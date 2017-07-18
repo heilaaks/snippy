@@ -3,13 +3,14 @@
 """database.py: Database management."""
 
 #import sqlite3
+from cuma.logger import Logger
 
 class Database(object):
     """Database management."""
 
     def __init__(self):
-        print("init")
+        self.logger = Logger().get()
 
     def init(self, location):
-        print("init databse: %s" % location)
+        self.logger.debug('initiating database into file {:s}'.format(location))
 

@@ -3,11 +3,15 @@
 """arguments.py: Command line arguments"""
 
 #import argparse
+from cuma.logger import Logger
 
 class Arguments(object):
 
-    def __init__(self):
-        print("arguments init")
+    args = {}
 
-    def mains(self):
-        print("mains")
+    def __init__(self):
+        self.logger = Logger().get()
+
+    @classmethod
+    def get(self):
+        self.logger.info('reading command line arguments')

@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 
-"""Code Unit MAnager for managing code and command sniplets."""
+"""Command Utility Manager for code and command sniplets."""
 
 from cuma.database import Database
 from cuma.config import Config
+from cuma.logger import Logger
 
 __author__    = "Heikki J. Laaksonen"
 __copyright__ = "Copyright 2017, Heikki J. Laaksonen"
@@ -13,13 +14,12 @@ __license__   = "MIT"
 class Cuma(object):
 
     def __init__(self):
-        print("main init")
+        self.logger = Logger().get()
+        self.config = Config()
 
     def run(self):
-        """Start the manager."""
-        print("running")
-        config = Config()
-        Database().init(config.get_storage_location())
+        self.logger.info('initiating service')
+        Database().init(self.config.get_storage_location())
 
 def main():
     Cuma().run()

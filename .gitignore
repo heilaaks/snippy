@@ -1,0 +1,8 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+
+# Ignore generated swap files with extensions
+*.swp
+*.swo
+*.swn

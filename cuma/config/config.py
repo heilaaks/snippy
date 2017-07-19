@@ -26,10 +26,18 @@ class Config(object):
         cls.config['path'] = os.path.join(os.environ.get('HOME'), 'devel', 'cuma-db')
         cls.config['file'] = 'cuma.db'
         cls.config['args'] = {}
-        cls.config['args']['add'] = Arguments.get_argument('add')
-        cls.config['args']['search'] = cls.args.get_argument('search')
+        cls.config['args']['snippet'] = Arguments.get_argument('snippet')
+        cls.config['args']['tags'] = cls.args.get_argument('tags')
+        cls.config['args']['comment'] = Arguments.get_argument('comment')
 
     @classmethod
-    def get_storage_location(cls):
+    def get_storage_path(cls):
+        """Get path of the persistent storage"""
+
+        return cls.config['path']
+
+    @classmethod
+    def get_storage_file(cls):
         """Get path and file of the persistent storage"""
+
         return os.path.join(cls.config['path'], cls.config['file'])

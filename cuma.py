@@ -3,6 +3,7 @@
 """Command Utility Manager for code and command sniplets."""
 
 from cuma.logger import Logger
+from cuma.logger import LoggerWrapper
 from cuma.config import Config
 from cuma.database import Database
 
@@ -19,7 +20,8 @@ class Cuma(object):
 
     def run(self):
         self.logger.info('initiating service')
-        Database().init(self.config.get_storage_location())
+        #LoggerWrapper.debug('initiating serviceeeeee') # does not work.
+        Database().init()
 
 def main(args=None):
     Cuma().run()

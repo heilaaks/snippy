@@ -15,8 +15,11 @@ class Arguments(object):
     def __init__(self):
         Arguments.logger = Logger().get()
         parser = argparse.ArgumentParser()
-        parser.add_argument('-a', '--add', type=str, help='add command or code example')
-        parser.add_argument('-s', '--search', type=str, help='search command or code example')
+        parser.add_argument('-s', '--snippet', type=str, help='add command or code snippet')
+        parser.add_argument('-t', '--tags', type=str, help='add tags with the give snippet')
+        parser.add_argument('-c', '--comment', type=str, help='add comment with the snippet')
+        parser.add_argument('-f', '--find', type=str, help='find with any give keyword')
+        parser.add_argument('--ftag', type=str, help='find from tags only')
         Arguments.args = parser.parse_args()
 
     @classmethod

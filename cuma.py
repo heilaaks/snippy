@@ -2,9 +2,9 @@
 
 """Command Utility Manager for code and command sniplets."""
 
-from cuma.database import Database
-from cuma.config import Config
 from cuma.logger import Logger
+from cuma.config import Config
+from cuma.database import Database
 
 __author__    = "Heikki J. Laaksonen"
 __copyright__ = "Copyright 2017, Heikki J. Laaksonen"
@@ -21,7 +21,7 @@ class Cuma(object):
         self.logger.info('initiating service')
         Database().init(self.config.get_storage_location())
 
-def main():
+def main(args=None):
     Cuma().run()
 
 if __name__ == "__main__":

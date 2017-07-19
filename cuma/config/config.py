@@ -3,16 +3,16 @@
 """config.py: Read configuration."""
 
 import os.path
-#import ConfigParser as configparser
 from cuma.config import Arguments
 from cuma.logger import Logger
 
+
 class Config(object):
-    """Global configuration settings."""
+    """Global configuration management."""
 
     args = {}
     config = {}
-    logger = {}
+    logger = None
 
     def __init__(self):
         if not Config.config:
@@ -25,8 +25,11 @@ class Config(object):
         Config.logger.info('initiating configuration')
         cls.config['path'] = os.path.join(os.environ.get('HOME'), 'devel', 'cuma-db')
         cls.config['file'] = 'cuma.db'
+        cls.config['args'] = {}
+        cls.config['args']['add'] = Arguments.get_argument('add')
+        cls.config['args']['search'] = cls.args.get_argument('search')
 
     @classmethod
     def get_storage_location(cls):
+        """Get path and file of the persistent storage"""
         return os.path.join(cls.config['path'], cls.config['file'])
-

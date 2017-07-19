@@ -1,6 +1,12 @@
-# Byte-compiled / optimized / DLL files
+# Python byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+
+# Python distribution / packaging
+*.egg-info/
+
+# Python unit test / coverage reports
+.cache
 
 # Ignore generated swap files with extensions
 *.swp

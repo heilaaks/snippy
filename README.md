@@ -1,12 +1,52 @@
 # cuma
 
-## TODO
+## Installation
 
-# Set virtualenv
+   ```
+   # Installing with Python virtual environment wrapper.
+   $ mkdir -p ${HOME}/devel/python-virtualenvs
+   $ sudo pip3 install virtualenvwrapper
+   $ virtualenv --version
+   $ export WORKON_HOME=${HOME}/devel/python-virtualenvs # Add to ~/.bashrc
+   $ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3    # Add to ~/.bashrc
+   $ source /usr/bin/virtualenvwrapper.sh                # Add to ~/.bashrc
+   $ mkvirtualenv cuma
+   ```
 
-# Set Pylint
-$ sudo yum install pylint
-$ pylint --rcfile standard.rc ./doh
-$ pylint --rcfile standard.rc ./doh > pylint.txt
+   ```
+   # Installing
+   $ mkvirtualenv cuma
+   $ pip install .
+   $ pip install -e .[dev] # Development packages.
+   ```
 
+   ```
+   # Example commands for the Python virtualenvwrapper.
+   $ lssitepackages
+   $ lsvirtualenv
+   $ deactivate
+   $ workon cuma
+   $ rmvirtualenv cuma
+   ```
 
+   ```
+   # Using Pylint for the first time.
+   #    - Modified test line from 100 to 125 characters.
+   $ pylint --generate-rcfile > tests/pylint/pylint-cuma.rc
+   ```
+
+   ```
+   # Running Pylint.
+   $ pylint --rcfile tests/pylint/pylint-cuma.rc ./cuma
+   $ pylint --rcfile tests/pylint/pylint-cuma.rc ./cuma > tests/pylint/pylint-cuma.txt
+   ```
+
+   ```
+   # Running pytests tests
+   $ pytest
+   ```
+
+   ```
+   # Freezing project for tag (check this one)
+   $ pip freeze > requirements.txt
+   ```

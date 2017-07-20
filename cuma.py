@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Command Utility Manager for code and command sniplets."""
+"""Command Utility Manager for code and command snippets."""
 
 from cuma.logger import Logger
 from cuma.logger import LoggerWrapper

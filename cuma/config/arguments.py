@@ -15,22 +15,27 @@ class Arguments(object):
     def __init__(self):
         Arguments.logger = Logger().get()
         parser = argparse.ArgumentParser()
-        parser.add_argument('-s', '--snippet', type=str, help='add command or code snippet')
-        parser.add_argument('-t', '--tags', type=str, help='add tags with the give snippet')
-        parser.add_argument('-c', '--comment', type=str, help='add comment with the snippet')
+        parser.add_argument('-s', '--snippet', type=str, default="", help='add command or code snippet')
+        parser.add_argument('-t', '--tags', type=str, default="", help='add tags with the give snippet')
+        parser.add_argument('-c', '--comment', type=str, default="", help='add comment with the snippet')
         parser.add_argument('-f', '--find', type=str, help='find with any give keyword')
         parser.add_argument('--ftag', type=str, help='find from tags only')
         Arguments.args = parser.parse_args()
 
     @classmethod
-    def get_argument(cls, argument):
-        if argument in vars(cls.args):
-            cls.logger.info('parsed argument "{:s}" with value "{}"'.format(argument, vars(cls.args)[argument]))
+    def get_snippet(cls):
+        cls.logger.info('parsed argument --snippet with value "{:s}"'.format(vars(cls.args)['snippet']))
 
-            return vars(cls.args)[argument]
-
-        return None
+        return vars(cls.args)['snippet']
 
     @classmethod
-    def get(cls):
-        cls.logger.info('reading command line arguments')
+    def get_tags(cls):
+        cls.logger.info('parsed argument --tags with value "{:s}"'.format(vars(cls.args)['tags']))
+
+        return vars(cls.args)['tags']
+
+    @classmethod
+    def get_comment(cls):
+        cls.logger.info('parsed argument --comment with value "{:s}"'.format(vars(cls.args)['comment']))
+
+        return vars(cls.args)['comment']

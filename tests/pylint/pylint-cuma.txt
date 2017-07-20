@@ -1,10 +1,9 @@
-************* Module cuma.config.config
-R: 10, 0: Too few public methods (1/2) (too-few-public-methods)
 ************* Module cuma.config
 C:  1, 0: Missing module docstring (missing-docstring)
 ************* Module cuma.config.arguments
-C: 23, 4: Missing method docstring (missing-docstring)
+C: 26, 4: Missing method docstring (missing-docstring)
 C: 32, 4: Missing method docstring (missing-docstring)
+C: 38, 4: Missing method docstring (missing-docstring)
 ************* Module cuma.logger.logger
 C: 17, 4: Missing method docstring (missing-docstring)
 R:  8, 0: Too few public methods (1/2) (too-few-public-methods)
@@ -13,10 +12,9 @@ C:  1, 0: Missing module docstring (missing-docstring)
 ************* Module cuma.database
 C:  1, 0: Missing module docstring (missing-docstring)
 ************* Module cuma.database.database
-C: 15, 4: Missing method docstring (missing-docstring)
-R:  9, 0: Too few public methods (1/2) (too-few-public-methods)
-W:  5, 0: Unused import sqlite3 (unused-import)
+C: 17, 4: Missing method docstring (missing-docstring)
+R: 11, 0: Too few public methods (1/2) (too-few-public-methods)
 
 ------------------------------------------------------------------
-Your code has been rated at 8.14/10 (previous run: 8.14/10, +0.00)
+Your code has been rated at 9.00/10 (previous run: 9.00/10, +0.00)
 

@@ -1,0 +1,56 @@
+************* Module tests.test_arguments_add_new_snippet
+C:  1, 0: Missing module docstring (missing-docstring)
+C:  4, 0: Missing class docstring (missing-docstring)
+C:  6, 4: Missing method docstring (missing-docstring)
+R:  6, 4: Method could be a function (no-self-use)
+C: 14, 4: Missing method docstring (missing-docstring)
+R: 14, 4: Method could be a function (no-self-use)
+C: 23, 4: Missing method docstring (missing-docstring)
+R: 23, 4: Method could be a function (no-self-use)
+C: 33, 4: Missing method docstring (missing-docstring)
+R: 33, 4: Method could be a function (no-self-use)
+C: 43, 4: Missing method docstring (missing-docstring)
+R: 43, 4: Method could be a function (no-self-use)
+C: 54, 4: Missing method docstring (missing-docstring)
+R: 54, 4: Method could be a function (no-self-use)
+C: 65, 4: Missing method docstring (missing-docstring)
+C: 71, 4: Missing method docstring (missing-docstring)
+************* Module tests.test_config_add_new_snippet
+C:  1, 0: Missing module docstring (missing-docstring)
+C:  4, 0: Missing class docstring (missing-docstring)
+C:  6, 4: Missing method docstring (missing-docstring)
+C: 13,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C: 14,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C: 15,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+R:  6, 4: Method could be a function (no-self-use)
+C: 17, 4: Missing method docstring (missing-docstring)
+C: 26,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C: 27,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+R: 17, 4: Method could be a function (no-self-use)
+C: 29, 4: Missing method docstring (missing-docstring)
+C: 41,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+R: 29, 4: Method could be a function (no-self-use)
+C: 43, 4: Missing method docstring (missing-docstring)
+C: 55,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+R: 43, 4: Method could be a function (no-self-use)
+C: 57, 4: Missing method docstring (missing-docstring)
+R: 57, 4: Method could be a function (no-self-use)
+C: 72, 4: Missing method docstring (missing-docstring)
+C: 82,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+R: 72, 4: Method could be a function (no-self-use)
+C: 86, 4: Missing method docstring (missing-docstring)
+C: 91, 4: Missing method docstring (missing-docstring)
+R:  1, 0: Similar lines in 2 files
+==tests.test_arguments_add_new_snippet:67
+==tests.test_config_add_new_snippet:87
+        sys.argv = ["cuma"]
+
+    @classmethod
+    def teardown_class(cls):
+        print('teardown_class()')
+
+        sys.argv = ["cuma"] (duplicate-code)
+
+------------------------------------------------------------------
+Your code has been rated at 7.09/10 (previous run: 7.09/10, +0.00)
+

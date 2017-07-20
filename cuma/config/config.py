@@ -15,10 +15,9 @@ class Config(object):
     logger = None
 
     def __init__(self):
-        if not Config.config:
-            Config.logger = Logger().get()
-            Config.args = Arguments()
-            Config.__set_config()
+        Config.logger = Logger().get()
+        Config.args = Arguments()
+        Config.__set_config()
 
     @classmethod
     def __set_config(cls):
@@ -26,18 +25,66 @@ class Config(object):
         cls.config['path'] = os.path.join(os.environ.get('HOME'), 'devel', 'cuma-db')
         cls.config['file'] = 'cuma.db'
         cls.config['args'] = {}
-        cls.config['args']['snippet'] = Arguments.get_argument('snippet')
-        cls.config['args']['tags'] = cls.args.get_argument('tags')
-        cls.config['args']['comment'] = Arguments.get_argument('comment')
+        cls.config['args']['snippet'] = Config.__parse_snippet()
+        cls.config['args']['tags'] = Config.__parse_tags()
+        cls.config['args']['comment'] = Config.__parse_comment()
+
+    @classmethod
+    def __parse_snippet(cls):
+        """preprocess the user given snippet."""
+
+        arg = Arguments.get_snippet()
+        if arg:
+            return arg
+
+        return ''
+
+    @classmethod
+    def __parse_tags(cls):
+        """preprocess the user given tag list."""
+
+        arg = Arguments.get_tags()
+        if arg:
+            return arg.split(',')
+
+        return []
+
+    @classmethod
+    def __parse_comment(cls):
+        """preprocess the user given comment."""
+
+        arg = Arguments.get_comment()
+        if arg:
+            return arg
+
+        return ''
 
     @classmethod
     def get_storage_path(cls):
-        """Get path of the persistent storage"""
+        """Get path of the persistent storage."""
 
         return cls.config['path']
 
     @classmethod
     def get_storage_file(cls):
-        """Get path and file of the persistent storage"""
+        """Get path and file of the persistent storage."""
 
         return os.path.join(cls.config['path'], cls.config['file'])
+
+    @classmethod
+    def get_snippet(cls):
+        """Get the snippet."""
+
+        return cls.config['args']['snippet']
+
+    @classmethod
+    def get_tags(cls):
+        """Get tags for the snippet."""
+
+        return cls.config['args']['tags']
+
+    @classmethod
+    def get_comment(cls):
+        """Get comment for the snippet."""
+
+        return cls.config['args']['comment']

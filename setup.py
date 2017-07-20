@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='cuma',
     version='0.0.1',
-    description='Command Utility Manager for code and command sniplets.',
+    description='Command Utility Manager for code and command snippets.',
     url='https://github.com/heilaaks/cuma',
     author='Heikki J. Laaksonen',
     author_email='laaksonen.heikki.j@gmail.com',

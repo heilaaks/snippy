@@ -5,7 +5,6 @@ C: 26, 4: Missing method docstring (missing-docstring)
 C: 32, 4: Missing method docstring (missing-docstring)
 C: 38, 4: Missing method docstring (missing-docstring)
 ************* Module cuma.logger.logger
-C: 17, 4: Missing method docstring (missing-docstring)
 R:  8, 0: Too few public methods (1/2) (too-few-public-methods)
 ************* Module cuma.logger
 C:  1, 0: Missing module docstring (missing-docstring)
@@ -16,5 +15,5 @@ C: 17, 4: Missing method docstring (missing-docstring)
 R: 11, 0: Too few public methods (1/2) (too-few-public-methods)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.00/10 (previous run: 9.00/10, +0.00)
+Your code has been rated at 9.01/10 (previous run: 9.01/10, +0.00)
 

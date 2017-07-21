@@ -20,7 +20,7 @@ class Cuma(object):
 
     def run(self):
         self.logger.info('initiating service')
-        #LoggerWrapper.debug('initiating serviceeeeee') # does not work.
+        LoggerWrapper().warn('initiating serviceeeeee') # does not work.
         Database().init()
 
 def main(args=None):

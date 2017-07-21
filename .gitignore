@@ -7,6 +7,9 @@ __pycache__/
 
 # Python unit test / coverage reports
 .cache
+.coverage
+.coverage.*
+htmlcov/
 pytestdebug.log
 
 # Ignore generated swap files with extensions

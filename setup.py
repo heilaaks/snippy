@@ -22,7 +22,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     install_requires=['argparse'],
     extras_require={
-        'dev': ['pylint', 'pytest'],
+        'dev': ['pylint', 'pytest', 'pytest-cov'],
     },
     entry_points={
         'console_scripts': [

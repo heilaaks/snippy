@@ -12,6 +12,9 @@ __pycache__/
 htmlcov/
 pytestdebug.log
 
+# Sphinx documentation
+docs/build/
+
 # Ignore generated swap files with extensions
 *.swp
 *.swo

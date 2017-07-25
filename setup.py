@@ -22,7 +22,7 @@ setup(
     packages=find_packages(exclude=['tests']),
     install_requires=['argparse'],
     extras_require={
-        'dev': ['pylint', 'pytest', 'pytest-cov'],
+        'dev': ['pylint', 'pytest', 'pytest-cov', 'sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme'],
     },
     entry_points={
         'console_scripts': [

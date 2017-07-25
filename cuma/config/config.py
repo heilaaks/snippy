@@ -28,6 +28,8 @@ class Config(object):
         cls.config['args']['snippet'] = Config.__parse_snippet()
         cls.config['args']['tags'] = Config.__parse_tags()
         cls.config['args']['comment'] = Config.__parse_comment()
+        cls.config['args']['profiler'] = Arguments.get_profiler()
+
 
     @classmethod
     def __parse_snippet(cls):
@@ -88,3 +90,9 @@ class Config(object):
         """Get comment for the snippet."""
 
         return cls.config['args']['comment']
+
+    @classmethod
+    def is_profiled(cls):
+        """Check if the code profiler is run."""
+
+        return cls.config['args']['profiler']

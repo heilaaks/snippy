@@ -20,6 +20,7 @@ class Arguments(object):
         parser.add_argument('-c', '--comment', type=str, default="", help='add comment with the snippet')
         parser.add_argument('-f', '--find', type=str, help='find with any give keyword')
         parser.add_argument('--ftag', type=str, help='find from tags only')
+        parser.add_argument('--profiler', action='store_true', default=False, help=argparse.SUPPRESS)
         Arguments.args = parser.parse_args()
 
     @classmethod
@@ -39,3 +40,9 @@ class Arguments(object):
         cls.logger.info('parsed argument --comment with value "{:s}"'.format(vars(cls.args)['comment']))
 
         return vars(cls.args)['comment']
+
+    @classmethod
+    def get_profiler(cls):
+        cls.logger.info('parsed argument --profile with value "{!s}"'.format(vars(cls.args)['profiler']))
+
+        return vars(cls.args)['profiler']

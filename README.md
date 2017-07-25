@@ -51,6 +51,26 @@
    $ pip freeze > requirements.txt
    ```
 
+   ```
+   # Test if Pyflame will have problems with SELinux or settings. The first
+   # value needs to be 'off' and second value zero.
+   $ getsebool deny_ptrace
+     deny_ptrace --> off
+   $ sysctl kernel.yama.ptrace_scope
+     kernel.yama.ptrace_scope = 0
+   ```
+   
+   ```
+   # Install pyflame dependencies
+   $ sudo dnf install autoconf automake gcc-c++ python-devel python3-devel libtool
+   $ git clone https://github.com/uber/pyflame.git
+   $ cd pyflame
+   $ git checkout v1.4.4
+   $ ./autogen.sh
+   $ ./configure
+   $ make
+   ```
+
 ## Devel
 
 cd devel/cuma

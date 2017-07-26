@@ -1,59 +1,33 @@
-************* Module tests.test_arguments_add_new_snippet
-C:  1, 0: Missing module docstring (missing-docstring)
-C:  4, 0: Missing class docstring (missing-docstring)
-C:  6, 4: Missing method docstring (missing-docstring)
-R:  6, 4: Method could be a function (no-self-use)
-C: 14, 4: Missing method docstring (missing-docstring)
-R: 14, 4: Method could be a function (no-self-use)
-C: 23, 4: Missing method docstring (missing-docstring)
-R: 23, 4: Method could be a function (no-self-use)
-C: 33, 4: Missing method docstring (missing-docstring)
-R: 33, 4: Method could be a function (no-self-use)
-C: 43, 4: Missing method docstring (missing-docstring)
-R: 43, 4: Method could be a function (no-self-use)
-C: 54, 4: Missing method docstring (missing-docstring)
-R: 54, 4: Method could be a function (no-self-use)
-C: 65, 4: Missing method docstring (missing-docstring)
-C: 71, 4: Missing method docstring (missing-docstring)
 ************* Module tests.test_config_add_new_snippet
-C:  1, 0: Missing module docstring (missing-docstring)
-C:  4, 0: Missing class docstring (missing-docstring)
-C:  6, 4: Missing method docstring (missing-docstring)
-C: 13,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
-C: 14,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
-C: 15,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
-R:  6, 4: Method could be a function (no-self-use)
-C: 17, 4: Missing method docstring (missing-docstring)
-C: 26,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
-C: 27,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
-R: 17, 4: Method could be a function (no-self-use)
-C: 29, 4: Missing method docstring (missing-docstring)
-C: 41,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
-R: 29, 4: Method could be a function (no-self-use)
-C: 43, 4: Missing method docstring (missing-docstring)
-C: 55,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
-R: 43, 4: Method could be a function (no-self-use)
-C: 57, 4: Missing method docstring (missing-docstring)
-R: 57, 4: Method could be a function (no-self-use)
-C: 72, 4: Missing method docstring (missing-docstring)
-C: 82,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
-R: 72, 4: Method could be a function (no-self-use)
-C: 86, 4: Missing method docstring (missing-docstring)
-C: 91, 4: Missing method docstring (missing-docstring)
+C:121, 0: Trailing whitespace (trailing-whitespace)
+C: 21,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C: 22,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C: 23,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C: 37,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C: 38,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C: 56,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C: 74,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
+C:108,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
 ************* Module tests.test_config_storage_path
-R:  7, 4: Method could be a function (no-self-use)
-R: 14, 4: Method could be a function (no-self-use)
 R:  1, 0: Similar lines in 2 files
-==tests.test_arguments_add_new_snippet:67
-==tests.test_config_add_new_snippet:87
+==tests.test_arguments_add_new_snippet:84
+==tests.test_config_add_new_snippet:108
+        assert obj.get_comment() == comment
+
+    @classmethod
+    def setup_class(cls):
+        """Test class setup before any of the tests are run."""
+
+        print('setup_class()')
         sys.argv = ["cuma"]
 
     @classmethod
     def teardown_class(cls):
-        print('teardown_class()')
+        """Test class teardown after all tests run."""
 
+        print('teardown_class()')
         sys.argv = ["cuma"] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 7.17/10 (previous run: 7.17/10, +0.00)
+Your code has been rated at 9.34/10 (previous run: 9.34/10, +0.00)
 

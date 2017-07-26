@@ -75,13 +75,13 @@
 
 cd devel/cuma
 workon cuma
-cuma.py -s test
-pytest
 pylint --rcfile tests/pylint/pylint-cuma.rc ./cuma
 pylint --rcfile tests/pylint/pylint-cuma-tests.rc ./tests
 pytest --cov=cuma tests/
 pytest --cov=cuma --cov-report html tests/
 make -C docs html
+cuma.py -s test
+pytest
 
    > file:///home/heilaaks/devel/cuma/htmlcov/index.html
    > file:///home/heilaaks/devel/cuma/docs/build/html/index.html

@@ -16,4 +16,5 @@ class Logger(object):
 
     def get(self):
         """Get logger object."""
+
         return self.logger

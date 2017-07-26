@@ -22,8 +22,10 @@ class Config(object):
     @classmethod
     def __set_config(cls):
         Config.logger.info('initiating configuration')
-        cls.config['path'] = os.path.join(os.environ.get('HOME'), 'devel', 'cuma-db')
-        cls.config['file'] = 'cuma.db'
+        cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
+        cls.config['db_path'] = os.path.join(os.environ.get('HOME'), 'devel', 'cuma-db')
+        cls.config['db_file'] = 'cuma.db'
+        cls.config['db_schema'] = os.path.join(cls.config['root'], 'cuma/database/database.sql')
         cls.config['args'] = {}
         cls.config['args']['snippet'] = Config.__parse_snippet()
         cls.config['args']['tags'] = Config.__parse_tags()
@@ -65,13 +67,19 @@ class Config(object):
     def get_storage_path(cls):
         """Get path of the persistent storage."""
 
-        return cls.config['path']
+        return cls.config['db_path']
 
     @classmethod
     def get_storage_file(cls):
         """Get path and file of the persistent storage."""
 
-        return os.path.join(cls.config['path'], cls.config['file'])
+        return os.path.join(cls.config['db_path'], cls.config['db_file'])
+
+    @classmethod
+    def get_storage_schema(cls):
+        """Get storage schema."""
+
+        return cls.config['db_schema']
 
     @classmethod
     def get_snippet(cls):

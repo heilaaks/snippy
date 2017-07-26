@@ -1,5 +1,4 @@
 ************* Module tests.test_config_add_new_snippet
-C:121, 0: Trailing whitespace (trailing-whitespace)
 C: 21,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
 C: 22,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
 C: 23,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
@@ -29,5 +28,5 @@ R:  1, 0: Similar lines in 2 files
         sys.argv = ["cuma"] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.34/10 (previous run: 9.34/10, +0.00)
+Your code has been rated at 9.41/10 (previous run: 9.34/10, +0.07)
 

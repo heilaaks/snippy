@@ -50,7 +50,7 @@ class TestArgumentsAddNewSnippet(object):
         from cuma.config import Arguments
 
         command = "'docker rm $(docker ps -a -q)'"
-        tags = "docker, image, cleanup"
+        tags = "docker, container, cleanup"
         sys.argv = ["cuma", "-s", command, "-t", tags]
         obj = Arguments()
         assert obj.get_snippet() == command
@@ -63,8 +63,8 @@ class TestArgumentsAddNewSnippet(object):
         from cuma.config import Arguments
 
         command = "'docker rm $(docker ps -a -q)'"
-        tags = "docker, image, cleanup"
-        comment = "Remove docker container"
+        tags = "docker, container, cleanup"
+        comment = "Remove all docker containers"
         sys.argv = ["cuma", "-s", command, "-t", tags, "-c", comment]
         obj = Arguments()
         assert obj.get_snippet() == command
@@ -77,7 +77,7 @@ class TestArgumentsAddNewSnippet(object):
         from cuma.config import Arguments
 
         command = "'docker rm $(docker ps -a -q)'"
-        comment = "Remove docker container"
+        comment = "Remove all docker containers"
         sys.argv = ["cuma", "-s", command, "-c", comment]
         obj = Arguments()
         assert obj.get_snippet() == command

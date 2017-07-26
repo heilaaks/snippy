@@ -11,19 +11,17 @@ for Python virtual environment like below:
 
     git clone https://github.com/heilaaks/cuma.git
     mkvirtualenv cuma
-    pip install -e .[dev] # Install with the development packages.
+    make install
 
 The basic commands to run and test are:
 
 .. code:: bash
 
-    python3 cuma.py -s test
-    pytest
-    pylint --rcfile tests/pylint/pylint-cuma.rc ./cuma
-    pylint --rcfile tests/pylint/pylint-cuma-tests.rc ./tests
-    pytest --cov=cuma tests/
-    pytest --cov=cuma --cov-report html tests/
-    make -C docs html
+    python3 cuma.py -s 'docker rm $(docker ps -a -q)' -t docker,container,cleanup -c 'Remove all docker containers'
+    make test
+    make lint
+    make coverage
+    make docs 
 
 Python Virtual Environment
 --------------------------

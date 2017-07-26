@@ -19,8 +19,11 @@ class Cuma(object):
         self.config = Config()
 
     def run(self):
-        self.logger.info('initiating service')
-        Database().init()
+        self.logger.info('initiating services')
+        storage = Database()
+        storage.init()
+        storage.debug()
+        storage.disconnect()
 
 def main(args=None):
     Profiler.enable()

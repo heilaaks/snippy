@@ -5,7 +5,7 @@
 import logging
 
 
-class Logger(object):
+class Logger(object): # pylint: disable=too-few-public-methods
     """Logger wrapper."""
 
     def __init__(self):

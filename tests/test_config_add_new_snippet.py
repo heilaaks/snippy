@@ -62,7 +62,7 @@ class TestConfigAddNewSnippet(object):
         from cuma.config import Config
 
         command = "'docker rm $(docker ps -a -q)'"
-        tags = "docker, image, cleanup"
+        tags = "docker, container, cleanup"
         sys.argv = ["cuma", "-s", command, "-t", tags]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
@@ -80,8 +80,8 @@ class TestConfigAddNewSnippet(object):
         from cuma.config import Config
 
         command = "'docker rm $(docker ps -a -q)'"
-        tags = "docker, image, cleanup"
-        comment = "Remove docker container"
+        tags = "docker, container, cleanup"
+        comment = "Remove all docker containers"
         sys.argv = ["cuma", "-s", command, "-t", tags, "-c", comment]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
@@ -98,7 +98,7 @@ class TestConfigAddNewSnippet(object):
         from cuma.config import Config
 
         command = "'docker rm $(docker ps -a -q)'"
-        comment = "Remove docker container"
+        comment = "Remove all docker containers"
         sys.argv = ["cuma", "-s", command, "-c", comment]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
@@ -118,6 +118,6 @@ class TestConfigAddNewSnippet(object):
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
-        
+
         print('teardown_class()')
         sys.argv = ["cuma"]

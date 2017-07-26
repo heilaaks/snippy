@@ -1,11 +1,7 @@
 ************* Module cuma.config
 C:  1, 0: Missing module docstring (missing-docstring)
 ************* Module cuma.config.arguments
-C: 27, 4: Missing method docstring (missing-docstring)
-C: 33, 4: Missing method docstring (missing-docstring)
-C: 39, 4: Missing method docstring (missing-docstring)
-C: 45, 4: Missing method docstring (missing-docstring)
-W: 46,24: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
+W: 54,24: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
 ************* Module cuma.logger.logger
 R:  8, 0: Too few public methods (1/2) (too-few-public-methods)
 ************* Module cuma.logger
@@ -19,5 +15,5 @@ R: 11, 0: Too few public methods (1/2) (too-few-public-methods)
 C:  1, 0: Missing module docstring (missing-docstring)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.02/10 (previous run: 9.02/10, +0.00)
+Your code has been rated at 9.34/10 (previous run: 9.34/10, +0.00)
 

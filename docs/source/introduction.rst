@@ -1,5 +1,5 @@
 Introduction
 ============
 
-Command Utility Manager for code and command snippets.
+Snippy is a small command line tool to manage command and troubleshooting command reference logs.
 

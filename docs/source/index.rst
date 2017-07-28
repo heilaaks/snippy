@@ -1,4 +1,4 @@
-Welcome to cuma's documentation!
+Welcome to Snippy documentation!
 ================================
 
 .. toctree::

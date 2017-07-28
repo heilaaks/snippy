@@ -2,17 +2,17 @@
 
 """Command Utility Manager for code and command snippets."""
 
-from cuma.logger import Logger
-from cuma.config import Config
-from cuma.database import Database
-from cuma.profiler import Profiler
+from snippy.logger import Logger
+from snippy.config import Config
+from snippy.database import Database
+from snippy.profiler import Profiler
 
 __author__    = "Heikki J. Laaksonen"
 __copyright__ = "Copyright 2017, Heikki J. Laaksonen"
 __license__   = "MIT"
 
 
-class Cuma(object):
+class Snippy(object):
 
     def __init__(self):
         self.logger = Logger().get()
@@ -27,7 +27,7 @@ class Cuma(object):
 
 def main(args=None):
     Profiler.enable()
-    Cuma().run()
+    Snippy().run()
     Profiler.disable()
 
 if __name__ == "__main__":

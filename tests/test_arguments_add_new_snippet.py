@@ -11,9 +11,9 @@ class TestArgumentsAddNewSnippet(object):
     def test_no_value(self):
         """Test that new snippet can be added with comment but no tags."""
 
-        from cuma.config import Arguments
+        from snippy.config import Arguments
 
-        sys.argv = ["cuma"]
+        sys.argv = ["snippy"]
         obj = Arguments()
         assert obj.get_snippet() == ''
         assert obj.get_tags() == ''
@@ -22,10 +22,10 @@ class TestArgumentsAddNewSnippet(object):
     def test_valid_value_no_tags(self):
         """Test that new snippet can be added without tags."""
 
-        from cuma.config import Arguments
+        from snippy.config import Arguments
 
         command = "'docker rm $(docker ps -a -q)'"
-        sys.argv = ["cuma", "-s", command]
+        sys.argv = ["snippy", "-s", command]
         obj = Arguments()
         assert obj.get_snippet() == command
         assert obj.get_tags() == ''
@@ -34,11 +34,11 @@ class TestArgumentsAddNewSnippet(object):
     def test_valid_value_one_tag(self):
         """Test that new snippet can be added with one tag."""
 
-        from cuma.config import Arguments
+        from snippy.config import Arguments
 
         command = "'docker rm $(docker ps -a -q)'"
         tags = "docker"
-        sys.argv = ["cuma", "-s", command, "-t", tags]
+        sys.argv = ["snippy", "-s", command, "-t", tags]
         obj = Arguments()
         assert obj.get_snippet() == command
         assert obj.get_tags() == tags
@@ -47,11 +47,11 @@ class TestArgumentsAddNewSnippet(object):
     def test_valid_value_with_tags(self):
         """Test that new snippet can be added with multiple tags."""
 
-        from cuma.config import Arguments
+        from snippy.config import Arguments
 
         command = "'docker rm $(docker ps -a -q)'"
         tags = "docker, container, cleanup"
-        sys.argv = ["cuma", "-s", command, "-t", tags]
+        sys.argv = ["snippy", "-s", command, "-t", tags]
         obj = Arguments()
         assert obj.get_snippet() == command
         assert obj.get_tags() == tags
@@ -60,12 +60,12 @@ class TestArgumentsAddNewSnippet(object):
     def test_valid_value_with_tags_and_comment(self):
         """Test that new snippet can be added with multiple tags and comment."""
 
-        from cuma.config import Arguments
+        from snippy.config import Arguments
 
         command = "'docker rm $(docker ps -a -q)'"
         tags = "docker, container, cleanup"
         comment = "Remove all docker containers"
-        sys.argv = ["cuma", "-s", command, "-t", tags, "-c", comment]
+        sys.argv = ["snippy", "-s", command, "-t", tags, "-c", comment]
         obj = Arguments()
         assert obj.get_snippet() == command
         assert obj.get_tags() == tags
@@ -74,11 +74,11 @@ class TestArgumentsAddNewSnippet(object):
     def test_valid_value_with_comment_no_tags(self):
         """Test that new snippet can be added with comment but no tags."""
 
-        from cuma.config import Arguments
+        from snippy.config import Arguments
 
         command = "'docker rm $(docker ps -a -q)'"
         comment = "Remove all docker containers"
-        sys.argv = ["cuma", "-s", command, "-c", comment]
+        sys.argv = ["snippy", "-s", command, "-c", comment]
         obj = Arguments()
         assert obj.get_snippet() == command
         assert obj.get_tags() == ''
@@ -89,11 +89,11 @@ class TestArgumentsAddNewSnippet(object):
         """Test class setup before any of the tests are run."""
 
         print('setup_class()')
-        sys.argv = ["cuma"]
+        sys.argv = ["snippy"]
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
         print('teardown_class()')
-        sys.argv = ["cuma"]
+        sys.argv = ["snippy"]

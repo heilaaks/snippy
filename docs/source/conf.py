@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# cuma documentation build configuration file, created by
+# snippy documentation build configuration file, created by
 # sphinx-quickstart on Tue Jul 25 19:59:28 2017.
 #
 # This file is execfile()d with the current directory set to its
@@ -46,7 +46,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'cuma'
+project = 'snippy'
 copyright = '2017, Heikki Laaksonen'
 author = 'Heikki Laaksonen'
 
@@ -115,7 +115,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'cumadoc'
+htmlhelp_basename = 'snippydoc'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -142,7 +142,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'cuma.tex', 'cuma Documentation',
+    (master_doc, 'snippy.tex', 'Snippy Documentation',
      'Heikki Laaksonen', 'manual'),
 ]
 
@@ -152,7 +152,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'cuma', 'cuma Documentation',
+    (master_doc, 'snippy', 'Snippy Documentation',
      [author], 1)
 ]
 
@@ -163,8 +163,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'cuma', 'cuma Documentation',
-     author, 'cuma', 'One line description of project.',
+    (master_doc, 'snippy', 'Snippy Documentation',
+     author, 'snippy', 'One line description of project.',
      'Miscellaneous'),
 ]
 

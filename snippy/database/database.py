@@ -4,8 +4,8 @@
 
 import os
 import sqlite3
-from cuma.logger import Logger
-from cuma.config import Config
+from snippy.logger import Logger
+from snippy.config import Config
 
 
 class Database(object):
@@ -24,16 +24,16 @@ class Database(object):
         else:
             self.logger.error('storage path does not exist {:s}'.format(Config.get_storage_path()))
 
-    def __create_db(self, cuma_db):
+    def __create_db(self, snippy_db):
         """Create the database."""
 
         try:
-            conn = sqlite3.connect(cuma_db, check_same_thread=False)
+            conn = sqlite3.connect(snippy_db, check_same_thread=False)
             cursor = conn.cursor()
             with open(Config().get_storage_schema(), 'rt') as schema:
                 schema = schema.read()
                 conn.executescript(schema)
-            self.logger.debug('initialized sqlite3 database into {:s}'.format(cuma_db))
+            self.logger.debug('initialized sqlite3 database into {:s}'.format(snippy_db))
         except sqlite3.Error as exception:
             self.logger.error('creating sqlite3 database failed with exception {}'.format(exception))
 

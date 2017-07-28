@@ -1,18 +1,18 @@
-************* Module cuma.config
+************* Module snippy.config
 C:  1, 0: Missing module docstring (missing-docstring)
-************* Module cuma.config.arguments
+************* Module snippy.config.arguments
 W: 54,24: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
-************* Module cuma.logger
+************* Module snippy.logger
 C:  1, 0: Missing module docstring (missing-docstring)
-************* Module cuma.database
+************* Module snippy.database
 C:  1, 0: Missing module docstring (missing-docstring)
-************* Module cuma.database.database
+************* Module snippy.database.database
 W: 38,30: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
 W: 59,34: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
 W: 61,34: Use % formatting in logging functions and pass the % parameters as arguments (logging-format-interpolation)
-************* Module cuma.profiler
+************* Module snippy.profiler
 C:  1, 0: Missing module docstring (missing-docstring)
 
-------------------------------------------------------------------
-Your code has been rated at 9.48/10 (previous run: 9.48/10, +0.00)
+-----------------------------------
+Your code has been rated at 9.48/10
 

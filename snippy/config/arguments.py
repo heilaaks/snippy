@@ -3,7 +3,7 @@
 """arguments.py: Command line arguments"""
 
 import argparse
-from cuma.logger import Logger
+from snippy.logger import Logger
 
 
 class Arguments(object):

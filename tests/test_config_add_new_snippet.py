@@ -11,9 +11,9 @@ class TestConfigAddNewSnippet(object):
     def test_no_value(self):
         """Test that empty argument list is set to configuration."""
 
-        from cuma.config import Config
+        from snippy.config import Config
 
-        sys.argv = ["cuma"]
+        sys.argv = ["snippy"]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
@@ -25,10 +25,10 @@ class TestConfigAddNewSnippet(object):
     def test_valid_value_no_tags(self):
         """Test that new snippet can be configured without tags."""
 
-        from cuma.config import Config
+        from snippy.config import Config
 
         command = "'docker rm $(docker ps -a -q)'"
-        sys.argv = ["cuma", "-s", command]
+        sys.argv = ["snippy", "-s", command]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
@@ -41,11 +41,11 @@ class TestConfigAddNewSnippet(object):
         """Test that new snippet can be configured with one tag and that the
         tag configuration is a list that can be iterated."""
 
-        from cuma.config import Config
+        from snippy.config import Config
 
         command = "'docker rm $(docker ps -a -q)'"
         tags = "docker"
-        sys.argv = ["cuma", "-s", command, "-t", tags]
+        sys.argv = ["snippy", "-s", command, "-t", tags]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
@@ -59,11 +59,11 @@ class TestConfigAddNewSnippet(object):
         """Test that new snippet can be configured with multiple tags and that the
         tag configuration is a list that can be iterated."""
 
-        from cuma.config import Config
+        from snippy.config import Config
 
         command = "'docker rm $(docker ps -a -q)'"
         tags = "docker, container, cleanup"
-        sys.argv = ["cuma", "-s", command, "-t", tags]
+        sys.argv = ["snippy", "-s", command, "-t", tags]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
@@ -77,12 +77,12 @@ class TestConfigAddNewSnippet(object):
         """Test that new snippet can be configured with multiple tags and comment and
         that the tag configuration is a list that can be iterated."""
 
-        from cuma.config import Config
+        from snippy.config import Config
 
         command = "'docker rm $(docker ps -a -q)'"
         tags = "docker, container, cleanup"
         comment = "Remove all docker containers"
-        sys.argv = ["cuma", "-s", command, "-t", tags, "-c", comment]
+        sys.argv = ["snippy", "-s", command, "-t", tags, "-c", comment]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
@@ -95,11 +95,11 @@ class TestConfigAddNewSnippet(object):
     def test_valid_value_with_comment_no_tags(self):
         """Test that new snippet can be added with comment but no tags."""
 
-        from cuma.config import Config
+        from snippy.config import Config
 
         command = "'docker rm $(docker ps -a -q)'"
         comment = "Remove all docker containers"
-        sys.argv = ["cuma", "-s", command, "-c", comment]
+        sys.argv = ["snippy", "-s", command, "-c", comment]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
@@ -113,11 +113,11 @@ class TestConfigAddNewSnippet(object):
         """Test class setup before any of the tests are run."""
 
         print('setup_class()')
-        sys.argv = ["cuma"]
+        sys.argv = ["snippy"]
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
         print('teardown_class()')
-        sys.argv = ["cuma"]
+        sys.argv = ["snippy"]

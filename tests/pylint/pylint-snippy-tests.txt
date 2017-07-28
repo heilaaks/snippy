@@ -18,15 +18,15 @@ R:  1, 0: Similar lines in 2 files
         """Test class setup before any of the tests are run."""
 
         print('setup_class()')
-        sys.argv = ["cuma"]
+        sys.argv = ["snippy"]
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
         print('teardown_class()')
-        sys.argv = ["cuma"] (duplicate-code)
+        sys.argv = ["snippy"] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.41/10 (previous run: 9.34/10, +0.07)
+Your code has been rated at 9.41/10 (previous run: 9.41/10, +0.00)
 

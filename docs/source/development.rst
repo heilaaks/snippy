@@ -9,15 +9,15 @@ for Python virtual environment like below:
 
 .. code:: bash
 
-    git clone https://github.com/heilaaks/cuma.git
-    mkvirtualenv cuma
+    git clone https://github.com/heilaaks/snippy.git
+    mkvirtualenv snippy
     make install
 
 The basic commands to run and test are:
 
 .. code:: bash
 
-    python3 cuma.py -s 'docker rm $(docker ps -a -q)' -t docker,container,cleanup -c 'Remove all docker containers'
+    python3 snip.py -s 'docker rm $(docker ps -a -q)' -t docker,container,cleanup -c 'Remove all docker containers'
     make test
     make lint
     make coverage
@@ -36,7 +36,7 @@ You can install the Python virtual environment wrapper like below:
     export WORKON_HOME=${HOME}/devel/python-virtualenvs # Add to ~/.bashrc
     export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3    # Add to ~/.bashrc
     source /usr/bin/virtualenvwrapper.sh                # Add to ~/.bashrc
-    mkvirtualenv cuma
+    mkvirtualenv snippy
 
 Example commands to operate the virtual environment are below. More
 information can be found from the Python virtualenvwrapper_ command
@@ -47,8 +47,8 @@ reference documentation.
     lssitepackages
     lsvirtualenv
     deactivate
-    workon cuma
-    rmvirtualenv cuma
+    workon snippy
+    rmvirtualenv snippy
 
 Pylint
 ------
@@ -57,7 +57,7 @@ The Pylint rc file can be generated for the very first time like:
 
 .. code:: bash
 
-    pylint --generate-rcfile > tests/pylint/pylint-cuma.rc
+    pylint --generate-rcfile > tests/pylint/pylint-snippy.rc
 
 .. _virtualenvwrapper: http://virtualenvwrapper.readthedocs.io/en/latest/command_ref.html
 

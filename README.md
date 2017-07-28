@@ -1,4 +1,4 @@
-# cuma
+# snippy
 
 ## Installation
 
@@ -10,12 +10,12 @@
    $ export WORKON_HOME=${HOME}/devel/python-virtualenvs # Add to ~/.bashrc
    $ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3    # Add to ~/.bashrc
    $ source /usr/bin/virtualenvwrapper.sh                # Add to ~/.bashrc
-   $ mkvirtualenv cuma
+   $ mkvirtualenv snippy
    ```
 
    ```
    # Installing
-   $ mkvirtualenv cuma
+   $ mkvirtualenv snippy
    $ pip install .
    $ pip install -e .[dev] # Development packages.
    ```
@@ -25,20 +25,20 @@
    $ lssitepackages
    $ lsvirtualenv
    $ deactivate
-   $ workon cuma
-   $ rmvirtualenv cuma
+   $ workon snippy
+   $ rmvirtualenv snippy
    ```
 
    ```
    # Using Pylint for the first time.
    #    - Modified test line from 100 to 125 characters.
-   $ pylint --generate-rcfile > tests/pylint/pylint-cuma.rc
+   $ pylint --generate-rcfile > tests/pylint/pylint-snippy.rc
    ```
 
    ```
    # Running Pylint.
-   $ pylint --rcfile tests/pylint/pylint-cuma.rc ./cuma
-   $ pylint --rcfile tests/pylint/pylint-cuma.rc ./cuma > tests/pylint/pylint-cuma.txt
+   $ pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
+   $ pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy > tests/pylint/pylint-snippy.txt
    ```
 
    ```
@@ -73,15 +73,15 @@
 
 ## Devel
 
-cd devel/cuma
-workon cuma
-pylint --rcfile tests/pylint/pylint-cuma.rc ./cuma
-pylint --rcfile tests/pylint/pylint-cuma-tests.rc ./tests
-pytest --cov=cuma tests/
-pytest --cov=cuma --cov-report html tests/
+cd devel/snippy
+workon snippy
+pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
+pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests
+pytest --cov=snippy tests/
+pytest --cov=snippy --cov-report html tests/
 make -C docs html
-cuma.py -s test
+snip.py -s test
 pytest
 
-   > file:///home/heilaaks/devel/cuma/htmlcov/index.html
-   > file:///home/heilaaks/devel/cuma/docs/build/html/index.html
+   > file:///home/heilaaks/devel/snippy/htmlcov/index.html
+   > file:///home/heilaaks/devel/snippy/docs/build/html/index.html

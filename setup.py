@@ -1,15 +1,15 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='cuma',
+    name='snip',
     version='0.0.1',
-    description='Command Utility Manager for code and command snippets.',
-    url='https://github.com/heilaaks/cuma',
+    description='Snippet manager for commands and logs.',
+    url='https://github.com/heilaaks/snip',
     author='Heikki J. Laaksonen',
     author_email='laaksonen.heikki.j@gmail.com',
     license='MIT',
     classifiers=[
-        'Development Status :: 3 - Alpha',
+        'Development Status :: 1 - Planning',
         'Environment :: Console'
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Documentation',
@@ -26,7 +26,7 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'cuma = cuma:main'
+            'snip = snip:main'
         ],
     },
 )

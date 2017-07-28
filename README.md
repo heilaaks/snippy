@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/heilaaks/snippy.svg?branch=master)](https://travis-ci.org/heilaaks/snippy)
+
 # Snippy
 
 ## Introduction

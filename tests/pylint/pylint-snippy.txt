@@ -13,6 +13,6 @@ W: 61,34: Use % formatting in logging functions and pass the % parameters as arg
 ************* Module snippy.profiler
 C:  1, 0: Missing module docstring (missing-docstring)
 
------------------------------------
-Your code has been rated at 9.48/10
+------------------------------------------------------------------
+Your code has been rated at 9.48/10 (previous run: 9.48/10, +0.00)
 

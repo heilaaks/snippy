@@ -5,7 +5,7 @@ init:
 	pip3 install -e .[dev]
 
 test:
-	py.test tests
+	python3 -m pytest ./tests/test_*.py --cov snippy -vv
 
 coverage:
 	pytest --cov=snippy --cov-report html tests/

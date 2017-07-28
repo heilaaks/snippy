@@ -1,5 +1,7 @@
 from setuptools import setup, find_packages
 
+tests_require = ['pytest', 'pytest-cov'],
+
 setup(
     name='snip',
     version='0.0.1',
@@ -21,12 +23,15 @@ setup(
     keywords='cli code command troubleshooting manager',
     packages=find_packages(exclude=['tests']),
     install_requires=['argparse'],
-    extras_require={
-        'dev': ['pylint', 'pytest', 'pytest-cov', 'sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme'],
-    },
     entry_points={
         'console_scripts': [
             'snip = snip:main'
         ],
     },
+    extras_require={
+        'dev': ['pylint', 'pytest', 'pytest-cov', 'sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme'],
+        'tests': ['pytest', 'pytest-cov'],
+    },
+    test_suite='tests',
+    tests_require=tests_require,
 )

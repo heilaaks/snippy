@@ -1,3 +1,6 @@
+install:
+	pip3 install --user .
+
 init:
 	pip3 install -e .[dev]
 
@@ -24,4 +27,4 @@ clean:
 	rm -rf docs/build/*
 	rm -f pytestdebug.log
 
-.PHONY: init test coverage docs lint clean
+.PHONY: install init test coverage docs lint clean

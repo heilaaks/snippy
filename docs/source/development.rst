@@ -21,7 +21,8 @@ The basic commands to run and test are:
     make test
     make lint
     make coverage
-    make docs 
+    make docs
+    make clean
 
 Python Virtual Environment
 --------------------------

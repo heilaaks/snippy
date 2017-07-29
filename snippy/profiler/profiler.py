@@ -25,7 +25,6 @@ class Profiler(object):
         service startup."""
 
         if '--profile' in sys.argv:
-            print("here")
             cls.profiler = cProfile.Profile()
             cls.profiler.enable()
             cls.is_enabled = True
@@ -33,8 +32,8 @@ class Profiler(object):
     @classmethod
     def disable(cls):
         """Disable the profiler and print the results."""
+
         if cls.is_enabled:
-            print("disable")
             cls.profiler.disable()
             output_string = io.StringIO()
             cls.profiler = pstats.Stats(cls.profiler, stream=output_string).sort_stats('cumulative')

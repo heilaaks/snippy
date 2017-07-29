@@ -8,7 +8,7 @@
 ## Introduction
 
 Snippy is a small command line tool to manage command and troubleshooting
-solutions. See more information from the ![Read the Docs](http://snippy.readthedocs.io/en/latest/).
+solutions. See more information from the [Read the Docs](http://snippy.readthedocs.io/en/latest/).
 
 The project is based on personal interest to ramp-up competence around python
 and try to create something useful.

@@ -30,7 +30,7 @@ setup(
     install_requires=[],
     extras_require={
         'dev': ['pylint', 'pytest', 'pytest-cov', 'sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme'],
-        'test': ['pytest', 'pytest-cov'],
+        'test': tests_require,
     },
     tests_require=tests_require,
     test_suite='tests'

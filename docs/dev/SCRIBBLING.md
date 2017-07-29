@@ -72,6 +72,10 @@ Random notes and scribling during development.
    $ make
    ```
 
+## Bling
+
+http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-package/
+
 ## Devel
 
 cd devel/snippy

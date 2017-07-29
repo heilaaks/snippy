@@ -63,7 +63,7 @@ class Config(object):
         tags = []
 
         for tag in arg:
-            tags = tags+ re.findall(r"[\w']+", tag)
+            tags = tags + re.findall(r"[\w]+", tag)
 
         return sorted(tags)
 

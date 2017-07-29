@@ -15,9 +15,9 @@ class Arguments(object):
     def __init__(self):
         Arguments.logger = Logger().get()
         parser = argparse.ArgumentParser()
-        parser.add_argument('-s', '--snippet', type=str, default="", help='add command or code snippet')
-        parser.add_argument('-t', '--tags', nargs='*', type=str, default="", help='add tags with the give snippet')
-        parser.add_argument('-c', '--comment', type=str, default="", help='add comment with the snippet')
+        parser.add_argument('-s', '--snippet', type=str, default='', help='add command or code snippet')
+        parser.add_argument('-t', '--tags', nargs='*', type=str, default='', help='add tags with the give snippet')
+        parser.add_argument('-c', '--comment', type=str, default='', help='add comment with the snippet')
         parser.add_argument('-f', '--find', type=str, help='find with any give keyword')
         parser.add_argument('--ftag', type=str, help='find from tags only')
         parser.add_argument('--profiler', action='store_true', default=False, help=argparse.SUPPRESS)

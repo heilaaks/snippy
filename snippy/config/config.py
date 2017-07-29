@@ -23,7 +23,7 @@ class Config(object):
     def __set_config(cls):
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
-        cls.config['db_path'] = os.path.join(os.environ.get('HOME'), 'devel', 'snippy-db')
+        cls.config['db_path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
         cls.config['db_file'] = 'snippy.db'
         cls.config['db_schema'] = os.path.join(cls.config['root'], 'snippy/database/database.sql')
         cls.config['args'] = {}

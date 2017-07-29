@@ -2,6 +2,7 @@
 
 """config.py: Configuration management."""
 
+import re
 import os.path
 from snippy.config import Arguments
 from snippy.logger import Logger
@@ -32,6 +33,10 @@ class Config(object):
         cls.config['args']['comment'] = Config.__parse_comment()
         cls.config['args']['profiler'] = Arguments.get_profiler()
 
+        cls.logger.info('configured argument --snippet as "%s"', cls.config['args']['snippet'])
+        cls.logger.info('configured argument --tags as "%s"', cls.config['args']['tags'])
+        cls.logger.info('configured argument --comment as "%s"', cls.config['args']['comment'])
+        cls.logger.info('configured argument --profiler as "%s"', cls.config['args']['profiler'])
 
     @classmethod
     def __parse_snippet(cls):
@@ -45,13 +50,22 @@ class Config(object):
 
     @classmethod
     def __parse_tags(cls):
-        """Preprocess the user given tag list."""
+        """Preprocess the user given tag list. The tags are returned as a list from
+        the Argument. The user may use various formats so each item in a list may be
+        a string of comma separated tags."""
 
+        # Examples: Support processing of:
+        #           1. -t docker container cleanup
+        #           2. -t docker, container, cleanup
+        #           3. -t 'docker container cleanup'
+        #           4. -t 'docker, container, cleanup'
         arg = Arguments.get_tags()
-        if arg:
-            return arg.split(',')
+        tags = []
 
-        return []
+        for tag in arg:
+            tags = tags+ re.findall(r"[\w']+", tag)
+
+        return sorted(tags)
 
     @classmethod
     def __parse_comment(cls):

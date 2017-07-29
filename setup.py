@@ -3,10 +3,10 @@ from setuptools import setup, find_packages
 tests_require = ['pytest', 'pytest-cov', 'codecov'],
 
 setup(
-    name='snip',
+    name='snippy',
     version='0.0.1',
-    description='Snippet manager for commands and logs.',
-    url='https://github.com/heilaaks/snip',
+    description='A small command line tool to manage command and troubleshooting examples.',
+    url='https://github.com/heilaaks/snippy',
     author='Heikki J. Laaksonen',
     author_email='laaksonen.heikki.j@gmail.com',
     license='MIT',

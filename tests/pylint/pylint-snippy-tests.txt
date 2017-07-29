@@ -1,23 +1,21 @@
 ************* Module tests.test_config_storage_path
 R:  1, 0: Similar lines in 2 files
-==tests.test_arguments_add_new_snippet:84
-==tests.test_config_add_new_snippet:108
-        assert obj.get_comment() == comment
-
+==tests.test_arguments_add_new_snippet:167
+==tests.test_config_add_new_snippet:206
     @classmethod
     def setup_class(cls):
         """Test class setup before any of the tests are run."""
 
         print('setup_class()')
-        sys.argv = ["snippy"]
+        sys.argv = ['snippy']
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
         print('teardown_class()')
-        sys.argv = ["snippy"] (duplicate-code)
+        sys.argv = ['snippy'] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.93/10 (previous run: 9.93/10, +0.00)
+Your code has been rated at 9.96/10 (previous run: 9.96/10, +0.00)
 

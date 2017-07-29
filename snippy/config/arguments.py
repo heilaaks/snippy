@@ -16,7 +16,7 @@ class Arguments(object):
         Arguments.logger = Logger().get()
         parser = argparse.ArgumentParser()
         parser.add_argument('-s', '--snippet', type=str, default="", help='add command or code snippet')
-        parser.add_argument('-t', '--tags', type=str, default="", help='add tags with the give snippet')
+        parser.add_argument('-t', '--tags', nargs='*', type=str, default="", help='add tags with the give snippet')
         parser.add_argument('-c', '--comment', type=str, default="", help='add comment with the snippet')
         parser.add_argument('-f', '--find', type=str, help='find with any give keyword')
         parser.add_argument('--ftag', type=str, help='find from tags only')
@@ -29,7 +29,7 @@ class Arguments(object):
 
         cls.logger.info('parsed argument --snippet with value "%s"', cls.args.snippet)
 
-        return vars(cls.args)['snippet']
+        return cls.args.snippet
 
     @classmethod
     def get_tags(cls):
@@ -37,7 +37,7 @@ class Arguments(object):
 
         cls.logger.info('parsed argument --tags with value "%s"', cls.args.tags)
 
-        return vars(cls.args)['tags']
+        return cls.args.tags
 
     @classmethod
     def get_comment(cls):
@@ -45,7 +45,7 @@ class Arguments(object):
 
         cls.logger.info('parsed argument --comment with value "%s"', cls.args.comment)
 
-        return vars(cls.args)['comment']
+        return cls.args.comment
 
     @classmethod
     def get_profiler(cls):
@@ -53,4 +53,4 @@ class Arguments(object):
 
         cls.logger.info('parsed argument --profile with value "%s"', cls.args.profiler)
 
-        return vars(cls.args)['profiler']
+        return cls.args.profiler

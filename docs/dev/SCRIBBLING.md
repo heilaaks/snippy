@@ -90,12 +90,18 @@ http://snippy.readthedocs.io/en/latest/
 
 cd devel/snippy
 workon snippy
+make doc
+make lint
+make test
+python snip.py -s 'docker rm $(docker ps -a -q)'  -t docker,container,cleanup -c 'Remove all docker containers'
+
 pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
 pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests
 pytest --cov=snippy tests/
 pytest --cov=snippy --cov-report html tests/
 make -C docs html
 python snip.py -s 'docker rm $(docker ps -a -q)'  -t docker,container,cleanup -c 'Remove all docker containers'
+python snip.py -s 'docker rm $(docker ps -a -q)'  -t docker, container, cleanup -c 'Remove all docker containers'
 pytest
 
    > file:///home/heilaaks/devel/snippy/htmlcov/index.html

@@ -1,6 +1,7 @@
 
 [![Build Status](https://travis-ci.org/heilaaks/snippy.svg?branch=master)](https://travis-ci.org/heilaaks/snippy)
 [![codecov](https://codecov.io/gh/heilaaks/snippy/branch/master/graph/badge.svg)](https://codecov.io/gh/heilaaks/snippy)
+[![Code Health](https://landscape.io/github/heilaaks/snippy/master/landscape.svg?style=flat)](https://landscape.io/github/heilaaks/snippy/master)
 [![Documentation Status](https://readthedocs.org/projects/snippy/badge/?version=latest)](http://snippy.readthedocs.io/en/latest/?badge=latest)
 
 # Snippy

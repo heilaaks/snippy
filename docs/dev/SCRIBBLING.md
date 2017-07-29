@@ -76,6 +76,16 @@ Random notes and scribling during development.
 
 http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-package/
 
+## Travis CI and tooling
+
+Add '[ci skip]' to commitlog in order to prevent the CI build.
+
+https://landscape.io/dashboard
+https://travis-ci.org/heilaaks/snippy
+https://codecov.io/gh/heilaaks/snippy
+https://landscape.io/github/heilaaks/snippy
+http://snippy.readthedocs.io/en/latest/
+
 ## Devel
 
 cd devel/snippy

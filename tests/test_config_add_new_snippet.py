@@ -18,9 +18,9 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
-        assert len(obj.get_snippet()) == 0
-        assert len(obj.get_tags()) == 0
-        assert len(obj.get_comment()) == 0
+        assert not obj.get_snippet()
+        assert not obj.get_tags()
+        assert not obj.get_comment()
 
     def test_valid_value_no_tags(self):
         """Test that new snippet can be configured without tags."""
@@ -34,8 +34,8 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == command
-        assert len(obj.get_tags()) == 0
-        assert len(obj.get_comment()) == 0
+        assert not obj.get_tags()
+        assert not obj.get_comment()
 
     def test_valid_value_one_tag(self):
         """Test that new snippet can be configured with one tag and that the
@@ -53,7 +53,7 @@ class TestConfigAddNewSnippet(object):
         assert obj.get_snippet() == command
         assert set(obj.get_tags()) == set(tags.split(','))
         assert len(obj.get_tags()) == 1
-        assert len(obj.get_comment()) == 0
+        assert not obj.get_comment()
 
     def test_valid_value_with_tags(self):
         """Test that new snippet can be configured with multiple tags and that the
@@ -71,7 +71,7 @@ class TestConfigAddNewSnippet(object):
         assert obj.get_snippet() == command
         assert set(obj.get_tags()) == set(tags.split(','))
         assert len(obj.get_tags()) == 3
-        assert len(obj.get_comment()) == 0
+        assert not obj.get_comment()
 
     def test_valid_value_with_tags_and_comment(self):
         """Test that new snippet can be configured with multiple tags and comment and
@@ -105,7 +105,7 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == command
-        assert len(obj.get_tags()) == 0
+        assert not obj.get_tags()
         assert obj.get_comment() == comment
 
     @classmethod

@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-tests_require = ['pytest', 'pytest-cov'],
+tests_require = ['pytest', 'pytest-cov', 'codecov'],
 
 setup(
     name='snip',

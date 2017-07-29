@@ -30,7 +30,7 @@ class Database(object):
         try:
             conn = sqlite3.connect(snippy_db, check_same_thread=False)
             cursor = conn.cursor()
-            with open(Config().get_storage_schema(), 'rt') as schema_file:
+            with open(Config.get_storage_schema(), 'rt') as schema_file:
                 schema = schema_file.read()
                 conn.executescript(schema)
             self.logger.debug('initialized sqlite3 database into {:s}'.format(snippy_db))

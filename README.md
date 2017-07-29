@@ -1,5 +1,6 @@
 
 [![Build Status](https://travis-ci.org/heilaaks/snippy.svg?branch=master)](https://travis-ci.org/heilaaks/snippy)
+[![codecov](https://codecov.io/gh/heilaaks/snippy/branch/master/graph/badge.svg)](https://codecov.io/gh/heilaaks/snippy)
 
 # Snippy
 

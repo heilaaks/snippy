@@ -22,16 +22,16 @@ setup(
     ],
     keywords='cli code command troubleshooting manager',
     packages=find_packages(exclude=['tests']),
-    install_requires=['argparse'],
     entry_points={
         'console_scripts': [
             'snip = snip:main'
         ],
     },
+    install_requires=[],
     extras_require={
         'dev': ['pylint', 'pytest', 'pytest-cov', 'sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme'],
-        'tests': ['pytest', 'pytest-cov'],
+        'test': ['pytest', 'pytest-cov'],
     },
-    test_suite='tests',
     tests_require=tests_require,
+    test_suite='tests'
 )

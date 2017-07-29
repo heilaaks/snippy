@@ -11,5 +11,4 @@ To remove, run:
 
 .. code:: bash
 
-    sudo make uninstall
-
+    sudo make clean

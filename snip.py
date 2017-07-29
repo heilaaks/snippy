@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Command Utility Manager for code and command snippets."""
+"""Snippy - A small command line tool to manage command and troubleshooting examples."""
 
 from snippy.logger import Logger
 from snippy.config import Config

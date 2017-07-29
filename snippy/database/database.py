@@ -30,12 +30,12 @@ class Database(object):
         try:
             conn = sqlite3.connect(snippy_db, check_same_thread=False)
             cursor = conn.cursor()
-            with open(Config().get_storage_schema(), 'rt') as schema:
-                schema = schema.read()
+            with open(Config().get_storage_schema(), 'rt') as schema_file:
+                schema = schema_file.read()
                 conn.executescript(schema)
             self.logger.debug('initialized sqlite3 database into {:s}'.format(snippy_db))
         except sqlite3.Error as exception:
-            self.logger.error('creating sqlite3 database failed with exception {}'.format(exception))
+            self.logger.error('creating sqlite3 database failed with exception "%s"', exception)
 
         return (conn, cursor)
 
@@ -48,7 +48,7 @@ class Database(object):
                 self.conn.close()
                 self.logger.debug('closed sqlite3 database')
             except sqlite3.Error as exception:
-                self.logger.error('closing sqlite3 database failed with exception {:s}'.format(exception))
+                self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
     def debug(self):
         """Dump the whole databse."""
@@ -56,6 +56,6 @@ class Database(object):
         if self.conn is not None:
             try:
                 self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-                self.logger.debug('sqlite3 dump {}'.format(self.cursor.fetchall()))
+                self.logger.debug('sqlite3 dump %s', self.cursor.fetchall())
             except sqlite3.Error as exception:
-                self.logger.error('dumping sqlite3 database failed with exception {}'.format(exception))
+                self.logger.error('dumping sqlite3 database failed with exception "%s"', exception)

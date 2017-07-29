@@ -1,7 +1,7 @@
 install:
-	pip3 install --user .
+	pip3 install .
 
-init:
+dev:
 	pip3 install -e .[dev]
 
 test:
@@ -11,12 +11,12 @@ coverage:
 	pytest --cov=snippy --cov-report html tests/
 	pytest --cov=snippy tests/
 
-docs:
+doc:
 	make -C docs html
 
 lint:
-	-pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
 	-pylint --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
+	-pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
 
 clean:
 	find . \( -name \*.pyc -o -name \*.pyo -o -name __pycache__ \) -prune -exec rm -rf {} +
@@ -27,4 +27,4 @@ clean:
 	rm -rf docs/build/*
 	rm -f pytestdebug.log
 
-.PHONY: install init test coverage docs lint clean
+.PHONY: install dev test coverage doc lint clean

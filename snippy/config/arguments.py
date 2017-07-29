@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""arguments.py: Command line arguments"""
+"""arguments.py: Command line argument management."""
 
 import argparse
 from snippy.logger import Logger
@@ -27,7 +27,7 @@ class Arguments(object):
     def get_snippet(cls):
         """Return the snippet that user gave from CLI exactly as it was."""
 
-        cls.logger.info('parsed argument --snippet with value "{:s}"'.format(vars(cls.args)['snippet']))
+        cls.logger.info('parsed argument --snippet with value "%s"', cls.args.snippet)
 
         return vars(cls.args)['snippet']
 
@@ -35,7 +35,7 @@ class Arguments(object):
     def get_tags(cls):
         """Return the tags that user gave from CLI exactly as it was."""
 
-        cls.logger.info('parsed argument --tags with value "{:s}"'.format(vars(cls.args)['tags']))
+        cls.logger.info('parsed argument --tags with value "%s"', cls.args.tags)
 
         return vars(cls.args)['tags']
 
@@ -43,7 +43,7 @@ class Arguments(object):
     def get_comment(cls):
         """Return the comment that user gave from CLI exactly as it was."""
 
-        cls.logger.info('parsed argument --comment with value "{:s}"'.format(vars(cls.args)['comment']))
+        cls.logger.info('parsed argument --comment with value "%s"', cls.args.comment)
 
         return vars(cls.args)['comment']
 
@@ -51,6 +51,6 @@ class Arguments(object):
     def get_profiler(cls):
         """Return the profiler switch based on user input or from default."""
 
-        cls.logger.info('parsed argument --profile with value "{!s}"'.format(vars(cls.args)['profiler']))
+        cls.logger.info('parsed argument --profile with value "%s"', cls.args.profiler)
 
         return vars(cls.args)['profiler']

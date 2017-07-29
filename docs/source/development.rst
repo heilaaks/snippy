@@ -11,7 +11,7 @@ for Python virtual environment like below:
 
     git clone https://github.com/heilaaks/snippy.git
     mkvirtualenv snippy
-    make install
+    make dev
 
 The basic commands to run and test are:
 
@@ -21,7 +21,7 @@ The basic commands to run and test are:
     make test
     make lint
     make coverage
-    make docs
+    make doc
     make clean
 
 Python Virtual Environment
@@ -61,4 +61,3 @@ The Pylint rc file can be generated for the very first time like:
     pylint --generate-rcfile > tests/pylint/pylint-snippy.rc
 
 .. _virtualenvwrapper: http://virtualenvwrapper.readthedocs.io/en/latest/command_ref.html
-

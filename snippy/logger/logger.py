@@ -6,7 +6,7 @@ import logging
 
 
 class Logger(object): # pylint: disable=too-few-public-methods
-    """Logger wrapper."""
+    """Logging wrapper."""
 
     def __init__(self):
         self.logger = logging.getLogger('root')

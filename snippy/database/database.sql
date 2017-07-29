@@ -1,11 +1,11 @@
 -- database.sql
 
--- Schema for snippy application.
+-- Schema for Snippy application.
 
--- Snippets are short text based command or code examples.
-create table if not exists snippet (
+-- Snips are short command examples.
+create table if not exists snip (
     id          integer primary key,
-    snippet     text not null unique,
+    snip        text not null unique,
     metadata    text default '',
     tags        text default '',
     comment     text default ''
@@ -17,5 +17,5 @@ create table if not exists log (
     log         text not null unique,
     metadata    text default '',
     tags        text default '',
-    comment     text
+    comment     text default ''
 );

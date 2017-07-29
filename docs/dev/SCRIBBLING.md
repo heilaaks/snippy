@@ -81,7 +81,7 @@ pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests
 pytest --cov=snippy tests/
 pytest --cov=snippy --cov-report html tests/
 make -C docs html
-snip.py -s test
+python snip.py -s 'docker rm $(docker ps -a -q)'  -t docker,container,cleanup -c 'Remove all docker containers'
 pytest
 
    > file:///home/heilaaks/devel/snippy/htmlcov/index.html

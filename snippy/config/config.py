@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""config.py: Read configuration."""
+"""config.py: Configuration management."""
 
 import os.path
 from snippy.config import Arguments
@@ -35,7 +35,7 @@ class Config(object):
 
     @classmethod
     def __parse_snippet(cls):
-        """preprocess the user given snippet."""
+        """Preprocess the user given snippet."""
 
         arg = Arguments.get_snippet()
         if arg:
@@ -45,7 +45,7 @@ class Config(object):
 
     @classmethod
     def __parse_tags(cls):
-        """preprocess the user given tag list."""
+        """Preprocess the user given tag list."""
 
         arg = Arguments.get_tags()
         if arg:
@@ -55,7 +55,7 @@ class Config(object):
 
     @classmethod
     def __parse_comment(cls):
-        """preprocess the user given comment."""
+        """Preprocess the user given comment."""
 
         arg = Arguments.get_comment()
         if arg:

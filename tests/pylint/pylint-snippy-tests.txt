@@ -8,6 +8,10 @@ C: 56,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
 C: 74,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
 C:108,15: Do not use `len(SEQUENCE)` as condition value (len-as-condition)
 ************* Module tests.test_config_storage_path
+W: 12, 8: Unused variable 'obj' (unused-variable)
+W: 13, 8: Unused variable 'path' (unused-variable)
+W: 21, 8: Unused variable 'obj' (unused-variable)
+W: 22, 8: Unused variable 'db_file' (unused-variable)
 R:  1, 0: Similar lines in 2 files
 ==tests.test_arguments_add_new_snippet:84
 ==tests.test_config_add_new_snippet:108
@@ -28,5 +32,5 @@ R:  1, 0: Similar lines in 2 files
         sys.argv = ["snippy"] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.41/10 (previous run: 9.41/10, +0.00)
+Your code has been rated at 9.13/10 (previous run: 9.13/10, +0.00)
 

@@ -5,11 +5,11 @@
 
 ## Introduction
 
-Snippy is a small command line tool to manage command and troubleshooting command
-reference logs. 
+Snippy is a small command line tool to manage command and troubleshooting
+solutions.
 
-The project is based on personal interest to ramp-up competence around python and
-try to create something useful.
+The project is based on personal interest to ramp-up competence around python
+and try to create something useful.
 
 ## Features
 

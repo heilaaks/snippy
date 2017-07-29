@@ -39,4 +39,5 @@ class Profiler(object):
             output_string = io.StringIO()
             cls.profiler = pstats.Stats(cls.profiler, stream=output_string).sort_stats('cumulative')
             cls.profiler.print_stats()
+            cls.is_enabled = False
             print(output_string.getvalue())

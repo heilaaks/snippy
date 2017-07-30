@@ -22,9 +22,9 @@ clean:
 	find . \( -name \*.pyc -o -name \*.pyo -o -name __pycache__ \) -prune -exec rm -rf {} +
 	rm -drf .cache
 	rm -drf .coverage
-	rm -drf snippy.egg-info
+	rm -drf docs/build/*
 	rm -drf htmlcov
-	rm -rf docs/build/*
+	rm -drf snip.egg-info
 	rm -f pytestdebug.log
 
 .PHONY: install dev test coverage doc lint clean

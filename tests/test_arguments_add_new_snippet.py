@@ -3,6 +3,7 @@
 """test_arguments_add_new_snippet.py: Test command line argumens for creating new snippet."""
 
 import sys
+from tests.testlib.argument_helper import ArgumentHelper
 
 
 class TestArgumentsAddNewSnippet(object):
@@ -183,11 +184,11 @@ class TestArgumentsAddNewSnippet(object):
         """Test class setup before any of the tests are run."""
 
         print('setup_class()')
-        sys.argv = ['snippy']
+        ArgumentHelper().reset()
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
         print('teardown_class()')
-        sys.argv = ['snippy']
+        ArgumentHelper().reset()

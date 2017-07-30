@@ -28,10 +28,10 @@ class Config(object):
         cls.config['db_file'] = 'snippy.db'
         cls.config['db_schema'] = os.path.join(cls.config['root'], 'snippy/storage/database/database.sql')
         cls.config['args'] = {}
-        cls.config['args']['snippet'] = Config.__parse_snippet()
-        cls.config['args']['tags'] = Config.__parse_tags()
-        cls.config['args']['comment'] = Config.__parse_comment()
-        cls.config['args']['profiler'] = Arguments.get_profiler()
+        cls.config['args']['snippet'] = cls.__parse_snippet()
+        cls.config['args']['tags'] = cls.__parse_tags()
+        cls.config['args']['comment'] = cls.__parse_comment()
+        cls.config['args']['profiler'] = cls.args.get_profiler()
 
         cls.logger.info('configured argument --snippet as "%s"', cls.config['args']['snippet'])
         cls.logger.info('configured argument --tags as "%s"', cls.config['args']['tags'])
@@ -42,7 +42,7 @@ class Config(object):
     def __parse_snippet(cls):
         """Preprocess the user given snippet."""
 
-        arg = Arguments.get_snippet()
+        arg = cls.args.get_snippet()
         if arg:
             return arg
 
@@ -60,7 +60,7 @@ class Config(object):
         #           3. -t 'docker container cleanup'
         #           4. -t 'docker, container, cleanup'
         #           5. -t dockertesting', container-managemenet', cleanup_testing
-        arg = Arguments.get_tags()
+        arg = cls.args.get_tags()
         tags = []
 
         for tag in arg:
@@ -72,7 +72,7 @@ class Config(object):
     def __parse_comment(cls):
         """Preprocess the user given comment."""
 
-        arg = Arguments.get_comment()
+        arg = cls.args.get_comment()
         if arg:
             return arg
 

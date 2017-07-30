@@ -1,7 +1,7 @@
 ************* Module tests.test_config_storage_path
 R:  1, 0: Similar lines in 2 files
-==tests.test_arguments_add_new_snippet:167
-==tests.test_config_add_new_snippet:206
+==tests.test_arguments_add_new_snippet:180
+==tests.test_config_add_new_snippet:222
     @classmethod
     def setup_class(cls):
         """Test class setup before any of the tests are run."""
@@ -17,5 +17,5 @@ R:  1, 0: Similar lines in 2 files
         sys.argv = ['snippy'] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.96/10 (previous run: 9.96/10, +0.00)
+Your code has been rated at 9.96/10 (previous run: 9.78/10, +0.18)
 

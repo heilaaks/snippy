@@ -59,11 +59,12 @@ class Config(object):
         #           2. -t docker, container, cleanup
         #           3. -t 'docker container cleanup'
         #           4. -t 'docker, container, cleanup'
+        #           5. -t dockertesting', container-managemenet', cleanup_testing
         arg = Arguments.get_tags()
         tags = []
 
         for tag in arg:
-            tags = tags + re.findall(r"[\w]+", tag)
+            tags = tags + re.findall(r"[\w\-]+", tag)
 
         return sorted(tags)
 

@@ -165,6 +165,19 @@ class TestArgumentsAddNewSnippet(object):
         assert obj.get_tags() == tags
         assert obj.get_comment() == ''
 
+    def test_valid_value_with_tags_with_special_characters(self):
+        """Test that tags are accepted if they contain special characters."""
+
+        from snippy.config import Arguments
+
+        command = 'docker rm $(docker ps -a -q)'
+        tags = ['dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
+        sys.argv = ['snippy', '-s', command, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
+        obj = Arguments()
+        assert obj.get_snippet() == command
+        assert obj.get_tags() == tags
+        assert obj.get_comment() == ''
+
     @classmethod
     def setup_class(cls):
         """Test class setup before any of the tests are run."""

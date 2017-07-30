@@ -11,10 +11,10 @@ create table if not exists snip (
     comment     text default ''
 );
 
--- Logs are troubleshooting reference notes.
-create table if not exists log (
+-- Resolutions are troubleshooting notes.
+create table if not exists resolve (
     id          integer primary key,
-    log         text not null unique,
+    resolve     text not null unique,
     metadata    text default '',
     tags        text default '',
     comment     text default ''

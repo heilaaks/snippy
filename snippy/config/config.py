@@ -29,6 +29,7 @@ class Config(object):
         cls.config['db_schema'] = os.path.join(cls.config['root'], 'snippy/storage/database/database.sql')
         cls.config['args'] = {}
         cls.config['args']['snippet'] = cls.__parse_snippet()
+        cls.config['args']['resolve'] = cls.__parse_resolve()
         cls.config['args']['tags'] = cls.__parse_tags()
         cls.config['args']['comment'] = cls.__parse_comment()
         cls.config['args']['profiler'] = cls.args.get_profiler()
@@ -39,10 +40,86 @@ class Config(object):
         cls.logger.info('configured argument --profiler as "%s"', cls.config['args']['profiler'])
 
     @classmethod
+    def is_snippet(cls):
+        """Test if the user action was to add new snippet."""
+
+        if cls.get_snippet():
+            return True
+
+        return False
+
+    @classmethod
+    def is_resolve(cls):
+        """Test if the user action was to add new resolution."""
+
+        if cls.get_resolve():
+            return True
+
+        return False
+
+    @classmethod
+    def get_storage_path(cls):
+        """Get path of the persistent storage."""
+
+        return cls.config['db_path']
+
+    @classmethod
+    def get_storage_file(cls):
+        """Get path and file of the persistent storage."""
+
+        return os.path.join(cls.config['db_path'], cls.config['db_file'])
+
+    @classmethod
+    def get_storage_schema(cls):
+        """Get storage schema."""
+
+        return cls.config['db_schema']
+
+    @classmethod
+    def get_snippet(cls):
+        """Get the snippet."""
+
+        return cls.config['args']['snippet']
+
+    @classmethod
+    def get_resolve(cls):
+        """Get the resolution."""
+
+        return cls.config['args']['resolve']
+
+    @classmethod
+    def get_tags(cls):
+        """Get tags for the snippet."""
+
+        return cls.config['args']['tags']
+
+    @classmethod
+    def get_comment(cls):
+        """Get comment for the snippet."""
+
+        return cls.config['args']['comment']
+
+    @classmethod
+    def is_profiled(cls):
+        """Check if the code profiler is run."""
+
+        return cls.config['args']['profiler']
+
+    @classmethod
     def __parse_snippet(cls):
         """Preprocess the user given snippet."""
 
         arg = cls.args.get_snippet()
+        if arg:
+            return arg
+
+        return ''
+
+    @classmethod
+    def __parse_resolve(cls):
+        """Preprocess the user given resolution."""
+
+        arg = cls.args.get_resolve()
         if arg:
             return arg
 
@@ -77,45 +154,3 @@ class Config(object):
             return arg
 
         return ''
-
-    @classmethod
-    def get_storage_path(cls):
-        """Get path of the persistent storage."""
-
-        return cls.config['db_path']
-
-    @classmethod
-    def get_storage_file(cls):
-        """Get path and file of the persistent storage."""
-
-        return os.path.join(cls.config['db_path'], cls.config['db_file'])
-
-    @classmethod
-    def get_storage_schema(cls):
-        """Get storage schema."""
-
-        return cls.config['db_schema']
-
-    @classmethod
-    def get_snippet(cls):
-        """Get the snippet."""
-
-        return cls.config['args']['snippet']
-
-    @classmethod
-    def get_tags(cls):
-        """Get tags for the snippet."""
-
-        return cls.config['args']['tags']
-
-    @classmethod
-    def get_comment(cls):
-        """Get comment for the snippet."""
-
-        return cls.config['args']['comment']
-
-    @classmethod
-    def is_profiled(cls):
-        """Check if the code profiler is run."""
-
-        return cls.config['args']['profiler']

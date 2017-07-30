@@ -25,6 +25,7 @@ clean:
 	rm -drf docs/build/*
 	rm -drf htmlcov
 	rm -drf snip.egg-info
+	rm -f coverage.xml
 	rm -f pytestdebug.log
 
 .PHONY: install dev test coverage doc lint clean

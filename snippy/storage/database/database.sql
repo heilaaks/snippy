@@ -9,7 +9,7 @@ create table if not exists snip (
     metadata    text default '',
     tags        text default '',
     comment     text default '',
-    reference   text default ''
+    link        text default ''
 );
 
 -- Resolutions are longer troubleshooting notes.
@@ -18,5 +18,6 @@ create table if not exists resolve (
     resolve     text not null unique,
     metadata    text default '',
     tags        text default '',
-    comment     text default ''
+    comment     text default '',
+    link        text default ''
 );

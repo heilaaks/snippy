@@ -32,11 +32,13 @@ class Config(object):
         cls.config['args']['resolve'] = cls.__parse_resolve()
         cls.config['args']['tags'] = cls.__parse_tags()
         cls.config['args']['comment'] = cls.__parse_comment()
+        cls.config['args']['link'] = cls.__parse_link()
         cls.config['args']['profiler'] = cls.args.get_profiler()
 
         cls.logger.info('configured argument --snippet as "%s"', cls.config['args']['snippet'])
         cls.logger.info('configured argument --tags as "%s"', cls.config['args']['tags'])
         cls.logger.info('configured argument --comment as "%s"', cls.config['args']['comment'])
+        cls.logger.info('configured argument --link as "%s"', cls.config['args']['link'])
         cls.logger.info('configured argument --profiler as "%s"', cls.config['args']['profiler'])
 
     @classmethod
@@ -89,15 +91,21 @@ class Config(object):
 
     @classmethod
     def get_tags(cls):
-        """Get tags for the snippet."""
+        """Get tags for the snippet or resolution."""
 
         return cls.config['args']['tags']
 
     @classmethod
     def get_comment(cls):
-        """Get comment for the snippet."""
+        """Get comment for the snippet or resolution."""
 
         return cls.config['args']['comment']
+
+    @classmethod
+    def get_link(cls):
+        """Get link for the snippet or resolution."""
+
+        return cls.config['args']['link']
 
     @classmethod
     def is_profiled(cls):
@@ -150,6 +158,16 @@ class Config(object):
         """Preprocess the user given comment."""
 
         arg = cls.args.get_comment()
+        if arg:
+            return arg
+
+        return ''
+
+    @classmethod
+    def __parse_link(cls):
+        """Preprocess the user given link."""
+
+        arg = cls.args.get_link()
         if arg:
             return arg
 

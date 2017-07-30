@@ -8,10 +8,11 @@ create table if not exists snip (
     snip        text not null unique,
     metadata    text default '',
     tags        text default '',
-    comment     text default ''
+    comment     text default '',
+    reference   text default ''
 );
 
--- Resolutions are troubleshooting notes.
+-- Resolutions are longer troubleshooting notes.
 create table if not exists resolve (
     id          integer primary key,
     resolve     text not null unique,

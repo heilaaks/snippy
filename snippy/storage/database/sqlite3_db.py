@@ -35,7 +35,7 @@ class Sqlite3Db(object):
                 conn.executescript(schema)
             self.logger.debug('initialized sqlite3 database into {:s}'.format(snippy_db))
         except sqlite3.Error as exception:
-            self.logger.error('creating sqlite3 database failed with exception "%s"', exception)
+            self.logger.exception('creating sqlite3 database failed with exception "%s"', exception)
 
         return (conn, cursor)
 
@@ -58,4 +58,4 @@ class Sqlite3Db(object):
                 self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
                 self.logger.debug('sqlite3 dump %s', self.cursor.fetchall())
             except sqlite3.Error as exception:
-                self.logger.error('dumping sqlite3 database failed with exception "%s"', exception)
+                self.logger.exception('dumping sqlite3 database failed with exception "%s"', exception)

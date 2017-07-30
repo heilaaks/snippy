@@ -221,6 +221,7 @@ class TestConfigAddNewSnippet(object):
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
 
+    # pylint: disable=duplicate-code
     @classmethod
     def setup_class(cls):
         """Test class setup before any of the tests are run."""

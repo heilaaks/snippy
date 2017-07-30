@@ -179,6 +179,7 @@ class TestArgumentsAddNewSnippet(object):
         assert obj.get_tags() == tags
         assert obj.get_comment() == ''
 
+    # pylint: disable=duplicate-code
     @classmethod
     def setup_class(cls):
         """Test class setup before any of the tests are run."""

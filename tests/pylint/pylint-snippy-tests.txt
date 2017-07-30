@@ -1,21 +1,4 @@
-************* Module tests.testlib.argument_helper
-R:  1, 0: Similar lines in 2 files
-==tests.test_arguments_add_new_snippet:181
-==tests.test_config_add_new_snippet:223
-    @classmethod
-    def setup_class(cls):
-        """Test class setup before any of the tests are run."""
 
-        print('setup_class()')
-        ArgumentHelper().reset()
-
-    @classmethod
-    def teardown_class(cls):
-        """Test class teardown after all tests run."""
-
-        print('teardown_class()')
-        ArgumentHelper().reset() (duplicate-code)
-
-------------------------------------------------------------------
-Your code has been rated at 9.97/10 (previous run: 9.97/10, +0.00)
+-------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 9.97/10, +0.03)
 

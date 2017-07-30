@@ -24,9 +24,6 @@ class Config(object):
     def __set_config(cls):
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
-        cls.config['db_path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
-        cls.config['db_file'] = 'snippy.db'
-        cls.config['db_schema'] = os.path.join(cls.config['root'], 'snippy/storage/database/database.sql')
         cls.config['args'] = {}
         cls.config['args']['snippet'] = cls.__parse_snippet()
         cls.config['args']['resolve'] = cls.__parse_resolve()
@@ -34,6 +31,11 @@ class Config(object):
         cls.config['args']['comment'] = cls.__parse_comment()
         cls.config['args']['link'] = cls.__parse_link()
         cls.config['args']['profiler'] = cls.args.get_profiler()
+        cls.config['storage'] = {}
+        cls.config['storage']['path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
+        cls.config['storage']['file'] = 'snippy.db'
+        cls.config['storage']['schema'] = os.path.join(cls.config['root'], 'snippy/storage/database/database.sql')
+        cls.config['storage']['in_memory'] = False
 
         cls.logger.info('configured argument --snippet as "%s"', cls.config['args']['snippet'])
         cls.logger.info('configured argument --tags as "%s"', cls.config['args']['tags'])
@@ -63,19 +65,31 @@ class Config(object):
     def get_storage_path(cls):
         """Get path of the persistent storage."""
 
-        return cls.config['db_path']
+        return cls.config['storage']['path']
 
     @classmethod
     def get_storage_file(cls):
         """Get path and file of the persistent storage."""
 
-        return os.path.join(cls.config['db_path'], cls.config['db_file'])
+        return os.path.join(cls.config['storage']['path'], cls.config['storage']['file'])
 
     @classmethod
     def get_storage_schema(cls):
         """Get storage schema."""
 
-        return cls.config['db_schema']
+        return cls.config['storage']['schema']
+
+    @classmethod
+    def set_storage_in_memory(cls, in_memory):
+        """Set the storage to be in memory."""
+
+        cls.config['storage']['in_memory'] = in_memory
+
+    @classmethod
+    def is_storage_in_memory(cls):
+        """Test if storage is defined to be run in memory."""
+
+        return cls.config['storage']['in_memory']
 
     @classmethod
     def get_snippet(cls):

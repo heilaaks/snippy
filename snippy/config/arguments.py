@@ -34,7 +34,7 @@ class Arguments(object):
 
     @classmethod
     def get_resolve(cls):
-        """Return the resolve log that user gave from CLI exactly as it was."""
+        """Return the resolution that user gave from CLI exactly as it was."""
 
         cls.logger.info('parsed argument --resolve with value "%s"', cls.args.resolve)
 

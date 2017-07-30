@@ -17,5 +17,5 @@ R:  1, 0: Similar lines in 2 files
         sys.argv = ['snippy'] (duplicate-code)
 
 ------------------------------------------------------------------
-Your code has been rated at 9.96/10 (previous run: 9.78/10, +0.18)
+Your code has been rated at 9.96/10 (previous run: 9.96/10, +0.00)
 

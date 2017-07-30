@@ -51,7 +51,7 @@ class Database(object):
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
     def debug(self):
-        """Dump the whole databse."""
+        """Dump the whole database."""
 
         if self.conn is not None:
             try:

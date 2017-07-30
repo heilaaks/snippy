@@ -4,7 +4,7 @@
 
 from snippy.logger import Logger
 from snippy.config import Config
-from snippy.database import Database
+from snippy.storage import Storage
 from snippy.profiler import Profiler
 
 __author__    = "Heikki J. Laaksonen"
@@ -20,7 +20,7 @@ class Snippy(object):
 
     def run(self):
         self.logger.info('initiating services')
-        storage = Database()
+        storage = Storage()
         storage.init()
         storage.debug()
         storage.disconnect()

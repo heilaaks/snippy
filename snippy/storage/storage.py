@@ -3,7 +3,7 @@
 """storage.py: Storage management."""
 
 from snippy.logger import Logger
-from snippy.storage.database import Database
+from snippy.storage.database import Sqlite3Db as Database
 
 
 class Storage(object):

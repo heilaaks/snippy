@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""database.py: Database management."""
+"""sqlite3_db.py: Database management."""
 
 import os
 import sqlite3
@@ -8,8 +8,8 @@ from snippy.logger import Logger
 from snippy.config import Config
 
 
-class Database(object):
-    """Database management."""
+class Sqlite3Db(object):
+    """Sqlite3 database management."""
 
     def __init__(self):
         self.logger = Logger().get()

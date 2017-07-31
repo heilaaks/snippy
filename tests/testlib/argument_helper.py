@@ -6,7 +6,7 @@ import sys
 
 
 class ArgumentHelper(object): # pylint: disable=too-few-public-methods
-    """Reset command line arguments."""
+    """Helper methods for arguments testing."""
 
     def reset(self):
         """Reset command line arguments."""

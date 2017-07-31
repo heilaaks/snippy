@@ -2,22 +2,22 @@
 
 -- Schema for Snippy application.
 
--- Snips are short command examples.
-create table if not exists snip (
+-- Snippets are short command examples.
+create table if not exists snippet (
     id          integer primary key,
-    snip        text not null unique,
-    metadata    text default '',
+    snippet     text not null unique,
     tags        text default '',
     comment     text default '',
-    link        text default ''
+    link        text default '',
+    metadata    text default ''
 );
 
 -- Resolutions are longer troubleshooting notes.
 create table if not exists resolve (
     id          integer primary key,
     resolve     text not null unique,
-    metadata    text default '',
     tags        text default '',
     comment     text default '',
-    link        text default ''
+    link        text default '',
+    metadata    text default ''
 );

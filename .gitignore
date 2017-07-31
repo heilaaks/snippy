@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 
 # Python distribution / packaging
+build/
+dist/
 *.egg-info/
 
 # Python unit test / coverage reports

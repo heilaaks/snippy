@@ -93,7 +93,7 @@ workon snippy
 make doc
 make lint
 make test
-python snip.py -s 'docker rm $(docker ps -a -q)'  -t docker,container,cleanup -c 'Remove all docker containers'
+time python snip.py -s 'docker rm $(docker ps -a -q)'  -t docker,container,cleanup -c 'Remove all docker containers'
 
 pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
 pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests

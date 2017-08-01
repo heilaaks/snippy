@@ -3,6 +3,7 @@
 """snippet.py: Snippet management."""
 
 from snippy.logger import Logger
+from snippy.config import Config
 
 
 class Snippet(object):
@@ -16,9 +17,11 @@ class Snippet(object):
         """Add new snippet."""
 
         self.logger.info('add new snippet')
+        self.storage.store(Config.get_snippet(), Config.get_tags(), Config.get_comment(), Config.get_link())
 
     def run(self, storage):
         """Run the snippet management task."""
 
         self.logger.info('managing snippet')
         self.storage = storage
+        self.add()

@@ -3,6 +3,7 @@
 """sqlite3_db.py: Database management."""
 
 import os
+import re
 import sys
 import sqlite3
 from snippy.logger import Logger
@@ -39,16 +40,52 @@ class Sqlite3Db(object):
         """Insert snippet into database."""
 
         if self.conn:
+            tags_string = ','.join(map(str, tags))
+            query = ('INSERT INTO snippets(snippet, tags, comment, link, metadata) VALUES(?,?,?,?,?)')
+            self.logger.debug('insert snippet {:s} with tags {:s}'.format(snippet, tags_string))
             try:
-                tags_string = ','.join(map(str, tags))
-                query = ('insert into snippet(snippet, tags, comment, link, metadata) values(?,?,?,?,?)')
-                self.logger.debug('insert snippet {:s} with tags {:s}'.format(snippet, tags_string))
                 self.cursor.execute(query, (snippet, tags_string, comment, link, metadata))
                 self.conn.commit()
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
         else:
             self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
+
+    def select_snippet(self, keywords, regex=True):
+        """Select snippets."""
+
+        rows = []
+        if self.conn:
+            # The regex based queries contain the same amount of regex queries than there are
+            # keywords. The reason is that each keyword (one keyword) must be searched from all
+            # the colums where the search is made. The query argumes are generated so that each
+            # query is made with the same keyword for all the colums thus also the query arguments
+            # can be counted by multiplying the query keywords (e.g 3)and the searched colums.
+            #
+            # Example queries:
+            #     1) SELECT id, snippet, tags, comment, link, metadata FROM snippets WHERE
+            #        (snippet REGEXP ? or tags REGEXP ? or comment REGEXP? or link REGEXP ?) ORDER BY id ASC
+            #     2) SELECT id, snippet, tags, comment, link, metadata FROM snippets WHERE (snippet REGEXP ?
+            #        or tags REGEXP ? or comment REGEXP? or link REGEXP ?) OR (snippet REGEXP ? or tags REGEXP ?
+            #        or comment REGEXP? or link REGEXP ?) OR (snippet REGEXP ? or tags REGEXP ? or comment REGEXP ?
+            #        or link REGEXP ?) ORDER BY id ASC
+            if regex:
+                query, qargs = Sqlite3Db._get_regexp_query(keywords)
+            else:
+                query, qargs = Sqlite3Db._get_regexp_query(keywords)
+
+            self.logger.debug('running query "%s"', query)
+            try:
+                self.cursor.execute(query, qargs)
+                rows = self.cursor.fetchall()
+            except sqlite3.Error as exception:
+                self.logger.exception('selecting from sqlite3 database failed with exception "%s"', exception)
+        else:
+            self.logger.error('sqlite3 database connection did not exist while all entries were being queried')
+
+        self.logger.debug('selected rows %s', rows)
+
+        return rows
 
     def debug(self):
         """Dump the whole database."""
@@ -66,6 +103,7 @@ class Sqlite3Db(object):
         location = self._get_db_location()
         try:
             conn = sqlite3.connect(location, check_same_thread=False, uri=True)
+            conn.create_function('REGEXP', 2, Sqlite3Db._regexp)
             cursor = conn.cursor()
             with open(Config.get_storage_schema(), 'rt') as schema_file:
                 schema = schema_file.read()
@@ -91,3 +129,24 @@ class Sqlite3Db(object):
                 sys.exit('storage path does not exist or is not accessible: {:s}'.format(Config.get_storage_path()))
 
         return location
+
+    @staticmethod
+    def _regexp(expr, item):
+        """Regular expression for the sqlite3."""
+
+        return re.search(expr, item, re.IGNORECASE) is not None
+
+    @staticmethod
+    def _get_regexp_query(keywords):
+        """Generate query parameters for the SQL query."""
+
+        query_args = []
+        query = 'SELECT id, snippet, tags, comment, link, metadata FROM snippets WHERE '
+        search = '(snippet REGEXP ? or tags REGEXP ? or comment REGEXP ? or link REGEXP ?) '
+        for token in keywords:
+            query = query + search + 'OR '
+            query_args = query_args + [token, token, token, token] # Token for each search colum in the row.
+        query = query[:-3] # Remove last 'OR ' added by the loop.
+        query = query + ' ORDER BY id ASC'
+
+        return (query, query_args)

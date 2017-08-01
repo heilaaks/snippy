@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 
-"""test_sqlite3_db_snippet.py: Test snippet storage in sqlite3 database."""
+"""test_sqlite3_db_insert_snippet_basic.py: Test snippet insert in sqlite3 database."""
 
 import mock
 from snippy.config import Config
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper
 
-class TestSqlite3DbAddNewSnippet(object): # pylint: disable=too-few-public-methods
-    """Testing storing new snippets."""
+class TestSqlite3DbInsertSnippetBasic(object): # pylint: disable=too-few-public-methods
+    """Testing inserting new snippets with basic cases."""
 
     @mock.patch.object(Config, 'is_storage_in_memory')
     @mock.patch.object(Config, 'get_storage_schema')
-    def test_add_new_with_all_parameters(self, mock_get_storage_schema, mock_is_storage_in_memory):
+    def test_insert_new_with_all_parameters(self, mock_get_storage_schema, mock_is_storage_in_memory):
         """Test that snippet with tags, comment or links is stored."""
 
         from snippy.storage.database import Sqlite3Db

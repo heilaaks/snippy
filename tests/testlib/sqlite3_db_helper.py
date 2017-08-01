@@ -17,7 +17,7 @@ class Sqlite3DbHelper(object): # pylint: disable=too-few-public-methods
         """Select requested snippet with unique ID."""
 
         self.logger.debug('select snippet with id {:d}'.format(snippet_id))
-        self.cursor.execute('select * from snippet')
+        self.cursor.execute('select * from snippets')
         rows = self.cursor.fetchall()
         for row in rows:
             self.logger.debug("fetched row %s", row)
@@ -25,7 +25,7 @@ class Sqlite3DbHelper(object): # pylint: disable=too-few-public-methods
     def select_all_snippets(self):
         """Select all snippets."""
 
-        self.cursor.execute('select * from snippet')
+        self.cursor.execute('select * from snippets')
         rows = self.cursor.fetchall()
         for row in rows:
             self.logger.debug("fetched row %s", row)

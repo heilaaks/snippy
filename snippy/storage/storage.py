@@ -18,6 +18,11 @@ class Storage(object):
 
         self.database.init()
 
+    def store(self, snippet, tags=None, comment=None, link=None, metadata=None):
+        """Store snippet."""
+
+        self.database.insert_snippet(snippet, tags, comment, link, metadata)
+
     def disconnect(self):
         """Disconnect storage."""
 

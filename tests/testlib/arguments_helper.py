@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 
-"""argument_helper.py: Helper methods for command line argument testing."""
+"""arguments_helper.py: Helper methods for command line arguments testing."""
 
 import sys
 
 
-class ArgumentHelper(object): # pylint: disable=too-few-public-methods
+class ArgumentsHelper(object): # pylint: disable=too-few-public-methods
     """Helper methods for arguments testing."""
 
     def reset(self):

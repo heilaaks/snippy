@@ -1,3 +1,3 @@
 # pylint: disable=missing-docstring
-from .argument_helper import ArgumentHelper
+from .arguments_helper import ArgumentsHelper
 from .sqlite3_db_helper import Sqlite3DbHelper

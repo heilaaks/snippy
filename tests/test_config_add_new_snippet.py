@@ -3,7 +3,7 @@
 """test_config_add_new_snippet.py: Test tool configuration management new snippet."""
 
 import sys
-from tests.testlib.argument_helper import ArgumentHelper
+from tests.testlib.arguments_helper import ArgumentsHelper
 
 
 class TestConfigAddNewSnippet(object):
@@ -227,11 +227,11 @@ class TestConfigAddNewSnippet(object):
         """Test class setup before any of the tests are run."""
 
         print('setup_class()')
-        ArgumentHelper().reset()
+        ArgumentsHelper().reset()
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
         print('teardown_class()')
-        ArgumentHelper().reset()
+        ArgumentsHelper().reset()

@@ -42,7 +42,7 @@ class Sqlite3Db(object):
         if self.conn:
             tags_string = ','.join(map(str, tags))
             query = ('INSERT INTO snippets(snippet, tags, comment, link, metadata) VALUES(?,?,?,?,?)')
-            self.logger.debug('insert snippet {:s} with tags {:s}'.format(snippet, tags_string))
+            self.logger.debug('insert snippet %s with tags %s', snippet, tags_string)
             try:
                 self.cursor.execute(query, (snippet, tags_string, comment, link, metadata))
                 self.conn.commit()

@@ -20,7 +20,7 @@ class Arguments(object):
         parser.add_argument('-t', '--tags', nargs='*', type=str, default='', help='add tags with the snippet or resolution')
         parser.add_argument('-c', '--comment', type=str, default='', help='add comment with the snippet or resolution')
         parser.add_argument('-l', '--link', type=str, default='', help='add reference link for more information')
-        parser.add_argument('-f', '--find', type=str, help='find with any given keyword')
+        parser.add_argument('-f', '--find', nargs='*', type=str, default='', help='find with any given keyword')
         parser.add_argument('--ftag', type=str, help='find from tags only')
         parser.add_argument('--profiler', action='store_true', default=False, help=argparse.SUPPRESS)
         Arguments.args = parser.parse_args()
@@ -56,7 +56,7 @@ class Arguments(object):
         cls.logger.info('parsed argument --comment with value "%s"', cls.args.comment)
 
         return cls.args.comment
-
+    
     @classmethod
     def get_link(cls):
         """Return the link that user gave exactly as it was."""
@@ -64,6 +64,14 @@ class Arguments(object):
         cls.logger.info('parsed argument --link with value "%s"', cls.args.link)
 
         return cls.args.link
+
+    @classmethod
+    def get_find(cls):
+        """Return the find keywords that user gave exactly as it was."""
+
+        cls.logger.info('parsed argument --find with value "%s"', cls.args.find)
+
+        return cls.args.find
 
     @classmethod
     def get_profiler(cls):

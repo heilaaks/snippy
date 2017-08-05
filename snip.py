@@ -24,9 +24,12 @@ class Snippy(object):
         self.logger.info('running services')
         storage = Storage()
         storage.init()
-        if Config.is_snippet():
+        if Config.has_snippet():
             Snippet().run(storage)
-        elif Config.is_resolve():
+        elif Config.has_resolve():
+            Resolve().run(storage)
+        elif Config.has_find_keywords():
+            Snippet().run(storage)
             Resolve().run(storage)
         else:
             self.logger.error('no task defined exiting')

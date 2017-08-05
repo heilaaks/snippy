@@ -23,6 +23,11 @@ class Storage(object):
 
         self.database.insert_snippet(snippet, tags, comment, link, metadata)
 
+    def search(self, keywords):
+        """Search snippet."""
+
+        self.database.select_snippet(keywords)
+
     def disconnect(self):
         """Disconnect storage."""
 

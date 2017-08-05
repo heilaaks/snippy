@@ -56,7 +56,7 @@ class Arguments(object):
         cls.logger.info('parsed argument --comment with value "%s"', cls.args.comment)
 
         return cls.args.comment
-    
+
     @classmethod
     def get_link(cls):
         """Return the link that user gave exactly as it was."""

@@ -26,7 +26,7 @@ class Storage(object):
     def search(self, keywords):
         """Search snippet."""
 
-        self.database.select_snippet(keywords)
+        return self.database.select_snippet(keywords)
 
     def disconnect(self):
         """Disconnect storage."""

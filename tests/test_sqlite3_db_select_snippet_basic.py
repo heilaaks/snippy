@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
 
-"""test_sqlite3_db_select_snippet_basic.py: Test selecting snippet from the sqlite3 database."""
+"""test_sqlite3_db_select_snippet_basic.py: Test selecting snippets from the sqlite3 database."""
 
 import mock
 from snippy.config import Config
+from snippy.storage.database import Sqlite3Db
 
 class TestSqlite3DbSelectSnippetBasic(object): # pylint: disable=too-few-public-methods
-    """Testing selecting of snippets from database with basic cases."""
+    """Testing selecting of snippets from database with basic tests."""
 
     @mock.patch.object(Config, 'is_storage_in_memory')
     @mock.patch.object(Config, 'get_storage_schema')
     def test_select_with_one_keyword_matching_column_link(self, mock_get_storage_schema, mock_is_storage_in_memory):
         """Test that snippet can be selected with regexp keywords. In this
         case only the last keyword matches to link column."""
-
-        from snippy.storage.database import Sqlite3Db
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'

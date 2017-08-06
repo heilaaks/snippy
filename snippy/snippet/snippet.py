@@ -35,7 +35,7 @@ class Snippet(object):
         console = ''
         for idx, row in enumerate(hits):
             console = console + Const.SNIPPET_HEADER_STR % (idx+1, row[Const.SNIPPET_DESCRIPTION], row[Const.SNIPPET_ID])
-            console = Const.SNIPPET_STR % (console, row[Const.SNIPPET]) + Const.NEWLINE
+            console = Const.SNIPPET_STR % (console, row[Const.SNIPPET_SNIPPET]) + Const.NEWLINE
             console = Const.SNIPPET_LINK_STR % (console, row[Const.SNIPPET_LINK])
             console = Const.SNIPPET_TAGS_STR % (console, row[Const.SNIPPET_TAGS])
             console = console + Const.NEWLINE

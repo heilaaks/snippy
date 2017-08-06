@@ -8,9 +8,9 @@ class Constants(object): # pylint: disable=too-few-public-methods
 
     NEWLINE = '\n'
 
-    # Colum numbers in snippets table.
+    # Column numbers in snippets table.
     SNIPPET_ID = 0
-    SNIPPET = 1
+    SNIPPET_SNIPPET = 1
     SNIPPET_TAGS = 2
     SNIPPET_DESCRIPTION = 3
     SNIPPET_LINK = 4

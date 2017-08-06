@@ -1,223 +1,180 @@
 #!/usr/bin/env python3
 
-"""test_config_add_new_snippet.py: Test tool configuration management new snippet."""
+"""test_config_add_new_snippet.py: Test tool configuration management for new snippets."""
 
 import sys
+from snippy.config import Config
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 
 class TestConfigAddNewSnippet(object):
-    """Testing configurationg management for new snippet."""
+    """Testing configurationg management for new snippets."""
 
-    def test_no_value(self):
+    def test_no_arguments(self):
         """Test that empty argument list is set to configuration."""
-
-        from snippy.config import Config
 
         sys.argv = ['snippy']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_resolve(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
+        assert isinstance(obj.get_link(), str)
+        assert isinstance(obj.get_find_keywords(), list)
         assert not obj.get_snippet()
+        assert not obj.get_resolve()
         assert not obj.get_tags()
         assert not obj.get_comment()
+        assert not obj.get_link()
+        assert not obj.get_find_keywords()
 
-    def test_valid_value_no_tags(self):
-        """Test that new snippet can be configured without tags."""
+    def test_add_snippet_without_optional_arguments(self):
+        """Test that new snippet can be added without optional arguments."""
 
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', '-s', command]
+        snippet = 'docker rm $(docker ps -a -q)'
+        sys.argv = ['snippy', '-s', snippet]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
+        assert obj.get_snippet() == snippet
         assert not obj.get_tags()
         assert not obj.get_comment()
 
-    def test_valid_value_one_tag(self):
-        """Test that new snippet can be configured with one tag and that the
-        tag configuration is a list that can be iterated."""
+    def test_add_snippet_with_comment_but_no_tags(self):
+        """Test that new snippet can be added with comment but no tags."""
 
-        from snippy.config import Config
+        snippet = 'docker rm $(docker ps -a -q)'
+        comment = 'Remove all docker containers'
+        sys.argv = ['snippy', '-s', snippet, '-c', comment]
+        obj = Config()
+        assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_tags(), list)
+        assert isinstance(obj.get_comment(), str)
+        assert obj.get_snippet() == snippet
+        assert not obj.get_tags()
+        assert obj.get_comment() == comment
 
-        command = 'docker rm $(docker ps -a -q)'
+    def test_add_snippet_with_one_tag(self):
+        """Test that new snippet can be added with a single tag."""
+
+        snippet = 'docker rm $(docker ps -a -q)'
         tags = ['docker']
-        sys.argv = ['snippy', '-s', command, '-t', 'docker']
+        sys.argv = ['snippy', '-s', snippet, '-t', 'docker']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
+        assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 1
         assert not obj.get_comment()
 
-    def test_valid_value_with_tags(self):
-        """Test that new snippet can be configured with multiple tags and that
-        the tag configuration is a list that can be iterated. The tags are inside
-        quotes without spaces."""
+    def test_tags_with_quotes_and_separated_by_comma_and_no_space(self):
+        """Test that tags can be added inside quotes separated by comma and
+        without spaces."""
 
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
+        snippet = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
-        sys.argv = ["snippy", "-s", command, "-t", 'docker,container,cleanup']
+        sys.argv = ["snippy", "-s", snippet, "-t", 'docker,container,cleanup']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
+        assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
         assert not obj.get_comment()
 
-    def test_valid_value_with_tags_and_comment(self):
-        """Test that new snippet can be configured with multiple tags and comment
-        and that the tag configuration is a list that can be iterated. The tags are
-        inside quotes and separated with spaces."""
+    def test_tags_with_quotes_and_separated_by_comma_and_space(self):
+        """Test that tags can be added inside quotes separated by comma and
+        space after comma."""
 
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
+        snippet = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
         comment = 'Remove all docker containers'
-        sys.argv = ['snippy', '-s', command, '-t', 'docker, container, cleanup', '-c', comment]
+        sys.argv = ['snippy', '-s', snippet, '-t', 'docker, container, cleanup', '-c', comment]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
+        assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
         assert obj.get_comment() == comment
 
-    def test_valid_value_with_comment_no_tags(self):
-        """Test that new snippet can be added with comment but no tags."""
+    def test_tags_with_quotes_and_separated_by_only_space(self):
+        """Test that tags can be added so that they are separated by spaces
+        before and after the words."""
 
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
-        comment = 'Remove all docker containers'
-        sys.argv = ['snippy', '-s', command, '-c', comment]
-        obj = Config()
-        assert isinstance(obj.get_snippet(), str)
-        assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
-        assert not obj.get_tags()
-        assert obj.get_comment() == comment
-
-    def test_valid_value_with_tags_with_space(self):
-        """Test that tags are accepted if the tags are elements in a list.
-        In here the tags are separated by spaces before and after the words
-        like in '-t docker container cleanup'. The result should be proper
-        sorted list of keywords."""
-
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
+        snippet = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', command, '-t', 'docker ', 'container ', 'cleanup']
+        sys.argv = ['snippy', '-s', snippet, '-t', 'docker container cleanup']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
+        assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
 
-    def test_valid_value_with_tags_with_comma(self):
-        """Test that tags are accepted if the tags are elements in a list.
-        In here the tags are separated by commas after the words like in
-        '-t docker, container, cleanup'. The result should be proper
-        sorted list of keywords."""
+    def test_tags_separated_by_space(self):
+        """Test that tags can be added so that they are separated by spaces
+        before and after the words like in '-t docker container cleanup'."""
 
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
+        snippet = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', command, '-t', 'docker,', 'container,', 'cleanup']
+        sys.argv = ['snippy', '-s', snippet, '-t', 'docker ', 'container ', 'cleanup']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
+        assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
 
-    def test_valid_value_with_tags_with_space_inside_quotes(self):
-        """Test that tags are accepted if the tags are elements in a list.
-        In here the tags are separated by spaces before and after the words
-        like in '-t 'docker container cleanup''. The result should be proper
-        sorted list of keywords."""
+    def test_tags_separated_by_space_and_comma(self):
+        """Test that tags can be added so that they are separated by comma
+        after the words like in '-t docker, container, cleanup'."""
 
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
+        snippet = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', command, '-t', 'docker container cleanup']
+        sys.argv = ['snippy', '-s', snippet, '-t', 'docker,', 'container,', 'cleanup']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
+        assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
 
-    def test_valid_value_with_tags_with_comma_inside_quotes(self):
-        """Test that tags are accepted if the tags are elements in a list.
-        In here the tags are separated by commas after the words like in
-        '-t 'docker, container, cleanup''. The result should be proper
-        sorted list of keywords."""
-
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
-        tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', command, '-t', 'docker, container, cleanup']
-        obj = Config()
-        assert isinstance(obj.get_snippet(), str)
-        assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
-        assert set(obj.get_tags()) == set(tags)
-        assert len(obj.get_tags()) == 3
-
-    def test_valid_value_with_tags_with_list(self):
-        """Test that tags are accepted if the tags are elements in a list.
-        This might not be realistic case since user might not be able to
-        reproduce this."""
-
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
-        tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', command, '-t', 'docker', 'container', 'cleanup']
-        obj = Config()
-        assert isinstance(obj.get_snippet(), str)
-        assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
-        assert set(obj.get_tags()) == set(tags)
-        assert len(obj.get_tags()) == 3
-
-    def test_valid_value_with_tags_with_special_characters(self):
+    def test_tags_with_special_characters(self):
         """Test that tags are accepted if they contain special characters."""
 
-        from snippy.config import Config
-
-        command = 'docker rm $(docker ps -a -q)'
+        snippet = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup_testing', 'container-managemenet', 'dockertesting']
-        sys.argv = ['snippy', '-s', command, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
+        sys.argv = ['snippy', '-s', snippet, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
-        assert obj.get_snippet() == command
+        assert obj.get_snippet() == snippet
+        assert set(obj.get_tags()) == set(tags)
+        assert len(obj.get_tags()) == 3
+
+    def test_tags_provided_in_list(self):
+        """Test that tags are accepted if the tags are elements in a list.
+        This might not be realistic case since user might not be able to
+        reproduce this?"""
+
+        snippet = 'docker rm $(docker ps -a -q)'
+        tags = ['cleanup', 'container', 'docker']
+        sys.argv = ['snippy', '-s', snippet, '-t', 'docker', 'container', 'cleanup']
+        obj = Config()
+        assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_tags(), list)
+        assert isinstance(obj.get_comment(), str)
+        assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
 

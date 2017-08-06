@@ -73,11 +73,13 @@ class TestArgumentsAddNewSnippet(object):
         snippet = 'docker rm $(docker ps -a -q)'
         tags = ['docker, container, cleanup']
         comment = 'Remove all docker containers'
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker, container, cleanup', '-c', comment]
+        link = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
+        sys.argv = ['snippy', '-s', snippet, '-t', 'docker, container, cleanup', '-c', comment, '-l', link]
         obj = Arguments()
         assert obj.get_snippet() == snippet
         assert obj.get_tags() == tags
         assert obj.get_comment() == comment
+        assert obj.get_link() == link
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
         """Test that tags can be added so that they are separated by spaces

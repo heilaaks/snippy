@@ -93,15 +93,18 @@ class TestConfigAddNewSnippet(object):
         snippet = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
         comment = 'Remove all docker containers'
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker, container, cleanup', '-c', comment]
+        link = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
+        sys.argv = ['snippy', '-s', snippet, '-t', 'docker, container, cleanup', '-c', comment, '-l', link]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_tags(), list)
         assert isinstance(obj.get_comment(), str)
+        assert isinstance(obj.get_link(), str)
         assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
         assert obj.get_comment() == comment
+        assert obj.get_link() == link
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
         """Test that tags can be added so that they are separated by spaces

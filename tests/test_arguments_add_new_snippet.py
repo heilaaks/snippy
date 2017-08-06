@@ -17,8 +17,8 @@ class TestArgumentsAddNewSnippet(object):
         obj = Arguments()
         assert obj.get_snippet() == ''
         assert obj.get_resolve() == ''
+        assert obj.get_brief() == ''
         assert obj.get_tags() == ''
-        assert obj.get_comment() == ''
         assert obj.get_link() == ''
         assert obj.get_find() == ''
 
@@ -29,19 +29,20 @@ class TestArgumentsAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet]
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == ''
         assert obj.get_tags() == ''
-        assert obj.get_comment() == ''
 
-    def test_add_snippet_with_comment_but_no_tags(self):
-        """Test that new snippet can be added with comment but no tags."""
+    def test_add_snippet_with_brief_but_no_tags(self):
+        """Test that new snippet can be added with brief description but
+        no tags."""
 
         snippet = 'docker rm $(docker ps -a -q)'
-        comment = 'Remove all docker containers'
-        sys.argv = ['snippy', '-s', snippet, '-c', comment]
+        brief = 'Remove all docker containers'
+        sys.argv = ['snippy', '-s', snippet, '-b', brief]
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == brief
         assert obj.get_tags() == ''
-        assert obj.get_comment() == comment
 
     def test_add_snippet_with_one_tag(self):
         """Test that new snippet can be added with a single tag."""
@@ -51,8 +52,8 @@ class TestArgumentsAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker']
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == ''
         assert obj.get_tags() == tags
-        assert obj.get_comment() == ''
 
     def test_tags_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -63,22 +64,22 @@ class TestArgumentsAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker,container,cleanup']
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == ''
         assert obj.get_tags() == tags
-        assert obj.get_comment() == ''
 
     def test_tags_with_quotes_and_separated_by_comma_and_space(self):
         """Test that tags can be added inside quotes separated by comma and
         spaces after comma."""
 
         snippet = 'docker rm $(docker ps -a -q)'
+        brief = 'Remove all docker containers'
         tags = ['docker, container, cleanup']
-        comment = 'Remove all docker containers'
         link = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker, container, cleanup', '-c', comment, '-l', link]
+        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', link]
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == brief
         assert obj.get_tags() == tags
-        assert obj.get_comment() == comment
         assert obj.get_link() == link
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
@@ -90,8 +91,8 @@ class TestArgumentsAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker container cleanup']
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == ''
         assert obj.get_tags() == tags
-        assert obj.get_comment() == ''
 
     def test_tags_separated_by_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -102,8 +103,8 @@ class TestArgumentsAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker ', 'container ', 'cleanup']
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == ''
         assert obj.get_tags() == tags
-        assert obj.get_comment() == ''
 
     def test_tags_separated_by_space_and_comma(self):
         """Test that tags can be added so that they are separated by comma
@@ -114,8 +115,8 @@ class TestArgumentsAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker,', 'container,', 'cleanup']
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == ''
         assert obj.get_tags() == tags
-        assert obj.get_comment() == ''
 
     def test_tags_with_special_characters(self):
         """Test that tags are accepted if they contain special characters."""
@@ -125,8 +126,8 @@ class TestArgumentsAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == ''
         assert obj.get_tags() == tags
-        assert obj.get_comment() == ''
 
     def test_tags_provided_in_list(self):
         """Test that tags are accepted if the tags are elements in a list.
@@ -138,8 +139,8 @@ class TestArgumentsAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker', 'container', 'cleanup']
         obj = Arguments()
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == ''
         assert obj.get_tags() == tags
-        assert obj.get_comment() == ''
 
     # pylint: disable=duplicate-code
     @classmethod

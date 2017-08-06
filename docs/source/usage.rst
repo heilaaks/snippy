@@ -1,9 +1,10 @@
 Usage
 =====
 
-The basic usage contains adding a snippet with specified tags and search them.
+You can add any number of command or code snippets and search them with a keyword
+list. The keyword list search finds the results with any matching keyword.
 
 .. code:: bash
 
-    snippy --snippet 'docker rm $(docker ps -a -q)' --tags docker, image, cleanup
-
+    python snip.py --snippet 'docker rm $(docker ps -a -q)' --brief 'Remove all docker containers' --tags docker, image, cleanup
+    python snip.py --find docker

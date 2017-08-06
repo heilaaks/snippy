@@ -18,7 +18,7 @@ class Snippet(object):
         """Add new snippet."""
 
         self.logger.debug('add new snippet')
-        self.storage.store(Config.get_snippet(), Config.get_tags(), Config.get_comment(), Config.get_link())
+        self.storage.store(Config.get_snippet(), Config.get_brief(), Config.get_tags(), Config.get_link())
 
     def find_keywords(self):
         """Find snippets based on keywords."""
@@ -34,8 +34,8 @@ class Snippet(object):
 
         console = ''
         for idx, row in enumerate(hits):
-            console = console + Const.SNIPPET_HEADER_STR % (idx+1, row[Const.SNIPPET_DESCRIPTION], row[Const.SNIPPET_ID])
-            console = Const.SNIPPET_STR % (console, row[Const.SNIPPET_SNIPPET]) + Const.NEWLINE
+            console = console + Const.SNIPPET_HEADER_STR % (idx+1, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_ID])
+            console = Const.SNIPPET_SNIPPET_STR % (console, row[Const.SNIPPET_SNIPPET]) + Const.NEWLINE
             console = Const.SNIPPET_LINK_STR % (console, row[Const.SNIPPET_LINK])
             console = Const.SNIPPET_TAGS_STR % (console, row[Const.SNIPPET_TAGS])
             console = console + Const.NEWLINE

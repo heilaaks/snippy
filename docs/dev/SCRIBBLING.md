@@ -93,19 +93,19 @@ workon snippy
 make doc
 make lint
 make test
-time python snip.py -s 'docker rm'  -t docker,container,cleanup -c 'Remove all docker containers'
+time python snip.py -s 'docker rm' -b 'Remove all docker containers' -t docker,container,cleanup
 
-python snip.py -s 'docker rm -v $(docker ps -a -q)'  -t docker,container,cleanup -c 'Remove all docker containers' -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-python snip.py -s 'docker rmi $(docker images -f dangling=true -q)'  -t docker,images,dangling,cleanup -c 'Remove all dangling image layers' -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-python snip.py -s 'docker rmi $(docker images -a -q)'  -t docker,images,remove -c 'Remove all docker images' -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+python snip.py -s 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
+python snip.py -s 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+python snip.py -s 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 
 pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
 pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests
 pytest --cov=snippy tests/
 pytest --cov=snippy --cov-report html tests/
 make -C docs html
-python snip.py -s 'docker rm $(docker ps -a -q)'  -t docker,container,cleanup -c 'Remove all docker containers'
-python snip.py -s 'docker rm $(docker ps -a -q)'  -t docker, container, cleanup -c 'Remove all docker containers'
+python snip.py -s 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -t docker,container,cleanup
+python snip.py -s 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -t docker, container, cleanup
 pytest
 
    > file:///home/heilaaks/devel/snippy/htmlcov/index.html

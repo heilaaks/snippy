@@ -6,8 +6,8 @@
 create table if not exists snippets (
     id          integer primary key,
     snippet     text not null unique,
+    brief       text default '',
     tags        text default '',
-    comment     text default '',
     link        text default '',
     metadata    text default ''
 );
@@ -16,8 +16,8 @@ create table if not exists snippets (
 create table if not exists resolves (
     id          integer primary key,
     resolve     text not null unique,
+    brief       text default '',
     tags        text default '',
-    comment     text default '',
     link        text default '',
     metadata    text default ''
 );

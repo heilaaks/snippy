@@ -36,15 +36,15 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_snippet(self, snippet, tags=None, comment=None, link=None, metadata=None):
+    def insert_snippet(self, snippet, brief=None, tags=None, link=None, metadata=None):
         """Insert snippet into database."""
 
         if self.conn:
             tags_string = ','.join(map(str, tags))
-            query = ('INSERT INTO snippets(snippet, tags, comment, link, metadata) VALUES(?,?,?,?,?)')
-            self.logger.debug('insert snippet %s with tags %s', snippet, tags_string)
+            query = ('INSERT INTO snippets(snippet, brief, tags, link, metadata) VALUES(?,?,?,?,?)')
+            self.logger.debug('insert snippet %s with brief %s and tags %s', snippet, brief, tags_string)
             try:
-                self.cursor.execute(query, (snippet, tags_string, comment, link, metadata))
+                self.cursor.execute(query, (snippet, brief, tags_string, link, metadata))
                 self.conn.commit()
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
@@ -63,11 +63,11 @@ class Sqlite3Db(object):
             # can be counted by multiplying the query keywords (e.g 3)and the searched colums.
             #
             # Example queries:
-            #     1) SELECT id, snippet, tags, comment, link, metadata FROM snippets WHERE
-            #        (snippet REGEXP ? or tags REGEXP ? or comment REGEXP? or link REGEXP ?) ORDER BY id ASC
-            #     2) SELECT id, snippet, tags, comment, link, metadata FROM snippets WHERE (snippet REGEXP ?
-            #        or tags REGEXP ? or comment REGEXP? or link REGEXP ?) OR (snippet REGEXP ? or tags REGEXP ?
-            #        or comment REGEXP? or link REGEXP ?) OR (snippet REGEXP ? or tags REGEXP ? or comment REGEXP ?
+            #     1) SELECT id, snippet, brief, tags, link, metadata FROM snippets WHERE
+            #        (snippet REGEXP ? or tags REGEXP ? or brief REGEXP? or link REGEXP ?) ORDER BY id ASC
+            #     2) SELECT id, snippet, brief, tags, link, metadata FROM snippets WHERE (snippet REGEXP ?
+            #        or tags REGEXP ? or brief REGEXP? or link REGEXP ?) OR (snippet REGEXP ? or tags REGEXP ?
+            #        or brief REGEXP? or link REGEXP ?) OR (snippet REGEXP ? or tags REGEXP ? or brief REGEXP ?
             #        or link REGEXP ?) ORDER BY id ASC
             if regex:
                 query, qargs = Sqlite3Db._get_regexp_query(keywords)
@@ -141,8 +141,8 @@ class Sqlite3Db(object):
         """Generate query parameters for the SQL query."""
 
         query_args = []
-        query = 'SELECT id, snippet, tags, comment, link, metadata FROM snippets WHERE '
-        search = '(snippet REGEXP ? or tags REGEXP ? or comment REGEXP ? or link REGEXP ?) '
+        query = 'SELECT id, snippet, brief, tags, link, metadata FROM snippets WHERE '
+        search = '(snippet REGEXP ? or brief REGEXP ? or tags REGEXP ? or link REGEXP ?) '
         for token in keywords:
             query = query + search + 'OR '
             query_args = query_args + [token, token, token, token] # Token for each search colum in the row.

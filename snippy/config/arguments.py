@@ -17,10 +17,10 @@ class Arguments(object):
         parser = argparse.ArgumentParser()
         parser.add_argument('-s', '--snippet', type=str, default='', help='add command or code snippet')
         parser.add_argument('-r', '--resolve', type=str, default='', help='add troubleshooting resolution')
-        parser.add_argument('-t', '--tags', nargs='*', type=str, default='', help='add tags with the snippet or resolution')
-        parser.add_argument('-c', '--comment', type=str, default='', help='add comment with the snippet or resolution')
-        parser.add_argument('-l', '--link', type=str, default='', help='add reference link for more information')
-        parser.add_argument('-f', '--find', nargs='*', type=str, default='', help='find with any given keyword')
+        parser.add_argument('-b', '--brief', type=str, default='', help='set brief description for the input')
+        parser.add_argument('-t', '--tags', nargs='*', type=str, default='', help='set tags for the input')
+        parser.add_argument('-l', '--link', type=str, default='', help='set reference link for more information')
+        parser.add_argument('-f', '--find', nargs='*', type=str, default='', help='find with all given keyword')
         parser.add_argument('--ftag', type=str, help='find from tags only')
         parser.add_argument('--profiler', action='store_true', default=False, help=argparse.SUPPRESS)
         Arguments.args = parser.parse_args()
@@ -42,20 +42,20 @@ class Arguments(object):
         return cls.args.resolve
 
     @classmethod
+    def get_brief(cls):
+        """Return the brief description that user gave exactly as it was."""
+
+        cls.logger.info('parsed argument --brief with value "%s"', cls.args.brief)
+
+        return cls.args.brief
+
+    @classmethod
     def get_tags(cls):
         """Return the tags that user gave exactly as it was."""
 
         cls.logger.info('parsed argument --tags with value "%s"', cls.args.tags)
 
         return cls.args.tags
-
-    @classmethod
-    def get_comment(cls):
-        """Return the comment that user gave exactly as it was."""
-
-        cls.logger.info('parsed argument --comment with value "%s"', cls.args.comment)
-
-        return cls.args.comment
 
     @classmethod
     def get_link(cls):

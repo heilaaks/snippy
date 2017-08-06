@@ -27,8 +27,8 @@ class Config(object):
         cls.config['args'] = {}
         cls.config['args']['snippet'] = cls.__parse_snippet()
         cls.config['args']['resolve'] = cls.__parse_resolve()
+        cls.config['args']['brief'] = cls.__parse_brief()
         cls.config['args']['tags'] = cls.__parse_tags()
-        cls.config['args']['comment'] = cls.__parse_comment()
         cls.config['args']['link'] = cls.__parse_link()
         cls.config['args']['find'] = cls.__parse_find()
         cls.config['args']['profiler'] = cls.args.get_profiler()
@@ -40,7 +40,7 @@ class Config(object):
 
         cls.logger.info('configured argument --snippet as "%s"', cls.config['args']['snippet'])
         cls.logger.info('configured argument --tags as "%s"', cls.config['args']['tags'])
-        cls.logger.info('configured argument --comment as "%s"', cls.config['args']['comment'])
+        cls.logger.info('configured argument --brief as "%s"', cls.config['args']['brief'])
         cls.logger.info('configured argument --link as "%s"', cls.config['args']['link'])
         cls.logger.info('configured argument --find as "%s"', cls.config['args']['find'])
         cls.logger.info('configured argument --profiler as "%s"', cls.config['args']['profiler'])
@@ -115,16 +115,16 @@ class Config(object):
         return cls.config['args']['resolve']
 
     @classmethod
+    def get_brief(cls):
+        """Get brief description for the snippet or resolution."""
+
+        return cls.config['args']['brief']
+
+    @classmethod
     def get_tags(cls):
         """Get tags for the snippet or resolution."""
 
         return cls.config['args']['tags']
-
-    @classmethod
-    def get_comment(cls):
-        """Get comment for the snippet or resolution."""
-
-        return cls.config['args']['comment']
 
     @classmethod
     def get_link(cls):
@@ -165,22 +165,22 @@ class Config(object):
         return ''
 
     @classmethod
+    def __parse_brief(cls):
+        """Preprocess the user given brief description."""
+
+        arg = cls.args.get_brief()
+        if arg:
+            return arg
+
+        return ''
+
+    @classmethod
     def __parse_tags(cls):
         """Process the user given tag keywords."""
 
         arg = cls.args.get_tags()
 
         return cls.__parse_keywords(arg)
-
-    @classmethod
-    def __parse_comment(cls):
-        """Preprocess the user given comment."""
-
-        arg = cls.args.get_comment()
-        if arg:
-            return arg
-
-        return ''
 
     @classmethod
     def __parse_link(cls):

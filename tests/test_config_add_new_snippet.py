@@ -17,14 +17,14 @@ class TestConfigAddNewSnippet(object):
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_resolve(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert isinstance(obj.get_link(), str)
         assert isinstance(obj.get_find_keywords(), list)
         assert not obj.get_snippet()
         assert not obj.get_resolve()
+        assert not obj.get_brief()
         assert not obj.get_tags()
-        assert not obj.get_comment()
         assert not obj.get_link()
         assert not obj.get_find_keywords()
 
@@ -35,25 +35,26 @@ class TestConfigAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == snippet
+        assert not obj.get_brief()
         assert not obj.get_tags()
-        assert not obj.get_comment()
 
-    def test_add_snippet_with_comment_but_no_tags(self):
-        """Test that new snippet can be added with comment but no tags."""
+    def test_add_snippet_with_brief_but_no_tags(self):
+        """Test that new snippet can be added with brief description but
+        no tags."""
 
         snippet = 'docker rm $(docker ps -a -q)'
-        comment = 'Remove all docker containers'
-        sys.argv = ['snippy', '-s', snippet, '-c', comment]
+        brief = 'Remove all docker containers'
+        sys.argv = ['snippy', '-s', snippet, '-b', brief]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == brief
         assert not obj.get_tags()
-        assert obj.get_comment() == comment
 
     def test_add_snippet_with_one_tag(self):
         """Test that new snippet can be added with a single tag."""
@@ -63,12 +64,12 @@ class TestConfigAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == snippet
+        assert not obj.get_brief()
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 1
-        assert not obj.get_comment()
 
     def test_tags_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -79,31 +80,31 @@ class TestConfigAddNewSnippet(object):
         sys.argv = ["snippy", "-s", snippet, "-t", 'docker,container,cleanup']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == snippet
+        assert not obj.get_brief()
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
-        assert not obj.get_comment()
 
     def test_tags_with_quotes_and_separated_by_comma_and_space(self):
         """Test that tags can be added inside quotes separated by comma and
         space after comma."""
 
         snippet = 'docker rm $(docker ps -a -q)'
+        brief = 'Remove all docker containers'
         tags = ['cleanup', 'container', 'docker']
-        comment = 'Remove all docker containers'
         link = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker, container, cleanup', '-c', comment, '-l', link]
+        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', link]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert isinstance(obj.get_link(), str)
         assert obj.get_snippet() == snippet
+        assert obj.get_brief() == brief
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
-        assert obj.get_comment() == comment
         assert obj.get_link() == link
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
@@ -115,8 +116,8 @@ class TestConfigAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker container cleanup']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
@@ -130,8 +131,8 @@ class TestConfigAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker ', 'container ', 'cleanup']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
@@ -145,8 +146,8 @@ class TestConfigAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker,', 'container,', 'cleanup']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
@@ -159,8 +160,8 @@ class TestConfigAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3
@@ -175,8 +176,8 @@ class TestConfigAddNewSnippet(object):
         sys.argv = ['snippy', '-s', snippet, '-t', 'docker', 'container', 'cleanup']
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_comment(), str)
         assert obj.get_snippet() == snippet
         assert set(obj.get_tags()) == set(tags)
         assert len(obj.get_tags()) == 3

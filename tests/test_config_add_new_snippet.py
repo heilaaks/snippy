@@ -3,11 +3,12 @@
 """test_config_add_new_snippet.py: Test tool configuration management for new snippets."""
 
 import sys
+import unittest
 from snippy.config import Config
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 
-class TestConfigAddNewSnippet(object):
+class TestConfigAddNewSnippet(unittest.TestCase):
     """Testing configurationg management for new snippets."""
 
     def test_no_arguments(self):
@@ -68,8 +69,7 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_tags(), list)
         assert obj.get_snippet() == snippet
         assert not obj.get_brief()
-        assert set(obj.get_tags()) == set(tags)
-        assert len(obj.get_tags()) == 1
+        self.assertCountEqual(obj.get_tags(), tags)
 
     def test_tags_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -84,8 +84,7 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_tags(), list)
         assert obj.get_snippet() == snippet
         assert not obj.get_brief()
-        assert set(obj.get_tags()) == set(tags)
-        assert len(obj.get_tags()) == 3
+        self.assertCountEqual(obj.get_tags(), tags)
 
     def test_tags_with_quotes_and_separated_by_comma_and_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -103,8 +102,7 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_link(), str)
         assert obj.get_snippet() == snippet
         assert obj.get_brief() == brief
-        assert set(obj.get_tags()) == set(tags)
-        assert len(obj.get_tags()) == 3
+        self.assertCountEqual(obj.get_tags(), tags)
         assert obj.get_link() == link
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
@@ -119,8 +117,7 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
         assert obj.get_snippet() == snippet
-        assert set(obj.get_tags()) == set(tags)
-        assert len(obj.get_tags()) == 3
+        self.assertCountEqual(obj.get_tags(), tags)
 
     def test_tags_separated_by_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -134,8 +131,7 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
         assert obj.get_snippet() == snippet
-        assert set(obj.get_tags()) == set(tags)
-        assert len(obj.get_tags()) == 3
+        self.assertCountEqual(obj.get_tags(), tags)
 
     def test_tags_separated_by_space_and_comma(self):
         """Test that tags can be added so that they are separated by comma
@@ -149,8 +145,7 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
         assert obj.get_snippet() == snippet
-        assert set(obj.get_tags()) == set(tags)
-        assert len(obj.get_tags()) == 3
+        self.assertCountEqual(obj.get_tags(), tags)
 
     def test_tags_with_special_characters(self):
         """Test that tags are accepted if they contain special characters."""
@@ -163,7 +158,7 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
         assert obj.get_snippet() == snippet
-        assert set(obj.get_tags()) == set(tags)
+        self.assertCountEqual(obj.get_tags(), tags)
         assert len(obj.get_tags()) == 3
 
     def test_tags_provided_in_list(self):
@@ -179,8 +174,7 @@ class TestConfigAddNewSnippet(object):
         assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
         assert obj.get_snippet() == snippet
-        assert set(obj.get_tags()) == set(tags)
-        assert len(obj.get_tags()) == 3
+        self.assertCountEqual(obj.get_tags(), tags)
 
     # pylint: disable=duplicate-code
     @classmethod

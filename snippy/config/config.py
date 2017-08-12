@@ -31,6 +31,7 @@ class Config(object):
         cls.config['args']['tags'] = cls.__parse_tags()
         cls.config['args']['link'] = cls.__parse_link()
         cls.config['args']['find'] = cls.__parse_find()
+        cls.config['args']['delete_snippet'] = cls.__parse_delete_snippet()
         cls.config['args']['profiler'] = cls.args.get_profiler()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
@@ -43,64 +44,26 @@ class Config(object):
         cls.logger.info('configured argument --brief as "%s"', cls.config['args']['brief'])
         cls.logger.info('configured argument --link as "%s"', cls.config['args']['link'])
         cls.logger.info('configured argument --find as "%s"', cls.config['args']['find'])
+        cls.logger.info('configured argument --delete_snippet as "%s"', cls.config['args']['delete_snippet'])
         cls.logger.info('configured argument --profiler as "%s"', cls.config['args']['profiler'])
 
     @classmethod
-    def has_snippet(cls):
-        """Test if the user action was to add new snippet."""
+    def is_snippet_task(cls):
+        """Test if the user action was for a snippet."""
 
-        if cls.get_snippet():
+        if cls.get_snippet() or cls.get_find_keywords() or cls.get_delete_snippet():
             return True
 
         return False
 
     @classmethod
-    def has_resolve(cls):
-        """Test if the user action was to add new resolution."""
+    def is_resolve_task(cls):
+        """Test if the user action was for a resolution."""
 
-        if cls.get_resolve():
+        if cls.get_resolve() or cls.get_find_keywords():
             return True
 
         return False
-
-    @classmethod
-    def has_find_keywords(cls):
-        """Test if the user action was to find snippet or resolution."""
-
-        if cls.get_find_keywords():
-            return True
-
-        return False
-
-    @classmethod
-    def get_storage_path(cls):
-        """Get path of the persistent storage."""
-
-        return cls.config['storage']['path']
-
-    @classmethod
-    def get_storage_file(cls):
-        """Get path and file of the persistent storage."""
-
-        return os.path.join(cls.config['storage']['path'], cls.config['storage']['file'])
-
-    @classmethod
-    def get_storage_schema(cls):
-        """Get storage schema."""
-
-        return cls.config['storage']['schema']
-
-    @classmethod
-    def set_storage_in_memory(cls, in_memory):
-        """Set the storage to be in memory."""
-
-        cls.config['storage']['in_memory'] = in_memory
-
-    @classmethod
-    def is_storage_in_memory(cls):
-        """Test if storage is defined to be run in memory."""
-
-        return cls.config['storage']['in_memory']
 
     @classmethod
     def get_snippet(cls):
@@ -137,6 +100,42 @@ class Config(object):
         """Get find keywords for the snippet or resolution."""
 
         return cls.config['args']['find']
+
+    @classmethod
+    def get_delete_snippet(cls):
+        """Get deleted snippet index."""
+
+        return cls.config['args']['delete_snippet']
+
+    @classmethod
+    def get_storage_path(cls):
+        """Get path of the persistent storage."""
+
+        return cls.config['storage']['path']
+
+    @classmethod
+    def get_storage_file(cls):
+        """Get path and file of the persistent storage."""
+
+        return os.path.join(cls.config['storage']['path'], cls.config['storage']['file'])
+
+    @classmethod
+    def get_storage_schema(cls):
+        """Get storage schema."""
+
+        return cls.config['storage']['schema']
+
+    @classmethod
+    def set_storage_in_memory(cls, in_memory):
+        """Set the storage to be in memory."""
+
+        cls.config['storage']['in_memory'] = in_memory
+
+    @classmethod
+    def is_storage_in_memory(cls):
+        """Test if storage is defined to be run in memory."""
+
+        return cls.config['storage']['in_memory']
 
     @classmethod
     def is_profiled(cls):
@@ -199,6 +198,16 @@ class Config(object):
         arg = cls.args.get_find()
 
         return cls.__parse_keywords(arg)
+
+    @classmethod
+    def __parse_delete_snippet(cls):
+        """Process the user given delete keywords to remove snippet."""
+
+        arg = cls.args.get_delete_snippet()
+        if arg:
+            return arg
+
+        return 0
 
     @classmethod
     def __parse_keywords(cls, keywords):

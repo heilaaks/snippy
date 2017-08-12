@@ -98,6 +98,8 @@ time python snip.py -s 'docker rm' -b 'Remove all docker containers' -t docker,c
 python snip.py -s 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python snip.py -s 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py -s 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+python snip.py -f docker
+python snip.py -d 1
 
 pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
 pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests

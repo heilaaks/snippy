@@ -28,6 +28,11 @@ class Storage(object):
 
         return self.database.select_snippet(keywords)
 
+    def delete(self, db_index):
+        """Delete snippet."""
+
+        return self.database.delete_snippet(db_index)
+
     def disconnect(self):
         """Disconnect storage."""
 

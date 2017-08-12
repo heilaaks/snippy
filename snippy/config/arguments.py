@@ -21,6 +21,7 @@ class Arguments(object):
         parser.add_argument('-t', '--tags', nargs='*', type=str, default='', help='set tags for the input')
         parser.add_argument('-l', '--link', type=str, default='', help='set reference link for more information')
         parser.add_argument('-f', '--find', nargs='*', type=str, default='', help='find with all given keyword')
+        parser.add_argument('-ds', '--delete_snippet', type=int, default=0, help='Remove snippet based on index')
         parser.add_argument('--ftag', type=str, help='find from tags only')
         parser.add_argument('--profiler', action='store_true', default=False, help=argparse.SUPPRESS)
         Arguments.args = parser.parse_args()
@@ -72,6 +73,14 @@ class Arguments(object):
         cls.logger.info('parsed argument --find with value "%s"', cls.args.find)
 
         return cls.args.find
+
+    @classmethod
+    def get_delete_snippet(cls):
+        """Return the index to be deleted as it was provided by the user."""
+
+        cls.logger.info('parsed argument --delete_snippet with value "%s"', cls.args.delete_snippet)
+
+        return cls.args.delete_snippet
 
     @classmethod
     def get_profiler(cls):

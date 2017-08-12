@@ -17,15 +17,22 @@ class Snippet(object):
     def add(self):
         """Add new snippet."""
 
-        self.logger.debug('add new snippet')
+        self.logger.debug('adding new snippet')
         self.storage.store(Config.get_snippet(), Config.get_brief(), Config.get_tags(), Config.get_link())
 
     def find_keywords(self):
         """Find snippets based on keywords."""
 
-        self.logger.info('find snippet based on keywords')
+        self.logger.info('finding snippet based on keywords')
 
         return self.storage.search(Config.get_find_keywords())
+
+    def delete_snippet(self):
+        """Delete new snippet."""
+
+        self.logger.debug('deleting snippet')
+
+        return self.storage.delete(Config.get_delete_snippet())
 
     def format_hits(self, hits):
         """Format hits."""
@@ -53,11 +60,13 @@ class Snippet(object):
 
         self.logger.info('managing snippet')
         self.storage = storage
-        if Config.has_snippet():
+        if Config.get_snippet():
             self.add()
-        elif Config.has_find_keywords():
+        elif Config.get_find_keywords():
             hits = self.find_keywords()
             hits = self.format_hits(hits)
             self.print_hits(hits)
+        elif Config.get_delete_snippet():
+            self.delete_snippet()
         else:
             self.logger.error('unknown action for snippet')

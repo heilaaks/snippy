@@ -87,6 +87,23 @@ class Sqlite3Db(object):
 
         return rows
 
+    def delete_snippet(self, db_index):
+        """Delete snippets."""
+
+        if self.conn:
+            query = ('DELETE FROM snippets where id = ?')
+            self.logger.debug('delete snippet with index %d', db_index)
+            try:
+                self.cursor.execute(query, (db_index,))
+                if self.cursor.rowcount == 1:
+                    self.conn.commit()
+                else:
+                    self.logger.info('database index was not found %d', db_index)
+            except sqlite3.Error as exception:
+                self.logger.exception('deleting from sqlite3 database failed with exception "%s"', exception)
+        else:
+            self.logger.error('sqlite3 database connection did not exist while index was being deleted')
+
     def debug(self):
         """Dump the whole database."""
 

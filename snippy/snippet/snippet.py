@@ -32,7 +32,7 @@ class Snippet(object):
 
         self.logger.debug('deleting snippet')
 
-        return self.storage.delete(Config.get_delete_snippet())
+        return self.storage.delete(Config.get_delete())
 
     def format_hits(self, hits):
         """Format hits."""
@@ -66,7 +66,7 @@ class Snippet(object):
             hits = self.find_keywords()
             hits = self.format_hits(hits)
             self.print_hits(hits)
-        elif Config.get_delete_snippet():
+        elif Config.get_delete():
             self.delete_snippet()
         else:
             self.logger.error('unknown action for snippet')

@@ -31,7 +31,8 @@ class Config(object):
         cls.config['args']['tags'] = cls.__parse_tags()
         cls.config['args']['link'] = cls.__parse_link()
         cls.config['args']['find'] = cls.__parse_find()
-        cls.config['args']['delete_snippet'] = cls.__parse_delete_snippet()
+        cls.config['args']['delete'] = cls.__parse_delete()
+        cls.config['args']['export'], cls.config['args']['export_format'] = cls.__parse_export()
         cls.config['args']['profiler'] = cls.args.get_profiler()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
@@ -44,14 +45,16 @@ class Config(object):
         cls.logger.info('configured argument --brief as "%s"', cls.config['args']['brief'])
         cls.logger.info('configured argument --link as "%s"', cls.config['args']['link'])
         cls.logger.info('configured argument --find as "%s"', cls.config['args']['find'])
-        cls.logger.info('configured argument --delete_snippet as "%s"', cls.config['args']['delete_snippet'])
+        cls.logger.info('configured argument --delete as "%s"', cls.config['args']['delete'])
+        cls.logger.info('configured argument --export as "%s"', cls.config['args']['export'])
         cls.logger.info('configured argument --profiler as "%s"', cls.config['args']['profiler'])
+        cls.logger.info('extracted export file format as "%s"', cls.config['args']['export_format'])
 
     @classmethod
     def is_snippet_task(cls):
         """Test if the user action was for a snippet."""
 
-        if cls.get_snippet() or cls.get_find_keywords() or cls.get_delete_snippet():
+        if cls.get_snippet() or cls.get_find_keywords() or cls.get_delete() or cls.get_export():
             return True
 
         return False
@@ -102,10 +105,16 @@ class Config(object):
         return cls.config['args']['find']
 
     @classmethod
-    def get_delete_snippet(cls):
+    def get_delete(cls):
         """Get deleted snippet index."""
 
-        return cls.config['args']['delete_snippet']
+        return cls.config['args']['delete']
+
+    @classmethod
+    def get_export(cls):
+        """Get export file."""
+
+        return cls.config['args']['export']
 
     @classmethod
     def get_storage_path(cls):
@@ -200,14 +209,30 @@ class Config(object):
         return cls.__parse_keywords(arg)
 
     @classmethod
-    def __parse_delete_snippet(cls):
+    def __parse_delete(cls):
         """Process the user given delete keywords to remove snippet."""
 
-        arg = cls.args.get_delete_snippet()
+        arg = cls.args.get_delete()
         if arg:
             return arg
 
         return 0
+
+    @classmethod
+    def __parse_export(cls):
+        """Preprocess the user given export file."""
+
+        export_file = cls.args.get_export()
+        filename, file_extension = os.path.splitext(export_file)
+        print("filename %s and extension %s" % (filename, file_extension))
+        if filename and ('yaml' in file_extension or 'yml' in file_extension):
+            export_file = filename + '.yaml'
+
+            return (export_file, 'yaml')
+
+        cls.logger.info('unsupported export file format "%s"', file_extension)
+
+        return ('', 'yaml')
 
     @classmethod
     def __parse_keywords(cls, keywords):

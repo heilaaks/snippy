@@ -24,7 +24,7 @@ clean:
 	rm -drf .coverage
 	rm -drf docs/build/*
 	rm -drf htmlcov
-	rm -drf snip.egg-info
+	rm -drf snippy.egg-info
 	rm -f coverage.xml
 	rm -f pytestdebug.log
 

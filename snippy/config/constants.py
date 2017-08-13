@@ -22,3 +22,6 @@ class Constants(object): # pylint: disable=too-few-public-methods
     SNIPPET_BRIEF_STR = '%s   \x1b[91m+\x1b[0m %s\n'
     SNIPPET_TAGS_STR = '%s   \x1b[91m#\x1b[0m %s\n'
     SNIPPET_LINK_STR = '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n'
+
+    # Yaml formatting.
+    YAML_INDENT = '    '

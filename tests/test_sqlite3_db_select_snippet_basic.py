@@ -27,5 +27,5 @@ class TestSqlite3DbSelectSnippetBasic(object): # pylint: disable=too-few-public-
         obj = Sqlite3Db()
         obj.init()
         obj.insert_snippet(snippet, brief, tags, link, metadata)
-        assert obj.select_snippet(keywords) == rows
+        assert obj.select_snippets(keywords) == rows
         obj.disconnect()

@@ -100,6 +100,7 @@ python snip.py -s 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove a
 python snip.py -s 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py -f docker
 python snip.py -d 1
+python snip.py -e snippy.yaml
 
 pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
 pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests

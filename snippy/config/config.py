@@ -224,7 +224,6 @@ class Config(object):
 
         export_file = cls.args.get_export()
         filename, file_extension = os.path.splitext(export_file)
-        print("filename %s and extension %s" % (filename, file_extension))
         if filename and ('yaml' in file_extension or 'yml' in file_extension):
             export_file = filename + '.yaml'
 

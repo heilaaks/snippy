@@ -51,7 +51,7 @@ class Sqlite3Db(object):
         else:
             self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
 
-    def select_snippet(self, keywords, regex=True):
+    def select_snippets(self, keywords, regex=True):
         """Select snippets."""
 
         rows = []
@@ -81,11 +81,28 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('selecting from sqlite3 database failed with exception "%s"', exception)
         else:
-            self.logger.error('sqlite3 database connection did not exist while all entries were being queried')
+            self.logger.error('sqlite3 database connection did not exist while selecting records was execured')
 
         self.logger.debug('selected rows %s', rows)
 
         return rows
+
+    def select_all_snippets(self):
+        """Select all snippets."""
+
+        if self.conn:
+            query = ('SELECT * FROM snippets')
+            self.logger.debug('select all snippets')
+            try:
+                self.cursor.execute(query)
+
+                return self.cursor.fetchall()
+            except sqlite3.Error as exception:
+                self.logger.exception('deleting from sqlite3 database failed with exception "%s"', exception)
+        else:
+            self.logger.error('sqlite3 database connection did not exist while all entries were being queried')
+
+        return []
 
     def delete_snippet(self, db_index):
         """Delete snippets."""

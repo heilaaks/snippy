@@ -24,9 +24,14 @@ class Storage(object):
         self.database.insert_snippet(snippet, brief, tags, link, metadata)
 
     def search(self, keywords):
-        """Search snippet."""
+        """Search snippets."""
 
-        return self.database.select_snippet(keywords)
+        return self.database.select_snippets(keywords)
+
+    def export(self):
+        """Export all snippets."""
+
+        return self.database.select_all_snippets()
 
     def delete(self, db_index):
         """Delete snippet."""

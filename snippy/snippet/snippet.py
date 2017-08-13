@@ -2,6 +2,7 @@
 
 """snippet.py: Snippet management."""
 
+import sys
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
@@ -27,17 +28,25 @@ class Snippet(object):
 
         return self.storage.search(Config.get_find_keywords())
 
-    def delete_snippet(self):
+    def delete(self):
         """Delete new snippet."""
 
         self.logger.debug('deleting snippet')
 
         return self.storage.delete(Config.get_delete())
 
-    def format_hits(self, hits):
-        """Format hits."""
+    def export(self):
+        """export snippets."""
 
-        self.logger.debug('format search hits')
+        self.logger.debug('exporting snippet')
+        hits = self.storage.export()
+        hits = self.format_yaml(hits)
+        self.print_file(hits)
+
+    def format_console(self, hits):
+        """Format hits for console."""
+
+        self.logger.debug('format search hits for console')
 
         console = ''
         for idx, row in enumerate(hits):
@@ -49,11 +58,46 @@ class Snippet(object):
 
         return console
 
-    def print_hits(self, hits):
-        """Print hits."""
+    def format_yaml(self, hits):
+        """Format hits for yaml file."""
+
+        import yaml
+
+        self.logger.debug('format search hits to yaml string')
+        yaml_string = ''
+        yaml_string = yaml_string + '%YAML 1.2\n'
+        yaml_string = yaml_string + '---\n'
+        yaml_string = yaml_string + 'snippets:\n  -'
+        for row in hits:
+            yaml_string = yaml_string + Const.NEWLINE
+            yaml_string = yaml_string + '{0:s}brief: "{1:s}"\n'.format(Const.YAML_INDENT, row[Const.SNIPPET_BRIEF])
+            yaml_string = yaml_string + '{0:s}snippet: >-\n{0:s}{0:s}$ {1:s}\n'.format(Const.YAML_INDENT, row[Const.SNIPPET_SNIPPET])
+            yaml_string = yaml_string + '{0:s}links:\n{0:s}{0:s}- "{1:s}"\n'.format(Const.YAML_INDENT, row[Const.SNIPPET_LINK])
+            yaml_string = yaml_string + '{0:s}tags: [{1:s}]\n'.format(Const.YAML_INDENT, row[Const.SNIPPET_TAGS])
+            yaml_string = yaml_string + '  -'
+        yaml_string = yaml_string[:-3] # Remove last 'OR ' added by the loop.
+        try:
+            yaml.load(yaml_string)
+            self.logger.info('generated valid yaml file')
+        except yaml.YAMLError as exception:
+            self.logger.exception('fatal failure to generate yaml formatted export file "%s"', exception)
+            sys.exit()
+
+        return yaml_string
+
+    def print_console(self, hits):
+        """Print hits into console."""
 
         self.logger.debug('printing search results')
         print(hits)
+
+    def print_file(self, yaml_string):
+        """Print hits into file."""
+
+        export = Config.get_export()
+        self.logger.debug('exporting storage into file %s', export)
+        with open(export, 'w') as outfile:
+            outfile.write(yaml_string)
 
     def run(self, storage):
         """Run the snippet management task."""
@@ -64,9 +108,11 @@ class Snippet(object):
             self.add()
         elif Config.get_find_keywords():
             hits = self.find_keywords()
-            hits = self.format_hits(hits)
-            self.print_hits(hits)
+            hits = self.format_console(hits)
+            self.print_console(hits)
         elif Config.get_delete():
-            self.delete_snippet()
+            self.delete()
+        elif Config.get_export():
+            self.export()
         else:
             self.logger.error('unknown action for snippet')

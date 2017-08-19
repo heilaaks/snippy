@@ -26,6 +26,3 @@ class Constants(object): # pylint: disable=too-few-public-methods
     # Export formats
     EXPORT_YAML = 'yaml'
     EXPORT_JSON = 'json'
-
-    # Yaml formatting.
-    YAML_INDENT = '    '

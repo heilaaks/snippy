@@ -84,19 +84,22 @@ class Snippet(object):
         """Print snippets into file."""
 
         import yaml
+        import json
 
         export = Config.get_export()
         self.logger.debug('exporting storage into file %s', export)
-        if Config.is_export_format_yaml():
-            with open(export, 'w') as outfile:
-                try:
+        with open(export, 'w') as outfile:
+            try:
+                if Config.is_export_format_yaml():
                     yaml.dump(snippet_dict, outfile)
-                except yaml.YAMLError as exception:
-                    self.logger.exception('fatal failure to generate yaml formatted export file "%s"', exception)
-                    self.logger.exception('fatal failure with dictionary %s', snippet_dict)
-                    sys.exit()
-        else:
-            self.logger.info('unknown export format')
+                elif Config.is_export_format_json():
+                    json.dump(snippet_dict, outfile)
+                else:
+                    self.logger.info('unknown export format')
+            except (yaml.YAMLError, TypeError) as exception:
+                self.logger.exception('fatal failure to generate yaml formatted export file "%s"', exception)
+                self.logger.exception('fatal failure with dictionary %s', snippet_dict)
+                sys.exit()
 
     def run(self, storage):
         """Run the snippet management task."""

@@ -9,7 +9,8 @@ class Constants(object): # pylint: disable=too-few-public-methods
     NEWLINE = '\n'
 
     # Delimiters
-    DELIMITER_LINKS = '>'
+    DELIMITER_TAGS = ','
+    DELIMITER_LINKS = '>' # Disallowed characters in URI: <|>|#|%|"
 
     # Column numbers in snippets table.
     SNIPPET_ID = 0

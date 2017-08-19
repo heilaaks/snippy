@@ -41,8 +41,8 @@ class Sqlite3Db(object):
         """Insert snippet into database."""
 
         if self.conn:
-            tags_string = ','.join(map(str, tags))
-            links_string = Const.DELIMITER_LINKS.join(map(str, links)) # Disallowed characters in URI: <|>|#|%|"
+            tags_string = Const.DELIMITER_TAGS.join(map(str, tags))
+            links_string = Const.DELIMITER_LINKS.join(map(str, links))
             query = ('INSERT INTO snippets(snippet, brief, tags, links, metadata) VALUES(?,?,?,?,?)')
             self.logger.debug('insert snippet %s with brief %s and tags %s', snippet, brief, tags_string)
             try:

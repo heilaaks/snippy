@@ -40,36 +40,36 @@ class Snippet(object):
 
         self.logger.debug('exporting snippets')
         snippets = self.storage.export()
-        snippets = self.format_dict(snippets)
+        snippets = self.create_dictionary(snippets)
         self.print_file(snippets)
 
     def format_console(self, snippets):
         """Format snippets for console."""
 
-        self.logger.debug('format search snippets for console')
+        self.logger.debug('format snippets for console')
         console = ''
-        links = ''
+        link_string = ''
         for idx, row in enumerate(snippets):
             console = console + Const.SNIPPET_HEADER_STR % (idx+1, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_ID])
             console = Const.SNIPPET_SNIPPET_STR % (console, row[Const.SNIPPET_SNIPPET]) + Const.NEWLINE
-            console = console + ''.join([Const.SNIPPET_LINKS_STR % (links, link) \
+            console = console + ''.join([Const.SNIPPET_LINKS_STR % (link_string, link) \
                       for link in row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS)])
             console = Const.SNIPPET_TAGS_STR % (console, row[Const.SNIPPET_TAGS])
             console = console + Const.NEWLINE
 
         return console
 
-    def format_dict(self, snippets):
-        """Format snippets for yaml file."""
+    def create_dictionary(self, snippets):
+        """Create dictionary from snippets for data serialization."""
 
-        self.logger.debug('format search snippets to yaml')
+        self.logger.debug('create dictionary from snippets')
         snippet_dict = {}
         snippet_list = []
         for row in snippets:
             snippet = {'brief': row[Const.SNIPPET_BRIEF],
                        'snippet': row[Const.SNIPPET_SNIPPET],
                        'links': row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS),
-                       'tags': row[Const.SNIPPET_TAGS]}
+                       'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS)}
             snippet_list.append(snippet.copy())
         snippet_dict = {'snippets': snippet_list}
 
@@ -88,7 +88,7 @@ class Snippet(object):
         import json
 
         export = Config.get_export()
-        self.logger.debug('exporting storage into file %s', export)
+        self.logger.debug('export storage into file %s', export)
         with open(export, 'w') as outfile:
             try:
                 if Config.is_export_format_yaml():

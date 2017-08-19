@@ -4,8 +4,9 @@
 
 import re
 import os.path
-from snippy.config import Arguments
 from snippy.logger import Logger
+from snippy.config import Constants as Const
+from snippy.config import Arguments
 
 
 class Config(object):
@@ -115,6 +116,15 @@ class Config(object):
         """Get export file."""
 
         return cls.config['args']['export']
+
+    @classmethod
+    def is_export_format_yaml(cls):
+        """Test if export format is yaml."""
+
+        if cls.config['args']['export_format'] == Const.EXPORT_YAML:
+            return True
+
+        return False
 
     @classmethod
     def get_storage_path(cls):
@@ -227,11 +237,11 @@ class Config(object):
         if filename and ('yaml' in file_extension or 'yml' in file_extension):
             export_file = filename + '.yaml'
 
-            return (export_file, 'yaml')
+            return (export_file, Const.EXPORT_YAML)
 
         cls.logger.info('unsupported export file format "%s"', file_extension)
 
-        return ('', 'yaml')
+        return ('', Const.EXPORT_YAML)
 
     @classmethod
     def __parse_keywords(cls, keywords):

@@ -20,13 +20,13 @@ class TestConfigAddNewSnippet(unittest.TestCase):
         assert isinstance(obj.get_resolve(), str)
         assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_link(), str)
+        assert isinstance(obj.get_links(), list)
         assert isinstance(obj.get_find_keywords(), list)
         assert not obj.get_snippet()
         assert not obj.get_resolve()
         assert not obj.get_brief()
         assert not obj.get_tags()
-        assert not obj.get_link()
+        assert not obj.get_links()
         assert not obj.get_find_keywords()
 
     def test_add_snippet_without_optional_arguments(self):
@@ -93,17 +93,17 @@ class TestConfigAddNewSnippet(unittest.TestCase):
         snippet = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
         tags = ['cleanup', 'container', 'docker']
-        link = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', link]
+        links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container']
+        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', links[0]]
         obj = Config()
         assert isinstance(obj.get_snippet(), str)
         assert isinstance(obj.get_brief(), str)
         assert isinstance(obj.get_tags(), list)
-        assert isinstance(obj.get_link(), str)
+        assert isinstance(obj.get_links(), list)
         assert obj.get_snippet() == snippet
         assert obj.get_brief() == brief
         self.assertCountEqual(obj.get_tags(), tags)
-        assert obj.get_link() == link
+        self.assertCountEqual(obj.get_links(), links)
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -175,6 +175,26 @@ class TestConfigAddNewSnippet(unittest.TestCase):
         assert isinstance(obj.get_tags(), list)
         assert obj.get_snippet() == snippet
         self.assertCountEqual(obj.get_tags(), tags)
+
+    def test_links_separated_by_space(self):
+        """Test that multiple links can be added by separating them with
+        space."""
+
+        snippet = 'docker rm $(docker ps -a -q)'
+        brief = 'Remove all docker containers'
+        tags = ['cleanup', 'container', 'docker']
+        links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
+                 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes']
+        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', ' '.join(links)]
+        obj = Config()
+        assert isinstance(obj.get_snippet(), str)
+        assert isinstance(obj.get_brief(), str)
+        assert isinstance(obj.get_tags(), list)
+        assert isinstance(obj.get_links(), list)
+        assert obj.get_snippet() == snippet
+        assert obj.get_brief() == brief
+        self.assertCountEqual(obj.get_tags(), tags)
+        self.assertCountEqual(obj.get_links(), links)
 
     # pylint: disable=duplicate-code
     @classmethod

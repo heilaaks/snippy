@@ -8,12 +8,15 @@ class Constants(object): # pylint: disable=too-few-public-methods
 
     NEWLINE = '\n'
 
+    # Delimiters
+    DELIMITER_LINKS = '>'
+
     # Column numbers in snippets table.
     SNIPPET_ID = 0
     SNIPPET_SNIPPET = 1
     SNIPPET_BRIEF = 2
     SNIPPET_TAGS = 3
-    SNIPPET_LINK = 4
+    SNIPPET_LINKS = 4
     SNIPPET_METADATA = 5
 
     # Snippet console print formatting.
@@ -21,7 +24,7 @@ class Constants(object): # pylint: disable=too-few-public-methods
     SNIPPET_SNIPPET_STR = '%s   \x1b[91m$\x1b[0m \x1b[2m%s\x1b[0m\n'
     SNIPPET_BRIEF_STR = '%s   \x1b[91m+\x1b[0m %s\n'
     SNIPPET_TAGS_STR = '%s   \x1b[91m#\x1b[0m %s\n'
-    SNIPPET_LINK_STR = '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n'
+    SNIPPET_LINKS_STR = '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n'
 
     # Export formats
     EXPORT_YAML = 'yaml'

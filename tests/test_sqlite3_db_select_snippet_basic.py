@@ -11,21 +11,21 @@ class TestSqlite3DbSelectSnippetBasic(object): # pylint: disable=too-few-public-
 
     @mock.patch.object(Config, 'is_storage_in_memory')
     @mock.patch.object(Config, 'get_storage_schema')
-    def test_select_with_one_keyword_matching_column_link(self, mock_get_storage_schema, mock_is_storage_in_memory):
+    def test_select_with_one_keyword_matching_column_links(self, mock_get_storage_schema, mock_is_storage_in_memory):
         """Test that snippet can be selected with regexp keywords. In this
-        case only the last keyword matches to link column."""
+        case only the last keyword matches to links column."""
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
         snippet = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
         tags = ['container', 'cleanup', 'docker']
-        link = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
+        links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container']
         metadata = 'metadata'
         keywords = ['moby', 'delete', 'askubuntu']
-        rows = [(1, snippet, brief, 'container,cleanup,docker', link, metadata)]
+        rows = [(1, snippet, brief, 'container,cleanup,docker', links[0], metadata)]
         obj = Sqlite3Db()
         obj.init()
-        obj.insert_snippet(snippet, brief, tags, link, metadata)
+        obj.insert_snippet(snippet, brief, tags, links, metadata)
         assert obj.select_snippets(keywords) == rows
         obj.disconnect()

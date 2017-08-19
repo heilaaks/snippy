@@ -8,7 +8,7 @@ create table if not exists snippets (
     snippet     text not null unique,
     brief       text default '',
     tags        text default '',
-    link        text default '',
+    links       text default '',
     metadata    text default ''
 );
 
@@ -18,6 +18,6 @@ create table if not exists resolves (
     resolve     text not null unique,
     brief       text default '',
     tags        text default '',
-    link        text default '',
+    links       text default '',
     metadata    text default ''
 );

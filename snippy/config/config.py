@@ -30,7 +30,7 @@ class Config(object):
         cls.config['args']['resolve'] = cls.__parse_resolve()
         cls.config['args']['brief'] = cls.__parse_brief()
         cls.config['args']['tags'] = cls.__parse_tags()
-        cls.config['args']['link'] = cls.__parse_link()
+        cls.config['args']['links'] = cls.__parse_links()
         cls.config['args']['find'] = cls.__parse_find()
         cls.config['args']['delete'] = cls.__parse_delete()
         cls.config['args']['export'], cls.config['args']['export_format'] = cls.__parse_export()
@@ -44,7 +44,7 @@ class Config(object):
         cls.logger.info('configured argument --snippet as "%s"', cls.config['args']['snippet'])
         cls.logger.info('configured argument --tags as "%s"', cls.config['args']['tags'])
         cls.logger.info('configured argument --brief as "%s"', cls.config['args']['brief'])
-        cls.logger.info('configured argument --link as "%s"', cls.config['args']['link'])
+        cls.logger.info('configured argument --links as "%s"', cls.config['args']['links'])
         cls.logger.info('configured argument --find as "%s"', cls.config['args']['find'])
         cls.logger.info('configured argument --delete as "%s"', cls.config['args']['delete'])
         cls.logger.info('configured argument --export as "%s"', cls.config['args']['export'])
@@ -94,10 +94,10 @@ class Config(object):
         return cls.config['args']['tags']
 
     @classmethod
-    def get_link(cls):
-        """Get link for the snippet or resolution."""
+    def get_links(cls):
+        """Get links for the snippet or resolution."""
 
-        return cls.config['args']['link']
+        return cls.config['args']['links']
 
     @classmethod
     def get_find_keywords(cls):
@@ -210,14 +210,15 @@ class Config(object):
         return cls.__parse_keywords(arg)
 
     @classmethod
-    def __parse_link(cls):
-        """Preprocess the user given link."""
+    def __parse_links(cls):
+        """Preprocess the user given links."""
 
-        arg = cls.args.get_link()
-        if arg:
-            return arg
+        links = cls.args.get_links()
+        # Examples: Support processing of:
+        #           1. -l docker container cleanup # Space separated string of links
+        link_list = links.split()
 
-        return ''
+        return sorted(link_list)
 
     @classmethod
     def __parse_find(cls):

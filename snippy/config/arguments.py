@@ -19,7 +19,7 @@ class Arguments(object):
         parser.add_argument('-r', '--resolve', type=str, default='', help='add troubleshooting resolution')
         parser.add_argument('-b', '--brief', type=str, default='', help='set brief description for the input')
         parser.add_argument('-t', '--tags', nargs='*', type=str, default='', help='set tags for the input')
-        parser.add_argument('-l', '--link', type=str, default='', help='set reference link for more information')
+        parser.add_argument('-l', '--links', type=str, default='', help='set reference links for more information')
         parser.add_argument('-f', '--find', nargs='*', type=str, default='', help='find with all given keywords')
         parser.add_argument('-d', '--delete', type=int, default=0, help='remove snippet based on storage index')
         parser.add_argument('-e', '--export', type=str, default='', help='export peristed storage to file [*.yaml]')
@@ -60,12 +60,12 @@ class Arguments(object):
         return cls.args.tags
 
     @classmethod
-    def get_link(cls):
-        """Return the link that user gave exactly as it was."""
+    def get_links(cls):
+        """Return the links that user gave exactly as it was."""
 
-        cls.logger.info('parsed argument --link with value "%s"', cls.args.link)
+        cls.logger.info('parsed argument --links with value "%s"', cls.args.links)
 
-        return cls.args.link
+        return cls.args.links
 
     @classmethod
     def get_find(cls):

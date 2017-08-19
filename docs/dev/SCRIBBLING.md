@@ -98,6 +98,7 @@ time python snip.py -s 'docker rm' -b 'Remove all docker containers' -t docker,c
 python snip.py -s 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python snip.py -s 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py -s 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+python snip.py -s 'docker rm --force redis' -b 'Remove docker image with force' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
 python snip.py -f docker
 python snip.py -d 1
 python snip.py -e snippets.yaml
@@ -114,3 +115,6 @@ pytest
 
    > file:///home/heilaaks/devel/snippy/htmlcov/index.html
    > file:///home/heilaaks/devel/snippy/docs/build/html/index.html
+
+# Run single test
+pytest tests/test_arguments_add_new_snippet.py -k test_tags_with_quotes_and_separated_by_comma_and_space

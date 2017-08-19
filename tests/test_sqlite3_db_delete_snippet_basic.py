@@ -28,8 +28,8 @@ class TestSqlite3DbDeleteSnippetBasic(object): # pylint: disable=too-few-public-
                 (2, snippets[1], briefs[1], 'container,cleanup,docker', links[1], metadata)]
         obj = Sqlite3Db()
         obj.init()
-        obj.insert_snippet(snippets[0], briefs[0], tags[0], links[0], metadata)
-        obj.insert_snippet(snippets[1], briefs[1], tags[1], links[1], metadata)
+        obj.insert_snippet(snippets[0], briefs[0], tags[0], [links[0]], metadata)
+        obj.insert_snippet(snippets[1], briefs[1], tags[1], [links[1]], metadata)
         assert obj.select_snippets(keywords) == rows
         obj.delete_snippet(1)
         assert obj.select_snippets(keywords) == [(2, snippets[1], briefs[1], 'container,cleanup,docker', links[1], metadata)]

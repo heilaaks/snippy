@@ -19,7 +19,7 @@ class TestArgumentsAddNewSnippet(object):
         assert obj.get_resolve() == ''
         assert obj.get_brief() == ''
         assert obj.get_tags() == ''
-        assert obj.get_link() == ''
+        assert obj.get_links() == ''
         assert obj.get_find() == ''
 
     def test_add_snippet_without_optional_arguments(self):
@@ -74,13 +74,13 @@ class TestArgumentsAddNewSnippet(object):
         snippet = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
         tags = ['docker, container, cleanup']
-        link = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', link]
+        links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
+        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', links]
         obj = Arguments()
         assert obj.get_snippet() == snippet
         assert obj.get_brief() == brief
         assert obj.get_tags() == tags
-        assert obj.get_link() == link
+        assert obj.get_links() == links
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -141,6 +141,22 @@ class TestArgumentsAddNewSnippet(object):
         assert obj.get_snippet() == snippet
         assert obj.get_brief() == ''
         assert obj.get_tags() == tags
+
+    def test_links_separated_by_space(self):
+        """Test that multiple links can be added by separating them with
+        space."""
+
+        snippet = 'docker rm $(docker ps -a -q)'
+        brief = 'Remove all docker containers'
+        tags = ['docker, container, cleanup']
+        links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container \
+                 https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', links]
+        obj = Arguments()
+        assert obj.get_snippet() == snippet
+        assert obj.get_brief() == brief
+        assert obj.get_tags() == tags
+        assert obj.get_links() == links
 
     # pylint: disable=duplicate-code
     @classmethod

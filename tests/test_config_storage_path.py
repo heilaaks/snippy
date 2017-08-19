@@ -3,6 +3,7 @@
 """test_config_storage_path.py: Testing storage path configuration."""
 
 import os
+import sys
 from snippy.config import Config
 
 
@@ -14,6 +15,7 @@ class TestConfigStoragePath(object):
     def test_storage_path(self):
         """Test that storage path is configured correctly."""
 
+        sys.argv = ['snippy']
         obj = Config()
         path = os.path.join(os.environ['HOME'], 'devel/snippy-db')
         assert obj.get_storage_path() == path
@@ -21,6 +23,7 @@ class TestConfigStoragePath(object):
     def test_storage_snippy(self):
         """Test that storage file is configured correctly."""
 
+        sys.argv = ['snippy']
         obj = Config()
         db_file = os.path.join(os.environ['HOME'], 'devel/snippy-db', 'snippy.db')
         assert obj.get_storage_file() == db_file

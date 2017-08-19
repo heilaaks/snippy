@@ -95,6 +95,7 @@ class Snippet(object):
                     yaml.dump(snippet_dict, outfile)
                 elif Config.is_export_format_json():
                     json.dump(snippet_dict, outfile)
+                    outfile.write(Const.NEWLINE)
                 else:
                     self.logger.info('unknown export format')
             except (yaml.YAMLError, TypeError) as exception:

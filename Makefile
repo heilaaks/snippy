@@ -22,6 +22,7 @@ clean:
 	find . \( -name \*.pyc -o -name \*.pyo -o -name __pycache__ \) -prune -exec rm -rf {} +
 	rm -drf .cache
 	rm -drf .coverage
+	rm -dfr dist
 	rm -drf docs/build/*
 	rm -drf htmlcov
 	rm -drf snippy.egg-info

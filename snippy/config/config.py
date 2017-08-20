@@ -4,8 +4,8 @@
 
 import re
 import os.path
-from snippy.logger import Logger
 from snippy.config import Constants as Const
+from snippy.logger import Logger
 from snippy.config import Arguments
 
 
@@ -32,6 +32,7 @@ class Config(object):
         cls.config['args']['tags'] = cls.__parse_tags()
         cls.config['args']['links'] = cls.__parse_links()
         cls.config['args']['find'] = cls.__parse_find()
+        cls.config['args']['write'] = cls.__parse_write()
         cls.config['args']['delete'] = cls.__parse_delete()
         cls.config['args']['export'], cls.config['args']['export_format'] = cls.__parse_export()
         cls.config['args']['profiler'] = cls.args.get_profiler()
@@ -39,17 +40,19 @@ class Config(object):
         cls.config['storage']['path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
         cls.config['storage']['file'] = 'snippy.db'
         cls.config['storage']['schema'] = os.path.join(cls.config['root'], 'snippy/storage/database/database.sql')
-        cls.config['storage']['in_memory'] = False
+        cls.config['storage']['in_memory'] = False # Enabled only for testing.
 
-        cls.logger.info('configured argument --snippet as "%s"', cls.config['args']['snippet'])
-        cls.logger.info('configured argument --tags as "%s"', cls.config['args']['tags'])
-        cls.logger.info('configured argument --brief as "%s"', cls.config['args']['brief'])
-        cls.logger.info('configured argument --links as "%s"', cls.config['args']['links'])
-        cls.logger.info('configured argument --find as "%s"', cls.config['args']['find'])
-        cls.logger.info('configured argument --delete as "%s"', cls.config['args']['delete'])
-        cls.logger.info('configured argument --export as "%s"', cls.config['args']['export'])
-        cls.logger.info('configured argument --profiler as "%s"', cls.config['args']['profiler'])
-        cls.logger.info('extracted export file format as "%s"', cls.config['args']['export_format'])
+        cls.__set_editor_input()
+
+        cls.logger.debug('configured argument --snippet as "%s"', cls.config['args']['snippet'])
+        cls.logger.debug('configured argument --tags as "%s"', cls.config['args']['tags'])
+        cls.logger.debug('configured argument --brief as "%s"', cls.config['args']['brief'])
+        cls.logger.debug('configured argument --links as "%s"', cls.config['args']['links'])
+        cls.logger.debug('configured argument --find as "%s"', cls.config['args']['find'])
+        cls.logger.debug('configured argument --delete as "%s"', cls.config['args']['delete'])
+        cls.logger.debug('configured argument --export as "%s"', cls.config['args']['export'])
+        cls.logger.debug('configured argument --profiler as "%s"', cls.config['args']['profiler'])
+        cls.logger.debug('extracted export file format as "%s"', cls.config['args']['export_format'])
 
     @classmethod
     def is_snippet_task(cls):
@@ -229,6 +232,12 @@ class Config(object):
         return cls.__parse_keywords(arg)
 
     @classmethod
+    def __parse_write(cls):
+        """Process the user given input from editor."""
+
+        return cls.args.get_write()
+
+    @classmethod
     def __parse_delete(cls):
         """Process the user given delete keywords to remove snippet."""
 
@@ -275,3 +284,33 @@ class Config(object):
             kw_list = kw_list + re.findall(r"[\w\-]+", tag)
 
         return sorted(kw_list)
+
+    @classmethod
+    def __set_editor_input(cls):
+        """Read and set the user provided values from the editor."""
+
+        if cls.config['args']['write']:
+            cls.logger.debug('using parameters from editor')
+            snippet = re.search('%s(.*)%s' % (Const.EDITOR_SNIPPET_HEAD, Const.EDITOR_SNIPPET_TAIL), \
+                                 cls.config['args']['write'], re.DOTALL)
+            if snippet:
+                line_list = list(map(lambda s: s.strip(), snippet.group(1).rstrip().split(Const.NEWLINE)))
+                cls.config['args']['snippet'] = Const.NEWLINE.join(line_list)
+
+            brief = re.search('%s(.*)%s' % (Const.EDITOR_BRIEF_HEAD, Const.EDITOR_BRIEF_TAIL), \
+                               cls.config['args']['write'], re.DOTALL)
+            if brief:
+                line_list = list(map(lambda s: s.strip(), brief.group(1).rstrip().split(Const.NEWLINE)))
+                cls.config['args']['brief'] = Const.NEWLINE.join(line_list)
+
+            tags = re.search('%s(.*)%s' % (Const.EDITOR_TAGS_HEAD, Const.EDITOR_TAGS_TAIL), \
+                              cls.config['args']['write'], re.DOTALL)
+            if tags:
+                line_list = list(map(lambda s: s.strip(), tags.group(1).rstrip().split(Const.NEWLINE)))
+                cls.config['args']['tags'] = cls.__parse_keywords(line_list)
+
+            links = re.search('%s(.*)%s' % (Const.EDITOR_LINKS_HEAD, Const.EDITOR_LINKS_TAIL), \
+                               cls.config['args']['write'], re.DOTALL)
+            if links:
+                line_list = list(map(lambda s: s.strip(), links.group(1).rstrip().split(Const.NEWLINE)))
+                cls.config['args']['links'] = line_list

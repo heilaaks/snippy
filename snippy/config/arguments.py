@@ -2,6 +2,7 @@
 
 """arguments.py: Command line argument management."""
 
+import os
 import argparse
 from snippy.logger import Logger
 
@@ -21,6 +22,7 @@ class Arguments(object):
         parser.add_argument('-t', '--tags', nargs='*', type=str, default='', help='set tags for the input')
         parser.add_argument('-l', '--links', type=str, default='', help='set reference links for more information')
         parser.add_argument('-f', '--find', nargs='*', type=str, default='', help='find with all given keywords')
+        parser.add_argument('-w', '--write', action='store_true', default=False, help='write input with editor')
         parser.add_argument('-d', '--delete', type=int, default=0, help='remove snippet based on storage index')
         parser.add_argument('-e', '--export', type=str, default='', help='export peristed storage to file [*.yaml]')
         parser.add_argument('--ftag', type=str, help='find from tags only')
@@ -98,3 +100,35 @@ class Arguments(object):
         cls.logger.info('parsed argument --profile with value "%s"', cls.args.profiler)
 
         return cls.args.profiler
+
+    @classmethod
+    def get_write(cls):
+        """Return the user input from editor."""
+
+        edited_message = ''
+        if not cls.args.write:
+            return edited_message
+
+        import tempfile
+        from subprocess import call
+
+        default_editor = os.environ.get('EDITOR', 'vi')
+        editor_template = ('# Commented lines will be ignored.\n'
+                           '\n'
+                           '# Add mandatory snippet below.\n'
+                           '\n'
+                           '# Add optional brief description below.\n'
+                           '\n'
+                           '# Add optional comma separated list of tags below.\n'
+                           '\n'
+                           '# Add optional links below one link per line.\n'
+                           '\n').encode('UTF-8')
+
+        with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
+            outfile.write(editor_template)
+            outfile.flush()
+            call([default_editor, outfile.name])
+            outfile.seek(0)
+            edited_message = outfile.read()
+
+        return edited_message.decode('UTF-8')

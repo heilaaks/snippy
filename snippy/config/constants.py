@@ -30,3 +30,13 @@ class Constants(object): # pylint: disable=too-few-public-methods
     # Export formats
     EXPORT_YAML = 'yaml'
     EXPORT_JSON = 'json'
+
+    # Editor input tags
+    EDITOR_SNIPPET_HEAD = '# Add mandatory snippet below.\n'
+    EDITOR_SNIPPET_TAIL = '# Add optional brief description below.\n'
+    EDITOR_BRIEF_HEAD = '# Add optional brief description below.\n'
+    EDITOR_BRIEF_TAIL = '# Add optional comma separated list of tags below.\n'
+    EDITOR_TAGS_HEAD = '# Add optional comma separated list of tags below.\n'
+    EDITOR_TAGS_TAIL = '# Add optional links below one link per line.\n'
+    EDITOR_LINKS_HEAD = '# Add optional links below one link per line.\n'
+    EDITOR_LINKS_TAIL = '.'

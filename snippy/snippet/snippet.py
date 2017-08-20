@@ -48,10 +48,13 @@ class Snippet(object):
 
         self.logger.debug('format snippets for console')
         console = ''
+        snippet_string = ''
         link_string = ''
         for idx, row in enumerate(snippets):
             console = console + Const.SNIPPET_HEADER_STR % (idx+1, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_ID])
-            console = Const.SNIPPET_SNIPPET_STR % (console, row[Const.SNIPPET_SNIPPET]) + Const.NEWLINE
+            console = console + ''.join([Const.SNIPPET_SNIPPET_STR % (snippet_string, snippet_line) \
+                      for snippet_line in row[Const.SNIPPET_SNIPPET].split(Const.NEWLINE)])
+            console = console + Const.NEWLINE
             console = console + ''.join([Const.SNIPPET_LINKS_STR % (link_string, link) \
                       for link in row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS)])
             console = Const.SNIPPET_TAGS_STR % (console, row[Const.SNIPPET_TAGS])

@@ -118,3 +118,22 @@ pytest
 
 # Run single test
 pytest tests/test_arguments_add_new_snippet.py -k test_tags_with_quotes_and_separated_by_comma_and_space
+
+### Editor input
+# Commented lines will be ignored.
+
+# Add mandatory snippet below.
+docker rm --force redis
+docker rmi redis
+docker rmi zookeeper
+
+# Add optional brief description below.
+Remove docker image with force
+
+# Add optional comma separated list of tags below.
+docker,images,remove
+
+# Add optional links below one link per line.
+https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
+https://docs.docker.com/engine/reference/commandline/rm/
+

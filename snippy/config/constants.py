@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-"""constants.py: Globals for the tool."""
+"""constants.py: Globals constants for the tool."""
 
 
-class Constants(object): # pylint: disable=too-few-public-methods
-    """Globals for the tool."""
+class Constants(object):
+    """Globals constants for the tool."""
 
     NEWLINE = '\n'
 
@@ -20,16 +20,10 @@ class Constants(object): # pylint: disable=too-few-public-methods
     SNIPPET_LINKS = 4
     SNIPPET_METADATA = 5
 
-    # Snippet console print formatting.
-    SNIPPET_HEADER_STR = '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m [%s]\x1b[0m\n'
-    SNIPPET_SNIPPET_STR = '%s   \x1b[91m$\x1b[0m \x1b[2m%s\x1b[0m\n'
-    SNIPPET_BRIEF_STR = '%s   \x1b[91m+\x1b[0m %s\n'
-    SNIPPET_TAGS_STR = '%s   \x1b[91m#\x1b[0m %s\n'
-    SNIPPET_LINKS_STR = '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n'
-
     # Export formats
     EXPORT_YAML = 'yaml'
     EXPORT_JSON = 'json'
+    EXPORT_TEXT = 'text'
 
     # Editor input tags
     EDITOR_SNIPPET_HEAD = '# Add mandatory snippet below.\n'
@@ -40,3 +34,33 @@ class Constants(object): # pylint: disable=too-few-public-methods
     EDITOR_TAGS_TAIL = '# Add optional links below one link per line.\n'
     EDITOR_LINKS_HEAD = '# Add optional links below one link per line.\n'
     EDITOR_LINKS_TAIL = '.'
+
+    @staticmethod
+    def format_header(colors=False):
+        """Format snippet text header."""
+
+        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m [%s]\x1b[0m\n' if colors else '%d. %s [%s]\n'
+
+    @staticmethod
+    def format_snippet(colors=False):
+        """Format snippet text."""
+
+        return '%s   \x1b[91m$\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   $ %s\n'
+
+    @staticmethod
+    def format_brief(colors=False):
+        """Format snippet brief description."""
+
+        return '%s   \x1b[91m+\x1b[0m %s\n' if colors else '%s   + %s\n'
+
+    @staticmethod
+    def format_tags(colors=False):
+        """Format snippet tags."""
+
+        return '%s   \x1b[91m#\x1b[0m %s\n' if colors else '%s   # %s\n'
+
+    @staticmethod
+    def format_links(colors=False):
+        """Format snippet links."""
+
+        return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   > %s\n'

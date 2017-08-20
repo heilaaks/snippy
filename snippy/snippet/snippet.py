@@ -21,53 +21,52 @@ class Snippet(object):
         self.logger.debug('adding new snippet')
         self.storage.store(Config.get_snippet(), Config.get_brief(), Config.get_tags(), Config.get_links())
 
-    def find_keywords(self):
+    def find(self):
         """Find snippets based on keywords."""
 
         self.logger.info('finding snippet based on keywords')
-
-        return self.storage.search(Config.get_find_keywords())
+        snippets = self.storage.search(Config.get_find_keywords())
+        snippets = self.format_text(snippets, colors=True)
+        self.print_terminal(snippets)
 
     def delete(self):
         """Delete new snippet."""
 
         self.logger.debug('deleting snippet')
-
-        return self.storage.delete(Config.get_delete())
+        self.storage.delete(Config.get_delete())
 
     def export(self):
         """export snippets."""
 
         self.logger.debug('exporting snippets')
         snippets = self.storage.export()
-        snippets = self.create_dictionary(snippets)
         self.print_file(snippets)
 
-    def format_console(self, snippets):
-        """Format snippets for console."""
+    def format_text(self, snippets, colors=False):
+        """Format snippets for terminal with color codes or for a raw text output."""
 
-        self.logger.debug('format snippets for console')
-        console = ''
+        text = ''
         snippet_string = ''
         link_string = ''
+        self.logger.debug('format snippets for text based output')
         for idx, row in enumerate(snippets):
-            console = console + Const.SNIPPET_HEADER_STR % (idx+1, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_ID])
-            console = console + ''.join([Const.SNIPPET_SNIPPET_STR % (snippet_string, snippet_line) \
+            text = text + Const.format_header(colors) % (idx+1, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_ID])
+            text = text + ''.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
                       for snippet_line in row[Const.SNIPPET_SNIPPET].split(Const.NEWLINE)])
-            console = console + Const.NEWLINE
-            console = console + ''.join([Const.SNIPPET_LINKS_STR % (link_string, link) \
+            text = text + Const.NEWLINE
+            text = text + ''.join([Const.format_links(colors) % (link_string, link) \
                       for link in row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS)])
-            console = Const.SNIPPET_TAGS_STR % (console, row[Const.SNIPPET_TAGS])
-            console = console + Const.NEWLINE
+            text = Const.format_tags(colors) % (text, row[Const.SNIPPET_TAGS])
+            text = text + Const.NEWLINE
 
-        return console
+        return text
 
     def create_dictionary(self, snippets):
         """Create dictionary from snippets for data serialization."""
 
-        self.logger.debug('create dictionary from snippets')
         snippet_dict = {}
         snippet_list = []
+        self.logger.debug('create dictionary from snippets')
         for row in snippets:
             snippet = {'brief': row[Const.SNIPPET_BRIEF],
                        'snippet': row[Const.SNIPPET_SNIPPET],
@@ -78,32 +77,35 @@ class Snippet(object):
 
         return snippet_dict
 
-    def print_console(self, snippets):
-        """Print snippets into console."""
+    def print_terminal(self, snippets):
+        """Print snippets into terminal."""
 
         self.logger.debug('printing search results')
         print(snippets)
 
-    def print_file(self, snippet_dict):
+    def print_file(self, snippets):
         """Print snippets into file."""
-
-        import yaml
-        import json
 
         export = Config.get_export()
         self.logger.debug('export storage into file %s', export)
         with open(export, 'w') as outfile:
             try:
                 if Config.is_export_format_yaml():
-                    yaml.dump(snippet_dict, outfile)
+                    import yaml
+
+                    yaml.dump(self.create_dictionary(snippets), outfile)
                 elif Config.is_export_format_json():
-                    json.dump(snippet_dict, outfile)
+                    import json
+
+                    json.dump(self.create_dictionary(snippets), outfile)
                     outfile.write(Const.NEWLINE)
+                elif Config.is_export_format_text():
+                    self.format_text(snippets)
+                    outfile.write(self.format_text(snippets))
                 else:
                     self.logger.info('unknown export format')
             except (yaml.YAMLError, TypeError) as exception:
-                self.logger.exception('fatal failure to generate yaml formatted export file "%s"', exception)
-                self.logger.exception('fatal failure with dictionary %s', snippet_dict)
+                self.logger.exception('fatal failure to generate formatted export file "%s"', exception)
                 sys.exit()
 
     def run(self, storage):
@@ -114,9 +116,7 @@ class Snippet(object):
         if Config.get_snippet():
             self.add()
         elif Config.get_find_keywords():
-            snippets = self.find_keywords()
-            snippets = self.format_console(snippets)
-            self.print_console(snippets)
+            self.find()
         elif Config.get_delete():
             self.delete()
         elif Config.get_export():

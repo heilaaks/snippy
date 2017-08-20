@@ -139,6 +139,15 @@ class Config(object):
         return False
 
     @classmethod
+    def is_export_format_text(cls):
+        """Test if export format is text."""
+
+        if cls.config['args']['export_format'] == Const.EXPORT_TEXT:
+            return True
+
+        return False
+
+    @classmethod
     def get_storage_path(cls):
         """Get path of the persistent storage."""
 
@@ -261,6 +270,11 @@ class Config(object):
             export_file = filename + '.json'
 
             return (export_file, Const.EXPORT_JSON)
+
+        elif filename and ('txt' in file_extension or 'text' in file_extension):
+            export_file = filename + '.txt'
+
+            return (export_file, Const.EXPORT_TEXT)
 
         cls.logger.info('unsupported export file format "%s"', file_extension)
 

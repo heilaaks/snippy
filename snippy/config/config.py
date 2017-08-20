@@ -313,4 +313,4 @@ class Config(object):
                                cls.config['args']['write'], re.DOTALL)
             if links:
                 line_list = list(map(lambda s: s.strip(), links.group(1).rstrip().split(Const.NEWLINE)))
-                cls.config['args']['links'] = line_list
+                cls.config['args']['links'] = sorted(line_list)

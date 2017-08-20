@@ -45,13 +45,13 @@ class Config(object):
         cls.__set_editor_input()
 
         cls.logger.debug('configured argument --snippet as "%s"', cls.config['args']['snippet'])
-        cls.logger.debug('configured argument --tags as "%s"', cls.config['args']['tags'])
+        cls.logger.debug('configured argument --tags as %s', cls.config['args']['tags'])
         cls.logger.debug('configured argument --brief as "%s"', cls.config['args']['brief'])
-        cls.logger.debug('configured argument --links as "%s"', cls.config['args']['links'])
-        cls.logger.debug('configured argument --find as "%s"', cls.config['args']['find'])
-        cls.logger.debug('configured argument --delete as "%s"', cls.config['args']['delete'])
+        cls.logger.debug('configured argument --links as %s', cls.config['args']['links'])
+        cls.logger.debug('configured argument --find as %s', cls.config['args']['find'])
+        cls.logger.debug('configured argument --delete as %d', cls.config['args']['delete'])
         cls.logger.debug('configured argument --export as "%s"', cls.config['args']['export'])
-        cls.logger.debug('configured argument --profiler as "%s"', cls.config['args']['profiler'])
+        cls.logger.debug('configured argument --profiler as %s', cls.config['args']['profiler'])
         cls.logger.debug('extracted export file format as "%s"', cls.config['args']['export_format'])
 
     @classmethod

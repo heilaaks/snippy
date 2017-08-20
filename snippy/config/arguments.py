@@ -19,9 +19,9 @@ class Arguments(object):
         parser.add_argument('-s', '--snippet', type=str, default='', help='add command or code snippet')
         parser.add_argument('-r', '--resolve', type=str, default='', help='add troubleshooting resolution')
         parser.add_argument('-b', '--brief', type=str, default='', help='set brief description for the input')
-        parser.add_argument('-t', '--tags', nargs='*', type=str, default='', help='set tags for the input')
+        parser.add_argument('-t', '--tags', nargs='*', type=str, default=[], help='set tags for the input')
         parser.add_argument('-l', '--links', type=str, default='', help='set reference links for more information')
-        parser.add_argument('-f', '--find', nargs='*', type=str, default='', help='find with all given keywords')
+        parser.add_argument('-f', '--find', nargs='*', type=str, default=[], help='find with all given keywords')
         parser.add_argument('-w', '--write', action='store_true', default=False, help='write input with editor')
         parser.add_argument('-d', '--delete', type=int, default=0, help='remove snippet based on storage index')
         parser.add_argument('-e', '--export', type=str, default='', help='export peristed storage to file [*.yaml]')
@@ -57,7 +57,7 @@ class Arguments(object):
     def get_tags(cls):
         """Return the tags that user gave exactly as it was."""
 
-        cls.logger.info('parsed argument --tags with value "%s"', cls.args.tags)
+        cls.logger.info('parsed argument --tags with value %s', cls.args.tags)
 
         return cls.args.tags
 
@@ -73,7 +73,7 @@ class Arguments(object):
     def get_find(cls):
         """Return the find keywords that user gave exactly as it was."""
 
-        cls.logger.info('parsed argument --find with value "%s"', cls.args.find)
+        cls.logger.info('parsed argument --find with value %s', cls.args.find)
 
         return cls.args.find
 
@@ -81,7 +81,7 @@ class Arguments(object):
     def get_delete(cls):
         """Return the index to be deleted as it was provided by the user."""
 
-        cls.logger.info('parsed argument --delete with value "%s"', cls.args.delete)
+        cls.logger.info('parsed argument --delete with value %d', cls.args.delete)
 
         return cls.args.delete
 
@@ -97,7 +97,7 @@ class Arguments(object):
     def get_profiler(cls):
         """Return the profiler switch based on user input or from default."""
 
-        cls.logger.info('parsed argument --profile with value "%s"', cls.args.profiler)
+        cls.logger.info('parsed argument --profile with value %s', cls.args.profiler)
 
         return cls.args.profiler
 

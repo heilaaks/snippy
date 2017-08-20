@@ -18,9 +18,9 @@ class TestArgumentsAddNewSnippet(object):
         assert obj.get_snippet() == ''
         assert obj.get_resolve() == ''
         assert obj.get_brief() == ''
-        assert obj.get_tags() == ''
+        assert obj.get_tags() == []
         assert obj.get_links() == ''
-        assert obj.get_find() == ''
+        assert obj.get_find() == []
 
     def test_add_snippet_without_optional_arguments(self):
         """Test that new snippet can be added without optional arguments."""
@@ -30,7 +30,7 @@ class TestArgumentsAddNewSnippet(object):
         obj = Arguments()
         assert obj.get_snippet() == snippet
         assert obj.get_brief() == ''
-        assert obj.get_tags() == ''
+        assert obj.get_tags() == []
 
     def test_add_snippet_with_brief_but_no_tags(self):
         """Test that new snippet can be added with brief description but
@@ -42,7 +42,7 @@ class TestArgumentsAddNewSnippet(object):
         obj = Arguments()
         assert obj.get_snippet() == snippet
         assert obj.get_brief() == brief
-        assert obj.get_tags() == ''
+        assert obj.get_tags() == []
 
     def test_add_snippet_with_one_tag(self):
         """Test that new snippet can be added with a single tag."""

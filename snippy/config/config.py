@@ -19,22 +19,22 @@ class Config(object):
     def __init__(self):
         Config.logger = Logger().get()
         Config.args = Arguments()
-        Config.__set_config()
+        Config._set_config()
 
     @classmethod
-    def __set_config(cls):
+    def _set_config(cls):
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
         cls.config['args'] = {}
-        cls.config['args']['snippet'] = cls.__parse_snippet()
-        cls.config['args']['resolve'] = cls.__parse_resolve()
-        cls.config['args']['brief'] = cls.__parse_brief()
-        cls.config['args']['tags'] = cls.__parse_tags()
-        cls.config['args']['links'] = cls.__parse_links()
-        cls.config['args']['find'] = cls.__parse_find()
-        cls.config['args']['write'] = cls.__parse_write()
-        cls.config['args']['delete'] = cls.__parse_delete()
-        cls.config['args']['export'], cls.config['args']['export_format'] = cls.__parse_export()
+        cls.config['args']['snippet'] = cls._parse_snippet()
+        cls.config['args']['resolve'] = cls._parse_resolve()
+        cls.config['args']['brief'] = cls._parse_brief()
+        cls.config['args']['tags'] = cls._parse_tags()
+        cls.config['args']['links'] = cls._parse_links()
+        cls.config['args']['find'] = cls._parse_find()
+        cls.config['args']['write'] = cls._parse_write()
+        cls.config['args']['delete'] = cls._parse_delete()
+        cls.config['args']['export'], cls.config['args']['export_format'] = cls._parse_export()
         cls.config['args']['profiler'] = cls.args.get_profiler()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
@@ -42,7 +42,7 @@ class Config(object):
         cls.config['storage']['schema'] = os.path.join(cls.config['root'], 'snippy/storage/database/database.sql')
         cls.config['storage']['in_memory'] = False # Enabled only for testing.
 
-        cls.__set_editor_input()
+        cls._set_editor_input()
 
         cls.logger.debug('configured argument --snippet as "%s"', cls.config['args']['snippet'])
         cls.logger.debug('configured argument --tags as %s', cls.config['args']['tags'])
@@ -184,7 +184,7 @@ class Config(object):
         return cls.config['args']['profiler']
 
     @classmethod
-    def __parse_snippet(cls):
+    def _parse_snippet(cls):
         """Preprocess the user given snippet."""
 
         arg = cls.args.get_snippet()
@@ -194,7 +194,7 @@ class Config(object):
         return ''
 
     @classmethod
-    def __parse_resolve(cls):
+    def _parse_resolve(cls):
         """Preprocess the user given resolution."""
 
         arg = cls.args.get_resolve()
@@ -204,7 +204,7 @@ class Config(object):
         return ''
 
     @classmethod
-    def __parse_brief(cls):
+    def _parse_brief(cls):
         """Preprocess the user given brief description."""
 
         arg = cls.args.get_brief()
@@ -214,15 +214,15 @@ class Config(object):
         return ''
 
     @classmethod
-    def __parse_tags(cls):
+    def _parse_tags(cls):
         """Process the user given tag keywords."""
 
         arg = cls.args.get_tags()
 
-        return cls.__parse_keywords(arg)
+        return cls._parse_keywords(arg)
 
     @classmethod
-    def __parse_links(cls):
+    def _parse_links(cls):
         """Preprocess the user given links."""
 
         links = cls.args.get_links()
@@ -233,21 +233,21 @@ class Config(object):
         return sorted(link_list)
 
     @classmethod
-    def __parse_find(cls):
+    def _parse_find(cls):
         """Process the user given find keywords."""
 
         arg = cls.args.get_find()
 
-        return cls.__parse_keywords(arg)
+        return cls._parse_keywords(arg)
 
     @classmethod
-    def __parse_write(cls):
+    def _parse_write(cls):
         """Process the user given input from editor."""
 
         return cls.args.get_write()
 
     @classmethod
-    def __parse_delete(cls):
+    def _parse_delete(cls):
         """Process the user given delete keywords to remove snippet."""
 
         arg = cls.args.get_delete()
@@ -257,7 +257,7 @@ class Config(object):
         return 0
 
     @classmethod
-    def __parse_export(cls):
+    def _parse_export(cls):
         """Preprocess the user given export file."""
 
         export_file = cls.args.get_export()
@@ -281,7 +281,7 @@ class Config(object):
         return ('', Const.EXPORT_YAML)
 
     @classmethod
-    def __parse_keywords(cls, keywords):
+    def _parse_keywords(cls, keywords):
         """Preprocess the user given keyword list. The keywords are for example the
         user provided tags or the find keywords. The keywords are returned as a list
         from the Argument. The user may use various formats so each item in a list may
@@ -300,7 +300,7 @@ class Config(object):
         return sorted(kw_list)
 
     @classmethod
-    def __set_editor_input(cls):
+    def _set_editor_input(cls):
         """Read and set the user provided values from the editor."""
 
         if cls.config['args']['write']:
@@ -321,7 +321,7 @@ class Config(object):
                               cls.config['args']['write'], re.DOTALL)
             if tags:
                 line_list = list(map(lambda s: s.strip(), tags.group(1).rstrip().split(Const.NEWLINE)))
-                cls.config['args']['tags'] = cls.__parse_keywords(line_list)
+                cls.config['args']['tags'] = cls._parse_keywords(line_list)
 
             links = re.search('%s(.*)%s' % (Const.EDITOR_LINKS_HEAD, Const.EDITOR_LINKS_TAIL), \
                                cls.config['args']['write'], re.DOTALL)

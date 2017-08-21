@@ -10,7 +10,7 @@ class Sqlite3DbHelper(object): # pylint: disable=too-few-public-methods
     """Helper methods for Sqlite3 database testing."""
 
     def __init__(self):
-        self.logger = Logger().get()
+        self.logger = Logger(__name__).get()
         self.conn, self.cursor = self._connect_db()
 
     def select_snippet(self, snippet_id):

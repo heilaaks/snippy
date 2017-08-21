@@ -15,7 +15,7 @@ class Sqlite3Db(object):
     """Sqlite3 database management."""
 
     def __init__(self):
-        self.logger = Logger().get()
+        self.logger = Logger(__name__).get()
         self.conn = None
         self.cursor = None
 

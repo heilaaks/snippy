@@ -17,7 +17,7 @@ class Config(object):
     logger = None
 
     def __init__(self):
-        Config.logger = Logger().get()
+        Config.logger = Logger(__name__).get()
         Config.args = Arguments()
         Config._set_config()
 

@@ -14,7 +14,7 @@ class Arguments(object):
     logger = {}
 
     def __init__(self):
-        Arguments.logger = Logger().get()
+        Arguments.logger = Logger(__name__).get()
         parser = argparse.ArgumentParser()
         parser.add_argument('-s', '--snippet', type=str, default='', help='add command or code snippet')
         parser.add_argument('-r', '--resolve', type=str, default='', help='add troubleshooting resolution')
@@ -27,6 +27,7 @@ class Arguments(object):
         parser.add_argument('-e', '--export', type=str, default='', help='export peristed storage to file [*.yaml]')
         parser.add_argument('--ftag', type=str, help='find from tags only')
         parser.add_argument('--profiler', action='store_true', default=False, help=argparse.SUPPRESS)
+        parser.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
         Arguments.args = parser.parse_args()
 
     @classmethod

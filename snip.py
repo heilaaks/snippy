@@ -17,7 +17,7 @@ __license__   = "MIT"
 class Snippy(object):
 
     def __init__(self):
-        self.logger = Logger().get()
+        self.logger = Logger(__name__).get()
         self.config = Config()
 
     def run(self):
@@ -35,6 +35,7 @@ class Snippy(object):
         storage.disconnect()
 
 def main(args=None):
+    Logger.set_level()
     Profiler.enable()
     Snippy().run()
     Profiler.disable()

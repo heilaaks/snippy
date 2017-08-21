@@ -10,7 +10,7 @@ class Storage(object):
     """Storage management for snippets."""
 
     def __init__(self):
-        self.logger = Logger().get()
+        self.logger = Logger(__name__).get()
         self.database = Database()
 
     def init(self):

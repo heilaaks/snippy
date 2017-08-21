@@ -86,6 +86,10 @@ https://codecov.io/gh/heilaaks/snippy
 https://landscape.io/github/heilaaks/snippy
 http://snippy.readthedocs.io/en/latest/
 
+## Documents
+
+Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=PA357&dq=Should+I+use+root+or+logger+or+module+name+logger&source=bl&ots=eNYyAjE-IP&sig=MPee2BYjTYu4epc2NlESCG0x3so&hl=en&sa=X&ved=0ahUKEwiylOaLhunVAhXDK5oKHWSaCn04ChDoAQhGMAY#v=onepage&q=Should%20I%20use%20root%20or%20logger%20or%20module%20name%20logger&f=false
+
 ## Devel
 
 cd devel/snippy

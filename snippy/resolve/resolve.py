@@ -8,17 +8,16 @@ from snippy.logger import Logger
 class Resolve(object):
     """Resolve management."""
 
-    def __init__(self):
+    def __init__(self, storage):
         self.logger = Logger().get()
-        self.storage = None
+        self.storage = storage
 
     def add(self):
         """Add new resolution."""
 
         self.logger.info('add new resolution')
 
-    def run(self, storage):
+    def run(self):
         """Run the snippet management task."""
 
         self.logger.info('managing resolution')
-        self.storage = storage

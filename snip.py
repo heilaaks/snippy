@@ -25,9 +25,9 @@ class Snippy(object):
         storage = Storage()
         storage.init()
         if Config.is_snippet_task():
-            Snippet().run(storage)
+            Snippet(storage).run()
         elif Config.is_resolve_task():
-            Resolve().run(storage)
+            Resolve(storage).run()
         else:
             self.logger.error('unknown task defined exiting')
 

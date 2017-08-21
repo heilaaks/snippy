@@ -11,9 +11,9 @@ from snippy.config import Config
 class Snippet(object):
     """Snippet management."""
 
-    def __init__(self):
+    def __init__(self, storage):
         self.logger = Logger().get()
-        self.storage = None
+        self.storage = storage
 
     def add(self):
         """Add new snippet."""
@@ -108,11 +108,10 @@ class Snippet(object):
                 self.logger.exception('fatal failure to generate formatted export file "%s"', exception)
                 sys.exit()
 
-    def run(self, storage):
+    def run(self):
         """Run the snippet management task."""
 
         self.logger.info('managing snippet')
-        self.storage = storage
         if Config.get_snippet():
             self.add()
         elif Config.get_find_keywords():

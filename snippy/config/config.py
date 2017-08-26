@@ -3,13 +3,14 @@
 """config.py: Configuration management."""
 
 import re
+import sys
 import os.path
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Arguments
 
 
-class Config(object):
+class Config(object): # pylint: disable=too-many-public-methods
     """Global configuration management."""
 
     args = {}
@@ -35,7 +36,8 @@ class Config(object):
         cls.config['args']['find'] = cls._parse_find()
         cls.config['args']['write'] = cls._parse_write()
         cls.config['args']['delete'] = cls._parse_delete()
-        cls.config['args']['export'], cls.config['args']['export_format'] = cls._parse_export()
+        cls.config['args']['export'], cls.config['args']['export_format'] = cls._parse_export_snippets()
+        cls.config['args']['import'], cls.config['args']['import_format'] = cls._parse_import_snippets()
         cls.config['args']['profiler'] = cls.args.get_profiler()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
@@ -60,7 +62,8 @@ class Config(object):
     def is_snippet_task(cls):
         """Test if the user action was for a snippet."""
 
-        if cls.get_snippet() or cls.get_find_keywords() or cls.get_delete() or cls.get_export():
+        if cls.get_snippet() or cls.get_find_keywords() or cls.get_delete() or \
+           cls.get_export_snippets() or cls.get_import_snippets():
             return True
 
         return False
@@ -123,16 +126,22 @@ class Config(object):
         return cls.config['args']['delete']
 
     @classmethod
-    def get_export(cls):
+    def get_export_snippets(cls):
         """Get export file."""
 
         return cls.config['args']['export']
 
     @classmethod
+    def get_import_snippets(cls):
+        """Get import file."""
+
+        return cls.config['args']['import']
+
+    @classmethod
     def is_export_format_yaml(cls):
         """Test if export format is yaml."""
 
-        if cls.config['args']['export_format'] == Const.EXPORT_YAML:
+        if cls.config['args']['export_format'] == Const.FILE_TYPE_YAML:
             return True
 
         return False
@@ -141,7 +150,7 @@ class Config(object):
     def is_export_format_json(cls):
         """Test if export format is json."""
 
-        if cls.config['args']['export_format'] == Const.EXPORT_JSON:
+        if cls.config['args']['export_format'] == Const.FILE_TYPE_JSON:
             return True
 
         return False
@@ -150,7 +159,25 @@ class Config(object):
     def is_export_format_text(cls):
         """Test if export format is text."""
 
-        if cls.config['args']['export_format'] == Const.EXPORT_TEXT:
+        if cls.config['args']['export_format'] == Const.FILE_TYPE_TEXT:
+            return True
+
+        return False
+
+    @classmethod
+    def is_import_format_yaml(cls):
+        """Test if import format is yaml."""
+
+        if cls.config['args']['import_format'] == Const.FILE_TYPE_YAML:
+            return True
+
+        return False
+
+    @classmethod
+    def is_import_format_json(cls):
+        """Test if import format is json."""
+
+        if cls.config['args']['import_format'] == Const.FILE_TYPE_JSON:
             return True
 
         return False
@@ -275,28 +302,45 @@ class Config(object):
         return 0
 
     @classmethod
-    def _parse_export(cls):
+    def _parse_export_snippets(cls):
         """Preprocess the user given export file."""
 
-        export_file = cls.args.get_export()
-        filename, file_extension = os.path.splitext(export_file)
+        return cls._parse_file_type(cls.args.get_export())
+
+    @classmethod
+    def _parse_import_snippets(cls):
+        """Preprocess the user given import file."""
+
+        import_file, import_format = cls._parse_file_type(cls.args.get_import())
+
+        if import_format == Const.FILE_TYPE_TEXT:
+            cls.logger.error('unsupported export file format for import "%s"', import_format)
+            sys.exit(1)
+
+        return (import_file, Const.FILE_TYPE_YAML)
+
+    @classmethod
+    def _parse_file_type(cls, filename):
+        """Get the file format and file."""
+
+        filename, file_extension = os.path.splitext(filename)
         if filename and ('yaml' in file_extension or 'yml' in file_extension):
-            export_file = filename + '.yaml'
+            filename = filename + '.yaml'
 
-            return (export_file, Const.EXPORT_YAML)
+            return (filename, Const.FILE_TYPE_YAML)
         elif filename and 'json' in file_extension:
-            export_file = filename + '.json'
+            filename = filename + '.json'
 
-            return (export_file, Const.EXPORT_JSON)
+            return (filename, Const.FILE_TYPE_JSON)
 
         elif filename and ('txt' in file_extension or 'text' in file_extension):
-            export_file = filename + '.txt'
+            filename = filename + '.txt'
 
-            return (export_file, Const.EXPORT_TEXT)
+            return (filename, Const.FILE_TYPE_TEXT)
 
         cls.logger.info('unsupported export file format "%s"', file_extension)
 
-        return ('', Const.EXPORT_YAML)
+        return ('', Const.FILE_TYPE_YAML)
 
     @classmethod
     def _parse_keywords(cls, keywords):

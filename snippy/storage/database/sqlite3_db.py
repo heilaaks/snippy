@@ -53,6 +53,12 @@ class Sqlite3Db(object):
         else:
             self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
 
+    def bulk_insert_snippets(self, snippets):
+        """Insert multiple snippets into database."""
+
+        for row in snippets:
+            self.insert_snippet(row['snippet'], row['brief'], row['category'], row['tags'], row['links'])
+
     def select_snippets(self, keywords, regex=True):
         """Select snippets."""
 

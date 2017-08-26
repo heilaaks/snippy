@@ -36,12 +36,19 @@ class Snippet(object):
         self.logger.debug('deleting snippet')
         self.storage.delete(Config.get_delete())
 
-    def export(self):
-        """export snippets."""
+    def export_snippets(self):
+        """Export snippets."""
 
         self.logger.debug('exporting snippets')
-        snippets = self.storage.export()
+        snippets = self.storage.export_snippets()
         self.print_file(snippets)
+
+    def import_snippets(self):
+        """Import snippets."""
+
+        self.logger.debug('importing snippets %s', Config.get_import_snippets())
+        snippets = self.load_dictionary(Config.get_import_snippets())
+        self.storage.import_snippets(snippets)
 
     def format_text(self, snippets, colors=False):
         """Format snippets for terminal with color codes or for a raw text output."""
@@ -64,11 +71,11 @@ class Snippet(object):
         return text
 
     def create_dictionary(self, snippets):
-        """Create dictionary from snippets for data serialization."""
+        """Create dictionary from snippets in the database for data serialization."""
 
         snippet_dict = {}
         snippet_list = []
-        self.logger.debug('create dictionary from snippets')
+        self.logger.debug('creating dictionary from snippets')
         for row in snippets:
             snippet = {'brief': row[Const.SNIPPET_BRIEF],
                        'snippet': row[Const.SNIPPET_SNIPPET],
@@ -77,6 +84,29 @@ class Snippet(object):
                        'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS)}
             snippet_list.append(snippet.copy())
         snippet_dict = {'snippets': snippet_list}
+
+        return snippet_dict
+
+    def load_dictionary(self, snippets):
+        """Create dictionary from snippets in a file for data serialization."""
+
+        snippet_dict = {}
+        self.logger.debug('loading snippet dictionary from file')
+        with open(snippets, 'r') as infile:
+            try:
+                if Config.is_import_format_yaml():
+                    import yaml
+
+                    snippet_dict = yaml.load(infile)
+                elif Config.is_import_format_json():
+                    import json
+
+                    snippet_dict = json.load(infile)
+                else:
+                    self.logger.info('unknown export format')
+            except (yaml.YAMLError, TypeError) as exception:
+                self.logger.exception('fatal exception while loading the import file %s "%s"', snippets, exception)
+                sys.exit()
 
         return snippet_dict
 
@@ -89,9 +119,9 @@ class Snippet(object):
     def print_file(self, snippets):
         """Print snippets into file."""
 
-        export = Config.get_export()
-        self.logger.debug('export storage into file %s', export)
-        with open(export, 'w') as outfile:
+        export_file = Config.get_export_snippets()
+        self.logger.debug('export storage into file %s', export_file)
+        with open(export_file, 'w') as outfile:
             try:
                 if Config.is_export_format_yaml():
                     import yaml
@@ -121,7 +151,9 @@ class Snippet(object):
             self.find()
         elif Config.get_delete():
             self.delete()
-        elif Config.get_export():
-            self.export()
+        elif Config.get_export_snippets():
+            self.export_snippets()
+        elif Config.get_import_snippets():
+            self.import_snippets()
         else:
             self.logger.error('unknown action for snippet')

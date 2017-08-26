@@ -26,7 +26,10 @@ class Arguments(object):
         parser.add_argument('-f', '--find', nargs='*', type=str, default=[], help='find with all given keywords')
         parser.add_argument('-w', '--write', action='store_true', default=False, help='write input with editor')
         parser.add_argument('-d', '--delete', type=int, default=0, help='remove snippet based on storage index')
-        parser.add_argument('-e', '--export', type=str, default='', help='export peristed storage to file [*.yaml]')
+        parser.add_argument('-e', '--export', dest='export_file', type=str, default='', \
+                             help='export peristed storage to file [*.yaml|json|txt]')
+        parser.add_argument('-i', '--import', dest='import_file', type=str, default='', \
+                             help='export peristed storage to file [*.yaml|json]')
         parser.add_argument('--ftag', type=str, help='find from tags only')
         parser.add_argument('--profiler', action='store_true', default=False, help=argparse.SUPPRESS)
         parser.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
@@ -100,9 +103,17 @@ class Arguments(object):
     def get_export(cls):
         """Return the export file name as it was provided by the user."""
 
-        cls.logger.info('parsed argument --export with value "%s"', cls.args.export)
+        cls.logger.info('parsed argument --export with value "%s"', cls.args.export_file)
 
-        return cls.args.export
+        return cls.args.export_file
+
+    @classmethod
+    def get_import(cls):
+        """Return the import file name as it was provided by the user."""
+
+        cls.logger.info('parsed argument --import with value "%s"', cls.args.import_file)
+
+        return cls.args.import_file
 
     @classmethod
     def get_profiler(cls):

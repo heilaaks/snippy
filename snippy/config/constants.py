@@ -25,9 +25,9 @@ class Constants(object):
     SNIPPET_METADATA = 6
 
     # Export formats
-    EXPORT_YAML = 'yaml'
-    EXPORT_JSON = 'json'
-    EXPORT_TEXT = 'text'
+    FILE_TYPE_YAML = 'yaml'
+    FILE_TYPE_JSON = 'json'
+    FILE_TYPE_TEXT = 'text'
 
     # Editor inputs
     EDITOR_SNIPPET_HEAD = '# Add mandatory snippet below.\n'

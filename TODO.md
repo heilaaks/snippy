@@ -1,5 +1,5 @@
 ## TODO
-   - [ ] Add import functionality from json and yaml files.
+   - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents
    - [ ] Add support for cutting log string with low logging levels. Long lines are nasty and meant for debugging.
@@ -8,6 +8,7 @@
    - [ ] Refactor database tests to use dictionary format for the test rows.
 
 ## DONE
+   - [x] Add import functionality from json and yaml files.
    - [x] Add support for categories that allow grouping snippets into larger groups.
    - [x] Add command line option --debug to elevate the debug level and set the default level to error.
    - [x] Support text format export on top of yaml and json.

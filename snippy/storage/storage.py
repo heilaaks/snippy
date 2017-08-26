@@ -28,10 +28,15 @@ class Storage(object):
 
         return self.database.select_snippets(keywords)
 
-    def export(self):
+    def export_snippets(self):
         """Export all snippets."""
 
         return self.database.select_all_snippets()
+
+    def import_snippets(self, snippets):
+        """Import all given snippets."""
+
+        return self.database.bulk_insert_snippets(snippets['snippets'])
 
     def delete(self, db_index):
         """Delete snippet."""

@@ -29,6 +29,7 @@ class Config(object):
         cls.config['args']['snippet'] = cls._parse_snippet()
         cls.config['args']['resolve'] = cls._parse_resolve()
         cls.config['args']['brief'] = cls._parse_brief()
+        cls.config['args']['category'] = cls._parse_category()
         cls.config['args']['tags'] = cls._parse_tags()
         cls.config['args']['links'] = cls._parse_links()
         cls.config['args']['find'] = cls._parse_find()
@@ -47,6 +48,7 @@ class Config(object):
         cls.logger.debug('configured argument --snippet as "%s"', cls.config['args']['snippet'])
         cls.logger.debug('configured argument --tags as %s', cls.config['args']['tags'])
         cls.logger.debug('configured argument --brief as "%s"', cls.config['args']['brief'])
+        cls.logger.debug('configured argument --category as "%s"', cls.config['args']['category'])
         cls.logger.debug('configured argument --links as %s', cls.config['args']['links'])
         cls.logger.debug('configured argument --find as %s', cls.config['args']['find'])
         cls.logger.debug('configured argument --delete as %d', cls.config['args']['delete'])
@@ -89,6 +91,12 @@ class Config(object):
         """Get brief description for the snippet or resolution."""
 
         return cls.config['args']['brief']
+
+    @classmethod
+    def get_category(cls):
+        """Get category for the snippet or resolution."""
+
+        return cls.config['args']['category']
 
     @classmethod
     def get_tags(cls):
@@ -214,6 +222,16 @@ class Config(object):
         return ''
 
     @classmethod
+    def _parse_category(cls):
+        """Preprocess the user given category value."""
+
+        arg = cls.args.get_category()
+        if arg:
+            return arg
+
+        return ''
+
+    @classmethod
     def _parse_tags(cls):
         """Process the user given tag keywords."""
 
@@ -300,31 +318,34 @@ class Config(object):
         return sorted(kw_list)
 
     @classmethod
+    def _get_user_list(cls, edited_string, constants):
+        """Parse list type value from editor input."""
+
+        user_answer = re.search('%s(.*)%s' % (constants['head'], constants['tail']), edited_string, re.DOTALL)
+        if user_answer:
+            value_list = list(map(lambda s: s.strip(), user_answer.group(1).rstrip().split(Const.NEWLINE)))
+
+            return value_list
+
+        return []
+
+    @classmethod
+    def _get_user_string(cls, edited_string, constants):
+        """Parse string type value from editor input."""
+
+        value_list = cls._get_user_list(edited_string, constants)
+
+        return constants['delimiter'].join(value_list)
+
+    @classmethod
     def _set_editor_input(cls):
         """Read and set the user provided values from the editor."""
 
-        if cls.config['args']['write']:
+        edited_input = cls.config['args']['write']
+        if edited_input:
             cls.logger.debug('using parameters from editor')
-            snippet = re.search('%s(.*)%s' % (Const.EDITOR_SNIPPET_HEAD, Const.EDITOR_SNIPPET_TAIL), \
-                                 cls.config['args']['write'], re.DOTALL)
-            if snippet:
-                line_list = list(map(lambda s: s.strip(), snippet.group(1).rstrip().split(Const.NEWLINE)))
-                cls.config['args']['snippet'] = Const.NEWLINE.join(line_list)
-
-            brief = re.search('%s(.*)%s' % (Const.EDITOR_BRIEF_HEAD, Const.EDITOR_BRIEF_TAIL), \
-                               cls.config['args']['write'], re.DOTALL)
-            if brief:
-                line_list = list(map(lambda s: s.strip(), brief.group(1).rstrip().split(Const.NEWLINE)))
-                cls.config['args']['brief'] = Const.NEWLINE.join(line_list)
-
-            tags = re.search('%s(.*)%s' % (Const.EDITOR_TAGS_HEAD, Const.EDITOR_TAGS_TAIL), \
-                              cls.config['args']['write'], re.DOTALL)
-            if tags:
-                line_list = list(map(lambda s: s.strip(), tags.group(1).rstrip().split(Const.NEWLINE)))
-                cls.config['args']['tags'] = cls._parse_keywords(line_list)
-
-            links = re.search('%s(.*)%s' % (Const.EDITOR_LINKS_HEAD, Const.EDITOR_LINKS_TAIL), \
-                               cls.config['args']['write'], re.DOTALL)
-            if links:
-                line_list = list(map(lambda s: s.strip(), links.group(1).rstrip().split(Const.NEWLINE)))
-                cls.config['args']['links'] = sorted(line_list)
+            cls.config['args']['snippet'] = Config._get_user_string(edited_input, Const.EDITED_SNIPPET)
+            cls.config['args']['brief'] = Config._get_user_string(edited_input, Const.EDITED_BRIEF)
+            cls.config['args']['category'] = Config._get_user_string(edited_input, Const.EDITED_CATEGORY)
+            cls.config['args']['tags'] = Config._get_user_list(edited_input, Const.EDITED_TAGS)
+            cls.config['args']['links'] = Config._get_user_list(edited_input, Const.EDITED_LINKS)

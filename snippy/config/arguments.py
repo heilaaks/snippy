@@ -4,6 +4,7 @@
 
 import os
 import argparse
+from snippy.config import Constants as Const
 from snippy.logger import Logger
 
 
@@ -19,6 +20,7 @@ class Arguments(object):
         parser.add_argument('-s', '--snippet', type=str, default='', help='add command or code snippet')
         parser.add_argument('-r', '--resolve', type=str, default='', help='add troubleshooting resolution')
         parser.add_argument('-b', '--brief', type=str, default='', help='set brief description for the input')
+        parser.add_argument('-c', '--category', type=str, default='', help='set a category for the input')
         parser.add_argument('-t', '--tags', nargs='*', type=str, default=[], help='set tags for the input')
         parser.add_argument('-l', '--links', type=str, default='', help='set reference links for more information')
         parser.add_argument('-f', '--find', nargs='*', type=str, default=[], help='find with all given keywords')
@@ -53,6 +55,14 @@ class Arguments(object):
         cls.logger.info('parsed argument --brief with value "%s"', cls.args.brief)
 
         return cls.args.brief
+
+    @classmethod
+    def get_category(cls):
+        """Return the category that user gave exactly as it was."""
+
+        cls.logger.info('parsed argument --category with value "%s"', cls.args.category)
+
+        return cls.args.category
 
     @classmethod
     def get_tags(cls):
@@ -115,14 +125,16 @@ class Arguments(object):
 
         default_editor = os.environ.get('EDITOR', 'vi')
         editor_template = ('# Commented lines will be ignored.\n'
-                           '\n'
-                           '# Add mandatory snippet below.\n'
-                           '\n'
-                           '# Add optional brief description below.\n'
-                           '\n'
-                           '# Add optional comma separated list of tags below.\n'
-                           '\n'
-                           '# Add optional links below one link per line.\n'
+                           '#\n' +
+                           Const.EDITOR_SNIPPET_HEAD +
+                           '\n' +
+                           Const.EDITOR_BRIEF_HEAD +
+                           '\n' +
+                           Const.EDITOR_CATEGORY_HEAD +
+                           '\n' +
+                           Const.EDITOR_TAGS_HEAD +
+                           '\n' +
+                           Const.EDITOR_LINKS_HEAD +
                            '\n').encode('UTF-8')
 
         with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:

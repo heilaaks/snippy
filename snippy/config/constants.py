@@ -7,39 +7,52 @@ class Constants(object):
     """Globals constants for the tool."""
 
     NEWLINE = '\n'
+    SPACE = ' '
 
     # Delimiters
     DELIMITER_TAGS = ','
     DELIMITER_LINKS = '>' # Disallowed characters in URI: <|>|#|%|"
+    DELIMITER_SPACE = SPACE
+    DELIMITER_NEWLINE = NEWLINE
 
     # Column numbers in snippets table.
     SNIPPET_ID = 0
     SNIPPET_SNIPPET = 1
     SNIPPET_BRIEF = 2
-    SNIPPET_TAGS = 3
-    SNIPPET_LINKS = 4
-    SNIPPET_METADATA = 5
+    SNIPPET_CATEGORY = 3
+    SNIPPET_TAGS = 4
+    SNIPPET_LINKS = 5
+    SNIPPET_METADATA = 6
 
     # Export formats
     EXPORT_YAML = 'yaml'
     EXPORT_JSON = 'json'
     EXPORT_TEXT = 'text'
 
-    # Editor input tags
+    # Editor inputs
     EDITOR_SNIPPET_HEAD = '# Add mandatory snippet below.\n'
     EDITOR_SNIPPET_TAIL = '# Add optional brief description below.\n'
     EDITOR_BRIEF_HEAD = '# Add optional brief description below.\n'
-    EDITOR_BRIEF_TAIL = '# Add optional comma separated list of tags below.\n'
+    EDITOR_BRIEF_TAIL = '# Add optional single category below.\n'
+    EDITOR_CATEGORY_HEAD = '# Add optional single category below.\n'
+    EDITOR_CATEGORY_TAIL = '# Add optional comma separated list of tags below.\n'
     EDITOR_TAGS_HEAD = '# Add optional comma separated list of tags below.\n'
     EDITOR_TAGS_TAIL = '# Add optional links below one link per line.\n'
     EDITOR_LINKS_HEAD = '# Add optional links below one link per line.\n'
     EDITOR_LINKS_TAIL = '.'
 
+    EDITED_SNIPPET = {'head': EDITOR_SNIPPET_HEAD, 'tail': EDITOR_SNIPPET_TAIL, 'delimiter': DELIMITER_NEWLINE}
+    EDITED_BRIEF = {'head': EDITOR_BRIEF_HEAD, 'tail': EDITOR_BRIEF_TAIL, 'delimiter': DELIMITER_SPACE}
+    EDITED_CATEGORY = {'head': EDITOR_CATEGORY_HEAD, 'tail': EDITOR_CATEGORY_TAIL, 'delimiter': DELIMITER_SPACE}
+    EDITED_TAGS = {'head': EDITOR_TAGS_HEAD, 'tail': EDITOR_TAGS_TAIL, 'delimiter': None}
+    EDITED_LINKS = {'head': EDITOR_LINKS_HEAD, 'tail': EDITOR_LINKS_TAIL, 'delimiter': None}
+
     @staticmethod
     def format_header(colors=False):
         """Format snippet text header."""
 
-        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m [%s]\x1b[0m\n' if colors else '%d. %s [%s]\n'
+        #return '\x1b[96;1m%d. \x1b[1;92m%s (%s)\x1b[0;2m [%s]\x1b[0m\n' if colors else '%d. %s (%s) [%s]\n'
+        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m \x1b[0m@ %s \x1b[0;2m[%s]\x1b[0m\n' if colors else '%d. %s @ %s [%s]\n'
 
     @staticmethod
     def format_snippet(colors=False):

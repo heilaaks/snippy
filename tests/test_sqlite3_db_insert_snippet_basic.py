@@ -18,15 +18,17 @@ class TestSqlite3DbInsertSnippetBasic(object): # pylint: disable=too-few-public-
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
-        snippet = 'docker rm $(docker ps -a -q)'
-        brief = 'Remove all docker containers'
-        tags = ['container', 'cleanup', 'docker']
-        links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container']
-        metadata = 'metadata'
-        rows = [(1, snippet, brief, 'container,cleanup,docker', links[0], metadata)]
+        row = {'snippet': 'docker rm $(docker ps -a -q)',
+               'brief': 'Remove all docker containers',
+               'category': 'docker',
+               'tags': ['container', 'cleanup', 'docker'],
+               'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'],
+               'metadata': 'metadata'}
+        rows = [(1, row['snippet'], row['brief'], row['category'], 'container,cleanup,docker', \
+                    row['links'][0], row['metadata'])]
         obj = Sqlite3Db()
         obj.init()
-        obj.insert_snippet(snippet, brief, tags, links, metadata)
+        obj.insert_snippet(row['snippet'], row['brief'], row['category'], row['tags'], row['links'], row['metadata'])
         assert Sqlite3DbHelper().select_all_snippets() == rows
         obj.disconnect()
 
@@ -37,15 +39,17 @@ class TestSqlite3DbInsertSnippetBasic(object): # pylint: disable=too-few-public-
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
-        snippet = 'docker rm $(docker ps -a -q)'
-        brief = 'Remove all docker containers'
-        tags = ['container', 'cleanup', 'docker']
-        links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
-                 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes']
-        metadata = 'metadata'
-        rows = [(1, snippet, brief, 'container,cleanup,docker', links[0] + Const.DELIMITER_LINKS + links[1], metadata)]
+        row = {'snippet': 'docker rm $(docker ps -a -q)',
+               'brief': 'Remove all docker containers',
+               'category': 'docker',
+               'tags': ['container', 'cleanup', 'docker'],
+               'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
+                         'https://www.faked.com/tutorials/how-to-remove-docker-images-containers-and-volumes'],
+               'metadata': 'metadata'}
+        rows = [(1, row['snippet'], row['brief'], row['category'], 'container,cleanup,docker', \
+                    row['links'][0] + Const.DELIMITER_LINKS + row['links'][1], row['metadata'])]
         obj = Sqlite3Db()
         obj.init()
-        obj.insert_snippet(snippet, brief, tags, links, metadata)
+        obj.insert_snippet(row['snippet'], row['brief'], row['category'], row['tags'], row['links'], row['metadata'])
         assert Sqlite3DbHelper().select_all_snippets() == rows
         obj.disconnect()

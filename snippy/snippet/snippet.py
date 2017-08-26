@@ -19,7 +19,8 @@ class Snippet(object):
         """Add new snippet."""
 
         self.logger.debug('adding new snippet')
-        self.storage.store(Config.get_snippet(), Config.get_brief(), Config.get_tags(), Config.get_links())
+        self.storage.store(Config.get_snippet(), Config.get_brief(), Config.get_category(), \
+                           Config.get_tags(), Config.get_links())
 
     def find(self):
         """Find snippets based on keywords."""
@@ -50,7 +51,8 @@ class Snippet(object):
         link_string = ''
         self.logger.debug('format snippets for text based output')
         for idx, row in enumerate(snippets, start=1):
-            text = text + Const.format_header(colors) % (idx, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_ID])
+            text = text + Const.format_header(colors) % (idx, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_CATEGORY], \
+                                                              row[Const.SNIPPET_ID])
             text = text + ''.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
                       for snippet_line in row[Const.SNIPPET_SNIPPET].split(Const.NEWLINE)])
             text = text + Const.NEWLINE
@@ -70,6 +72,7 @@ class Snippet(object):
         for row in snippets:
             snippet = {'brief': row[Const.SNIPPET_BRIEF],
                        'snippet': row[Const.SNIPPET_SNIPPET],
+                       'category': row[Const.SNIPPET_CATEGORY],
                        'links': row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS),
                        'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS)}
             snippet_list.append(snippet.copy())

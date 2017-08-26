@@ -19,10 +19,8 @@ class Profiler(object):
 
     @classmethod
     def enable(cls):
-        """The profiler enabling is read directly from the system arguments because the value
-        is needed before the Config() object gets initialized. If the Config.is_profiled()
-        would be used here, the profiler would miss almost all the function calls for the
-        service startup."""
+        """The profiler enabling is read directly from the system arguments because
+        the value is needed before the Config() object gets initialized."""
 
         if '--profile' in sys.argv:
             cls.profiler = cProfile.Profile()

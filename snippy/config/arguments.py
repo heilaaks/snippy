@@ -17,118 +17,54 @@ class Arguments(object):
     def __init__(self):
         Arguments.logger = Logger(__name__).get()
         parser = argparse.ArgumentParser()
-        parser.add_argument('-s', '--snippet', type=str, default='', help='add command or code snippet')
-        parser.add_argument('-r', '--resolve', type=str, default='', help='add troubleshooting resolution')
-        parser.add_argument('-b', '--brief', type=str, default='', help='set brief description for the input')
-        parser.add_argument('-c', '--category', type=str, default='', help='set a category for the input')
-        parser.add_argument('-t', '--tags', nargs='*', type=str, default=[], help='set tags for the input')
-        parser.add_argument('-l', '--links', type=str, default='', help='set reference links for more information')
-        parser.add_argument('-f', '--find', nargs='*', type=str, default=[], help='find with all given keywords')
-        parser.add_argument('-w', '--write', action='store_true', default=False, help='write input with editor')
-        parser.add_argument('-d', '--delete', type=int, default=0, help='remove snippet based on storage index')
-        parser.add_argument('-e', '--export', dest='export_file', type=str, default='', \
-                             help='export peristed storage to file [*.yaml|json|txt]')
-        parser.add_argument('-i', '--import', dest='import_file', type=str, default='', \
-                             help='export peristed storage to file [*.yaml|json]')
-        parser.add_argument('--ftag', type=str, help='find from tags only')
-        parser.add_argument('--profiler', action='store_true', default=False, help=argparse.SUPPRESS)
+
+        job_roles = ['snippet', 'resolve']
+        jobs = ['create', 'search', 'update', 'delete', 'import', 'export']
+        job_type = parser.add_argument_group('MANDATORY JOB OPTIONS')
+        job_type.add_argument('-r', '--role', type=str, choices=job_roles, default=job_roles[0], help='define job role')
+        job_type.add_argument('-j', '--job', type=str, choices=jobs, default=jobs[0], help='define job')
+
+        job_service = parser.add_argument_group('OPTIONAL SERVICES')
+        job_service.add_argument('--editor', action='store_true', default=False, help='use default editor')
+        job_service.add_argument('--file', type=str, default='', help='use input file')
+        job_service.add_argument('--id', type=str, default='', help='set identity of an item')
+
+        job_args = parser.add_argument_group('OPTIONAL ARGUMENTS')
+        job_args.add_argument('-i', '--input', dest='content', type=str, default='', help='input content')
+        job_args.add_argument('-b', '--brief', type=str, default='', help='brief description ot the input')
+        job_args.add_argument('-c', '--category', type=str, default='', help='category for the input')
+        job_args.add_argument('-t', '--tags', nargs='*', type=str, default=[], help='tags for the input')
+        job_args.add_argument('-l', '--links', type=str, default='', help='links for more information')
+
+        job_search = parser.add_argument_group('SEARCH OPTIONS')
+        job_search.add_argument('-s', '--search', nargs='*', type=str, default=[], help='search with keywords')
+
+        parser.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
         parser.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
         Arguments.args = parser.parse_args()
 
     @classmethod
-    def get_snippet(cls):
-        """Return the snippet that user gave exactly as it was."""
+    def get_job(cls):
+        """Return the job that user defined."""
 
-        cls.logger.info('parsed argument --snippet with value "%s"', cls.args.snippet)
+        cls.logger.info('parsed argument --job with value "%s"', cls.args.job)
 
-        return cls.args.snippet
-
-    @classmethod
-    def get_resolve(cls):
-        """Return the resolution that user gave exactly as it was."""
-
-        cls.logger.info('parsed argument --resolve with value "%s"', cls.args.resolve)
-
-        return cls.args.resolve
+        return cls.args.job
 
     @classmethod
-    def get_brief(cls):
-        """Return the brief description that user gave exactly as it was."""
+    def get_job_role(cls):
+        """Return the job role that user defined."""
 
-        cls.logger.info('parsed argument --brief with value "%s"', cls.args.brief)
+        cls.logger.info('parsed argument --role with value "%s"', cls.args.role)
 
-        return cls.args.brief
-
-    @classmethod
-    def get_category(cls):
-        """Return the category that user gave exactly as it was."""
-
-        cls.logger.info('parsed argument --category with value "%s"', cls.args.category)
-
-        return cls.args.category
+        return cls.args.role
 
     @classmethod
-    def get_tags(cls):
-        """Return the tags that user gave exactly as it was."""
-
-        cls.logger.info('parsed argument --tags with value %s', cls.args.tags)
-
-        return cls.args.tags
-
-    @classmethod
-    def get_links(cls):
-        """Return the links that user gave exactly as it was."""
-
-        cls.logger.info('parsed argument --links with value "%s"', cls.args.links)
-
-        return cls.args.links
-
-    @classmethod
-    def get_find(cls):
-        """Return the find keywords that user gave exactly as it was."""
-
-        cls.logger.info('parsed argument --find with value %s', cls.args.find)
-
-        return cls.args.find
-
-    @classmethod
-    def get_delete(cls):
-        """Return the index to be deleted as it was provided by the user."""
-
-        cls.logger.info('parsed argument --delete with value %d', cls.args.delete)
-
-        return cls.args.delete
-
-    @classmethod
-    def get_export(cls):
-        """Return the export file name as it was provided by the user."""
-
-        cls.logger.info('parsed argument --export with value "%s"', cls.args.export_file)
-
-        return cls.args.export_file
-
-    @classmethod
-    def get_import(cls):
-        """Return the import file name as it was provided by the user."""
-
-        cls.logger.info('parsed argument --import with value "%s"', cls.args.import_file)
-
-        return cls.args.import_file
-
-    @classmethod
-    def get_profiler(cls):
-        """Return the profiler switch based on user input or from default."""
-
-        cls.logger.info('parsed argument --profile with value %s', cls.args.profiler)
-
-        return cls.args.profiler
-
-    @classmethod
-    def get_write(cls):
-        """Return the user input from editor."""
+    def get_editor(cls):
+        """Return the supplementary editor for the job."""
 
         edited_message = ''
-        if not cls.args.write:
+        if not cls.args.editor:
             return edited_message
 
         import tempfile
@@ -156,3 +92,67 @@ class Arguments(object):
             edited_message = outfile.read()
 
         return edited_message.decode('UTF-8')
+
+    @classmethod
+    def get_file(cls):
+        """Return the supplementary file for the job."""
+
+        cls.logger.info('parsed argument --file with value "%s"', cls.args.file)
+
+        return cls.args.file
+
+    @classmethod
+    def get_id(cls):
+        """Return the supplementary if for the job."""
+
+        cls.logger.info('parsed argument --id with value "%s"', cls.args.id)
+
+        return cls.args.id
+
+    @classmethod
+    def get_content(cls):
+        """Return supplementary content for the job."""
+
+        cls.logger.info('parsed argument --input with value "%s"', cls.args.content)
+
+        return cls.args.content
+
+    @classmethod
+    def get_brief(cls):
+        """Return supplementary brief description."""
+
+        cls.logger.info('parsed argument --brief with value "%s"', cls.args.brief)
+
+        return cls.args.brief
+
+    @classmethod
+    def get_category(cls):
+        """Return supplementary category for the job."""
+
+        cls.logger.info('parsed argument --category with value "%s"', cls.args.category)
+
+        return cls.args.category
+
+    @classmethod
+    def get_tags(cls):
+        """Return supplementary tags."""
+
+        cls.logger.info('parsed argument --tags with value %s', cls.args.tags)
+
+        return cls.args.tags
+
+    @classmethod
+    def get_links(cls):
+        """Return supplementary links."""
+
+        cls.logger.info('parsed argument --links with value "%s"', cls.args.links)
+
+        return cls.args.links
+
+    @classmethod
+    def get_search(cls):
+        """Return the search keywords."""
+
+        cls.logger.info('parsed argument --search with value %s', cls.args.search)
+
+        return cls.args.search

@@ -17,7 +17,7 @@ class TestSqlite3DbDeleteSnippetBasic(object): # pylint: disable=too-few-public-
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
-        snippets = ['docker rm $(docker ps -a -q)', 'docker rmi $(docker images -f dangling=true -q)']
+        content = ['docker rm $(docker ps -a -q)', 'docker rmi $(docker images -f dangling=true -q)']
         briefs = ['Remove all docker containers', 'Remove all dangling image layers']
         category = 'docker'
         tags = [['container', 'cleanup', 'docker'], ['container', 'cleanup', 'docker']]
@@ -25,14 +25,14 @@ class TestSqlite3DbDeleteSnippetBasic(object): # pylint: disable=too-few-public-
                  'https://www.faked.com/tutorials/how-to-remove-docker-images-containers-and-volumes']
         metadata = 'metadata'
         keywords = ['help', 'docker']
-        rows = [(1, snippets[0], briefs[0], category, 'container,cleanup,docker', links[0], metadata),
-                (2, snippets[1], briefs[1], category, 'container,cleanup,docker', links[1], metadata)]
+        rows = [(1, content[0], briefs[0], category, 'container,cleanup,docker', links[0], metadata),
+                (2, content[1], briefs[1], category, 'container,cleanup,docker', links[1], metadata)]
         obj = Sqlite3Db()
         obj.init()
-        obj.insert_snippet(snippets[0], briefs[0], category, tags[0], [links[0]], metadata)
-        obj.insert_snippet(snippets[1], briefs[1], category, tags[1], [links[1]], metadata)
+        obj.insert_snippet(content[0], briefs[0], category, tags[0], [links[0]], metadata)
+        obj.insert_snippet(content[1], briefs[1], category, tags[1], [links[1]], metadata)
         assert obj.select_snippets(keywords) == rows
         obj.delete_snippet(1)
-        assert obj.select_snippets(keywords) == [(2, snippets[1], briefs[1], category, 'container,cleanup,docker', \
+        assert obj.select_snippets(keywords) == [(2, content[1], briefs[1], category, 'container,cleanup,docker', \
                                                      links[1], metadata)]
         obj.disconnect()

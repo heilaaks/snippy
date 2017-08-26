@@ -1,57 +1,61 @@
 #!/usr/bin/env python3
 
-"""test_arguments_add_new_snippet.py: Test command line argumens for creating new snippets."""
+"""test_arguments_create_snippet.py: Test command line argumens for creating new snippets."""
 
 import sys
 from snippy.config import Arguments
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 
-class TestArgumentsAddNewSnippet(object):
-    """Testing command line arguments for creating new snippets."""
+class TestArgumentsCreateSnippet(object):
+    """Testing command line arguments for creating snippets."""
 
     def test_no_arguments(self):
         """Test that default values are set when no arguments are used."""
 
         sys.argv = ['snippy']
         obj = Arguments()
-        assert obj.get_snippet() == ''
-        assert obj.get_resolve() == ''
+        assert obj.get_job() == 'create'
+        assert obj.get_job_role() == 'snippet'
+        assert obj.get_editor() == ''
+        assert obj.get_file() == ''
+        assert obj.get_id() == ''
+        assert obj.get_content() == ''
         assert obj.get_brief() == ''
         assert obj.get_tags() == []
         assert obj.get_links() == ''
-        assert obj.get_find() == []
+        assert obj.get_search() == []
 
-    def test_add_snippet_without_optional_arguments(self):
-        """Test that new snippet can be added without optional arguments."""
+    def test_create_snippet_without_optional_arguments(self):
+        """Test that new snippet can be created without optional arguments."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', '-s', snippet]
+        content = 'docker rm $(docker ps -a -q)'
+        sys.argv = ['snippy', '-i', content]
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == ''
         assert obj.get_tags() == []
 
-    def test_add_snippet_with_brief_but_no_tags(self):
-        """Test that new snippet can be added with brief description but
+    def test_create_snippet_with_brief_but_no_tags(self):
+        """Test that new snippet can be created with brief description but
         no tags."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
-        sys.argv = ['snippy', '-s', snippet, '-b', brief]
+        sys.argv = ['snippy', '-i', content, '-b', brief]
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == brief
         assert obj.get_tags() == []
 
-    def test_add_snippet_with_one_tag(self):
-        """Test that new snippet can be added with a single tag."""
+    def test_create_snippet_with_one_tag(self):
+        """Test that new snippet can be created with a single tag."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         tags = ['docker']
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker']
+        sys.argv = ['snippy', '-i', content, '-t', 'docker']
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == ''
         assert obj.get_tags() == tags
 
@@ -59,11 +63,11 @@ class TestArgumentsAddNewSnippet(object):
         """Test that tags can be added inside quotes separated by comma and
         without spaces."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         tags = ['docker,container,cleanup']
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker,container,cleanup']
+        sys.argv = ['snippy', '-i', content, '-t', 'docker,container,cleanup']
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == ''
         assert obj.get_tags() == tags
 
@@ -71,13 +75,13 @@ class TestArgumentsAddNewSnippet(object):
         """Test that tags can be added inside quotes separated by comma and
         spaces after comma."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
         tags = ['docker, container, cleanup']
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', links]
+        sys.argv = ['snippy', '-i', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', links]
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == brief
         assert obj.get_tags() == tags
         assert obj.get_links() == links
@@ -86,11 +90,11 @@ class TestArgumentsAddNewSnippet(object):
         """Test that tags can be added so that they are separated by spaces
         before and after the words."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         tags = ['docker container cleanup']
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker container cleanup']
+        sys.argv = ['snippy', '-i', content, '-t', 'docker container cleanup']
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == ''
         assert obj.get_tags() == tags
 
@@ -98,11 +102,11 @@ class TestArgumentsAddNewSnippet(object):
         """Test that tags can be added so that they are separated by spaces
         before and after the words like in '-t docker container cleanup'."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         tags = ['docker ', 'container ', 'cleanup']
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker ', 'container ', 'cleanup']
+        sys.argv = ['snippy', '-i', content, '-t', 'docker ', 'container ', 'cleanup']
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == ''
         assert obj.get_tags() == tags
 
@@ -110,22 +114,22 @@ class TestArgumentsAddNewSnippet(object):
         """Test that tags can be added so that they are separated by comma
         after the words like in '-t docker, container, cleanup'."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         tags = ['docker,', 'container,', 'cleanup']
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker,', 'container,', 'cleanup']
+        sys.argv = ['snippy', '-i', content, '-t', 'docker,', 'container,', 'cleanup']
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == ''
         assert obj.get_tags() == tags
 
     def test_tags_with_special_characters(self):
         """Test that tags are accepted if they contain special characters."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         tags = ['dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
-        sys.argv = ['snippy', '-s', snippet, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
+        sys.argv = ['snippy', '-i', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == ''
         assert obj.get_tags() == tags
 
@@ -134,11 +138,11 @@ class TestArgumentsAddNewSnippet(object):
         This might not be realistic case since user might not be able to
         reproduce this?"""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         tags = ['docker', 'container', 'cleanup']
-        sys.argv = ['snippy', '-s', snippet, '-t', 'docker', 'container', 'cleanup']
+        sys.argv = ['snippy', '-i', content, '-t', 'docker', 'container', 'cleanup']
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == ''
         assert obj.get_tags() == tags
 
@@ -146,14 +150,14 @@ class TestArgumentsAddNewSnippet(object):
         """Test that multiple links can be added by separating them with
         space."""
 
-        snippet = 'docker rm $(docker ps -a -q)'
+        content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
         tags = ['docker, container, cleanup']
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container \
                  https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-        sys.argv = ['snippy', '-s', snippet, '-b', brief, '-t', 'docker, container, cleanup', '-l', links]
+        sys.argv = ['snippy', '-i', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', links]
         obj = Arguments()
-        assert obj.get_snippet() == snippet
+        assert obj.get_content() == content
         assert obj.get_brief() == brief
         assert obj.get_tags() == tags
         assert obj.get_links() == links

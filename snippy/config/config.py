@@ -27,18 +27,18 @@ class Config(object): # pylint: disable=too-many-public-methods
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
         cls.config['args'] = {}
-        cls.config['args']['snippet'] = cls._parse_snippet()
-        cls.config['args']['resolve'] = cls._parse_resolve()
+        cls.config['args']['job'] = cls._parse_job()
+        cls.config['args']['role'] = cls._parse_job_role()
+        cls.config['args']['editor'] = cls._parse_editor()
+        cls.config['args']['file'] = {}
+        cls.config['args']['file']['name'], cls.config['args']['file']['type'] = cls._parse_file()
+        cls.config['args']['id'] = cls._parse_id()
+        cls.config['args']['content'] = cls._parse_content()
         cls.config['args']['brief'] = cls._parse_brief()
         cls.config['args']['category'] = cls._parse_category()
         cls.config['args']['tags'] = cls._parse_tags()
         cls.config['args']['links'] = cls._parse_links()
-        cls.config['args']['find'] = cls._parse_find()
-        cls.config['args']['write'] = cls._parse_write()
-        cls.config['args']['delete'] = cls._parse_delete()
-        cls.config['args']['export'], cls.config['args']['export_format'] = cls._parse_export_snippets()
-        cls.config['args']['import'], cls.config['args']['import_format'] = cls._parse_import_snippets()
-        cls.config['args']['profiler'] = cls.args.get_profiler()
+        cls.config['args']['search'] = cls._parse_search()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
         cls.config['storage']['file'] = 'snippy.db'
@@ -47,137 +47,139 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         cls._set_editor_input()
 
-        cls.logger.debug('configured argument --snippet as "%s"', cls.config['args']['snippet'])
-        cls.logger.debug('configured argument --tags as %s', cls.config['args']['tags'])
+        cls.logger.debug('configured argument --job as "%s"', cls.config['args']['job'])
+        cls.logger.debug('configured argument --role as "%s"', cls.config['args']['role'])
+        cls.logger.debug('configured argument --editor as "%s"', cls.config['args']['editor'])
+        cls.logger.debug('configured argument --file as "%s"', cls.config['args']['file']['name'])
+        cls.logger.debug('configured argument --id as "%s"', cls.config['args']['id'])
+        cls.logger.debug('configured argument --content as "%s"', cls.config['args']['content'])
         cls.logger.debug('configured argument --brief as "%s"', cls.config['args']['brief'])
         cls.logger.debug('configured argument --category as "%s"', cls.config['args']['category'])
+        cls.logger.debug('configured argument --tags as %s', cls.config['args']['tags'])
         cls.logger.debug('configured argument --links as %s', cls.config['args']['links'])
-        cls.logger.debug('configured argument --find as %s', cls.config['args']['find'])
-        cls.logger.debug('configured argument --delete as %d', cls.config['args']['delete'])
-        cls.logger.debug('configured argument --export as "%s"', cls.config['args']['export'])
-        cls.logger.debug('configured argument --profiler as %s', cls.config['args']['profiler'])
-        cls.logger.debug('extracted export file format as "%s"', cls.config['args']['export_format'])
+        cls.logger.debug('configured argument --search as %s', cls.config['args']['search'])
+        cls.logger.debug('extracted file format from argument --file "%s"', cls.config['args']['file']['type'])
 
     @classmethod
-    def is_snippet_task(cls):
-        """Test if the user action was for a snippet."""
+    def is_role_snippet(cls):
+        """Test if defined role was snippet."""
 
-        if cls.get_snippet() or cls.get_find_keywords() or cls.get_delete() or \
-           cls.get_export_snippets() or cls.get_import_snippets():
+        if cls.config['args']['role'] == 'snippet':
             return True
 
         return False
 
     @classmethod
-    def is_resolve_task(cls):
-        """Test if the user action was for a resolution."""
+    def is_role_resolve(cls):
+        """Test if defined role was resolve."""
 
-        if cls.get_resolve() or cls.get_find_keywords():
+        if cls.config['args']['role'] == 'resolve':
             return True
 
         return False
 
     @classmethod
-    def get_snippet(cls):
-        """Get the snippet."""
+    def is_job_create(cls):
+        """Test if defined job was create."""
 
-        return cls.config['args']['snippet']
-
-    @classmethod
-    def get_resolve(cls):
-        """Get the resolution."""
-
-        return cls.config['args']['resolve']
+        return True if cls.config['args']['job'] == 'create' else False
 
     @classmethod
-    def get_brief(cls):
-        """Get brief description for the snippet or resolution."""
+    def is_job_search(cls):
+        """Test if defined job was search."""
+
+        return True if cls.config['args']['job'] == 'search' else False
+
+    @classmethod
+    def is_job_delete(cls):
+        """Test if defined job was delete."""
+
+        return True if cls.config['args']['job'] == 'delete' else False
+
+    @classmethod
+    def is_job_export(cls):
+        """Test if defined job was export."""
+
+        return True if cls.config['args']['job'] == 'export' else False
+
+    @classmethod
+    def is_job_import(cls):
+        """Test if defined job was import."""
+
+        return True if cls.config['args']['job'] == 'import' else False
+
+    @classmethod
+    def get_file(cls):
+        """Get job supplementary filename."""
+
+        return cls.config['args']['file']['name']
+
+    @classmethod
+    def get_target_id(cls):
+        """Get job supplementary target identity."""
+
+        return cls.config['args']['id']
+
+    @classmethod
+    def get_job_content(cls):
+        """Get content for the job."""
+
+        return cls.config['args']['content']
+
+    @classmethod
+    def get_job_brief(cls):
+        """Get brief description for the job."""
 
         return cls.config['args']['brief']
 
     @classmethod
-    def get_category(cls):
-        """Get category for the snippet or resolution."""
+    def get_job_category(cls):
+        """Get category for the job."""
 
         return cls.config['args']['category']
 
     @classmethod
-    def get_tags(cls):
-        """Get tags for the snippet or resolution."""
+    def get_job_tags(cls):
+        """Get tags for the job."""
 
         return cls.config['args']['tags']
 
     @classmethod
-    def get_links(cls):
-        """Get links for the snippet or resolution."""
+    def get_job_links(cls):
+        """Get links for the job."""
 
         return cls.config['args']['links']
 
     @classmethod
-    def get_find_keywords(cls):
-        """Get find keywords for the snippet or resolution."""
+    def get_search_keywords(cls):
+        """Get user provided list of search keywords."""
 
-        return cls.config['args']['find']
+        return cls.config['args']['search']
 
-    @classmethod
-    def get_delete(cls):
-        """Get deleted snippet index."""
-
-        return cls.config['args']['delete']
 
     @classmethod
-    def get_export_snippets(cls):
-        """Get export file."""
+    def is_file_type_yaml(cls):
+        """Test if supplementary file format is yaml."""
 
-        return cls.config['args']['export']
-
-    @classmethod
-    def get_import_snippets(cls):
-        """Get import file."""
-
-        return cls.config['args']['import']
-
-    @classmethod
-    def is_export_format_yaml(cls):
-        """Test if export format is yaml."""
-
-        if cls.config['args']['export_format'] == Const.FILE_TYPE_YAML:
+        if cls.config['args']['file']['type'] == Const.FILE_TYPE_YAML:
             return True
 
         return False
 
     @classmethod
-    def is_export_format_json(cls):
-        """Test if export format is json."""
+    def is_file_type_json(cls):
+        """Test if supplementary file format is json."""
 
-        if cls.config['args']['export_format'] == Const.FILE_TYPE_JSON:
+        if cls.config['args']['file']['type'] == Const.FILE_TYPE_JSON:
             return True
 
         return False
 
     @classmethod
-    def is_export_format_text(cls):
-        """Test if export format is text."""
+    def is_file_type_text(cls):
+        """Test if supplementary file format is text."""
 
-        if cls.config['args']['export_format'] == Const.FILE_TYPE_TEXT:
-            return True
-
-        return False
-
-    @classmethod
-    def is_import_format_yaml(cls):
-        """Test if import format is yaml."""
-
-        if cls.config['args']['import_format'] == Const.FILE_TYPE_YAML:
-            return True
-
-        return False
-
-    @classmethod
-    def is_import_format_json(cls):
-        """Test if import format is json."""
-
-        if cls.config['args']['import_format'] == Const.FILE_TYPE_JSON:
+        if cls.config['args']['file']['type'] == Const.FILE_TYPE_TEXT:
             return True
 
         return False
@@ -213,26 +215,44 @@ class Config(object): # pylint: disable=too-many-public-methods
         return cls.config['storage']['in_memory']
 
     @classmethod
-    def is_profiled(cls):
-        """Check if the code profiler is run."""
+    def _parse_job(cls):
+        """Process the job."""
 
-        return cls.config['args']['profiler']
+        return cls.args.get_job()
 
     @classmethod
-    def _parse_snippet(cls):
-        """Preprocess the user given snippet."""
+    def _parse_job_role(cls):
+        """Process the job role."""
 
-        arg = cls.args.get_snippet()
+        return cls.args.get_job_role()
+
+    @classmethod
+    def _parse_editor(cls):
+        """Process the input from editor."""
+
+        return cls.args.get_editor()
+
+    @classmethod
+    def _parse_file(cls):
+        """Process supplementary file the job."""
+
+        return cls._get_file_type(cls.args.get_file())
+
+    @classmethod
+    def _parse_id(cls):
+        """Process supplementary id for the job."""
+
+        arg = cls.args.get_id()
         if arg:
             return arg
 
         return ''
 
     @classmethod
-    def _parse_resolve(cls):
-        """Preprocess the user given resolution."""
+    def _parse_content(cls):
+        """Process the job content."""
 
-        arg = cls.args.get_resolve()
+        arg = cls.args.get_content()
         if arg:
             return arg
 
@@ -240,7 +260,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
     @classmethod
     def _parse_brief(cls):
-        """Preprocess the user given brief description."""
+        """Process the brief description for the job."""
 
         arg = cls.args.get_brief()
         if arg:
@@ -250,7 +270,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
     @classmethod
     def _parse_category(cls):
-        """Preprocess the user given category value."""
+        """Process the job category."""
 
         arg = cls.args.get_category()
         if arg:
@@ -260,15 +280,15 @@ class Config(object): # pylint: disable=too-many-public-methods
 
     @classmethod
     def _parse_tags(cls):
-        """Process the user given tag keywords."""
+        """Process the job tags."""
 
         arg = cls.args.get_tags()
 
-        return cls._parse_keywords(arg)
+        return cls._get_keywords(arg)
 
     @classmethod
     def _parse_links(cls):
-        """Preprocess the user given links."""
+        """Process the links of the job."""
 
         links = cls.args.get_links()
         # Examples: Support processing of:
@@ -278,49 +298,17 @@ class Config(object): # pylint: disable=too-many-public-methods
         return sorted(link_list)
 
     @classmethod
-    def _parse_find(cls):
-        """Process the user given find keywords."""
+    def _parse_search(cls):
+        """Process the user given search keywords."""
 
-        arg = cls.args.get_find()
-
-        return cls._parse_keywords(arg)
-
-    @classmethod
-    def _parse_write(cls):
-        """Process the user given input from editor."""
-
-        return cls.args.get_write()
-
-    @classmethod
-    def _parse_delete(cls):
-        """Process the user given delete keywords to remove snippet."""
-
-        arg = cls.args.get_delete()
+        arg = cls.args.get_search()
         if arg:
-            return arg
+            cls.config['args']['job'] = 'search'
 
-        return 0
-
-    @classmethod
-    def _parse_export_snippets(cls):
-        """Preprocess the user given export file."""
-
-        return cls._parse_file_type(cls.args.get_export())
+        return cls._get_keywords(arg)
 
     @classmethod
-    def _parse_import_snippets(cls):
-        """Preprocess the user given import file."""
-
-        import_file, import_format = cls._parse_file_type(cls.args.get_import())
-
-        if import_format == Const.FILE_TYPE_TEXT:
-            cls.logger.error('unsupported export file format for import "%s"', import_format)
-            sys.exit(1)
-
-        return (import_file, Const.FILE_TYPE_YAML)
-
-    @classmethod
-    def _parse_file_type(cls, filename):
+    def _get_file_type(cls, filename):
         """Get the file format and file."""
 
         filename, file_extension = os.path.splitext(filename)
@@ -335,15 +323,18 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         elif filename and ('txt' in file_extension or 'text' in file_extension):
             filename = filename + '.txt'
+            if cls.is_job_import():
+                cls.logger.error('unsupported file format for import "%s"', file_extension)
+                sys.exit(1)
 
             return (filename, Const.FILE_TYPE_TEXT)
-
-        cls.logger.info('unsupported export file format "%s"', file_extension)
+        else:
+            cls.logger.info('unsupported export file format "%s"', file_extension)
 
         return ('', Const.FILE_TYPE_YAML)
 
     @classmethod
-    def _parse_keywords(cls, keywords):
+    def _get_keywords(cls, keywords):
         """Preprocess the user given keyword list. The keywords are for example the
         user provided tags or the find keywords. The keywords are returned as a list
         from the Argument. The user may use various formats so each item in a list may
@@ -360,6 +351,19 @@ class Config(object): # pylint: disable=too-many-public-methods
             kw_list = kw_list + re.findall(r"[\w\-]+", tag)
 
         return sorted(kw_list)
+
+    @classmethod
+    def _set_editor_input(cls):
+        """Read and set the user provided values from the editor."""
+
+        edited_input = cls.config['args']['editor']
+        if edited_input:
+            cls.logger.debug('using parameters from editor')
+            cls.config['args']['content'] = Config._get_user_string(edited_input, Const.EDITED_SNIPPET)
+            cls.config['args']['brief'] = Config._get_user_string(edited_input, Const.EDITED_BRIEF)
+            cls.config['args']['category'] = Config._get_user_string(edited_input, Const.EDITED_CATEGORY)
+            cls.config['args']['tags'] = Config._get_user_list(edited_input, Const.EDITED_TAGS)
+            cls.config['args']['links'] = Config._get_user_list(edited_input, Const.EDITED_LINKS)
 
     @classmethod
     def _get_user_list(cls, edited_string, constants):
@@ -380,16 +384,3 @@ class Config(object): # pylint: disable=too-many-public-methods
         value_list = cls._get_user_list(edited_string, constants)
 
         return constants['delimiter'].join(value_list)
-
-    @classmethod
-    def _set_editor_input(cls):
-        """Read and set the user provided values from the editor."""
-
-        edited_input = cls.config['args']['write']
-        if edited_input:
-            cls.logger.debug('using parameters from editor')
-            cls.config['args']['snippet'] = Config._get_user_string(edited_input, Const.EDITED_SNIPPET)
-            cls.config['args']['brief'] = Config._get_user_string(edited_input, Const.EDITED_BRIEF)
-            cls.config['args']['category'] = Config._get_user_string(edited_input, Const.EDITED_CATEGORY)
-            cls.config['args']['tags'] = Config._get_user_list(edited_input, Const.EDITED_TAGS)
-            cls.config['args']['links'] = Config._get_user_list(edited_input, Const.EDITED_LINKS)

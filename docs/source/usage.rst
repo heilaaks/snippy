@@ -8,6 +8,6 @@ Deleting the snippets works with the index of the snippet.
 
 .. code:: bash
 
-    python snip.py --snippet 'docker rm $(docker ps -a -q)' --brief 'Remove all docker containers' --tags docker, image, cleanup
-    python snip.py --find docker
-    python snip.py --delete_snippet 1
+    python snip.py --input 'docker rm $(docker ps -a -q)' --brief 'Remove all docker containers' --tags docker, image, cleanup
+    python snip.py --search docker
+    python snip.py --job delete --role snippet --id 1

@@ -24,12 +24,12 @@ class Snippy(object):
         self.logger.info('running services')
         storage = Storage()
         storage.init()
-        if Config.is_snippet_task():
+        if Config.is_role_snippet():
             Snippet(storage).run()
-        elif Config.is_resolve_task():
+        elif Config.is_role_resolve():
             Resolve(storage).run()
         else:
-            self.logger.error('unknown task defined exiting')
+            self.logger.error('exiting because of unknown role')
 
         storage.debug()
         storage.disconnect()

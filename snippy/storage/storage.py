@@ -18,8 +18,8 @@ class Storage(object):
 
         self.database.init()
 
-    def store(self, snippet, brief=None, category=None, tags=None, links=None, metadata=None):
-        """Store snippet."""
+    def create(self, snippet, brief=None, category=None, tags=None, links=None, metadata=None):
+        """Create snippet."""
 
         self.database.insert_snippet(snippet, brief, category, tags, links, metadata)
 

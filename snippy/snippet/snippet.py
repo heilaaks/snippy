@@ -15,18 +15,18 @@ class Snippet(object):
         self.logger = Logger(__name__).get()
         self.storage = storage
 
-    def add(self):
-        """Add new snippet."""
+    def create(self):
+        """Create new snippet."""
 
-        self.logger.debug('adding new snippet')
-        self.storage.store(Config.get_snippet(), Config.get_brief(), Config.get_category(), \
-                           Config.get_tags(), Config.get_links())
+        self.logger.debug('creating new snippet')
+        self.storage.create(Config.get_job_content(), Config.get_job_brief(), Config.get_job_category(), \
+                           Config.get_job_tags(), Config.get_job_links())
 
-    def find(self):
-        """Find snippets based on keywords."""
+    def search(self):
+        """Search snippets based on keywords."""
 
-        self.logger.info('finding snippet based on keywords')
-        snippets = self.storage.search(Config.get_find_keywords())
+        self.logger.info('searching snippets based on keywords')
+        snippets = self.storage.search(Config.get_search_keywords())
         snippets = self.format_text(snippets, colors=True)
         self.print_terminal(snippets)
 
@@ -34,20 +34,20 @@ class Snippet(object):
         """Delete snippet."""
 
         self.logger.debug('deleting snippet')
-        self.storage.delete(Config.get_delete())
+        self.storage.delete(Config.get_target_id())
 
-    def export_snippets(self):
+    def export(self):
         """Export snippets."""
 
         self.logger.debug('exporting snippets')
         snippets = self.storage.export_snippets()
         self.print_file(snippets)
 
-    def import_snippets(self):
+    def digest(self):
         """Import snippets."""
 
-        self.logger.debug('importing snippets %s', Config.get_import_snippets())
-        snippets = self.load_dictionary(Config.get_import_snippets())
+        self.logger.debug('importing snippets %s', Config.get_file())
+        snippets = self.load_dictionary(Config.get_file())
         self.storage.import_snippets(snippets)
 
     def format_text(self, snippets, colors=False):
@@ -94,11 +94,11 @@ class Snippet(object):
         self.logger.debug('loading snippet dictionary from file')
         with open(snippets, 'r') as infile:
             try:
-                if Config.is_import_format_yaml():
+                if Config.is_file_type_yaml():
                     import yaml
 
                     snippet_dict = yaml.load(infile)
-                elif Config.is_import_format_json():
+                elif Config.is_file_type_json():
                     import json
 
                     snippet_dict = json.load(infile)
@@ -119,20 +119,20 @@ class Snippet(object):
     def print_file(self, snippets):
         """Print snippets into file."""
 
-        export_file = Config.get_export_snippets()
+        export_file = Config.get_file()
         self.logger.debug('export storage into file %s', export_file)
         with open(export_file, 'w') as outfile:
             try:
-                if Config.is_export_format_yaml():
+                if Config.is_file_type_yaml():
                     import yaml
 
                     yaml.dump(self.create_dictionary(snippets), outfile)
-                elif Config.is_export_format_json():
+                elif Config.is_file_type_json():
                     import json
 
                     json.dump(self.create_dictionary(snippets), outfile)
                     outfile.write(Const.NEWLINE)
-                elif Config.is_export_format_text():
+                elif Config.is_file_type_text():
                     self.format_text(snippets)
                     outfile.write(self.format_text(snippets))
                 else:
@@ -145,15 +145,15 @@ class Snippet(object):
         """Run the snippet management task."""
 
         self.logger.info('managing snippet')
-        if Config.get_snippet():
-            self.add()
-        elif Config.get_find_keywords():
-            self.find()
-        elif Config.get_delete():
+        if Config.is_job_create():
+            self.create()
+        elif Config.is_job_search():
+            self.search()
+        elif Config.is_job_delete():
             self.delete()
-        elif Config.get_export_snippets():
-            self.export_snippets()
-        elif Config.get_import_snippets():
-            self.import_snippets()
+        elif Config.is_job_export():
+            self.export()
+        elif Config.is_job_import():
+            self.digest()
         else:
-            self.logger.error('unknown action for snippet')
+            self.logger.error('unknown job for snippet')

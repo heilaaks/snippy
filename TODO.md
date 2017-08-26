@@ -6,11 +6,12 @@
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add text log what was done. The default log level is error so no logs at all. A bit more info is better.
    - [ ] Refactor database tests to use dictionary format for the test rows.
-   - [ ] Refactor the resolve input so that it comes only from files. For example 'snip.py -w RESOLUTION'.
-   - [ ] Consider changing the -s|--snipppet to -a|--add. The input for multiline snips and resolves would be editor.
-   - [ ] Add updating of snippets.
+   - [ ] Add update job.
+   - [ ] Use hashes like in git instead of sequential numbers.
+   - [ ] Add default values from optional arguments to editor template.
 
 ## DONE
+   - [x] Refactored command line arguments to be more suitable for resolve cases as well.
    - [x] Add import functionality from json and yaml files.
    - [x] Add support for categories that allow grouping snippets into larger groups.
    - [x] Add command line option --debug to elevate the debug level and set the default level to error.

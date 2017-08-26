@@ -17,7 +17,7 @@ The basic commands to run and test are:
 
 .. code:: bash
 
-    python3 snip.py -s 'docker rm $(docker ps -a -q)' -t docker,container,cleanup -c 'Remove all docker containers'
+    python3 snip.py -i 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -t docker,container,cleanup
     make test
     make lint
     make coverage

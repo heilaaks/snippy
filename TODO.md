@@ -6,6 +6,9 @@
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add text log what was done. The default log level is error so no logs at all. A bit more info is better.
    - [ ] Refactor database tests to use dictionary format for the test rows.
+   - [ ] Refactor the resolve input so that it comes only from files. For example 'snip.py -w RESOLUTION'.
+   - [ ] Consider changing the -s|--snipppet to -a|--add. The input for multiline snips and resolves would be editor.
+   - [ ] Add updating of snippets.
 
 ## DONE
    - [x] Add import functionality from json and yaml files.

@@ -97,7 +97,7 @@ workon snippy
 make doc
 make lint
 make test
-time python snip.py -s 'docker rm' -b 'Remove all docker containers' -t docker,container,cleanup
+time python snip.py -s 'docker rm' -b 'Remove all docker containers' -c 'docker' -t docker,container,cleanup --debug
 python snip.py -f docker
 
 python snip.py -s 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -c 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
@@ -114,8 +114,8 @@ pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests
 pytest --cov=snippy tests/
 pytest --cov=snippy --cov-report html tests/
 make -C docs html
-python snip.py -s 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -t docker,container,cleanup
-python snip.py -s 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -t docker, container, cleanup
+python snip.py -s 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -c 'docker' -t docker,container,cleanup
+python snip.py -s 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -c 'docker' -t docker, container, cleanup
 pytest
 
    > file:///home/heilaaks/devel/snippy/htmlcov/index.html

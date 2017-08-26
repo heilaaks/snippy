@@ -30,7 +30,7 @@ class Snippet(object):
         self.print_terminal(snippets)
 
     def delete(self):
-        """Delete new snippet."""
+        """Delete snippet."""
 
         self.logger.debug('deleting snippet')
         self.storage.delete(Config.get_delete())
@@ -49,8 +49,8 @@ class Snippet(object):
         snippet_string = ''
         link_string = ''
         self.logger.debug('format snippets for text based output')
-        for idx, row in enumerate(snippets):
-            text = text + Const.format_header(colors) % (idx+1, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_ID])
+        for idx, row in enumerate(snippets, start=1):
+            text = text + Const.format_header(colors) % (idx, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_ID])
             text = text + ''.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
                       for snippet_line in row[Const.SNIPPET_SNIPPET].split(Const.NEWLINE)])
             text = text + Const.NEWLINE

@@ -18,6 +18,8 @@ class Storage(object):
         """Initialize storage."""
 
         self.database.init()
+        
+        return self
 
     def create(self, snippet):
         """Create snippet."""
@@ -63,4 +65,5 @@ class Storage(object):
         """Calculate digest for the data."""
 
         data_string = ''.join(['%s::%s' % (key, value) for (key, value) in sorted(data_dictionary.items())])
+
         return hashlib.blake2s(data_string.encode('UTF-8')).hexdigest()

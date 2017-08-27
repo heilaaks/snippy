@@ -22,8 +22,7 @@ class Snippy(object):
 
     def run(self):
         self.logger.info('running services')
-        storage = Storage()
-        storage.init()
+        storage = Storage().init()
         if Config.is_role_snippet():
             Snippet(storage).run()
         elif Config.is_role_resolve():

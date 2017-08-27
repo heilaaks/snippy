@@ -19,6 +19,7 @@ class Snippet(object):
         """Create new snippet."""
 
         self.logger.debug('creating new snippet')
+        Config.update()
         snippet = {'content': Config.get_job_content(), 'brief': Config.get_job_brief(),
                    'category': Config.get_job_category(), 'tags': Config.get_job_tags(),
                    'links': Config.get_job_links()}
@@ -31,6 +32,24 @@ class Snippet(object):
         snippets = self.storage.search(Config.get_search_keywords())
         snippets = self.format_text(snippets, colors=True)
         self.print_terminal(snippets)
+
+    def update(self):
+        """Update snippet."""
+
+        self.logger.debug('updating snippet')
+        keywords = []
+        digest = Config.get_target_id()
+        snippets = self.storage.search(keywords, digest)
+        if len(snippets) == 1:
+            Config.update(self.create_dictionary(snippets)['snippets'][0])
+            snippet = {'content': Config.get_job_content(), 'brief': Config.get_job_brief(),
+                       'category': Config.get_job_category(), 'tags': Config.get_job_tags(),
+                       'links': Config.get_job_links()}
+            self.storage.update(digest, snippet)
+        elif not snippets:
+            self.logger.info('cannot find requested snippet %s', digest)
+        else:
+            self.logger.error('cannot update two snippets with the same leading digest')
 
     def delete(self):
         """Delete snippet."""
@@ -152,6 +171,8 @@ class Snippet(object):
             self.create()
         elif Config.is_job_search():
             self.search()
+        elif Config.is_job_update():
+            self.update()
         elif Config.is_job_delete():
             self.delete()
         elif Config.is_job_export():

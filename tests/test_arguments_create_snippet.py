@@ -17,7 +17,7 @@ class TestArgumentsCreateSnippet(object):
         obj = Arguments()
         assert obj.get_job() == 'create'
         assert obj.get_job_role() == 'snippet'
-        assert obj.get_editor() == ''
+        assert not obj.get_editor()
         assert obj.get_file() == ''
         assert obj.get_id() == ''
         assert obj.get_content() == ''

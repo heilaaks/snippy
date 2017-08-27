@@ -62,7 +62,7 @@ class Sqlite3Db(object):
         for snippet in snippets:
             self.insert_snippet(snippet)
 
-    def select_snippets(self, keywords, regex=True):
+    def select_snippets(self, keywords=None, digest=None):
         """Select snippets."""
 
         rows = []
@@ -74,19 +74,24 @@ class Sqlite3Db(object):
             # can be counted by multiplying the query keywords (e.g 3)and the searched colums.
             #
             # Example queries:
-            #     1) SELECT id, snippet, brief, category, tags, links, metadata FROM snippets WHERE
+            #     1) SELECT id, snippet, brief, category, tags, links, metadata, digest FROM snippets WHERE
             #        (snippet REGEXP ? or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?)
             #        ORDER BY id ASC
-            #     2) SELECT id, snippet, brief, category, tags, links, metadata FROM snippets WHERE (snippet REGEXP ?
+            #     2) SELECT id, snippet, brief, category, tags, links, metadata, digest FROM snippets WHERE (snippet REGEXP ?
             #        or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
             #        or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
             #        or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?) ORDER BY id ASC
-            if regex:
+            if keywords:
                 query, qargs = Sqlite3Db._get_regexp_query(keywords)
+            elif digest:
+                query = ('SELECT id, snippet, brief, category, tags, links, metadata, digest FROM snippets \
+                          WHERE digest LIKE ?')
+                qargs = [digest+'%']
             else:
-                query, qargs = Sqlite3Db._get_regexp_query(keywords)
+                self.logger.error('exiting because of internal error where search query was not defined')
+                sys.exit(1)
 
-            self.logger.debug('running query "%s"', query)
+            self.logger.debug('running select query "%s"', query)
             try:
                 self.cursor.execute(query, qargs)
                 rows = self.cursor.fetchall()
@@ -115,6 +120,26 @@ class Sqlite3Db(object):
             self.logger.error('sqlite3 database connection did not exist while all entries were being queried')
 
         return []
+
+    def update_snippet(self, digest, snippet, metadata=None):
+        """Update existing snippet."""
+
+        if self.conn:
+            tags_string = Const.DELIMITER_TAGS.join(map(str, snippet['tags']))
+            links_string = Const.DELIMITER_LINKS.join(map(str, snippet['links']))
+            query = ('UPDATE snippets SET snippet=?, brief=?, category=?, tags=?, links=?, metadata=?, digest=? \
+                      WHERE digest LIKE ?')
+            qargs = [snippet['content'], snippet['brief'], snippet['category'], tags_string,
+                     links_string, metadata, snippet['digest'], digest+'%']
+            self.logger.debug('updating snippet %.16s with new digest %.16s and brief "%s"', digest, snippet['digest'],
+                              snippet['brief'])
+            try:
+                self.cursor.execute(query, qargs)
+                self.conn.commit()
+            except sqlite3.Error as exception:
+                self.logger.exception('updating sqlite3 database failed with exception "%s"', exception)
+        else:
+            self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
 
     def delete_snippet(self, digest):
         """Delete one snippet based on given digest."""

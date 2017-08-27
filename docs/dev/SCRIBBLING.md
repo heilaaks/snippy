@@ -112,6 +112,8 @@ python snip.py -j export -r snippet --file snippets.txt
 python snip.py -j import -r snippet --file snippets.yaml
 python snip.py -j import -r snippet --file snippets.json
 python snip.py -j import -r snippet --file snippets.txt
+python snip.py -r snippet -j update -id 6b8705255016268c
+python snip.py -r snippet -j create
 
 pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
 pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests

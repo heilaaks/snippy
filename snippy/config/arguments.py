@@ -61,28 +61,36 @@ class Arguments(object):
 
     @classmethod
     def get_editor(cls):
-        """Return the supplementary editor for the job."""
+        """Return the usage of supplementary editor for the job."""
 
-        edited_message = ''
-        if not cls.args.editor:
-            return edited_message
+        return cls.args.editor
+
+    @classmethod
+    def get_editor_content(cls, snippet):
+        """Return the edited content."""
 
         import tempfile
         from subprocess import call
-
+        print("snippet %s" % snippet)
+        edited_message = ''
+        content = snippet['content'] + Const.NEWLINE
+        brief = snippet['brief'] + Const.NEWLINE
+        category = snippet['category'] + Const.NEWLINE
+        tags = Const.DELIMITER_TAGS.join(snippet['tags']) + Const.NEWLINE
+        links = Const.DELIMITER_NEWLINE.join(snippet['links']) + Const.NEWLINE
         default_editor = os.environ.get('EDITOR', 'vi')
         editor_template = ('# Commented lines will be ignored.\n'
                            '#\n' +
                            Const.EDITOR_SNIPPET_HEAD +
-                           '\n' +
+                           content + '\n' +
                            Const.EDITOR_BRIEF_HEAD +
-                           '\n' +
+                           brief + '\n' +
                            Const.EDITOR_CATEGORY_HEAD +
-                           '\n' +
+                           category + '\n' +
                            Const.EDITOR_TAGS_HEAD +
-                           '\n' +
+                           tags + '\n' +
                            Const.EDITOR_LINKS_HEAD +
-                           '\n').encode('UTF-8')
+                           links + '\n').encode('UTF-8')
 
         with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
             outfile.write(editor_template)

@@ -18,7 +18,7 @@ class Storage(object):
         """Initialize storage."""
 
         self.database.init()
-        
+
         return self
 
     def create(self, snippet):
@@ -27,10 +27,17 @@ class Storage(object):
         snippet['digest'] = Storage._hash(snippet)
         self.database.insert_snippet(snippet)
 
-    def search(self, keywords):
+    def search(self, keywords=None, digest=None):
         """Search snippets."""
 
-        return self.database.select_snippets(keywords)
+        return self.database.select_snippets(keywords, digest)
+
+    def update(self, digest, snippet):
+        """Update snippet."""
+
+        snippet['digest'] = Storage._hash(snippet)
+
+        return self.database.update_snippet(digest, snippet)
 
     def export_snippets(self):
         """Export all snippets."""
@@ -45,10 +52,10 @@ class Storage(object):
 
         return self.database.bulk_insert_snippets(snippets['snippets'])
 
-    def delete(self, db_index):
+    def delete(self, digest):
         """Delete snippet."""
 
-        return self.database.delete_snippet(db_index)
+        return self.database.delete_snippet(digest)
 
     def disconnect(self):
         """Disconnect storage."""

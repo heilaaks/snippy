@@ -8,6 +8,7 @@ class Constants(object):
 
     NEWLINE = '\n'
     SPACE = ' '
+    EMPTY = ''
 
     # Delimiters
     DELIMITER_TAGS = ','

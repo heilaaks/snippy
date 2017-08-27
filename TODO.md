@@ -1,16 +1,20 @@
 ## TODO
+   - [ ] Add new method for Config() to return the snippet in a single dictionary.
+   - [ ] Change the Config.update() to return the update snippet in dictionary.
+   - [ ] Change small methods that have simple tests Config() to use ternary operator in a single line.
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents
    - [ ] Add support for cutting log string with low logging levels. Long lines are nasty and meant for debugging.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add text log what was done. The default log level is error so no logs at all. A bit more info is better.
-   - [ ] Add update job.
    - [ ] Add default values from optional arguments to editor template.
    - [ ] Add digest check when importing.
    - [ ] Fix inserting same snippet again so that the error is handled nicely.
+   - [ ] Fix the empty tags and list from editor. They contain one item array like ['']. The lists should be empty.
 
 ## DONE
+   - [x] Added possibility to update existing snippet.
    - [x] Changed delete to work with the snippet digest instead of database rown number.
    - [x] Added hashes to identify snippets.
    - [x] Changed database tests to use dictionary format.

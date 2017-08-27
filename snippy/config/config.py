@@ -45,20 +45,25 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['storage']['schema'] = os.path.join(cls.config['root'], 'snippy/storage/database/database.sql')
         cls.config['storage']['in_memory'] = False # Enabled only for testing.
 
-        cls._set_editor_input()
-
-        cls.logger.debug('configured argument --job as "%s"', cls.config['args']['job'])
-        cls.logger.debug('configured argument --role as "%s"', cls.config['args']['role'])
-        cls.logger.debug('configured argument --editor as "%s"', cls.config['args']['editor'])
-        cls.logger.debug('configured argument --file as "%s"', cls.config['args']['file']['name'])
-        cls.logger.debug('configured argument --id as "%s"', cls.config['args']['id'])
-        cls.logger.debug('configured argument --content as "%s"', cls.config['args']['content'])
-        cls.logger.debug('configured argument --brief as "%s"', cls.config['args']['brief'])
-        cls.logger.debug('configured argument --category as "%s"', cls.config['args']['category'])
-        cls.logger.debug('configured argument --tags as %s', cls.config['args']['tags'])
-        cls.logger.debug('configured argument --links as %s', cls.config['args']['links'])
-        cls.logger.debug('configured argument --search as %s', cls.config['args']['search'])
+        cls.logger.debug('configured value from --job as "%s"', cls.config['args']['job'])
+        cls.logger.debug('configured value from --role as "%s"', cls.config['args']['role'])
+        cls.logger.debug('configured value from --editor as "%s"', cls.config['args']['editor'])
+        cls.logger.debug('configured value from --file as "%s"', cls.config['args']['file']['name'])
+        cls.logger.debug('configured value from --id as "%s"', cls.config['args']['id'])
+        cls.logger.debug('configured value from --content as "%s"', cls.config['args']['content'])
+        cls.logger.debug('configured value from --brief as "%s"', cls.config['args']['brief'])
+        cls.logger.debug('configured value from --category as "%s"', cls.config['args']['category'])
+        cls.logger.debug('configured value from --tags as %s', cls.config['args']['tags'])
+        cls.logger.debug('configured value from --links as %s', cls.config['args']['links'])
+        cls.logger.debug('configured value from --search as %s', cls.config['args']['search'])
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['args']['file']['type'])
+
+    @classmethod
+    def update(cls, snippet=None):
+        """Get snippet from edited content."""
+
+        if cls.get_editor():
+            cls._set_editor_content(snippet)
 
     @classmethod
     def is_role_snippet(cls):
@@ -91,6 +96,12 @@ class Config(object): # pylint: disable=too-many-public-methods
         return True if cls.config['args']['job'] == 'search' else False
 
     @classmethod
+    def is_job_update(cls):
+        """Test if defined job was update."""
+
+        return True if cls.config['args']['job'] == 'update' else False
+
+    @classmethod
     def is_job_delete(cls):
         """Test if defined job was delete."""
 
@@ -107,6 +118,12 @@ class Config(object): # pylint: disable=too-many-public-methods
         """Test if defined job was import."""
 
         return True if cls.config['args']['job'] == 'import' else False
+
+    @classmethod
+    def get_editor(cls):
+        """Get job supplementary editor."""
+
+        return cls.config['args']['editor']
 
     @classmethod
     def get_file(cls):
@@ -228,7 +245,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
     @classmethod
     def _parse_editor(cls):
-        """Process the input from editor."""
+        """Process the input for supplementary editor usage."""
 
         return cls.args.get_editor()
 
@@ -353,10 +370,14 @@ class Config(object): # pylint: disable=too-many-public-methods
         return sorted(kw_list)
 
     @classmethod
-    def _set_editor_input(cls):
-        """Read and set the user provided values from the editor."""
+    def _set_editor_content(cls, snippet=None):
+        """Read and set the user provided values from editor."""
 
-        edited_input = cls.config['args']['editor']
+        if not snippet:
+            snippet = {'content': Const.EMPTY, 'brief': Const.EMPTY, 'category': Const.EMPTY, 'tags': Const.EMPTY,
+                       'links': Const.EMPTY, 'digest': Const.EMPTY}
+
+        edited_input = cls.args.get_editor_content(snippet)
         if edited_input:
             cls.logger.debug('using parameters from editor')
             cls.config['args']['content'] = Config._get_user_string(edited_input, Const.EDITED_SNIPPET)
@@ -364,6 +385,11 @@ class Config(object): # pylint: disable=too-many-public-methods
             cls.config['args']['category'] = Config._get_user_string(edited_input, Const.EDITED_CATEGORY)
             cls.config['args']['tags'] = Config._get_user_list(edited_input, Const.EDITED_TAGS)
             cls.config['args']['links'] = Config._get_user_list(edited_input, Const.EDITED_LINKS)
+            cls.logger.debug('configured value from editor for --content as "%s"', cls.config['args']['content'])
+            cls.logger.debug('configured value from editor for --brief as "%s"', cls.config['args']['brief'])
+            cls.logger.debug('configured value from editor for --category as "%s"', cls.config['args']['category'])
+            cls.logger.debug('configured value from editor for --tags as %s', cls.config['args']['tags'])
+            cls.logger.debug('configured value from editor for --links as %s', cls.config['args']['links'])
 
     @classmethod
     def _get_user_list(cls, edited_string, constants):

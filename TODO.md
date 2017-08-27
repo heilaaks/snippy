@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Make delete to work with the snippet digest instead of database rown number.
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents
@@ -8,9 +7,11 @@
    - [ ] Add text log what was done. The default log level is error so no logs at all. A bit more info is better.
    - [ ] Add update job.
    - [ ] Add default values from optional arguments to editor template.
-   - [ ] Using UTF-8 currently. Check if Unicode would be possible for example with vi editor input.
+   - [ ] Add digest check when importing.
+   - [ ] Fix inserting same snippet again so that the error is handled nicely.
 
 ## DONE
+   - [x] Changed delete to work with the snippet digest instead of database rown number.
    - [x] Added hashes to identify snippets.
    - [x] Changed database tests to use dictionary format.
    - [x] Changed command line arguments to be more suitable for resolve cases as well.

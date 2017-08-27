@@ -116,18 +116,20 @@ class Sqlite3Db(object):
 
         return []
 
-    def delete_snippet(self, db_index):
-        """Delete snippets."""
+    def delete_snippet(self, digest):
+        """Delete one snippet based on given digest."""
 
         if self.conn:
-            query = ('DELETE FROM snippets where id = ?')
-            self.logger.debug('delete snippet with index %d', db_index)
+            query = ('DELETE FROM snippets WHERE digest LIKE ?')
+            self.logger.debug('delete snippet with index %s', digest)
             try:
-                self.cursor.execute(query, (db_index,))
+                self.cursor.execute(query, (digest+'%',))
                 if self.cursor.rowcount == 1:
                     self.conn.commit()
+                elif self.cursor.rowcount == 0:
+                    self.logger.info('the requested row was not found with digest %s', digest)
                 else:
-                    self.logger.info('database index was not found %d', db_index)
+                    self.logger.info('unexpected row count %d while deleting with digest %s', self.cursor.rowcount, digest)
             except sqlite3.Error as exception:
                 self.logger.exception('deleting from sqlite3 database failed with exception "%s"', exception)
         else:

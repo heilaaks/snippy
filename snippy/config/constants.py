@@ -52,7 +52,8 @@ class Constants(object):
     def format_header(colors=False):
         """Format snippet text header."""
 
-        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m \x1b[0m@ %s \x1b[0;2m[%.16s]\x1b[0m\n' if colors else '%d. %s @ %s [%.16s]\n'
+        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m \x1b[0m@ %s \x1b[0;2m[%.16s]\x1b[0m\n' if colors \
+               else '%d. %s @ %s [%.16s]\n'
 
     @staticmethod
     def format_snippet(colors=False):

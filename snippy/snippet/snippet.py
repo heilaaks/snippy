@@ -19,8 +19,10 @@ class Snippet(object):
         """Create new snippet."""
 
         self.logger.debug('creating new snippet')
-        self.storage.create(Config.get_job_content(), Config.get_job_brief(), Config.get_job_category(), \
-                           Config.get_job_tags(), Config.get_job_links())
+        snippet = {'content': Config.get_job_content(), 'brief': Config.get_job_brief(),
+                   'category': Config.get_job_category(), 'tags': Config.get_job_tags(),
+                   'links': Config.get_job_links()}
+        self.storage.create(snippet)
 
     def search(self):
         """Search snippets based on keywords."""
@@ -59,7 +61,7 @@ class Snippet(object):
         self.logger.debug('format snippets for text based output')
         for idx, row in enumerate(snippets, start=1):
             text = text + Const.format_header(colors) % (idx, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_CATEGORY], \
-                                                              row[Const.SNIPPET_ID])
+                                                              row[Const.SNIPPET_DIGEST])
             text = text + ''.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
                       for snippet_line in row[Const.SNIPPET_SNIPPET].split(Const.NEWLINE)])
             text = text + Const.NEWLINE
@@ -77,11 +79,12 @@ class Snippet(object):
         snippet_list = []
         self.logger.debug('creating dictionary from snippets')
         for row in snippets:
-            snippet = {'brief': row[Const.SNIPPET_BRIEF],
-                       'snippet': row[Const.SNIPPET_SNIPPET],
+            snippet = {'content': row[Const.SNIPPET_SNIPPET],
+                       'brief': row[Const.SNIPPET_BRIEF],
                        'category': row[Const.SNIPPET_CATEGORY],
+                       'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS),
                        'links': row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS),
-                       'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS)}
+                       'digest': row[Const.SNIPPET_DIGEST]}
             snippet_list.append(snippet.copy())
         snippet_dict = {'snippets': snippet_list}
 

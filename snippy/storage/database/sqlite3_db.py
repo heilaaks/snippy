@@ -24,6 +24,8 @@ class Sqlite3Db(object):
 
         self.conn, self.cursor = self._create_db()
 
+        return self
+
     def disconnect(self):
         """Close database connection."""
 
@@ -37,16 +39,17 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_snippet(self, snippet, brief=None, category=None, tags=None, links=None, metadata=None):
+    def insert_snippet(self, snippet, metadata=None):
         """Insert snippet into database."""
 
         if self.conn:
-            tags_string = Const.DELIMITER_TAGS.join(map(str, tags))
-            links_string = Const.DELIMITER_LINKS.join(map(str, links))
-            query = ('INSERT INTO snippets(snippet, brief, category, tags, links, metadata) VALUES(?,?,?,?,?,?)')
-            self.logger.debug('insert snippet %s with brief %s and tags %s', snippet, brief, tags_string)
+            tags_string = Const.DELIMITER_TAGS.join(map(str, snippet['tags']))
+            links_string = Const.DELIMITER_LINKS.join(map(str, snippet['links']))
+            query = ('INSERT INTO snippets(snippet, brief, category, tags, links, metadata, digest) VALUES(?,?,?,?,?,?,?)')
+            self.logger.debug('insert snippet %s with brief %s', snippet['content'], snippet['brief'])
             try:
-                self.cursor.execute(query, (snippet, brief, category, tags_string, links_string, metadata))
+                self.cursor.execute(query, (snippet['content'], snippet['brief'], snippet['category'], tags_string,
+                                            links_string, metadata, snippet['digest']))
                 self.conn.commit()
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
@@ -56,8 +59,8 @@ class Sqlite3Db(object):
     def bulk_insert_snippets(self, snippets):
         """Insert multiple snippets into database."""
 
-        for row in snippets:
-            self.insert_snippet(row['snippet'], row['brief'], row['category'], row['tags'], row['links'])
+        for snippet in snippets:
+            self.insert_snippet(snippet)
 
     def select_snippets(self, keywords, regex=True):
         """Select snippets."""
@@ -184,7 +187,7 @@ class Sqlite3Db(object):
         """Generate query parameters for the SQL query."""
 
         query_args = []
-        query = 'SELECT id, snippet, brief, category, tags, links, metadata FROM snippets WHERE '
+        query = 'SELECT id, snippet, brief, category, tags, links, metadata, digest FROM snippets WHERE '
         search = '(snippet REGEXP ? or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?) '
         for token in keywords:
             query = query + search + 'OR '

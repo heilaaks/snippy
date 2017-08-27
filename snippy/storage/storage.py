@@ -2,6 +2,7 @@
 
 """storage.py: Storage management."""
 
+import hashlib
 from snippy.logger import Logger
 from snippy.storage.database import Sqlite3Db as Database
 
@@ -18,10 +19,11 @@ class Storage(object):
 
         self.database.init()
 
-    def create(self, snippet, brief=None, category=None, tags=None, links=None, metadata=None):
+    def create(self, snippet):
         """Create snippet."""
 
-        self.database.insert_snippet(snippet, brief, category, tags, links, metadata)
+        snippet['digest'] = Storage._hash(snippet)
+        self.database.insert_snippet(snippet)
 
     def search(self, keywords):
         """Search snippets."""
@@ -35,6 +37,9 @@ class Storage(object):
 
     def import_snippets(self, snippets):
         """Import all given snippets."""
+
+        for snippet in snippets['snippets']:
+            snippet['digest'] = Storage._hash(snippet)
 
         return self.database.bulk_insert_snippets(snippets['snippets'])
 
@@ -52,3 +57,10 @@ class Storage(object):
         """Dump the whole storage."""
 
         self.database.debug()
+
+    @staticmethod
+    def _hash(data_dictionary):
+        """Calculate digest for the data."""
+
+        data_string = ''.join(['%s::%s' % (key, value) for (key, value) in sorted(data_dictionary.items())])
+        return hashlib.blake2s(data_string.encode('UTF-8')).hexdigest()

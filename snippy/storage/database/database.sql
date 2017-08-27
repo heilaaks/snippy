@@ -10,7 +10,8 @@ create table if not exists snippets (
     category    text default '',
     tags        text default '',
     links       text default '',
-    metadata    text default ''
+    metadata    text default '',
+    digest      blob(64)
 );
 
 -- Resolutions are longer troubleshooting notes.
@@ -21,5 +22,6 @@ create table if not exists resolves (
     category    text default '',
     tags        text default '',
     links       text default '',
-    metadata    text default ''
+    metadata    text default '',
+    digest      blob(64)
 );

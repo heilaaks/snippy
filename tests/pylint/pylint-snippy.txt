@@ -1,4 +1,6 @@
+************* Module snippy.config.constants
+C: 55, 0: Line too long (129/125) (line-too-long)
 
---------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+-------------------------------------------------------------------
+Your code has been rated at 9.98/10 (previous run: 10.00/10, -0.02)
 

@@ -23,6 +23,7 @@ class Constants(object):
     SNIPPET_TAGS = 4
     SNIPPET_LINKS = 5
     SNIPPET_METADATA = 6
+    SNIPPET_DIGEST = 7
 
     # Export formats
     FILE_TYPE_YAML = 'yaml'
@@ -51,8 +52,7 @@ class Constants(object):
     def format_header(colors=False):
         """Format snippet text header."""
 
-        #return '\x1b[96;1m%d. \x1b[1;92m%s (%s)\x1b[0;2m [%s]\x1b[0m\n' if colors else '%d. %s (%s) [%s]\n'
-        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m \x1b[0m@ %s \x1b[0;2m[%s]\x1b[0m\n' if colors else '%d. %s @ %s [%s]\n'
+        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m \x1b[0m@ %s \x1b[0;2m[%.16s]\x1b[0m\n' if colors else '%d. %s @ %s [%.16s]\n'
 
     @staticmethod
     def format_snippet(colors=False):

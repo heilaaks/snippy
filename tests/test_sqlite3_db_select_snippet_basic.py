@@ -17,16 +17,17 @@ class TestSqlite3DbSelectSnippetBasic(object): # pylint: disable=too-few-public-
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
-        content = 'docker rm $(docker ps -a -q)'
-        brief = 'Remove all docker containers'
-        category = 'docker'
-        tags = ['container', 'cleanup', 'docker']
-        links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container']
+        snippet = {'content': 'docker rm $(docker ps -a -q)',
+                   'brief': 'Remove all docker containers',
+                   'category': 'moby',
+                   'tags': ['container', 'cleanup', 'docker'],
+                   'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'],
+                   'digest': 'da106d811ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'}
         metadata = 'metadata'
         keywords = ['moby', 'delete', 'askubuntu']
-        rows = [(1, content, brief, category, 'container,cleanup,docker', links[0], metadata)]
-        obj = Sqlite3Db()
-        obj.init()
-        obj.insert_snippet(content, brief, category, tags, links, metadata)
-        assert obj.select_snippets(keywords) == rows
+        db_rows = [(1, snippet['content'], snippet['brief'], snippet['category'], 'container,cleanup,docker',
+                    snippet['links'][0], metadata, snippet['digest'])]
+        obj = Sqlite3Db().init()
+        obj.insert_snippet(snippet, metadata)
+        assert obj.select_snippets(keywords) == db_rows
         obj.disconnect()

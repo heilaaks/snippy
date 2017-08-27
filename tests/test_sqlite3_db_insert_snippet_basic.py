@@ -18,18 +18,18 @@ class TestSqlite3DbInsertSnippetBasic(object): # pylint: disable=too-few-public-
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
-        row = {'content': 'docker rm $(docker ps -a -q)',
-               'brief': 'Remove all docker containers',
-               'category': 'docker',
-               'tags': ['container', 'cleanup', 'docker'],
-               'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'],
-               'metadata': 'metadata'}
-        rows = [(1, row['content'], row['brief'], row['category'], 'container,cleanup,docker', \
-                    row['links'][0], row['metadata'])]
-        obj = Sqlite3Db()
-        obj.init()
-        obj.insert_snippet(row['content'], row['brief'], row['category'], row['tags'], row['links'], row['metadata'])
-        assert Sqlite3DbHelper().select_all_snippets() == rows
+        snippet = {'content': 'docker rm $(docker ps -a -q)',
+                   'brief': 'Remove all docker containers',
+                   'category': 'docker',
+                   'tags': ['container', 'cleanup', 'docker'],
+                   'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'],
+                   'digest': 'da106d811ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'}
+        metadata = 'metadata'
+        db_rows = [(1, snippet['content'], snippet['brief'], snippet['category'], 'container,cleanup,docker',
+                    snippet['links'][0], metadata, snippet['digest'])]
+        obj = Sqlite3Db().init()
+        obj.insert_snippet(snippet, metadata)
+        assert Sqlite3DbHelper().select_all_snippets() == db_rows
         obj.disconnect()
 
     @mock.patch.object(Config, 'is_storage_in_memory')
@@ -39,17 +39,17 @@ class TestSqlite3DbInsertSnippetBasic(object): # pylint: disable=too-few-public-
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
-        row = {'content': 'docker rm $(docker ps -a -q)',
-               'brief': 'Remove all docker containers',
-               'category': 'docker',
-               'tags': ['container', 'cleanup', 'docker'],
-               'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
-                         'https://www.faked.com/tutorials/how-to-remove-docker-images-containers-and-volumes'],
-               'metadata': 'metadata'}
-        rows = [(1, row['content'], row['brief'], row['category'], 'container,cleanup,docker', \
-                    row['links'][0] + Const.DELIMITER_LINKS + row['links'][1], row['metadata'])]
-        obj = Sqlite3Db()
-        obj.init()
-        obj.insert_snippet(row['content'], row['brief'], row['category'], row['tags'], row['links'], row['metadata'])
-        assert Sqlite3DbHelper().select_all_snippets() == rows
+        snippet = {'content': 'docker rm $(docker ps -a -q)',
+                   'brief': 'Remove all docker containers',
+                   'category': 'docker',
+                   'tags': ['container', 'cleanup', 'docker'],
+                   'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
+                             'https://www.faked.com/tutorials/how-to-remove-docker-images-containers-and-volumes'],
+                   'digest': 'da106d811ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'}
+        metadata = 'metadata'
+        db_rows = [(1, snippet['content'], snippet['brief'], snippet['category'], 'container,cleanup,docker',
+                    snippet['links'][0] + Const.DELIMITER_LINKS + snippet['links'][1], metadata, snippet['digest'])]
+        obj = Sqlite3Db().init()
+        obj.insert_snippet(snippet, metadata)
+        assert Sqlite3DbHelper().select_all_snippets() == db_rows
         obj.disconnect()

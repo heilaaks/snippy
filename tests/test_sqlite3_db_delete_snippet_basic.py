@@ -17,22 +17,28 @@ class TestSqlite3DbDeleteSnippetBasic(object): # pylint: disable=too-few-public-
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
-        content = ['docker rm $(docker ps -a -q)', 'docker rmi $(docker images -f dangling=true -q)']
-        briefs = ['Remove all docker containers', 'Remove all dangling image layers']
-        category = 'docker'
-        tags = [['container', 'cleanup', 'docker'], ['container', 'cleanup', 'docker']]
-        links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
-                 'https://www.faked.com/tutorials/how-to-remove-docker-images-containers-and-volumes']
+        snippet1 = {'content': 'docker rm $(docker ps -a -q)',
+                    'brief': 'Remove all docker containers',
+                    'category': 'docker',
+                    'tags': ['container', 'cleanup', 'docker'],
+                    'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'],
+                    'digest': 'da106d811ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'}
+        snippet2 = {'content': 'docker rmi $(docker images -f dangling=true -q)',
+                    'brief': 'Remove all dangling image layers',
+                    'category': 'docker',
+                    'tags': ['container', 'cleanup', 'docker'],
+                    'links': ['https://www.faked.com/tutorials/how-to-remove-docker-images-containers-and-volumes'],
+                    'digest': 'aa106d811ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'}
         metadata = 'metadata'
         keywords = ['help', 'docker']
-        rows = [(1, content[0], briefs[0], category, 'container,cleanup,docker', links[0], metadata),
-                (2, content[1], briefs[1], category, 'container,cleanup,docker', links[1], metadata)]
-        obj = Sqlite3Db()
-        obj.init()
-        obj.insert_snippet(content[0], briefs[0], category, tags[0], [links[0]], metadata)
-        obj.insert_snippet(content[1], briefs[1], category, tags[1], [links[1]], metadata)
-        assert obj.select_snippets(keywords) == rows
+        db_rows = [(1, snippet1['content'], snippet1['brief'], snippet1['category'], 'container,cleanup,docker',
+                    snippet1['links'][0], metadata, snippet1['digest']),
+                   (2, snippet2['content'], snippet2['brief'], snippet2['category'], 'container,cleanup,docker',
+                    snippet2['links'][0], metadata, snippet2['digest'])]
+        obj = Sqlite3Db().init()
+        obj.insert_snippet(snippet1, metadata)
+        obj.insert_snippet(snippet2, metadata)
+        assert obj.select_snippets(keywords) == db_rows
         obj.delete_snippet(1)
-        assert obj.select_snippets(keywords) == [(2, content[1], briefs[1], category, 'container,cleanup,docker', \
-                                                     links[1], metadata)]
+        assert obj.select_snippets(keywords) == [db_rows[1]]
         obj.disconnect()

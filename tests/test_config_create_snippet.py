@@ -17,7 +17,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         sys.argv = ['snippy']
         obj = Config()
         assert isinstance(obj.get_file(), str)
-        assert isinstance(obj.get_target_id(), str)
+        assert isinstance(obj.get_snippet_digets(), str)
         assert isinstance(obj.get_job_content(), str)
         assert isinstance(obj.get_job_brief(), str)
         assert isinstance(obj.get_job_tags(), list)

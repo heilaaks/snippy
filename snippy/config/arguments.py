@@ -71,7 +71,7 @@ class Arguments(object):
 
         import tempfile
         from subprocess import call
-        print("snippet %s" % snippet)
+
         edited_message = ''
         content = snippet['content'] + Const.NEWLINE
         brief = snippet['brief'] + Const.NEWLINE

@@ -19,52 +19,45 @@ class Snippet(object):
         """Create new snippet."""
 
         self.logger.debug('creating new snippet')
-        Config.update()
-        snippet = {'content': Config.get_job_content(), 'brief': Config.get_job_brief(),
-                   'category': Config.get_job_category(), 'tags': Config.get_job_tags(),
-                   'links': Config.get_job_links()}
+        snippet = Config.get_snippet()
         self.storage.create(snippet)
 
     def search(self):
         """Search snippets based on keywords."""
 
-        self.logger.info('searching snippets based on keywords')
+        self.logger.info('searching snippets')
         snippets = self.storage.search(Config.get_search_keywords())
         snippets = self.format_text(snippets, colors=True)
         self.print_terminal(snippets)
 
     def update(self):
-        """Update snippet."""
+        """Update snippet based on snippet digest."""
 
-        self.logger.debug('updating snippet')
-        keywords = []
-        digest = Config.get_target_id()
-        snippets = self.storage.search(keywords, digest)
-        if len(snippets) == 1:
-            Config.update(self.create_dictionary(snippets)['snippets'][0])
-            snippet = {'content': Config.get_job_content(), 'brief': Config.get_job_brief(),
-                       'category': Config.get_job_category(), 'tags': Config.get_job_tags(),
-                       'links': Config.get_job_links()}
+        digest = Config.get_snippet_digets()
+        self.logger.debug('updating snippet with digest %.16s', digest)
+        rows = self.storage.search(None, digest)
+        if len(rows) == 1:
+            snippet = Config.get_snippet(self.convert_db_row(rows[0]))
             self.storage.update(digest, snippet)
-        elif not snippets:
-            self.logger.info('cannot find requested snippet %s', digest)
+        elif not rows:
+            self.logger.info('cannot find requested snippet with digest %s', digest)
         else:
-            self.logger.error('cannot update two snippets with the same leading digest')
+            self.logger.error('cannot update multiple snippets with the same 16 byte digest')
 
     def delete(self):
         """Delete snippet."""
 
         self.logger.debug('deleting snippet')
-        self.storage.delete(Config.get_target_id())
+        self.storage.delete(Config.get_snippet_digets())
 
-    def export(self):
+    def export_all(self):
         """Export snippets."""
 
         self.logger.debug('exporting snippets')
         snippets = self.storage.export_snippets()
         self.print_file(snippets)
 
-    def digest(self):
+    def import_all(self):
         """Import snippets."""
 
         self.logger.debug('importing snippets %s', Config.get_file())
@@ -91,6 +84,18 @@ class Snippet(object):
 
         return text
 
+    @staticmethod
+    def convert_db_row(row):
+        """Convert row from database to snippet dictionary."""
+        snippet = {'content': row[Const.SNIPPET_SNIPPET],
+                   'brief': row[Const.SNIPPET_BRIEF],
+                   'category': row[Const.SNIPPET_CATEGORY],
+                   'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS),
+                   'links': row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS),
+                   'digest': row[Const.SNIPPET_DIGEST]}
+
+        return snippet
+
     def create_dictionary(self, snippets):
         """Create dictionary from snippets in the database for data serialization."""
 
@@ -98,13 +103,7 @@ class Snippet(object):
         snippet_list = []
         self.logger.debug('creating dictionary from snippets')
         for row in snippets:
-            snippet = {'content': row[Const.SNIPPET_SNIPPET],
-                       'brief': row[Const.SNIPPET_BRIEF],
-                       'category': row[Const.SNIPPET_CATEGORY],
-                       'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS),
-                       'links': row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS),
-                       'digest': row[Const.SNIPPET_DIGEST]}
-            snippet_list.append(snippet.copy())
+            snippet_list.append(self.convert_db_row(row))
         snippet_dict = {'snippets': snippet_list}
 
         return snippet_dict
@@ -164,7 +163,7 @@ class Snippet(object):
                 sys.exit()
 
     def run(self):
-        """Run the snippet management task."""
+        """Run the snippet management job."""
 
         self.logger.info('managing snippet')
         if Config.is_job_create():
@@ -176,8 +175,8 @@ class Snippet(object):
         elif Config.is_job_delete():
             self.delete()
         elif Config.is_job_export():
-            self.export()
+            self.export_all()
         elif Config.is_job_import():
-            self.digest()
+            self.import_all()
         else:
             self.logger.error('unknown job for snippet')

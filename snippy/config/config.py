@@ -59,11 +59,17 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['args']['file']['type'])
 
     @classmethod
-    def update(cls, snippet=None):
-        """Get snippet from edited content."""
+    def get_snippet(cls, snippet=None):
+        """Get snippet after it has been possibly edited."""
 
         if cls.get_editor():
             cls._set_editor_content(snippet)
+
+        snippet = {'content': cls.get_job_content(), 'brief': cls.get_job_brief(),
+                   'category': cls.get_job_category(), 'tags': cls.get_job_tags(),
+                   'links': cls.get_job_links()}
+
+        return snippet
 
     @classmethod
     def is_role_snippet(cls):
@@ -132,7 +138,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         return cls.config['args']['file']['name']
 
     @classmethod
-    def get_target_id(cls):
+    def get_snippet_digets(cls):
         """Get job supplementary target identity."""
 
         return cls.config['args']['id']

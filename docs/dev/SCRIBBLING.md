@@ -60,7 +60,7 @@ Random notes and scribling during development.
    $ sysctl kernel.yama.ptrace_scope
      kernel.yama.ptrace_scope = 0
    ```
-   
+
    ```
    # Install pyflame dependencies
    $ sudo dnf install autoconf automake gcc-c++ python-devel python3-devel libtool
@@ -115,6 +115,75 @@ python snip.py -j import -r snippet --file snippets.txt
 python snip.py -r snippet -j update -id 6b8705255016268c
 python snip.py -r snippet -j create
 
+
+###### Command line desing
+https://softwareengineering.stackexchange.com/questions/307467/what-are-good-habits-for-designing-command-line-arguments
+subparsers https://stackoverflow.com/questions/23304740/optional-python-arguments-without-dashes-but-with-additional-parameters
+==================================================================
+usage: snippy [--version] [--help] [--debug] [-v] [-vv]
+       <command> [<options>] [<arguments>]
+
+COMMANDS: create, search, update, delete, export, import
+
+OPTIONS:
+    -e, --editor            use default editor for editing
+    -d, --digest DIGEST     message digest to identify
+    -f, --file FILE         file input for command
+    -c, --content           optional snippet content
+    -b, --brief             optional snippet description
+    -c, --category          single optional category for snippet
+    -t, --tags              optional comma separated tags
+    -l, --links             optioanl links separated by '>'
+    --stag                  search only from tags
+    --scat                  search only from categories
+
+ARGUMENTS:
+    snippet, resolve
+
+SYMBOLS:
+    $   command
+    >   url
+    #   tags
+    @   category
+
+EXAMPLES:
+    Create new snippet with default editor.
+      $ python snip.py create snippet
+
+    Search snippet with keyword list.
+      $ python snip.py search docker,moby
+
+    Delete snippet with message digest.
+      $ python snip.py delete -d 2dcbecd10330ac4d
+
+==================================================================
+
+# Basic options
+python snip.py --version
+python snip.py --help
+python snip.py -v
+python snip.py -vv
+python snip.py --debug
+
+python snip.py create [--] <snippet>                             # Defaults to snippet and starts editor
+python snip.py create [--] <resolve>                             # Starts editor
+python snip.py create -e|--editor [--] <snippet>                 # Defaults to snippet
+python snip.py create -e|--editor [--] <resolve>                 # Defaults to snippet
+python snip.py create -f|--file FILE <snippet>
+python snip.py create -f|--file FILE <resolve>
+python snip.py create -c|--content CONTENT -b|--brief BRIEF -c|--category CATEGORY -t|--tags [TAGS] -l|--links [LINKS] [--] <snippet> # Only for snippet
+python snip.py update -d|--digest DIGEST                         # Starts editor. Does not need type since trust digest always different.
+python snip.py update -d|--digest DIGEST -e|--editor
+python snip.py update -d|--digest DIGEST -f|--file FILE
+python snip.py delete -d|--digest DIGEST
+python snip.py search KEYWORDS [<snippet>] [<resolve>]
+python snip.py search --stag [--] <keywords> [<snippet>] [<resolve>]
+python snip.py search --scat [--] <keywords> [<snippet>] [<resolve>]
+python snip.py export -f|--file FILE
+python snip.py export -d|--digest DIGEST
+python snip.py import -f|--file FILE
+=====================================================
+
 pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
 pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests
 pytest --cov=snippy tests/
@@ -132,7 +201,7 @@ pytest tests/test_arguments_add_new_snippet.py -k test_tags_with_quotes_and_sepa
 
 ### Editor input
 # Commented lines will be ignored.
-# 
+#
 # Add mandatory snippet below.
 docker rm --force redis
 docker rmi redis

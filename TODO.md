@@ -1,6 +1,6 @@
 ## TODO
-   - [ ] Add new method for Config() to return the snippet in a single dictionary.
-   - [ ] Change the Config.update() to return the update snippet in dictionary.
+   - [ ] Change the CLI commands to be more like in a standard Linux commands.
+   - [ ] Remove space after @ like 'Remove docker image with force @docker [2dcbecd10330ac4d]'
    - [ ] Change small methods that have simple tests Config() to use ternary operator in a single line.
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.

@@ -119,43 +119,60 @@ python snip.py -r snippet -j create
 ###### Command line desing
 https://softwareengineering.stackexchange.com/questions/307467/what-are-good-habits-for-designing-command-line-arguments
 subparsers https://stackoverflow.com/questions/23304740/optional-python-arguments-without-dashes-but-with-additional-parameters
+https://www.gnu.org/prep/standards/standards.html#g_t_002d_002dhelp
+http://docopt.org/
+http://www.tldp.org/LDP/abs/html/standard-options.html
+
+
 ==================================================================
-usage: snippy [--version] [--help] [--debug] [-v] [-vv]
-       <command> [<options>] [<arguments>]
+Snippy: Command and resolution example manager.
 
-COMMANDS: create, search, update, delete, export, import
+Usage:
+    snippy [--version] [--help] [--debug] [-v] [-vv] [-q]
+    <command> [<options>] [<arguments>]
 
-OPTIONS:
-    -e, --editor            use default editor for editing
-    -d, --digest DIGEST     message digest to identify
-    -f, --file FILE         file input for command
-    -c, --content           optional snippet content
-    -b, --brief             optional snippet description
-    -c, --category          single optional category for snippet
-    -t, --tags              optional comma separated tags
-    -l, --links             optioanl links separated by '>'
-    --stag                  search only from tags
-    --scat                  search only from categories
+Commands:
+    {create, search, update, delete, export, import}
 
-ARGUMENTS:
+Options:
+    -e, --editor                  use vi editor for input
+    -f, --file FILE               use file for input
+    -d, --digest DIGEST           identify example with digest
+    -c, --content CONTENT         example content
+    -b, --brief BRIEF             brief description of example
+    -g, --group GROUP             single category for example
+    -t, --tags [TAGS ...]         comma separated list of tags
+    -l, --link LINK               reference link
+    --stag                        search only from tags
+    --sgrp                        search only from groups
+
+Arguments:
     snippet, resolve
 
-SYMBOLS:
-    $   command
-    >   url
-    #   tags
-    @   category
+Symbols:
+    $    command
+    >    url
+    #    tag
+    @    category
 
-EXAMPLES:
-    Create new snippet with default editor.
-      $ python snip.py create snippet
+Examples:
+    Create new snippet with vi editor.
+        $ snippy create -e snippet
 
-    Search snippet with keyword list.
-      $ python snip.py search docker,moby
+    Search snippets with keyword list.
+        $ snippy search -t docker,moby snippet
 
-    Delete snippet with message digest.
-      $ python snip.py delete -d 2dcbecd10330ac4d
+    Delete example with message digest.
+        $ snippy delete -d 2dcbecd10330ac4d snippet
 
+    Export all snippets in yaml format.
+        $ snippy export -f snippets.yaml snippet
+
+
+Version 0.1
+Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>
+License MIT
+Homepage: https://github.com/heilaaks/snippy
 ==================================================================
 
 # Basic options

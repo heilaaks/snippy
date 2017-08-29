@@ -9,9 +9,10 @@ from snippy.snippet import Snippet
 from snippy.resolve import Resolve
 from snippy.profiler import Profiler
 
-__author__    = "Heikki J. Laaksonen"
-__copyright__ = "Copyright 2017, Heikki J. Laaksonen"
-__license__   = "MIT"
+__author__    = 'Heikki J. Laaksonen'
+__copyright__ = 'Copyright 2017, Heikki J. Laaksonen'
+__license__   = 'MIT'
+__version__   = '0.1'
 
 
 class Snippy(object):

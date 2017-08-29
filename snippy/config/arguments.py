@@ -7,6 +7,57 @@ import argparse
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 
+# ==================================================================
+# Snippy: Command and resolution example manager.
+#
+# Usage:
+#     snippy [--version] [--help] [--debug] [-v] [-vv] [-q]
+#     <command> [<options>] [<arguments>]
+#
+# Commands:
+#     {create, search, update, delete, export, import}
+#
+# Options:
+#     -e, --editor                  use vi editor for input
+#     -f, --file FILE               use file for input
+#     -d, --digest DIGEST           identify example with digest
+#     -c, --content CONTENT         example content
+#     -b, --brief BRIEF             brief description of example
+#     -g, --group GROUP             single category for example
+#     -t, --tags [TAGS ...]         comma separated list of tags
+#     -l, --link LINK               reference link
+#     --stag                        search only from tags
+#     --sgrp                        search only from groups
+#
+# Arguments:
+#     snippet, resolve
+#
+# Symbols:
+#     $    command
+#     >    url
+#     #    tag
+#     @    category
+#
+# Examples:
+#     Create new snippet with vi editor.
+#         $ snippy create -e snippet
+#
+#     Search snippets with keyword list.
+#         $ snippy search -t docker,moby snippet
+#
+#     Delete example with message digest.
+#         $ snippy delete -d 2dcbecd10330ac4d snippet
+#
+#     Export all snippets in yaml format.
+#         $ snippy export -f snippets.yaml snippet
+#
+#
+# Version 0.1
+# Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>
+# License MIT
+# Homepage: https://github.com/heilaaks/snippy
+# ==================================================================
+
 
 class Arguments(object):
     """Command line argument management."""
@@ -16,8 +67,34 @@ class Arguments(object):
 
     def __init__(self):
         Arguments.logger = Logger(__name__).get()
-        parser = argparse.ArgumentParser()
 
+        #parser = argparse.ArgumentParser(prog='snip.py', description="Snippy: Command and resolution example manager.")
+        #parser.add_argument('command', choices=('create', 'search', 'update', 'delete', 'export', 'import'))
+        #options = parser.add_argument_group(title='Options:', description=Const.ARGS_OPTIONS_DESC)
+        #options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
+        #options.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
+        #parser.add_argument('-d', '--digest', type=str, default='', help=argparse.SUPPRESS)
+        #parser.add_argument('-c', '--content', type=str, default='', help=argparse.SUPPRESS)
+        #parser.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
+        #parser.add_argument('-g', '--group', type=str, default='', help=argparse.SUPPRESS)
+        #parser.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        #parser.add_argument('-l', '--links', type=str, default='', help=argparse.SUPPRESS)
+        #
+        #parser.add_argument('--stag', action='store_true', default=False, help=argparse.SUPPRESS)
+        #parser.add_argument('--sgrp', action='store_true', default=False, help=argparse.SUPPRESS)
+        #
+        ##parser.add_argument('--version', action='version', version=__version__, help=argparse.SUPPRESS)
+        #parser.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
+        #parser.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
+        #parser.add_argument('-v', dest='verbose', action='store_true', default=False, help=argparse.SUPPRESS)
+        #parser.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
+        #parser.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
+        #
+        #Arguments.args = parser.parse_args()
+        #print(Arguments.args)
+
+
+        parser = argparse.ArgumentParser()
         job_roles = ['snippet', 'resolve']
         jobs = ['create', 'search', 'update', 'delete', 'import', 'export']
         job_type = parser.add_argument_group('MANDATORY JOB OPTIONS')

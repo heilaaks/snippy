@@ -49,6 +49,17 @@ class Constants(object):
     EDITED_TAGS = {'head': EDITOR_TAGS_HEAD, 'tail': EDITOR_TAGS_TAIL, 'delimiter': None}
     EDITED_LINKS = {'head': EDITOR_LINKS_HEAD, 'tail': EDITOR_LINKS_TAIL, 'delimiter': None}
 
+    ARGS_OPTIONS_DESC = '''    -e, --editor                  use vi editor for input
+                            -f, --file FILE               use file for input
+                            -d, --digest DIGEST           identify example with digest\
+                            -c, --content CONTENT         example content
+                            -b, --brief BRIEF             brief description of example
+                            -g, --group GROUP             single category for example
+                            -t, --tags [TAGS ...]         comma separated list of tags
+                            -l, --link LINK               reference link
+                            --stag                        search only from tags
+                            --sgrp                        search only from groups'''
+
     @staticmethod
     def format_header(colors=False):
         """Format snippet text header."""

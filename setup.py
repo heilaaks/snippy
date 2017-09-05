@@ -1,14 +1,15 @@
 from setuptools import setup, find_packages
 
-tests_require = ['pytest', 'pytest-cov', 'codecov'],
+tests_require = ('pytest', 'pytest-cov', 'codecov', 'mock')
+docs_require = ('sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme')
 
 setup(
     name='snippy',
-    version='0.0.1',
-    description='A small command line tool to manage command and troubleshooting examples.',
-    url='https://github.com/heilaaks/snippy',
+    version='0.1.0',
     author='Heikki J. Laaksonen',
     author_email='laaksonen.heikki.j@gmail.com',
+    url='https://github.com/heilaaks/snippy',
+    description='A small command line tool to manage command and troubleshooting examples.',
     license='MIT',
     classifiers=[
         'Development Status :: 1 - Planning',
@@ -29,7 +30,7 @@ setup(
     },
     install_requires=[],
     extras_require={
-        'dev': ['pylint', 'pytest', 'pytest-cov', 'sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme'],
+        'dev': tests_require + docs_require,
         'test': tests_require,
     },
     tests_require=tests_require,

@@ -6,57 +6,7 @@ import os
 import argparse
 from snippy.config import Constants as Const
 from snippy.logger import Logger
-
-# ==================================================================
-# Snippy: Command and resolution example manager.
-#
-# Usage:
-#     snippy [--version] [--help] [--debug] [-v] [-vv] [-q]
-#     <command> [<options>] [<arguments>]
-#
-# Commands:
-#     {create, search, update, delete, export, import}
-#
-# Options:
-#     -e, --editor                  use vi editor for input
-#     -f, --file FILE               use file for input
-#     -d, --digest DIGEST           identify example with digest
-#     -c, --content CONTENT         example content
-#     -b, --brief BRIEF             brief description of example
-#     -g, --group GROUP             single category for example
-#     -t, --tags [TAGS ...]         comma separated list of tags
-#     -l, --link LINK               reference link
-#     --stag                        search only from tags
-#     --sgrp                        search only from groups
-#
-# Arguments:
-#     snippet, resolve
-#
-# Symbols:
-#     $    command
-#     >    url
-#     #    tag
-#     @    category
-#
-# Examples:
-#     Create new snippet with vi editor.
-#         $ snippy create -e snippet
-#
-#     Search snippets with keyword list.
-#         $ snippy search -t docker,moby snippet
-#
-#     Delete example with message digest.
-#         $ snippy delete -d 2dcbecd10330ac4d snippet
-#
-#     Export all snippets in yaml format.
-#         $ snippy export -f snippets.yaml snippet
-#
-#
-# Version 0.1
-# Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>
-# License MIT
-# Homepage: https://github.com/heilaaks/snippy
-# ==================================================================
+from pkg_resources import get_distribution
 
 
 class Arguments(object):
@@ -64,35 +14,92 @@ class Arguments(object):
 
     args = {}
     logger = {}
+    version = get_distribution('snippy').version
+
+    ARGS_MANAGE = ('snippy [-v, --version] [-h, --help] <command> [<options>] [--debug]')
+    ARGS_EDITOR = ('  --snippet                     operate snippets [default: true]',
+                   '  --resolution                  operate resolutions [default: false]',
+                   '  -e, --editor                  use vi editor to add content',
+                   '  -f, --file FILE               use input file to add content',
+                   '  -c, --content CONTENT         define example content',
+                   '  -b, --brief BRIEF             define content brief description',
+                   '  -l, --link LINK               define content reference link',
+                   '  -g, --group GROUP             define content category',
+                   '  -t, --tags [TAGS ...]         define tags for content',
+                   '  -d, --digest DIGEST           idenfity content with digest')
+    ARGS_SEARCH = ('  --sall                        search from all fields',
+                   '  --stag                        search only from tags',
+                   '  --sgrp                        search only from groups')
+    ARGS_EPILOG = ('symbols:',
+                   '    $    command',
+                   '    >    url',
+                   '    #    tag',
+                   '    @    category',
+                   '',
+                   'examples:',
+                   '    Creating new snippets.',
+                   '      $ snippy create --editor',
+                   '      $ snippy create --snippet --editor',
+                   '      $ snippy create -c \'docker ps\' -b \'list containers\' -t docker,moby',
+                   '',
+                   '    Search snippets with keyword list.',
+                   '      $ snippy search --snippet -sall docker,moby',
+                   '',
+                   '    Delete snippet with message digest.',
+                   '      $ snippy delete --snippet -d 2dcbecd10330ac4d',
+                   '',
+                   '    Export all snippets in yaml format.',
+                   '      $ snippy export --snippet -f snippets.yaml',
+                   '',
+                   'Snippy version ' + get_distribution('snippy').version + ' - license MIT',
+                   'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+                   'Homepage https://github.com/heilaaks/snippy',
+                   '')
 
     def __init__(self):
         Arguments.logger = Logger(__name__).get()
 
-        #parser = argparse.ArgumentParser(prog='snip.py', description="Snippy: Command and resolution example manager.")
-        #parser.add_argument('command', choices=('create', 'search', 'update', 'delete', 'export', 'import'))
-        #options = parser.add_argument_group(title='Options:', description=Const.ARGS_OPTIONS_DESC)
+        #parser = argparse.ArgumentParser(prog='snippy', add_help=False,
+        #                                 usage=Arguments.ARGS_MANAGE,
+        #                                 epilog=Const.NEWLINE.join(Arguments.ARGS_EPILOG),
+        #                                 formatter_class=argparse.RawTextHelpFormatter)
+
+        ## positional arguments
+        #commands = ('create', 'search', 'update', 'delete', 'export', 'import')
+        #parser.add_argument('command', choices=commands, metavar='  {create,search,update,delete,export,import}')
+
+        ## content options
+        #content = parser.add_mutually_exclusive_group()
+        #content.add_argument('--snippet', action='store_true', help=argparse.SUPPRESS)
+        #content.add_argument('--resolution', action='store_true', help=argparse.SUPPRESS)
+
+        ## editing arguments
+        #options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Arguments.ARGS_EDITOR))
         #options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
         #options.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
-        #parser.add_argument('-d', '--digest', type=str, default='', help=argparse.SUPPRESS)
-        #parser.add_argument('-c', '--content', type=str, default='', help=argparse.SUPPRESS)
-        #parser.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
-        #parser.add_argument('-g', '--group', type=str, default='', help=argparse.SUPPRESS)
-        #parser.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
-        #parser.add_argument('-l', '--links', type=str, default='', help=argparse.SUPPRESS)
-        #
-        #parser.add_argument('--stag', action='store_true', default=False, help=argparse.SUPPRESS)
-        #parser.add_argument('--sgrp', action='store_true', default=False, help=argparse.SUPPRESS)
-        #
-        ##parser.add_argument('--version', action='version', version=__version__, help=argparse.SUPPRESS)
-        #parser.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
-        #parser.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
-        #parser.add_argument('-v', dest='verbose', action='store_true', default=False, help=argparse.SUPPRESS)
-        #parser.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
-        #parser.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
-        #
-        #Arguments.args = parser.parse_args()
-        #print(Arguments.args)
+        #options.add_argument('-d', '--digest', type=str, default='', help=argparse.SUPPRESS)
+        #options.add_argument('-c', '--content', type=str, default='', help=argparse.SUPPRESS)
+        #options.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
+        #options.add_argument('-g', '--group', type=str, default='', help=argparse.SUPPRESS)
+        #options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        #options.add_argument('-l', '--links', type=str, default='', help=argparse.SUPPRESS)
 
+        ## search options
+        #search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Arguments.ARGS_SEARCH))
+        #search.add_argument('--sany', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        #search.add_argument('--stag', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        #search.add_argument('--sgrp', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+
+        ## support options
+        #support = parser.add_argument_group(title='support options')
+        #support.add_argument('-h', '--help', action='help', help=argparse.SUPPRESS)
+        #support.add_argument('-v', '--version', action='version', version=Arguments.version, help=argparse.SUPPRESS)
+        #support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
+        #support.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
+        #support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
+
+        #Arguments.args = parser.parse_args()
+        #print("test %s" % Arguments.args)
 
         parser = argparse.ArgumentParser()
         job_roles = ['snippet', 'resolve']

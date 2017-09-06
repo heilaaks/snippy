@@ -16,25 +16,27 @@ class Arguments(object):
     logger = {}
     version = get_distribution('snippy').version
 
-    ARGS_MANAGE = ('snippy [-v, --version] [-h, --help] <command> [<options>] [--debug]')
-    ARGS_EDITOR = ('  --snippet                     operate snippets [default: true]',
-                   '  --resolution                  operate resolutions [default: false]',
-                   '  -e, --editor                  use vi editor to add content',
-                   '  -f, --file FILE               use input file to add content',
+    ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <command> [<options>] [-vv]')
+    ARGS_CONTENT = ('  --snippet                     operate snippets [default: true]',
+                    '  --solution                    operate solutions [default: false]',
+                    '  --all                         operate all content [default: false]')
+    ARGS_EDITOR = ('  -e, --editor                  use vi editor to add content',
+                   '  -f, --file FILE               use template file to add content',
                    '  -c, --content CONTENT         define example content',
                    '  -b, --brief BRIEF             define content brief description',
+                   '  -g, --group GROUP             define content group',
+                   '  -t, --tags [TAG,...]          define comma separated list of tags',
                    '  -l, --link LINK               define content reference link',
-                   '  -g, --group GROUP             define content category',
-                   '  -t, --tags [TAGS ...]         define tags for content',
                    '  -d, --digest DIGEST           idenfity content with digest')
-    ARGS_SEARCH = ('  --sall                        search from all fields',
-                   '  --stag                        search only from tags',
-                   '  --sgrp                        search only from groups')
+    ARGS_SEARCH = ('  --sall [KW,...]               search keywords from all fields',
+                   '  --stag [KW,...]               search keywords only from tags',
+                   '  --sgrp [KW,...]               search keywords only from groups')
+    ARGS_IMPEXP = ('  --template FILE               create template for defined content')
     ARGS_EPILOG = ('symbols:',
                    '    $    command',
                    '    >    url',
                    '    #    tag',
-                   '    @    category',
+                   '    @    group',
                    '',
                    'examples:',
                    '    Creating new snippets.',
@@ -60,7 +62,7 @@ class Arguments(object):
         Arguments.logger = Logger(__name__).get()
 
         #parser = argparse.ArgumentParser(prog='snippy', add_help=False,
-        #                                 usage=Arguments.ARGS_MANAGE,
+        #                                 usage=Arguments.ARGS_USAGE,
         #                                 epilog=Const.NEWLINE.join(Arguments.ARGS_EPILOG),
         #                                 formatter_class=argparse.RawTextHelpFormatter)
 
@@ -69,9 +71,12 @@ class Arguments(object):
         #parser.add_argument('command', choices=commands, metavar='  {create,search,update,delete,export,import}')
 
         ## content options
-        #content = parser.add_mutually_exclusive_group()
-        #content.add_argument('--snippet', action='store_true', help=argparse.SUPPRESS)
-        #content.add_argument('--resolution', action='store_true', help=argparse.SUPPRESS)
+        #content = parser.add_argument_group(title='content options', description=Const.NEWLINE.join(Arguments.ARGS_CONTENT))
+        #content_meg = parser.add_mutually_exclusive_group()
+        #content_meg.add_argument('--snippet', action='store_const', dest='type', const='snippet', help=argparse.SUPPRESS)
+        #content_meg.add_argument('--solution', action='store_const', dest='type', const='solution', help=argparse.SUPPRESS)
+        #content_meg.add_argument('--all', action='store_const', dest='type', const='all', help=argparse.SUPPRESS)
+        #content_meg.set_defaults(type='snippet')
 
         ## editing arguments
         #options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Arguments.ARGS_EDITOR))
@@ -90,13 +95,18 @@ class Arguments(object):
         #search.add_argument('--stag', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         #search.add_argument('--sgrp', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
 
+        ## import/export options
+        #template = parser.add_argument_group(title='export options', description=Arguments.ARGS_IMPEXP)
+        #template.add_argument('--template', type=argparse.FileType('w'), help=argparse.SUPPRESS)
+
         ## support options
         #support = parser.add_argument_group(title='support options')
         #support.add_argument('-h', '--help', action='help', help=argparse.SUPPRESS)
         #support.add_argument('-v', '--version', action='version', version=Arguments.version, help=argparse.SUPPRESS)
+        #support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
+        #support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
         #support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
         #support.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
-        #support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
 
         #Arguments.args = parser.parse_args()
         #print("test %s" % Arguments.args)

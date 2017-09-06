@@ -1,4 +1,6 @@
 ## TODO
+   - [ ] Change the category internally to group to match new command line.
+   - [ ] Change the resolution to solution since the later is better.
    - [ ] Change the CLI commands to be more like in a standard Linux commands.
    - [ ] Remove space after @ like 'Remove docker image with force @docker [2dcbecd10330ac4d]'
    - [ ] Change small methods that have simple tests Config() to use ternary operator in a single line.

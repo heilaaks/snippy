@@ -1,8 +1,8 @@
 ## TODO
-   - [ ] Add OK/FAILED: <string> without -vv or --debug. This is suppressed with -q
+   - [ ] Add OK/FAILED: <string> without -vv or --debug that is suppressed with -q
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
-   - [ ] Update documents
+   - [ ] Update documents.
    - [ ] Add support for cutting log string with low logging levels. Long lines are nasty and meant for debugging.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add text log what was done. The default log level is error so no logs at all. A bit more info is better.
@@ -12,12 +12,12 @@
    - [ ] Fix the empty tags and list from editor. They contain one item array like ['']. The lists should be empty.
 
 ## DONE
-   - [x] It is confusing that update operation with digest requires --editor flag.
-   - [x] Change the CLI commands to be more like in a standard Linux commands.
-   - [x] Change small methods that have simple tests Config() to use ternary operator in a single line.
-   - [x] Remove space after @ like 'Remove docker image with force @docker [2dcbecd10330ac4d]'
-   - [x] Change the resolution to solution since the later is better.
-   - [x] Change the category internally to group to match new command line.
+   - [x] Changed the editor flag internally so that used do not need it when update is made with digest.
+   - [x] Changed the CLI commands to behave and look like standard Linux CLI design.
+   - [x] Changed small methods that have simple tests in Config() to use ternary operator.
+   - [x] Changed print layout and the group to remove space after @ '.. force @docker [2dcbecd10330ac4d]'
+   - [x] Changed the resolution to solution since the later is better.
+   - [x] Changed the category internally to group to match new command line.
    - [x] Added possibility to update existing snippet.
    - [x] Changed delete to work with the snippet digest instead of database rown number.
    - [x] Added hashes to identify snippets.

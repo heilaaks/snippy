@@ -1,2 +1,2 @@
 # pylint: disable=missing-docstring
-from .resolve import Resolve
+from .solution import Solution

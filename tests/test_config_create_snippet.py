@@ -14,33 +14,33 @@ class TestConfigCreateSnippet(unittest.TestCase):
     def test_no_arguments(self):
         """Test that empty argument list is set to configuration."""
 
-        sys.argv = ['snippy']
+        sys.argv = ['snippy', 'create']
         obj = Config()
-        assert isinstance(obj.get_file(), str)
-        assert isinstance(obj.get_snippet_digets(), str)
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert isinstance(obj.get_job_links(), list)
+        assert isinstance(obj.get_operation_file(), str)
+        assert isinstance(obj.get_operation_digest(), str)
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert isinstance(obj.get_content_links(), list)
         assert isinstance(obj.get_search_keywords(), list)
-        assert not obj.get_job_content()
-        assert not obj.get_job_brief()
-        assert not obj.get_job_tags()
-        assert not obj.get_job_links()
+        assert not obj.get_content_data()
+        assert not obj.get_content_brief()
+        assert not obj.get_content_tags()
+        assert not obj.get_content_links()
         assert not obj.get_search_keywords()
 
     def test_create_snippet_without_optional_arguments(self):
         """Test that new snippet can be created without optional arguments."""
 
         content = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', '-i', content]
+        sys.argv = ['snippy', 'create', '-c', content]
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert obj.get_job_content() == content
-        assert not obj.get_job_brief()
-        assert not obj.get_job_tags()
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert obj.get_content_data() == content
+        assert not obj.get_content_brief()
+        assert not obj.get_content_tags()
 
     def test_create_snippet_with_brief_but_no_tags(self):
         """Test that new snippet can be created with brief description but
@@ -48,28 +48,28 @@ class TestConfigCreateSnippet(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
-        sys.argv = ['snippy', '-i', content, '-b', brief]
+        sys.argv = ['snippy', 'create', '-c', content, '-b', brief]
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert obj.get_job_content() == content
-        assert obj.get_job_brief() == brief
-        assert not obj.get_job_tags()
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert obj.get_content_data() == content
+        assert obj.get_content_brief() == brief
+        assert not obj.get_content_tags()
 
     def test_create_snippet_with_one_tag(self):
         """Test that new snippet can be created with a single tag."""
 
         content = 'docker rm $(docker ps -a -q)'
         tags = ['docker']
-        sys.argv = ['snippy', '-i', content, '-t', 'docker']
+        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker']
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert obj.get_job_content() == content
-        assert not obj.get_job_brief()
-        self.assertCountEqual(obj.get_job_tags(), tags)
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert obj.get_content_data() == content
+        assert not obj.get_content_brief()
+        self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_tags_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -77,14 +77,14 @@ class TestConfigCreateSnippet(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-i', content, '-t', 'docker,container,cleanup']
+        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup']
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert obj.get_job_content() == content
-        assert not obj.get_job_brief()
-        self.assertCountEqual(obj.get_job_tags(), tags)
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert obj.get_content_data() == content
+        assert not obj.get_content_brief()
+        self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_tags_with_quotes_and_separated_by_comma_and_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -94,16 +94,16 @@ class TestConfigCreateSnippet(unittest.TestCase):
         brief = 'Remove all docker containers'
         tags = ['cleanup', 'container', 'docker']
         links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container']
-        sys.argv = ['snippy', '-i', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', links[0]]
+        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', links[0]]
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert isinstance(obj.get_job_links(), list)
-        assert obj.get_job_content() == content
-        assert obj.get_job_brief() == brief
-        self.assertCountEqual(obj.get_job_tags(), tags)
-        self.assertCountEqual(obj.get_job_links(), links)
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert isinstance(obj.get_content_links(), list)
+        assert obj.get_content_data() == content
+        assert obj.get_content_brief() == brief
+        self.assertCountEqual(obj.get_content_tags(), tags)
+        self.assertCountEqual(obj.get_content_links(), links)
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -111,13 +111,13 @@ class TestConfigCreateSnippet(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-i', content, '-t', 'docker container cleanup']
+        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker container cleanup']
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert obj.get_job_content() == content
-        self.assertCountEqual(obj.get_job_tags(), tags)
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert obj.get_content_data() == content
+        self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_tags_separated_by_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -125,13 +125,13 @@ class TestConfigCreateSnippet(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-i', content, '-t', 'docker ', 'container ', 'cleanup']
+        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup']
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert obj.get_job_content() == content
-        self.assertCountEqual(obj.get_job_tags(), tags)
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert obj.get_content_data() == content
+        self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_tags_separated_by_space_and_comma(self):
         """Test that tags can be added so that they are separated by comma
@@ -139,27 +139,27 @@ class TestConfigCreateSnippet(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-i', content, '-t', 'docker,', 'container,', 'cleanup']
+        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup']
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert obj.get_job_content() == content
-        self.assertCountEqual(obj.get_job_tags(), tags)
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert obj.get_content_data() == content
+        self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_tags_with_special_characters(self):
         """Test that tags are accepted if they contain special characters."""
 
         content = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup_testing', 'container-managemenet', 'dockertesting']
-        sys.argv = ['snippy', '-i', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
+        sys.argv = ['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert obj.get_job_content() == content
-        self.assertCountEqual(obj.get_job_tags(), tags)
-        assert len(obj.get_job_tags()) == 3
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert obj.get_content_data() == content
+        self.assertCountEqual(obj.get_content_tags(), tags)
+        assert len(obj.get_content_tags()) == 3
 
     def test_tags_provided_in_list(self):
         """Test that tags are accepted if the tags are elements in a list.
@@ -168,13 +168,13 @@ class TestConfigCreateSnippet(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         tags = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-i', content, '-t', 'docker', 'container', 'cleanup']
+        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup']
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert obj.get_job_content() == content
-        self.assertCountEqual(obj.get_job_tags(), tags)
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert obj.get_content_data() == content
+        self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_links_separated_by_space(self):
         """Test that multiple links can be added by separating them with
@@ -185,16 +185,16 @@ class TestConfigCreateSnippet(unittest.TestCase):
         tags = ['cleanup', 'container', 'docker']
         links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
                  'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes']
-        sys.argv = ['snippy', '-i', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', ' '.join(links)]
+        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', ' '.join(links)]
         obj = Config()
-        assert isinstance(obj.get_job_content(), str)
-        assert isinstance(obj.get_job_brief(), str)
-        assert isinstance(obj.get_job_tags(), list)
-        assert isinstance(obj.get_job_links(), list)
-        assert obj.get_job_content() == content
-        assert obj.get_job_brief() == brief
-        self.assertCountEqual(obj.get_job_tags(), tags)
-        self.assertCountEqual(obj.get_job_links(), links)
+        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), list)
+        assert isinstance(obj.get_content_links(), list)
+        assert obj.get_content_data() == content
+        assert obj.get_content_brief() == brief
+        self.assertCountEqual(obj.get_content_tags(), tags)
+        self.assertCountEqual(obj.get_content_links(), links)
 
     # pylint: disable=duplicate-code
     @classmethod

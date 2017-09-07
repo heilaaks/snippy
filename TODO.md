@@ -1,9 +1,5 @@
 ## TODO
-   - [ ] Change the category internally to group to match new command line.
-   - [ ] Change the resolution to solution since the later is better.
-   - [ ] Change the CLI commands to be more like in a standard Linux commands.
-   - [ ] Remove space after @ like 'Remove docker image with force @docker [2dcbecd10330ac4d]'
-   - [ ] Change small methods that have simple tests Config() to use ternary operator in a single line.
+   - [ ] Add OK/FAILED: <string> without -vv or --debug. This is suppressed with -q
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents
@@ -16,6 +12,12 @@
    - [ ] Fix the empty tags and list from editor. They contain one item array like ['']. The lists should be empty.
 
 ## DONE
+   - [x] It is confusing that update operation with digest requires --editor flag.
+   - [x] Change the CLI commands to be more like in a standard Linux commands.
+   - [x] Change small methods that have simple tests Config() to use ternary operator in a single line.
+   - [x] Remove space after @ like 'Remove docker image with force @docker [2dcbecd10330ac4d]'
+   - [x] Change the resolution to solution since the later is better.
+   - [x] Change the category internally to group to match new command line.
    - [x] Added possibility to update existing snippet.
    - [x] Changed delete to work with the snippet digest instead of database rown number.
    - [x] Added hashes to identify snippets.

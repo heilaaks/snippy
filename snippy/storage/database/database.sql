@@ -7,19 +7,19 @@ create table if not exists snippets (
     id          integer primary key,
     snippet     text not null unique,
     brief       text default '',
-    category    text default '',
+    groups      text default '',
     tags        text default '',
     links       text default '',
     metadata    text default '',
     digest      blob(64)
 );
 
--- Resolutions are longer troubleshooting notes.
-create table if not exists resolves (
+-- Solutions are longer troubleshooting notes.
+create table if not exists solutions (
     id          integer primary key,
-    resolve     text not null unique,
+    solution    text not null unique,
     brief       text default '',
-    category    text default '',
+    groups      text default '',
     tags        text default '',
     links       text default '',
     metadata    text default '',

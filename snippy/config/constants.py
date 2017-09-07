@@ -20,24 +20,30 @@ class Constants(object):
     SNIPPET_ID = 0
     SNIPPET_SNIPPET = 1
     SNIPPET_BRIEF = 2
-    SNIPPET_CATEGORY = 3
+    SNIPPET_GROUP = 3
     SNIPPET_TAGS = 4
     SNIPPET_LINKS = 5
     SNIPPET_METADATA = 6
     SNIPPET_DIGEST = 7
 
     # Export formats
+    FILE_TYPE_NONE = 'none'
     FILE_TYPE_YAML = 'yaml'
     FILE_TYPE_JSON = 'json'
     FILE_TYPE_TEXT = 'text'
+
+    # Search types
+    SEARCH_ALL = 'all'
+    SEARCH_TAG = 'tag'
+    SEARCH_GRP = 'grp'
 
     # Editor inputs
     EDITOR_SNIPPET_HEAD = '# Add mandatory snippet below.\n'
     EDITOR_SNIPPET_TAIL = '# Add optional brief description below.\n'
     EDITOR_BRIEF_HEAD = '# Add optional brief description below.\n'
-    EDITOR_BRIEF_TAIL = '# Add optional single category below.\n'
-    EDITOR_CATEGORY_HEAD = '# Add optional single category below.\n'
-    EDITOR_CATEGORY_TAIL = '# Add optional comma separated list of tags below.\n'
+    EDITOR_BRIEF_TAIL = '# Add optional single group below.\n'
+    EDITOR_GROUP_HEAD = '# Add optional single group below.\n'
+    EDITOR_GROUP_TAIL = '# Add optional comma separated list of tags below.\n'
     EDITOR_TAGS_HEAD = '# Add optional comma separated list of tags below.\n'
     EDITOR_TAGS_TAIL = '# Add optional links below one link per line.\n'
     EDITOR_LINKS_HEAD = '# Add optional links below one link per line.\n'
@@ -45,27 +51,16 @@ class Constants(object):
 
     EDITED_SNIPPET = {'head': EDITOR_SNIPPET_HEAD, 'tail': EDITOR_SNIPPET_TAIL, 'delimiter': DELIMITER_NEWLINE}
     EDITED_BRIEF = {'head': EDITOR_BRIEF_HEAD, 'tail': EDITOR_BRIEF_TAIL, 'delimiter': DELIMITER_SPACE}
-    EDITED_CATEGORY = {'head': EDITOR_CATEGORY_HEAD, 'tail': EDITOR_CATEGORY_TAIL, 'delimiter': DELIMITER_SPACE}
+    EDITED_GROUP = {'head': EDITOR_GROUP_HEAD, 'tail': EDITOR_GROUP_TAIL, 'delimiter': DELIMITER_SPACE}
     EDITED_TAGS = {'head': EDITOR_TAGS_HEAD, 'tail': EDITOR_TAGS_TAIL, 'delimiter': None}
     EDITED_LINKS = {'head': EDITOR_LINKS_HEAD, 'tail': EDITOR_LINKS_TAIL, 'delimiter': None}
-
-    ARGS_OPTIONS_DESC = '''    -e, --editor                  use vi editor for input
-                            -f, --file FILE               use file for input
-                            -d, --digest DIGEST           identify example with digest\
-                            -c, --content CONTENT         example content
-                            -b, --brief BRIEF             brief description of example
-                            -g, --group GROUP             single category for example
-                            -t, --tags [TAGS ...]         comma separated list of tags
-                            -l, --link LINK               reference link
-                            --stag                        search only from tags
-                            --sgrp                        search only from groups'''
 
     @staticmethod
     def format_header(colors=False):
         """Format snippet text header."""
 
-        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m \x1b[0m@ %s \x1b[0;2m[%.16s]\x1b[0m\n' if colors \
-               else '%d. %s @ %s [%.16s]\n'
+        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m \x1b[0m@%s \x1b[0;2m[%.16s]\x1b[0m\n' if colors \
+               else '%d. %s @%s [%.16s]\n'
 
     @staticmethod
     def format_snippet(colors=False):

@@ -15,7 +15,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         """Test that search can be used with one keyword."""
 
         search_kw = ['docker']
-        sys.argv = ['snippy', '-s', 'docker']
+        sys.argv = ['snippy', 'search', '--sall', 'docker']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), list)
         self.assertCountEqual(obj.get_search_keywords(), search_kw)
@@ -25,7 +25,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         comma and without spaces."""
 
         search_kw = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', 'docker,container,cleanup']
+        sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), list)
         self.assertCountEqual(obj.get_search_keywords(), search_kw)
@@ -35,7 +35,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         comma and spaces after comma."""
 
         search_kw = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', 'docker, container, cleanup']
+        sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), list)
         self.assertCountEqual(obj.get_search_keywords(), search_kw)
@@ -45,7 +45,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         by spaces before and after the words."""
 
         search_kw = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', 'docker container cleanup']
+        sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), list)
         self.assertCountEqual(obj.get_search_keywords(), search_kw)
@@ -56,7 +56,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         cleanup'."""
 
         search_kw = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', 'docker ', 'container ', 'cleanup']
+        sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), list)
         self.assertCountEqual(obj.get_search_keywords(), search_kw)
@@ -66,7 +66,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         by comma after the words like in '-t docker, container, cleanup'."""
 
         search_kw = ['cleanup', 'container', 'docker']
-        sys.argv = ['snippy', '-s', 'docker,', 'container,', 'cleanup']
+        sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), list)
         self.assertCountEqual(obj.get_search_keywords(), search_kw)
@@ -76,7 +76,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         characters."""
 
         search_kw = ['cleanup_testing', 'container-managemenet', 'dockertesting']
-        sys.argv = ['snippy', '-s', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
+        sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), list)
         self.assertCountEqual(obj.get_search_keywords(), search_kw)

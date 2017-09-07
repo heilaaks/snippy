@@ -33,7 +33,7 @@ class Snippet(object):
     def update(self):
         """Update snippet based on snippet digest."""
 
-        digest = Config.get_snippet_digets()
+        digest = Config.get_operation_digest()
         self.logger.debug('updating snippet with digest %.16s', digest)
         rows = self.storage.search(None, digest)
         if len(rows) == 1:
@@ -48,7 +48,7 @@ class Snippet(object):
         """Delete snippet."""
 
         self.logger.debug('deleting snippet')
-        self.storage.delete(Config.get_snippet_digets())
+        self.storage.delete(Config.get_operation_digest())
 
     def export_all(self):
         """Export snippets."""
@@ -60,8 +60,8 @@ class Snippet(object):
     def import_all(self):
         """Import snippets."""
 
-        self.logger.debug('importing snippets %s', Config.get_file())
-        snippets = self.load_dictionary(Config.get_file())
+        self.logger.debug('importing snippets %s', Config.get_operation_file())
+        snippets = self.load_dictionary(Config.get_operation_file())
         self.storage.import_snippets(snippets)
 
     def format_text(self, snippets, colors=False):
@@ -72,7 +72,7 @@ class Snippet(object):
         link_string = ''
         self.logger.debug('format snippets for text based output')
         for idx, row in enumerate(snippets, start=1):
-            text = text + Const.format_header(colors) % (idx, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_CATEGORY], \
+            text = text + Const.format_header(colors) % (idx, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_GROUP], \
                                                               row[Const.SNIPPET_DIGEST])
             text = text + ''.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
                       for snippet_line in row[Const.SNIPPET_SNIPPET].split(Const.NEWLINE)])
@@ -89,7 +89,7 @@ class Snippet(object):
         """Convert row from database to snippet dictionary."""
         snippet = {'content': row[Const.SNIPPET_SNIPPET],
                    'brief': row[Const.SNIPPET_BRIEF],
-                   'category': row[Const.SNIPPET_CATEGORY],
+                   'group': row[Const.SNIPPET_GROUP],
                    'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS),
                    'links': row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS),
                    'digest': row[Const.SNIPPET_DIGEST]}
@@ -140,7 +140,7 @@ class Snippet(object):
     def print_file(self, snippets):
         """Print snippets into file."""
 
-        export_file = Config.get_file()
+        export_file = Config.get_operation_file()
         self.logger.debug('export storage into file %s', export_file)
         with open(export_file, 'w') as outfile:
             try:
@@ -166,17 +166,17 @@ class Snippet(object):
         """Run the snippet management job."""
 
         self.logger.info('managing snippet')
-        if Config.is_job_create():
+        if Config.is_operation_create():
             self.create()
-        elif Config.is_job_search():
+        elif Config.is_operation_search():
             self.search()
-        elif Config.is_job_update():
+        elif Config.is_operation_update():
             self.update()
-        elif Config.is_job_delete():
+        elif Config.is_operation_delete():
             self.delete()
-        elif Config.is_job_export():
+        elif Config.is_operation_export():
             self.export_all()
-        elif Config.is_job_import():
+        elif Config.is_operation_import():
             self.import_all()
         else:
-            self.logger.error('unknown job for snippet')
+            self.logger.error('unknown operation for snippet')

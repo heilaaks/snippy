@@ -16,22 +16,23 @@ class Arguments(object):
     logger = {}
     version = get_distribution('snippy').version
 
-    ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <command> [<options>] [-vv]')
-    ARGS_CONTENT = ('  --snippet                     operate snippets [default: true]',
-                    '  --solution                    operate solutions [default: false]',
-                    '  --all                         operate all content [default: false]')
+    ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')
+    ARGS_CONTENT = ('  --snippet                     operate snippets (default)',
+                    '  --solution                    operate solutions',
+                    '  --all                         operate all content')
     ARGS_EDITOR = ('  -e, --editor                  use vi editor to add content',
-                   '  -f, --file FILE               use template file to add content',
+                   '  -f, --file FILE               define file for operation',
                    '  -c, --content CONTENT         define example content',
                    '  -b, --brief BRIEF             define content brief description',
                    '  -g, --group GROUP             define content group',
                    '  -t, --tags [TAG,...]          define comma separated list of tags',
-                   '  -l, --link LINK               define content reference link',
+                   '  -l, --links LINK              define content reference link',
                    '  -d, --digest DIGEST           idenfity content with digest')
     ARGS_SEARCH = ('  --sall [KW,...]               search keywords from all fields',
                    '  --stag [KW,...]               search keywords only from tags',
                    '  --sgrp [KW,...]               search keywords only from groups')
-    ARGS_IMPEXP = ('  --template FILE               create template for defined content')
+    ARGS_IMPEXP = ('  -f, --file FILE               define file for operation',
+                   '  --template FILE               create template for defined content')
     ARGS_EPILOG = ('symbols:',
                    '    $    command',
                    '    >    url',
@@ -40,18 +41,17 @@ class Arguments(object):
                    '',
                    'examples:',
                    '    Creating new snippets.',
-                   '      $ snippy create --editor',
                    '      $ snippy create --snippet --editor',
                    '      $ snippy create -c \'docker ps\' -b \'list containers\' -t docker,moby',
                    '',
                    '    Search snippets with keyword list.',
-                   '      $ snippy search --snippet -sall docker,moby',
-                   '',
-                   '    Delete snippet with message digest.',
-                   '      $ snippy delete --snippet -d 2dcbecd10330ac4d',
+                   '      $ snippy search --snippet --sall docker,moby',
                    '',
                    '    Export all snippets in yaml format.',
                    '      $ snippy export --snippet -f snippets.yaml',
+                   '',
+                   '    Delete snippet with message digest.',
+                   '      $ snippy delete --snippet -d 9deb6049d3f94dbd',
                    '',
                    'Snippy version ' + get_distribution('snippy').version + ' - license MIT',
                    'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
@@ -61,101 +61,147 @@ class Arguments(object):
     def __init__(self):
         Arguments.logger = Logger(__name__).get()
 
-        #parser = argparse.ArgumentParser(prog='snippy', add_help=False,
-        #                                 usage=Arguments.ARGS_USAGE,
-        #                                 epilog=Const.NEWLINE.join(Arguments.ARGS_EPILOG),
-        #                                 formatter_class=argparse.RawTextHelpFormatter)
+        parser = argparse.ArgumentParser(prog='snippy', add_help=False,
+                                         usage=Arguments.ARGS_USAGE,
+                                         epilog=Const.NEWLINE.join(Arguments.ARGS_EPILOG),
+                                         formatter_class=argparse.RawTextHelpFormatter)
 
-        ## positional arguments
-        #commands = ('create', 'search', 'update', 'delete', 'export', 'import')
-        #parser.add_argument('command', choices=commands, metavar='  {create,search,update,delete,export,import}')
+        # positional arguments
+        operations = ('create', 'search', 'update', 'delete', 'export', 'import')
+        parser.add_argument('operation', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
-        ## content options
-        #content = parser.add_argument_group(title='content options', description=Const.NEWLINE.join(Arguments.ARGS_CONTENT))
-        #content_meg = parser.add_mutually_exclusive_group()
-        #content_meg.add_argument('--snippet', action='store_const', dest='type', const='snippet', help=argparse.SUPPRESS)
-        #content_meg.add_argument('--solution', action='store_const', dest='type', const='solution', help=argparse.SUPPRESS)
-        #content_meg.add_argument('--all', action='store_const', dest='type', const='all', help=argparse.SUPPRESS)
-        #content_meg.set_defaults(type='snippet')
+        # content options
+        content = parser.add_argument_group(title='content options', description=Const.NEWLINE.join(Arguments.ARGS_CONTENT))
+        content_meg = content.add_mutually_exclusive_group()
+        content_meg.add_argument('--snippet', action='store_const', dest='type', const='snippet', help=argparse.SUPPRESS)
+        content_meg.add_argument('--solution', action='store_const', dest='type', const='solution', help=argparse.SUPPRESS)
+        content_meg.add_argument('--all', action='store_const', dest='type', const='all', help=argparse.SUPPRESS)
+        content_meg.set_defaults(type='snippet')
 
-        ## editing arguments
-        #options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Arguments.ARGS_EDITOR))
-        #options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
-        #options.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
-        #options.add_argument('-d', '--digest', type=str, default='', help=argparse.SUPPRESS)
-        #options.add_argument('-c', '--content', type=str, default='', help=argparse.SUPPRESS)
-        #options.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
-        #options.add_argument('-g', '--group', type=str, default='', help=argparse.SUPPRESS)
-        #options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
-        #options.add_argument('-l', '--links', type=str, default='', help=argparse.SUPPRESS)
+        # editing arguments
+        options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Arguments.ARGS_EDITOR))
+        options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
+        options.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
+        options.add_argument('-c', '--content', type=str, default='', help=argparse.SUPPRESS)
+        options.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
+        options.add_argument('-g', '--group', type=str, default='', help=argparse.SUPPRESS)
+        options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        options.add_argument('-l', '--links', type=str, default='', help=argparse.SUPPRESS)
+        options.add_argument('-d', '--digest', type=str, default='', help=argparse.SUPPRESS)
 
-        ## search options
-        #search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Arguments.ARGS_SEARCH))
-        #search.add_argument('--sany', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
-        #search.add_argument('--stag', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
-        #search.add_argument('--sgrp', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        # search options
+        search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Arguments.ARGS_SEARCH))
+        search_meg = search.add_mutually_exclusive_group()
+        search_meg.add_argument('--sall', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        search_meg.add_argument('--stag', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        search_meg.add_argument('--sgrp', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
 
-        ## import/export options
-        #template = parser.add_argument_group(title='export options', description=Arguments.ARGS_IMPEXP)
-        #template.add_argument('--template', type=argparse.FileType('w'), help=argparse.SUPPRESS)
+        # import/export options
+        template = parser.add_argument_group(title='export options', description=Const.NEWLINE.join(Arguments.ARGS_IMPEXP))
+        template.add_argument('--template', type=argparse.FileType('w'), help=argparse.SUPPRESS)
 
-        ## support options
-        #support = parser.add_argument_group(title='support options')
-        #support.add_argument('-h', '--help', action='help', help=argparse.SUPPRESS)
-        #support.add_argument('-v', '--version', action='version', version=Arguments.version, help=argparse.SUPPRESS)
-        #support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
-        #support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
-        #support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
-        #support.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
+        # support options
+        support = parser.add_argument_group(title='support options')
+        support.add_argument('-h', '--help', action='help', help=argparse.SUPPRESS)
+        support.add_argument('-v', '--version', action='version', version=Arguments.version, help=argparse.SUPPRESS)
+        support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
+        support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
+        support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
+        support.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
 
-        #Arguments.args = parser.parse_args()
-        #print("test %s" % Arguments.args)
-
-        parser = argparse.ArgumentParser()
-        job_roles = ['snippet', 'resolve']
-        jobs = ['create', 'search', 'update', 'delete', 'import', 'export']
-        job_type = parser.add_argument_group('MANDATORY JOB OPTIONS')
-        job_type.add_argument('-r', '--role', type=str, choices=job_roles, default=job_roles[0], help='define job role')
-        job_type.add_argument('-j', '--job', type=str, choices=jobs, default=jobs[0], help='define job')
-
-        job_service = parser.add_argument_group('OPTIONAL SERVICES')
-        job_service.add_argument('--editor', action='store_true', default=False, help='use default editor')
-        job_service.add_argument('--file', type=str, default='', help='use input file')
-        job_service.add_argument('--id', type=str, default='', help='set identity of an item')
-
-        job_args = parser.add_argument_group('OPTIONAL ARGUMENTS')
-        job_args.add_argument('-i', '--input', dest='content', type=str, default='', help='input content')
-        job_args.add_argument('-b', '--brief', type=str, default='', help='brief description ot the input')
-        job_args.add_argument('-c', '--category', type=str, default='', help='category for the input')
-        job_args.add_argument('-t', '--tags', nargs='*', type=str, default=[], help='tags for the input')
-        job_args.add_argument('-l', '--links', type=str, default='', help='links for more information')
-
-        job_search = parser.add_argument_group('SEARCH OPTIONS')
-        job_search.add_argument('-s', '--search', nargs='*', type=str, default=[], help='search with keywords')
-
-        parser.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
-        parser.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
         Arguments.args = parser.parse_args()
 
     @classmethod
-    def get_job(cls):
-        """Return the job that user defined."""
+    def get_operation(cls):
+        """Return the requested operation for the content."""
 
-        cls.logger.info('parsed argument --job with value "%s"', cls.args.job)
+        cls.logger.info('parsed positional argument with value "%s"', cls.args.operation)
 
-        return cls.args.job
+        return cls.args.operation
 
     @classmethod
-    def get_job_role(cls):
-        """Return the job role that user defined."""
+    def get_content_type(cls):
+        """Return content type."""
 
-        cls.logger.info('parsed argument --role with value "%s"', cls.args.role)
+        cls.logger.info('parsed content type with value "%s"', cls.args.type)
 
-        return cls.args.role
+        return cls.args.type
+
+    @classmethod
+    def get_content_data(cls):
+        """Return content data."""
+
+        cls.logger.info('parsed argument --content with value "%s"', cls.args.content)
+
+        return cls.args.content
+
+    @classmethod
+    def get_content_brief(cls):
+        """Return content brief description."""
+
+        cls.logger.info('parsed argument --brief with value "%s"', cls.args.brief)
+
+        return cls.args.brief
+
+    @classmethod
+    def get_content_group(cls):
+        """Return content group."""
+
+        cls.logger.info('parsed argument --group with value "%s"', cls.args.group)
+
+        return cls.args.group
+
+    @classmethod
+    def get_content_tags(cls):
+        """Return content tags."""
+
+        cls.logger.info('parsed argument --tags with value %s', cls.args.tags)
+
+        return cls.args.tags
+
+    @classmethod
+    def get_content_links(cls):
+        """Return content reference links."""
+
+        cls.logger.info('parsed argument --links with value "%s"', cls.args.links)
+
+        return cls.args.links
+
+    @classmethod
+    def get_operation_digest(cls):
+        """Return digest identifying the operation target."""
+
+        cls.logger.info('parsed argument --digest with value "%s"', cls.args.digest)
+
+        return cls.args.digest
+
+    @classmethod
+    def get_search_all(cls):
+        """Return keywords to search from all fields."""
+
+        cls.logger.info('parsed argument --sall with value %s', cls.args.sall)
+
+        return cls.args.sall
+
+    @classmethod
+    def get_search_tag(cls):
+        """Return keywords to search only from tag."""
+
+        cls.logger.info('parsed argument --stag with value %s', cls.args.stag)
+
+        return cls.args.stag
+
+    @classmethod
+    def get_search_grp(cls):
+        """Return keywords to search from groups."""
+
+        cls.logger.info('parsed argument --sgrp with value %s', cls.args.sgrp)
+
+        return cls.args.sgrp
 
     @classmethod
     def get_editor(cls):
-        """Return the usage of supplementary editor for the job."""
+        """Return the usage of supplementary editor for the operation."""
 
         return cls.args.editor
 
@@ -169,7 +215,7 @@ class Arguments(object):
         edited_message = ''
         content = snippet['content'] + Const.NEWLINE
         brief = snippet['brief'] + Const.NEWLINE
-        category = snippet['category'] + Const.NEWLINE
+        group = snippet['group'] + Const.NEWLINE
         tags = Const.DELIMITER_TAGS.join(snippet['tags']) + Const.NEWLINE
         links = Const.DELIMITER_NEWLINE.join(snippet['links']) + Const.NEWLINE
         default_editor = os.environ.get('EDITOR', 'vi')
@@ -179,8 +225,8 @@ class Arguments(object):
                            content + '\n' +
                            Const.EDITOR_BRIEF_HEAD +
                            brief + '\n' +
-                           Const.EDITOR_CATEGORY_HEAD +
-                           category + '\n' +
+                           Const.EDITOR_GROUP_HEAD +
+                           group + '\n' +
                            Const.EDITOR_TAGS_HEAD +
                            tags + '\n' +
                            Const.EDITOR_LINKS_HEAD +
@@ -196,65 +242,9 @@ class Arguments(object):
         return edited_message.decode('UTF-8')
 
     @classmethod
-    def get_file(cls):
-        """Return the supplementary file for the job."""
+    def get_operation_file(cls):
+        """Return the supplementary file for the opration."""
 
         cls.logger.info('parsed argument --file with value "%s"', cls.args.file)
 
         return cls.args.file
-
-    @classmethod
-    def get_id(cls):
-        """Return the supplementary if for the job."""
-
-        cls.logger.info('parsed argument --id with value "%s"', cls.args.id)
-
-        return cls.args.id
-
-    @classmethod
-    def get_content(cls):
-        """Return supplementary content for the job."""
-
-        cls.logger.info('parsed argument --input with value "%s"', cls.args.content)
-
-        return cls.args.content
-
-    @classmethod
-    def get_brief(cls):
-        """Return supplementary brief description."""
-
-        cls.logger.info('parsed argument --brief with value "%s"', cls.args.brief)
-
-        return cls.args.brief
-
-    @classmethod
-    def get_category(cls):
-        """Return supplementary category for the job."""
-
-        cls.logger.info('parsed argument --category with value "%s"', cls.args.category)
-
-        return cls.args.category
-
-    @classmethod
-    def get_tags(cls):
-        """Return supplementary tags."""
-
-        cls.logger.info('parsed argument --tags with value %s', cls.args.tags)
-
-        return cls.args.tags
-
-    @classmethod
-    def get_links(cls):
-        """Return supplementary links."""
-
-        cls.logger.info('parsed argument --links with value "%s"', cls.args.links)
-
-        return cls.args.links
-
-    @classmethod
-    def get_search(cls):
-        """Return the search keywords."""
-
-        cls.logger.info('parsed argument --search with value %s', cls.args.search)
-
-        return cls.args.search

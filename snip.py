@@ -6,7 +6,7 @@ from snippy.logger import Logger
 from snippy.config import Config
 from snippy.storage import Storage
 from snippy.snippet import Snippet
-from snippy.resolve import Resolve
+from snippy.solution import Solution
 from snippy.profiler import Profiler
 
 
@@ -19,9 +19,9 @@ class Snippy(object):
     def run(self):
         self.logger.info('running services')
         storage = Storage().init()
-        if Config.is_role_snippet():
+        if Config.is_content_snippet():
             Snippet(storage).run()
-        elif Config.is_role_resolve():
+        elif Config.is_content_solution():
             Resolve(storage).run()
         else:
             self.logger.error('exiting because of unknown role')

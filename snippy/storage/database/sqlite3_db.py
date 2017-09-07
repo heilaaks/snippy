@@ -45,10 +45,10 @@ class Sqlite3Db(object):
         if self.conn:
             tags_string = Const.DELIMITER_TAGS.join(map(str, snippet['tags']))
             links_string = Const.DELIMITER_LINKS.join(map(str, snippet['links']))
-            query = ('INSERT INTO snippets(snippet, brief, category, tags, links, metadata, digest) VALUES(?,?,?,?,?,?,?)')
+            query = ('INSERT INTO snippets(snippet, brief, groups, tags, links, metadata, digest) VALUES(?,?,?,?,?,?,?)')
             self.logger.debug('insert snippet %s with brief %s', snippet['content'], snippet['brief'])
             try:
-                self.cursor.execute(query, (snippet['content'], snippet['brief'], snippet['category'], tags_string,
+                self.cursor.execute(query, (snippet['content'], snippet['brief'], snippet['group'], tags_string,
                                             links_string, metadata, snippet['digest']))
                 self.conn.commit()
             except sqlite3.Error as exception:
@@ -74,17 +74,17 @@ class Sqlite3Db(object):
             # can be counted by multiplying the query keywords (e.g 3)and the searched colums.
             #
             # Example queries:
-            #     1) SELECT id, snippet, brief, category, tags, links, metadata, digest FROM snippets WHERE
-            #        (snippet REGEXP ? or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?)
+            #     1) SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets WHERE
+            #        (snippet REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?)
             #        ORDER BY id ASC
-            #     2) SELECT id, snippet, brief, category, tags, links, metadata, digest FROM snippets WHERE (snippet REGEXP ?
-            #        or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
-            #        or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
-            #        or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?) ORDER BY id ASC
+            #     2) SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets WHERE (snippet REGEXP ?
+            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
+            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
+            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) ORDER BY id ASC
             if keywords:
                 query, qargs = Sqlite3Db._get_regexp_query(keywords)
             elif digest:
-                query = ('SELECT id, snippet, brief, category, tags, links, metadata, digest FROM snippets \
+                query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets \
                           WHERE digest LIKE ?')
                 qargs = [digest+'%']
             else:
@@ -127,9 +127,9 @@ class Sqlite3Db(object):
         if self.conn:
             tags_string = Const.DELIMITER_TAGS.join(map(str, snippet['tags']))
             links_string = Const.DELIMITER_LINKS.join(map(str, snippet['links']))
-            query = ('UPDATE snippets SET snippet=?, brief=?, category=?, tags=?, links=?, metadata=?, digest=? \
+            query = ('UPDATE snippets SET snippet=?, brief=?, groups=?, tags=?, links=?, metadata=?, digest=? \
                       WHERE digest LIKE ?')
-            qargs = [snippet['content'], snippet['brief'], snippet['category'], tags_string,
+            qargs = [snippet['content'], snippet['brief'], snippet['group'], tags_string,
                      links_string, metadata, snippet['digest'], digest+'%']
             self.logger.debug('updating snippet %.16s with new digest %.16s and brief "%s"', digest, snippet['digest'],
                               snippet['brief'])
@@ -214,8 +214,8 @@ class Sqlite3Db(object):
         """Generate query parameters for the SQL query."""
 
         query_args = []
-        query = 'SELECT id, snippet, brief, category, tags, links, metadata, digest FROM snippets WHERE '
-        search = '(snippet REGEXP ? or brief REGEXP ? or category REGEXP ? or tags REGEXP ? or links REGEXP ?) '
+        query = 'SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets WHERE '
+        search = '(snippet REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) '
         for token in keywords:
             query = query + search + 'OR '
             query_args = query_args + [token, token, token, token, token] # Token for each search colum in the row.

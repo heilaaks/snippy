@@ -27,5 +27,5 @@ class Logger(object): # pylint: disable=too-few-public-methods
         which causes module level logger to rely only higher level logger
         in the logging hierarchy."""
         logging.getLogger().setLevel(logging.ERROR)
-        if '--debug' in sys.argv:
+        if '--debug' in sys.argv or '-vv' in sys.argv:
             logging.getLogger().setLevel(logging.DEBUG)

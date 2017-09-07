@@ -22,9 +22,9 @@ class TestSqlite3DbDeleteSnippetBasic(object): # pylint: disable=too-few-public-
         snippet2 = Sqlite3DbHelper.SNIPPET2
         metadata = 'metadata'
         keywords = ['help', 'docker']
-        db_rows = [(1, snippet1['content'], snippet1['brief'], snippet1['category'], 'container,cleanup,docker',
+        db_rows = [(1, snippet1['content'], snippet1['brief'], snippet1['group'], 'container,cleanup,docker',
                     snippet1['links'][0], metadata, snippet1['digest']),
-                   (2, snippet2['content'], snippet2['brief'], snippet2['category'], 'container,cleanup,docker',
+                   (2, snippet2['content'], snippet2['brief'], snippet2['group'], 'container,cleanup,docker',
                     snippet2['links'][0], metadata, snippet2['digest'])]
         obj = Sqlite3Db().init()
         obj.insert_snippet(snippet1, metadata)
@@ -45,9 +45,9 @@ class TestSqlite3DbDeleteSnippetBasic(object): # pylint: disable=too-few-public-
         snippet2 = Sqlite3DbHelper.SNIPPET2
         metadata = 'metadata'
         keywords = ['help', 'docker']
-        db_rows = [(1, snippet1['content'], snippet1['brief'], snippet1['category'], 'container,cleanup,docker',
+        db_rows = [(1, snippet1['content'], snippet1['brief'], snippet1['group'], 'container,cleanup,docker',
                     snippet1['links'][0], metadata, snippet1['digest']),
-                   (2, snippet2['content'], snippet2['brief'], snippet2['category'], 'container,cleanup,docker',
+                   (2, snippet2['content'], snippet2['brief'], snippet2['group'], 'container,cleanup,docker',
                     snippet2['links'][0], metadata, snippet2['digest'])]
         obj = Sqlite3Db().init()
         obj.insert_snippet(snippet1, metadata)

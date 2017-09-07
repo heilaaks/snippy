@@ -19,13 +19,13 @@ class TestSqlite3DbSelectSnippetBasic(object): # pylint: disable=too-few-public-
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
         snippet = {'content': 'docker rm $(docker ps -a -q)',
                    'brief': 'Remove all docker containers',
-                   'category': 'moby',
+                   'group': 'moby',
                    'tags': ['container', 'cleanup', 'docker'],
                    'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'],
                    'digest': 'da106d811ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'}
         metadata = 'metadata'
         keywords = ['moby', 'delete', 'askubuntu']
-        db_rows = [(1, snippet['content'], snippet['brief'], snippet['category'], 'container,cleanup,docker',
+        db_rows = [(1, snippet['content'], snippet['brief'], snippet['group'], 'container,cleanup,docker',
                     snippet['links'][0], metadata, snippet['digest'])]
         obj = Sqlite3Db().init()
         obj.insert_snippet(snippet, metadata)

@@ -100,105 +100,28 @@ make test
 time python snip.py -i 'docker rm' -b 'Remove all docker containers' -c 'docker' -t docker,container,cleanup --debug
 python snip.py -s docker
 
-python snip.py -i 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -c 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-python snip.py -i 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -c 'docker' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-python snip.py -i 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -c 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-python snip.py -i 'docker rm --force redis' -b 'Remove docker image with force' -c 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
-python snip.py -s docker
-python snip.py -j delete -r snippet --id 1
-python snip.py -j export -r snippet --file snippets.yaml
-python snip.py -j export -r snippet --file snippets.json
-python snip.py -j export -r snippet --file snippets.txt
-python snip.py -j import -r snippet --file snippets.yaml
-python snip.py -j import -r snippet --file snippets.json
-python snip.py -j import -r snippet --file snippets.txt
-python snip.py -r snippet -j update -id 6b8705255016268c
-python snip.py -r snippet -j create
+python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
+python snip.py create -c 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -g 'docker' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
+python snip.py searc --sall docker
+python snip.py delete --id 1
+python snip.py export --file snippets.yaml
+python snip.py export --file snippets.json
+python snip.py export --file snippets.txt
+python snip.py import --file snippets.yaml
+python snip.py import --file snippets.json
+python snip.py import --file snippets.txt
+python snip.py update -d 6b8705255016268c
+python snip.py create
 
-
+=====================================================
 ###### Command line desing
 https://softwareengineering.stackexchange.com/questions/307467/what-are-good-habits-for-designing-command-line-arguments
 subparsers https://stackoverflow.com/questions/23304740/optional-python-arguments-without-dashes-but-with-additional-parameters
 https://www.gnu.org/prep/standards/standards.html#g_t_002d_002dhelp
 http://docopt.org/
 http://www.tldp.org/LDP/abs/html/standard-options.html
-
-
-==================================================================
-Snippy: Command and resolution example manager.
-
-Usage:
-    snippy [--version] [--help] [--debug] [-v] [-vv] [-q]
-    <command> [<options>] [<arguments>]
-
-Commands:
-    {create, search, update, delete, export, import}
-
-Options:
-    -e, --editor                  use vi editor for input
-    -f, --file FILE               use file for input
-    -d, --digest DIGEST           identify example with digest
-    -c, --content CONTENT         example content
-    -b, --brief BRIEF             brief description of example
-    -g, --group GROUP             single category for example
-    -t, --tags [TAGS ...]         comma separated list of tags
-    -l, --link LINK               reference link
-    --stag                        search only from tags
-    --sgrp                        search only from groups
-
-Arguments:
-    snippet, resolve
-
-Symbols:
-    $    command
-    >    url
-    #    tag
-    @    category
-
-Examples:
-    Create new snippet with vi editor.
-        $ snippy create -e snippet
-
-    Search snippets with keyword list.
-        $ snippy search -t docker,moby snippet
-
-    Delete example with message digest.
-        $ snippy delete -d 2dcbecd10330ac4d snippet
-
-    Export all snippets in yaml format.
-        $ snippy export -f snippets.yaml snippet
-
-
-Version 0.1
-Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>
-License MIT
-Homepage: https://github.com/heilaaks/snippy
-==================================================================
-
-# Basic options
-python snip.py --version
-python snip.py --help
-python snip.py -v
-python snip.py -vv
-python snip.py --debug
-
-python snip.py create [--] <snippet>                             # Defaults to snippet and starts editor
-python snip.py create [--] <resolve>                             # Starts editor
-python snip.py create -e|--editor [--] <snippet>                 # Defaults to snippet
-python snip.py create -e|--editor [--] <resolve>                 # Defaults to snippet
-python snip.py create -f|--file FILE <snippet>
-python snip.py create -f|--file FILE <resolve>
-python snip.py create -c|--content CONTENT -b|--brief BRIEF -c|--category CATEGORY -t|--tags [TAGS] -l|--links [LINKS] [--] <snippet> # Only for snippet
-python snip.py update -d|--digest DIGEST                         # Starts editor. Does not need type since trust digest always different.
-python snip.py update -d|--digest DIGEST -e|--editor
-python snip.py update -d|--digest DIGEST -f|--file FILE
-python snip.py delete -d|--digest DIGEST
-python snip.py search KEYWORDS [<snippet>] [<resolve>]
-python snip.py search --stag [--] <keywords> [<snippet>] [<resolve>]
-python snip.py search --scat [--] <keywords> [<snippet>] [<resolve>]
-python snip.py export -f|--file FILE
-python snip.py export -d|--digest DIGEST
-python snip.py import -f|--file FILE
 =====================================================
 
 pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
@@ -206,8 +129,8 @@ pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests
 pytest --cov=snippy tests/
 pytest --cov=snippy --cov-report html tests/
 make -C docs html
-python snip.py -i 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -c 'docker' -t docker,container,cleanup
-python snip.py -i 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -c 'docker' -t docker, container, cleanup
+python snip.py create -c 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup
+python snip.py create -c 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker, container, cleanup
 pytest
 
    > file:///home/heilaaks/devel/snippy/htmlcov/index.html
@@ -227,7 +150,7 @@ docker rmi zookeeper
 # Add optional brief description below.
 Remove docker image with force
 
-# Add optional single category below.
+# Add optional single group below.
 docker
 
 # Add optional comma separated list of tags below.

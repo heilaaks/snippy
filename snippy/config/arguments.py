@@ -78,7 +78,7 @@ class Arguments(object):
         content_meg.add_argument('--all', action='store_const', dest='type', const='all', help=argparse.SUPPRESS)
         content_meg.set_defaults(type='snippet')
 
-        # editing arguments
+        # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Arguments.ARGS_EDITOR))
         options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
         options.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
@@ -185,7 +185,7 @@ class Arguments(object):
 
     @classmethod
     def get_search_tag(cls):
-        """Return keywords to search only from tag."""
+        """Return keywords to search only from tags."""
 
         cls.logger.info('parsed argument --stag with value %s', cls.args.stag)
 
@@ -193,7 +193,7 @@ class Arguments(object):
 
     @classmethod
     def get_search_grp(cls):
-        """Return keywords to search from groups."""
+        """Return keywords to search only from groups."""
 
         cls.logger.info('parsed argument --sgrp with value %s', cls.args.sgrp)
 
@@ -201,13 +201,13 @@ class Arguments(object):
 
     @classmethod
     def get_editor(cls):
-        """Return the usage of supplementary editor for the operation."""
+        """Return the usage of editor for the operation."""
 
         return cls.args.editor
 
     @classmethod
     def get_editor_content(cls, snippet):
-        """Return the edited content."""
+        """Return the edited content from editor."""
 
         import tempfile
         from subprocess import call
@@ -243,7 +243,7 @@ class Arguments(object):
 
     @classmethod
     def get_operation_file(cls):
-        """Return the supplementary file for the opration."""
+        """Return file for operation."""
 
         cls.logger.info('parsed argument --file with value "%s"', cls.args.file)
 

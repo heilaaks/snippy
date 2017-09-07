@@ -10,6 +10,8 @@
    - [ ] Add digest check when importing.
    - [ ] Fix inserting same snippet again so that the error is handled nicely.
    - [ ] Fix the empty tags and list from editor. They contain one item array like ['']. The lists should be empty.
+   - [ ] Fix the problem that no changes when updating snippet seem to change the digest?
+   - [ ] Fix search queries for tags and groups. Searching works only from all fields.
 
 ## DONE
    - [x] Changed the editor flag internally so that used do not need it when update is made with digest.

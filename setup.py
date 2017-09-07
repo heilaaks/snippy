@@ -9,7 +9,7 @@ setup(
     author='Heikki J. Laaksonen',
     author_email='laaksonen.heikki.j@gmail.com',
     url='https://github.com/heilaaks/snippy',
-    description='A small command line tool to manage command and troubleshooting examples.',
+    description='Command line tool to manage command examples and troubleshooting solutions.',
     license='MIT',
     classifiers=[
         'Development Status :: 1 - Planning',
@@ -21,11 +21,11 @@ setup(
         'Natural Language :: English',
         'Topic :: Utilities'
     ],
-    keywords='cli code command troubleshooting manager',
+    keywords='cli code command troubleshooting solution manager',
     packages=find_packages(exclude=['tests']),
     entry_points={
         'console_scripts': [
-            'snippy = snip:main'
+            'snippy = snippy.snip:main'
         ],
     },
     install_requires=[],

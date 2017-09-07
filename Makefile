@@ -1,6 +1,9 @@
 install:
 	pip3 install .
 
+upgrade:
+	pip install --upgrade .
+
 dev:
 	pip3 install -e .[dev]
 
@@ -11,7 +14,7 @@ coverage:
 	pytest --cov=snippy --cov-report html tests/
 	pytest --cov=snippy tests/
 
-doc:
+docs:
 	make -C docs html
 
 lint:
@@ -29,4 +32,4 @@ clean:
 	rm -f coverage.xml
 	rm -f pytestdebug.log
 
-.PHONY: install dev test coverage doc lint clean
+.PHONY: install upgrade dev test coverage docs lint clean

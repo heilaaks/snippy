@@ -15,19 +15,36 @@ class TestConfigCreateSnippet(unittest.TestCase):
         """Test that empty argument list is set to configuration."""
 
         sys.argv = ['snippy', 'create']
+        snippet = {'content': '', 'brief': '', 'group': '', 'tags': [], 'links': []}
         obj = Config()
-        assert isinstance(obj.get_operation_file(), str)
-        assert isinstance(obj.get_operation_digest(), str)
         assert isinstance(obj.get_content_data(), str)
         assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_group(), str)
         assert isinstance(obj.get_content_tags(), list)
         assert isinstance(obj.get_content_links(), list)
+        assert isinstance(obj.get_operation_digest(), str)
         assert isinstance(obj.get_search_keywords(), list)
+        assert isinstance(obj.get_operation_file(), str)
+        assert obj.get_snippet() == snippet
+        assert obj.is_operation_create()
+        assert not obj.is_operation_search()
+        assert not obj.is_operation_update()
+        assert not obj.is_operation_delete()
+        assert not obj.is_operation_export()
+        assert not obj.is_operation_import()
+        assert obj.is_content_snippet()
+        assert not obj.is_content_solution()
         assert not obj.get_content_data()
         assert not obj.get_content_brief()
+        assert not obj.get_content_group()
         assert not obj.get_content_tags()
         assert not obj.get_content_links()
         assert not obj.get_search_keywords()
+        assert not obj.get_operation_digest()
+        assert not obj.is_editor()
+        assert not obj.is_file_type_yaml()
+        assert not obj.is_file_type_json()
+        assert not obj.is_file_type_text()
 
     def test_create_snippet_without_optional_arguments(self):
         """Test that new snippet can be created without optional arguments."""
@@ -92,16 +109,20 @@ class TestConfigCreateSnippet(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
+        group = 'docker'
         tags = ['cleanup', 'container', 'docker']
         links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container']
-        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', links[0]]
+        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', 'docker, container, cleanup',
+                    '-l', links[0]]
         obj = Config()
         assert isinstance(obj.get_content_data(), str)
         assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_group(), str)
         assert isinstance(obj.get_content_tags(), list)
         assert isinstance(obj.get_content_links(), list)
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == brief
+        assert obj.get_content_group() == group
         self.assertCountEqual(obj.get_content_tags(), tags)
         self.assertCountEqual(obj.get_content_links(), links)
 

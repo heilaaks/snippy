@@ -104,8 +104,8 @@ python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker
 python snip.py create -c 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -g 'docker' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
-python snip.py searc --sall docker
-python snip.py delete --id 1
+python snip.py search --sall docker
+python snip.py delete --digest 6b8705255016268c
 python snip.py export --file snippets.yaml
 python snip.py export --file snippets.json
 python snip.py export --file snippets.txt

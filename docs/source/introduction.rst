@@ -1,5 +1,5 @@
 Introduction
 ============
 
-Snippy is a small command line tool to manage command examples and troubleshooting
-solutions.
+Lightweight command line utility to manage command examples and
+troubleshooting solutions.

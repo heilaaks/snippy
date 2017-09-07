@@ -29,7 +29,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['operation'] = {}
         cls.config['operation']['task'] = cls._parse_operation()
         cls.config['operation']['file'] = {}
-        cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_file()
+        cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
         cls.config['content'] = {}
         cls.config['content']['type'] = cls._parse_content_type()
         cls.config['content']['data'] = cls._parse_content_data()
@@ -64,7 +64,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
     @classmethod
     def get_snippet(cls, snippet=None):
-        """Get snippet after it has been possibly edited."""
+        """Return snippet after it has been optionally edited."""
 
         if cls.is_editor():
             cls._set_editor_content(snippet)
@@ -77,109 +77,109 @@ class Config(object): # pylint: disable=too-many-public-methods
 
     @classmethod
     def is_operation_create(cls):
-        """Test if defined operation was create."""
+        """Test if operation was create."""
 
         return True if cls.config['operation']['task'] == 'create' else False
 
     @classmethod
     def is_operation_search(cls):
-        """Test if defined operation was search."""
+        """Test if operation was search."""
 
         return True if cls.config['operation']['task'] == 'search' else False
 
     @classmethod
     def is_operation_update(cls):
-        """Test if defined operation was update."""
+        """Test if operation was update."""
 
         return True if cls.config['operation']['task'] == 'update' else False
 
     @classmethod
     def is_operation_delete(cls):
-        """Test if defined operation was delete."""
+        """Test if operation was delete."""
 
         return True if cls.config['operation']['task'] == 'delete' else False
 
     @classmethod
     def is_operation_export(cls):
-        """Test if defined operation was export."""
+        """Test if operation was export."""
 
         return True if cls.config['operation']['task'] == 'export' else False
 
     @classmethod
     def is_operation_import(cls):
-        """Test if defined operation was import."""
+        """Test if operation was import."""
 
         return True if cls.config['operation']['task'] == 'import' else False
 
     @classmethod
     def is_content_snippet(cls):
-        """Test if defined content was snippet."""
+        """Test if content was snippet."""
 
         return True if cls.config['content']['type'] == 'snippet' else False
 
     @classmethod
     def is_content_solution(cls):
-        """Test if defined content was solution."""
+        """Test if content was solution."""
 
         return True if cls.config['content']['type'] == 'solution' else False
 
     @classmethod
     def get_content_data(cls):
-        """Get content data."""
+        """Return content data."""
 
         return cls.config['content']['data']
 
     @classmethod
     def get_content_brief(cls):
-        """Get content brief description."""
+        """Return content brief description."""
 
         return cls.config['content']['brief']
 
     @classmethod
     def get_content_group(cls):
-        """Get content group."""
+        """Return content group."""
 
         return cls.config['content']['group']
 
     @classmethod
     def get_content_tags(cls):
-        """Get content tags."""
+        """Return content tags."""
 
         return cls.config['content']['tags']
 
     @classmethod
     def get_content_links(cls):
-        """Get content reference links."""
+        """Return content reference links."""
 
         return cls.config['content']['links']
+
+    @classmethod
+    def get_operation_digest(cls):
+        """Return digest identifying the operation target."""
+
+        return cls.config['digest']
 
     @classmethod
     def is_search_all(cls):
         """Test if all fields are searched."""
 
-        return True
+        return True if cls.config['search']['field'] == Const.SEARCH_ALL else False
 
     @classmethod
     def get_search_keywords(cls):
-        """Get user provided list of search keywords."""
+        """Return list of search keywords."""
 
         return cls.config['search']['keywords']
 
     @classmethod
     def is_editor(cls):
-        """Test if editor was used for input."""
+        """Test if editor is used to input content."""
 
         return cls.config['input']['editor']
 
     @classmethod
-    def get_operation_digest(cls):
-        """Get digest identifying the operation target."""
-
-        return cls.config['digest']
-
-    @classmethod
     def get_operation_file(cls):
-        """Get file for operation."""
+        """Return file for operation."""
 
         return cls.config['operation']['file']['name']
 
@@ -203,19 +203,19 @@ class Config(object): # pylint: disable=too-many-public-methods
 
     @classmethod
     def get_storage_path(cls):
-        """Get path of the persistent storage."""
+        """Return path of the persistent storage."""
 
         return cls.config['storage']['path']
 
     @classmethod
     def get_storage_file(cls):
-        """Get path and file of the persistent storage."""
+        """Return path and file of the persistent storage."""
 
         return os.path.join(cls.config['storage']['path'], cls.config['storage']['file'])
 
     @classmethod
     def get_storage_schema(cls):
-        """Get storage schema."""
+        """Return storage schema."""
 
         return cls.config['storage']['schema']
 
@@ -244,33 +244,6 @@ class Config(object): # pylint: disable=too-many-public-methods
         return cls.args.get_content_type()
 
     @classmethod
-    def _parse_editor(cls):
-        """Process editor usage."""
-
-        # Implicitly force editor in case of updates with message digest.
-        editor = cls.args.get_editor()
-        if cls.is_operation_update() and cls.get_operation_digest():
-            editor = True
-
-        return editor
-
-    @classmethod
-    def _parse_file(cls):
-        """Process supplementary file the operation."""
-
-        return cls._get_file_type(cls.args.get_operation_file())
-
-    @classmethod
-    def _parse_digest(cls):
-        """Process message digest for the operation."""
-
-        arg = cls.args.get_operation_digest()
-        if arg:
-            return arg
-
-        return ''
-
-    @classmethod
     def _parse_content_data(cls):
         """Process content data."""
 
@@ -278,7 +251,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         if arg:
             return arg
 
-        return ''
+        return Const.EMPTY
 
     @classmethod
     def _parse_content_brief(cls):
@@ -288,7 +261,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         if arg:
             return arg
 
-        return ''
+        return Const.EMPTY
 
     @classmethod
     def _parse_content_group(cls):
@@ -298,7 +271,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         if arg:
             return arg
 
-        return ''
+        return Const.EMPTY
 
     @classmethod
     def _parse_content_tags(cls):
@@ -310,7 +283,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
     @classmethod
     def _parse_content_links(cls):
-        """Process the links of the job."""
+        """Process content reference links."""
 
         links = cls.args.get_content_links()
         # Examples: Support processing of:
@@ -320,8 +293,18 @@ class Config(object): # pylint: disable=too-many-public-methods
         return sorted(link_list)
 
     @classmethod
+    def _parse_digest(cls):
+        """Process message digest identifying the operation target."""
+
+        arg = cls.args.get_operation_digest()
+        if arg:
+            return arg
+
+        return Const.EMPTY
+
+    @classmethod
     def _parse_search(cls):
-        """Process the user given search keywords."""
+        """Process the user given search keywords and field."""
 
         arg = ()
         field = Const.SEARCH_ALL
@@ -337,8 +320,47 @@ class Config(object): # pylint: disable=too-many-public-methods
         return (field, cls._get_keywords(arg))
 
     @classmethod
+    def _parse_editor(cls):
+        """Process editor usage."""
+
+        # Implicitly force editor in case of update operation with message digest.
+        editor = cls.args.get_editor()
+        if cls.is_operation_update() and cls.get_operation_digest():
+            editor = True
+
+        return editor
+
+    @classmethod
+    def _set_editor_content(cls, snippet=None):
+        """Read and set the user provided values from editor."""
+
+        if not snippet:
+            snippet = {'content': Const.EMPTY, 'brief': Const.EMPTY, 'group': Const.EMPTY, 'tags': Const.EMPTY,
+                       'links': Const.EMPTY, 'digest': Const.EMPTY}
+
+        edited_input = cls.args.get_editor_content(snippet)
+        if edited_input:
+            cls.logger.debug('using parameters from editor')
+            cls.config['content']['data'] = Config._get_user_string(edited_input, Const.EDITED_SNIPPET)
+            cls.config['content']['brief'] = Config._get_user_string(edited_input, Const.EDITED_BRIEF)
+            cls.config['content']['group'] = Config._get_user_string(edited_input, Const.EDITED_GROUP)
+            cls.config['content']['tags'] = Config._get_user_list(edited_input, Const.EDITED_TAGS)
+            cls.config['content']['links'] = Config._get_user_list(edited_input, Const.EDITED_LINKS)
+            cls.logger.debug('configured value from editor for --content as "%s"', cls.config['content']['data'])
+            cls.logger.debug('configured value from editor for --brief as "%s"', cls.config['content']['brief'])
+            cls.logger.debug('configured value from editor for --group as "%s"', cls.config['content']['group'])
+            cls.logger.debug('configured value from editor for --tags as %s', cls.config['content']['tags'])
+            cls.logger.debug('configured value from editor for --links as %s', cls.config['content']['links'])
+
+    @classmethod
+    def _parse_operation_file(cls):
+        """Process file for operation."""
+
+        return cls._get_file_type(cls.args.get_operation_file())
+
+    @classmethod
     def _get_file_type(cls, filename):
-        """Get the file format and file."""
+        """Return the file format and file."""
 
         if not filename:
             return (Const.EMPTY, Const.FILE_TYPE_NONE)
@@ -363,7 +385,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         else:
             cls.logger.info('unsupported export file format "%s"', file_extension)
 
-        return ('', Const.FILE_TYPE_YAML)
+        return (Const.EMPTY, Const.FILE_TYPE_YAML)
 
     @classmethod
     def _get_keywords(cls, keywords):
@@ -383,28 +405,6 @@ class Config(object): # pylint: disable=too-many-public-methods
             kw_list = kw_list + re.findall(r"[\w\-]+", tag)
 
         return sorted(kw_list)
-
-    @classmethod
-    def _set_editor_content(cls, snippet=None):
-        """Read and set the user provided values from editor."""
-
-        if not snippet:
-            snippet = {'content': Const.EMPTY, 'brief': Const.EMPTY, 'group': Const.EMPTY, 'tags': Const.EMPTY,
-                       'links': Const.EMPTY, 'digest': Const.EMPTY}
-
-        edited_input = cls.args.get_editor_content(snippet)
-        if edited_input:
-            cls.logger.debug('using parameters from editor')
-            cls.config['content']['data'] = Config._get_user_string(edited_input, Const.EDITED_SNIPPET)
-            cls.config['content']['brief'] = Config._get_user_string(edited_input, Const.EDITED_BRIEF)
-            cls.config['content']['group'] = Config._get_user_string(edited_input, Const.EDITED_GROUP)
-            cls.config['content']['tags'] = Config._get_user_list(edited_input, Const.EDITED_TAGS)
-            cls.config['content']['links'] = Config._get_user_list(edited_input, Const.EDITED_LINKS)
-            cls.logger.debug('configured value from editor for --content as "%s"', cls.config['content']['data'])
-            cls.logger.debug('configured value from editor for --brief as "%s"', cls.config['content']['brief'])
-            cls.logger.debug('configured value from editor for --group as "%s"', cls.config['content']['group'])
-            cls.logger.debug('configured value from editor for --tags as %s', cls.config['content']['tags'])
-            cls.logger.debug('configured value from editor for --links as %s', cls.config['content']['links'])
 
     @classmethod
     def _get_user_list(cls, edited_string, constants):

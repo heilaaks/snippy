@@ -81,7 +81,7 @@ class Sqlite3Db(object):
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) ORDER BY id ASC
-            if keywords:
+            if keywords and Config.is_search_all():
                 query, qargs = Sqlite3Db._get_regexp_query(keywords)
             elif digest:
                 query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets \

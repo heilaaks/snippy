@@ -9,6 +9,7 @@ class Constants(object):
     NEWLINE = '\n'
     SPACE = ' '
     EMPTY = ''
+    EMPTY_LIST = []
 
     # Delimiters
     DELIMITER_TAGS = ','
@@ -18,7 +19,7 @@ class Constants(object):
 
     # Column numbers in snippets table.
     SNIPPET_ID = 0
-    SNIPPET_SNIPPET = 1
+    SNIPPET_DATA = 1
     SNIPPET_BRIEF = 2
     SNIPPET_GROUP = 3
     SNIPPET_TAGS = 4

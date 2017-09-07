@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Snippy - A small command line tool to manage command and troubleshooting examples."""
+"""Snippy - Command line tool to manage command examples and troubleshooting solutions."""
 
 from snippy.logger import Logger
 from snippy.config import Config
@@ -24,7 +24,7 @@ class Snippy(object):
         elif Config.is_content_solution():
             Resolve(storage).run()
         else:
-            self.logger.error('exiting because of unknown role')
+            self.logger.error('exiting because of unknown content')
 
         storage.debug()
         storage.disconnect()

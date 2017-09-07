@@ -75,7 +75,7 @@ class Snippet(object):
             text = text + Const.format_header(colors) % (idx, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_GROUP], \
                                                               row[Const.SNIPPET_DIGEST])
             text = text + ''.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
-                      for snippet_line in row[Const.SNIPPET_SNIPPET].split(Const.NEWLINE)])
+                      for snippet_line in row[Const.SNIPPET_DATA].split(Const.NEWLINE)])
             text = text + Const.NEWLINE
             text = text + ''.join([Const.format_links(colors) % (link_string, link) \
                       for link in row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS)])
@@ -87,7 +87,7 @@ class Snippet(object):
     @staticmethod
     def convert_db_row(row):
         """Convert row from database to snippet dictionary."""
-        snippet = {'content': row[Const.SNIPPET_SNIPPET],
+        snippet = {'content': row[Const.SNIPPET_DATA],
                    'brief': row[Const.SNIPPET_BRIEF],
                    'group': row[Const.SNIPPET_GROUP],
                    'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS),
@@ -163,7 +163,7 @@ class Snippet(object):
                 sys.exit()
 
     def run(self):
-        """Run the snippet management job."""
+        """Run the snippet management operation."""
 
         self.logger.info('managing snippet')
         if Config.is_operation_create():

@@ -79,12 +79,14 @@ class TestArgumentsCreateSnippet(object):
 
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
+        group = 'docker'
         tags = ['docker, container, cleanup']
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', links]
+        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', 'docker, container, cleanup', '-l', links]
         obj = Arguments()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == brief
+        assert obj.get_content_group() == group
         assert obj.get_content_tags() == tags
         assert obj.get_content_links() == links
 

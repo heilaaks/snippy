@@ -1,5 +1,5 @@
 Features
 ========
 
-Lightweight command line utility to add and manage command examples
-and troubleshooting solutions.
+Lightweight command line utility to manage command examples and
+troubleshooting solutions.

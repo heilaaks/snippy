@@ -16,7 +16,7 @@ class Logger(object): # pylint: disable=too-few-public-methods
         self.logger = logging
 
     def get(self):
-        """Get logger object."""
+        """Return logger object."""
 
         return self.logger
 

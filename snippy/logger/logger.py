@@ -6,7 +6,7 @@ import sys
 import logging
 
 
-class Logger(object): # pylint: disable=too-few-public-methods
+class Logger(object):
     """Logging wrapper."""
 
     def __init__(self, module):
@@ -26,6 +26,16 @@ class Logger(object): # pylint: disable=too-few-public-methods
         This relies on that the module level logger does not set the level
         which causes module level logger to rely only higher level logger
         in the logging hierarchy."""
-        logging.getLogger().setLevel(logging.ERROR)
+        #logging.getLogger().setLevel(logging.ERROR)
+        logging.getLogger().disabled = True
         if '--debug' in sys.argv or '-vv' in sys.argv:
+            logging.getLogger().disabled = False
             logging.getLogger().setLevel(logging.DEBUG)
+
+    @staticmethod
+    def exit(logger, cause):
+        """Print exit cause for the tool."""
+        if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
+            logger.info('exiting with cause %s', cause.lower())
+        else:
+            print(cause)

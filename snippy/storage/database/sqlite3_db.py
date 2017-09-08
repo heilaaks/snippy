@@ -56,6 +56,7 @@ class Sqlite3Db(object):
                 result = Const.DB_INSERT_OK
             except sqlite3.IntegrityError as exception:
                 result = Const.DB_DUPLICATE
+                Config.set_exit_cause('content already exist with digest %.16s' % snippet['digest'])
                 self.logger.info('unique constraint violation with content "%s"', snippet['content'])
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)

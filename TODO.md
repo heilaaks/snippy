@@ -3,17 +3,17 @@
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents.
-   - [ ] Add support for cutting log string with low logging levels. Long lines are nasty and meant for debugging.
+   - [ ] Add support for cutting log string with lower logging levels. Long lines are nasty and meant for debugging.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
-   - [ ] Add text log what was done. The default log level is error so no logs at all. A bit more info is better.
    - [ ] Add default values from optional arguments to editor template.
    - [ ] Add digest check when importing.
-   - [ ] Fix inserting same snippet again so that the error is handled nicely.
    - [ ] Fix the empty tags and list from editor. They contain one item array like ['']. The lists should be empty.
    - [ ] Fix the problem that no changes when updating snippet seem to change the digest?
    - [ ] Fix search queries for tags and groups. Searching works only from all fields.
 
 ## DONE
+   - [x] Added exit status that is by default the only string printed. Options -vv or --debug enable loggin.
+   - [x] Fixed inserting same snippet again so that the error is handled nicely.
    - [x] Changed the editor flag internally so that used do not need it when update is made with digest.
    - [x] Changed the CLI commands to behave and look like standard Linux CLI design.
    - [x] Changed small methods that have simple tests in Config() to use ternary operator.

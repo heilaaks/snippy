@@ -47,6 +47,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['storage']['file'] = 'snippy.db'
         cls.config['storage']['schema'] = os.path.join(cls.config['root'], 'snippy/storage/database/database.sql')
         cls.config['storage']['in_memory'] = False # Enabled only for testing.
+        cls.config['exit_code'] = 'OK'
 
         cls.logger.debug('configured value from positional argument as "%s"', cls.config['operation'])
         cls.logger.debug('configured value from content type as "%s"', cls.config['content']['type'])
@@ -231,6 +232,20 @@ class Config(object): # pylint: disable=too-many-public-methods
         """Test if storage is defined to be run in memory."""
 
         return cls.config['storage']['in_memory']
+
+    @classmethod
+    def set_exit_cause(cls, code):
+        """Set exit cause for the tool."""
+
+        # Only allow one update to get the original cause.
+        if cls.config['exit_code'] == 'OK':
+            cls.config['exit_code'] = 'NOK: ' + code
+
+    @classmethod
+    def get_exit_cause(cls):
+        """Return exit cause for the tool."""
+
+        return cls.config['exit_code']
 
     @classmethod
     def _parse_operation(cls):

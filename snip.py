@@ -28,6 +28,7 @@ class Snippy(object):
 
         storage.debug()
         storage.disconnect()
+        Logger.exit(self.logger, Config.get_exit_cause(),)
 
 def main(args=None):
     Logger.set_level()

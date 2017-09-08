@@ -22,7 +22,12 @@ class Snippet(object):
         snippet = Config.get_snippet()
         result = self.storage.create(snippet)
         if result == Const.DB_DUPLICATE:
-            self.logger.error('use update operation for duplicated content with digest %.16s', snippet['digest'])
+            rows = self.storage.search(None, None, snippet['content'])
+            if len(rows) == 1:
+                Config.set_exit_cause('content already exist with digest %.16s' % rows[0][Const.SNIPPET_DIGEST])
+                self.logger.info('use update operation for duplicated content %.16s', rows[0][Const.SNIPPET_DIGEST])
+            else:
+                self.logger.error('unexpected number of rows received while searching content')
 
     def search(self):
         """Search snippets based on keywords."""

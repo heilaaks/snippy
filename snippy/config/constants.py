@@ -38,6 +38,12 @@ class Constants(object):
     SEARCH_TAG = 'tag'
     SEARCH_GRP = 'grp'
 
+    # Database
+    DB_INSERT_OK = 'insert-ok'
+    DB_UPDATE_OK = 'update-ok'
+    DB_DUPLICATE = 'unique-constraint-violation'
+    DB_FAILURE = 'internal-failure'
+
     # Editor inputs
     EDITOR_SNIPPET_HEAD = '# Add mandatory snippet below.\n'
     EDITOR_SNIPPET_TAIL = '# Add optional brief description below.\n'

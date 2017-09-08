@@ -63,15 +63,16 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
-    def get_snippet(cls, snippet=None):
+    def get_snippet(cls, snippet=None, use_editor=None):
         """Return snippet after it has been optionally edited."""
 
-        if cls.is_editor():
-            cls._set_editor_content(snippet)
-
+        # Set the defaults from commmand line to editing window.
         snippet = {'content': cls.get_content_data(), 'brief': cls.get_content_brief(),
                    'group': cls.get_content_group(), 'tags': cls.get_content_tags(),
                    'links': cls.get_content_links()}
+
+        if cls.is_editor() or use_editor:
+            snippet = cls._set_editor_content(snippet)
 
         return snippet
 
@@ -336,7 +337,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         if not snippet:
             snippet = {'content': Const.EMPTY, 'brief': Const.EMPTY, 'group': Const.EMPTY, 'tags': Const.EMPTY,
-                       'links': Const.EMPTY, 'digest': Const.EMPTY}
+                       'links': Const.EMPTY}
 
         edited_input = cls.args.get_editor_content(snippet)
         if edited_input:
@@ -346,11 +347,17 @@ class Config(object): # pylint: disable=too-many-public-methods
             cls.config['content']['group'] = Config._get_user_string(edited_input, Const.EDITED_GROUP)
             cls.config['content']['tags'] = Config._get_user_list(edited_input, Const.EDITED_TAGS)
             cls.config['content']['links'] = Config._get_user_list(edited_input, Const.EDITED_LINKS)
-            cls.logger.debug('configured value from editor for --content as "%s"', cls.config['content']['data'])
-            cls.logger.debug('configured value from editor for --brief as "%s"', cls.config['content']['brief'])
-            cls.logger.debug('configured value from editor for --group as "%s"', cls.config['content']['group'])
-            cls.logger.debug('configured value from editor for --tags as %s', cls.config['content']['tags'])
-            cls.logger.debug('configured value from editor for --links as %s', cls.config['content']['links'])
+            cls.logger.debug('configured value from editor for content as "%s"', cls.config['content']['data'])
+            cls.logger.debug('configured value from editor for brief as "%s"', cls.config['content']['brief'])
+            cls.logger.debug('configured value from editor for group as "%s"', cls.config['content']['group'])
+            cls.logger.debug('configured value from editor for tags as %s', cls.config['content']['tags'])
+            cls.logger.debug('configured value from editor for links as %s', cls.config['content']['links'])
+
+        snippet = {'content': cls.get_content_data(), 'brief': cls.get_content_brief(),
+                   'group': cls.get_content_group(), 'tags': cls.get_content_tags(),
+                   'links': cls.get_content_links()}
+
+        return snippet
 
     @classmethod
     def _parse_operation_file(cls):

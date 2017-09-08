@@ -20,7 +20,9 @@ class Snippet(object):
 
         self.logger.debug('creating new snippet')
         snippet = Config.get_snippet()
-        self.storage.create(snippet)
+        result = self.storage.create(snippet)
+        if result == Const.DB_DUPLICATE:
+            self.logger.error('use update operation for duplicated content with digest %.16s', snippet['digest'])
 
     def search(self):
         """Search snippets based on keywords."""
@@ -31,18 +33,28 @@ class Snippet(object):
         self.print_terminal(snippets)
 
     def update(self):
-        """Update snippet based on snippet digest."""
+        """Update snippet based on message digest or content."""
 
         digest = Config.get_operation_digest()
-        self.logger.debug('updating snippet with digest %.16s', digest)
-        rows = self.storage.search(None, digest)
+        content = Config.get_content_data()
+        if digest:
+            self.logger.debug('updating snippet with digest %.16s', digest)
+            rows = self.storage.search(None, digest)
+        elif content:
+            self.logger.debug('updating snippet with content "%s"', content)
+            rows = self.storage.search(None, None, content)
+
         if len(rows) == 1:
-            snippet = Config.get_snippet(self.convert_db_row(rows[0]))
+            if digest:
+                snippet = Config.get_snippet(self.convert_db_row(rows[0]))
+            else:
+                digest = rows[0][Const.SNIPPET_DIGEST]
+                snippet = Config.get_snippet(None, use_editor=True)
             self.storage.update(digest, snippet)
         elif not rows:
-            self.logger.info('cannot find requested snippet with digest %s', digest)
+            self.logger.info('cannot find requested snippet with digest %.16s or content "%s"', digest, content)
         else:
-            self.logger.error('cannot update multiple snippets with the same 16 byte digest')
+            self.logger.error('cannot update multiple snippets with same digest  %.16s or content "%s"', digest, content)
 
     def delete(self):
         """Delete snippet."""

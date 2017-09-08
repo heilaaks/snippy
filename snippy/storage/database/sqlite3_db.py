@@ -42,19 +42,27 @@ class Sqlite3Db(object):
     def insert_snippet(self, snippet, metadata=None):
         """Insert snippet into database."""
 
+        result = Const.DB_FAILURE
         if self.conn:
             tags_string = Const.DELIMITER_TAGS.join(map(str, snippet['tags']))
             links_string = Const.DELIMITER_LINKS.join(map(str, snippet['links']))
-            query = ('INSERT INTO snippets(snippet, brief, groups, tags, links, metadata, digest) VALUES(?,?,?,?,?,?,?)')
-            self.logger.debug('insert snippet %s with brief %s', snippet['content'], snippet['brief'])
+            query = ('INSERT OR ROLLBACK INTO snippets(snippet, brief, groups, tags, links, \
+                      metadata, digest) VALUES(?,?,?,?,?,?,?)')
+            self.logger.debug('insert snippet "%s" with brief "%s"', snippet['content'], snippet['brief'])
             try:
                 self.cursor.execute(query, (snippet['content'], snippet['brief'], snippet['group'], tags_string,
                                             links_string, metadata, snippet['digest']))
                 self.conn.commit()
+                result = Const.DB_INSERT_OK
+            except sqlite3.IntegrityError as exception:
+                result = Const.DB_DUPLICATE
+                self.logger.info('unique constraint violation with content "%s"', snippet['content'])
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
         else:
             self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
+
+        return result
 
     def bulk_insert_snippets(self, snippets):
         """Insert multiple snippets into database."""
@@ -62,7 +70,7 @@ class Sqlite3Db(object):
         for snippet in snippets:
             self.insert_snippet(snippet)
 
-    def select_snippets(self, keywords=None, digest=None):
+    def select_snippets(self, keywords=None, digest=None, content=None):
         """Select snippets."""
 
         rows = []
@@ -87,6 +95,10 @@ class Sqlite3Db(object):
                 query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets \
                           WHERE digest LIKE ?')
                 qargs = [digest+'%']
+            elif content:
+                query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets \
+                          WHERE snippet=?')
+                qargs = [content]
             else:
                 self.logger.error('exiting because of internal error where search query was not defined')
                 sys.exit(1)
@@ -181,7 +193,7 @@ class Sqlite3Db(object):
             with open(Config.get_storage_schema(), 'rt') as schema_file:
                 schema = schema_file.read()
                 conn.executescript(schema)
-            self.logger.debug('initialized sqlite3 database into {:s}'.format(location))
+            self.logger.debug('sqlite3 database persisted in {:s}'.format(location))
         except sqlite3.Error as exception:
             self.logger.exception('creating sqlite3 database failed with exception "%s"', exception)
 

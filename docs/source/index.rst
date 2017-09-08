@@ -11,6 +11,7 @@ Welcome to Snippy documentation!
    usage
    examples
    development
+   usecases
    license
 
 

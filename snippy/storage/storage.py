@@ -25,12 +25,12 @@ class Storage(object):
         """Create snippet."""
 
         snippet['digest'] = Storage._hash(snippet)
-        self.database.insert_snippet(snippet)
+        return self.database.insert_snippet(snippet)
 
-    def search(self, keywords=None, digest=None):
+    def search(self, keywords=None, digest=None, content=None):
         """Search snippets."""
 
-        return self.database.select_snippets(keywords, digest)
+        return self.database.select_snippets(keywords, digest, content)
 
     def update(self, digest, snippet):
         """Update snippet."""

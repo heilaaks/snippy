@@ -67,10 +67,12 @@ class Config(object): # pylint: disable=too-many-public-methods
     def get_snippet(cls, snippet=None, use_editor=None):
         """Return snippet after it has been optionally edited."""
 
-        # Set the defaults from commmand line to editing window.
-        snippet = {'content': cls.get_content_data(), 'brief': cls.get_content_brief(),
-                   'group': cls.get_content_group(), 'tags': cls.get_content_tags(),
-                   'links': cls.get_content_links()}
+        # Set the defaults from commmand line to editing window. If the
+        # snippet is not provided, it indicates update with digest only.
+        if not snippet:
+            snippet = {'content': cls.get_content_data(), 'brief': cls.get_content_brief(),
+                       'group': cls.get_content_group(), 'tags': cls.get_content_tags(),
+                       'links': cls.get_content_links()}
 
         if cls.is_editor() or use_editor:
             snippet = cls._set_editor_content(snippet)

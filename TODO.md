@@ -1,7 +1,8 @@
 ## TODO
-   - [ ] Add OK/FAILED: <string> without -vv or --debug that is suppressed with -q
+   - [ ] Fix exit code suppress with the -q option.
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
+   - [ ] Add default for the group so that it is not empty. All defaults should fall for example to 'default'.
    - [ ] Update documents.
    - [ ] Add support for cutting log string with lower logging levels. Long lines are nasty and meant for debugging.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.

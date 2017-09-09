@@ -1,13 +1,13 @@
 ## TODO
+   - [ ] Add search key that results all the database content.
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents.
    - [ ] Add support for cutting log string with lower logging levels. Long lines are nasty and meant for debugging.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
-   - [ ] Add default values from optional arguments to editor template.
    - [ ] Add digest check when importing.
-   - [ ] Fix the empty tags and list from editor. They contain one item array like ['']. The lists should be empty.
    - [ ] Fix search queries for tags and groups. Searching works only from all fields.
+   - [ ] Add statistics print that shows the amout of snippets and unique categories.
 
 ## DONE
    - [x] Fixed the problem that the digest changed even though no changes were made in editor for the content.

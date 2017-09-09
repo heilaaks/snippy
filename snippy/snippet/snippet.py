@@ -45,9 +45,11 @@ class Snippet(object):
         if digest:
             self.logger.debug('updating snippet with digest %.16s', digest)
             rows = self.storage.search(None, digest)
+            search_string = 'digest %.16s' % digest
         elif content:
             self.logger.debug('updating snippet with content "%s"', content)
             rows = self.storage.search(None, None, content)
+            search_string = 'content %.20s' % content
 
         if len(rows) == 1:
             if digest:
@@ -57,6 +59,7 @@ class Snippet(object):
                 snippet = Config.get_snippet(None, use_editor=True)
             self.storage.update(digest, snippet)
         elif not rows:
+            Config.set_exit_cause('cannot find content to be updated with %s' % search_string)
             self.logger.info('cannot find requested snippet with digest %.16s or content "%s"', digest, content)
         else:
             self.logger.error('cannot update multiple snippets with same digest  %.16s or content "%s"', digest, content)

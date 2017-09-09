@@ -1,4 +1,4 @@
-Use Cases
+Workflows
 =========
 
 Updating duplicated content

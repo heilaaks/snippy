@@ -94,11 +94,11 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
 
 cd devel/snippy
 workon snippy
-make doc
+make docs
 make lint
 make test
-time python snip.py -i 'docker rm' -b 'Remove all docker containers' -c 'docker' -t docker,container,cleanup --debug
-python snip.py -s docker
+time python snip.py create -c 'docker rm' -b 'Remove all docker containers' -c 'docker' -t docker,container,cleanup --debug
+python snip.py search --sall docker
 
 python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python snip.py create -c 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -g 'docker' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'

@@ -33,9 +33,9 @@ class Logger(object):
             logging.getLogger().setLevel(logging.DEBUG)
 
     @staticmethod
-    def exit(logger, cause):
+    def exit(cause):
         """Print exit cause for the tool."""
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
-            logger.info('exiting with cause %s', cause.lower())
+            Logger(__name__).get().info('exiting with cause %s', cause.lower())
         else:
             print(cause)

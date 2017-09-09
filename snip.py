@@ -22,13 +22,13 @@ class Snippy(object):
         if Config.is_content_snippet():
             Snippet(storage).run()
         elif Config.is_content_solution():
-            Resolve(storage).run()
+            Solution(storage).run()
         else:
             self.logger.error('exiting because of unknown content')
 
         storage.debug()
         storage.disconnect()
-        Logger.exit(self.logger, Config.get_exit_cause(),)
+        Logger.exit(self.config.get_exit_cause())
 
 def main(args=None):
     Logger.set_level()

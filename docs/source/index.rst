@@ -8,10 +8,9 @@ Welcome to Snippy documentation!
    introduction
    features
    installation
-   usage
    examples
+   workflows
    development
-   usecases
    license
 
 

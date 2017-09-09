@@ -90,7 +90,14 @@ class Sqlite3Db(object):
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) ORDER BY id ASC
             if keywords and Config.is_search_all():
-                query, qargs = Sqlite3Db._get_regexp_query(keywords)
+                columns = ['snippet', 'brief', 'groups', 'tags', 'links']
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
+            elif keywords and Config.is_search_tag():
+                columns = ['tags']
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
+            elif keywords and Config.is_search_grp():
+                columns = ['groups']
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
             elif digest:
                 query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets \
                           WHERE digest LIKE ?')
@@ -222,15 +229,25 @@ class Sqlite3Db(object):
         return re.search(expr, item, re.IGNORECASE) is not None
 
     @staticmethod
-    def _get_regexp_query(keywords):
-        """Generate query parameters for the SQL query."""
+    def _make_regexp_query(keywords, columns):
+        """Generate SQL query parameters for specific fields and keywords."""
 
         query_args = []
         query = 'SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets WHERE '
-        search = '(snippet REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) '
+
+        # Generate regexp search like:
+        #   1. '(snippet REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) '
+        #   2. '(tags REGEXP ?) '
+        search = '('
+        for column in columns:
+            search = search + column + ' REGEXP ? OR '
+        search = search[:-4] # Remove last ' OR ' added by the loop.
+        search = search + ') '
+
+        # Generate token for each searched column like
         for token in keywords:
             query = query + search + 'OR '
-            query_args = query_args + [token, token, token, token, token] # Token for each search colum in the row.
+            query_args = query_args + [token] * len(columns) # Token for each search colum in the row.
         query = query[:-3] # Remove last 'OR ' added by the loop.
         query = query + ' ORDER BY id ASC'
 

@@ -6,10 +6,11 @@
    - [ ] Add support for cutting log string with lower logging levels. Long lines are nasty and meant for debugging.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add digest check when importing.
-   - [ ] Fix search queries for tags and groups. Searching works only from all fields.
+   - [ ] Fix the paggaging. The snip.py should be under namespace and sql file locate might not be good.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
 
 ## DONE
+   - [x] Added support for --stag and --sgrp options to search from tags and group columns.
    - [x] Fixed the problem that the digest changed even though no changes were made in editor for the content.
    - [x] Fixed editor update that changed the list of tags to one string in a list.
    - [x] Fixed exit code suppression with the -q option.

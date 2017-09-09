@@ -170,6 +170,18 @@ class Config(object): # pylint: disable=too-many-public-methods
         return True if cls.config['search']['field'] == Const.SEARCH_ALL else False
 
     @classmethod
+    def is_search_tag(cls):
+        """Test if search is made only from tags."""
+
+        return True if cls.config['search']['field'] == Const.SEARCH_TAG else False
+
+    @classmethod
+    def is_search_grp(cls):
+        """Test if search is made only from groups."""
+
+        return True if cls.config['search']['field'] == Const.SEARCH_GRP else False
+
+    @classmethod
     def get_search_keywords(cls):
         """Return list of search keywords."""
 

@@ -1,6 +1,18 @@
 Workflows
 =========
 
+Printin all examples on screen
+------------------------------
+
+It is possible to print all snippets on screen by using dot in the search
+query. The search is a regexp query but the only special character passed
+to the query is dot which matches to to any character.
+
+.. code:: bash
+
+    python snip.py search --sall .
+    OK
+
 Updating duplicated content
 ---------------------------
 

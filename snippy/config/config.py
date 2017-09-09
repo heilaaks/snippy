@@ -446,9 +446,11 @@ class Config(object): # pylint: disable=too-many-public-methods
     @classmethod
     def _get_keywords(cls, keywords):
         """Preprocess the user given keyword list. The keywords are for example the
-        user provided tags or the find keywords. The keywords are returned as a list
-        from the Argument. The user may use various formats so each item in a list may
-        be for example a string of comma separated tags."""
+        user provided tags or the search keywords. The user may use various formats
+        so each item in a list may be for example a string of comma separated tags.
+
+        The dot is a special case. It is allowed for the regexp to match and print
+        all records."""
 
         # Examples: Support processing of:
         #           1. -t docker container cleanup
@@ -456,8 +458,9 @@ class Config(object): # pylint: disable=too-many-public-methods
         #           3. -t 'docker container cleanup'
         #           4. -t 'docker, container, cleanup'
         #           5. -t dockertesting', container-managemenet', cleanup_testing
+        #           6. --sall '.'
         kw_list = []
         for tag in keywords:
-            kw_list = kw_list + re.findall(r"[\w\-]+", tag)
+            kw_list = kw_list + re.findall(r"[\w\-\.]+", tag)
 
         return sorted(kw_list)

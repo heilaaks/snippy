@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Add search key that results all the database content.
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents.
@@ -10,6 +9,7 @@
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
 
 ## DONE
+   - [x] Added search key that allows printing all snippets.
    - [x] Added support for --stag and --sgrp options to search from tags and group columns.
    - [x] Fixed the problem that the digest changed even though no changes were made in editor for the content.
    - [x] Fixed editor update that changed the list of tags to one string in a list.

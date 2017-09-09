@@ -48,7 +48,7 @@ class Sqlite3Db(object):
             links_string = Const.DELIMITER_LINKS.join(map(str, snippet['links']))
             query = ('INSERT OR ROLLBACK INTO snippets(snippet, brief, groups, tags, links, \
                       metadata, digest) VALUES(?,?,?,?,?,?,?)')
-            self.logger.debug('insert snippet "%s" with brief "%s"', snippet['content'], snippet['brief'])
+            self.logger.debug('insert snippet "%s" with digest %.16s', snippet['content'], snippet['digest'])
             try:
                 self.cursor.execute(query, (snippet['content'], snippet['brief'], snippet['group'], tags_string,
                                             links_string, metadata, snippet['digest']))

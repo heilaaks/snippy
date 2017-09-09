@@ -377,6 +377,26 @@ class Config(object): # pylint: disable=too-many-public-methods
         return snippet
 
     @classmethod
+    def _get_user_string(cls, edited_string, constants):
+        """Parse string type value from editor input."""
+
+        value_list = cls._get_user_list(edited_string, constants)
+
+        return constants['delimiter'].join(value_list)
+
+    @classmethod
+    def _get_user_list(cls, edited_string, constants):
+        """Parse list type value from editor input."""
+
+        user_answer = re.search('%s(.*)%s' % (constants['head'], constants['tail']), edited_string, re.DOTALL)
+        if user_answer and not user_answer.group(1).isspace():
+            value_list = list(map(lambda s: s.strip(), user_answer.group(1).rstrip().split(constants['delimiter'])))
+
+            return value_list
+
+        return []
+
+    @classmethod
     def _parse_operation_file(cls):
         """Process file for operation."""
 
@@ -429,23 +449,3 @@ class Config(object): # pylint: disable=too-many-public-methods
             kw_list = kw_list + re.findall(r"[\w\-]+", tag)
 
         return sorted(kw_list)
-
-    @classmethod
-    def _get_user_list(cls, edited_string, constants):
-        """Parse list type value from editor input."""
-
-        user_answer = re.search('%s(.*)%s' % (constants['head'], constants['tail']), edited_string, re.DOTALL)
-        if user_answer:
-            value_list = list(map(lambda s: s.strip(), user_answer.group(1).rstrip().split(Const.NEWLINE)))
-
-            return value_list
-
-        return []
-
-    @classmethod
-    def _get_user_string(cls, edited_string, constants):
-        """Parse string type value from editor input."""
-
-        value_list = cls._get_user_list(edited_string, constants)
-
-        return constants['delimiter'].join(value_list)

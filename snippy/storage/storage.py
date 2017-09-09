@@ -24,7 +24,7 @@ class Storage(object):
     def create(self, snippet):
         """Create snippet."""
 
-        snippet['digest'] = Storage._hash(snippet)
+        snippet['digest'] = Storage._calculate_digest(snippet)
         return self.database.insert_snippet(snippet)
 
     def search(self, keywords=None, digest=None, content=None):
@@ -35,7 +35,7 @@ class Storage(object):
     def update(self, digest, snippet):
         """Update snippet."""
 
-        snippet['digest'] = Storage._hash(snippet)
+        snippet['digest'] = Storage._calculate_digest(snippet)
 
         return self.database.update_snippet(digest, snippet)
 
@@ -48,7 +48,7 @@ class Storage(object):
         """Import all given snippets."""
 
         for snippet in snippets['snippets']:
-            snippet['digest'] = Storage._hash(snippet)
+            snippet['digest'] = Storage._calculate_digest(snippet)
 
         return self.database.bulk_insert_snippets(snippets['snippets'])
 
@@ -68,7 +68,7 @@ class Storage(object):
         self.database.debug()
 
     @staticmethod
-    def _hash(data_dictionary):
+    def _calculate_digest(data_dictionary):
         """Calculate digest for the data."""
 
         data_string = ''.join(['%s::%s' % (key, value) for (key, value) in sorted(data_dictionary.items())])

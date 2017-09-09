@@ -97,7 +97,7 @@ workon snippy
 make docs
 make lint
 make test
-time python snip.py create -c 'docker rm' -b 'Remove all docker containers' -c 'docker' -t docker,container,cleanup --debug
+time python snip.py create -c 'docker rm' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup --debug
 python snip.py search --sall docker
 
 python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'

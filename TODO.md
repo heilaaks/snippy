@@ -7,10 +7,11 @@
    - [ ] Add default values from optional arguments to editor template.
    - [ ] Add digest check when importing.
    - [ ] Fix the empty tags and list from editor. They contain one item array like ['']. The lists should be empty.
-   - [ ] Fix the problem that no changes when updating snippet seem to change the digest?
    - [ ] Fix search queries for tags and groups. Searching works only from all fields.
 
 ## DONE
+   - [x] Fixed the problem that the digest changed even though no changes were made in editor for the content.
+   - [x] Fixed editor update that changed the list of tags to one string in a list.
    - [x] Fixed exit code suppression with the -q option.
    - [x] Added default group 'default' for the content.
    - [x] Added exit status that is by default the only string printed. Options -vv or --debug enable loggin.

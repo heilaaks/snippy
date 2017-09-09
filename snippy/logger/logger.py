@@ -38,5 +38,5 @@ class Logger(object):
 
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             Logger(__name__).get().info('exiting with cause %s', cause.lower())
-        elif not '-q' in sys.argv:
+        elif '-q' not in sys.argv:
             print(cause)

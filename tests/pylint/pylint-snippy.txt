@@ -1,4 +1,6 @@
+************* Module snippy.logger.logger
+C: 41,13: Consider changing "not '-q' in sys.argv" to "'-q' not in sys.argv" (unneeded-not)
 
---------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+------------------------------------------------------------------
+Your code has been rated at 9.99/10 (previous run: 9.99/10, +0.00)
 

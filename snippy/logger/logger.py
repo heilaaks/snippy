@@ -35,7 +35,8 @@ class Logger(object):
     @staticmethod
     def exit(cause):
         """Print exit cause for the tool."""
+
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             Logger(__name__).get().info('exiting with cause %s', cause.lower())
-        else:
+        elif not '-q' in sys.argv:
             print(cause)

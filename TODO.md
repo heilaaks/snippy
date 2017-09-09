@@ -1,8 +1,6 @@
 ## TODO
-   - [ ] Fix exit code suppress with the -q option.
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
-   - [ ] Add default for the group so that it is not empty. All defaults should fall for example to 'default'.
    - [ ] Update documents.
    - [ ] Add support for cutting log string with lower logging levels. Long lines are nasty and meant for debugging.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
@@ -13,6 +11,8 @@
    - [ ] Fix search queries for tags and groups. Searching works only from all fields.
 
 ## DONE
+   - [x] Fixed exit code suppression with the -q option.
+   - [x] Added default group 'default' for the content.
    - [x] Added exit status that is by default the only string printed. Options -vv or --debug enable loggin.
    - [x] Fixed inserting same snippet again so that the error is handled nicely.
    - [x] Changed the editor flag internally so that used do not need it when update is made with digest.

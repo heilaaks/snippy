@@ -84,7 +84,7 @@ class Arguments(object):
         options.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-c', '--content', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
-        options.add_argument('-g', '--group', type=str, default='', help=argparse.SUPPRESS)
+        options.add_argument('-g', '--group', type=str, default='default', help=argparse.SUPPRESS)
         options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-l', '--links', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-d', '--digest', type=str, default='', help=argparse.SUPPRESS)

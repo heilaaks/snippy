@@ -73,22 +73,16 @@ class Constants(object):
     def format_snippet(colors=False):
         """Format snippet text."""
 
-        return '%s   \x1b[91m$\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   $ %s\n'
-
-    @staticmethod
-    def format_brief(colors=False):
-        """Format snippet brief description."""
-
-        return '%s   \x1b[91m+\x1b[0m %s\n' if colors else '%s   + %s\n'
-
-    @staticmethod
-    def format_tags(colors=False):
-        """Format snippet tags."""
-
-        return '%s   \x1b[91m#\x1b[0m %s\n' if colors else '%s   # %s\n'
+        return '%s   \x1b[91m$\x1b[0m \x1b[0m%s\x1b[0m\n' if colors else '%s   $ %s\n'
 
     @staticmethod
     def format_links(colors=False):
         """Format snippet links."""
 
         return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   > %s\n'
+
+    @staticmethod
+    def format_tags(colors=False):
+        """Format snippet tags."""
+
+        return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   # %s\n'

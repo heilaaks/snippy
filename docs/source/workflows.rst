@@ -1,8 +1,11 @@
 Workflows
 =========
 
-Printin all examples on screen
-------------------------------
+Searching
+---------
+
+Printing all examples on console
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is possible to print all snippets on screen by using dot in the search
 query. The search is a regexp query but the only special character passed
@@ -12,6 +15,18 @@ to the query is dot which matches to to any character.
 
     python snip.py search --sall .
     OK
+
+Filtering with grep
+~~~~~~~~~~~~~~~~~~~
+
+With Linux grep it is possible to filter for example only the actual
+commands from the search query.
+
+.. code:: bash
+
+    python snip.py search --sall . | grep --color=never '\$'
+    python snip.py search --sgrp docker | grep --color=never '\$'
+
 
 Updating duplicated content
 ---------------------------

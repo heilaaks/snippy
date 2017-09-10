@@ -38,10 +38,10 @@ class TestWorkflowCreateNewSnippet(object): # pylint: skip-file
 
         snippet = SnippetHelper().get_snippet(SnippetHelper.SNIPPET_1)
         sys.argv = ['snippy', 'create', '-c', snippet['content']]
-        config = Config()
-        storage = Storage().init()
-        Snippet(storage).run()
-        rows = storage.search(None, None, snippet['content'])
+        #config = Config()
+        #storage = Storage().init()
+        #Snippet(storage).run()
+        #rows = storage.search(None, None, snippet['content'])
         #rows = Sqlite3DbHelper().select_all_snippets()
         #print("rows %s" % rows)
         

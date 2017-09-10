@@ -99,12 +99,12 @@ class Sqlite3Db(object):
                 columns = ['groups']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
             elif digest:
-                query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets \
-                          WHERE digest LIKE ?')
+                query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets ' +
+                         'WHERE digest LIKE ?')
                 qargs = [digest+'%']
             elif content:
-                query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets \
-                          WHERE snippet=?')
+                query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets ' +
+                         'WHERE snippet=?')
                 qargs = [content]
             else:
                 self.logger.error('exiting because of internal error where search query was not defined')

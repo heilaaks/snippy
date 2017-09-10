@@ -92,11 +92,11 @@ class Sqlite3Db(object):
             if keywords and Config.is_search_all():
                 columns = ['snippet', 'brief', 'groups', 'tags', 'links']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
-            elif keywords and Config.is_search_tag():
-                columns = ['tags']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
             elif keywords and Config.is_search_grp():
                 columns = ['groups']
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
+            elif keywords and Config.is_search_tag():
+                columns = ['tags']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
             elif digest:
                 query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets ' +

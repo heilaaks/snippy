@@ -183,20 +183,20 @@ class Arguments(object):
         return cls.args.sall
 
     @classmethod
-    def get_search_tag(cls):
-        """Return keywords to search only from tags."""
-
-        cls.logger.info('parsed argument --stag with value %s', cls.args.stag)
-
-        return cls.args.stag
-
-    @classmethod
     def get_search_grp(cls):
         """Return keywords to search only from groups."""
 
         cls.logger.info('parsed argument --sgrp with value %s', cls.args.sgrp)
 
         return cls.args.sgrp
+
+    @classmethod
+    def get_search_tag(cls):
+        """Return keywords to search only from tags."""
+
+        cls.logger.info('parsed argument --stag with value %s', cls.args.stag)
+
+        return cls.args.stag
 
     @classmethod
     def get_editor(cls):

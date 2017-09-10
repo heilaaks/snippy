@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Storage should not return database format but snippet dictionary.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add basic snippet set in common library to avoid writing them to multiple test cases.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
@@ -8,6 +9,7 @@
    - [ ] Add digest check when importing.
    - [ ] Fix the pip pagkaging. The snip.py should be under namespace and sql file locate might not be good.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
+   - [ ] Fix Apachle license text in documentation to be without any formatting.
 
 ## DONE
    - [x] Changed version definition. There is now version.py that is used to read the version.

@@ -24,8 +24,7 @@ class Snippet(object):
         if result == Const.DB_DUPLICATE:
             rows = self.storage.search(None, None, snippet['content'])
             if len(rows) == 1:
-                Config.set_exit_cause('content already exist with digest %.16s' % rows[0][Const.SNIPPET_DIGEST])
-                self.logger.info('use update operation for duplicated content %.16s', rows[0][Const.SNIPPET_DIGEST])
+                Config.set_cause('content already exist with digest %.16s' % rows[0][Const.SNIPPET_DIGEST])
             else:
                 self.logger.error('unexpected number of rows received while searching content')
 
@@ -59,8 +58,7 @@ class Snippet(object):
                 snippet = Config.get_snippet(None, use_editor=True)
             self.storage.update(digest, snippet)
         elif not rows:
-            Config.set_exit_cause('cannot find content to be updated with %s' % search_string)
-            self.logger.info('cannot find requested snippet with digest %.16s or content "%s"', digest, content)
+            Config.set_cause('cannot find content to be updated with %s' % search_string)
         else:
             self.logger.error('cannot update multiple snippets with same digest  %.16s or content "%s"', digest, content)
 

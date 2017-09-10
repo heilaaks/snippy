@@ -5,6 +5,7 @@
 import re
 import sys
 import os.path
+import inspect
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Arguments
@@ -248,12 +249,14 @@ class Config(object): # pylint: disable=too-many-public-methods
         return cls.config['storage']['in_memory']
 
     @classmethod
-    def set_exit_cause(cls, code):
-        """Set exit cause for the tool."""
+    def set_cause(cls, cause):
+        """Set failure cause."""
+
+        cls.logger.info('%s from module %s', cause, cls._caller())
 
         # Only allow one update to get the original cause.
         if cls.config['exit_code'] == 'OK':
-            cls.config['exit_code'] = 'NOK: ' + code
+            cls.config['exit_code'] = 'NOK: ' + cause
 
     @classmethod
     def get_exit_cause(cls):
@@ -464,3 +467,10 @@ class Config(object): # pylint: disable=too-many-public-methods
             kw_list = kw_list + re.findall(r"[\w\-\.]+", tag)
 
         return sorted(kw_list)
+
+    @staticmethod
+    def _caller():
+        caller = inspect.stack()[2]
+        module = inspect.getmodule(caller[0])
+
+        return module.__name__

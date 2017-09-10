@@ -2,10 +2,11 @@ from setuptools import setup, find_packages
 
 tests_require = ('pytest', 'pytest-cov', 'codecov', 'mock')
 docs_require = ('sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme')
+exec(open('snippy/version.py').read())
 
 setup(
     name='snippy',
-    version='0.1.0',
+    version=__version__,
     author='Heikki J. Laaksonen',
     author_email='laaksonen.heikki.j@gmail.com',
     url='https://github.com/heilaaks/snippy',

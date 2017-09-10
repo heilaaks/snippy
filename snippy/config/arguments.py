@@ -6,7 +6,7 @@ import os
 import argparse
 from snippy.config import Constants as Const
 from snippy.logger import Logger
-from pkg_resources import get_distribution
+from snippy.version import __version__
 
 
 class Arguments(object):
@@ -14,7 +14,6 @@ class Arguments(object):
 
     args = {}
     logger = {}
-    version = get_distribution('snippy').version
 
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')
     ARGS_CONTENT = ('  --snippet                     operate snippets (default)',
@@ -53,7 +52,7 @@ class Arguments(object):
                    '    Delete snippet with message digest.',
                    '      $ snippy delete --snippet -d 9deb6049d3f94dbd',
                    '',
-                   'Snippy version ' + get_distribution('snippy').version + ' - license MIT',
+                   'Snippy version ' + __version__ + ' - license MIT',
                    'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                    'Homepage https://github.com/heilaaks/snippy',
                    '')
@@ -103,7 +102,7 @@ class Arguments(object):
         # support options
         support = parser.add_argument_group(title='support options')
         support.add_argument('-h', '--help', action='help', help=argparse.SUPPRESS)
-        support.add_argument('-v', '--version', action='version', version=Arguments.version, help=argparse.SUPPRESS)
+        support.add_argument('-v', '--version', action='version', version=__version__, help=argparse.SUPPRESS)
         support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)

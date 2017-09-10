@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Don't rely on installed package for version. This breaks if code is run directly.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add basic snippet set in common library to avoid writing them to multiple test cases.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
@@ -7,10 +6,11 @@
    - [ ] Update documents.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add digest check when importing.
-   - [ ] Fix the paggaging. The snip.py should be under namespace and sql file locate might not be good.
+   - [ ] Fix the pip pagkaging. The snip.py should be under namespace and sql file locate might not be good.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
 
 ## DONE
+   - [x] Changed version definition. There is now version.py that is used to read the version.
    - [x] Added support to limit lenght of log strings with -vv option. The --debug option prints full lines.
    - [x] Added search key that allows printing all snippets.
    - [x] Added support for --stag and --sgrp options to search from tags and group columns.

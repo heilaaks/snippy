@@ -2,13 +2,13 @@
    - [ ] Add docker container for the project.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents.
-   - [ ] Add support for cutting log string with lower logging levels. Long lines are nasty and meant for debugging.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add digest check when importing.
    - [ ] Fix the paggaging. The snip.py should be under namespace and sql file locate might not be good.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
 
 ## DONE
+   - [x] Added support to limit lenght of log strings with -vv option. The --debug option prints full lines.
    - [x] Added search key that allows printing all snippets.
    - [x] Added support for --stag and --sgrp options to search from tags and group columns.
    - [x] Fixed the problem that the digest changed even though no changes were made in editor for the content.

@@ -116,6 +116,11 @@ python snip.py update -d 6b8705255016268c
 python snip.py create
 
 =====================================================
+## Logging
+https://www.relaxdiego.com/2014/07/logging-in-python.html
+=====================================================
+
+=====================================================
 ###### Command line desing
 https://softwareengineering.stackexchange.com/questions/307467/what-are-good-habits-for-designing-command-line-arguments
 subparsers https://stackoverflow.com/questions/23304740/optional-python-arguments-without-dashes-but-with-additional-parameters

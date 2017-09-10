@@ -1,6 +1,9 @@
 ## TODO
-   - [ ] Add docker container for the project.
+   - [ ] Don't rely on installed package for version. This breaks if code is run directly.
+   - [ ] How to document tests and create test document? Grepping commands and descriptions?
+   - [ ] Add basic snippet set in common library to avoid writing them to multiple test cases.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
+   - [ ] Add docker container for the project.
    - [ ] Update documents.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add digest check when importing.

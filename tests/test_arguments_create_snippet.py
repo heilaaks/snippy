@@ -11,7 +11,7 @@ class TestArgumentsCreateSnippet(object):
     """Testing command line arguments for creating snippets."""
 
     def test_no_arguments(self):
-        """Test that default values are set when no arguments are used."""
+        """Test default values when only mandatory arguments are used."""
 
         sys.argv = ['snippy', 'create']
         obj = Arguments()
@@ -23,8 +23,8 @@ class TestArgumentsCreateSnippet(object):
         assert obj.get_content_links() == ''
         assert obj.get_operation_digest() == ''
         assert obj.get_search_all() == []
-        assert obj.get_search_tag() == []
         assert obj.get_search_grp() == []
+        assert obj.get_search_tag() == []
         assert not obj.get_editor()
         assert obj.get_operation_file() == ''
 

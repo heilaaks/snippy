@@ -52,7 +52,7 @@ class Arguments(object):
                    '    Delete snippet with message digest.',
                    '      $ snippy delete --snippet -d 9deb6049d3f94dbd',
                    '',
-                   'Snippy version ' + __version__ + ' - license MIT',
+                   'Snippy version ' + __version__ + ' - license Apache 2.0',
                    'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                    'Homepage https://github.com/heilaaks/snippy',
                    '')

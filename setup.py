@@ -11,13 +11,13 @@ setup(
     author_email='laaksonen.heikki.j@gmail.com',
     url='https://github.com/heilaaks/snippy',
     description='Command line tool to manage command examples and troubleshooting solutions.',
-    license='MIT',
+    license='Apache 2.0',
     classifiers=[
-        'Development Status :: 1 - Planning',
+        'Development Status :: 2 - Pre-Alpha',
         'Environment :: Console'
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Documentation',
-        'License :: OSI Approved :: MIT License',
+        'License :: OSI Approved :: Apache Software License',
         'Programming Language :: Python :: 3.6',
         'Natural Language :: English',
         'Topic :: Utilities'

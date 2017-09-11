@@ -50,7 +50,7 @@ class Arguments(object):
                    '      $ snippy export --snippet -f snippets.yaml',
                    '',
                    '    Delete snippet with message digest.',
-                   '      $ snippy delete --snippet -d 9deb6049d3f94dbd',
+                   '      $ snippy delete --snippet -d b26daeda142cf1ed',
                    '',
                    'Snippy version ' + __version__ + ' - license Apache 2.0',
                    'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',

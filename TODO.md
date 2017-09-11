@@ -11,6 +11,7 @@
    - [ ] Fix Apachle license text in documentation to be without any formatting.
    - [ ] Fix importing the same data again. There could be a notice if the content already exist.
    - [ ] If the delete DB case fails, it leaves data in database and the select cases fail? Something not right.
+   - [ ] Fix adding empty content. Now if user does not give value to content, it is created instorage.
 
 ## DONE
    - [x] Changed snippet management. Now Storage() takes care of the snippet conversion between formats.

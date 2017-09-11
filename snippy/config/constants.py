@@ -27,6 +27,9 @@ class Constants(object):
     SNIPPET_METADATA = 6
     SNIPPET_ID = 7
 
+    # Default values for snippets
+    DEFAULT_GROUP = 'default'
+
     # Export formats
     FILE_TYPE_NONE = 'none'
     FILE_TYPE_YAML = 'yaml'

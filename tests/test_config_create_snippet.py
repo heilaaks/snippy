@@ -4,6 +4,7 @@
 
 import sys
 import unittest
+from snippy.config import Constants as Const
 from snippy.config import Config
 from tests.testlib.arguments_helper import ArgumentsHelper
 
@@ -15,7 +16,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         """Test that empty argument list is set to configuration."""
 
         sys.argv = ['snippy', 'create']
-        snippet = ('', '', 'default', [], [], None, None, None)
+        snippet = ('', '', Const.DEFAULT_GROUP, [], [], None, None, None)
         obj = Config()
         assert isinstance(obj.get_content_data(), str)
         assert isinstance(obj.get_content_brief(), str)
@@ -36,7 +37,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert not obj.is_content_solution()
         assert not obj.get_content_data()
         assert not obj.get_content_brief()
-        assert obj.get_content_group() == 'default'
+        assert obj.get_content_group() == Const.DEFAULT_GROUP
         assert not obj.get_content_tags()
         assert not obj.get_content_links()
         assert not obj.get_search_keywords()

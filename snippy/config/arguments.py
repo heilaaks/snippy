@@ -83,7 +83,7 @@ class Arguments(object):
         options.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-c', '--content', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
-        options.add_argument('-g', '--group', type=str, default='default', help=argparse.SUPPRESS)
+        options.add_argument('-g', '--group', type=str, default=Const.DEFAULT_GROUP, help=argparse.SUPPRESS)
         options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-l', '--links', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-d', '--digest', type=str, default='', help=argparse.SUPPRESS)
@@ -211,10 +211,16 @@ class Arguments(object):
         import tempfile
         from subprocess import call
 
+        # If the group is in default value, don't show it to end user
+        # since it may be confusing. If there is no input for the group
+        # the default is set back.
         edited_message = Const.EMPTY
         content = snippet[Const.SNIPPET_CONTENT] + Const.NEWLINE
         brief = snippet[Const.SNIPPET_BRIEF] + Const.NEWLINE
-        group = snippet[Const.SNIPPET_GROUP] + Const.NEWLINE
+        if snippet[Const.SNIPPET_GROUP] == Const.DEFAULT_GROUP:
+            group = Const.EMPTY + Const.NEWLINE
+        else:
+            group = snippet[Const.SNIPPET_GROUP] + Const.NEWLINE
         tags = Const.DELIMITER_TAGS.join(snippet[Const.SNIPPET_TAGS]) + Const.NEWLINE
         links = Const.DELIMITER_NEWLINE.join(snippet[Const.SNIPPET_LINKS]) + Const.NEWLINE
         default_editor = os.environ.get('EDITOR', 'vi')

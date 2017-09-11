@@ -385,6 +385,9 @@ class Config(object): # pylint: disable=too-many-public-methods
             cls.logger.debug('configured value from editor for group as "%s"', cls.config['content']['group'])
             cls.logger.debug('configured value from editor for tags as %s', cls.config['content']['tags'])
             cls.logger.debug('configured value from editor for links as %s', cls.config['content']['links'])
+            
+            if not cls.config['content']['group']:
+                cls.config['content']['group'] = Const.DEFAULT_GROUP
 
         snippet = (cls.get_content_data(),
                    cls.get_content_brief(),

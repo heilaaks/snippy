@@ -167,6 +167,10 @@ python snip.py create -e
 14. Create new content without mandatory parameter
 python snip.py create
 
+15. Create new from editor. Must not show the 'default' value for the group. If user does not set group, it must be insert with 'default' value.
+
+16. Create new from editor. Only only --group parameter to make sure the edir show this value and not default or empty.
+
 ####################
 ## Updating snippets
 ####################

@@ -9,18 +9,18 @@ from snippy.logger import Logger
 class Sqlite3DbHelper(object): # pylint: disable=too-few-public-methods
     """Helper methods for Sqlite3 database testing."""
 
-    SNIPPET1 = {'content': 'docker rm $(docker ps -a -q)',
-                'brief': 'Remove all docker containers',
-                'group': 'docker',
-                'tags': ['container', 'cleanup', 'docker'],
-                'links': ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'],
-                'digest': 'da217a911ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'}
-    SNIPPET2 = {'content': 'docker rmi $(docker images -f dangling=true -q)',
-                'brief': 'Remove all dangling image layers',
-                'group': 'docker',
-                'tags': ['container', 'cleanup', 'docker'],
-                'links': ['https://www.faked.com/tutorials/how-to-remove-docker-images-containers-and-volumes'],
-                'digest': 'aa106d811ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'}
+    SNIPPET1 = ('docker rm $(docker ps -a -q)',
+                'Remove all docker containers',
+                'docker',
+                ['container', 'cleanup', 'docker'],
+                ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'])
+    DIGEST1 = 'da217a911ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'
+    SNIPPET2 = ('docker rmi $(docker images -f dangling=true -q)',
+                'Remove all dangling image layers',
+                'docker',
+                ['container', 'cleanup', 'docker'],
+                ['https://www.faked.com/tutorials/how-to-remove-docker-images-containers-and-volumes'])
+    DIGEST2 = 'aa106d811ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c'
 
     def __init__(self):
         self.logger = Logger(__name__).get()

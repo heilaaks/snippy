@@ -290,6 +290,8 @@ python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with 
 python snip.py export --file ./snippets.json
 python snip.py import --file ./snippets.json
 
+3. Import same snippet yaml file again
+
 ########################
 ## Supplementary options
 ########################

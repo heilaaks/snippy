@@ -70,8 +70,9 @@ class Sqlite3Db(object):
     def bulk_insert_snippets(self, snippets):
         """Insert multiple snippets into database."""
 
-        digest = 'fixme'
         for snippet in snippets:
+            digest = snippet[Const.SNIPPET_DIGEST]
+            snippet = snippet[Const.SNIPPET_CONTENT:Const.SNIPPET_DIGEST]
             self.insert_snippet(snippet, digest)
 
     def select_snippets(self, keywords=None, digest=None, content=None):

@@ -80,6 +80,7 @@ class Snippet(object):
 
         self.logger.debug('importing snippets %s', Config.get_operation_file())
         snippets = self.load_dictionary(Config.get_operation_file())
+        snippets = self.storage.convert_from_dictionary(snippets['snippets'])
         self.storage.import_snippets(snippets)
 
     def format_to_text(self, snippets, colors=False):

@@ -55,10 +55,7 @@ class Storage(object):
     def import_snippets(self, snippets):
         """Import all given snippets."""
 
-        for snippet in snippets['snippets']:
-            snippet['digest'] = Storage._calculate_digest(snippet)
-
-        return self.database.bulk_insert_snippets(snippets['snippets'])
+        return self.database.bulk_insert_snippets(snippets)
 
     def delete(self, digest):
         """Delete snippet."""
@@ -72,13 +69,23 @@ class Storage(object):
 
         self.database.disconnect()
 
-    def convert_to_dictionary(self, snippets):
+    @staticmethod
+    def convert_to_dictionary(snippets):
         """Convert snippets to dictionary format."""
 
         snippet_list = []
-        self.logger.debug('creating dictionary from snippets')
         for snippet in snippets:
             snippet_list.append(Storage._get_dictionary(snippet))
+
+        return snippet_list
+
+    @staticmethod
+    def convert_from_dictionary(snippets):
+        """Convert snippets from dictionary format."""
+
+        snippet_list = []
+        for snippet in snippets:
+            snippet_list.append(Storage._get_tuple_from_dictionary(snippet))
 
         return snippet_list
 
@@ -88,26 +95,17 @@ class Storage(object):
         self.database.debug()
 
     @staticmethod
-    def _calculate_digest(snippet):
-        """Calculate digest for the data."""
-
-        data_string = Storage._get_string(snippet)
-        digest = hashlib.sha256(data_string.encode('UTF-8')).hexdigest()
-
-        return digest
-
-    @staticmethod
     def _get_tuple_list(rows):
         """Convert snippets from database to list of tuples."""
 
         snippets = []
         for row in rows:
-            snippets.append(Storage._get_tuple(row))
+            snippets.append(Storage._get_tuple_from_db_row(row))
 
         return snippets
 
     @staticmethod
-    def _get_tuple(row):
+    def _get_tuple_from_db_row(row):
         """Convert single row from database to snippet in tuple."""
 
         snippet = (row[Const.SNIPPET_CONTENT],
@@ -122,17 +120,40 @@ class Storage(object):
         return snippet
 
     @staticmethod
+    def _get_tuple_from_dictionary(dictionary):
+        """Convert single dictionary entry into tuple."""
+
+        snippet = [dictionary['content'],
+                   dictionary['brief'],
+                   dictionary['group'],
+                   dictionary['tags'],
+                   dictionary['links']]
+        digest = Storage._calculate_digest(snippet)
+        snippet.append(digest)
+
+        return tuple(snippet)
+
+    @staticmethod
     def _get_dictionary(snippet):
         """Convert snippet to dictionary."""
 
         dictionary = {'content': snippet[Const.SNIPPET_CONTENT],
                       'brief': snippet[Const.SNIPPET_BRIEF],
-                      'groups': snippet[Const.SNIPPET_GROUP],
+                      'group': snippet[Const.SNIPPET_GROUP],
                       'tags': snippet[Const.SNIPPET_TAGS],
                       'links': snippet[Const.SNIPPET_LINKS],
                       'digest': snippet[Const.SNIPPET_DIGEST]}
 
         return dictionary
+
+    @staticmethod
+    def _calculate_digest(snippet):
+        """Calculate digest for the data."""
+
+        data_string = Storage._get_string(snippet)
+        digest = hashlib.sha256(data_string.encode('UTF-8')).hexdigest()
+
+        return digest
 
     @staticmethod
     def _get_string(snippet):

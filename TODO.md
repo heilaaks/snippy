@@ -1,6 +1,4 @@
 ## TODO
-   - [ ] Fix import after latest refactoring.
-   - [ ] Storage should not return database format but snippet dictionary.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add basic snippet set in common library to avoid writing them to multiple test cases.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
@@ -11,8 +9,11 @@
    - [ ] Fix the pip pagkaging. The snip.py should be under namespace and sql file locate might not be good.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix Apachle license text in documentation to be without any formatting.
+   - [ ] Fix importing the same data again. There could be a notice if the content already exist.
+   - [ ] If the delete DB case fails, it leaves data in database and the select cases fail? Something not right.
 
 ## DONE
+   - [x] Changed snippet management. Now Storage() takes care of the snippet conversion between formats.
    - [x] Changed version definition. There is now version.py that is used to read the version.
    - [x] Added support to limit lenght of log strings with -vv option. The --debug option prints full lines.
    - [x] Added search key that allows printing all snippets.

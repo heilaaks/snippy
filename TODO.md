@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Fix import after latest refactoring.
    - [ ] Storage should not return database format but snippet dictionary.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add basic snippet set in common library to avoid writing them to multiple test cases.

@@ -22,18 +22,18 @@ class Snippet(object):
         snippet = Config.get_snippet()
         result = self.storage.create(snippet)
         if result == Const.DB_DUPLICATE:
-            rows = self.storage.search(None, None, snippet['content'])
-            if len(rows) == 1:
-                Config.set_cause('content already exist with digest %.16s' % rows[0][Const.SNIPPET_DIGEST])
+            snippets = self.storage.search(None, None, snippet[Const.SNIPPET_CONTENT])
+            if len(snippets) == 1:
+                Config.set_cause('content already exist with digest %.16s' % snippets[0][Const.SNIPPET_DIGEST])
             else:
-                self.logger.error('unexpected number of rows received while searching content')
+                self.logger.error('unexpected number of snippets received while searching content')
 
     def search(self):
         """Search snippets based on keywords."""
 
         self.logger.info('searching snippets')
         snippets = self.storage.search(Config.get_search_keywords())
-        snippets = self.format_text(snippets, colors=True)
+        snippets = self.format_to_text(snippets, colors=True)
         self.print_terminal(snippets)
 
     def update(self):
@@ -43,21 +43,21 @@ class Snippet(object):
         content = Config.get_content_data()
         if digest:
             self.logger.debug('updating snippet with digest %.16s', digest)
-            rows = self.storage.search(None, digest)
+            snippets = self.storage.search(None, digest)
             search_string = 'digest %.16s' % digest
         elif content:
             self.logger.debug('updating snippet with content "%s"', content)
-            rows = self.storage.search(None, None, content)
+            snippets = self.storage.search(None, None, content)
             search_string = 'content %.20s' % content
 
-        if len(rows) == 1:
+        if len(snippets) == 1:
             if digest:
-                snippet = Config.get_snippet(self.convert_db_row(rows[0]))
+                snippet = Config.get_snippet(snippets[0])
             else:
-                digest = rows[0][Const.SNIPPET_DIGEST]
+                digest = snippets[0][Const.SNIPPET_DIGEST]
                 snippet = Config.get_snippet(None, use_editor=True)
             self.storage.update(digest, snippet)
-        elif not rows:
+        elif not snippets:
             Config.set_cause('cannot find content to be updated with %s' % search_string)
         else:
             self.logger.error('cannot update multiple snippets with same digest  %.16s or content "%s"', digest, content)
@@ -82,49 +82,26 @@ class Snippet(object):
         snippets = self.load_dictionary(Config.get_operation_file())
         self.storage.import_snippets(snippets)
 
-    def format_text(self, snippets, colors=False):
+    def format_to_text(self, snippets, colors=False):
         """Format snippets for terminal with color codes or for a raw text output."""
 
         text = ''
         snippet_string = ''
         link_string = ''
         self.logger.debug('format snippets for text based output')
-        for idx, row in enumerate(snippets, start=1):
-            text = text + Const.format_header(colors) % (idx, row[Const.SNIPPET_BRIEF], row[Const.SNIPPET_GROUP], \
-                                                              row[Const.SNIPPET_DIGEST])
-            text = text + ''.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
-                      for snippet_line in row[Const.SNIPPET_DATA].split(Const.NEWLINE)])
+        for idx, snippet in enumerate(snippets, start=1):
+            text = text + Const.format_header(colors) % (idx, snippet[Const.SNIPPET_BRIEF],
+                                                         snippet[Const.SNIPPET_GROUP], \
+                                                         snippet[Const.SNIPPET_DIGEST])
+            text = text + Const.EMPTY.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
+                                            for snippet_line in snippet[Const.SNIPPET_CONTENT].split(Const.NEWLINE)])
             text = text + Const.NEWLINE
-            text = text + ''.join([Const.format_links(colors) % (link_string, link) \
-                      for link in row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS)])
-            text = Const.format_tags(colors) % (text, row[Const.SNIPPET_TAGS])
+            text = text + Const.EMPTY.join([Const.format_links(colors) % (link_string, link) \
+                      for link in snippet[Const.SNIPPET_LINKS]])
+            text = Const.format_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet[Const.SNIPPET_TAGS]))
             text = text + Const.NEWLINE
 
         return text
-
-    @staticmethod
-    def convert_db_row(row):
-        """Convert row from database to snippet dictionary."""
-        snippet = {'content': row[Const.SNIPPET_DATA],
-                   'brief': row[Const.SNIPPET_BRIEF],
-                   'group': row[Const.SNIPPET_GROUP],
-                   'tags': row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS),
-                   'links': row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS),
-                   'digest': row[Const.SNIPPET_DIGEST]}
-
-        return snippet
-
-    def create_dictionary(self, snippets):
-        """Create dictionary from snippets in the database for data serialization."""
-
-        snippet_dict = {}
-        snippet_list = []
-        self.logger.debug('creating dictionary from snippets')
-        for row in snippets:
-            snippet_list.append(self.convert_db_row(row))
-        snippet_dict = {'snippets': snippet_list}
-
-        return snippet_dict
 
     def load_dictionary(self, snippets):
         """Create dictionary from snippets in a file for data serialization."""
@@ -165,15 +142,16 @@ class Snippet(object):
                 if Config.is_file_type_yaml():
                     import yaml
 
-                    yaml.dump(self.create_dictionary(snippets), outfile)
+                    snippet_dict = {'snippets': self.storage.convert_to_dictionary(snippets)}
+                    yaml.dump(snippet_dict, outfile)
                 elif Config.is_file_type_json():
                     import json
 
-                    json.dump(self.create_dictionary(snippets), outfile)
+                    snippet_dict = {'snippets': self.storage.convert_to_dictionary(snippets)}
+                    json.dump(snippet_dict, outfile)
                     outfile.write(Const.NEWLINE)
                 elif Config.is_file_type_text():
-                    self.format_text(snippets)
-                    outfile.write(self.format_text(snippets))
+                    outfile.write(self.format_to_text(snippets))
                 else:
                     self.logger.info('unknown export format')
             except (yaml.YAMLError, TypeError) as exception:

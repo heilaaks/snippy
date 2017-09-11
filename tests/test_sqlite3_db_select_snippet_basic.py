@@ -17,7 +17,7 @@ class TestSqlite3DbSelectSnippetBasic(object): # pylint: disable=too-few-public-
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
-        snippet = {'content': 'docker rm $(docker ps -a -q)',
+        snippet = 'content': 'docker rm $(docker ps -a -q)',
                    'brief': 'Remove all docker containers',
                    'group': 'moby',
                    'tags': ['container', 'cleanup', 'docker'],

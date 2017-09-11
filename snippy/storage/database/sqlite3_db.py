@@ -39,24 +39,27 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_snippet(self, snippet, metadata=None):
+    def insert_snippet(self, snippet, digest, metadata=None):
         """Insert snippet into database."""
 
         result = Const.DB_FAILURE
         if self.conn:
-            tags_string = Const.DELIMITER_TAGS.join(map(str, snippet['tags']))
-            links_string = Const.DELIMITER_LINKS.join(map(str, snippet['links']))
-            query = ('INSERT OR ROLLBACK INTO snippets(snippet, brief, groups, tags, links, \
-                      metadata, digest) VALUES(?,?,?,?,?,?,?)')
-            self.logger.debug('insert snippet "%s" with digest %.16s', snippet['content'], snippet['digest'])
+            query = ('INSERT OR ROLLBACK INTO snippets(content, brief, groups, tags, links, digest, ' +
+                     'metadata) VALUES(?,?,?,?,?,?,?)')
+            self.logger.debug('insert snippet "%s" with digest %.16s', snippet[Const.SNIPPET_CONTENT], digest)
             try:
-                self.cursor.execute(query, (snippet['content'], snippet['brief'], snippet['group'], tags_string,
-                                            links_string, metadata, snippet['digest']))
+                self.cursor.execute(query, (snippet[Const.SNIPPET_CONTENT],
+                                            snippet[Const.SNIPPET_BRIEF],
+                                            snippet[Const.SNIPPET_GROUP],
+                                            Const.DELIMITER_TAGS.join(map(str, snippet[Const.SNIPPET_TAGS])),
+                                            Const.DELIMITER_LINKS.join(map(str, snippet[Const.SNIPPET_LINKS])),
+                                            digest,
+                                            metadata))
                 self.conn.commit()
                 result = Const.DB_INSERT_OK
             except sqlite3.IntegrityError as exception:
                 result = Const.DB_DUPLICATE
-                self.logger.info('unique constraint violation with content "%s"', snippet['content'])
+                self.logger.info('unique constraint violation with content "%s"', snippet[Const.SNIPPET_CONTENT])
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
         else:
@@ -67,8 +70,9 @@ class Sqlite3Db(object):
     def bulk_insert_snippets(self, snippets):
         """Insert multiple snippets into database."""
 
+        digest = 'fixme'
         for snippet in snippets:
-            self.insert_snippet(snippet)
+            self.insert_snippet(snippet, digest)
 
     def select_snippets(self, keywords=None, digest=None, content=None):
         """Select snippets."""
@@ -82,15 +86,15 @@ class Sqlite3Db(object):
             # can be counted by multiplying the query keywords (e.g 3)and the searched colums.
             #
             # Example queries:
-            #     1) SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets WHERE
-            #        (snippet REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?)
+            #     1) SELECT content, brief, groups, tags, links, digest, metadata, id FROM snippets WHERE
+            #        (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?)
             #        ORDER BY id ASC
-            #     2) SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets WHERE (snippet REGEXP ?
-            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
-            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (snippet REGEXP ?
+            #     2) SELECT content, brief, groups, tags, links,digest, metadata FROM snippets WHERE (content REGEXP ?
+            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (content REGEXP ?
+            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (content REGEXP ?
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) ORDER BY id ASC
             if keywords and Config.is_search_all():
-                columns = ['snippet', 'brief', 'groups', 'tags', 'links']
+                columns = ['content', 'brief', 'groups', 'tags', 'links']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
             elif keywords and Config.is_search_grp():
                 columns = ['groups']
@@ -99,12 +103,12 @@ class Sqlite3Db(object):
                 columns = ['tags']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
             elif digest:
-                query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets ' +
+                query = ('SELECT content, brief, groups, tags, links, digest, metadata, id FROM snippets ' +
                          'WHERE digest LIKE ?')
                 qargs = [digest+'%']
             elif content:
-                query = ('SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets ' +
-                         'WHERE snippet=?')
+                query = ('SELECT content, brief, groups, tags, links, digest, metadata, id FROM snippets ' +
+                         'WHERE content=?')
                 qargs = [content]
             else:
                 self.logger.error('exiting because of internal error where search query was not defined')
@@ -140,20 +144,23 @@ class Sqlite3Db(object):
 
         return []
 
-    def update_snippet(self, digest, snippet, metadata=None):
+    def update_snippet(self, snippet, digest_updated, digest_new, metadata=None):
         """Update existing snippet."""
 
         if self.conn:
-            tags_string = Const.DELIMITER_TAGS.join(map(str, snippet['tags']))
-            links_string = Const.DELIMITER_LINKS.join(map(str, snippet['links']))
-            query = ('UPDATE snippets SET snippet=?, brief=?, groups=?, tags=?, links=?, metadata=?, digest=? \
+            query = ('UPDATE snippets SET content=?, brief=?, groups=?, tags=?, links=?, digest=?, metadata=? \
                       WHERE digest LIKE ?')
-            qargs = [snippet['content'], snippet['brief'], snippet['group'], tags_string,
-                     links_string, metadata, snippet['digest'], digest+'%']
-            self.logger.debug('updating snippet %.16s with new digest %.16s and brief "%s"', digest, snippet['digest'],
-                              snippet['brief'])
+            self.logger.debug('updating snippet %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
+                              snippet[Const.SNIPPET_BRIEF])
             try:
-                self.cursor.execute(query, qargs)
+                self.cursor.execute(query, (snippet[Const.SNIPPET_CONTENT],
+                                            snippet[Const.SNIPPET_BRIEF],
+                                            snippet[Const.SNIPPET_GROUP],
+                                            Const.DELIMITER_TAGS.join(map(str, snippet[Const.SNIPPET_TAGS])),
+                                            Const.DELIMITER_LINKS.join(map(str, snippet[Const.SNIPPET_LINKS])),
+                                            digest_new,
+                                            metadata,
+                                            digest_updated))
                 self.conn.commit()
             except sqlite3.Error as exception:
                 self.logger.exception('updating sqlite3 database failed with exception "%s"', exception)
@@ -233,10 +240,10 @@ class Sqlite3Db(object):
         """Generate SQL query parameters for specific fields and keywords."""
 
         query_args = []
-        query = 'SELECT id, snippet, brief, groups, tags, links, metadata, digest FROM snippets WHERE '
+        query = 'SELECT content, brief, groups, tags, links, digest, metadata, id FROM snippets WHERE '
 
         # Generate regexp search like:
-        #   1. '(snippet REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) '
+        #   1. '(content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) '
         #   2. '(tags REGEXP ?) '
         search = '('
         for column in columns:

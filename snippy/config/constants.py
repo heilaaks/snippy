@@ -17,15 +17,15 @@ class Constants(object):
     DELIMITER_SPACE = SPACE
     DELIMITER_NEWLINE = NEWLINE
 
-    # Column numbers in snippets table.
-    SNIPPET_ID = 0
-    SNIPPET_DATA = 1
-    SNIPPET_BRIEF = 2
-    SNIPPET_GROUP = 3
-    SNIPPET_TAGS = 4
-    SNIPPET_LINKS = 5
+    # Column numbers for snippets.
+    SNIPPET_CONTENT = 0
+    SNIPPET_BRIEF = 1
+    SNIPPET_GROUP = 2
+    SNIPPET_TAGS = 3
+    SNIPPET_LINKS = 4
+    SNIPPET_DIGEST = 5
     SNIPPET_METADATA = 6
-    SNIPPET_DIGEST = 7
+    SNIPPET_ID = 7
 
     # Export formats
     FILE_TYPE_NONE = 'none'

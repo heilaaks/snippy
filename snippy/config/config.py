@@ -71,9 +71,14 @@ class Config(object): # pylint: disable=too-many-public-methods
         # Set the defaults from commmand line to editing window. If the
         # snippet is not provided, it indicates update with digest only.
         if not snippet:
-            snippet = {'content': cls.get_content_data(), 'brief': cls.get_content_brief(),
-                       'group': cls.get_content_group(), 'tags': cls.get_content_tags(),
-                       'links': cls.get_content_links()}
+            snippet = (cls.get_content_data(),
+                       cls.get_content_brief(),
+                       cls.get_content_group(),
+                       cls.get_content_tags(),
+                       cls.get_content_links(),
+                       None,
+                       None,
+                       None)
 
         if cls.is_editor() or use_editor:
             snippet = cls._set_editor_content(snippet)
@@ -364,12 +369,8 @@ class Config(object): # pylint: disable=too-many-public-methods
         return editor
 
     @classmethod
-    def _set_editor_content(cls, snippet=None):
+    def _set_editor_content(cls, snippet):
         """Read and set the user provided values from editor."""
-
-        if not snippet:
-            snippet = {'content': Const.EMPTY, 'brief': Const.EMPTY, 'group': Const.EMPTY, 'tags': Const.EMPTY,
-                       'links': Const.EMPTY}
 
         edited_input = cls.args.get_editor_content(snippet)
         if edited_input:
@@ -385,9 +386,14 @@ class Config(object): # pylint: disable=too-many-public-methods
             cls.logger.debug('configured value from editor for tags as %s', cls.config['content']['tags'])
             cls.logger.debug('configured value from editor for links as %s', cls.config['content']['links'])
 
-        snippet = {'content': cls.get_content_data(), 'brief': cls.get_content_brief(),
-                   'group': cls.get_content_group(), 'tags': cls.get_content_tags(),
-                   'links': cls.get_content_links()}
+        snippet = (cls.get_content_data(),
+                   cls.get_content_brief(),
+                   cls.get_content_group(),
+                   cls.get_content_tags(),
+                   cls.get_content_links(),
+                   None,
+                   None,
+                   None)
 
         return snippet
 

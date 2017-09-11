@@ -15,7 +15,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         """Test that empty argument list is set to configuration."""
 
         sys.argv = ['snippy', 'create']
-        snippet = {'content': '', 'brief': '', 'group': 'default', 'tags': [], 'links': []}
+        snippet = ('', '', 'default', [], [], None, None, None)
         obj = Config()
         assert isinstance(obj.get_content_data(), str)
         assert isinstance(obj.get_content_brief(), str)

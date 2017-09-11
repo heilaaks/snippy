@@ -211,12 +211,12 @@ class Arguments(object):
         import tempfile
         from subprocess import call
 
-        edited_message = ''
-        content = snippet['content'] + Const.NEWLINE
-        brief = snippet['brief'] + Const.NEWLINE
-        group = snippet['group'] + Const.NEWLINE
-        tags = Const.DELIMITER_TAGS.join(snippet['tags']) + Const.NEWLINE
-        links = Const.DELIMITER_NEWLINE.join(snippet['links']) + Const.NEWLINE
+        edited_message = Const.EMPTY
+        content = snippet[Const.SNIPPET_CONTENT] + Const.NEWLINE
+        brief = snippet[Const.SNIPPET_BRIEF] + Const.NEWLINE
+        group = snippet[Const.SNIPPET_GROUP] + Const.NEWLINE
+        tags = Const.DELIMITER_TAGS.join(snippet[Const.SNIPPET_TAGS]) + Const.NEWLINE
+        links = Const.DELIMITER_NEWLINE.join(snippet[Const.SNIPPET_LINKS]) + Const.NEWLINE
         default_editor = os.environ.get('EDITOR', 'vi')
         editor_template = ('# Commented lines will be ignored.\n'
                            '#\n' +

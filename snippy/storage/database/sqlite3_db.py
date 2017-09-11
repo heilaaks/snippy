@@ -42,10 +42,10 @@ class Sqlite3Db(object):
     def insert_snippet(self, snippet, digest, metadata=None):
         """Insert snippet into database."""
 
-        result = Const.DB_FAILURE
+        cause = Const.DB_FAILURE
         if self.conn:
-            query = ('INSERT OR ROLLBACK INTO snippets(content, brief, groups, tags, links, digest, ' +
-                     'metadata) VALUES(?,?,?,?,?,?,?)')
+            query = ('INSERT OR ROLLBACK INTO snippets(content, brief, groups, tags, links, digest, metadata) ' +
+                     'VALUES(?,?,?,?,?,?,?)')
             self.logger.debug('insert snippet "%s" with digest %.16s', snippet[Const.SNIPPET_CONTENT], digest)
             try:
                 self.cursor.execute(query, (snippet[Const.SNIPPET_CONTENT],
@@ -56,16 +56,16 @@ class Sqlite3Db(object):
                                             digest,
                                             metadata))
                 self.conn.commit()
-                result = Const.DB_INSERT_OK
+                cause = Const.DB_INSERT_OK
             except sqlite3.IntegrityError as exception:
-                result = Const.DB_DUPLICATE
+                cause = Const.DB_DUPLICATE
                 self.logger.info('unique constraint violation with content "%s"', snippet[Const.SNIPPET_CONTENT])
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
         else:
             self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
 
-        return result
+        return cause
 
     def bulk_insert_snippets(self, snippets):
         """Insert multiple snippets into database."""
@@ -148,8 +148,8 @@ class Sqlite3Db(object):
         """Update existing snippet."""
 
         if self.conn:
-            query = ('UPDATE snippets SET content=?, brief=?, groups=?, tags=?, links=?, digest=?, metadata=? \
-                      WHERE digest LIKE ?')
+            query = ('UPDATE snippets SET content=?, brief=?, groups=?, tags=?, links=?, digest=?, metadata=? ' +
+                     'WHERE digest LIKE ?')
             self.logger.debug('updating snippet %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
                               snippet[Const.SNIPPET_BRIEF])
             try:
@@ -170,6 +170,7 @@ class Sqlite3Db(object):
     def delete_snippet(self, digest):
         """Delete one snippet based on given digest."""
 
+        cause = Const.DB_FAILURE
         if self.conn:
             query = ('DELETE FROM snippets WHERE digest LIKE ?')
             self.logger.debug('delete snippet with index %s', digest)
@@ -177,14 +178,18 @@ class Sqlite3Db(object):
                 self.cursor.execute(query, (digest+'%',))
                 if self.cursor.rowcount == 1:
                     self.conn.commit()
+                    cause = Const.DB_DELETE_OK
                 elif self.cursor.rowcount == 0:
-                    self.logger.info('the requested row was not found with digest %s', digest)
+                    Config.set_cause('cannot find content to be deleted with digest %s' % digest)
+                    cause = Const.DB_ENTRY_NOT_FOUND
                 else:
                     self.logger.info('unexpected row count %d while deleting with digest %s', self.cursor.rowcount, digest)
             except sqlite3.Error as exception:
                 self.logger.exception('deleting from sqlite3 database failed with exception "%s"', exception)
         else:
             self.logger.error('sqlite3 database connection did not exist while index was being deleted')
+
+        return cause
 
     def debug(self):
         """Dump the whole database."""

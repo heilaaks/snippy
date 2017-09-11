@@ -20,16 +20,16 @@ class Snippet(object):
 
         self.logger.debug('creating new snippet')
         snippet = Config.get_snippet()
-        result = self.storage.create(snippet)
-        if result == Const.DB_DUPLICATE:
-            snippets = self.storage.search(None, None, snippet[Const.SNIPPET_CONTENT])
+        cause = self.storage.create(snippet)
+        if cause == Const.DB_DUPLICATE:
+            snippets = self.storage.search(content=snippet[Const.SNIPPET_CONTENT])
             if len(snippets) == 1:
                 Config.set_cause('content already exist with digest %.16s' % snippets[0][Const.SNIPPET_DIGEST])
             else:
                 self.logger.error('unexpected number of snippets received while searching content')
 
     def search(self):
-        """Search snippets based on keywords."""
+        """Search snippets."""
 
         self.logger.info('searching snippets')
         snippets = self.storage.search(Config.get_search_keywords())
@@ -37,28 +37,28 @@ class Snippet(object):
         self.print_terminal(snippets)
 
     def update(self):
-        """Update snippet based on message digest or content."""
+        """Update existing snippet."""
 
         digest = Config.get_operation_digest()
         content = Config.get_content_data()
-        if digest:
+        if Config.get_operation_digest():
             self.logger.debug('updating snippet with digest %.16s', digest)
-            snippets = self.storage.search(None, digest)
-            search_string = 'digest %.16s' % digest
+            snippets = self.storage.search(digest=digest)
+            log_string = 'digest %.16s' % digest
         elif content:
             self.logger.debug('updating snippet with content "%s"', content)
-            snippets = self.storage.search(None, None, content)
-            search_string = 'content %.20s' % content
+            snippets = self.storage.search(content=content)
+            log_string = 'content %.20s' % content
 
         if len(snippets) == 1:
             if digest:
                 snippet = Config.get_snippet(snippets[0])
             else:
                 digest = snippets[0][Const.SNIPPET_DIGEST]
-                snippet = Config.get_snippet(None, use_editor=True)
+                snippet = Config.get_snippet(use_editor=True)
             self.storage.update(digest, snippet)
         elif not snippets:
-            Config.set_cause('cannot find content to be updated with %s' % search_string)
+            Config.set_cause('cannot find content to be updated with %s' % log_string)
         else:
             self.logger.error('cannot update multiple snippets with same digest  %.16s or content "%s"', digest, content)
 
@@ -97,16 +97,17 @@ class Snippet(object):
                                             for snippet_line in snippet[Const.SNIPPET_CONTENT].split(Const.NEWLINE)])
             text = text + Const.NEWLINE
             text = text + Const.EMPTY.join([Const.format_links(colors) % (link_string, link) \
-                      for link in snippet[Const.SNIPPET_LINKS]])
+                                            for link in snippet[Const.SNIPPET_LINKS]])
             text = Const.format_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet[Const.SNIPPET_TAGS]))
             text = text + Const.NEWLINE
 
         return text
 
     def load_dictionary(self, snippets):
-        """Create dictionary from snippets in a file for data serialization."""
+        """Create dictionary from snippets in a file."""
 
         snippet_dict = {}
+
         self.logger.debug('loading snippet dictionary from file')
         with open(snippets, 'r') as infile:
             try:

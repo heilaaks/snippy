@@ -26,7 +26,9 @@ class Storage(object):
         """Create snippet."""
 
         digest = Storage._calculate_digest(snippet)
-        return self.database.insert_snippet(snippet, digest)
+        cause = self.database.insert_snippet(snippet, digest)
+
+        return cause
 
     def search(self, keywords=None, digest=None, content=None):
         """Search snippets."""
@@ -40,7 +42,6 @@ class Storage(object):
         """Update snippet."""
 
         digest = Storage._calculate_digest(snippet)
-
         self.database.update_snippet(snippet, digest_updated, digest)
 
     def export_snippets(self):
@@ -62,7 +63,9 @@ class Storage(object):
     def delete(self, digest):
         """Delete snippet."""
 
-        return self.database.delete_snippet(digest)
+        cause = self.database.delete_snippet(digest)
+
+        return cause
 
     def disconnect(self):
         """Disconnect storage."""
@@ -120,23 +123,23 @@ class Storage(object):
 
     @staticmethod
     def _get_dictionary(snippet):
-        """Convert snippet to dictionary format."""
+        """Convert snippet to dictionary."""
 
-        result = {'content': snippet[Const.SNIPPET_CONTENT],
-                  'brief': snippet[Const.SNIPPET_BRIEF],
-                  'groups': snippet[Const.SNIPPET_GROUP],
-                  'tags': snippet[Const.SNIPPET_TAGS],
-                  'links': snippet[Const.SNIPPET_LINKS],
-                  'digest': snippet[Const.SNIPPET_DIGEST]}
+        dictionary = {'content': snippet[Const.SNIPPET_CONTENT],
+                      'brief': snippet[Const.SNIPPET_BRIEF],
+                      'groups': snippet[Const.SNIPPET_GROUP],
+                      'tags': snippet[Const.SNIPPET_TAGS],
+                      'links': snippet[Const.SNIPPET_LINKS],
+                      'digest': snippet[Const.SNIPPET_DIGEST]}
 
-        return result
+        return dictionary
 
     @staticmethod
     def _get_string(snippet):
-        """Convert snippet to single string."""
+        """Convert snippet to one string."""
 
-        result = Const.EMPTY.join(snippet[Const.SNIPPET_CONTENT:Const.SNIPPET_TAGS])
-        result = result + Const.EMPTY.join(sorted(snippet[Const.SNIPPET_TAGS]))
-        result = result + Const.EMPTY.join(sorted(snippet[Const.SNIPPET_LINKS]))
+        snippet_str = Const.EMPTY.join(snippet[Const.SNIPPET_CONTENT:Const.SNIPPET_TAGS])
+        snippet_str = snippet_str + Const.EMPTY.join(sorted(snippet[Const.SNIPPET_TAGS]))
+        snippet_str = snippet_str + Const.EMPTY.join(sorted(snippet[Const.SNIPPET_LINKS]))
 
-        return result
+        return snippet_str

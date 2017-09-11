@@ -41,8 +41,10 @@ class Constants(object):
     # Database
     DB_INSERT_OK = 'insert-ok'
     DB_UPDATE_OK = 'update-ok'
+    DB_DELETE_OK = 'delete-ok'
     DB_DUPLICATE = 'unique-constraint-violation'
     DB_FAILURE = 'internal-failure'
+    DB_ENTRY_NOT_FOUND = 'not-found'
 
     # Editor inputs
     EDITOR_SNIPPET_HEAD = '# Add mandatory snippet below.\n'

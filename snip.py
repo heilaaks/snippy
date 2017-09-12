@@ -45,8 +45,9 @@ class Snippy(object):
 def main(args=None):
     Logger.set_level()
     Profiler.enable()
-    Snippy().run()
-    Snippy().disconnect()
+    snippy = Snippy()
+    snippy.run()
+    snippy.disconnect()
     Profiler.disable()
 
 if __name__ == "__main__":

@@ -50,7 +50,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['storage']['in_memory'] = False # Enabled only for testing.
         cls.config['exit_code'] = 'OK'
 
-        cls.logger.debug('configured value from positional argument as "%s"', cls.config['operation'])
+        cls.logger.debug('configured value from positional argument as "%s"', cls.config['operation']['task'])
         cls.logger.debug('configured value from content type as "%s"', cls.config['content']['type'])
         cls.logger.debug('configured value from --content as "%s"', cls.config['content']['data'])
         cls.logger.debug('configured value from --brief as "%s"', cls.config['content']['brief'])

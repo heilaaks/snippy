@@ -1,5 +1,6 @@
 ## TODO
    - [ ] Add search with content with -c|--content option.
+   - [ ] Add timestamp for new snippets.
    - [ ] Likely it is better to remove absolute path from schema location because the relative path would work.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.

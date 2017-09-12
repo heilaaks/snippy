@@ -32,7 +32,12 @@ class Snippet(object):
         """Search snippets."""
 
         self.logger.info('searching snippets')
-        snippets = self.storage.search(Config.get_search_keywords())
+        keywords = Config.get_search_keywords()
+        content = Config.get_content_data()
+        if keywords:
+            snippets = self.storage.search(keywords=keywords)
+        elif content:
+            snippets = self.storage.search(content=content)
         snippets = self.format_to_text(snippets, colors=True)
         self.print_terminal(snippets)
 

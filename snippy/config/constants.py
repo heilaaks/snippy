@@ -24,9 +24,10 @@ class Constants(object):
     SNIPPET_TAGS = 3
     SNIPPET_LINKS = 4
     SNIPPET_DIGEST = 5
-    SNIPPET_METADATA = 6
-    SNIPPET_ID = 7
-    SNIPPET_TESTING = 8
+    SNIPPET_UTC = 6
+    SNIPPET_METADATA = 7
+    SNIPPET_ID = 8
+    SNIPPET_TESTING = 9
 
     # Default values for snippets
     DEFAULT_GROUP = 'default'

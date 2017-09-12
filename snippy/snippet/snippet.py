@@ -44,28 +44,29 @@ class Snippet(object):
     def update(self):
         """Update existing snippet."""
 
-        digest = Config.get_operation_digest()
-        content = Config.get_content_data()
-        if digest:
-            self.logger.debug('updating snippet with digest %.16s', digest)
-            snippets = self.storage.search(digest=digest)
-            log_string = 'digest %.16s' % digest
-        elif content:
-            self.logger.debug('updating snippet with content "%s"', content)
-            snippets = self.storage.search(content=content)
-            log_string = 'content %.20s' % content
+        operation_digest = Config.get_operation_digest()
+        snippet_data = Config.get_content_data()
+        if operation_digest:
+            self.logger.debug('updating snippet with digest %.16s', operation_digest)
+            snippets = self.storage.search(digest=operation_digest)
+            log_string = 'digest %.16s' % operation_digest
+        elif snippet_data:
+            self.logger.debug('updating snippet with content "%s"', snippet_data)
+            snippets = self.storage.search(content=snippet_data)
+            log_string = 'content %.20s' % snippet_data
 
         if len(snippets) == 1:
-            if digest:
+            if operation_digest:
                 snippet = Config.get_snippet(snippets[0])
-            elif content:
-                digest = snippets[0][Const.SNIPPET_DIGEST]
+                operation_digest = snippets[0][Const.SNIPPET_DIGEST]
+            elif snippet_data:
                 snippet = Config.get_snippet(use_editor=True)
-            self.storage.update(digest, snippet)
+                operation_digest = snippets[0][Const.SNIPPET_DIGEST]
+            self.storage.update(snippet, operation_digest)
         elif not snippets:
             Config.set_cause('cannot find content to be updated with %s' % log_string)
         else:
-            self.logger.error('cannot update multiple snippets with same digest  %.16s or content "%s"', digest, content)
+            self.logger.error('cannot update multiple snippets with same %s', log_string)
 
     def delete(self):
         """Delete snippet."""

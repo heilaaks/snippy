@@ -18,6 +18,7 @@ class SnippetHelper(object):
                  'f4852122e1aa5b28d88181f9852960cc9e991fcc263a2e17f22db2cec98c3d0b',
                  None,
                  None,
+                 None,
                  """--content 'docker rm --volumes $(docker ps --all --quiet)'
                     --brief 'Remove all docker containers with volumes'
                     --group docker
@@ -33,7 +34,7 @@ class SnippetHelper(object):
         return snippets
 
     @staticmethod
-    def get_command_args(snippet, regexp=r'^\'|\'$|\n'):
+    def get_command_args(snippet, regexp=r'^\'|\'$|\n'): # ' <-- For UltraEditor code highlights problem.
         """Get command line arguments for the snippet."""
 
         args = [re.sub(regexp, Const.EMPTY, argument)
@@ -68,15 +69,16 @@ class SnippetHelper(object):
         TAGS = Const.SNIPPET_TAGS
         LINKS = Const.SNIPPET_LINKS
         DIGEST = Const.SNIPPET_DIGEST
-        ID = Const.SNIPPET_ID
+        METADATA = Const.SNIPPET_METADATA
         # pylint: enable=invalid-name
 
         # Test that all fields excluding id and onwards are equal.
         testcase = unittest.TestCase()
-        testcase.assertTupleEqual(snippet[CONTENT:TAGS], reference[CONTENT:TAGS])
+        testcase.assertEqual(snippet[CONTENT:TAGS], reference[CONTENT:TAGS])
         testcase.assertCountEqual(snippet[TAGS], reference[TAGS])
         testcase.assertCountEqual(snippet[LINKS], reference[LINKS])
-        testcase.assertTupleEqual(snippet[DIGEST:ID], reference[DIGEST:ID])
+        testcase.assertEqual(snippet[DIGEST], reference[DIGEST])
+        testcase.assertEqual(snippet[METADATA], reference[METADATA])
 
         # Test that the tags and links are sorted.
         testcase.assertEqual(snippet[TAGS], sorted(reference[TAGS]))

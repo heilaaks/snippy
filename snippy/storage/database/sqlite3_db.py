@@ -87,10 +87,10 @@ class Sqlite3Db(object):
             # can be counted by multiplying the query keywords (e.g 3)and the searched colums.
             #
             # Example queries:
-            #     1) SELECT content, brief, groups, tags, links, digest, metadata, id FROM snippets WHERE
+            #     1) SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM snippets WHERE
             #        (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?)
             #        ORDER BY id ASC
-            #     2) SELECT content, brief, groups, tags, links,digest, metadata FROM snippets WHERE (content REGEXP ?
+            #     2) SELECT content, brief, groups, tags, links,digest, utc, metadata FROM snippets WHERE (content REGEXP ?
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (content REGEXP ?
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (content REGEXP ?
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) ORDER BY id ASC
@@ -104,11 +104,11 @@ class Sqlite3Db(object):
                 columns = ['tags']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
             elif digest:
-                query = ('SELECT content, brief, groups, tags, links, digest, metadata, id FROM snippets ' +
+                query = ('SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM snippets ' +
                          'WHERE digest LIKE ?')
                 qargs = [digest+'%']
             elif content:
-                query = ('SELECT content, brief, groups, tags, links, digest, metadata, id FROM snippets ' +
+                query = ('SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM snippets ' +
                          'WHERE content=?')
                 qargs = [content]
             else:
@@ -246,7 +246,7 @@ class Sqlite3Db(object):
         """Generate SQL query parameters for specific fields and keywords."""
 
         query_args = []
-        query = 'SELECT content, brief, groups, tags, links, digest, metadata, id FROM snippets WHERE '
+        query = 'SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM snippets WHERE '
 
         # Generate regexp search like:
         #   1. '(content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) '

@@ -10,6 +10,7 @@ create table if not exists snippets (
     tags        text default '',
     links       text default '',
     digest      blob(64),
+    utc         datetime default current_timestamp,
     metadata    text default '',
     id          integer primary key
 );
@@ -22,6 +23,7 @@ create table if not exists solutions (
     tags        text default '',
     links       text default '',
     digest      blob(64),
+    utc         datetime default current_timestamp,
     metadata    text default '',
     id          integer primary key
 );

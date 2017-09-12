@@ -78,6 +78,7 @@ class Config(object): # pylint: disable=too-many-public-methods
                        cls.get_content_links(),
                        None,
                        None,
+                       None,
                        None)
 
         if cls.is_editor() or use_editor:
@@ -394,6 +395,7 @@ class Config(object): # pylint: disable=too-many-public-methods
                    cls.get_content_group(),
                    cls.get_content_tags(),
                    cls.get_content_links(),
+                   None,
                    None,
                    None,
                    None)

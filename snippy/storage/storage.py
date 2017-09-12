@@ -32,7 +32,7 @@ class Storage(object):
 
         return snippets
 
-    def update(self, digest_updated, snippet):
+    def update(self, snippet, digest_updated):
         """Update snippet."""
 
         digest = Storage._calculate_digest(snippet)
@@ -108,6 +108,7 @@ class Storage(object):
                    row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS),
                    row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS),
                    row[Const.SNIPPET_DIGEST],
+                   row[Const.SNIPPET_UTC],
                    row[Const.SNIPPET_METADATA],
                    row[Const.SNIPPET_ID])
 
@@ -136,7 +137,8 @@ class Storage(object):
                       'group': snippet[Const.SNIPPET_GROUP],
                       'tags': snippet[Const.SNIPPET_TAGS],
                       'links': snippet[Const.SNIPPET_LINKS],
-                      'digest': snippet[Const.SNIPPET_DIGEST]}
+                      'digest': snippet[Const.SNIPPET_DIGEST],
+                      'utc': snippet[Const.SNIPPET_UTC]}
 
         return dictionary
 

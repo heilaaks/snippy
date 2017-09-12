@@ -47,7 +47,7 @@ def main(args=None):
     Profiler.enable()
     snippy = Snippy()
     snippy.run()
-    snippy.disconnect()
+    #snippy.disconnect()
     Profiler.disable()
 
 if __name__ == "__main__":

@@ -2,13 +2,14 @@
 
 """test_sqlite3_db_insert_snippet_basic.py: Test inserting snippet into the sqlite3 database."""
 
+import unittest
 import mock
 from snippy.config import Constants as Const
 from snippy.config import Config
 from snippy.storage.database import Sqlite3Db
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper
 
-class TestSqlite3DbInsertSnippetBasic(object): # pylint: disable=too-few-public-methods
+class TestSqlite3DbInsertSnippetBasic(unittest.TestCase): # pylint: disable=too-few-public-methods
     """Testing inserting new snippets with basic tests."""
 
     @mock.patch.object(Config, 'is_storage_in_memory')
@@ -29,7 +30,12 @@ class TestSqlite3DbInsertSnippetBasic(object): # pylint: disable=too-few-public-
                     'container,cleanup,docker', snippet[Const.SNIPPET_LINKS][0], digest, metadata, 1)]
         obj = Sqlite3Db().init()
         obj.insert_snippet(snippet, digest, metadata)
-        assert Sqlite3DbHelper().select_all_snippets() == db_rows
+        snippet_db = Sqlite3DbHelper().select_all_snippets()
+        self.assertEqual(snippet_db[0][Const.SNIPPET_CONTENT], db_rows[0][Const.SNIPPET_CONTENT])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_BRIEF], db_rows[0][Const.SNIPPET_BRIEF])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_GROUP], db_rows[0][Const.SNIPPET_GROUP])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_TAGS], db_rows[0][Const.SNIPPET_TAGS])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_LINKS], db_rows[0][Const.SNIPPET_LINKS])
         obj.disconnect()
 
     @mock.patch.object(Config, 'is_storage_in_memory')
@@ -52,5 +58,10 @@ class TestSqlite3DbInsertSnippetBasic(object): # pylint: disable=too-few-public-
                     snippet[Const.SNIPPET_LINKS][1], digest, metadata, 1)]
         obj = Sqlite3Db().init()
         obj.insert_snippet(snippet, digest, metadata)
-        assert Sqlite3DbHelper().select_all_snippets() == db_rows
+        snippet_db = Sqlite3DbHelper().select_all_snippets()
+        self.assertEqual(snippet_db[0][Const.SNIPPET_CONTENT], db_rows[0][Const.SNIPPET_CONTENT])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_BRIEF], db_rows[0][Const.SNIPPET_BRIEF])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_GROUP], db_rows[0][Const.SNIPPET_GROUP])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_TAGS], db_rows[0][Const.SNIPPET_TAGS])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_LINKS], db_rows[0][Const.SNIPPET_LINKS])
         obj.disconnect()

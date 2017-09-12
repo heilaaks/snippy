@@ -2,12 +2,13 @@
 
 """test_sqlite3_db_select_snippet_basic.py: Test selecting snippets from the sqlite3 database."""
 
+import unittest
 import mock
 from snippy.config import Constants as Const
 from snippy.config import Config
 from snippy.storage.database import Sqlite3Db
 
-class TestSqlite3DbSelectSnippetBasic(object): # pylint: disable=too-few-public-methods
+class TestSqlite3DbSelectSnippetBasic(unittest.TestCase): # pylint: disable=too-few-public-methods
     """Testing selecting of snippets from database with basic tests."""
 
     @mock.patch.object(Config, 'is_search_all')
@@ -32,5 +33,10 @@ class TestSqlite3DbSelectSnippetBasic(object): # pylint: disable=too-few-public-
                     'container,cleanup,docker', snippet[Const.SNIPPET_LINKS][0], digest, metadata, 1)]
         obj = Sqlite3Db().init()
         obj.insert_snippet(snippet, digest, metadata)
-        assert obj.select_snippets(keywords) == db_rows
+        snippet_db = obj.select_snippets(keywords)
+        self.assertEqual(snippet_db[0][Const.SNIPPET_CONTENT], db_rows[0][Const.SNIPPET_CONTENT])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_BRIEF], db_rows[0][Const.SNIPPET_BRIEF])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_GROUP], db_rows[0][Const.SNIPPET_GROUP])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_TAGS], db_rows[0][Const.SNIPPET_TAGS])
+        self.assertEqual(snippet_db[0][Const.SNIPPET_LINKS], db_rows[0][Const.SNIPPET_LINKS])
         obj.disconnect()

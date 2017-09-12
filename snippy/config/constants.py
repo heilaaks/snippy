@@ -17,7 +17,7 @@ class Constants(object):
     DELIMITER_SPACE = SPACE
     DELIMITER_NEWLINE = NEWLINE
 
-    # Column numbers for snippets.
+    # Column and tuple numbers for snippets.
     SNIPPET_CONTENT = 0
     SNIPPET_BRIEF = 1
     SNIPPET_GROUP = 2
@@ -26,6 +26,7 @@ class Constants(object):
     SNIPPET_DIGEST = 5
     SNIPPET_METADATA = 6
     SNIPPET_ID = 7
+    SNIPPET_TESTING = 8
 
     # Default values for snippets
     DEFAULT_GROUP = 'default'

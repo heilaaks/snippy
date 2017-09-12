@@ -2,17 +2,16 @@
 
 """test_wf_create_new_snippet.py: Test workflows for creating new snippets."""
 
-import os
 import sys
+import unittest
 import mock
-from snippy.storage import Storage
-from snippy.snippet import Snippet
+from snip import Snippy
+from snippy.config import Constants as Const
 from snippy.config import Config
-from tests.testlib.snippet_helper import SnippetHelper
-from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper
+from tests.testlib.snippet_helper import SnippetHelper as Helper
 
 
-class TestWorkflowCreateNewSnippet(object): # pylint: skip-file
+class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
     """Test workflows for creating new snippets."""
 
     @mock.patch.object(Config, 'is_storage_in_memory')
@@ -23,34 +22,22 @@ class TestWorkflowCreateNewSnippet(object): # pylint: skip-file
         Workflow:
             @ creating snippet
         Execution:
-            $ python snip.py create --content 'docker rm -v $(docker ps -a -q)' --brief 'Remove all docker containers' --group 'docker' --tags docker,container,cleanup --links 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
+            $ python snip.py create SnippetHelper().get_snippet(0)
         Expected results:
             1 Long versions from command line options work.
-            2 One entry is read from storage.
+            2 One entry is read from storage and it can be read with digest or content.
             3 Content, brief, group, tags and links are read correctly.
-            4 Tags are presented in a list and they are sorted.
-            5 Links are presented in a list.
-            6 Message digest is constantly same.
+            4 Tags and links are presented in a list and they are sorted.
+            5 Message digest is corrent and constantly same.
         """
 
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
 
-        snippet = SnippetHelper().get_snippet(SnippetHelper.SNIPPET_1)
-        sys.argv = ['snippy', 'create', '-c', snippet['content']]
-        #config = Config()
-        #storage = Storage().init()
-        #Snippet(storage).run()
-        #rows = storage.search(None, None, snippet['content'])
-        #rows = Sqlite3DbHelper().select_all_snippets()
-        #print("rows %s" % rows)
-        
-        
-        #obj = Snippy().run()
-
-        #args = ('python snip.py create --content \'%s\'' % (snippet['content']))
-        #print("args %s" % args)
-        
-        #result = os.system(args)
-        #print("result %s" % result)
-        #assert 0
+        sys.argv = ['snippy', 'create'] + Helper().get_command_args(0)
+        snippy = Snippy()
+        snippy.run()
+        reference = Helper().get_references(0)
+        Helper().assert_snippets(snippy.storage.search(digest=reference[0][Const.SNIPPET_DIGEST])[0], reference[0])
+        Helper().assert_snippets(snippy.storage.search(content=reference[0][Const.SNIPPET_CONTENT])[0], reference[0])
+        snippy.disconnect()

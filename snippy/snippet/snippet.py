@@ -41,7 +41,7 @@ class Snippet(object):
 
         digest = Config.get_operation_digest()
         content = Config.get_content_data()
-        if Config.get_operation_digest():
+        if digest:
             self.logger.debug('updating snippet with digest %.16s', digest)
             snippets = self.storage.search(digest=digest)
             log_string = 'digest %.16s' % digest
@@ -53,7 +53,7 @@ class Snippet(object):
         if len(snippets) == 1:
             if digest:
                 snippet = Config.get_snippet(snippets[0])
-            else:
+            elif content:
                 digest = snippets[0][Const.SNIPPET_DIGEST]
                 snippet = Config.get_snippet(use_editor=True)
             self.storage.update(digest, snippet)

@@ -14,13 +14,7 @@ class Storage(object):
     def __init__(self):
         self.logger = Logger(__name__).get()
         self.database = Database()
-
-    def init(self):
-        """Initialize storage."""
-
         self.database.init()
-
-        return self
 
     def create(self, snippet):
         """Create snippet."""

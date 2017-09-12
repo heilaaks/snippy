@@ -1,6 +1,7 @@
 ## TODO
+   - [ ] Add search with content with -c|--content option.
+   - [ ] Likely it is better to remove absolute path from schema location because the relative path would work.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
-   - [ ] Add basic snippet set in common library to avoid writing them to multiple test cases.
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Add docker container for the project.
    - [ ] Update documents.
@@ -14,6 +15,7 @@
    - [ ] Fix adding empty content. Now if user does not give value to content, it is created instorage.
 
 ## DONE
+   - [x] Added basic snippet test suite in common library to avoid writing them to multiple test cases.
    - [x] Changed snippet management. Now Storage() takes care of the snippet conversion between formats.
    - [x] Changed version definition. There is now version.py that is used to read the version.
    - [x] Added support to limit lenght of log strings with -vv option. The --debug option prints full lines.

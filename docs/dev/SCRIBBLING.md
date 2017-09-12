@@ -254,6 +254,9 @@ python snip.py search --sgrp docker,moby # Returns three snippets
 python snip.py search --sgrp notfound # Returns no snippets
 python snip.py search --sgrp . # Returns three snippets
 
+4. Search with content
+python snip.py search -c 'docker rm --volumes $(docker ps --all --quiet)'
+
 ######################
 ## Exporting snipppets
 ######################
@@ -343,6 +346,10 @@ python snip.py create
 ## Logging
 https://www.relaxdiego.com/2014/07/logging-in-python.html
 =====================================================
+
+## Documens - generated document for MT
+https://stackoverflow.com/questions/7250659/python-code-to-generate-part-of-sphinx-documentation-is-it-possible
+
 
 =====================================================
 ###### Command line desing

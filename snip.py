@@ -15,25 +15,38 @@ class Snippy(object):
     def __init__(self):
         self.logger = Logger(__name__).get()
         self.config = Config()
+        self.storage = Storage()
+
+    def storage(self):
+        """Return storage session."""
+
+        return self.storage
+
+    def disconnect(self):
+        """Disconnect storage session."""
+
+        self.storage.debug()
+        self.storage.disconnect()
 
     def run(self):
+        """Run the tool."""
+
         self.logger.info('running services')
-        storage = Storage().init()
         if Config.is_content_snippet():
-            Snippet(storage).run()
+            Snippet(self.storage).run()
         elif Config.is_content_solution():
-            Solution(storage).run()
+            Solution(self.storage).run()
         else:
             self.logger.error('exiting because of unknown content')
 
-        storage.debug()
-        storage.disconnect()
         Logger.exit(self.config.get_exit_cause())
+
 
 def main(args=None):
     Logger.set_level()
     Profiler.enable()
     Snippy().run()
+    Snippy().disconnect()
     Profiler.disable()
 
 if __name__ == "__main__":

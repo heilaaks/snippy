@@ -5,19 +5,35 @@
 import sqlite3
 
 
-class Sqlite3DbHelper(object): # pylint: disable=too-few-public-methods
+class Sqlite3DbHelper(object):
     """Helper methods for Sqlite3 database testing."""
 
-    def __init__(self):
-        self.conn, self.cursor = Sqlite3DbHelper._connect_db()
 
-    def select_all_snippets(self):
+    @staticmethod
+    def select_all_snippets():
         """Select all snippets."""
 
-        self.cursor.execute('select * from snippets')
-        rows = self.cursor.fetchall()
+        conn, cursor = Sqlite3DbHelper._connect_db()
+        cursor.execute('SELECT * FROM snippets')
+        rows = cursor.fetchall()
+        cursor.close()
+        conn.close()
 
         return rows
+
+    @staticmethod
+    def delete_all_snippets():
+        """Delete all snippets."""
+
+        # In successful case the database table does not exist anymore
+        conn, cursor = Sqlite3DbHelper._connect_db()
+        try:
+            cursor.execute('DELETE FROM snippets')
+            conn.commit()
+        except sqlite3.OperationalError:
+            pass
+        cursor.close()
+        conn.close()
 
     @staticmethod
     def _connect_db():

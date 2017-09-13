@@ -34,7 +34,6 @@ class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
 
-
         sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
         snippy = Snippy()
         snippy.run()

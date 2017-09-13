@@ -11,7 +11,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
 
-class TestSqlite3DbInsertSnippetBasic(unittest.TestCase): # pylint: disable=too-few-public-methods
+class TestSqlite3DbInsertSnippetBasic(unittest.TestCase):
     """Testing inserting new snippets with basic tests."""
 
     def test_insert_with_all_parameters(self):

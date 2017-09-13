@@ -11,7 +11,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
 
-class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase): # pylint: disable=too-few-public-methods
+class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase):
     """Testing deleting snippets from database with basic tests."""
 
     @mock.patch.object(Config, 'is_search_all')

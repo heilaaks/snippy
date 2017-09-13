@@ -11,6 +11,7 @@
    - [ ] Fix importing the same data again. There could be a notice if the content already exist.
    - [ ] Fix adding empty content. Now if user does not give value to content, it is created in storage.
    - [ ] Fix make docs complain sometimes about missing _static folder.
+   - [ ] Fix situation in commit 11448a2e90dab3a2837c1a971798721095d1c160 somehow and make test_wf a bit nicer?
 
 ## DONE
    - [x] Changed absolute path of database.sql to relative. This removed the need for mock and relative is better.

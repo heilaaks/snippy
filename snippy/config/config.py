@@ -46,7 +46,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['storage'] = {}
         cls.config['storage']['path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
         cls.config['storage']['file'] = 'snippy.db'
-        cls.config['storage']['schema'] = os.path.join(cls.config['root'], 'snippy/storage/database/database.sql')
+        cls.config['storage']['schema'] = 'snippy/storage/database/database.sql'
         cls.config['storage']['in_memory'] = False # Enabled only for testing.
         cls.config['exit_code'] = 'OK'
 

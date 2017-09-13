@@ -15,8 +15,7 @@ class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few
     """Test workflows for creating new snippets."""
 
     @mock.patch.object(Config, 'is_storage_in_memory')
-    @mock.patch.object(Config, 'get_storage_schema')
-    def test_creating_new_snippet_from_command_line(self, mock_get_storage_schema, mock_is_storage_in_memory):
+    def test_creating_new_snippet_from_command_line(self, mock_is_storage_in_memory):
         """Create snippet from command line with all parameters.
 
         Workflow:
@@ -32,7 +31,6 @@ class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few
         """
 
         mock_is_storage_in_memory.return_value = True
-        mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
 
         sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
         snippy = Snippy()

@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Likely it is better to remove absolute path from schema location because the relative path would work.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Add docker container for the project.
@@ -10,10 +9,11 @@
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix Apachle license text in documentation to be without any formatting.
    - [ ] Fix importing the same data again. There could be a notice if the content already exist.
-   - [ ] Fix adding empty content. Now if user does not give value to content, it is created instorage.
+   - [ ] Fix adding empty content. Now if user does not give value to content, it is created in storage.
    - [ ] Fix make docs complain sometimes about missing _static folder.
 
 ## DONE
+   - [x] Changed absolute path of database.sql to relative. This removed the need for mock and relative is better.
    - [x] Fixed hanging database resources that failed sequential test in case of database test failure. 
    - [x] Added timestamp in UTC time for created snippets.
    - [x] Added search with content with -c|--content option.

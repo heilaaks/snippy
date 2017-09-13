@@ -350,6 +350,8 @@ https://www.relaxdiego.com/2014/07/logging-in-python.html
 ## Documens - generated document for MT
 https://stackoverflow.com/questions/7250659/python-code-to-generate-part-of-sphinx-documentation-is-it-possible
 
+## Pytest
+https://media.readthedocs.org/pdf/pytest/3.0.2/pytest.pdf
 
 =====================================================
 ###### Command line desing

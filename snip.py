@@ -18,28 +18,33 @@ class Snippy(object):
         self.storage = Storage()
 
     def storage(self):
-        """Return storage session."""
+        """Return active storage session."""
 
         return self.storage
 
-    def disconnect(self):
-        """Disconnect storage session."""
+    def config(self):
+        """Return active configuration."""
+
+        return self.config
+
+    def release(self):
+        """Release the command line session."""
 
         self.storage.debug()
         self.storage.disconnect()
 
-    def run(self):
-        """Run the tool."""
+        Logger.exit(self.config.get_exit_cause())
 
-        self.logger.info('running services')
+    def run(self):
+        """Run the command line session."""
+
+        self.logger.info('running command line interface')
         if Config.is_content_snippet():
             Snippet(self.storage).run()
         elif Config.is_content_solution():
             Solution(self.storage).run()
         else:
-            self.logger.error('exiting because of unknown content')
-
-        Logger.exit(self.config.get_exit_cause())
+            self.logger.error('unknown content type')
 
 
 def main(args=None):
@@ -47,7 +52,7 @@ def main(args=None):
     Profiler.enable()
     snippy = Snippy()
     snippy.run()
-    #snippy.disconnect()
+    snippy.release()
     Profiler.disable()
 
 if __name__ == "__main__":

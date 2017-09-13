@@ -4,10 +4,12 @@
 
 import unittest
 import mock
-from snippy.config import Constants as Const
 from snippy.config import Config
 from snippy.storage.database import Sqlite3Db
-from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper
+from tests.testlib.constant_helper import * # pylint: disable=wildcard-import,unused-wildcard-import
+from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
+
 
 class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase): # pylint: disable=too-few-public-methods
     """Testing deleting snippets from database with basic tests."""
@@ -22,38 +24,19 @@ class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase): # pylint: disable=too-
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
         mock_is_search_all.return_value = True
-        snippet1 = Sqlite3DbHelper.SNIPPET1
-        digest1 = Sqlite3DbHelper.DIGEST1
-        snippet2 = Sqlite3DbHelper.SNIPPET2
-        digest2 = Sqlite3DbHelper.DIGEST2
-        metadata = 'metadata'
-        keywords = ['help', 'docker']
-        db_rows = [(snippet1[Const.SNIPPET_CONTENT], snippet1[Const.SNIPPET_BRIEF], snippet1[Const.SNIPPET_GROUP],
-                    'container,cleanup,docker', snippet1[Const.SNIPPET_LINKS][0], digest1, metadata, 1),
-                   (snippet2[Const.SNIPPET_CONTENT], snippet2[Const.SNIPPET_BRIEF], snippet2[Const.SNIPPET_GROUP],
-                    'container,cleanup,docker', snippet2[Const.SNIPPET_LINKS][0], digest2, metadata, 2)]
-        obj = Sqlite3Db().init()
-        obj.insert_snippet(snippet1, digest1, metadata)
-        obj.insert_snippet(snippet2, digest2, metadata)
-        snippet_db = obj.select_snippets(keywords)
-        self.assertEqual(snippet_db[0][Const.SNIPPET_CONTENT], db_rows[0][Const.SNIPPET_CONTENT])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_BRIEF], db_rows[0][Const.SNIPPET_BRIEF])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_GROUP], db_rows[0][Const.SNIPPET_GROUP])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_TAGS], db_rows[0][Const.SNIPPET_TAGS])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_LINKS], db_rows[0][Const.SNIPPET_LINKS])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_CONTENT], db_rows[1][Const.SNIPPET_CONTENT])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_BRIEF], db_rows[1][Const.SNIPPET_BRIEF])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_GROUP], db_rows[1][Const.SNIPPET_GROUP])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_TAGS], db_rows[1][Const.SNIPPET_TAGS])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_LINKS], db_rows[1][Const.SNIPPET_LINKS])
-        obj.delete_snippet('da217a911ec37e9a')
-        snippet_db = obj.select_snippets(keywords)
-        self.assertEqual(snippet_db[0][Const.SNIPPET_CONTENT], db_rows[1][Const.SNIPPET_CONTENT])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_BRIEF], db_rows[1][Const.SNIPPET_BRIEF])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_GROUP], db_rows[1][Const.SNIPPET_GROUP])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_TAGS], db_rows[1][Const.SNIPPET_TAGS])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_LINKS], db_rows[1][Const.SNIPPET_LINKS])
-        obj.disconnect()
+
+        #obj = Sqlite3Db().init()
+        references = Snippet().get_references(sliced='0:2')
+        keywords = ['foo', 'engine', 'digitalocean']
+        self.sqlite.insert_snippet(references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
+        self.sqlite.insert_snippet(references[1][CONTENT:TESTING], references[1][DIGEST], references[1][METADATA])
+        Snippet().compare_db((self.sqlite.select_snippets(keywords))[0], references[0])
+        Snippet().compare_db((self.sqlite.select_snippets(keywords))[1], references[1])
+        assert len(Database().select_all_snippets()) == 2
+        self.sqlite.delete_snippet('6f9e21abdc2e4c53')
+        Snippet().compare_db((self.sqlite.select_snippets(keywords))[0], references[0])
+        assert len(Database().select_all_snippets()) == 1
+        self.sqlite.disconnect()
 
     @mock.patch.object(Config, 'is_search_all')
     @mock.patch.object(Config, 'is_storage_in_memory')
@@ -64,35 +47,33 @@ class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase): # pylint: disable=too-
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
         mock_is_search_all.return_value = True
-        snippet1 = Sqlite3DbHelper.SNIPPET1
-        digest1 = Sqlite3DbHelper.DIGEST1
-        snippet2 = Sqlite3DbHelper.SNIPPET2
-        digest2 = Sqlite3DbHelper.DIGEST2
-        metadata = 'metadata'
-        keywords = ['help', 'docker']
-        db_rows = [(snippet1[Const.SNIPPET_CONTENT], snippet1[Const.SNIPPET_BRIEF], snippet1[Const.SNIPPET_GROUP],
-                    'container,cleanup,docker', snippet1[Const.SNIPPET_LINKS][0], digest1, metadata, 1),
-                   (snippet2[Const.SNIPPET_CONTENT], snippet2[Const.SNIPPET_BRIEF], snippet2[Const.SNIPPET_GROUP],
-                    'container,cleanup,docker', snippet2[Const.SNIPPET_LINKS][0], digest2, metadata, 2)]
+
         obj = Sqlite3Db().init()
-        obj.insert_snippet(snippet1, digest1, metadata)
-        obj.insert_snippet(snippet2, digest2, metadata)
-        snippet_db = obj.select_snippets(keywords)
-        self.assertEqual(snippet_db[0][Const.SNIPPET_CONTENT], db_rows[0][Const.SNIPPET_CONTENT])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_BRIEF], db_rows[0][Const.SNIPPET_BRIEF])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_GROUP], db_rows[0][Const.SNIPPET_GROUP])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_TAGS], db_rows[0][Const.SNIPPET_TAGS])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_LINKS], db_rows[0][Const.SNIPPET_LINKS])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_CONTENT], db_rows[1][Const.SNIPPET_CONTENT])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_BRIEF], db_rows[1][Const.SNIPPET_BRIEF])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_GROUP], db_rows[1][Const.SNIPPET_GROUP])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_TAGS], db_rows[1][Const.SNIPPET_TAGS])
-        self.assertEqual(snippet_db[1][Const.SNIPPET_LINKS], db_rows[1][Const.SNIPPET_LINKS])
-        obj.delete_snippet('aa106d811ec37e9a2ad4a89ebb28d4f10e3216a7ce7d317b07ba41c95ec4152c')
-        snippet_db = obj.select_snippets(keywords)
-        self.assertEqual(snippet_db[0][Const.SNIPPET_CONTENT], db_rows[0][Const.SNIPPET_CONTENT])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_BRIEF], db_rows[0][Const.SNIPPET_BRIEF])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_GROUP], db_rows[0][Const.SNIPPET_GROUP])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_TAGS], db_rows[0][Const.SNIPPET_TAGS])
-        self.assertEqual(snippet_db[0][Const.SNIPPET_LINKS], db_rows[0][Const.SNIPPET_LINKS])
+        references = Snippet().get_references(sliced='0:2')
+        keywords = ['foo', 'engine', 'digitalocean']
+        obj.insert_snippet(references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
+        obj.insert_snippet(references[1][CONTENT:TESTING], references[1][DIGEST], references[1][METADATA])
+        Snippet().compare_db((obj.select_snippets(keywords))[0], references[0])
+        Snippet().compare_db((obj.select_snippets(keywords))[1], references[1])
+        assert len(Database().select_all_snippets()) == 2
+        obj.delete_snippet('6f9e21abdc2e4c53d04d77eff024708086c0a583f1be3dd761774353e9d2b74f')
+        Snippet().compare_db((obj.select_snippets(keywords))[0], references[0])
+        assert len(Database().select_all_snippets()) == 1
         obj.disconnect()
+
+    @mock.patch.object(Config, 'is_search_all')
+    @mock.patch.object(Config, 'is_storage_in_memory')
+    @mock.patch.object(Config, 'get_storage_schema')
+    def setUp(self, mock_get_storage_schema, mock_is_storage_in_memory, mock_is_search_all): # pylint: disable=arguments-differ
+        """Setup each test."""
+
+        mock_is_storage_in_memory.return_value = True
+        mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
+        mock_is_search_all.return_value = True
+
+        self.sqlite = Sqlite3Db().init()
+
+    def tearDown(self):
+        """Teardown each test."""
+
+        self.sqlite.disconnect()

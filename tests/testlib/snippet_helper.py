@@ -5,6 +5,7 @@
 import re
 import unittest
 from snippy.config import Constants as Const
+from tests.testlib.constant_helper import * # pylint: disable=wildcard-import,unused-wildcard-import
 
 
 class SnippetHelper(object):
@@ -23,24 +24,60 @@ class SnippetHelper(object):
                     --brief 'Remove all docker containers with volumes'
                     --group docker
                     --tags docker-ce,docker,moby,container,cleanup
-                    --links 'https://docs.docker.com/engine/reference/commandline/rm/'""")]
+                    --links 'https://docs.docker.com/engine/reference/commandline/rm/'"""),
+
+                ('docker rm --force redis',
+                 'Remove docker image with force',
+                 'docker',
+                 ['docker-ce', 'docker', 'moby', 'container', 'cleanup'],
+                 ['https://docs.docker.com/engine/reference/commandline/rm/',
+                  'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'],
+                 '6f9e21abdc2e4c53d04d77eff024708086c0a583f1be3dd761774353e9d2b74f',
+                 None,
+                 None,
+                 None,
+                 """-c 'docker rm --force redis'
+                    -b 'Remove docker image with force'
+                    -g 'docker'
+                    -t docker-ce,docker,moby,container,cleanup
+                    -l 'https://docs.docker.com/engine/reference/commandline/rm/
+                        https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'""")]
+
+
 
     @staticmethod
-    def get_references(snippets):
+    def get_references(index=0, sliced=None):
         """Return specified snippet."""
 
-        snippets = [SnippetHelper.SNIPPETS[snippets]]
+        if sliced:
+            sliced = sliced.split(':')
+            snippets = SnippetHelper.SNIPPETS[int(sliced[0]):int(sliced[1])]
+        else:
+            snippets = [SnippetHelper.SNIPPETS[index]]
 
         return snippets
 
     @staticmethod
     def get_command_args(snippet, regexp=r'^\'|\'$|\n'): # ' <-- For UltraEditor code highlights problem.
-        """Get command line arguments for the snippet."""
+        """Get command line arguments from snippets list."""
 
-        args = [re.sub(regexp, Const.EMPTY, argument)
-                for argument in re.split("( |'.*?')", SnippetHelper.SNIPPETS[snippet][Const.SNIPPET_TESTING]) if argument.strip()]
+        args = [re.sub(regexp, Const.EMPTY, arg)
+                for arg in re.split("('.*?'| )", SnippetHelper.SNIPPETS[snippet][TESTING], flags=re.DOTALL) if arg.strip()]
+
+        # Replace multiple spaces with one. These are coming from the snippet
+        # definition that splits for example the link parameter to multiple
+        # lines.
+        args = [re.sub(r'\s{2,}', Const.SPACE, argument).strip() for argument in args]
 
         return args
+
+    @staticmethod
+    def get_command_string(snippet):
+        """Return command string from snippets list."""
+
+        command = Const.SPACE.join(SnippetHelper.get_command_args(snippet, Const.NEWLINE))
+
+        return command
 
     @staticmethod
     def get_digest(snippet):
@@ -51,26 +88,8 @@ class SnippetHelper(object):
         return digest
 
     @staticmethod
-    def get_command_string(snippet):
-        """Return command string for specified snippet."""
-
-        command = Const.SPACE.join(SnippetHelper.get_command_args(snippet, '\n'))
-
-        return command
-
-    @staticmethod
-    def assert_snippets(snippet, reference):
+    def compare(snippet, reference):
         """Compare two snippets."""
-
-        # pylint: disable=invalid-name
-        CONTENT = Const.SNIPPET_CONTENT
-        BRIEF = Const.SNIPPET_BRIEF
-        GROUP = Const.SNIPPET_GROUP
-        TAGS = Const.SNIPPET_TAGS
-        LINKS = Const.SNIPPET_LINKS
-        DIGEST = Const.SNIPPET_DIGEST
-        METADATA = Const.SNIPPET_METADATA
-        # pylint: enable=invalid-name
 
         # Test that all fields excluding id and onwards are equal.
         testcase = unittest.TestCase()
@@ -90,4 +109,24 @@ class SnippetHelper(object):
         assert isinstance(snippet[GROUP], str)
         assert isinstance(snippet[TAGS], list)
         assert isinstance(snippet[LINKS], list)
+        assert isinstance(snippet[DIGEST], str)
+
+    @staticmethod
+    def compare_db(snippet, reference):
+        """Compare snippes when the snippet is database format."""
+
+        # Test that all fields excluding id and onwards are equal.
+        testcase = unittest.TestCase()
+        testcase.assertEqual(snippet[CONTENT:TAGS], reference[CONTENT:TAGS])
+        testcase.assertEqual(snippet[TAGS], Const.DELIMITER_TAGS.join(reference[TAGS]))
+        testcase.assertCountEqual(snippet[LINKS], Const.DELIMITER_LINKS.join(reference[LINKS]))
+        testcase.assertEqual(snippet[DIGEST], reference[DIGEST])
+        testcase.assertEqual(snippet[METADATA], reference[METADATA])
+
+        # Test that tags and links are lists and rest of the fields strings.
+        assert isinstance(snippet[CONTENT], str)
+        assert isinstance(snippet[BRIEF], str)
+        assert isinstance(snippet[GROUP], str)
+        assert isinstance(snippet[TAGS], str)
+        assert isinstance(snippet[LINKS], str)
         assert isinstance(snippet[DIGEST], str)

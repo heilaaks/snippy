@@ -6,9 +6,9 @@ import sys
 import unittest
 import mock
 from snip import Snippy
-from snippy.config import Constants as Const
 from snippy.config import Config
-from tests.testlib.snippet_helper import SnippetHelper as Helper
+from tests.testlib.constant_helper import * # pylint: disable=wildcard-import,unused-wildcard-import
+from tests.testlib.snippet_helper import SnippetHelper as Snippet
 
 
 class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
@@ -25,7 +25,7 @@ class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few
             $ python snip.py create SnippetHelper().get_snippet(0)
         Expected results:
             1 Long versions from command line options work.
-            2 One entry is read from storage and it can be read with digest or content.
+            2 Only one entry is read from storage and it can be read with digest or content.
             3 Content, brief, group, tags and links are read correctly.
             4 Tags and links are presented in a list and they are sorted.
             5 Message digest is corrent and constantly same.
@@ -34,10 +34,12 @@ class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few
         mock_is_storage_in_memory.return_value = True
         mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
 
-        sys.argv = ['snippy', 'create'] + Helper().get_command_args(0)
+        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
         snippy = Snippy()
         snippy.run()
-        reference = Helper().get_references(0)
-        Helper().assert_snippets(snippy.storage.search(digest=reference[0][Const.SNIPPET_DIGEST])[0], reference[0])
-        Helper().assert_snippets(snippy.storage.search(content=reference[0][Const.SNIPPET_CONTENT])[0], reference[0])
-        snippy.disconnect()
+        references = Snippet().get_references(0)
+        Snippet().compare(snippy.storage.search(digest=references[0][DIGEST])[0], references[0])
+        Snippet().compare(snippy.storage.search(content=references[0][CONTENT])[0], references[0])
+        assert len(snippy.storage.search(digest=references[0][DIGEST])) == 1
+        assert len(snippy.storage.search(content=references[0][CONTENT])) == 1
+        snippy.release()

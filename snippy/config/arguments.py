@@ -25,7 +25,7 @@ class Arguments(object):
                    '  -b, --brief BRIEF             define content brief description',
                    '  -g, --group GROUP             define content group',
                    '  -t, --tags [TAG,...]          define comma separated list of tags',
-                   '  -l, --links LINK              define content reference link',
+                   '  -l, --links LINK              define space separated list of links',
                    '  -d, --digest DIGEST           idenfity content with digest')
     ARGS_SEARCH = ('  --sall [KW,...]               search keywords from all fields',
                    '  --stag [KW,...]               search keywords only from tags',

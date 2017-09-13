@@ -39,6 +39,7 @@ class Snippy(object):
         """Run the command line session."""
 
         self.logger.info('running command line interface')
+        self.storage.init()
         if Config.is_content_snippet():
             Snippet(self.storage).run()
         elif Config.is_content_solution():

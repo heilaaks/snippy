@@ -30,10 +30,12 @@ class TestSqlite3DbSelectSnippetBasic(unittest.TestCase): # pylint: disable=too-
 
     # pylint: disable=duplicate-code
     @mock.patch.object(Config, 'is_storage_in_memory')
-    def setUp(self, mock_is_storage_in_memory): # pylint: disable=arguments-differ
+    @mock.patch.object(Config, 'get_storage_schema')
+    def setUp(self, mock_get_storage_schema, mock_is_storage_in_memory): # pylint: disable=arguments-differ
         """Setup each test."""
 
         mock_is_storage_in_memory.return_value = True
+        mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
 
         self.sqlite = Sqlite3Db().init()
 

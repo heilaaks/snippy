@@ -14,6 +14,10 @@ class Storage(object):
     def __init__(self):
         self.logger = Logger(__name__).get()
         self.database = Database()
+
+    def init(self):
+        """Initialize database."""
+
         self.database.init()
 
     def create(self, snippet):

@@ -5,13 +5,13 @@
    - [ ] Update documents.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add digest check when importing.
-   - [ ] Fix the pip pagkaging. The snip.py should be under namespace and sql file locate might not be good.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix importing the same data again. There could be a notice if the content already exist.
    - [ ] Fix adding empty content. Now if user does not give value to content, it is created in storage.
    - [ ] Fix case described in log 11448a2e90dab3a2837c1a971798721095d1c160 somehow and make test_wf a bit nicer?
 
 ## DONE
+   - [x] Fixed the pip pagkaging and added the uninstall in Makefile.
    - [x] Fixed Apache license layout in generated document. Now the lincese is just pure text.
    - [x] Fixed the make docs and _static folder by creating dummy content and changing the name to source.
    - [x] Changed absolute path of database.sql to relative. This removed the need for mock and relative is better.

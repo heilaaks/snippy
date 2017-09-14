@@ -5,7 +5,7 @@
 import sys
 import unittest
 import mock
-from snip import Snippy
+from snippy.snip import Snippy
 from snippy.config import Config
 from tests.testlib.constant_helper import * # pylint: disable=wildcard-import,unused-wildcard-import
 from tests.testlib.snippet_helper import SnippetHelper as Snippet

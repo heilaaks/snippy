@@ -11,21 +11,12 @@ from snippy.profiler import Profiler
 
 
 class Snippy(object):
+    """Snippet and solution management."""
 
     def __init__(self):
         self.logger = Logger(__name__).get()
         self.config = Config()
         self.storage = Storage()
-
-    def storage(self):
-        """Return active storage session."""
-
-        return self.storage
-
-    def config(self):
-        """Return active configuration."""
-
-        return self.config
 
     def release(self):
         """Release the command line session."""
@@ -48,7 +39,9 @@ class Snippy(object):
             self.logger.error('unknown content type')
 
 
-def main(args=None):
+def main():
+    """Main"""
+
     Logger.set_level()
     Profiler.enable()
     snippy = Snippy()

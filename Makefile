@@ -4,6 +4,9 @@ install:
 upgrade:
 	pip install --upgrade .
 
+uninstall:
+	pip uninstall --yes snippy
+
 dev:
 	pip3 install -e .[dev]
 
@@ -32,4 +35,4 @@ clean:
 	rm -f coverage.xml
 	rm -f pytestdebug.log
 
-.PHONY: install upgrade dev test coverage docs lint clean
+.PHONY: install upgrade uninstall dev test coverage docs lint clean

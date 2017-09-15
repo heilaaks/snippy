@@ -1,0 +1,17 @@
+snippets:
+- brief: Remove all docker containers with volumes
+  content: docker rm --volumes $(docker ps --all --quiet)
+  digest: f4852122e1aa5b28d88181f9852960cc9e991fcc263a2e17f22db2cec98c3d0b
+  group: docker
+  links: ['https://docs.docker.com/engine/reference/commandline/rm/']
+  tags: [cleanup, container, docker, docker-ce, moby]
+  utc: '2017-09-15 07:16:49'
+- brief: Find pattern from files
+  content: 'grep -rin ''./'' -e ''pattern''
+
+    grep -rin ''./'' -e ''pattern'' --include=\*.{ini,xml,cfg,conf,yaml}'
+  digest: 1b24ab0db58ae2f7c609ac06c7de5c63fe43385032d0ce8c6149f031b6b33eac
+  group: linux
+  links: ['https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux']
+  tags: [linux, search]
+  utc: '2017-09-15 07:22:32'

@@ -22,3 +22,7 @@ docs/build/
 *.swp
 *.swo
 *.swn
+
+# Ignore development database
+snippy.db
+

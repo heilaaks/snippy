@@ -1,4 +1,6 @@
 ## TODO
+   - [ ] Fix export of yaml that generates extra newlines with multiple content lines. Generate list?
+   - [ ] Fix 'snippy delete' or 'snippy delete ' that deletes all?
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Add docker container for the project.
@@ -11,7 +13,9 @@
    - [ ] Fix case described in log 11448a2e90dab3a2837c1a971798721095d1c160 somehow and make test_wf a bit nicer?
 
 ## DONE
-   - [x] Fixed the pip pagkaging and added the uninstall in Makefile.
+   - [x] Added new storage location with packaging and import defaults.
+   - [x] Changed order of links and tags in the console output.
+   - [x] Fixed the pip packaging and added the uninstall in Makefile.
    - [x] Fixed Apache license layout in generated document. Now the lincese is just pure text.
    - [x] Fixed the make docs and _static folder by creating dummy content and changing the name to source.
    - [x] Changed absolute path of database.sql to relative. This removed the need for mock and relative is better.

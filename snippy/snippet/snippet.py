@@ -103,9 +103,9 @@ class Snippet(object):
             text = text + Const.EMPTY.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
                                             for snippet_line in snippet[Const.SNIPPET_CONTENT].split(Const.NEWLINE)])
             text = text + Const.NEWLINE
+            text = Const.format_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet[Const.SNIPPET_TAGS]))
             text = text + Const.EMPTY.join([Const.format_links(colors) % (link_string, link) \
                                             for link in snippet[Const.SNIPPET_LINKS]])
-            text = Const.format_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet[Const.SNIPPET_TAGS]))
             text = text + Const.NEWLINE
 
         return text

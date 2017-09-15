@@ -6,6 +6,7 @@ import re
 import sys
 import os.path
 import inspect
+import pkg_resources
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Arguments
@@ -44,10 +45,10 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['input'] = {}
         cls.config['input']['editor'] = cls._parse_editor()
         cls.config['storage'] = {}
-        cls.config['storage']['path'] = os.path.join(os.environ.get('HOME'), 'devel/snippy-db')
+        cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
         cls.config['storage']['file'] = 'snippy.db'
         cls.config['storage']['schema'] = 'snippy/storage/database/database.sql'
-        cls.config['storage']['in_memory'] = False # Enabled only for testing.
+        cls.config['storage']['in_memory'] = False
         cls.config['exit_code'] = 'OK'
 
         cls.logger.debug('configured value from positional argument as "%s"', cls.config['operation']['task'])

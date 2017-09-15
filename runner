@@ -1,0 +1,7 @@
+# This file is intended for development purpose to
+# run the tool from main level of the package.
+
+import snippy.snip
+
+snippy.snip.main()
+

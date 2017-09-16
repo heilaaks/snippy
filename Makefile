@@ -34,5 +34,6 @@ clean:
 	rm -drf snippy.egg-info
 	rm -f coverage.xml
 	rm -f pytestdebug.log
+	> snippy/data/storage/snippy.db
 
 .PHONY: install upgrade uninstall dev test coverage docs lint clean

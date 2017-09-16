@@ -370,6 +370,12 @@ sudo pip install --index-url https://test.pypi.org/simple/ snippy
 sudo pip uninstall snippy
 pip3 install --user --index-url https://test.pypi.org/simple/ snippy
 
+# Make the snippy.db not included into the git
+https://stackoverflow.com/questions/9794931/keep-file-in-a-git-repo-but-dont-track-changes
+git update-index --assume-unchanged FILE_NAME # no changes tracked
+git update-index --assume-unchanged snippy/data/storage/snippy.db
+git update-index --no-assume-unchanged FILE_NAME # change back
+
 # Must be in $HOME
 [distutils]
 index-servers=

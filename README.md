@@ -8,11 +8,11 @@
 
 ## Introduction
 
-Snippy is a small command line tool to manage command and troubleshooting
+Snippy is a small command line tool to manage command examples and troubleshooting
 solutions. See more information from the [Read the Docs](http://snippy.readthedocs.io/en/latest/).
 
-The project is based on personal interest to ramp-up competence around python
-and try to create something useful.
+The project is based on personal interest to ramp-up competence around Python
+and try to create something semi useful.
 
 ## Features
 
@@ -21,11 +21,12 @@ None so far.
 ## Installation
 
    ```
+   # Developed with Python 3.6. Tested that Python 2.17.x does not currently work.
    git clone https://github.com/heilaaks/snippy.git
    cd snippy
    make install
-   mkdir ${HOME}/devel/snippy-db
-   python snip.py --help
+   snippy --help
+   make uninstall
    ```
 
 

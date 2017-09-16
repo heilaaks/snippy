@@ -100,20 +100,20 @@ make test
 time python snip.py create -c 'docker rm' -b 'Remove all docker containers' -g 'moby' -t docker,container,cleanup --debug
 python snip.py search --sall docker
 
-python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-python snip.py create -c 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -g 'docker' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
-python snip.py search --sall docker
-python snip.py delete --digest 6b8705255016268c
-python snip.py export --file snippets.yaml
-python snip.py export --file snippets.json
-python snip.py export --file snippets.txt
-python snip.py import --file snippets.yaml
-python snip.py import --file snippets.json
-python snip.py import --file snippets.txt
-python snip.py update -d 6b8705255016268c
-python snip.py create
+python runner create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
+python runner create -c 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -g 'docker' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+python runner create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+python runner create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
+python runner search --sall docker
+python runner delete --digest 6b8705255016268c
+python runner export --file snippets.yaml
+python runner export --file snippets.json
+python runner export --file snippets.txt
+python runner import --file snippets.yaml
+python runner import --file snippets.json
+python runner import --file snippets.txt
+python runner update -d 6b8705255016268c
+python runner create
 
 
 =====================================================
@@ -363,6 +363,30 @@ https://testpypi.python.org/pypi?%3Aaction=register_form
 
 ## Pytest
 https://media.readthedocs.org/pdf/pytest/3.0.2/pytest.pdf
+
+python setup.py register -r testpypi
+python setup.py sdist upload -r testpypi
+sudo pip install --index-url https://test.pypi.org/simple/ snippy
+sudo pip uninstall snippy
+pip install --user --index-url https://test.pypi.org/simple/ snippy
+
+# Must be in $HOME
+[distutils]
+index-servers=
+    pypi
+    testpypi
+
+[testpypi]
+repository: https://test.pypi.org/legacy/
+username: <user>
+password: <password>
+
+[pypi]
+repository: https://testpypi.python.org/pypi
+username: <user>
+password: <password>
+
+
 
 =====================================================
 ###### Command line desing

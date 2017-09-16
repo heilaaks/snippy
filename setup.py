@@ -14,7 +14,7 @@ setup(
     license='Apache 2.0',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
-        'Environment :: Console'
+        'Environment :: Console',
         'Intended Audience :: Developers',
         'Topic :: Software Development :: Documentation',
         'License :: OSI Approved :: Apache Software License',

@@ -3,6 +3,8 @@
 """sqlite3_db_helper.py: Helper methods for Sqlite3 database testing."""
 
 import sqlite3
+import os.path
+import pkg_resources
 
 
 class Sqlite3DbHelper(object):
@@ -34,6 +36,12 @@ class Sqlite3DbHelper(object):
             pass
         cursor.close()
         conn.close()
+
+    @staticmethod
+    def get_schema():
+        """Return the file where the database schema is located."""
+
+        return os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
 
     @staticmethod
     def _connect_db():

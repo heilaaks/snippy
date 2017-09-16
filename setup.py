@@ -25,7 +25,7 @@ setup(
     keywords='cli code command troubleshooting solution manager',
     packages=find_packages(exclude=['tests', 'tests.testlib']),
     package_dir={'snippy': 'snippy'},
-    package_data={'snippy': ['data/default/*', 'data/storage/README.md']},
+    package_data={'snippy': ['data/config/*', 'data/default/*', 'data/storage/*']},
     entry_points={
         'console_scripts': [
             'snippy = snippy.snip:main'

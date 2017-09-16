@@ -47,7 +47,9 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['storage'] = {}
         cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
         cls.config['storage']['file'] = 'snippy.db'
-        cls.config['storage']['schema'] = 'snippy/storage/database/database.sql'
+        cls.config['storage']['schema'] = {}
+        cls.config['storage']['schema']['path'] = pkg_resources.resource_filename('snippy', 'data/config')
+        cls.config['storage']['schema']['file'] = 'database.sql'
         cls.config['storage']['in_memory'] = False
         cls.config['exit_code'] = 'OK'
 
@@ -241,7 +243,7 @@ class Config(object): # pylint: disable=too-many-public-methods
     def get_storage_schema(cls):
         """Return storage schema."""
 
-        return cls.config['storage']['schema']
+        return os.path.join(cls.config['storage']['schema']['path'], cls.config['storage']['schema']['file'])
 
     @classmethod
     def set_storage_in_memory(cls, in_memory):

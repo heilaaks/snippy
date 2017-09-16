@@ -39,7 +39,7 @@ class TestSqlite3DbInsertSnippetBasic(unittest.TestCase):
         """Setup each test."""
 
         mock_is_storage_in_memory.return_value = True
-        mock_get_storage_schema.return_value = 'snippy/storage/database/database.sql'
+        mock_get_storage_schema.return_value = Database.get_schema()
 
         self.sqlite = Sqlite3Db().init()
 

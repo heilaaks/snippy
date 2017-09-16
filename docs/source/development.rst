@@ -17,11 +17,11 @@ The basic commands to run and test are:
 
 .. code:: bash
 
-    python3 snip.py create -c 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -t docker,container,cleanup
+    python3 runner create -c 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -t docker,container,cleanup
     make test
     make lint
     make coverage
-    make doc
+    make docs
     make clean
 
 Python Virtual Environment

@@ -1,14 +1,14 @@
 Installation
 ============
 
-To install stable release from git repository, run:
+To install, run:
 
 .. code:: bash
 
-    sudo make install
+    pip3 install snippy
 
 To remove, run:
 
 .. code:: bash
 
-    sudo make clean
+    pip3 uninstall --yes snippy

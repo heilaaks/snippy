@@ -13,7 +13,7 @@ to the query is dot which matches to to any character.
 
 .. code:: bash
 
-    python snip.py search --sall .
+    snippy search --sall .
     OK
 
 Filtering with grep
@@ -24,8 +24,8 @@ commands from the search query.
 
 .. code:: bash
 
-    python snip.py search --sall . | grep --color=never '\$'
-    python snip.py search --sgrp docker | grep --color=never '\$'
+    snippy search --sall . | grep --color=never '\$'
+    snippy search --sgrp docker | grep --color=never '\$'
 
 
 Updating duplicated content
@@ -46,9 +46,9 @@ the content which will get then updated.
 
 .. code:: bash
 
-    python snip.py create --content 'docker rm $(docker ps -a -q)' --brief 'Remove all docker containers' --tags docker,image,cleanup
-    NOK: content already exist with digest 5feded9ec5945d6a
-    python snip.py update --digest 5feded9ec5945d6a
+    snippy create --content 'docker rm $(docker ps -a -q)' --brief 'Remove all docker containers' --tags docker,image,cleanup
+    NOK: content already exist with digest f6062e09e2c11b47
+    snippy update --digest f6062e09e2c11b47
     OK
 
 Updating duplicated content by defining content
@@ -63,8 +63,8 @@ and save the content which will get then updated.
 
 .. code:: bash
 
-    python snip.py create --content 'docker rm $(docker ps -a -q)' --brief 'Remove all docker containers' --tags docker,image,cleanup
+    snippy create --content 'docker rm $(docker ps -a -q)' --brief 'Remove all docker containers' --tags docker,image,cleanup
     NOK: content already exist with digest 5feded9ec5945d6a
-    python snip.py update --content 'docker rm $(docker ps -a -q)' --brief 'Remove all docker containers' --tags docker,image,cleanup
+    snippy update --content 'docker rm $(docker ps -a -q)' --brief 'Remove all docker containers' --tags docker,image,cleanup
     OK
 

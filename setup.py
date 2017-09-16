@@ -22,7 +22,7 @@ setup(
         'Natural Language :: English',
         'Topic :: Utilities'
     ],
-    keywords='cli code command troubleshooting solution manager',
+    keywords='command example solution manager',
     packages=find_packages(exclude=['tests', 'tests.testlib']),
     package_dir={'snippy': 'snippy'},
     package_data={'snippy': ['data/config/*', 'data/default/*', 'data/storage/*']},

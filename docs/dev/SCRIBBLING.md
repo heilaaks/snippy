@@ -369,6 +369,13 @@ python setup.py sdist upload -r testpypi
 sudo pip install --index-url https://test.pypi.org/simple/ snippy
 sudo pip uninstall snippy
 pip3 install --user --index-url https://test.pypi.org/simple/ snippy
+pip3 uninstall snippy
+
+# Source dist
+python setup.py sdist
+tar -ztvf dist/snippy-0.1.0.tar.gz
+twine register dist/snippy-0.1.0.tar.gz
+twine upload dist/*
 
 # Make the snippy.db not included into the git
 https://stackoverflow.com/questions/9794931/keep-file-in-a-git-repo-but-dont-track-changes

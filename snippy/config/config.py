@@ -484,9 +484,9 @@ class Config(object): # pylint: disable=too-many-public-methods
         for tag in keywords:
             kw_list = kw_list + re.findall(r"[\w\-\.]+", tag)
 
-        kw_list = sorted(kw_list)
+        sorted_list = sorted(kw_list)
 
-        return tuple(kw_list)
+        return tuple(sorted_list)
 
     @staticmethod
     def _caller():

@@ -15,10 +15,20 @@ Random notes and scribling during development.
    ```
 
    ```
-   # Installing
+   # Installing for Python 3
    $ mkvirtualenv snippy
    $ pip3 install .
    $ pip3 install -e .[dev] # Development packages.
+   ```
+
+   ```
+   # Installing for Python 2.7
+   $ pip2 install virtualenvwrapper
+   $ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2    # Add to ~/.bashrc
+   $ mkvirtualenv snippy-python27
+   $ workon snippy-python27
+   $ pip install -e .[dev]
+   $ sudo dnf install redhat-rpm-config
    ```
 
    ```
@@ -26,6 +36,7 @@ Random notes and scribling during development.
    $ lssitepackages
    $ lsvirtualenv
    $ deactivate
+   $ rmvirtualenv snippy-python27
    $ workon snippy
    $ rmvirtualenv snippy
    ```
@@ -103,6 +114,10 @@ make clean
 time python runner create -c 'docker rm' -b 'Remove all docker containers' -g 'moby' -t docker,container,cleanup --debug
 python runner search --sall docker
 
+cd devel/snippy
+workon snippy-python27
+
+
 python runner create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python runner create -c 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -g 'docker' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python runner create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
@@ -158,7 +173,7 @@ grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
 ## PyPI
 #######################################
 
-    
+
     # Testing
     python setup.py register -r testpypi
     python setup.py sdist upload -r testpypi
@@ -171,25 +186,26 @@ grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
     python setup.py sdist
     python setup.py sdist bdist_wheel
     tar -ztvf dist/snippy-0.1.0.tar.gz
-    
+
     gpg --list-keys
     gpg --detach-sign -a dist/snippy-0.1.0.tar.gz
     twine upload dist/snippy-0.1.0.tar.gz snippy-0.1.0.tar.gz.asc
-    
+
     twine register dist/snippy-0.1.0.tar.gz
     twine register dist/snippy-0.1.0-py3-none-any.whl
     twine register dist/snippy-0.1.0.tar.gz
     twine upload dist/*
-    
+
     # Old (insecure)
     python setup.py register
     python setup.py sdist upload
-    
+
     # Links
     https://pypi.org/simple/snippet/
     https://pypi.org/simple/snippy/
-    
+
     # Service request and pypi index package names
+    https://pypi.org/project/snippy/
     https://stackoverflow.com/questions/45935230/transfer-ownership-of-pypi-packages
     https://www.python.org/dev/peps/pep-0541/
     https://sourceforge.net/p/pypi/support-requests/

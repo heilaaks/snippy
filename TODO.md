@@ -1,5 +1,7 @@
 ## TODO
+   - [ ] Why random test_sqlite3_db_delete_snippet_basic failure if DB insert tag map/join not sorted?
    - [ ] Fix 'snippy delete' or 'snippy delete ' that deletes all?
+   - [ ] Fix random appearance of file::memory:?cache=shared during Python2.7 tests. Where this comes?
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Add delete to work with exact content like update.
@@ -12,9 +14,10 @@
    - [ ] Fix adding empty content. Now if user does not give value to content, it is created in storage.
    - [ ] Fix case described in log 11448a2e90dab3a2837c1a971798721095d1c160 somehow and make test_wf a bit nicer?
    - [ ] Fix pip3 uninstalling does not remove database itself.
-   - [ ] Add compatibility with Python 2.7.x
+   - [ ] Add tox to run tests on multiple Python versions
 
 ## DONE
+   - [x] Fixed Python 2.7 compatibility.
    - [x] Changed content to be tuple so that it is bit nicer in the yaml and future processing should be easier.
    - [x] Added new storage location with packaging and import defaults.
    - [x] Changed order of links and tags in the console output.

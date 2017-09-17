@@ -3,7 +3,7 @@
 """snippet_helper.py: Helper methods for snippet testing."""
 
 import re
-import unittest
+import six
 from snippy.config import Constants as Const
 from tests.testlib.constant_helper import * # pylint: disable=wildcard-import,unused-wildcard-import
 
@@ -88,15 +88,14 @@ class SnippetHelper(object):
         return digest
 
     @staticmethod
-    def compare(snippet, reference):
+    def compare(testcase, snippet, reference):
         """Compare two snippets."""
 
         # Test that all fields excluding id and onwards are equal.
-        testcase = unittest.TestCase()
-        testcase.assertCountEqual(snippet[CONTENT], reference[CONTENT])
+        SnippetHelper._assert_count_equal(testcase, snippet[CONTENT], reference[CONTENT])
         testcase.assertEqual(snippet[BRIEF:TAGS], reference[BRIEF:TAGS])
-        testcase.assertCountEqual(snippet[TAGS], reference[TAGS])
-        testcase.assertCountEqual(snippet[LINKS], reference[LINKS])
+        SnippetHelper._assert_count_equal(testcase, snippet[TAGS], reference[TAGS])
+        SnippetHelper._assert_count_equal(testcase, snippet[LINKS], reference[LINKS])
         testcase.assertEqual(snippet[DIGEST], reference[DIGEST])
         testcase.assertEqual(snippet[METADATA], reference[METADATA])
 
@@ -106,29 +105,37 @@ class SnippetHelper(object):
 
         # Test that tags and links are lists and rest of the fields strings.
         assert isinstance(snippet[CONTENT], tuple)
-        assert isinstance(snippet[BRIEF], str)
-        assert isinstance(snippet[GROUP], str)
+        assert isinstance(snippet[BRIEF], six.string_types)
+        assert isinstance(snippet[GROUP], six.string_types)
         assert isinstance(snippet[TAGS], tuple)
         assert isinstance(snippet[LINKS], tuple)
-        assert isinstance(snippet[DIGEST], str)
+        assert isinstance(snippet[DIGEST], six.string_types)
 
     @staticmethod
-    def compare_db(snippet, reference):
+    def compare_db(testcase, snippet, reference):
         """Compare snippes when they are in database format."""
-
+        print("snippet %s" % (snippet,))
         # Test that all fields excluding id and onwards are equal.
-        testcase = unittest.TestCase()
         testcase.assertEqual(snippet[CONTENT], Const.DELIMITER_CONTENT.join(reference[CONTENT]))
         testcase.assertEqual(snippet[BRIEF:TAGS], reference[BRIEF:TAGS])
-        testcase.assertEqual(snippet[TAGS], Const.DELIMITER_TAGS.join(reference[TAGS]))
-        testcase.assertCountEqual(snippet[LINKS], Const.DELIMITER_LINKS.join(reference[LINKS]))
+        testcase.assertEqual(snippet[TAGS], Const.DELIMITER_TAGS.join(sorted(reference[TAGS])))
+        SnippetHelper._assert_count_equal(testcase, snippet[LINKS], Const.DELIMITER_LINKS.join(sorted(reference[LINKS])))
         testcase.assertEqual(snippet[DIGEST], reference[DIGEST])
         testcase.assertEqual(snippet[METADATA], reference[METADATA])
 
         # Test that tags and links are lists and rest of the fields strings.
-        assert isinstance(snippet[CONTENT], str)
-        assert isinstance(snippet[BRIEF], str)
-        assert isinstance(snippet[GROUP], str)
-        assert isinstance(snippet[TAGS], str)
-        assert isinstance(snippet[LINKS], str)
-        assert isinstance(snippet[DIGEST], str)
+        assert isinstance(snippet[CONTENT], six.string_types)
+        assert isinstance(snippet[BRIEF], six.string_types)
+        assert isinstance(snippet[GROUP], six.string_types)
+        assert isinstance(snippet[TAGS], six.string_types)
+        assert isinstance(snippet[LINKS], six.string_types)
+        assert isinstance(snippet[DIGEST], six.string_types)
+
+    @staticmethod
+    def _assert_count_equal(testcase, snippet, reference):
+        """Compare lists."""
+
+        if not Const.PYTHON2:
+            testcase.assertCountEqual(snippet, reference)
+        else:
+            testcase.assertItemsEqual(snippet, reference)

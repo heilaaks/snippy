@@ -2,6 +2,8 @@
 
 """constants.py: Globals constants for the tool."""
 
+import sys
+
 
 class Constants(object):
     """Globals constants for the tool."""
@@ -11,6 +13,9 @@ class Constants(object):
     EMPTY = ''
     EMPTY_LIST = []
     EMPTY_TUPLE = ()
+
+    # Python2
+    PYTHON2 = sys.version_info.major == 2
 
     # Delimiters
     DELIMITER_CONTENT = NEWLINE

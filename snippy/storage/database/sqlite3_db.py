@@ -48,11 +48,13 @@ class Sqlite3Db(object):
                      'VALUES(?,?,?,?,?,?,?)')
             self.logger.debug('insert snippet "%s" with digest %.16s', snippet[Const.SNIPPET_BRIEF], digest)
             try:
+                # The join/map is sorted because it seems that this somehow randomly changes
+                # the order of tags in the string. This seems to happen only in Python 2.7.
                 self.cursor.execute(query, (Const.get_content_string(snippet),
                                             snippet[Const.SNIPPET_BRIEF],
                                             snippet[Const.SNIPPET_GROUP],
-                                            Const.DELIMITER_TAGS.join(map(str, snippet[Const.SNIPPET_TAGS])),
-                                            Const.DELIMITER_LINKS.join(map(str, snippet[Const.SNIPPET_LINKS])),
+                                            Const.DELIMITER_TAGS.join(map(str, sorted(snippet[Const.SNIPPET_TAGS]))),
+                                            Const.DELIMITER_LINKS.join(map(str, sorted(snippet[Const.SNIPPET_LINKS]))),
                                             digest,
                                             metadata))
                 self.conn.commit()
@@ -207,7 +209,10 @@ class Sqlite3Db(object):
 
         location = self._get_db_location()
         try:
-            conn = sqlite3.connect(location, check_same_thread=False, uri=True)
+            if not Const.PYTHON2:
+                conn = sqlite3.connect(location, check_same_thread=False, uri=True)
+            else:
+                conn = sqlite3.connect(location, check_same_thread=False)
             conn.create_function('REGEXP', 2, Sqlite3Db._regexp)
             cursor = conn.cursor()
             with open(Config.get_storage_schema(), 'rt') as schema_file:

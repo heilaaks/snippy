@@ -21,7 +21,6 @@ None so far.
 ## Installation
 
    ```
-   # Developed with Python 3.6. Tested that Python 2.17.x does not currently work.
    git clone https://github.com/heilaaks/snippy.git
    cd snippy
    make install

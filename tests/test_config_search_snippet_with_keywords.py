@@ -18,7 +18,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         sys.argv = ['snippy', 'search', '--sall', 'docker']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertCountEqual(obj.get_search_keywords(), search_kw)
+        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
 
     def test_search_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that search keywords can be added inside quotes separated by
@@ -28,7 +28,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertCountEqual(obj.get_search_keywords(), search_kw)
+        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
 
     def test_search_with_quotes_and_separated_by_comma_and_space(self):
         """Test that search keywords can be added inside quotes separated by
@@ -38,7 +38,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertCountEqual(obj.get_search_keywords(), search_kw)
+        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
 
     def test_search_with_quotes_and_separated_by_only_space(self):
         """Test that search keywords can be added so that they are separated
@@ -48,7 +48,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertCountEqual(obj.get_search_keywords(), search_kw)
+        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
 
     def test_search_separated_by_space(self):
         """Test that search keywords can be added so that they are separated
@@ -59,7 +59,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertCountEqual(obj.get_search_keywords(), search_kw)
+        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
 
     def test_search_separated_by_space_and_comma(self):
         """Test that search keywords can be added so that they are separated
@@ -69,7 +69,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertCountEqual(obj.get_search_keywords(), search_kw)
+        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
 
     def test_search_with_special_characters(self):
         """Test that search keywords are accepted if they contain special
@@ -79,7 +79,7 @@ class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
         sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Config()
         assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertCountEqual(obj.get_search_keywords(), search_kw)
+        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
         assert len(obj.get_search_keywords()) == 3
 
     # pylint: disable=duplicate-code

@@ -25,11 +25,11 @@ class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase):
         keywords = ['foo', 'engine', 'digitalocean']
         self.sqlite.insert_snippet(references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
         self.sqlite.insert_snippet(references[1][CONTENT:TESTING], references[1][DIGEST], references[1][METADATA])
-        Snippet().compare_db((self.sqlite.select_snippets(keywords))[0], references[0])
-        Snippet().compare_db((self.sqlite.select_snippets(keywords))[1], references[1])
+        Snippet().compare_db(self, (self.sqlite.select_snippets(keywords))[0], references[0])
+        Snippet().compare_db(self, (self.sqlite.select_snippets(keywords))[1], references[1])
         assert len(Database.select_all_snippets()) == 2
         self.sqlite.delete_snippet('6f9e21abdc2e4c53')
-        Snippet().compare_db((self.sqlite.select_snippets(keywords))[0], references[0])
+        Snippet().compare_db(self, (self.sqlite.select_snippets(keywords))[0], references[0])
         assert len(Database.select_all_snippets()) == 1
         self.sqlite.disconnect()
 
@@ -43,11 +43,11 @@ class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase):
         keywords = ['foo', 'engine', 'digitalocean']
         self.sqlite.insert_snippet(references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
         self.sqlite.insert_snippet(references[1][CONTENT:TESTING], references[1][DIGEST], references[1][METADATA])
-        Snippet().compare_db((self.sqlite.select_snippets(keywords))[0], references[0])
-        Snippet().compare_db((self.sqlite.select_snippets(keywords))[1], references[1])
+        Snippet().compare_db(self, (self.sqlite.select_snippets(keywords))[0], references[0])
+        Snippet().compare_db(self, (self.sqlite.select_snippets(keywords))[1], references[1])
         assert len(Database.select_all_snippets()) == 2
         self.sqlite.delete_snippet('6f9e21abdc2e4c53d04d77eff024708086c0a583f1be3dd761774353e9d2b74f')
-        Snippet().compare_db((self.sqlite.select_snippets(keywords))[0], references[0])
+        Snippet().compare_db(self, (self.sqlite.select_snippets(keywords))[0], references[0])
         assert len(Database.select_all_snippets()) == 1
         self.sqlite.disconnect()
 

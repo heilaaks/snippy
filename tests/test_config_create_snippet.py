@@ -87,7 +87,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_content_tags(), tuple)
         assert obj.get_content_data() == tuple([content])
         assert not obj.get_content_brief()
-        self.assertCountEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_tags(), tags)
 
     def test_tags_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -102,7 +102,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_content_tags(), tuple)
         assert obj.get_content_data() == tuple([content])
         assert not obj.get_content_brief()
-        self.assertCountEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_tags(), tags)
 
     def test_tags_with_quotes_and_separated_by_comma_and_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -124,8 +124,8 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert obj.get_content_data() == tuple([content])
         assert obj.get_content_brief() == brief
         assert obj.get_content_group() == group
-        self.assertCountEqual(obj.get_content_tags(), tags)
-        self.assertCountEqual(obj.get_content_links(), links)
+        self.assertTupleEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_links(), links)
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -139,7 +139,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_content_brief(), str)
         assert isinstance(obj.get_content_tags(), tuple)
         assert obj.get_content_data() == tuple([content])
-        self.assertCountEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_tags(), tags)
 
     def test_tags_separated_by_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -153,7 +153,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_content_brief(), str)
         assert isinstance(obj.get_content_tags(), tuple)
         assert obj.get_content_data() == tuple([content])
-        self.assertCountEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_tags(), tags)
 
     def test_tags_separated_by_space_and_comma(self):
         """Test that tags can be added so that they are separated by comma
@@ -167,7 +167,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_content_brief(), str)
         assert isinstance(obj.get_content_tags(), tuple)
         assert obj.get_content_data() == tuple([content])
-        self.assertCountEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_tags(), tags)
 
     def test_tags_with_special_characters(self):
         """Test that tags are accepted if they contain special characters."""
@@ -180,7 +180,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_content_brief(), str)
         assert isinstance(obj.get_content_tags(), tuple)
         assert obj.get_content_data() == tuple([content])
-        self.assertCountEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_tags(), tags)
         assert len(obj.get_content_tags()) == 3
 
     def test_tags_provided_in_list(self):
@@ -196,7 +196,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_content_brief(), str)
         assert isinstance(obj.get_content_tags(), tuple)
         assert obj.get_content_data() == tuple([content])
-        self.assertCountEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_tags(), tags)
 
     def test_links_separated_by_space(self):
         """Test that multiple links can be added by separating them with
@@ -215,8 +215,8 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_content_links(), tuple)
         assert obj.get_content_data() == tuple([content])
         assert obj.get_content_brief() == brief
-        self.assertCountEqual(obj.get_content_tags(), tags)
-        self.assertCountEqual(obj.get_content_links(), links)
+        self.assertTupleEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_links(), links)
 
     # pylint: disable=duplicate-code
     @classmethod

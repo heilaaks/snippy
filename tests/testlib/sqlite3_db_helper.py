@@ -5,6 +5,7 @@
 import sqlite3
 import os.path
 import pkg_resources
+from snippy.config import Constants as Const
 
 
 class Sqlite3DbHelper(object):
@@ -47,7 +48,10 @@ class Sqlite3DbHelper(object):
     def _connect_db():
         """Connect to shared memory database."""
 
-        conn = sqlite3.connect('file::memory:?cache=shared', check_same_thread=False, uri=True)
+        if not Const.PYTHON2:
+            conn = sqlite3.connect('file::memory:?cache=shared', check_same_thread=False, uri=True)
+        else:
+            conn = sqlite3.connect('file::memory:?cache=shared', check_same_thread=False)
         cursor = conn.cursor()
 
         return (conn, cursor)

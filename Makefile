@@ -1,5 +1,5 @@
 install:
-	pip3 install .
+	pip install .
 
 upgrade:
 	pip install --upgrade .
@@ -8,10 +8,10 @@ uninstall:
 	pip uninstall --yes snippy
 
 dev:
-	pip3 install -e .[dev]
+	pip install -e .[dev]
 
 test:
-	python3 -m pytest ./tests/test_*.py --cov snippy -vv
+	python -m pytest ./tests/test_*.py --cov snippy -vv
 
 coverage:
 	pytest --cov=snippy --cov-report html tests/

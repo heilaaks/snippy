@@ -215,7 +215,7 @@ class Arguments(object):
         # since it may be confusing. If there is no input for the group
         # the default is set back.
         edited_message = Const.EMPTY
-        content = Const.DELIMITER_CONTENT.join(map(str, snippet[Const.SNIPPET_CONTENT]))
+        content = Const.get_content_string(snippet)
         brief = snippet[Const.SNIPPET_BRIEF] + Const.NEWLINE
         if snippet[Const.SNIPPET_GROUP] == Const.DEFAULT_GROUP:
             group = Const.EMPTY + Const.NEWLINE

@@ -48,7 +48,7 @@ class Sqlite3Db(object):
                      'VALUES(?,?,?,?,?,?,?)')
             self.logger.debug('insert snippet "%s" with digest %.16s', snippet[Const.SNIPPET_BRIEF], digest)
             try:
-                self.cursor.execute(query, (Const.DELIMITER_CONTENT.join(map(str, snippet[Const.SNIPPET_CONTENT])),
+                self.cursor.execute(query, (Const.get_content_string(snippet),
                                             snippet[Const.SNIPPET_BRIEF],
                                             snippet[Const.SNIPPET_GROUP],
                                             Const.DELIMITER_TAGS.join(map(str, snippet[Const.SNIPPET_TAGS])),
@@ -154,7 +154,7 @@ class Sqlite3Db(object):
             self.logger.debug('updating snippet %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
                               snippet[Const.SNIPPET_BRIEF])
             try:
-                self.cursor.execute(query, (Const.DELIMITER_CONTENT.join(map(str, snippet[Const.SNIPPET_CONTENT])),
+                self.cursor.execute(query, (Const.get_content_string(snippet),
                                             snippet[Const.SNIPPET_BRIEF],
                                             snippet[Const.SNIPPET_GROUP],
                                             Const.DELIMITER_TAGS.join(map(str, snippet[Const.SNIPPET_TAGS])),

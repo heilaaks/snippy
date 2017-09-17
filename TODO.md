@@ -1,8 +1,8 @@
 ## TODO
-   - [ ] Fix export of yaml that generates extra newlines with multiple content lines. Generate list?
    - [ ] Fix 'snippy delete' or 'snippy delete ' that deletes all?
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
+   - [ ] Add delete to work with exact content like update.
    - [ ] Add docker container for the project.
    - [ ] Update documents.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
@@ -15,6 +15,7 @@
    - [ ] Add compatibility with Python 2.7.x
 
 ## DONE
+   - [x] Changed content to be tuple so that it is bit nicer in the yaml and future processing should be easier.
    - [x] Added new storage location with packaging and import defaults.
    - [x] Changed order of links and tags in the console output.
    - [x] Fixed the pip packaging and added the uninstall in Makefile.

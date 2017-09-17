@@ -95,3 +95,9 @@ class Constants(object):
         """Format snippet tags."""
 
         return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   # %s\n'
+
+    @staticmethod
+    def get_content_string(snippet):
+        """Format snippet content to string."""
+
+        return Constants.DELIMITER_CONTENT.join(map(str, snippet[Constants.SNIPPET_CONTENT]))

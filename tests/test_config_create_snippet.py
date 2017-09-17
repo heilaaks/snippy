@@ -16,15 +16,15 @@ class TestConfigCreateSnippet(unittest.TestCase):
         """Test that empty argument list is set to configuration."""
 
         sys.argv = ['snippy', 'create']
-        snippet = ('', '', Const.DEFAULT_GROUP, [], [], None, None, None, None)
+        snippet = ((), '', Const.DEFAULT_GROUP, (), (), None, None, None, None)
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
         assert isinstance(obj.get_content_group(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert isinstance(obj.get_content_links(), list)
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert isinstance(obj.get_content_links(), tuple)
         assert isinstance(obj.get_operation_digest(), str)
-        assert isinstance(obj.get_search_keywords(), list)
+        assert isinstance(obj.get_search_keywords(), tuple)
         assert isinstance(obj.get_operation_file(), str)
         assert obj.get_snippet() == snippet
         assert obj.is_operation_create()
@@ -53,10 +53,10 @@ class TestConfigCreateSnippet(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         sys.argv = ['snippy', 'create', '-c', content]
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert obj.get_content_data() == tuple([content])
         assert not obj.get_content_brief()
         assert not obj.get_content_tags()
 
@@ -68,10 +68,10 @@ class TestConfigCreateSnippet(unittest.TestCase):
         brief = 'Remove all docker containers'
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief]
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert obj.get_content_data() == tuple([content])
         assert obj.get_content_brief() == brief
         assert not obj.get_content_tags()
 
@@ -79,13 +79,13 @@ class TestConfigCreateSnippet(unittest.TestCase):
         """Test that new snippet can be created with a single tag."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['docker']
+        tags = ('docker',)
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker']
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert obj.get_content_data() == tuple([content])
         assert not obj.get_content_brief()
         self.assertCountEqual(obj.get_content_tags(), tags)
 
@@ -94,13 +94,13 @@ class TestConfigCreateSnippet(unittest.TestCase):
         without spaces."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['cleanup', 'container', 'docker']
+        tags = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup']
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert obj.get_content_data() == tuple([content])
         assert not obj.get_content_brief()
         self.assertCountEqual(obj.get_content_tags(), tags)
 
@@ -111,17 +111,17 @@ class TestConfigCreateSnippet(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
         group = 'docker'
-        tags = ['cleanup', 'container', 'docker']
-        links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container']
+        tags = ('cleanup', 'container', 'docker')
+        links = ('https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',)
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', 'docker, container, cleanup',
                     '-l', links[0]]
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
         assert isinstance(obj.get_content_group(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert isinstance(obj.get_content_links(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert isinstance(obj.get_content_links(), tuple)
+        assert obj.get_content_data() == tuple([content])
         assert obj.get_content_brief() == brief
         assert obj.get_content_group() == group
         self.assertCountEqual(obj.get_content_tags(), tags)
@@ -132,13 +132,13 @@ class TestConfigCreateSnippet(unittest.TestCase):
         before and after the words."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['cleanup', 'container', 'docker']
+        tags = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker container cleanup']
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert obj.get_content_data() == tuple([content])
         self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_tags_separated_by_space(self):
@@ -146,13 +146,13 @@ class TestConfigCreateSnippet(unittest.TestCase):
         before and after the words like in '-t docker container cleanup'."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['cleanup', 'container', 'docker']
+        tags = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup']
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert obj.get_content_data() == tuple([content])
         self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_tags_separated_by_space_and_comma(self):
@@ -160,26 +160,26 @@ class TestConfigCreateSnippet(unittest.TestCase):
         after the words like in '-t docker, container, cleanup'."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['cleanup', 'container', 'docker']
+        tags = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup']
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert obj.get_content_data() == tuple([content])
         self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_tags_with_special_characters(self):
         """Test that tags are accepted if they contain special characters."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['cleanup_testing', 'container-managemenet', 'dockertesting']
+        tags = ('cleanup_testing', 'container-managemenet', 'dockertesting')
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert obj.get_content_data() == tuple([content])
         self.assertCountEqual(obj.get_content_tags(), tags)
         assert len(obj.get_content_tags()) == 3
 
@@ -189,13 +189,13 @@ class TestConfigCreateSnippet(unittest.TestCase):
         reproduce this?"""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['cleanup', 'container', 'docker']
+        tags = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup']
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert obj.get_content_data() == tuple([content])
         self.assertCountEqual(obj.get_content_tags(), tags)
 
     def test_links_separated_by_space(self):
@@ -204,16 +204,16 @@ class TestConfigCreateSnippet(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
-        tags = ['cleanup', 'container', 'docker']
-        links = ['https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
-                 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes']
+        tags = ('cleanup', 'container', 'docker')
+        links = ('https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
+                 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', ' '.join(links)]
         obj = Config()
-        assert isinstance(obj.get_content_data(), str)
+        assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), list)
-        assert isinstance(obj.get_content_links(), list)
-        assert obj.get_content_data() == content
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert isinstance(obj.get_content_links(), tuple)
+        assert obj.get_content_data() == tuple([content])
         assert obj.get_content_brief() == brief
         self.assertCountEqual(obj.get_content_tags(), tags)
         self.assertCountEqual(obj.get_content_links(), links)

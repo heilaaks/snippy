@@ -328,6 +328,8 @@ python snip.py create
 
 17. Create content with quotes like 'grep -rin './' -e 'pattern'
 
+18. Create content with that has tags, brief and group only numbers to see if the string handling takes care of numbers.
+
 ####################
 ## Updating snippets
 ####################

@@ -291,9 +291,11 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         arg = cls.args.get_content_data()
         if arg:
-            return arg
+            content = arg.split(Const.DELIMITER_CONTENT)
 
-        return Const.EMPTY
+            return tuple(content)
+
+        return Const.EMPTY_TUPLE
 
     @classmethod
     def _parse_content_brief(cls):
@@ -331,8 +333,10 @@ class Config(object): # pylint: disable=too-many-public-methods
         # Examples: Support processing of:
         #           1. -l docker container cleanup # Space separated string of links
         link_list = links.split()
+        link_list = sorted(link_list)
 
-        return sorted(link_list)
+
+        return tuple(link_list)
 
     @classmethod
     def _parse_digest(cls):
@@ -379,11 +383,11 @@ class Config(object): # pylint: disable=too-many-public-methods
         edited_input = cls.args.get_editor_content(snippet)
         if edited_input:
             cls.logger.debug('using parameters from editor')
-            cls.config['content']['data'] = Config._get_user_string(edited_input, Const.EDITED_SNIPPET)
+            cls.config['content']['data'] = Config._get_user_tuple(edited_input, Const.EDITED_CONTENT)
             cls.config['content']['brief'] = Config._get_user_string(edited_input, Const.EDITED_BRIEF)
             cls.config['content']['group'] = Config._get_user_string(edited_input, Const.EDITED_GROUP)
-            cls.config['content']['tags'] = Config._get_user_list(edited_input, Const.EDITED_TAGS)
-            cls.config['content']['links'] = Config._get_user_list(edited_input, Const.EDITED_LINKS)
+            cls.config['content']['tags'] = Config._get_user_tuple(edited_input, Const.EDITED_TAGS)
+            cls.config['content']['links'] = Config._get_user_tuple(edited_input, Const.EDITED_LINKS)
             cls.logger.debug('configured value from editor for content as "%s"', cls.config['content']['data'])
             cls.logger.debug('configured value from editor for brief as "%s"', cls.config['content']['brief'])
             cls.logger.debug('configured value from editor for group as "%s"', cls.config['content']['group'])
@@ -409,21 +413,21 @@ class Config(object): # pylint: disable=too-many-public-methods
     def _get_user_string(cls, edited_string, constants):
         """Parse string type value from editor input."""
 
-        value_list = cls._get_user_list(edited_string, constants)
+        value_list = cls._get_user_tuple(edited_string, constants)
 
         return constants['delimiter'].join(value_list)
 
     @classmethod
-    def _get_user_list(cls, edited_string, constants):
+    def _get_user_tuple(cls, edited_string, constants):
         """Parse list type value from editor input."""
 
         user_answer = re.search('%s(.*)%s' % (constants['head'], constants['tail']), edited_string, re.DOTALL)
         if user_answer and not user_answer.group(1).isspace():
-            value_list = list(map(lambda s: s.strip(), user_answer.group(1).rstrip().split(constants['delimiter'])))
+            value_list = tuple(map(lambda s: s.strip(), user_answer.group(1).rstrip().split(constants['delimiter'])))
 
             return value_list
 
-        return []
+        return Const.EMPTY_TUPLE
 
     @classmethod
     def _parse_operation_file(cls):
@@ -480,7 +484,9 @@ class Config(object): # pylint: disable=too-many-public-methods
         for tag in keywords:
             kw_list = kw_list + re.findall(r"[\w\-\.]+", tag)
 
-        return sorted(kw_list)
+        kw_list = sorted(kw_list)
+
+        return tuple(kw_list)
 
     @staticmethod
     def _caller():

@@ -10,8 +10,10 @@ class Constants(object):
     SPACE = ' '
     EMPTY = ''
     EMPTY_LIST = []
+    EMPTY_TUPLE = ()
 
     # Delimiters
+    DELIMITER_CONTENT = NEWLINE
     DELIMITER_TAGS = ','
     DELIMITER_LINKS = '>' # Disallowed characters in URI: <|>|#|%|"
     DELIMITER_SPACE = SPACE
@@ -52,8 +54,8 @@ class Constants(object):
     DB_ENTRY_NOT_FOUND = 'not-found'
 
     # Editor inputs
-    EDITOR_SNIPPET_HEAD = '# Add mandatory snippet below.\n'
-    EDITOR_SNIPPET_TAIL = '# Add optional brief description below.\n'
+    EDITOR_CONTENT_HEAD = '# Add mandatory snippet below.\n'
+    EDITOR_CONTENT_TAIL = '# Add optional brief description below.\n'
     EDITOR_BRIEF_HEAD = '# Add optional brief description below.\n'
     EDITOR_BRIEF_TAIL = '# Add optional single group below.\n'
     EDITOR_GROUP_HEAD = '# Add optional single group below.\n'
@@ -63,7 +65,7 @@ class Constants(object):
     EDITOR_LINKS_HEAD = '# Add optional links below one link per line.\n'
     EDITOR_LINKS_TAIL = '.'
 
-    EDITED_SNIPPET = {'head': EDITOR_SNIPPET_HEAD, 'tail': EDITOR_SNIPPET_TAIL, 'delimiter': DELIMITER_NEWLINE}
+    EDITED_CONTENT = {'head': EDITOR_CONTENT_HEAD, 'tail': EDITOR_CONTENT_TAIL, 'delimiter': DELIMITER_NEWLINE}
     EDITED_BRIEF = {'head': EDITOR_BRIEF_HEAD, 'tail': EDITOR_BRIEF_TAIL, 'delimiter': DELIMITER_SPACE}
     EDITED_GROUP = {'head': EDITOR_GROUP_HEAD, 'tail': EDITOR_GROUP_TAIL, 'delimiter': DELIMITER_SPACE}
     EDITED_TAGS = {'head': EDITOR_TAGS_HEAD, 'tail': EDITOR_TAGS_TAIL, 'delimiter': DELIMITER_TAGS}

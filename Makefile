@@ -28,12 +28,18 @@ clean:
 	find . \( -name \*.pyc -o -name \*.pyo -o -name __pycache__ \) -prune -exec rm -rf {} +
 	rm -drf .cache
 	rm -drf .coverage
+	rm -dfr build
 	rm -dfr dist
 	rm -drf docs/build/*
 	rm -drf htmlcov
 	rm -drf snippy.egg-info
 	rm -f coverage.xml
 	rm -f pytestdebug.log
+	rm -f snippets.json
+	rm -f snippets.text
+	rm -f snippets.yaml
+
+clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall dev test coverage docs lint clean
+.PHONY: install upgrade uninstall dev test coverage docs lint clean clean-db

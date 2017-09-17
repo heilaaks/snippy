@@ -106,11 +106,11 @@ class Storage(object):
     def _get_tuple_from_db_row(row):
         """Convert single row from database to snippet in tuple."""
 
-        snippet = (row[Const.SNIPPET_CONTENT],
+        snippet = (tuple(row[Const.SNIPPET_CONTENT].split(Const.DELIMITER_CONTENT)),
                    row[Const.SNIPPET_BRIEF],
                    row[Const.SNIPPET_GROUP],
-                   row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS),
-                   row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS),
+                   tuple(row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS)),
+                   tuple(row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS)),
                    row[Const.SNIPPET_DIGEST],
                    row[Const.SNIPPET_UTC],
                    row[Const.SNIPPET_METADATA],
@@ -159,7 +159,8 @@ class Storage(object):
     def _get_string(snippet):
         """Convert snippet to one string."""
 
-        snippet_str = Const.EMPTY.join(snippet[Const.SNIPPET_CONTENT:Const.SNIPPET_TAGS])
+        snippet_str = Const.EMPTY.join(map(str, snippet[Const.SNIPPET_CONTENT]))
+        snippet_str = snippet_str + Const.EMPTY.join(snippet[Const.SNIPPET_BRIEF:Const.SNIPPET_TAGS])
         snippet_str = snippet_str + Const.EMPTY.join(sorted(snippet[Const.SNIPPET_TAGS]))
         snippet_str = snippet_str + Const.EMPTY.join(sorted(snippet[Const.SNIPPET_LINKS]))
 

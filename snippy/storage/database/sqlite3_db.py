@@ -46,9 +46,9 @@ class Sqlite3Db(object):
         if self.conn:
             query = ('INSERT OR ROLLBACK INTO snippets(content, brief, groups, tags, links, digest, metadata) ' +
                      'VALUES(?,?,?,?,?,?,?)')
-            self.logger.debug('insert snippet "%s" with digest %.16s', snippet[Const.SNIPPET_CONTENT], digest)
+            self.logger.debug('insert snippet "%s" with digest %.16s', snippet[Const.SNIPPET_BRIEF], digest)
             try:
-                self.cursor.execute(query, (snippet[Const.SNIPPET_CONTENT],
+                self.cursor.execute(query, (Const.DELIMITER_CONTENT.join(map(str, snippet[Const.SNIPPET_CONTENT])),
                                             snippet[Const.SNIPPET_BRIEF],
                                             snippet[Const.SNIPPET_GROUP],
                                             Const.DELIMITER_TAGS.join(map(str, snippet[Const.SNIPPET_TAGS])),
@@ -110,7 +110,7 @@ class Sqlite3Db(object):
             elif content:
                 query = ('SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM snippets ' +
                          'WHERE content=?')
-                qargs = [content]
+                qargs = [Const.DELIMITER_CONTENT.join(map(str, content))]
             else:
                 self.logger.error('exiting because of internal error where search query was not defined')
                 sys.exit(1)
@@ -154,7 +154,7 @@ class Sqlite3Db(object):
             self.logger.debug('updating snippet %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
                               snippet[Const.SNIPPET_BRIEF])
             try:
-                self.cursor.execute(query, (snippet[Const.SNIPPET_CONTENT],
+                self.cursor.execute(query, (Const.DELIMITER_CONTENT.join(map(str, snippet[Const.SNIPPET_CONTENT])),
                                             snippet[Const.SNIPPET_BRIEF],
                                             snippet[Const.SNIPPET_GROUP],
                                             Const.DELIMITER_TAGS.join(map(str, snippet[Const.SNIPPET_TAGS])),

@@ -93,18 +93,18 @@ class Snippet(object):
         """Format snippets for terminal with color codes or for a raw text output."""
 
         text = ''
-        snippet_string = ''
-        link_string = ''
-        self.logger.debug('format snippets for text based output')
+        content = ''
+        links = ''
+        self.logger.debug('format snippets into text format')
         for idx, snippet in enumerate(snippets, start=1):
             text = text + Const.format_header(colors) % (idx, snippet[Const.SNIPPET_BRIEF],
                                                          snippet[Const.SNIPPET_GROUP], \
                                                          snippet[Const.SNIPPET_DIGEST])
-            text = text + Const.EMPTY.join([Const.format_snippet(colors) % (snippet_string, snippet_line) \
-                                            for snippet_line in snippet[Const.SNIPPET_CONTENT].split(Const.NEWLINE)])
+            text = text + Const.EMPTY.join([Const.format_snippet(colors) % (content, line) \
+                                            for line in snippet[Const.SNIPPET_CONTENT]])
             text = text + Const.NEWLINE
             text = Const.format_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet[Const.SNIPPET_TAGS]))
-            text = text + Const.EMPTY.join([Const.format_links(colors) % (link_string, link) \
+            text = text + Const.EMPTY.join([Const.format_links(colors) % (links, link) \
                                             for link in snippet[Const.SNIPPET_LINKS]])
             text = text + Const.NEWLINE
 
@@ -151,7 +151,7 @@ class Snippet(object):
                     import yaml
 
                     snippet_dict = {'snippets': self.storage.convert_to_dictionary(snippets)}
-                    yaml.dump(snippet_dict, outfile)
+                    yaml.dump(snippet_dict, outfile, default_flow_style=False)
                 elif Config.is_file_type_json():
                     import json
 

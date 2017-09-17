@@ -215,7 +215,7 @@ class Arguments(object):
         # since it may be confusing. If there is no input for the group
         # the default is set back.
         edited_message = Const.EMPTY
-        content = snippet[Const.SNIPPET_CONTENT] + Const.NEWLINE
+        content = Const.DELIMITER_CONTENT.join(map(str, snippet[Const.SNIPPET_CONTENT]))
         brief = snippet[Const.SNIPPET_BRIEF] + Const.NEWLINE
         if snippet[Const.SNIPPET_GROUP] == Const.DEFAULT_GROUP:
             group = Const.EMPTY + Const.NEWLINE
@@ -226,8 +226,8 @@ class Arguments(object):
         default_editor = os.environ.get('EDITOR', 'vi')
         editor_template = ('# Commented lines will be ignored.\n'
                            '#\n' +
-                           Const.EDITOR_SNIPPET_HEAD +
-                           content + '\n' +
+                           Const.EDITOR_CONTENT_HEAD +
+                           content + Const.NEWLINE * 2 +
                            Const.EDITOR_BRIEF_HEAD +
                            brief + '\n' +
                            Const.EDITOR_GROUP_HEAD +

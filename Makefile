@@ -36,7 +36,7 @@ clean:
 	rm -f coverage.xml
 	rm -f pytestdebug.log
 	rm -f snippets.json
-	rm -f snippets.text
+	rm -f snippets.txt
 	rm -f snippets.yaml
 
 clean-db:

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Snippy - Command line tool to manage command examples and troubleshooting solutions."""
+"""Snippy - Command and solution example management from console."""
 
 from snippy.logger import Logger
 from snippy.config import Config
@@ -11,7 +11,7 @@ from snippy.profiler import Profiler
 
 
 class Snippy(object):
-    """Snippet and solution management."""
+    """Command and solution management."""
 
     def __init__(self):
         self.logger = Logger(__name__).get()

@@ -90,15 +90,18 @@ http://snippy.readthedocs.io/en/latest/
 
 Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=PA357&dq=Should+I+use+root+or+logger+or+module+name+logger&source=bl&ots=eNYyAjE-IP&sig=MPee2BYjTYu4epc2NlESCG0x3so&hl=en&sa=X&ved=0ahUKEwiylOaLhunVAhXDK5oKHWSaCn04ChDoAQhGMAY#v=onepage&q=Should%20I%20use%20root%20or%20logger%20or%20module%20name%20logger&f=false
 
+#######################################
 ## Devel
+#######################################
 
 cd devel/snippy
 workon snippy
 make docs
 make lint
 make test
-time python snip.py create -c 'docker rm' -b 'Remove all docker containers' -g 'moby' -t docker,container,cleanup --debug
-python snip.py search --sall docker
+make clean
+time python runner create -c 'docker rm' -b 'Remove all docker containers' -g 'moby' -t docker,container,cleanup --debug
+python runner search --sall docker
 
 python runner create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python runner create -c 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -g 'docker' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
@@ -113,12 +116,164 @@ python runner import --file snippets.yaml
 python runner import --file snippets.json
 python runner import --file snippets.txt
 python runner update -d 6b8705255016268c
-python runner create
+
+python runner create --content 'docker rm --volumes $(docker ps --all --quiet)' --brief 'Remove all docker containers with volumes' --group docker --tags docker-ce,docker,moby,container,cleanup --links 'https://docs.docker.com/engine/reference/commandline/rm/'
+python runner create --brief 'Find pattern from files' --group linux --tags linux,search --links 'https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux' --editor
+grep -rin './' -e 'pattern'
+grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
 
 
-=====================================================
-## Test Plan for work flows
-=====================================================
+#######################################
+## Logging
+#######################################
+
+    > https://www.relaxdiego.com/2014/07/logging-in-python.html
+
+
+#######################################
+## Logging
+#######################################
+
+    # Documens - generated document for MT
+    > https://stackoverflow.com/questions/7250659/python-code-to-generate-part-of-sphinx-documentation-is-it-possible
+
+
+#######################################
+## Pytest
+#######################################
+
+    # Pytest
+    > https://media.readthedocs.org/pdf/pytest/3.0.2/pytest.pdf
+
+#######################################
+## Packaging
+#######################################
+
+    # Packaging
+    > https://stackoverflow.com/questions/779495/python-access-data-in-package-subdirectory
+    > http://peterdowns.com/posts/first-time-with-pypi.html
+    > https://testpypi.python.org/pypi?%3Aaction=register_form
+
+#######################################
+## PyPI
+#######################################
+
+    
+    # Testing
+    python setup.py register -r testpypi
+    python setup.py sdist upload -r testpypi
+    sudo pip install --index-url https://test.pypi.org/simple/ snippy
+    sudo pip uninstall snippy
+    pip3 install --user --index-url https://test.pypi.org/simple/ snippy
+    pip3 uninstall snippy
+
+    # Source dist for PyPI
+    python setup.py sdist
+    python setup.py sdist bdist_wheel
+    tar -ztvf dist/snippy-0.1.0.tar.gz
+    
+    gpg --list-keys
+    gpg --detach-sign -a dist/snippy-0.1.0.tar.gz
+    twine upload dist/snippy-0.1.0.tar.gz snippy-0.1.0.tar.gz.asc
+    
+    twine register dist/snippy-0.1.0.tar.gz
+    twine register dist/snippy-0.1.0-py3-none-any.whl
+    twine register dist/snippy-0.1.0.tar.gz
+    twine upload dist/*
+    
+    # Old (insecure)
+    python setup.py register
+    python setup.py sdist upload
+    
+    # Links
+    https://pypi.org/simple/snippet/
+    https://pypi.org/simple/snippy/
+    
+    # Service request and pypi index package names
+    https://stackoverflow.com/questions/45935230/transfer-ownership-of-pypi-packages
+    https://www.python.org/dev/peps/pep-0541/
+    https://sourceforge.net/p/pypi/support-requests/
+    https://www.python.org/dev/peps/pep-0423/
+
+# Must be in $HOME
+[distutils]
+index-servers=
+    pypi
+    testpypi
+
+[testpypi]
+repository: https://test.pypi.org/legacy/
+username: <user>
+password: <password>
+
+[pypi]
+repository: https://testpypi.python.org/pypi
+username: <user>
+password: <password>
+
+# Make the snippy.db not included into the git
+https://stackoverflow.com/questions/9794931/keep-file-in-a-git-repo-but-dont-track-changes
+git update-index --assume-unchanged FILE_NAME # no changes tracked
+git update-index --assume-unchanged snippy/data/storage/snippy.db
+git update-index --no-assume-unchanged FILE_NAME # change back
+
+
+#######################################
+## Command line design
+#######################################
+
+    # Command line desing
+    https://softwareengineering.stackexchange.com/questions/307467/what-are-good-habits-for-designing-command-line-arguments
+    subparsers https://stackoverflow.com/questions/23304740/optional-python-arguments-without-dashes-but-with-additional-parameters
+    https://www.gnu.org/prep/standards/standards.html#g_t_002d_002dhelp
+    http://docopt.org/
+    http://www.tldp.org/LDP/abs/html/standard-options.html
+
+
+pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
+pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests
+pytest --cov=snippy tests/
+pytest --cov=snippy --cov-report html tests/
+make -C docs html
+python snip.py create -c 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup
+python snip.py create -c 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker, container, cleanup
+pytest
+
+   > file:///home/heilaaks/devel/snippy/htmlcov/index.html
+   > file:///home/heilaaks/devel/snippy/docs/build/html/index.html
+
+# Run single test
+pytest tests/test_arguments_add_new_snippet.py -k test_tags_with_quotes_and_separated_by_comma_and_space
+
+#######################################
+## Editor example
+#######################################
+
+### Editor input
+# Commented lines will be ignored.
+#
+# Add mandatory snippet below.
+docker rm --force redis
+docker rmi redis
+docker rmi zookeeper
+
+# Add optional brief description below.
+Remove docker image with force
+
+# Add optional single group below.
+docker
+
+# Add optional comma separated list of tags below.
+docker,images,remove
+
+# Add optional links below one link per line.
+https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
+https://docs.docker.com/engine/reference/commandline/rm/
+
+
+#######################################
+## Test plan
+#######################################
 
 ########################
 ## Creating new snippets
@@ -324,126 +479,3 @@ python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker
 
 6. Print profiling results with --profile option
 python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container' --profile
-
-================================================
-
-python runner create -c 'docker rmi $(docker images -f dangling=true -q)' -b 'Remove all dangling image layers' -g 'docker' -t docker,images,dangling,cleanup -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-python runner create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-python runner create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
-python runner search --sall docker
-python runner delete --digest 6b8705255016268c
-python runner export --file snippets.yaml
-python runner export --file snippets.json
-python runner export --file snippets.txt
-python runner import --file snippets.yaml
-python runner import --file snippets.json
-python runner import --file snippets.txt
-python runner update -d 6b8705255016268c
-
-python runner create --content 'docker rm --volumes $(docker ps --all --quiet)' --brief 'Remove all docker containers with volumes' --group docker --tags docker-ce,docker,moby,container,cleanup --links 'https://docs.docker.com/engine/reference/commandline/rm/'
-python runner create --brief 'Find pattern from files' --group linux --tags linux,search --links 'https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux' --editor
-grep -rin './' -e 'pattern'
-grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
-
-=====================================================
-
-=====================================================
-## Logging
-https://www.relaxdiego.com/2014/07/logging-in-python.html
-=====================================================
-
-## Documens - generated document for MT
-https://stackoverflow.com/questions/7250659/python-code-to-generate-part-of-sphinx-documentation-is-it-possible
-
-=====================================================
-## Packaging
-https://stackoverflow.com/questions/779495/python-access-data-in-package-subdirectory
-http://peterdowns.com/posts/first-time-with-pypi.html
-https://testpypi.python.org/pypi?%3Aaction=register_form
-
-## Pytest
-https://media.readthedocs.org/pdf/pytest/3.0.2/pytest.pdf
-
-python setup.py register -r testpypi
-python setup.py sdist upload -r testpypi
-sudo pip install --index-url https://test.pypi.org/simple/ snippy
-sudo pip uninstall snippy
-pip3 install --user --index-url https://test.pypi.org/simple/ snippy
-pip3 uninstall snippy
-
-# Source dist
-python setup.py sdist
-tar -ztvf dist/snippy-0.1.0.tar.gz
-twine register dist/snippy-0.1.0.tar.gz
-twine upload dist/*
-
-# Make the snippy.db not included into the git
-https://stackoverflow.com/questions/9794931/keep-file-in-a-git-repo-but-dont-track-changes
-git update-index --assume-unchanged FILE_NAME # no changes tracked
-git update-index --assume-unchanged snippy/data/storage/snippy.db
-git update-index --no-assume-unchanged FILE_NAME # change back
-
-# Must be in $HOME
-[distutils]
-index-servers=
-    pypi
-    testpypi
-
-[testpypi]
-repository: https://test.pypi.org/legacy/
-username: <user>
-password: <password>
-
-[pypi]
-repository: https://testpypi.python.org/pypi
-username: <user>
-password: <password>
-
-
-
-=====================================================
-###### Command line desing
-https://softwareengineering.stackexchange.com/questions/307467/what-are-good-habits-for-designing-command-line-arguments
-subparsers https://stackoverflow.com/questions/23304740/optional-python-arguments-without-dashes-but-with-additional-parameters
-https://www.gnu.org/prep/standards/standards.html#g_t_002d_002dhelp
-http://docopt.org/
-http://www.tldp.org/LDP/abs/html/standard-options.html
-=====================================================
-
-pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
-pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests
-pytest --cov=snippy tests/
-pytest --cov=snippy --cov-report html tests/
-make -C docs html
-python snip.py create -c 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup
-python snip.py create -c 'docker rm $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker, container, cleanup
-pytest
-
-   > file:///home/heilaaks/devel/snippy/htmlcov/index.html
-   > file:///home/heilaaks/devel/snippy/docs/build/html/index.html
-
-# Run single test
-pytest tests/test_arguments_add_new_snippet.py -k test_tags_with_quotes_and_separated_by_comma_and_space
-
-### Editor input
-# Commented lines will be ignored.
-#
-# Add mandatory snippet below.
-docker rm --force redis
-docker rmi redis
-docker rmi zookeeper
-
-# Add optional brief description below.
-Remove docker image with force
-
-# Add optional single group below.
-docker
-
-# Add optional comma separated list of tags below.
-docker,images,remove
-
-# Add optional links below one link per line.
-https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
-https://docs.docker.com/engine/reference/commandline/rm/
-
-

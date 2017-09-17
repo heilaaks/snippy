@@ -10,7 +10,7 @@ setup(
     author='Heikki J. Laaksonen',
     author_email='laaksonen.heikki.j@gmail.com',
     url='https://github.com/heilaaks/snippy',
-    description='Command line tool to manage command examples and troubleshooting solutions.',
+    description='Command and solution example management from console.',
     license='Apache 2.0',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
@@ -22,7 +22,7 @@ setup(
         'Natural Language :: English',
         'Topic :: Utilities'
     ],
-    keywords='command example solution manager',
+    keywords='command example solution manager console',
     packages=find_packages(exclude=['tests', 'tests.testlib']),
     package_dir={'snippy': 'snippy'},
     package_data={'snippy': ['data/config/*', 'data/default/*', 'data/storage/*']},

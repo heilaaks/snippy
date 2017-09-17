@@ -217,6 +217,12 @@ git update-index --assume-unchanged FILE_NAME # no changes tracked
 git update-index --assume-unchanged snippy/data/storage/snippy.db
 git update-index --no-assume-unchanged FILE_NAME # change back
 
+#######################################
+## Python general
+#######################################
+
+    # Ordered dictionary also in Python 2.7
+    https://stackoverflow.com/questions/31605131/dumping-a-dictionary-to-a-yaml-file-while-preserving-order
 
 #######################################
 ## Command line design

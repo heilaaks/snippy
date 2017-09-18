@@ -20,13 +20,16 @@ class Snippet(object):
 
         self.logger.debug('creating new snippet')
         snippet = Config.get_snippet()
-        cause = self.storage.create(snippet)
-        if cause == Const.DB_DUPLICATE:
-            snippets = self.storage.search(content=snippet[Const.SNIPPET_CONTENT])
-            if len(snippets) == 1:
-                Config.set_cause('content already exist with digest %.16s' % snippets[0][Const.SNIPPET_DIGEST])
-            else:
-                self.logger.error('unexpected number of snippets received while searching content')
+        if snippet[Const.SNIPPET_CONTENT]:
+            cause = self.storage.create(snippet)
+            if cause == Const.DB_DUPLICATE:
+                snippets = self.storage.search(content=snippet[Const.SNIPPET_CONTENT])
+                if len(snippets) == 1:
+                    Config.set_cause('content already exist with digest %.16s' % snippets[0][Const.SNIPPET_DIGEST])
+                else:
+                    self.logger.error('unexpected number of snippets received while searching content')
+        else:
+            Config.set_cause('mandatory content not defined')
 
     def search(self):
         """Search snippets."""

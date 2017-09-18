@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Fix adding empty content. Now if user does not give value to content, it is created in storage.
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] Fix random appearance of file::memory:?cache=shared during Python2.7 tests. Where this comes?
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
@@ -16,6 +15,7 @@
    - [ ] Test BytePackager/packagecore.
 
 ## DONE
+   - [x] Fixed error handling in case mandatory content was not provided or it was empty.
    - [x] Added delete to work with user provided content like in case of update.
    - [x] Fixed delete in case user provided invalid digest like empty (matches all) or to short.
    - [x] Fixed Python 2.7 compatibility.

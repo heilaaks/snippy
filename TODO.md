@@ -1,6 +1,5 @@
 ## TODO
    - [ ] Add tox to run tests on multiple Python versions.
-   - [ ] Fix random appearance of file::memory:?cache=shared during Python2.7 tests. Where this comes?
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Add docker container for the project.
@@ -15,6 +14,7 @@
    - [ ] Test BytePackager/packagecore.
 
 ## DONE
+   - [x] Fixed incorrect mocking of database that created file::memory:?cache=shared with Python2.
    - [x] Fixed error handling in case mandatory content was not provided or it was empty.
    - [x] Added delete to work with user provided content like in case of update.
    - [x] Fixed delete in case user provided invalid digest like empty (matches all) or to short.

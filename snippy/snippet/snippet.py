@@ -48,8 +48,10 @@ class Snippet(object):
     def update(self):
         """Update existing snippet."""
 
+        snippets = ()
         operation_digest = Config.get_operation_digest()
         snippet_data = Config.get_content_data()
+        log_string = 'invalid digest %.16s' % operation_digest
         if operation_digest:
             self.logger.debug('updating snippet with digest %.16s', operation_digest)
             snippets = self.storage.search(digest=operation_digest)

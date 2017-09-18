@@ -12,6 +12,7 @@
    - [ ] Why random test_sqlite3_db_delete_snippet_basic failure if DB insert tag map/join not sorted?
    - [ ] Test Flake8 lint. It seems to require specific version for specific Python version.
    - [ ] Test BytePackager/packagecore.
+   - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
 
 ## DONE
    - [x] Fixed incorrect mocking of database that created file::memory:?cache=shared with Python2.

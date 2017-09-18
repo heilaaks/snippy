@@ -1,22 +1,23 @@
 ## TODO
-   - [ ] Why random test_sqlite3_db_delete_snippet_basic failure if DB insert tag map/join not sorted?
-   - [ ] Fix 'snippy delete' or 'snippy delete ' that deletes all?
+   - [ ] Fix adding empty content. Now if user does not give value to content, it is created in storage.
+   - [ ] Add tox to run tests on multiple Python versions.
    - [ ] Fix random appearance of file::memory:?cache=shared during Python2.7 tests. Where this comes?
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
-   - [ ] Add delete to work with exact content like update.
    - [ ] Add docker container for the project.
    - [ ] Update documents.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
-   - [ ] Add digest check when importing.
+   - [ ] Add digest check when importing data.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix importing the same data again. There could be a notice if the content already exist.
-   - [ ] Fix adding empty content. Now if user does not give value to content, it is created in storage.
    - [ ] Fix case described in log 11448a2e90dab3a2837c1a971798721095d1c160 somehow and make test_wf a bit nicer?
-   - [ ] Fix pip3 uninstalling does not remove database itself.
-   - [ ] Add tox to run tests on multiple Python versions
+   - [ ] Why random test_sqlite3_db_delete_snippet_basic failure if DB insert tag map/join not sorted?
+   - [ ] Test Flake8 lint. It seems to require specific version for specific Python version.
+   - [ ] Test BytePackager/packagecore.
 
 ## DONE
+   - [x] Added delete to work with user provided content like in case of update.
+   - [x] Fixed delete in case user provided invalid digest like empty (matches all) or to short.
    - [x] Fixed Python 2.7 compatibility.
    - [x] Changed content to be tuple so that it is bit nicer in the yaml and future processing should be easier.
    - [x] Added new storage location with packaging and import defaults.

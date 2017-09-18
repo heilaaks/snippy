@@ -161,6 +161,13 @@ grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
     > https://media.readthedocs.org/pdf/pytest/3.0.2/pytest.pdf
 
 #######################################
+## Tox
+#######################################
+
+    # Tox
+    > https://blog.ionelmc.ro/2015/04/14/tox-tricks-and-patterns/
+
+#######################################
 ## Packaging
 #######################################
 
@@ -397,6 +404,15 @@ python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker
 python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'moby' -t moby,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
 python snip.py delete --digest 111111111111111
+
+3. Test deleting snippets with content that is found
+
+4. Test deleting snippets with content that is not found
+
+5. Test that empty digest does not delete snippet when there is only one snippet
+
+6. Test that deleting snippet requires at least 16 character hash to make sure that user does not accidentally use e.g. '2' that would delete all snippets which hash is starting with '2'.
+
 
 #####################
 ## Searching snippets

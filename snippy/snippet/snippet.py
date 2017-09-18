@@ -32,6 +32,7 @@ class Snippet(object):
         """Search snippets."""
 
         self.logger.info('searching snippets')
+        snippets = ()
         keywords = Config.get_search_keywords()
         content = Config.get_content_data()
         if keywords:
@@ -72,7 +73,26 @@ class Snippet(object):
         """Delete snippet."""
 
         self.logger.debug('deleting snippet')
-        self.storage.delete(Config.get_operation_digest())
+        snippets = ()
+        operation_digest = Config.get_operation_digest()
+        snippet_data = Config.get_content_data()
+        log_string = 'invalid digest %.16s' % operation_digest
+        if operation_digest and len(operation_digest) >= Const.DIGEST_MIN_LENGTH:
+            self.logger.debug('deleting snippet with digest %.16s', operation_digest)
+            snippets = self.storage.search(digest=operation_digest)
+            log_string = 'digest %.16s' % operation_digest
+        elif snippet_data:
+            self.logger.debug('deleting snippet with content "%s"', snippet_data)
+            snippets = self.storage.search(content=snippet_data)
+            log_string = 'content %.20s' % snippet_data
+
+        if len(snippets) == 1:
+            operation_digest = snippets[0][Const.SNIPPET_DIGEST]
+            self.storage.delete(operation_digest)
+        elif not snippets:
+            Config.set_cause('cannot find content to be deleted with %s' % log_string)
+        else:
+            self.logger.error('cannot delete multiple snippets with same %s', log_string)
 
     def export_all(self):
         """Export snippets."""

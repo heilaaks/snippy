@@ -176,7 +176,7 @@ class Sqlite3Db(object):
         cause = Const.DB_FAILURE
         if self.conn:
             query = ('DELETE FROM snippets WHERE digest LIKE ?')
-            self.logger.debug('delete snippet with index %s', digest)
+            self.logger.debug('delete snippet with digest %s', digest)
             try:
                 self.cursor.execute(query, (digest+'%',))
                 if self.cursor.rowcount == 1:
@@ -190,7 +190,7 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('deleting from sqlite3 database failed with exception "%s"', exception)
         else:
-            self.logger.error('sqlite3 database connection did not exist while index was being deleted')
+            self.logger.error('sqlite3 database connection did not exist while snippet was being deleted')
 
         return cause
 

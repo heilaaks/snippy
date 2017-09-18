@@ -17,6 +17,9 @@ class Constants(object):
     # Python2
     PYTHON2 = sys.version_info.major == 2
 
+    # Digest
+    DIGEST_MIN_LENGTH = 16
+
     # Delimiters
     DELIMITER_CONTENT = NEWLINE
     DELIMITER_TAGS = ','

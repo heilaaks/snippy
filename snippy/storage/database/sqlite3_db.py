@@ -46,22 +46,22 @@ class Sqlite3Db(object):
         if self.conn:
             query = ('INSERT OR ROLLBACK INTO snippets(content, brief, groups, tags, links, digest, metadata) ' +
                      'VALUES(?,?,?,?,?,?,?)')
-            self.logger.debug('insert snippet "%s" with digest %.16s', snippet[Const.SNIPPET_BRIEF], digest)
+            self.logger.debug('insert snippet "%s" with digest %.16s', snippet[Const.BRIEF], digest)
             try:
                 # The join/map is sorted because it seems that this somehow randomly changes
                 # the order of tags in the string. This seems to happen only in Python 2.7.
                 self.cursor.execute(query, (Const.get_content_string(snippet),
-                                            snippet[Const.SNIPPET_BRIEF],
-                                            snippet[Const.SNIPPET_GROUP],
-                                            Const.DELIMITER_TAGS.join(map(str, sorted(snippet[Const.SNIPPET_TAGS]))),
-                                            Const.DELIMITER_LINKS.join(map(str, sorted(snippet[Const.SNIPPET_LINKS]))),
+                                            snippet[Const.BRIEF],
+                                            snippet[Const.GROUP],
+                                            Const.DELIMITER_TAGS.join(map(str, sorted(snippet[Const.TAGS]))),
+                                            Const.DELIMITER_LINKS.join(map(str, sorted(snippet[Const.LINKS]))),
                                             digest,
                                             metadata))
                 self.conn.commit()
                 cause = Const.DB_INSERT_OK
             except sqlite3.IntegrityError as exception:
                 cause = Const.DB_DUPLICATE
-                self.logger.info('unique constraint violation with content "%s"', snippet[Const.SNIPPET_CONTENT])
+                self.logger.info('unique constraint violation with content "%s"', snippet[Const.CONTENT])
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
         else:
@@ -73,8 +73,8 @@ class Sqlite3Db(object):
         """Insert multiple snippets into database."""
 
         for snippet in snippets:
-            digest = snippet[Const.SNIPPET_DIGEST]
-            snippet = snippet[Const.SNIPPET_CONTENT:Const.SNIPPET_DIGEST]
+            digest = snippet[Const.DIGEST]
+            snippet = snippet[Const.CONTENT:Const.DIGEST]
             self.insert_snippet(snippet, digest)
 
     def select_snippets(self, keywords=None, digest=None, content=None):
@@ -154,13 +154,13 @@ class Sqlite3Db(object):
             query = ('UPDATE snippets SET content=?, brief=?, groups=?, tags=?, links=?, digest=?, metadata=? ' +
                      'WHERE digest LIKE ?')
             self.logger.debug('updating snippet %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
-                              snippet[Const.SNIPPET_BRIEF])
+                              snippet[Const.BRIEF])
             try:
                 self.cursor.execute(query, (Const.get_content_string(snippet),
-                                            snippet[Const.SNIPPET_BRIEF],
-                                            snippet[Const.SNIPPET_GROUP],
-                                            Const.DELIMITER_TAGS.join(map(str, snippet[Const.SNIPPET_TAGS])),
-                                            Const.DELIMITER_LINKS.join(map(str, snippet[Const.SNIPPET_LINKS])),
+                                            snippet[Const.BRIEF],
+                                            snippet[Const.GROUP],
+                                            Const.DELIMITER_TAGS.join(map(str, snippet[Const.TAGS])),
+                                            Const.DELIMITER_LINKS.join(map(str, snippet[Const.LINKS])),
                                             digest_new,
                                             metadata,
                                             digest_updated))

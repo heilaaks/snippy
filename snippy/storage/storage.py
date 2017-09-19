@@ -106,15 +106,15 @@ class Storage(object):
     def _get_tuple_from_db_row(row):
         """Convert single row from database to snippet in tuple."""
 
-        snippet = (tuple(row[Const.SNIPPET_CONTENT].split(Const.DELIMITER_CONTENT)),
-                   row[Const.SNIPPET_BRIEF],
-                   row[Const.SNIPPET_GROUP],
-                   tuple(row[Const.SNIPPET_TAGS].split(Const.DELIMITER_TAGS)),
-                   tuple(row[Const.SNIPPET_LINKS].split(Const.DELIMITER_LINKS)),
-                   row[Const.SNIPPET_DIGEST],
-                   row[Const.SNIPPET_UTC],
-                   row[Const.SNIPPET_METADATA],
-                   row[Const.SNIPPET_ID])
+        snippet = (tuple(row[Const.CONTENT].split(Const.DELIMITER_CONTENT)),
+                   row[Const.BRIEF],
+                   row[Const.GROUP],
+                   tuple(row[Const.TAGS].split(Const.DELIMITER_TAGS)),
+                   tuple(row[Const.LINKS].split(Const.DELIMITER_LINKS)),
+                   row[Const.DIGEST],
+                   row[Const.UTC],
+                   row[Const.METADATA],
+                   row[Const.KEY])
 
         return snippet
 
@@ -136,13 +136,13 @@ class Storage(object):
     def _get_dictionary(snippet):
         """Convert snippet to dictionary."""
 
-        dictionary = {'content': snippet[Const.SNIPPET_CONTENT],
-                      'brief': snippet[Const.SNIPPET_BRIEF],
-                      'group': snippet[Const.SNIPPET_GROUP],
-                      'tags': snippet[Const.SNIPPET_TAGS],
-                      'links': snippet[Const.SNIPPET_LINKS],
-                      'digest': snippet[Const.SNIPPET_DIGEST],
-                      'utc': snippet[Const.SNIPPET_UTC]}
+        dictionary = {'content': snippet[Const.CONTENT],
+                      'brief': snippet[Const.BRIEF],
+                      'group': snippet[Const.GROUP],
+                      'tags': snippet[Const.TAGS],
+                      'links': snippet[Const.LINKS],
+                      'digest': snippet[Const.DIGEST],
+                      'utc': snippet[Const.UTC]}
 
         return dictionary
 
@@ -159,9 +159,9 @@ class Storage(object):
     def _get_string(snippet):
         """Convert snippet to one string."""
 
-        snippet_str = Const.EMPTY.join(map(str, snippet[Const.SNIPPET_CONTENT]))
-        snippet_str = snippet_str + Const.EMPTY.join(snippet[Const.SNIPPET_BRIEF:Const.SNIPPET_TAGS])
-        snippet_str = snippet_str + Const.EMPTY.join(sorted(snippet[Const.SNIPPET_TAGS]))
-        snippet_str = snippet_str + Const.EMPTY.join(sorted(snippet[Const.SNIPPET_LINKS]))
+        snippet_str = Const.EMPTY.join(map(str, snippet[Const.CONTENT]))
+        snippet_str = snippet_str + Const.EMPTY.join(snippet[Const.BRIEF:Const.TAGS])
+        snippet_str = snippet_str + Const.EMPTY.join(sorted(snippet[Const.TAGS]))
+        snippet_str = snippet_str + Const.EMPTY.join(sorted(snippet[Const.LINKS]))
 
         return snippet_str

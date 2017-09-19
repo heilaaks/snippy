@@ -20,12 +20,12 @@ class Snippet(object):
 
         self.logger.debug('creating new snippet')
         snippet = Config.get_snippet()
-        if snippet[Const.SNIPPET_CONTENT]:
+        if snippet[Const.CONTENT]:
             cause = self.storage.create(snippet)
             if cause == Const.DB_DUPLICATE:
-                snippets = self.storage.search(content=snippet[Const.SNIPPET_CONTENT])
+                snippets = self.storage.search(content=snippet[Const.CONTENT])
                 if len(snippets) == 1:
-                    Config.set_cause('content already exist with digest %.16s' % snippets[0][Const.SNIPPET_DIGEST])
+                    Config.set_cause('content already exist with digest %.16s' % snippets[0][Const.DIGEST])
                 else:
                     self.logger.error('unexpected number of snippets received while searching content')
         else:
@@ -64,10 +64,10 @@ class Snippet(object):
         if len(snippets) == 1:
             if operation_digest:
                 snippet = Config.get_snippet(snippets[0])
-                operation_digest = snippets[0][Const.SNIPPET_DIGEST]
+                operation_digest = snippets[0][Const.DIGEST]
             elif snippet_data:
                 snippet = Config.get_snippet(use_editor=True)
-                operation_digest = snippets[0][Const.SNIPPET_DIGEST]
+                operation_digest = snippets[0][Const.DIGEST]
             self.storage.update(snippet, operation_digest)
         elif not snippets:
             Config.set_cause('cannot find content to be updated with %s' % log_string)
@@ -92,7 +92,7 @@ class Snippet(object):
             log_string = 'content %.20s' % snippet_data
 
         if len(snippets) == 1:
-            operation_digest = snippets[0][Const.SNIPPET_DIGEST]
+            operation_digest = snippets[0][Const.DIGEST]
             self.storage.delete(operation_digest)
         elif not snippets:
             Config.set_cause('cannot find content to be deleted with %s' % log_string)
@@ -122,15 +122,15 @@ class Snippet(object):
         links = ''
         self.logger.debug('format snippets into text format')
         for idx, snippet in enumerate(snippets, start=1):
-            text = text + Const.format_header(colors) % (idx, snippet[Const.SNIPPET_BRIEF],
-                                                         snippet[Const.SNIPPET_GROUP], \
-                                                         snippet[Const.SNIPPET_DIGEST])
+            text = text + Const.format_header(colors) % (idx, snippet[Const.BRIEF],
+                                                         snippet[Const.GROUP], \
+                                                         snippet[Const.DIGEST])
             text = text + Const.EMPTY.join([Const.format_snippet(colors) % (content, line) \
-                                            for line in snippet[Const.SNIPPET_CONTENT]])
+                                            for line in snippet[Const.CONTENT]])
             text = text + Const.NEWLINE
-            text = Const.format_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet[Const.SNIPPET_TAGS]))
+            text = Const.format_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet[Const.TAGS]))
             text = text + Const.EMPTY.join([Const.format_links(colors) % (links, link) \
-                                            for link in snippet[Const.SNIPPET_LINKS]])
+                                            for link in snippet[Const.LINKS]])
             text = text + Const.NEWLINE
 
         return text

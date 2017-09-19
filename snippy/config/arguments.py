@@ -216,13 +216,13 @@ class Arguments(object):
         # the default is set back.
         edited_message = Const.EMPTY
         content = Const.get_content_string(snippet)
-        brief = snippet[Const.SNIPPET_BRIEF] + Const.NEWLINE
-        if snippet[Const.SNIPPET_GROUP] == Const.DEFAULT_GROUP:
+        brief = snippet[Const.BRIEF] + Const.NEWLINE
+        if snippet[Const.GROUP] == Const.DEFAULT_GROUP:
             group = Const.EMPTY + Const.NEWLINE
         else:
-            group = snippet[Const.SNIPPET_GROUP] + Const.NEWLINE
-        tags = Const.DELIMITER_TAGS.join(snippet[Const.SNIPPET_TAGS]) + Const.NEWLINE
-        links = Const.DELIMITER_NEWLINE.join(snippet[Const.SNIPPET_LINKS]) + Const.NEWLINE
+            group = snippet[Const.GROUP] + Const.NEWLINE
+        tags = Const.DELIMITER_TAGS.join(snippet[Const.TAGS]) + Const.NEWLINE
+        links = Const.DELIMITER_NEWLINE.join(snippet[Const.LINKS]) + Const.NEWLINE
         default_editor = os.environ.get('EDITOR', 'vi')
         editor_template = ('# Commented lines will be ignored.\n'
                            '#\n' +

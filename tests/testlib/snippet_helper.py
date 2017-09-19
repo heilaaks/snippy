@@ -83,7 +83,7 @@ class SnippetHelper(object):
     def get_digest(snippet):
         """Return digest for specified snippet."""
 
-        digest = SnippetHelper.SNIPPETS[snippet][Const.SNIPPET_DIGEST]
+        digest = SnippetHelper.SNIPPETS[snippet][DIGEST]
 
         return digest
 

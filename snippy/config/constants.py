@@ -27,17 +27,17 @@ class Constants(object):
     DELIMITER_SPACE = SPACE
     DELIMITER_NEWLINE = NEWLINE
 
-    # Column and tuple numbers for snippets.
-    SNIPPET_CONTENT = 0
-    SNIPPET_BRIEF = 1
-    SNIPPET_GROUP = 2
-    SNIPPET_TAGS = 3
-    SNIPPET_LINKS = 4
-    SNIPPET_DIGEST = 5
-    SNIPPET_UTC = 6
-    SNIPPET_METADATA = 7
-    SNIPPET_ID = 8
-    SNIPPET_TESTING = 9
+    # Column and tuple numbers for snippets and solutions.
+    CONTENT = 0
+    BRIEF = 1
+    GROUP = 2
+    TAGS = 3
+    LINKS = 4
+    DIGEST = 5
+    UTC = 6
+    METADATA = 7
+    KEY = 8
+    TESTING = 9
 
     # Default values for snippets
     DEFAULT_GROUP = 'default'
@@ -108,4 +108,4 @@ class Constants(object):
     def get_content_string(snippet):
         """Format snippet content to string."""
 
-        return Constants.DELIMITER_CONTENT.join(map(str, snippet[Constants.SNIPPET_CONTENT]))
+        return Constants.DELIMITER_CONTENT.join(map(str, snippet[Constants.CONTENT]))

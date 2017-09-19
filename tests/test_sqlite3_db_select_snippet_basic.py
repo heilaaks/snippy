@@ -23,9 +23,9 @@ class TestSqlite3DbSelectSnippetBasic(unittest.TestCase):
 
         references = Snippet().get_references(1)
         keywords = ['foo', 'bar', 'digitalocean']
-        self.sqlite.insert_snippet(references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
-        Snippet().compare_db(self, (self.sqlite.select_snippets(keywords))[0], references[0])
-        assert len(self.sqlite.select_snippets(keywords)) == 1
+        self.sqlite.insert_content('snippets', references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
+        Snippet().compare_db(self, (self.sqlite.select_content('snippets', keywords))[0], references[0])
+        assert len(self.sqlite.select_content('snippets', keywords)) == 1
         self.sqlite.disconnect()
 
     # pylint: disable=duplicate-code

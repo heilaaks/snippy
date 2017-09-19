@@ -39,29 +39,29 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_snippet(self, snippet, digest, metadata=None):
-        """Insert snippet into database."""
+    def insert_content(self, table, content, digest, metadata=None):
+        """Insert content into database."""
 
         cause = Const.DB_FAILURE
         if self.conn:
-            query = ('INSERT OR ROLLBACK INTO snippets(content, brief, groups, tags, links, digest, metadata) ' +
+            query = ('INSERT OR ROLLBACK INTO ' + table + '(content, brief, groups, tags, links, digest, metadata) ' +
                      'VALUES(?,?,?,?,?,?,?)')
-            self.logger.debug('insert snippet "%s" with digest %.16s', snippet[Const.BRIEF], digest)
+            self.logger.debug('insert "%s" with digest %.16s', content[Const.BRIEF], digest)
             try:
                 # The join/map is sorted because it seems that this somehow randomly changes
                 # the order of tags in the string. This seems to happen only in Python 2.7.
-                self.cursor.execute(query, (Const.get_content_string(snippet),
-                                            snippet[Const.BRIEF],
-                                            snippet[Const.GROUP],
-                                            Const.DELIMITER_TAGS.join(map(str, sorted(snippet[Const.TAGS]))),
-                                            Const.DELIMITER_LINKS.join(map(str, sorted(snippet[Const.LINKS]))),
+                self.cursor.execute(query, (Const.get_content_string(content),
+                                            content[Const.BRIEF],
+                                            content[Const.GROUP],
+                                            Const.DELIMITER_TAGS.join(map(str, sorted(content[Const.TAGS]))),
+                                            Const.DELIMITER_LINKS.join(map(str, sorted(content[Const.LINKS]))),
                                             digest,
                                             metadata))
                 self.conn.commit()
                 cause = Const.DB_INSERT_OK
             except sqlite3.IntegrityError as exception:
                 cause = Const.DB_DUPLICATE
-                self.logger.info('unique constraint violation with content "%s"', snippet[Const.CONTENT])
+                self.logger.info('unique constraint violation with content "%s"', content[Const.CONTENT])
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
         else:
@@ -69,16 +69,16 @@ class Sqlite3Db(object):
 
         return cause
 
-    def bulk_insert_snippets(self, snippets):
-        """Insert multiple snippets into database."""
+    def bulk_insert_content(self, table, contents):
+        """Insert multiple contents into database."""
 
-        for snippet in snippets:
-            digest = snippet[Const.DIGEST]
-            snippet = snippet[Const.CONTENT:Const.DIGEST]
-            self.insert_snippet(snippet, digest)
+        for entry in contents:
+            digest = entry[Const.DIGEST]
+            entry = entry[Const.CONTENT:Const.DIGEST]
+            self.insert_content(table, entry, digest)
 
-    def select_snippets(self, keywords=None, digest=None, content=None):
-        """Select snippets."""
+    def select_content(self, table, keywords=None, digest=None, content=None):
+        """Select content."""
 
         rows = []
         if self.conn:
@@ -98,20 +98,20 @@ class Sqlite3Db(object):
             #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) ORDER BY id ASC
             if keywords and Config.is_search_all():
                 columns = ['content', 'brief', 'groups', 'tags', 'links']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, table)
             elif keywords and Config.is_search_grp():
                 columns = ['groups']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, table)
             elif keywords and Config.is_search_tag():
                 columns = ['tags']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns)
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, table)
             elif digest:
-                query = ('SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM snippets ' +
-                         'WHERE digest LIKE ?')
+                query = ('SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM ' + table +
+                         ' WHERE digest LIKE ?')
                 qargs = [digest+'%']
             elif content:
-                query = ('SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM snippets ' +
-                         'WHERE content=?')
+                query = ('SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM ' + table +
+                         ' WHERE content=?')
                 qargs = [Const.DELIMITER_CONTENT.join(map(str, content))]
             else:
                 self.logger.error('exiting because of internal error where search query was not defined')
@@ -130,12 +130,12 @@ class Sqlite3Db(object):
 
         return rows
 
-    def select_all_snippets(self):
-        """Select all snippets."""
+    def select_all_content(self, table):
+        """Select all content."""
 
         if self.conn:
-            query = ('SELECT * FROM snippets')
-            self.logger.debug('select all snippets')
+            query = ('SELECT * FROM ' + table)
+            self.logger.debug('select all contents from table %s', table)
             try:
                 self.cursor.execute(query)
 
@@ -147,20 +147,20 @@ class Sqlite3Db(object):
 
         return []
 
-    def update_snippet(self, snippet, digest_updated, digest_new, metadata=None):
-        """Update existing snippet."""
+    def update_content(self, table, content, digest_updated, digest_new, metadata=None):
+        """Update existing content."""
 
         if self.conn:
-            query = ('UPDATE snippets SET content=?, brief=?, groups=?, tags=?, links=?, digest=?, metadata=? ' +
+            query = ('UPDATE ' + table + ' SET content=?, brief=?, groups=?, tags=?, links=?, digest=?, metadata=? ' +
                      'WHERE digest LIKE ?')
-            self.logger.debug('updating snippet %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
-                              snippet[Const.BRIEF])
+            self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
+                              content[Const.BRIEF])
             try:
-                self.cursor.execute(query, (Const.get_content_string(snippet),
-                                            snippet[Const.BRIEF],
-                                            snippet[Const.GROUP],
-                                            Const.DELIMITER_TAGS.join(map(str, snippet[Const.TAGS])),
-                                            Const.DELIMITER_LINKS.join(map(str, snippet[Const.LINKS])),
+                self.cursor.execute(query, (Const.get_content_string(content),
+                                            content[Const.BRIEF],
+                                            content[Const.GROUP],
+                                            Const.DELIMITER_TAGS.join(map(str, content[Const.TAGS])),
+                                            Const.DELIMITER_LINKS.join(map(str, content[Const.LINKS])),
                                             digest_new,
                                             metadata,
                                             digest_updated))
@@ -170,13 +170,13 @@ class Sqlite3Db(object):
         else:
             self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
 
-    def delete_snippet(self, digest):
-        """Delete one snippet based on given digest."""
+    def delete_content(self, table, digest):
+        """Delete one content based on given digest."""
 
         cause = Const.DB_FAILURE
         if self.conn:
-            query = ('DELETE FROM snippets WHERE digest LIKE ?')
-            self.logger.debug('delete snippet with digest %s', digest)
+            query = ('DELETE FROM ' + table + ' WHERE digest LIKE ?')
+            self.logger.debug('delete content with digest %s', digest)
             try:
                 self.cursor.execute(query, (digest+'%',))
                 if self.cursor.rowcount == 1:
@@ -190,7 +190,7 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('deleting from sqlite3 database failed with exception "%s"', exception)
         else:
-            self.logger.error('sqlite3 database connection did not exist while snippet was being deleted')
+            self.logger.error('sqlite3 database connection did not exist while content was being deleted')
 
         return cause
 
@@ -247,11 +247,11 @@ class Sqlite3Db(object):
         return re.search(expr, item, re.IGNORECASE) is not None
 
     @staticmethod
-    def _make_regexp_query(keywords, columns):
+    def _make_regexp_query(keywords, columns, table):
         """Generate SQL query parameters for specific fields and keywords."""
 
         query_args = []
-        query = 'SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM snippets WHERE '
+        query = 'SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM ' + table + ' WHERE '
 
         # Generate regexp search like:
         #   1. '(content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) '

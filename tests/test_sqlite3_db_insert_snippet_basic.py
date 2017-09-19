@@ -18,7 +18,7 @@ class TestSqlite3DbInsertSnippetBasic(unittest.TestCase):
         """Test that snippet with tags, brief or links is stored."""
 
         references = Snippet().get_references(0)
-        self.sqlite.insert_snippet(references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
+        self.sqlite.insert_content('snippets', references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
         Snippet().compare_db(self, (Database.select_all_snippets())[0], references[0])
         assert len(Database.select_all_snippets()) == 1
         self.sqlite.disconnect()
@@ -27,7 +27,7 @@ class TestSqlite3DbInsertSnippetBasic(unittest.TestCase):
         """Test that snippet can be added with multiple links."""
 
         references = Snippet().get_references(1)
-        self.sqlite.insert_snippet(references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
+        self.sqlite.insert_content('snippets', references[0][CONTENT:TESTING], references[0][DIGEST], references[0][METADATA])
         Snippet().compare_db(self, (Database.select_all_snippets())[0], references[0])
         assert len(Database.select_all_snippets()) == 1
         self.sqlite.disconnect()

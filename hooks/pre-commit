@@ -1,0 +1,18 @@
+#!/bin/bash -e
+
+# Test that snippy.db is empty before commit. The only
+# purpose for this file is to get the Python packaging
+# to delete the database file that is updated run time.
+
+GIT_ROOT=`git rev-parse --show-toplevel 2> /dev/null`
+if [ "$GITROOT" == "" ]; then
+  echo "this does not appear to be a git repo"
+  exit 1
+fi
+
+if [ -s "$GIT_ROOT/snippy/data/storage/snippy.db" ]; then
+    echo "run make clean-db before commit"
+    exit 1
+fi
+
+

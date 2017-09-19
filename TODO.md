@@ -13,6 +13,7 @@
    - [ ] Test Flake8 lint. It seems to require specific version for specific Python version.
    - [ ] Test BytePackager/packagecore.
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
+   - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
    - [x] Fixed incorrect mocking of database that created file::memory:?cache=shared with Python2.

@@ -68,26 +68,26 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
-    def get_snippet(cls, snippet=None, use_editor=None):
-        """Return snippet after it has been optionally edited."""
+    def get_content(cls, content=None, use_editor=None, form=Const.SNIPPET):
+        """Return content after it has been optionally edited."""
 
-        # Set the defaults from commmand line for editor. If snippet is not
+        # Set the defaults from commmand line for editor. If content is not
         # provided at all, it tells that operation is done with digest only.
-        if not snippet:
-            snippet = (cls.get_content_data(),
+        if not content:
+            content = (cls.get_content_data(),
                        cls.get_content_brief(),
                        cls.get_content_group(),
                        cls.get_content_tags(),
                        cls.get_content_links(),
-                       None,
-                       None,
-                       None,
-                       None)
+                       None, # UTC
+                       None, # Metadata
+                       None, # Key
+                       None) # Testing
 
         if cls.is_editor() or use_editor:
-            snippet = cls._set_editor_content(snippet)
+            content = cls._set_editor_content(content, form)
 
-        return snippet
+        return content
 
     @classmethod
     def is_operation_create(cls):
@@ -166,6 +166,21 @@ class Config(object): # pylint: disable=too-many-public-methods
         """Return content reference links."""
 
         return cls.config['content']['links']
+
+    @classmethod
+    def get_content_template(cls, form):
+        """Return content template."""
+
+        template = Const.EMPTY
+        if form == Const.SNIPPET:
+            file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
+        else:
+            file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
+
+        with open(file, 'r') as infile:
+            template = infile.read()
+
+        return template
 
     @classmethod
     def get_operation_digest(cls):
@@ -377,17 +392,22 @@ class Config(object): # pylint: disable=too-many-public-methods
         return editor
 
     @classmethod
-    def _set_editor_content(cls, snippet):
+    def _set_editor_content(cls, content, form):
         """Read and set the user provided values from editor."""
 
-        edited_input = cls.args.get_editor_content(snippet)
-        if edited_input:
+        message = Config._get_edited_content(content, form)
+        if message:
             cls.logger.debug('using parameters from editor')
-            cls.config['content']['data'] = Config._get_user_tuple(edited_input, Const.EDITED_CONTENT)
-            cls.config['content']['brief'] = Config._get_user_string(edited_input, Const.EDITED_BRIEF)
-            cls.config['content']['group'] = Config._get_user_string(edited_input, Const.EDITED_GROUP)
-            cls.config['content']['tags'] = Config._get_user_tuple(edited_input, Const.EDITED_TAGS)
-            cls.config['content']['links'] = Config._get_user_tuple(edited_input, Const.EDITED_LINKS)
+            #cls.config['content']['data'] = Editor._get_edited_data(message, form)
+            #Config._set_edited_brief(message, form)
+            #Config._set_edited_group(message, form)
+            #Config._set_edited_tags(message, form)
+            #Config._set_edited_lins(message, form)
+            cls.config['content']['data'] = Config._get_user_tuple(message, Const.EDITED_CONTENT)
+            cls.config['content']['brief'] = Config._get_user_string(message, Const.EDITED_BRIEF)
+            cls.config['content']['group'] = Config._get_user_string(message, Const.EDITED_GROUP)
+            cls.config['content']['tags'] = Config._get_user_tuple(message, Const.EDITED_TAGS)
+            cls.config['content']['links'] = Config._get_user_tuple(message, Const.EDITED_LINKS)
             cls.logger.debug('configured value from editor for content as "%s"', cls.config['content']['data'])
             cls.logger.debug('configured value from editor for brief as "%s"', cls.config['content']['brief'])
             cls.logger.debug('configured value from editor for group as "%s"', cls.config['content']['group'])
@@ -397,17 +417,102 @@ class Config(object): # pylint: disable=too-many-public-methods
             if not cls.config['content']['group']:
                 cls.config['content']['group'] = Const.DEFAULT_GROUP
 
-        snippet = (cls.get_content_data(),
+        content = (cls.get_content_data(),
                    cls.get_content_brief(),
                    cls.get_content_group(),
                    cls.get_content_tags(),
                    cls.get_content_links(),
-                   None,
-                   None,
-                   None,
-                   None)
+                   None, # UTC
+                   None, # Metadata
+                   None, # Key
+                   None) # Testing
 
-        return snippet
+        return content
+
+    @classmethod
+    def _get_edited_content(cls, content, form):
+        """Return the edited content from editor."""
+
+        import tempfile
+        from subprocess import call
+
+        message = Const.EMPTY
+        template = Config.get_content_template(form)
+        template = Config._set_template_data(content, template)
+        template = Config._set_template_brief(content, template)
+        template = Config._set_template_group(content, template)
+        template = Config._set_template_tags(content, template)
+        template = Config._set_template_links(content, template)
+        template = Config._set_template_file(content, template)
+        template = template.encode('UTF-8')
+
+        editor = os.environ.get('EDITOR', 'vi')
+        cls.logger.info('using editor %s', editor)
+        with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
+            outfile.write(template)
+            outfile.flush()
+            call([editor, outfile.name])
+            outfile.seek(0)
+            message = outfile.read()
+
+        return message.decode('UTF-8')
+
+    @classmethod
+    def _set_template_data(cls, content, template):
+        """Update template content data."""
+
+        data = Const.get_content_string(content)
+        if data:
+            template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
+        else:
+            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
+
+        return template
+
+    @classmethod
+    def _set_template_brief(cls, content, template):
+        """Update template content brief."""
+
+        brief = Const.get_brief_string(content)
+        template = template.replace('<SNIPPY_BRIEF>', brief)
+
+        return template
+
+    @classmethod
+    def _set_template_group(cls, content, template):
+        """Update template content group."""
+
+        group = Const.get_group_string(content)
+        template = template.replace('<SNIPPY_GROUP>', group)
+
+        return template
+
+    @classmethod
+    def _set_template_tags(cls, content, template):
+        """Update template content tags."""
+
+        tags = Const.get_tags_string(content)
+        template = template.replace('<SNIPPY_TAGS>', tags)
+
+        return template
+
+    @classmethod
+    def _set_template_links(cls, content, template):
+        """Update template content links."""
+
+        links = Const.get_links_string(content)
+        template = template.replace('<SNIPPY_LINKS>', links)
+
+        return template
+
+    @classmethod
+    def _set_template_file(cls, content, template):
+        """Update template content file."""
+
+        file = Const.get_file_string(content)
+        template = template.replace('<SNIPPY_FILE>', file)
+
+        return template
 
     @classmethod
     def _get_user_string(cls, edited_string, constants):

@@ -2,6 +2,7 @@
 
 """solution.py: Solution management."""
 
+from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
 
@@ -18,7 +19,7 @@ class Solution(object):
 
         # pylint: disable=duplicate-code
         self.logger.debug('creating new solution')
-        solution = Config.get_snippet()
+        solution = Config.get_content(form=Const.SOLUTION)
         cause = self.storage.create(solution)
         Config.set_cause('snippet created with cause' % cause)
 

@@ -2,7 +2,6 @@
 
 """arguments.py: Command line argument management."""
 
-import os
 import argparse
 from snippy.config import Constants as Const
 from snippy.logger import Logger
@@ -203,48 +202,6 @@ class Arguments(object):
         """Return the usage of editor for the operation."""
 
         return cls.args.editor
-
-    @classmethod
-    def get_editor_content(cls, snippet):
-        """Return the edited content from editor."""
-
-        import tempfile
-        from subprocess import call
-
-        # If the group is in default value, don't show it to end user
-        # since it may be confusing. If there is no input for the group
-        # the default is set back.
-        edited_message = Const.EMPTY
-        content = Const.get_content_string(snippet)
-        brief = snippet[Const.BRIEF] + Const.NEWLINE
-        if snippet[Const.GROUP] == Const.DEFAULT_GROUP:
-            group = Const.EMPTY + Const.NEWLINE
-        else:
-            group = snippet[Const.GROUP] + Const.NEWLINE
-        tags = Const.DELIMITER_TAGS.join(snippet[Const.TAGS]) + Const.NEWLINE
-        links = Const.DELIMITER_NEWLINE.join(snippet[Const.LINKS]) + Const.NEWLINE
-        default_editor = os.environ.get('EDITOR', 'vi')
-        editor_template = ('# Commented lines will be ignored.\n'
-                           '#\n' +
-                           Const.EDITOR_CONTENT_HEAD +
-                           content + Const.NEWLINE * 2 +
-                           Const.EDITOR_BRIEF_HEAD +
-                           brief + '\n' +
-                           Const.EDITOR_GROUP_HEAD +
-                           group + '\n' +
-                           Const.EDITOR_TAGS_HEAD +
-                           tags + '\n' +
-                           Const.EDITOR_LINKS_HEAD +
-                           links + '\n').encode('UTF-8')
-
-        with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
-            outfile.write(editor_template)
-            outfile.flush()
-            call([default_editor, outfile.name])
-            outfile.seek(0)
-            edited_message = outfile.read()
-
-        return edited_message.decode('UTF-8')
 
     @classmethod
     def get_operation_file(cls):

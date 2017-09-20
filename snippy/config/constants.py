@@ -3,6 +3,7 @@
 """constants.py: Globals constants for the tool."""
 
 import sys
+import re
 
 
 class Constants(object):
@@ -20,14 +21,18 @@ class Constants(object):
     # Digest
     DIGEST_MIN_LENGTH = 16
 
-    # Delimiters
+    # Content types
+    SNIPPET = 'snippet'
+    SOLUTION = 'solution'
+
+    # Content delimiters
     DELIMITER_CONTENT = NEWLINE
     DELIMITER_TAGS = ','
     DELIMITER_LINKS = '>' # Disallowed characters in URI: <|>|#|%|"
     DELIMITER_SPACE = SPACE
     DELIMITER_NEWLINE = NEWLINE
 
-    # Column and tuple numbers for snippets and solutions.
+    # Content index numbers in data structures.
     CONTENT = 0
     BRIEF = 1
     GROUP = 2
@@ -39,7 +44,7 @@ class Constants(object):
     KEY = 8
     TESTING = 9
 
-    # Default values for snippets
+    # Default values for content fields.
     DEFAULT_GROUP = 'default'
 
     # Export formats
@@ -105,7 +110,60 @@ class Constants(object):
         return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   # %s\n'
 
     @staticmethod
-    def get_content_string(snippet):
-        """Format snippet content to string."""
+    def get_content_string(content):
+        """Format content data to string."""
 
-        return Constants.DELIMITER_CONTENT.join(map(str, snippet[Constants.CONTENT]))
+        data = Constants.DELIMITER_CONTENT.join(map(str, content[Constants.CONTENT]))
+
+        return data
+
+    @staticmethod
+    def get_brief_string(content):
+        """Format content brief to string."""
+
+        brief = content[Constants.BRIEF]
+
+        return brief
+
+    @staticmethod
+    def get_group_string(content):
+        """Format content group to string."""
+
+        # If the group is in default value, don't show it to end user
+        # since it may be confusing. If there is no input for the group
+        # the default is set back.
+        group = Constants.EMPTY
+        if not content[Constants.GROUP] == Constants.DEFAULT_GROUP:
+            group = content[Constants.GROUP]
+
+        return group
+
+    @staticmethod
+    def get_tags_string(content):
+        """Format content tags to string."""
+
+        tags = Constants.DELIMITER_TAGS.join(map(str, content[Constants.TAGS]))
+
+        return tags
+
+    @staticmethod
+    def get_links_string(content):
+        """Format content links to string."""
+
+        links = Constants.DELIMITER_NEWLINE.join(map(str, content[Constants.LINKS]))
+
+        return links
+
+    @staticmethod
+    def get_file_string(content):
+        """Format content file to string."""
+
+        file = Constants.EMPTY
+        match = re.search('## FILE  :(.*)', Constants.get_content_string(content))
+        if match:
+            file = match.group(1)
+
+        if '<SNIPPY_FILE>' in file:
+            file = Constants.EMPTY
+
+        return file

@@ -19,7 +19,7 @@ class Snippet(object):
         """Create new snippet."""
 
         self.logger.debug('creating new snippet')
-        snippet = Config.get_snippet()
+        snippet = Config.get_content(form=Const.SNIPPET)
         if snippet[Const.CONTENT]:
             cause = self.storage.create(snippet)
             if cause == Const.DB_DUPLICATE:
@@ -63,10 +63,10 @@ class Snippet(object):
 
         if len(snippets) == 1:
             if operation_digest:
-                snippet = Config.get_snippet(snippets[0])
+                snippet = Config.get_content(content=snippets[0], form=Const.SNIPPET)
                 operation_digest = snippets[0][Const.DIGEST]
             elif snippet_data:
-                snippet = Config.get_snippet(use_editor=True)
+                snippet = Config.get_content(use_editor=True, form=Const.SNIPPET)
                 operation_digest = snippets[0][Const.DIGEST]
             self.storage.update(snippet, operation_digest)
         elif not snippets:

@@ -6,6 +6,7 @@ import sys
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
+from snippy.format import Format
 
 
 class Snippet(object):
@@ -42,7 +43,7 @@ class Snippet(object):
             snippets = self.storage.search(keywords=keywords)
         elif content:
             snippets = self.storage.search(content=content)
-        snippets = self.format_to_text(snippets, colors=True)
+        snippets = Format.get_text(snippets, colors=True)
         self.print_terminal(snippets)
 
     def update(self):
@@ -103,7 +104,7 @@ class Snippet(object):
         """Export snippets."""
 
         self.logger.debug('exporting snippets')
-        snippets = self.storage.export_snippets()
+        snippets = self.storage.export_content()
         self.print_file(snippets)
 
     def import_all(self):
@@ -112,28 +113,7 @@ class Snippet(object):
         self.logger.debug('importing snippets %s', Config.get_operation_file())
         snippets = self.load_dictionary(Config.get_operation_file())
         snippets = self.storage.convert_from_dictionary(snippets['snippets'])
-        self.storage.import_snippets(snippets)
-
-    def format_to_text(self, snippets, colors=False):
-        """Format snippets for terminal with color codes or for a raw text output."""
-
-        text = ''
-        content = ''
-        links = ''
-        self.logger.debug('format snippets into text format')
-        for idx, snippet in enumerate(snippets, start=1):
-            text = text + Const.format_header(colors) % (idx, snippet[Const.BRIEF],
-                                                         snippet[Const.GROUP], \
-                                                         snippet[Const.DIGEST])
-            text = text + Const.EMPTY.join([Const.format_snippet(colors) % (content, line) \
-                                            for line in snippet[Const.CONTENT]])
-            text = text + Const.NEWLINE
-            text = Const.format_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet[Const.TAGS]))
-            text = text + Const.EMPTY.join([Const.format_links(colors) % (links, link) \
-                                            for link in snippet[Const.LINKS]])
-            text = text + Const.NEWLINE
-
-        return text
+        self.storage.import_content(snippets)
 
     def load_dictionary(self, snippets):
         """Create dictionary from snippets in a file."""
@@ -184,7 +164,7 @@ class Snippet(object):
                     json.dump(snippet_dict, outfile)
                     outfile.write(Const.NEWLINE)
                 elif Config.is_file_type_text():
-                    outfile.write(self.format_to_text(snippets))
+                    outfile.write(Format.get_text(snippets, colors=False))
                 else:
                     self.logger.info('unknown export format')
             except (yaml.YAMLError, TypeError) as exception:

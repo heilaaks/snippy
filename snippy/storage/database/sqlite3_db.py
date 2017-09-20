@@ -9,6 +9,7 @@ import sqlite3
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
+from snippy.format import Format
 
 
 class Sqlite3Db(object):
@@ -50,7 +51,7 @@ class Sqlite3Db(object):
             try:
                 # The join/map is sorted because it seems that this somehow randomly changes
                 # the order of tags in the string. This seems to happen only in Python 2.7.
-                self.cursor.execute(query, (Const.get_content_string(content),
+                self.cursor.execute(query, (Format.get_content_string(content),
                                             content[Const.BRIEF],
                                             content[Const.GROUP],
                                             Const.DELIMITER_TAGS.join(map(str, sorted(content[Const.TAGS]))),
@@ -156,7 +157,7 @@ class Sqlite3Db(object):
             self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
                               content[Const.BRIEF])
             try:
-                self.cursor.execute(query, (Const.get_content_string(content),
+                self.cursor.execute(query, (Format.get_content_string(content),
                                             content[Const.BRIEF],
                                             content[Const.GROUP],
                                             Const.DELIMITER_TAGS.join(map(str, content[Const.TAGS])),

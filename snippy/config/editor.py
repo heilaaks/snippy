@@ -2,70 +2,216 @@
 
 """editor.py: Editor based configuration."""
 
+import re
+import os.path
+import pkg_resources
 from snippy.config import Constants as Const
 from snippy.logger import Logger
+from snippy.format import Format
 
 
 class Editor(object): # pylint: disable-all
     """Editor based configuration."""
 
-    def __init__(self):
-        Config.logger = Logger(__name__).get()
+    def __init__(self, content, form):
+        self.logger = Logger(__name__).get()
+        self.content = content
+        self.edited = Const.EMPTY
+        self.form = form
 
-    @classmethod
-    def _get_edited_data(cls, message, form):
+    def read_content(self):
+        """Read the content from editor."""
+
+        import tempfile
+        from subprocess import call
+
+        template = self.read_template()
+        template = self._set_template_data(self.content, template)
+        template = self._set_template_brief(self.content, template)
+        template = self._set_template_group(self.content, template)
+        template = self._set_template_tags(self.content, template)
+        template = self._set_template_links(self.content, template)
+        template = self._set_template_file(self.content, template)
+        template = template.encode('UTF-8')
+
+        editor = os.environ.get('EDITOR', 'vi')
+        self.logger.info('using editor %s', editor)
+        with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
+            outfile.write(template)
+            outfile.flush()
+            call([editor, outfile.name])
+            outfile.seek(0)
+            message = outfile.read()
+
+        self.edited = message.decode('UTF-8')
+
+    def read_template(self):
+        """Return content template."""
+
+        template = Const.EMPTY
+        if self.form == Const.SNIPPET:
+            file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
+        else:
+            file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
+
+        with open(file, 'r') as infile:
+            template = infile.read()
+
+        return template
+
+    def get_edited_data(self):
         """Return content data from editor."""
 
-        lines = ()
-        if form == Const.SNIPPET:
-            lines = Config._get_user_tuple(message, Const.EDITED_CONTENT)
+        data = ()
+        if self.form == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (Const.EDITOR_CONTENT_HEAD, Const.EDITOR_CONTENT_TAIL), self.edited, re.DOTALL)
+            if match and not match.group(1).isspace():
+                data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
         else:
-            lines = tuple(map(lambda s: s.strip(), message.rstrip().split(Const.NEWLINE)))
+            data = tuple(map(lambda s: s.strip(), self.edited.rstrip().split(Const.NEWLINE)))
+        self.logger.debug('parsed content data from editor "%s"', data)
 
-        return lines
+        return data
 
-    @classmethod
-    def _get_edited_brief(cls, message, form):
+    def get_edited_brief(self):
         """Return content brief from editor."""
 
         brief = Const.EMPTY
-        if form == Const.SNIPPET:
-            brief = Config._get_user_string(message, Const.EDITED_BRIEF)
+        if self.form == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (Const.EDITOR_BRIEF_HEAD, Const.EDITOR_BRIEF_TAIL), self.edited, re.DOTALL)
+            if match and not match.group(1).isspace():
+                lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
+                brief = Const.DELIMITER_SPACE.join(lines)
         else:
-            match = re.search('## BRIEF :(.*)$', message)
+            match = re.search('## BRIEF :(.*)$', self.edited)
             if match:
                 brief = match.group(1).strip()
+        self.logger.debug('parsed content brief from editor "%s"', brief)
+        
+        return brief
 
-        cls.config['content']['brief'] = brief
-        cls.logger.debug('configured value from editor for brief as "%s"', cls.config['content']['brief'])
-
-    @classmethod
-    def _get_edited_group(cls, message, form):
+    def get_edited_group(self):
         """Return content group from editor."""
 
         group = Const.EMPTY
-        if form == Const.SNIPPET:
-            group = Config._get_user_string(message, Const.EDITED_GROUP)
+        if self.form == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (Const.EDITOR_GROUP_HEAD, Const.EDITOR_GROUP_TAIL), self.edited, re.DOTALL)
+            if match and not match.group(1).isspace():
+                lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
+                group = Const.DELIMITER_SPACE.join(lines)
+
         else:
-            match = re.search('## GROUP :(.*)$', message)
+            match = re.search('## GROUP :(.*)$', self.edited)
             if match:
                 group = match.group(1).strip()
+        self.logger.debug('parsed content group from editor "%s"', group)
+        
+        return group
 
-        cls.config['content']['group'] = group
-        cls.logger.debug('configured value from editor for group as "%s"', cls.config['content']['group'])
-
-    @classmethod
-    def _get_edited_tags(cls, message, form):
+    def get_edited_tags(self):
         """Return content tags from editor."""
 
-        tags = Const.EMPTY
-        if form == Const.SNIPPET:
-            tags = Config._get_user_string(message, Const.EDITED_TAGS)
+        tags = ()
+        if self.form == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (Const.EDITOR_TAGS_HEAD, Const.EDITOR_TAGS_TAIL), self.edited, re.DOTALL)
+            if match and not match.group(1).isspace():
+                tags = Format.get_keywords([match.group(1)])
         else:
-            match = re.search('## TAGS  :(.*)$', message)
+            match = re.search('## TAGS  :(.*)$', self.edited)
             if match:
                 tags = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_TAGS)))
+        self.logger.debug('parsed content tags from editor "%s"', tags)
+        
+        return tags
 
-        cls.config['content']['tags'] = tags
-        cls.logger.debug('configured value from editor for tags as "%s"', cls.config['content']['tags'])
+    def get_edited_links(self):
+        """Return content links from editor."""
 
+        # In case of solution, the links are read from the whole content data.
+        links = ()
+        if self.form == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (Const.EDITOR_LINKS_HEAD, Const.EDITOR_LINKS_TAIL), self.edited, re.DOTALL)
+            if match and not match.group(1).isspace():
+                links = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
+        else:
+            links = tuple(re.findall('> (http.*)', self.edited, re.DOTALL))
+        self.logger.debug('parsed content links from editor "%s"', links)
+        
+        return links
+
+    @classmethod
+    def _set_template_data(cls, content, template):
+        """Update template content data."""
+
+        data = Format.get_content_string(content)
+        if data:
+            template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
+        else:
+            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
+
+        return template
+
+    @classmethod
+    def _set_template_brief(cls, content, template):
+        """Update template content brief."""
+
+        brief = Format.get_brief_string(content)
+        template = template.replace('<SNIPPY_BRIEF>', brief)
+
+        return template
+
+    @classmethod
+    def _set_template_group(cls, content, template):
+        """Update template content group."""
+
+        group = Format.get_group_string(content)
+        template = template.replace('<SNIPPY_GROUP>', group)
+
+        return template
+
+    @classmethod
+    def _set_template_tags(cls, content, template):
+        """Update template content tags."""
+
+        tags = Format.get_tags_string(content)
+        template = template.replace('<SNIPPY_TAGS>', tags)
+
+        return template
+
+    @classmethod
+    def _set_template_links(cls, content, template):
+        """Update template content links."""
+
+        links = Format.get_links_string(content)
+        template = template.replace('<SNIPPY_LINKS>', links)
+
+        return template
+
+    @classmethod
+    def _set_template_file(cls, content, template):
+        """Update template content file."""
+
+        file = Format.get_file_string(content)
+        template = template.replace('<SNIPPY_FILE>', file)
+
+        return template
+
+    @classmethod
+    def _get_user_string(cls, edited_string, constants):
+        """Parse string type value from editor input."""
+
+        value_list = cls._get_user_tuple(edited_string, constants)
+
+        return constants['delimiter'].join(value_list)
+
+    @classmethod
+    def _get_user_tuple(cls, edited_string, constants):
+        """Parse list type value from editor input."""
+
+        user_answer = re.search('%s(.*)%s' % (constants['head'], constants['tail']), edited_string, re.DOTALL)
+        if user_answer and not user_answer.group(1).isspace():
+            value_list = tuple(map(lambda s: s.strip(), user_answer.group(1).rstrip().split(constants['delimiter'])))
+
+            return value_list
+
+        return Const.EMPTY_TUPLE

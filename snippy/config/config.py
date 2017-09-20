@@ -2,7 +2,6 @@
 
 """config.py: Configuration management."""
 
-import re
 import sys
 import os.path
 import inspect
@@ -10,6 +9,8 @@ import pkg_resources
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Arguments
+from snippy.config import Editor
+from snippy.format import Format
 
 
 class Config(object): # pylint: disable=too-many-public-methods
@@ -55,7 +56,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         cls.logger.debug('configured value from positional argument as "%s"', cls.config['operation']['task'])
         cls.logger.debug('configured value from content type as "%s"', cls.config['content']['type'])
-        cls.logger.debug('configured value from --content as "%s"', cls.config['content']['data'])
+        cls.logger.debug('configured value from --content as %s', cls.config['content']['data'])
         cls.logger.debug('configured value from --brief as "%s"', cls.config['content']['brief'])
         cls.logger.debug('configured value from --group as "%s"', cls.config['content']['group'])
         cls.logger.debug('configured value from --tags as %s', cls.config['content']['tags'])
@@ -85,7 +86,7 @@ class Config(object): # pylint: disable=too-many-public-methods
                        None) # Testing
 
         if cls.is_editor() or use_editor:
-            content = cls._set_editor_content(content, form)
+            content = Config._get_edited_content(content, form)
 
         return content
 
@@ -166,21 +167,6 @@ class Config(object): # pylint: disable=too-many-public-methods
         """Return content reference links."""
 
         return cls.config['content']['links']
-
-    @classmethod
-    def get_content_template(cls, form):
-        """Return content template."""
-
-        template = Const.EMPTY
-        if form == Const.SNIPPET:
-            file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
-        else:
-            file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
-
-        with open(file, 'r') as infile:
-            template = infile.read()
-
-        return template
 
     @classmethod
     def get_operation_digest(cls):
@@ -338,7 +324,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         arg = cls.args.get_content_tags()
 
-        return cls._get_keywords(arg)
+        return Format.get_keywords(arg)
 
     @classmethod
     def _parse_content_links(cls):
@@ -378,7 +364,7 @@ class Config(object): # pylint: disable=too-many-public-methods
             arg = cls.args.get_search_grp()
             field = Const.SEARCH_GRP
 
-        return (field, cls._get_keywords(arg))
+        return (field, Format.get_keywords(arg))
 
     @classmethod
     def _parse_editor(cls):
@@ -392,31 +378,16 @@ class Config(object): # pylint: disable=too-many-public-methods
         return editor
 
     @classmethod
-    def _set_editor_content(cls, content, form):
+    def _get_edited_content(cls, content, form):
         """Read and set the user provided values from editor."""
 
-        message = Config._get_edited_content(content, form)
-        if message:
-            cls.logger.debug('using parameters from editor')
-            #cls.config['content']['data'] = Editor._get_edited_data(message, form)
-            #Config._set_edited_brief(message, form)
-            #Config._set_edited_group(message, form)
-            #Config._set_edited_tags(message, form)
-            #Config._set_edited_lins(message, form)
-            cls.config['content']['data'] = Config._get_user_tuple(message, Const.EDITED_CONTENT)
-            cls.config['content']['brief'] = Config._get_user_string(message, Const.EDITED_BRIEF)
-            cls.config['content']['group'] = Config._get_user_string(message, Const.EDITED_GROUP)
-            cls.config['content']['tags'] = Config._get_user_tuple(message, Const.EDITED_TAGS)
-            cls.config['content']['links'] = Config._get_user_tuple(message, Const.EDITED_LINKS)
-            cls.logger.debug('configured value from editor for content as "%s"', cls.config['content']['data'])
-            cls.logger.debug('configured value from editor for brief as "%s"', cls.config['content']['brief'])
-            cls.logger.debug('configured value from editor for group as "%s"', cls.config['content']['group'])
-            cls.logger.debug('configured value from editor for tags as %s', cls.config['content']['tags'])
-            cls.logger.debug('configured value from editor for links as %s', cls.config['content']['links'])
-
-            if not cls.config['content']['group']:
-                cls.config['content']['group'] = Const.DEFAULT_GROUP
-
+        editor = Editor(content, form)
+        editor.read_content()
+        cls.config['content']['data'] = editor.get_edited_data()
+        cls.config['content']['brief'] = editor.get_edited_brief()
+        cls.config['content']['group'] = editor.get_edited_group()
+        cls.config['content']['tags'] = editor.get_edited_tags()
+        cls.config['content']['links'] = editor.get_edited_links()
         content = (cls.get_content_data(),
                    cls.get_content_brief(),
                    cls.get_content_group(),
@@ -428,111 +399,6 @@ class Config(object): # pylint: disable=too-many-public-methods
                    None) # Testing
 
         return content
-
-    @classmethod
-    def _get_edited_content(cls, content, form):
-        """Return the edited content from editor."""
-
-        import tempfile
-        from subprocess import call
-
-        message = Const.EMPTY
-        template = Config.get_content_template(form)
-        template = Config._set_template_data(content, template)
-        template = Config._set_template_brief(content, template)
-        template = Config._set_template_group(content, template)
-        template = Config._set_template_tags(content, template)
-        template = Config._set_template_links(content, template)
-        template = Config._set_template_file(content, template)
-        template = template.encode('UTF-8')
-
-        editor = os.environ.get('EDITOR', 'vi')
-        cls.logger.info('using editor %s', editor)
-        with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
-            outfile.write(template)
-            outfile.flush()
-            call([editor, outfile.name])
-            outfile.seek(0)
-            message = outfile.read()
-
-        return message.decode('UTF-8')
-
-    @classmethod
-    def _set_template_data(cls, content, template):
-        """Update template content data."""
-
-        data = Const.get_content_string(content)
-        if data:
-            template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
-        else:
-            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
-
-        return template
-
-    @classmethod
-    def _set_template_brief(cls, content, template):
-        """Update template content brief."""
-
-        brief = Const.get_brief_string(content)
-        template = template.replace('<SNIPPY_BRIEF>', brief)
-
-        return template
-
-    @classmethod
-    def _set_template_group(cls, content, template):
-        """Update template content group."""
-
-        group = Const.get_group_string(content)
-        template = template.replace('<SNIPPY_GROUP>', group)
-
-        return template
-
-    @classmethod
-    def _set_template_tags(cls, content, template):
-        """Update template content tags."""
-
-        tags = Const.get_tags_string(content)
-        template = template.replace('<SNIPPY_TAGS>', tags)
-
-        return template
-
-    @classmethod
-    def _set_template_links(cls, content, template):
-        """Update template content links."""
-
-        links = Const.get_links_string(content)
-        template = template.replace('<SNIPPY_LINKS>', links)
-
-        return template
-
-    @classmethod
-    def _set_template_file(cls, content, template):
-        """Update template content file."""
-
-        file = Const.get_file_string(content)
-        template = template.replace('<SNIPPY_FILE>', file)
-
-        return template
-
-    @classmethod
-    def _get_user_string(cls, edited_string, constants):
-        """Parse string type value from editor input."""
-
-        value_list = cls._get_user_tuple(edited_string, constants)
-
-        return constants['delimiter'].join(value_list)
-
-    @classmethod
-    def _get_user_tuple(cls, edited_string, constants):
-        """Parse list type value from editor input."""
-
-        user_answer = re.search('%s(.*)%s' % (constants['head'], constants['tail']), edited_string, re.DOTALL)
-        if user_answer and not user_answer.group(1).isspace():
-            value_list = tuple(map(lambda s: s.strip(), user_answer.group(1).rstrip().split(constants['delimiter'])))
-
-            return value_list
-
-        return Const.EMPTY_TUPLE
 
     @classmethod
     def _parse_operation_file(cls):
@@ -568,30 +434,6 @@ class Config(object): # pylint: disable=too-many-public-methods
             cls.logger.info('unsupported export file format "%s"', file_extension)
 
         return (Const.EMPTY, Const.FILE_TYPE_YAML)
-
-    @classmethod
-    def _get_keywords(cls, keywords):
-        """Preprocess the user given keyword list. The keywords are for example the
-        user provided tags or the search keywords. The user may use various formats
-        so each item in a list may be for example a string of comma separated tags.
-
-        The dot is a special case. It is allowed for the regexp to match and print
-        all records."""
-
-        # Examples: Support processing of:
-        #           1. -t docker container cleanup
-        #           2. -t docker, container, cleanup
-        #           3. -t 'docker container cleanup'
-        #           4. -t 'docker, container, cleanup'
-        #           5. -t dockertesting', container-managemenet', cleanup_testing
-        #           6. --sall '.'
-        kw_list = []
-        for tag in keywords:
-            kw_list = kw_list + re.findall(r"[\w\-\.]+", tag)
-
-        sorted_list = sorted(kw_list)
-
-        return tuple(sorted_list)
 
     @staticmethod
     def _caller():

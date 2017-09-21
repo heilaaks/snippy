@@ -22,13 +22,13 @@ class Snippet(object):
         self.logger.debug('creating new snippet')
         snippet = Config.get_content(form=Const.SNIPPET)
         if snippet[Const.CONTENT]:
-            cause = self.storage.create(snippet)
+            cause = self.storage.create(Const.SNIPPET, snippet)
             if cause == Const.DB_DUPLICATE:
-                snippets = self.storage.search(content=snippet[Const.CONTENT])
+                snippets = self.storage.search(Const.SNIPPET, content=snippet[Const.CONTENT])
                 if len(snippets) == 1:
                     Config.set_cause('content already exist with digest %.16s' % snippets[0][Const.DIGEST])
                 else:
-                    self.logger.error('unexpected number of snippets received while searching content')
+                    self.logger.error('unexpected number of snippets %d received while searching', len(snippets))
         else:
             Config.set_cause('mandatory content not defined')
 
@@ -40,10 +40,10 @@ class Snippet(object):
         keywords = Config.get_search_keywords()
         content = Config.get_content_data()
         if keywords:
-            snippets = self.storage.search(keywords=keywords)
+            snippets = self.storage.search(Const.SNIPPET, keywords=keywords)
         elif content:
-            snippets = self.storage.search(content=content)
-        snippets = Format.get_text(snippets, colors=True)
+            snippets = self.storage.search(Const.SNIPPET, content=content)
+        snippets = Format.get_snippet_text(snippets, colors=True)
         self.print_terminal(snippets)
 
     def update(self):
@@ -55,11 +55,11 @@ class Snippet(object):
         log_string = 'invalid digest %.16s' % operation_digest
         if operation_digest:
             self.logger.debug('updating snippet with digest %.16s', operation_digest)
-            snippets = self.storage.search(digest=operation_digest)
+            snippets = self.storage.search(Const.SNIPPET, digest=operation_digest)
             log_string = 'digest %.16s' % operation_digest
         elif snippet_data:
             self.logger.debug('updating snippet with content "%s"', snippet_data)
-            snippets = self.storage.search(content=snippet_data)
+            snippets = self.storage.search(Const.SNIPPET, content=snippet_data)
             log_string = 'content %.20s' % snippet_data
 
         if len(snippets) == 1:
@@ -85,18 +85,18 @@ class Snippet(object):
         log_string = 'invalid digest %.16s' % operation_digest
         if operation_digest and len(operation_digest) >= Const.DIGEST_MIN_LENGTH:
             self.logger.debug('deleting snippet with digest %.16s', operation_digest)
-            snippets = self.storage.search(digest=operation_digest)
+            snippets = self.storage.search(Const.SNIPPET, digest=operation_digest)
             log_string = 'digest %.16s' % operation_digest
         elif snippet_data:
             self.logger.debug('deleting snippet with content "%s"', snippet_data)
-            snippets = self.storage.search(content=snippet_data)
+            snippets = self.storage.search(Const.SNIPPET, content=snippet_data)
             log_string = 'content %.20s' % snippet_data
 
         if len(snippets) == 1:
             operation_digest = snippets[0][Const.DIGEST]
-            self.storage.delete(operation_digest)
+            self.storage.delete(Const.SNIPPET, operation_digest)
         elif not snippets:
-            Config.set_cause('cannot find content to be deleted with %s' % log_string)
+            Config.set_cause('cannot find snippet to be deleted with %s' % log_string)
         else:
             self.logger.error('cannot delete multiple snippets with same %s', log_string)
 
@@ -164,7 +164,7 @@ class Snippet(object):
                     json.dump(snippet_dict, outfile)
                     outfile.write(Const.NEWLINE)
                 elif Config.is_file_type_text():
-                    outfile.write(Format.get_text(snippets, colors=False))
+                    outfile.write(Format.get_snippet_text(snippets, colors=False))
                 else:
                     self.logger.info('unknown export format')
             except (yaml.YAMLError, TypeError) as exception:

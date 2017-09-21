@@ -4,6 +4,7 @@
 
 import re
 import os.path
+import datetime
 import pkg_resources
 from snippy.config import Constants as Const
 from snippy.logger import Logger
@@ -28,6 +29,7 @@ class Editor(object): # pylint: disable-all
         template = self.read_template()
         template = self._set_template_data(self.content, template)
         template = self._set_template_brief(self.content, template)
+        template = self._set_template_date(self.content, template)
         template = self._set_template_group(self.content, template)
         template = self._set_template_tags(self.content, template)
         template = self._set_template_links(self.content, template)
@@ -68,7 +70,7 @@ class Editor(object): # pylint: disable-all
             if match and not match.group(1).isspace():
                 data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
         else:
-            data = tuple(map(lambda s: s.strip(), self.edited.rstrip().split(Const.NEWLINE)))
+            data = tuple(self.edited.rstrip().split(Const.NEWLINE))
         self.logger.debug('parsed content data from editor "%s"', data)
 
         return data
@@ -83,7 +85,7 @@ class Editor(object): # pylint: disable-all
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
                 brief = Const.DELIMITER_SPACE.join(lines)
         else:
-            match = re.search('## BRIEF :(.*)$', self.edited)
+            match = re.search('## BRIEF :\s*(.*)', self.edited)
             if match:
                 brief = match.group(1).strip()
         self.logger.debug('parsed content brief from editor "%s"', brief)
@@ -101,7 +103,7 @@ class Editor(object): # pylint: disable-all
                 group = Const.DELIMITER_SPACE.join(lines)
 
         else:
-            match = re.search('## GROUP :(.*)$', self.edited)
+            match = re.search('## GROUP :\s*(.*)', self.edited)
             if match:
                 group = match.group(1).strip()
         self.logger.debug('parsed content group from editor "%s"', group)
@@ -117,7 +119,7 @@ class Editor(object): # pylint: disable-all
             if match and not match.group(1).isspace():
                 tags = Format.get_keywords([match.group(1)])
         else:
-            match = re.search('## TAGS  :(.*)$', self.edited)
+            match = re.search('## TAGS  :\s*(.*)', self.edited)
             if match:
                 tags = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_TAGS)))
         self.logger.debug('parsed content tags from editor "%s"', tags)
@@ -134,7 +136,7 @@ class Editor(object): # pylint: disable-all
             if match and not match.group(1).isspace():
                 links = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
         else:
-            links = tuple(re.findall('> (http.*)', self.edited, re.DOTALL))
+            links = tuple(re.findall('> (http.*)', self.edited))
         self.logger.debug('parsed content links from editor "%s"', links)
         
         return links
@@ -157,6 +159,15 @@ class Editor(object): # pylint: disable-all
 
         brief = Format.get_brief_string(content)
         template = template.replace('<SNIPPY_BRIEF>', brief)
+
+        return template
+
+    @classmethod
+    def _set_template_date(cls, content, template):
+        """Update template content date."""
+
+        utc = datetime.datetime.utcnow()
+        template = template.replace('<SNIPPY_DATE>', utc.strftime("%Y-%m-%d %H:%M:%S"))
 
         return template
 

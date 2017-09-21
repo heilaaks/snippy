@@ -10,8 +10,8 @@ class Format(object):
     """Data formatting and conversions."""
 
     @staticmethod
-    def get_text(snippets, colors=False):
-        """Format snippets for terminal with color codes or for a raw text output."""
+    def get_snippet_text(snippets, colors=False):
+        """Format snippets for console or pure text output."""
 
         text = Const.EMPTY
         content = Const.EMPTY
@@ -31,8 +31,30 @@ class Format(object):
         return text
 
     @staticmethod
+    def get_solution_text(solutions, colors=False):
+        """Format solutions for console or pure text output."""
+
+        text = Const.EMPTY
+        content = Const.EMPTY
+        links = Const.EMPTY
+        for idx, solution in enumerate(solutions, start=1):
+            text = text + Format.console_header(colors) % (idx, solution[Const.BRIEF],
+                                                           solution[Const.GROUP], \
+                                                           solution[Const.DIGEST])
+            text = text + Const.NEWLINE
+            text = Format.console_tags(colors) % (text, Const.DELIMITER_TAGS.join(solution[Const.TAGS]))
+            text = text + Const.EMPTY.join([Format.console_links(colors) % (links, link) \
+                                            for link in solution[Const.LINKS]])
+            text = text + Const.NEWLINE
+
+            text = text + Const.EMPTY.join([Format.console_solution(colors) % (content, line) \
+                                            for line in solution[Const.CONTENT]])
+
+        return text
+
+    @staticmethod
     def console_header(colors=False):
-        """Format snippet text header."""
+        """Format content text header."""
 
         return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m \x1b[0m@%s \x1b[0;2m[%.16s]\x1b[0m\n' if colors \
                else '%d. %s @%s [%.16s]\n'
@@ -44,14 +66,20 @@ class Format(object):
         return '%s   \x1b[91m$\x1b[0m \x1b[0m%s\x1b[0m\n' if colors else '%s   $ %s\n'
 
     @staticmethod
+    def console_solution(colors=False):
+        """Format solution text."""
+
+        return '%s   \x1b[91m:\x1b[0m \x1b[0m%s\x1b[0m\n' if colors else '%s   : %s\n'
+
+    @staticmethod
     def console_links(colors=False):
-        """Format snippet links."""
+        """Format content links."""
 
         return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   > %s\n'
 
     @staticmethod
     def console_tags(colors=False):
-        """Format snippet tags."""
+        """Format content tags."""
 
         return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   # %s\n'
 

@@ -20,18 +20,18 @@ class Storage(object):
 
         self.database.init()
 
-    def create(self, content, table='snippets'):
+    def create(self, category, content):
         """Create content."""
 
         digest = Storage._calculate_digest(content)
-        cause = self.database.insert_content(table, content, digest)
+        cause = self.database.insert_content(category, content, digest)
 
         return cause
 
-    def search(self, keywords=None, digest=None, content=None, table='snippets'):
+    def search(self, category, keywords=None, digest=None, content=None):
         """Search content."""
 
-        rows = self.database.select_content(table, keywords, digest, content)
+        rows = self.database.select_content(category, keywords, digest, content)
         entries = Storage._get_tuple_list(rows)
 
         return entries
@@ -55,10 +55,10 @@ class Storage(object):
 
         return self.database.bulk_insert_content(table, contents)
 
-    def delete(self, digest, table='snippets'):
+    def delete(self, category, digest):
         """Delete content."""
 
-        cause = self.database.delete_content(table, digest)
+        cause = self.database.delete_content(category, digest)
 
         return cause
 

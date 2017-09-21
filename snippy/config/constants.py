@@ -21,8 +21,8 @@ class Constants(object): # pylint: disable=too-few-public-methods
     DIGEST_MIN_LENGTH = 16
 
     # Content types
-    SNIPPET = 'snippet'
-    SOLUTION = 'solution'
+    SNIPPET = 'snippets'
+    SOLUTION = 'solutions'
 
     # Content delimiters
     DELIMITER_CONTENT = NEWLINE

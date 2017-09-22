@@ -42,23 +42,41 @@ class Solution(object):
             solutions = Format.get_solution_text(solutions, colors=True)
             self.print_terminal(solutions)
 
+    def update(self):
+        """Update existing solution."""
+
+        solution = ()
+        content_digest = Config.get_content_digest()
+        if content_digest and len(content_digest) >= Const.DIGEST_MIN_LENGTH:
+            self.logger.debug('updating soulution with digest %.16s', content_digest)
+            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
+
+        if len(solutions) == 1:
+            content_digest = solutions[0][Const.DIGEST]
+            solution = Config.get_content(content=solutions[0], use_editor=True, form=Const.SOLUTION)
+            self.storage.update(solution, content_digest)
+        elif not solutions:
+            Config.set_cause('cannot find solution to be updated with digest %.16s' % content_digest)
+        else:
+            self.logger.error('cannot update multiple soutions with same digest %.16s', content_digest)
+
     def delete(self):
         """Delete solutions."""
 
         self.logger.debug('deleting solution')
         solutions = ()
-        operation_digest = Config.get_operation_digest()
-        if operation_digest and len(operation_digest) >= Const.DIGEST_MIN_LENGTH:
-            self.logger.debug('deleting soulution with digest %.16s', operation_digest)
-            solutions = self.storage.search(Const.SOLUTION, digest=operation_digest)
+        content_digest = Config.get_content_digest()
+        if content_digest and len(content_digest) >= Const.DIGEST_MIN_LENGTH:
+            self.logger.debug('deleting soulution with digest %.16s', content_digest)
+            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
 
         if len(solutions) == 1:
-            operation_digest = solutions[0][Const.DIGEST]
-            self.storage.delete(Const.SOLUTION, operation_digest)
+            content_digest = solutions[0][Const.DIGEST]
+            self.storage.delete(Const.SOLUTION, content_digest)
         elif not solutions:
-            Config.set_cause('cannot find solution to be deleted with digest %.16s' % operation_digest)
+            Config.set_cause('cannot find solution to be deleted with digest %.16s' % content_digest)
         else:
-            self.logger.error('cannot delete multiple soutions with same digest %.16s', operation_digest)
+            self.logger.error('cannot delete multiple soutions with same digest %.16s', content_digest)
 
     def print_terminal(self, solutions):
         """Print solutions into terminal."""
@@ -74,8 +92,8 @@ class Solution(object):
             self.create()
         elif Config.is_operation_search():
             self.search()
-        #elif Config.is_operation_update():
-        #    self.update()
+        elif Config.is_operation_update():
+            self.update()
         elif Config.is_operation_delete():
             self.delete()
         #elif Config.is_operation_export():

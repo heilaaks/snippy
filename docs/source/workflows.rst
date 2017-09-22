@@ -27,6 +27,12 @@ commands from the search query.
     snippy search --sall . | grep --color=never '\$'
     snippy search --sgrp docker | grep --color=never '\$'
 
+Filtering out solution content to list only the metadata.
+
+.. code:: bash
+
+    snippy search --solution --sall . | grep -Ev '[^\s]+:'
+
 
 Updating duplicated content
 ---------------------------

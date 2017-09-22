@@ -50,28 +50,28 @@ class Snippet(object):
         """Update existing snippet."""
 
         snippets = ()
-        operation_digest = Config.get_operation_digest()
+        content_digest = Config.get_content_digest()
         snippet_data = Config.get_content_data()
-        log_string = 'invalid digest %.16s' % operation_digest
-        if operation_digest:
-            self.logger.debug('updating snippet with digest %.16s', operation_digest)
-            snippets = self.storage.search(Const.SNIPPET, digest=operation_digest)
-            log_string = 'digest %.16s' % operation_digest
+        log_string = 'invalid digest %.16s' % content_digest
+        if content_digest:
+            self.logger.debug('updating snippet with digest %.16s', content_digest)
+            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
+            log_string = 'digest %.16s' % content_digest
         elif snippet_data:
             self.logger.debug('updating snippet with content "%s"', snippet_data)
             snippets = self.storage.search(Const.SNIPPET, content=snippet_data)
             log_string = 'content %.20s' % snippet_data
 
         if len(snippets) == 1:
-            if operation_digest:
+            if content_digest:
                 snippet = Config.get_content(content=snippets[0], form=Const.SNIPPET)
-                operation_digest = snippets[0][Const.DIGEST]
+                content_digest = snippets[0][Const.DIGEST]
             elif snippet_data:
                 snippet = Config.get_content(use_editor=True, form=Const.SNIPPET)
-                operation_digest = snippets[0][Const.DIGEST]
-            self.storage.update(snippet, operation_digest)
+                content_digest = snippets[0][Const.DIGEST]
+            self.storage.update(snippet, content_digest)
         elif not snippets:
-            Config.set_cause('cannot find content to be updated with %s' % log_string)
+            Config.set_cause('cannot find snippet to be updated with %s' % log_string)
         else:
             self.logger.error('cannot update multiple snippets with same %s', log_string)
 
@@ -80,21 +80,21 @@ class Snippet(object):
 
         self.logger.debug('deleting snippet')
         snippets = ()
-        operation_digest = Config.get_operation_digest()
+        content_digest = Config.get_content_digest()
         snippet_data = Config.get_content_data()
-        log_string = 'invalid digest %.16s' % operation_digest
-        if operation_digest and len(operation_digest) >= Const.DIGEST_MIN_LENGTH:
-            self.logger.debug('deleting snippet with digest %.16s', operation_digest)
-            snippets = self.storage.search(Const.SNIPPET, digest=operation_digest)
-            log_string = 'digest %.16s' % operation_digest
+        log_string = 'invalid digest %.16s' % content_digest
+        if content_digest and len(content_digest) >= Const.DIGEST_MIN_LENGTH:
+            self.logger.debug('deleting snippet with digest %.16s', content_digest)
+            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
+            log_string = 'digest %.16s' % content_digest
         elif snippet_data:
             self.logger.debug('deleting snippet with content "%s"', snippet_data)
             snippets = self.storage.search(Const.SNIPPET, content=snippet_data)
             log_string = 'content %.20s' % snippet_data
 
         if len(snippets) == 1:
-            operation_digest = snippets[0][Const.DIGEST]
-            self.storage.delete(Const.SNIPPET, operation_digest)
+            content_digest = snippets[0][Const.DIGEST]
+            self.storage.delete(Const.SNIPPET, content_digest)
         elif not snippets:
             Config.set_cause('cannot find snippet to be deleted with %s' % log_string)
         else:

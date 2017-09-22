@@ -167,8 +167,8 @@ class Arguments(object):
         return cls.args.links
 
     @classmethod
-    def get_operation_digest(cls):
-        """Return digest identifying the operation target."""
+    def get_content_digest(cls):
+        """Return digest identifying the content."""
 
         cls.logger.info('parsed argument --digest with value "%s"', cls.args.digest)
 

@@ -21,7 +21,7 @@ class TestArgumentsCreateSnippet(object):
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == []
         assert obj.get_content_links() == ''
-        assert obj.get_operation_digest() == ''
+        assert obj.get_content_digest() == ''
         assert obj.get_search_all() == []
         assert obj.get_search_grp() == []
         assert obj.get_search_tag() == []

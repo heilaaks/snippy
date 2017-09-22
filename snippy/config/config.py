@@ -169,8 +169,8 @@ class Config(object): # pylint: disable=too-many-public-methods
         return cls.config['content']['links']
 
     @classmethod
-    def get_operation_digest(cls):
-        """Return digest identifying the operation target."""
+    def get_content_digest(cls):
+        """Return digest identifying the content."""
 
         return cls.config['digest']
 
@@ -343,7 +343,7 @@ class Config(object): # pylint: disable=too-many-public-methods
     def _parse_digest(cls):
         """Process message digest identifying the operation target."""
 
-        arg = cls.args.get_operation_digest()
+        arg = cls.args.get_content_digest()
         if arg:
             return arg
 
@@ -372,7 +372,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         # Implicitly force editor in case of update operation with message digest.
         editor = cls.args.get_editor()
-        if cls.is_operation_update() and cls.get_operation_digest():
+        if cls.is_operation_update() and cls.get_content_digest():
             editor = True
 
         return editor

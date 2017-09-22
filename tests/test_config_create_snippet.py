@@ -23,7 +23,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_content_group(), str)
         assert isinstance(obj.get_content_tags(), tuple)
         assert isinstance(obj.get_content_links(), tuple)
-        assert isinstance(obj.get_operation_digest(), str)
+        assert isinstance(obj.get_content_digest(), str)
         assert isinstance(obj.get_search_keywords(), tuple)
         assert isinstance(obj.get_operation_file(), str)
         assert obj.get_content() == snippet
@@ -41,7 +41,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert not obj.get_content_tags()
         assert not obj.get_content_links()
         assert not obj.get_search_keywords()
-        assert not obj.get_operation_digest()
+        assert not obj.get_content_digest()
         assert not obj.is_editor()
         assert not obj.is_file_type_yaml()
         assert not obj.is_file_type_json()

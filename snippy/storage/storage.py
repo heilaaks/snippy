@@ -42,10 +42,17 @@ class Storage(object):
         digest = Storage._calculate_digest(content)
         self.database.update_content(category, content, digest_updated, digest)
 
-    def export_content(self, table='snippets'):
+    def delete(self, category, digest):
+        """Delete content."""
+
+        cause = self.database.delete_content(category, digest)
+
+        return cause
+
+    def export_content(self, category):
         """Export content."""
 
-        rows = self.database.select_all_content(table)
+        rows = self.database.select_all_content(category)
         content = Storage._get_tuple_list(rows)
 
         return content
@@ -55,27 +62,10 @@ class Storage(object):
 
         return self.database.bulk_insert_content(table, contents)
 
-    def delete(self, category, digest):
-        """Delete content."""
-
-        cause = self.database.delete_content(category, digest)
-
-        return cause
-
     def disconnect(self):
         """Disconnect storage."""
 
         self.database.disconnect()
-
-    @staticmethod
-    def convert_to_dictionary(contents):
-        """Convert content to dictionary format."""
-
-        content_list = []
-        for entry in contents:
-            content_list.append(Storage._get_dictionary(entry))
-
-        return content_list
 
     @staticmethod
     def convert_from_dictionary(contents):
@@ -131,20 +121,6 @@ class Storage(object):
         content.append(digest)
 
         return tuple(content)
-
-    @staticmethod
-    def _get_dictionary(content):
-        """Convert content into dictionary."""
-
-        dictionary = {'content': content[Const.CONTENT],
-                      'brief': content[Const.BRIEF],
-                      'group': content[Const.GROUP],
-                      'tags': content[Const.TAGS],
-                      'links': content[Const.LINKS],
-                      'digest': content[Const.DIGEST],
-                      'utc': content[Const.UTC]}
-
-        return dictionary
 
     @staticmethod
     def _calculate_digest(content):

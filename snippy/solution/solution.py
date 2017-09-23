@@ -6,6 +6,7 @@ from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
 from snippy.format import Format
+from snippy.migrate import Migrate
 
 
 class Solution(object):
@@ -40,7 +41,7 @@ class Solution(object):
         if keywords:
             solutions = self.storage.search(Const.SOLUTION, keywords=keywords)
             solutions = Format.get_solution_text(solutions, colors=True)
-            self.print_terminal(solutions)
+            Migrate.print_terminal(solutions)
 
     def update(self):
         """Update existing solution."""
@@ -78,11 +79,12 @@ class Solution(object):
         else:
             self.logger.error('cannot delete multiple soutions with same digest %.16s', content_digest)
 
-    def print_terminal(self, solutions):
-        """Print solutions into terminal."""
+    def export_all(self):
+        """Export snippets."""
 
-        self.logger.debug('printing search results')
-        print(solutions)
+        self.logger.debug('exporting snippets')
+        solution = self.storage.export_content(Const.SOLUTION)
+        Migrate().print_file(Const.SOLUTION, solution)
 
     def run(self):
         """Run the solution management operation."""
@@ -96,8 +98,8 @@ class Solution(object):
             self.update()
         elif Config.is_operation_delete():
             self.delete()
-        #elif Config.is_operation_export():
-        #    self.export_all()
+        elif Config.is_operation_export():
+            self.export_all()
         #elif Config.is_operation_import():
         #    self.import_all()
         else:

@@ -7,6 +7,7 @@ from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
 from snippy.format import Format
+from snippy.migrate import Migrate
 
 
 class Snippet(object):
@@ -44,7 +45,7 @@ class Snippet(object):
         elif content:
             snippets = self.storage.search(Const.SNIPPET, content=content)
         snippets = Format.get_snippet_text(snippets, colors=True)
-        self.print_terminal(snippets)
+        Migrate.print_terminal(snippets)
 
     def update(self):
         """Update existing snippet."""
@@ -104,8 +105,8 @@ class Snippet(object):
         """Export snippets."""
 
         self.logger.debug('exporting snippets')
-        snippets = self.storage.export_content()
-        self.print_file(snippets)
+        snippets = self.storage.export_content(Const.SNIPPET)
+        Migrate().print_file(Const.SNIPPET, snippets)
 
     def import_all(self):
         """Import snippets."""
@@ -138,38 +139,6 @@ class Snippet(object):
                 sys.exit()
 
         return snippet_dict
-
-    def print_terminal(self, snippets):
-        """Print snippets into terminal."""
-
-        self.logger.debug('printing search results')
-        print(snippets)
-
-    def print_file(self, snippets):
-        """Print snippets into file."""
-
-        export_file = Config.get_operation_file()
-        self.logger.debug('export storage into file %s', export_file)
-        with open(export_file, 'w') as outfile:
-            try:
-                if Config.is_file_type_yaml():
-                    import yaml
-
-                    snippet_dict = {'snippets': self.storage.convert_to_dictionary(snippets)}
-                    yaml.dump(snippet_dict, outfile, default_flow_style=False)
-                elif Config.is_file_type_json():
-                    import json
-
-                    snippet_dict = {'snippets': self.storage.convert_to_dictionary(snippets)}
-                    json.dump(snippet_dict, outfile)
-                    outfile.write(Const.NEWLINE)
-                elif Config.is_file_type_text():
-                    outfile.write(Format.get_snippet_text(snippets, colors=False))
-                else:
-                    self.logger.info('unknown export format')
-            except (yaml.YAMLError, TypeError) as exception:
-                self.logger.exception('fatal failure to generate formatted export file "%s"', exception)
-                sys.exit()
 
     def run(self):
         """Run the snippet management operation."""

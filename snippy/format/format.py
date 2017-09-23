@@ -165,3 +165,28 @@ class Format(object):
         sorted_list = sorted(kw_list)
 
         return tuple(sorted_list)
+
+
+    @staticmethod
+    def get_dictionary(contents):
+        """Convert content to dictionary format."""
+
+        content_list = []
+        for entry in contents:
+            content_list.append(Format._get_dictionary(entry))
+
+        return content_list
+
+    @staticmethod
+    def _get_dictionary(content):
+        """Convert content into dictionary."""
+
+        dictionary = {'content': content[Const.CONTENT],
+                      'brief': content[Const.BRIEF],
+                      'group': content[Const.GROUP],
+                      'tags': content[Const.TAGS],
+                      'links': content[Const.LINKS],
+                      'digest': content[Const.DIGEST],
+                      'utc': content[Const.UTC]}
+
+        return dictionary

@@ -38,6 +38,9 @@ clean:
 	rm -f snippets.json
 	rm -f snippets.txt
 	rm -f snippets.yaml
+	rm -f solutions.json
+	rm -f solutions.txt
+	rm -f solutions.yaml
 
 clean-db:
 	> snippy/data/storage/snippy.db

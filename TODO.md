@@ -1,7 +1,6 @@
 ## TODO
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] Fix importing unknown file that terminates with exception.
-   - [ ] Add import defaults that would import the defaults.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Add docker container for the project.
@@ -18,6 +17,7 @@
    - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
+   - [x] Added import defaults with for snippets and solutions.
    - [x] Fixed solution update that duplicated the header.
    - [x] Fixed incorrect mocking of database that created file::memory:?cache=shared with Python2.
    - [x] Fixed error handling in case mandatory content was not provided or it was empty.

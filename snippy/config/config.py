@@ -29,10 +29,6 @@ class Config(object): # pylint: disable=too-many-public-methods
     def _set_config(cls):
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
-        cls.config['operation'] = {}
-        cls.config['operation']['task'] = cls._parse_operation()
-        cls.config['operation']['file'] = {}
-        cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
         cls.config['content'] = {}
         cls.config['content']['type'] = cls._parse_content_type()
         cls.config['content']['data'] = cls._parse_content_data()
@@ -40,6 +36,10 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['content']['group'] = cls._parse_content_group()
         cls.config['content']['tags'] = cls._parse_content_tags()
         cls.config['content']['links'] = cls._parse_content_links()
+        cls.config['operation'] = {}
+        cls.config['operation']['task'] = cls._parse_operation()
+        cls.config['operation']['file'] = {}
+        cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
         cls.config['digest'] = cls._parse_digest()
         cls.config['search'] = {}
         cls.config['search']['field'], cls.config['search']['keywords'] = cls._parse_search()
@@ -413,6 +413,17 @@ class Config(object): # pylint: disable=too-many-public-methods
         if not filename:
             return (Const.EMPTY, Const.FILE_TYPE_NONE)
 
+        # Import default content with keyword 'default'.
+        default_file = 'snippets.yaml'
+        if Config.is_content_solution():
+            default_file = 'solutions.yaml'
+
+        if filename == 'defaults':
+            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/default'), default_file)
+
+            return (filename, Const.FILE_TYPE_YAML)
+
+        # Import content from user specified file.
         filename, file_extension = os.path.splitext(filename)
         if filename and ('yaml' in file_extension or 'yml' in file_extension):
             filename = filename + '.yaml'

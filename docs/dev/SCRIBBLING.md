@@ -497,6 +497,10 @@ python snip.py import --file ./snippets.json
 
 3. Import same snippet yaml file again
 
+4. Import snippet defaults: 1) python runner import -f defaults 2) python runner import --snippet -f defaults
+
+5. Import solution defaults: python runner import --solution -f defaults
+
 ########################
 ## Supplementary options
 ########################

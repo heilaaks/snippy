@@ -1,4 +1,4 @@
-snippets:
+content:
 - brief: Remove all docker containers with volumes
   content: !!python/tuple
   - docker rm --volumes $(docker ps --all --quiet)

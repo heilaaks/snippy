@@ -27,13 +27,13 @@ class Editor(object): # pylint: disable-all
         from subprocess import call
 
         template = self.read_template()
-        template = self._set_template_data(self.content, template)
-        template = self._set_template_brief(self.content, template)
-        template = self._set_template_date(self.content, template)
-        template = self._set_template_group(self.content, template)
-        template = self._set_template_tags(self.content, template)
-        template = self._set_template_links(self.content, template)
-        template = self._set_template_file(self.content, template)
+        template = self._set_template_data(template)
+        template = self._set_template_brief(template)
+        template = self._set_template_date(template)
+        template = self._set_template_group(template)
+        template = self._set_template_tags(template)
+        template = self._set_template_links(template)
+        template = self._set_template_file(template)
         template = template.encode('UTF-8')
 
         editor = os.environ.get('EDITOR', 'vi')
@@ -141,29 +141,29 @@ class Editor(object): # pylint: disable-all
         
         return links
 
-    @classmethod
-    def _set_template_data(cls, content, template):
+    def _set_template_data(self, template):
         """Update template content data."""
 
-        data = Format.get_content_string(content)
+        data = Format.get_content_string(self.content)
         if data:
-            template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
+            if self.form == Const.SOLUTION:
+                template = data
+            else:
+                template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
         else:
             template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
 
         return template
 
-    @classmethod
-    def _set_template_brief(cls, content, template):
+    def _set_template_brief(self, template):
         """Update template content brief."""
 
-        brief = Format.get_brief_string(content)
+        brief = Format.get_brief_string(self.content)
         template = template.replace('<SNIPPY_BRIEF>', brief)
 
         return template
 
-    @classmethod
-    def _set_template_date(cls, content, template):
+    def _set_template_date(self, template):
         """Update template content date."""
 
         utc = datetime.datetime.utcnow()
@@ -171,38 +171,34 @@ class Editor(object): # pylint: disable-all
 
         return template
 
-    @classmethod
-    def _set_template_group(cls, content, template):
+    def _set_template_group(self, template):
         """Update template content group."""
 
-        group = Format.get_group_string(content)
+        group = Format.get_group_string(self.content)
         template = template.replace('<SNIPPY_GROUP>', group)
 
         return template
 
-    @classmethod
-    def _set_template_tags(cls, content, template):
+    def _set_template_tags(self, template):
         """Update template content tags."""
 
-        tags = Format.get_tags_string(content)
+        tags = Format.get_tags_string(self.content)
         template = template.replace('<SNIPPY_TAGS>', tags)
 
         return template
 
-    @classmethod
-    def _set_template_links(cls, content, template):
+    def _set_template_links(self, template):
         """Update template content links."""
 
-        links = Format.get_links_string(content)
+        links = Format.get_links_string(self.content)
         template = template.replace('<SNIPPY_LINKS>', links)
 
         return template
 
-    @classmethod
-    def _set_template_file(cls, content, template):
+    def _set_template_file(self, template):
         """Update template content file."""
 
-        file = Format.get_file_string(content)
+        file = Format.get_file_string(self.content)
         template = template.replace('<SNIPPY_FILE>', file)
 
         return template

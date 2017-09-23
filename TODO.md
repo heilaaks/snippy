@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Fix solution update and the duplicated header.
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
@@ -17,6 +16,7 @@
    - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
+   - [x] Fixed solution update that duplicated the header.
    - [x] Fixed incorrect mocking of database that created file::memory:?cache=shared with Python2.
    - [x] Fixed error handling in case mandatory content was not provided or it was empty.
    - [x] Added delete to work with user provided content like in case of update.

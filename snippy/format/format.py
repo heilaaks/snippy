@@ -133,7 +133,7 @@ class Format(object):
         """Format content file to string."""
 
         file = Const.EMPTY
-        match = re.search('## FILE  :(.*)', Format.get_content_string(content))
+        match = re.search(r'## FILE  :\s+(\S+)', Format.get_content_string(content))
         if match:
             file = match.group(1)
 

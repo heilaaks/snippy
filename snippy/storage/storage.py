@@ -36,11 +36,11 @@ class Storage(object):
 
         return entries
 
-    def update(self, content, digest_updated, table='snippets'):
+    def update(self, category, content, digest_updated):
         """Update content."""
 
         digest = Storage._calculate_digest(content)
-        self.database.update_content(table, content, digest_updated, digest)
+        self.database.update_content(category, content, digest_updated, digest)
 
     def export_content(self, table='snippets'):
         """Export content."""

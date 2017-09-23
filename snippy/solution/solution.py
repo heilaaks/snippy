@@ -54,7 +54,7 @@ class Solution(object):
         if len(solutions) == 1:
             content_digest = solutions[0][Const.DIGEST]
             solution = Config.get_content(content=solutions[0], use_editor=True, form=Const.SOLUTION)
-            self.storage.update(solution, content_digest)
+            self.storage.update(Const.SOLUTION, solution, content_digest)
         elif not solutions:
             Config.set_cause('cannot find solution to be updated with digest %.16s' % content_digest)
         else:

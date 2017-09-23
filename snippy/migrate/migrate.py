@@ -52,3 +52,28 @@ class Migrate(object):
             except (yaml.YAMLError, TypeError) as exception:
                 cls.logger.exception('fatal failure to generate formatted export file "%s"', exception)
                 sys.exit()
+
+    @classmethod
+    def load_dictionary(cls, contents):
+        """Create dictionary from content loaded from a file."""
+
+        content_dict = {}
+
+        cls.logger.debug('loading content dictionary from file')
+        with open(contents, 'r') as infile:
+            try:
+                if Config.is_file_type_yaml():
+                    import yaml
+
+                    content_dict = yaml.load(infile)
+                elif Config.is_file_type_json():
+                    import json
+
+                    content_dict = json.load(infile)
+                else:
+                    cls.logger.info('unknown export format')
+            except (yaml.YAMLError, TypeError) as exception:
+                cls.logger.exception('fatal exception while loading the import file %s "%s"', contents, exception)
+                sys.exit()
+
+        return content_dict

@@ -3,6 +3,7 @@
 """format.py: Data formatting and conversions."""
 
 import re
+import hashlib
 from snippy.config import Constants as Const
 
 
@@ -178,6 +179,25 @@ class Format(object):
         return content_list
 
     @staticmethod
+    def get_storage(contents):
+        """Convert content from dictionary format."""
+
+        content_list = []
+        for entry in contents:
+            content_list.append(Format._get_tuple_from_dictionary(entry))
+
+        return content_list
+
+    @staticmethod
+    def calculate_digest(content):
+        """Calculate digest for the data."""
+
+        data_string = Format._get_string(content)
+        digest = hashlib.sha256(data_string.encode('UTF-8')).hexdigest()
+
+        return digest
+
+    @staticmethod
     def _get_dictionary(content):
         """Convert content into dictionary."""
 
@@ -190,3 +210,28 @@ class Format(object):
                       'utc': content[Const.UTC]}
 
         return dictionary
+
+    @staticmethod
+    def _get_tuple_from_dictionary(dictionary):
+        """Convert single dictionary entry into tuple."""
+
+        content = [dictionary['content'],
+                   dictionary['brief'],
+                   dictionary['group'],
+                   dictionary['tags'],
+                   dictionary['links']]
+        digest = Format.calculate_digest(content)
+        content.append(digest)
+
+        return tuple(content)
+
+    @staticmethod
+    def _get_string(content):
+        """Convert content into one string."""
+
+        content_str = Const.EMPTY.join(map(str, content[Const.CONTENT]))
+        content_str = content_str + Const.EMPTY.join(content[Const.BRIEF:Const.TAGS])
+        content_str = content_str + Const.EMPTY.join(sorted(content[Const.TAGS]))
+        content_str = content_str + Const.EMPTY.join(sorted(content[Const.LINKS]))
+
+        return content_str

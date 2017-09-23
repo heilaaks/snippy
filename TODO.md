@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] Fix importing unknown file that terminates with exception.
+   - [ ] Add import defaults that would import the defaults.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Add docker container for the project.

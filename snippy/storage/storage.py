@@ -2,9 +2,9 @@
 
 """storage.py: Storage management."""
 
-import hashlib
 from snippy.config import Constants as Const
 from snippy.logger import Logger
+from snippy.format import Format
 from snippy.storage.database import Sqlite3Db as Database
 
 
@@ -23,7 +23,7 @@ class Storage(object):
     def create(self, category, content):
         """Create content."""
 
-        digest = Storage._calculate_digest(content)
+        digest = Format.calculate_digest(content)
         cause = self.database.insert_content(category, content, digest)
 
         return cause
@@ -39,7 +39,7 @@ class Storage(object):
     def update(self, category, content, digest_updated):
         """Update content."""
 
-        digest = Storage._calculate_digest(content)
+        digest = Format.calculate_digest(content)
         self.database.update_content(category, content, digest_updated, digest)
 
     def delete(self, category, digest):
@@ -57,25 +57,15 @@ class Storage(object):
 
         return content
 
-    def import_content(self, contents, table='snippets'):
+    def import_content(self, category, contents):
         """Import contents."""
 
-        return self.database.bulk_insert_content(table, contents)
+        return self.database.bulk_insert_content(category, contents)
 
     def disconnect(self):
         """Disconnect storage."""
 
         self.database.disconnect()
-
-    @staticmethod
-    def convert_from_dictionary(contents):
-        """Convert content from dictionary format."""
-
-        content_list = []
-        for entry in contents:
-            content_list.append(Storage._get_tuple_from_dictionary(entry))
-
-        return content_list
 
     def debug(self):
         """Dump the whole storage."""
@@ -107,37 +97,3 @@ class Storage(object):
                    row[Const.KEY])
 
         return content
-
-    @staticmethod
-    def _get_tuple_from_dictionary(dictionary):
-        """Convert single dictionary entry into tuple."""
-
-        content = [dictionary['content'],
-                   dictionary['brief'],
-                   dictionary['group'],
-                   dictionary['tags'],
-                   dictionary['links']]
-        digest = Storage._calculate_digest(content)
-        content.append(digest)
-
-        return tuple(content)
-
-    @staticmethod
-    def _calculate_digest(content):
-        """Calculate digest for the data."""
-
-        data_string = Storage._get_string(content)
-        digest = hashlib.sha256(data_string.encode('UTF-8')).hexdigest()
-
-        return digest
-
-    @staticmethod
-    def _get_string(content):
-        """Convert content into one string."""
-
-        content_str = Const.EMPTY.join(map(str, content[Const.CONTENT]))
-        content_str = content_str + Const.EMPTY.join(content[Const.BRIEF:Const.TAGS])
-        content_str = content_str + Const.EMPTY.join(sorted(content[Const.TAGS]))
-        content_str = content_str + Const.EMPTY.join(sorted(content[Const.LINKS]))
-
-        return content_str

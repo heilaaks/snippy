@@ -41,7 +41,7 @@ class Solution(object):
         if keywords:
             solutions = self.storage.search(Const.SOLUTION, keywords=keywords)
             solutions = Format.get_solution_text(solutions, colors=True)
-            Migrate.print_terminal(solutions)
+            Migrate().print_terminal(solutions)
 
     def update(self):
         """Update existing solution."""
@@ -80,11 +80,19 @@ class Solution(object):
             self.logger.error('cannot delete multiple soutions with same digest %.16s', content_digest)
 
     def export_all(self):
-        """Export snippets."""
+        """Export solutions."""
 
-        self.logger.debug('exporting snippets')
+        self.logger.debug('exporting solutions %s', Config.get_operation_file())
         solution = self.storage.export_content(Const.SOLUTION)
         Migrate().print_file(Const.SOLUTION, solution)
+
+    def import_all(self):
+        """Import solutions."""
+
+        self.logger.debug('importing solutions %s', Config.get_operation_file())
+        solutions = Migrate().load_dictionary(Config.get_operation_file())
+        solutions = Format.get_storage(solutions['content'])
+        self.storage.import_content(Const.SOLUTION, solutions)
 
     def run(self):
         """Run the solution management operation."""
@@ -100,7 +108,7 @@ class Solution(object):
             self.delete()
         elif Config.is_operation_export():
             self.export_all()
-        #elif Config.is_operation_import():
-        #    self.import_all()
+        elif Config.is_operation_import():
+            self.import_all()
         else:
             self.logger.error('unknown operation for solution')

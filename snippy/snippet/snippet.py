@@ -2,7 +2,6 @@
 
 """snippet.py: Snippet management."""
 
-import sys
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
@@ -45,7 +44,7 @@ class Snippet(object):
         elif content:
             snippets = self.storage.search(Const.SNIPPET, content=content)
         snippets = Format.get_snippet_text(snippets, colors=True)
-        Migrate.print_terminal(snippets)
+        Migrate().print_terminal(snippets)
 
     def update(self):
         """Update existing snippet."""
@@ -104,7 +103,7 @@ class Snippet(object):
     def export_all(self):
         """Export snippets."""
 
-        self.logger.debug('exporting snippets')
+        self.logger.debug('exporting snippets %s', Config.get_operation_file())
         snippets = self.storage.export_content(Const.SNIPPET)
         Migrate().print_file(Const.SNIPPET, snippets)
 
@@ -112,33 +111,9 @@ class Snippet(object):
         """Import snippets."""
 
         self.logger.debug('importing snippets %s', Config.get_operation_file())
-        snippets = self.load_dictionary(Config.get_operation_file())
-        snippets = self.storage.convert_from_dictionary(snippets['snippets'])
-        self.storage.import_content(snippets)
-
-    def load_dictionary(self, snippets):
-        """Create dictionary from snippets in a file."""
-
-        snippet_dict = {}
-
-        self.logger.debug('loading snippet dictionary from file')
-        with open(snippets, 'r') as infile:
-            try:
-                if Config.is_file_type_yaml():
-                    import yaml
-
-                    snippet_dict = yaml.load(infile)
-                elif Config.is_file_type_json():
-                    import json
-
-                    snippet_dict = json.load(infile)
-                else:
-                    self.logger.info('unknown export format')
-            except (yaml.YAMLError, TypeError) as exception:
-                self.logger.exception('fatal exception while loading the import file %s "%s"', snippets, exception)
-                sys.exit()
-
-        return snippet_dict
+        snippets = Migrate().load_dictionary(Config.get_operation_file())
+        snippets = Format.get_storage(snippets['content'])
+        self.storage.import_content(Const.SNIPPET, snippets)
 
     def run(self):
         """Run the snippet management operation."""

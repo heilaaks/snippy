@@ -2,6 +2,7 @@
 
 """arguments.py: Command line argument management."""
 
+import sys
 import argparse
 from snippy.config import Constants as Const
 from snippy.logger import Logger
@@ -14,10 +15,13 @@ class Arguments(object):
     args = {}
     logger = {}
 
+    ARGS_COPYRIGHT = ('Snippy version ' + __version__ + ' - license Apache 2.0',
+                      'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+                      'Homepage https://github.com/heilaaks/snippy')
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')
-    ARGS_CONTENT = ('  --snippet                     operate snippets (default)',
-                    '  --solution                    operate solutions',
-                    '  --all                         operate all content')
+    ARGS_CATEGO = ('  --snippet                     operate snippets (default)',
+                   '  --solution                    operate solutions',
+                   '  --all                         operate all content')
     ARGS_EDITOR = ('  -e, --editor                  use vi editor to add content',
                    '  -f, --file FILE               define file for operation',
                    '  -c, --content CONTENT         define example content',
@@ -29,7 +33,7 @@ class Arguments(object):
     ARGS_SEARCH = ('  --sall [KW,...]               search keywords from all fields',
                    '  --stag [KW,...]               search keywords only from tags',
                    '  --sgrp [KW,...]               search keywords only from groups')
-    ARGS_IMPEXP = ('  -f, --file FILE               define file for operation',
+    ARGS_MIGRAT = ('  -f, --file FILE               define file for operation',
                    '  --template FILE               create template for defined content')
     ARGS_EPILOG = ('symbols:',
                    '    $    snippet',
@@ -39,23 +43,45 @@ class Arguments(object):
                    '    >    url',
                    '',
                    'examples:',
-                   '    Creating new snippets.',
-                   '      $ snippy create --snippet --editor',
-                   '      $ snippy create -c \'docker ps\' -b \'list containers\' -t docker,moby',
+                   '    Import default content.',
+                   '      $ snippy import --snippet -f defaults',
+                   '      $ snippy import --solution -f defaults',
                    '',
-                   '    Search snippets with keyword list.',
-                   '      $ snippy search --snippet --sall docker,moby',
+                   '    List all snippets.',
+                   '      $ snippy search --snippet --sall .',
                    '',
-                   '    Export all snippets in yaml format.',
-                   '      $ snippy export --snippet -f snippets.yaml',
-                   '',
-                   '    Delete snippet with message digest.',
-                   '      $ snippy delete --snippet -d b26daeda142cf1ed',
-                   '',
-                   'Snippy version ' + __version__ + ' - license Apache 2.0',
-                   'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
-                   'Homepage https://github.com/heilaaks/snippy',
-                   '')
+                   '    List more examples.',
+                   '      $ snippy --help examples',
+                   '') + ARGS_COPYRIGHT
+
+    ARGS_EXAMPLES = ('examples:',
+                     '    Creating new content.',
+                     '      $ snippy create --snippet --editor',
+                     '      $ snippy create --snippet -c \'docker ps\' -b \'list containers\' -t docker,moby',
+                     '',
+                     '    Searching and filtering content.',
+                     '      $ snippy search --snippet --sall docker,moby',
+                     '      $ snippy search --snippet --sall .',
+                     '      $ snippy search --snippet --sall . | grep --color=never \'\\$\'',
+                     '      $ snippy search --solution --sall .',
+                     '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
+                     '',
+                     '    Updating content.',
+                     '      $ snippy update --snippet -d b26daeda142cf1ed',
+                     '      $ snippy update --snippet -c \'docker rm --volumes $(docker ps --all --quiet)\'',
+                     '',
+                     '    Deleting content.',
+                     '      $ snippy delete --snippet -d b26daeda142cf1ed',
+                     '      $ snippy delete --snippet -c \'docker rm --volumes $(docker ps --all --quiet)\'',
+                     '',
+                     '    Migrating content.',
+                     '      $ snippy export --snippet -f snippets.yaml',
+                     '      $ snippy export --snippet -f snippets.json',
+                     '      $ snippy export --snippet -f snippets.text',
+                     '      $ snippy import --snippet -f snippets.yaml',
+                     '      $ snippy export --solution -f contents.yaml',
+                     '      $ snippy import --solution -f contents.yaml',
+                     '') + ARGS_COPYRIGHT
 
     def __init__(self):
         Arguments.logger = Logger(__name__).get()
@@ -70,7 +96,7 @@ class Arguments(object):
         parser.add_argument('operation', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
         # content options
-        content = parser.add_argument_group(title='content options', description=Const.NEWLINE.join(Arguments.ARGS_CONTENT))
+        content = parser.add_argument_group(title='content options', description=Const.NEWLINE.join(Arguments.ARGS_CATEGO))
         content_meg = content.add_mutually_exclusive_group()
         content_meg.add_argument('--snippet', action='store_const', dest='type', const='snippet', help=argparse.SUPPRESS)
         content_meg.add_argument('--solution', action='store_const', dest='type', const='solution', help=argparse.SUPPRESS)
@@ -95,13 +121,13 @@ class Arguments(object):
         search_meg.add_argument('--stag', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         search_meg.add_argument('--sgrp', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
 
-        # import/export options
-        template = parser.add_argument_group(title='export options', description=Const.NEWLINE.join(Arguments.ARGS_IMPEXP))
-        template.add_argument('--template', type=argparse.FileType('w'), help=argparse.SUPPRESS)
+        # migration options
+        migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Arguments.ARGS_MIGRAT))
+        migrat.add_argument('--template', type=argparse.FileType('w'), help=argparse.SUPPRESS)
 
         # support options
         support = parser.add_argument_group(title='support options')
-        support.add_argument('-h', '--help', action='help', help=argparse.SUPPRESS)
+        support.add_argument('-h', '--help', nargs=0, action=MyHelpAction, help=argparse.SUPPRESS)
         support.add_argument('-v', '--version', action='version', version=__version__, help=argparse.SUPPRESS)
         support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
@@ -211,3 +237,18 @@ class Arguments(object):
         cls.logger.info('parsed argument --file with value "%s"', cls.args.file)
 
         return cls.args.file
+
+
+class MyHelpAction(argparse.Action): # pylint: disable=too-few-public-methods
+    """Customised argparse help to print examples."""
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        """Customised example printing to override positional arguments."""
+
+        if option_string == '-h' or option_string == '--help':
+            if 'examples' not in sys.argv:
+                parser.print_help()
+            else:
+                print(Const.NEWLINE.join(Arguments.ARGS_EXAMPLES))
+
+        parser.exit()

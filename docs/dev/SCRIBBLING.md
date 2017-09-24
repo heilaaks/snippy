@@ -259,6 +259,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     http://docopt.org/
     http://www.tldp.org/LDP/abs/html/standard-options.html
 
+    # Customise help
+    https://stackoverflow.com/questions/20094215/argparse-subparser-monolithic-help-output
+    https://gist.github.com/evertrol/09d7fe69efb65bbc35d2
 
 pylint --rcfile tests/pylint/pylint-snippy.rc ./snippy
 pylint --rcfile tests/pylint/pylint-snippy-tests.rc ./tests

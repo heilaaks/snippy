@@ -127,16 +127,22 @@ class Config(object): # pylint: disable=too-many-public-methods
         return True if cls.config['operation']['task'] == 'import' else False
 
     @classmethod
-    def is_content_snippet(cls):
-        """Test if content was snippet."""
+    def is_category_snippet(cls):
+        """Test if operation is applied to snippet category."""
 
         return True if cls.config['content']['type'] == 'snippet' else False
 
     @classmethod
-    def is_content_solution(cls):
-        """Test if content was solution."""
+    def is_category_solution(cls):
+        """Test if operation is applied to solution category."""
 
         return True if cls.config['content']['type'] == 'solution' else False
+
+    @classmethod
+    def is_category_all(cls):
+        """Test if operation is applied to all content categories."""
+
+        return True if cls.config['content']['type'] == 'all' else False
 
     @classmethod
     def get_content_data(cls):
@@ -415,7 +421,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         # Import default content with keyword 'default'.
         default_file = 'snippets.yaml'
-        if Config.is_content_solution():
+        if Config.is_category_solution():
             default_file = 'solutions.yaml'
 
         if filename == 'defaults':

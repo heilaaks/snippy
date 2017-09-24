@@ -33,8 +33,9 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert not obj.is_operation_delete()
         assert not obj.is_operation_export()
         assert not obj.is_operation_import()
-        assert obj.is_content_snippet()
-        assert not obj.is_content_solution()
+        assert obj.is_category_snippet()
+        assert not obj.is_category_solution()
+        assert not obj.is_category_all()
         assert not obj.get_content_data()
         assert not obj.get_content_brief()
         assert obj.get_content_group() == Const.DEFAULT_GROUP

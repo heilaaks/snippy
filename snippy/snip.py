@@ -31,12 +31,15 @@ class Snippy(object):
 
         self.logger.info('running command line interface')
         self.storage.init()
-        if Config.is_content_snippet():
+        if Config.is_category_snippet():
             Snippet(self.storage).run()
-        elif Config.is_content_solution():
+        elif Config.is_category_solution():
             Solution(self.storage).run()
+        elif Config.is_category_all() and Config.is_operation_search():
+            Snippet(self.storage).search()
+            Solution(self.storage).search()
         else:
-            self.logger.error('unknown content type')
+            Config.set_cause('content category \'all\' is supported only with search operation')
 
 
 def main():

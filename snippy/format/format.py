@@ -57,20 +57,20 @@ class Format(object):
     def console_header(colors=False):
         """Format content text header."""
 
-        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0;2m \x1b[0m@%s \x1b[0;2m[%.16s]\x1b[0m\n' if colors \
+        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0m @%s \x1b[0;2m[%.16s]\x1b[0m\n' if colors \
                else '%d. %s @%s [%.16s]\n'
 
     @staticmethod
     def console_snippet(colors=False):
         """Format snippet text."""
 
-        return '%s   \x1b[91m$\x1b[0m \x1b[0m%s\x1b[0m\n' if colors else '%s   $ %s\n'
+        return '%s   \x1b[91m$\x1b[0m %s\n' if colors else '%s   $ %s\n'
 
     @staticmethod
     def console_solution(colors=False):
         """Format solution text."""
 
-        return '%s   \x1b[91m:\x1b[0m \x1b[0m%s\x1b[0m\n' if colors else '%s   : %s\n'
+        return '%s   \x1b[91m:\x1b[0m %s\n' if colors else '%s   : %s\n'
 
     @staticmethod
     def console_links(colors=False):

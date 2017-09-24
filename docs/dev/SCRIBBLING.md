@@ -247,6 +247,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     # Ordered dictionary also in Python 2.7
     https://stackoverflow.com/questions/31605131/dumping-a-dictionary-to-a-yaml-file-while-preserving-order
+    
+    # Ansicolor
+    https://github.com/shiena/ansicolor/blob/master/README.md
 
 #######################################
 ## Command line design
@@ -311,7 +314,7 @@ https://docs.docker.com/engine/reference/commandline/rm/
 ########################
 ## Creating new snippets
 ########################
-
+https://github.com/shiena/ansicolor/blob/master/README.md
 1. Create snippet from command line with all parameters
 python snip.py create --content 'docker rm -v $(docker ps -a -q)' --brief 'Remove all docker containers' --group 'docker' --tags docker,container,cleanup --links 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 

@@ -2,6 +2,7 @@
 
 """migrate.py: Import and export management."""
 
+import re
 import sys
 from snippy.config import Constants as Const
 from snippy.logger import Logger
@@ -21,8 +22,19 @@ class Migrate(object):
     def print_terminal(cls, content):
         """Print content into console."""
 
+        # In case user provided regexp filter, the ANSI color codes are removed
+        # from the content in order to make the filter work as exptected.
         cls.logger.debug('printing content to console')
-        print(content)
+        regexp = Config.get_search_filter()
+        if regexp:
+            ansi_escape = re.compile(r'\x1b[^m]*m')
+            content = ansi_escape.sub('', content)
+            match = re.findall(regexp, content)
+            if match:
+                print(Const.NEWLINE.join(match))
+                print()
+        else:
+            print(content)
 
     @classmethod
     def print_file(cls, category, content):

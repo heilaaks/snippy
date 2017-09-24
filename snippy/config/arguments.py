@@ -21,7 +21,7 @@ class Arguments(object):
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')
     ARGS_CATEGO = ('  --snippet                     operate snippets (default)',
                    '  --solution                    operate solutions',
-                   '  --all                         operate all content')
+                   '  --all                         operate all content (search only)')
     ARGS_EDITOR = ('  -e, --editor                  use vi editor to add content',
                    '  -f, --file FILE               define file for operation',
                    '  -c, --content CONTENT         define example content',
@@ -32,7 +32,8 @@ class Arguments(object):
                    '  -d, --digest DIGEST           idenfity content with digest')
     ARGS_SEARCH = ('  --sall [KW,...]               search keywords from all fields',
                    '  --stag [KW,...]               search keywords only from tags',
-                   '  --sgrp [KW,...]               search keywords only from groups')
+                   '  --sgrp [KW,...]               search keywords only from groups',
+                   '  --filter REGEXP               filter search output with regexp')
     ARGS_MIGRAT = ('  -f, --file FILE               define file for operation',
                    '  --template FILE               create template for defined content')
     ARGS_EPILOG = ('symbols:',
@@ -65,6 +66,7 @@ class Arguments(object):
                      '      $ snippy search --snippet --sall . | grep --color=never \'\\$\'',
                      '      $ snippy search --solution --sall .',
                      '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
+                     '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
                      '',
                      '    Updating content.',
                      '      $ snippy update --snippet -d b26daeda142cf1ed',
@@ -96,7 +98,7 @@ class Arguments(object):
         parser.add_argument('operation', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
         # content options
-        content = parser.add_argument_group(title='content options', description=Const.NEWLINE.join(Arguments.ARGS_CATEGO))
+        content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Arguments.ARGS_CATEGO))
         content_meg = content.add_mutually_exclusive_group()
         content_meg.add_argument('--snippet', action='store_const', dest='type', const='snippet', help=argparse.SUPPRESS)
         content_meg.add_argument('--solution', action='store_const', dest='type', const='solution', help=argparse.SUPPRESS)
@@ -120,6 +122,7 @@ class Arguments(object):
         search_meg.add_argument('--sall', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         search_meg.add_argument('--stag', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         search_meg.add_argument('--sgrp', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        search.add_argument('--filter', type=str, dest='regexp', default='', help=argparse.SUPPRESS)
 
         # migration options
         migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Arguments.ARGS_MIGRAT))
@@ -209,6 +212,14 @@ class Arguments(object):
         return cls.args.sall
 
     @classmethod
+    def get_search_tag(cls):
+        """Return keywords to search only from tags."""
+
+        cls.logger.info('parsed argument --stag with value %s', cls.args.stag)
+
+        return cls.args.stag
+
+    @classmethod
     def get_search_grp(cls):
         """Return keywords to search only from groups."""
 
@@ -217,12 +228,12 @@ class Arguments(object):
         return cls.args.sgrp
 
     @classmethod
-    def get_search_tag(cls):
-        """Return keywords to search only from tags."""
+    def get_search_filter(cls):
+        """Return regexp filter for search output."""
 
-        cls.logger.info('parsed argument --stag with value %s', cls.args.stag)
+        cls.logger.info('parsed argument --filter with value %s', cls.args.regexp)
 
-        return cls.args.stag
+        return cls.args.regexp
 
     @classmethod
     def get_editor(cls):

@@ -2,6 +2,7 @@
 
 """config.py: Configuration management."""
 
+import re
 import sys
 import os.path
 import inspect
@@ -43,6 +44,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['digest'] = cls._parse_digest()
         cls.config['search'] = {}
         cls.config['search']['field'], cls.config['search']['keywords'] = cls._parse_search()
+        cls.config['search']['filter'] = cls._parse_search_filter()
         cls.config['input'] = {}
         cls.config['input']['editor'] = cls._parse_editor()
         cls.config['storage'] = {}
@@ -66,6 +68,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.logger.debug('configured value from --file as "%s"', cls.config['operation']['file']['name'])
         cls.logger.debug('configured value from search field as %s', cls.config['search']['field'])
         cls.logger.debug('configured value from search keywords as %s', cls.config['search']['keywords'])
+        cls.logger.debug('configured value from search filter as %s', cls.config['search']['filter'])
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
@@ -203,6 +206,12 @@ class Config(object): # pylint: disable=too-many-public-methods
         """Return list of search keywords."""
 
         return cls.config['search']['keywords']
+
+    @classmethod
+    def get_search_filter(cls):
+        """Return search filter."""
+
+        return cls.config['search']['filter']
 
     @classmethod
     def is_editor(cls):
@@ -371,6 +380,20 @@ class Config(object): # pylint: disable=too-many-public-methods
             field = Const.SEARCH_GRP
 
         return (field, Format.get_keywords(arg))
+
+    @classmethod
+    def _parse_search_filter(cls):
+        """Process the user given search keywords and field."""
+
+        regexp = cls.args.get_search_filter()
+
+        try:
+            re.compile(regexp)
+        except re.error:
+            cls.logger.info('filter is not a valid regexp "%s"', regexp)
+            regexp = Const.EMPTY
+
+        return regexp
 
     @classmethod
     def _parse_editor(cls):

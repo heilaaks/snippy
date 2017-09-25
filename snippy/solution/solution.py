@@ -20,9 +20,9 @@ class Solution(object):
         """Create new solution."""
 
         self.logger.debug('creating new solution')
-        solution = Config.get_content(form=Const.SOLUTION)
+        solution = Config.get_content()
         if solution:
-            cause = self.storage.create(Const.SOLUTION, solution)
+            cause = self.storage.create(solution)
             if cause == Const.DB_DUPLICATE:
                 solutions = self.storage.search(Const.SOLUTION, content=solution[Const.CONTENT])
                 if len(solutions) == 1:
@@ -54,8 +54,8 @@ class Solution(object):
 
         if len(solutions) == 1:
             content_digest = solutions[0][Const.DIGEST]
-            solution = Config.get_content(content=solutions[0], use_editor=True, form=Const.SOLUTION)
-            self.storage.update(Const.SOLUTION, solution, content_digest)
+            solution = Config.get_content(content=solutions[0], use_editor=True)
+            self.storage.update(solution, content_digest)
         elif not solutions:
             Config.set_cause('cannot find solution to be updated with digest %.16s' % content_digest)
         else:
@@ -84,7 +84,7 @@ class Solution(object):
 
         self.logger.debug('exporting solutions %s', Config.get_operation_file())
         solution = self.storage.export_content(Const.SOLUTION)
-        Migrate().print_file(Const.SOLUTION, solution)
+        Migrate().print_file(solution)
 
     def import_all(self):
         """Import solutions."""
@@ -92,12 +92,13 @@ class Solution(object):
         self.logger.debug('importing solutions %s', Config.get_operation_file())
         solutions = Migrate().load_dictionary(Config.get_operation_file())
         solutions = Format.get_storage(solutions['content'])
-        self.storage.import_content(Const.SOLUTION, solutions)
+        self.storage.import_content(solutions)
 
     def run(self):
         """Run the solution management operation."""
 
         self.logger.info('managing solution')
+        Config.set_category(Const.SOLUTION)
         if Config.is_operation_create():
             self.create()
         elif Config.is_operation_search():

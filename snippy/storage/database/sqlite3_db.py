@@ -40,11 +40,12 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_content(self, table, content, digest, metadata=None):
+    def insert_content(self, content, digest, metadata=None):
         """Insert content into database."""
 
         cause = Const.DB_FAILURE
         if self.conn:
+            table = content[Const.CATEGORY]
             query = ('INSERT OR ROLLBACK INTO ' + table + '(content, brief, groups, tags, links, digest, metadata) ' +
                      'VALUES(?,?,?,?,?,?,?)')
             self.logger.debug('insert "%s" with digest %.16s', content[Const.BRIEF], digest)
@@ -70,13 +71,13 @@ class Sqlite3Db(object):
 
         return cause
 
-    def bulk_insert_content(self, table, contents):
+    def bulk_insert_content(self, contents):
         """Insert multiple contents into database."""
 
-        for entry in contents:
-            digest = entry[Const.DIGEST]
-            entry = entry[Const.CONTENT:Const.DIGEST]
-            self.insert_content(table, entry, digest)
+        for content in contents:
+            digest = content[Const.DIGEST]
+            content = content[Const.CONTENT:Const.DIGEST]
+            self.insert_content(content, digest)
 
     def select_content(self, table, keywords=None, digest=None, content=None):
         """Select content."""
@@ -90,13 +91,14 @@ class Sqlite3Db(object):
             # can be counted by multiplying the query keywords (e.g 3)and the searched colums.
             #
             # Example queries:
-            #     1) SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM snippets WHERE
-            #        (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?)
-            #        ORDER BY id ASC
-            #     2) SELECT content, brief, groups, tags, links,digest, utc, metadata FROM snippets WHERE (content REGEXP ?
-            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (content REGEXP ?
-            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) OR (content REGEXP ?
-            #        or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) ORDER BY id ASC
+            #     1) SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id
+            #        FROM snippets WHERE (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?
+            #        or links REGEXP ?) ORDER BY id ASC
+            #     2) SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id
+            #        FROM snippets WHERE (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?
+            #        or links REGEXP ?) OR (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?
+            #        or links REGEXP ?) OR (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?
+            #        or links REGEXP ?) ORDER BY id ASC
             if keywords and Config.is_search_all():
                 columns = ['content', 'brief', 'groups', 'tags', 'links']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, table)
@@ -107,12 +109,12 @@ class Sqlite3Db(object):
                 columns = ['tags']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, table)
             elif digest:
-                query = ('SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM ' + table +
-                         ' WHERE digest LIKE ?')
+                query = ('SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id FROM '
+                         + table + ' WHERE digest LIKE ?')
                 qargs = [digest+'%']
             elif content:
-                query = ('SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM ' + table +
-                         ' WHERE content=?')
+                query = ('SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id FROM '
+                         + table + ' WHERE content=?')
                 qargs = [Const.DELIMITER_CONTENT.join(map(str, content))]
             else:
                 self.logger.error('exiting because of internal error where search query was not defined')
@@ -148,10 +150,11 @@ class Sqlite3Db(object):
 
         return []
 
-    def update_content(self, table, content, digest_updated, digest_new, metadata=None):
+    def update_content(self, content, digest_updated, digest_new, metadata=None):
         """Update existing content."""
 
         if self.conn:
+            table = content[Const.CATEGORY]
             query = ('UPDATE ' + table + ' SET content=?, brief=?, groups=?, tags=?, links=?, digest=?, metadata=? ' +
                      'WHERE digest LIKE ?')
             self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
@@ -252,7 +255,8 @@ class Sqlite3Db(object):
         """Generate SQL query parameters for specific fields and keywords."""
 
         query_args = []
-        query = 'SELECT content, brief, groups, tags, links, digest, utc, metadata, id FROM ' + table + ' WHERE '
+        query = ('SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id FROM '
+                 + table + ' WHERE ')
 
         # Generate regexp search like:
         #   1. '(content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) '

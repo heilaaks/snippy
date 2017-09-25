@@ -1,4 +1,6 @@
 ## TODO
+   - [ ] Add filename from solution to database.
+   - [ ] Calculate digest from first element up to but not including digest.
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] Fix importing unknown file that terminates with exception.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?

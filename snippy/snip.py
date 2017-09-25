@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""Snippy - Command and solution example management from console."""
+"""Snippy - Command and solution management from console."""
 
 from snippy.logger import Logger
 from snippy.config import Config
@@ -14,30 +14,36 @@ class Snippy(object):
     """Command and solution management."""
 
     def __init__(self):
+        Logger.set_level()
         self.logger = Logger(__name__).get()
         self.config = Config()
         self.storage = Storage()
+        self.snippet = Snippet(self.storage)
+        self.solution = Solution(self.storage)
 
     def release(self):
-        """Release the command line session."""
-
-        self.storage.debug()
-        self.storage.disconnect()
+        """Release session."""
 
         Logger.exit(self.config.get_exit_cause())
+        self.storage.disconnect()
+        self.storage = None
+        self.snippet = None
+        self.solution = None
+        self.config = None
+        self.logger = None
 
-    def run(self):
-        """Run the command line session."""
+    def run_cli(self):
+        """Run command line session."""
 
         self.logger.info('running command line interface')
         self.storage.init()
         if Config.is_category_snippet():
-            Snippet(self.storage).run()
+            self.snippet.run()
         elif Config.is_category_solution():
-            Solution(self.storage).run()
+            self.solution.run()
         elif Config.is_category_all() and Config.is_operation_search():
-            Snippet(self.storage).search()
-            Solution(self.storage).search()
+            self.snippet.run()
+            self.solution.run()
         else:
             Config.set_cause('content category \'all\' is supported only with search operation')
 
@@ -45,10 +51,9 @@ class Snippy(object):
 def main():
     """Main"""
 
-    Logger.set_level()
     Profiler.enable()
     snippy = Snippy()
-    snippy.run()
+    snippy.run_cli()
     snippy.release()
     Profiler.disable()
 

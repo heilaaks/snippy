@@ -9,8 +9,10 @@ create table if not exists snippets (
     groups      text default '',
     tags        text default '',
     links       text default '',
-    digest      blob(64),
+    category    text default 'snippets',
+    filename    text default '',
     utc         datetime default current_timestamp,
+    digest      blob(64),
     metadata    text default '',
     id          integer primary key
 );
@@ -22,8 +24,10 @@ create table if not exists solutions (
     groups      text default '',
     tags        text default '',
     links       text default '',
-    digest      blob(64),
+    category    text default 'solutions',
+    filename    text default '',
     utc         datetime default current_timestamp,
+    digest      blob(64),
     metadata    text default '',
     id          integer primary key
 );

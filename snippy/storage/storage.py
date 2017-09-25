@@ -20,11 +20,11 @@ class Storage(object):
 
         self.database.init()
 
-    def create(self, category, content):
+    def create(self, content):
         """Create content."""
 
         digest = Format.calculate_digest(content)
-        cause = self.database.insert_content(category, content, digest)
+        cause = self.database.insert_content(content, digest)
 
         return cause
 
@@ -36,11 +36,11 @@ class Storage(object):
 
         return entries
 
-    def update(self, category, content, digest_updated):
+    def update(self, content, digest_updated):
         """Update content."""
 
         digest = Format.calculate_digest(content)
-        self.database.update_content(category, content, digest_updated, digest)
+        self.database.update_content(content, digest_updated, digest)
 
     def delete(self, category, digest):
         """Delete content."""
@@ -57,18 +57,20 @@ class Storage(object):
 
         return content
 
-    def import_content(self, category, contents):
+    def import_content(self, contents):
         """Import contents."""
 
-        return self.database.bulk_insert_content(category, contents)
+        return self.database.bulk_insert_content(contents)
 
     def disconnect(self):
         """Disconnect storage."""
 
         self.database.disconnect()
+        self.debug()
+        self.database = None
 
     def debug(self):
-        """Dump the whole storage."""
+        """Debug the storage."""
 
         self.database.debug()
 
@@ -91,8 +93,10 @@ class Storage(object):
                    row[Const.GROUP],
                    tuple(row[Const.TAGS].split(Const.DELIMITER_TAGS)),
                    tuple(row[Const.LINKS].split(Const.DELIMITER_LINKS)),
-                   row[Const.DIGEST],
+                   row[Const.CATEGORY],
+                   row[Const.FILENAME],
                    row[Const.UTC],
+                   row[Const.DIGEST],
                    row[Const.METADATA],
                    row[Const.KEY])
 

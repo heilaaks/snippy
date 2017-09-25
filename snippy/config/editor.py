@@ -14,11 +14,10 @@ from snippy.format import Format
 class Editor(object): # pylint: disable-all
     """Editor based configuration."""
 
-    def __init__(self, content, form):
+    def __init__(self, content):
         self.logger = Logger(__name__).get()
         self.content = content
         self.edited = Const.EMPTY
-        self.form = form
 
     def read_content(self):
         """Read the content from editor."""
@@ -51,7 +50,7 @@ class Editor(object): # pylint: disable-all
         """Return content template."""
 
         template = Const.EMPTY
-        if self.form == Const.SNIPPET:
+        if self.content[Const.CATEGORY] == Const.SNIPPET:
             file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
         else:
             file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
@@ -65,7 +64,7 @@ class Editor(object): # pylint: disable-all
         """Return content data from editor."""
 
         data = ()
-        if self.form == Const.SNIPPET:
+        if self.content[Const.CATEGORY] == Const.SNIPPET:
             match = re.search('%s(.*)%s' % (Const.EDITOR_CONTENT_HEAD, Const.EDITOR_CONTENT_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
@@ -79,7 +78,7 @@ class Editor(object): # pylint: disable-all
         """Return content brief from editor."""
 
         brief = Const.EMPTY
-        if self.form == Const.SNIPPET:
+        if self.content[Const.CATEGORY] == Const.SNIPPET:
             match = re.search('%s(.*)%s' % (Const.EDITOR_BRIEF_HEAD, Const.EDITOR_BRIEF_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
@@ -96,7 +95,7 @@ class Editor(object): # pylint: disable-all
         """Return content group from editor."""
 
         group = Const.EMPTY
-        if self.form == Const.SNIPPET:
+        if self.content[Const.CATEGORY] == Const.SNIPPET:
             match = re.search('%s(.*)%s' % (Const.EDITOR_GROUP_HEAD, Const.EDITOR_GROUP_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
@@ -114,7 +113,7 @@ class Editor(object): # pylint: disable-all
         """Return content tags from editor."""
 
         tags = ()
-        if self.form == Const.SNIPPET:
+        if self.content[Const.CATEGORY] == Const.SNIPPET:
             match = re.search('%s(.*)%s' % (Const.EDITOR_TAGS_HEAD, Const.EDITOR_TAGS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 tags = Format.get_keywords([match.group(1)])
@@ -131,7 +130,7 @@ class Editor(object): # pylint: disable-all
 
         # In case of solution, the links are read from the whole content data.
         links = ()
-        if self.form == Const.SNIPPET:
+        if self.content[Const.CATEGORY] == Const.SNIPPET:
             match = re.search('%s(.*)%s' % (Const.EDITOR_LINKS_HEAD, Const.EDITOR_LINKS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 links = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
@@ -146,7 +145,7 @@ class Editor(object): # pylint: disable-all
 
         data = Format.get_content_string(self.content)
         if data:
-            if self.form == Const.SOLUTION:
+            if self.content[Const.CATEGORY] == Const.SOLUTION:
                 template = data
             else:
                 template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)

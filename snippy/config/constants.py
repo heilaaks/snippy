@@ -20,9 +20,10 @@ class Constants(object): # pylint: disable=too-few-public-methods
     # Digest
     DIGEST_MIN_LENGTH = 16
 
-    # Content types
+    # Content categories that must match SQL table names.
     SNIPPET = 'snippets'
     SOLUTION = 'solutions'
+    ALL = 'all'
 
     # Content delimiters
     DELIMITER_CONTENT = NEWLINE
@@ -37,11 +38,13 @@ class Constants(object): # pylint: disable=too-few-public-methods
     GROUP = 2
     TAGS = 3
     LINKS = 4
-    DIGEST = 5
-    UTC = 6
-    METADATA = 7
-    KEY = 8
-    TESTING = 9
+    CATEGORY = 5
+    FILENAME = 6
+    UTC = 7
+    DIGEST = 8
+    METADATA = 9
+    KEY = 10
+    TESTING = 11
 
     # Default values for content fields.
     DEFAULT_GROUP = 'default'
@@ -76,9 +79,3 @@ class Constants(object): # pylint: disable=too-few-public-methods
     EDITOR_TAGS_TAIL = '# Add optional links below one link per line.\n'
     EDITOR_LINKS_HEAD = '# Add optional links below one link per line.\n'
     EDITOR_LINKS_TAIL = '.'
-
-    EDITED_CONTENT = {'head': EDITOR_CONTENT_HEAD, 'tail': EDITOR_CONTENT_TAIL, 'delimiter': DELIMITER_NEWLINE}
-    EDITED_BRIEF = {'head': EDITOR_BRIEF_HEAD, 'tail': EDITOR_BRIEF_TAIL, 'delimiter': DELIMITER_SPACE}
-    EDITED_GROUP = {'head': EDITOR_GROUP_HEAD, 'tail': EDITOR_GROUP_TAIL, 'delimiter': DELIMITER_SPACE}
-    EDITED_TAGS = {'head': EDITOR_TAGS_HEAD, 'tail': EDITOR_TAGS_TAIL, 'delimiter': DELIMITER_TAGS}
-    EDITED_LINKS = {'head': EDITOR_LINKS_HEAD, 'tail': EDITOR_LINKS_TAIL, 'delimiter': DELIMITER_NEWLINE}

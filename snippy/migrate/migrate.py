@@ -37,7 +37,7 @@ class Migrate(object):
             print(content)
 
     @classmethod
-    def print_file(cls, category, content):
+    def print_file(cls, content):
         """Print content into file."""
 
         export_file = Config.get_operation_file()
@@ -55,9 +55,9 @@ class Migrate(object):
                     content_dict = {'content': Format.get_dictionary(content)}
                     json.dump(content_dict, outfile)
                     outfile.write(Const.NEWLINE)
-                elif Config.is_file_type_text() and category == Const.SNIPPET:
+                elif Config.is_file_type_text() and content[Const.CATEGORY] == Const.SNIPPET:
                     outfile.write(Format.get_snippet_text(content, colors=False))
-                elif Config.is_file_type_text() and category == Const.SOLUTION:
+                elif Config.is_file_type_text() and content[Const.CATEGORY] == Const.SOLUTION:
                     outfile.write(Format.get_solution_text(content, colors=False))
                 else:
                     cls.logger.info('unknown export format')

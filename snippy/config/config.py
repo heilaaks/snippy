@@ -31,7 +31,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
         cls.config['content'] = {}
-        cls.config['content']['type'] = cls._parse_content_type()
+        cls.config['content']['category'] = cls._parse_content_category()
         cls.config['content']['data'] = cls._parse_content_data()
         cls.config['content']['brief'] = cls._parse_content_brief()
         cls.config['content']['group'] = cls._parse_content_group()
@@ -57,7 +57,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['exit_code'] = 'OK'
 
         cls.logger.debug('configured value from positional argument as "%s"', cls.config['operation']['task'])
-        cls.logger.debug('configured value from content type as "%s"', cls.config['content']['type'])
+        cls.logger.debug('configured value from content category as "%s"', cls.config['content']['category'])
         cls.logger.debug('configured value from --content as %s', cls.config['content']['data'])
         cls.logger.debug('configured value from --brief as "%s"', cls.config['content']['brief'])
         cls.logger.debug('configured value from --group as "%s"', cls.config['content']['group'])
@@ -72,7 +72,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
-    def get_content(cls, content=None, use_editor=None, form=Const.SNIPPET):
+    def get_content(cls, content=None, use_editor=None):
         """Return content after it has been optionally edited."""
 
         # Set the defaults from commmand line for editor. If content is not
@@ -83,13 +83,15 @@ class Config(object): # pylint: disable=too-many-public-methods
                        cls.get_content_group(),
                        cls.get_content_tags(),
                        cls.get_content_links(),
-                       None, # UTC
-                       None, # Metadata
-                       None, # Key
-                       None) # Testing
+                       cls.get_category(),
+                       None, # filename
+                       None, # utc
+                       None, # digest
+                       None, # metadata
+                       None) # key
 
         if cls.is_editor() or use_editor:
-            content = Config._get_edited_content(content, form)
+            content = Config._get_edited_content(content)
 
         return content
 
@@ -133,19 +135,34 @@ class Config(object): # pylint: disable=too-many-public-methods
     def is_category_snippet(cls):
         """Test if operation is applied to snippet category."""
 
-        return True if cls.config['content']['type'] == 'snippet' else False
+        return True if cls.config['content']['category'] == Const.SNIPPET else False
 
     @classmethod
     def is_category_solution(cls):
         """Test if operation is applied to solution category."""
 
-        return True if cls.config['content']['type'] == 'solution' else False
+        return True if cls.config['content']['category'] == Const.SOLUTION else False
 
     @classmethod
     def is_category_all(cls):
         """Test if operation is applied to all content categories."""
 
-        return True if cls.config['content']['type'] == 'all' else False
+        return True if cls.config['content']['category'] == 'all' else False
+
+    @classmethod
+    def get_category(cls):
+        """Return content category."""
+
+        return cls.config['content']['category']
+
+    @classmethod
+    def set_category(cls, category):
+        """Set content category."""
+
+        if category == Const.SOLUTION:
+            cls.config['content']['category'] = Const.SOLUTION
+        else:
+            cls.config['content']['category'] = Const.SNIPPET
 
     @classmethod
     def get_content_data(cls):
@@ -296,10 +313,10 @@ class Config(object): # pylint: disable=too-many-public-methods
         return cls.args.get_operation()
 
     @classmethod
-    def _parse_content_type(cls):
-        """Process the content type."""
+    def _parse_content_category(cls):
+        """Process the content category."""
 
-        return cls.args.get_content_type()
+        return cls.args.get_content_category()
 
     @classmethod
     def _parse_content_data(cls):
@@ -407,10 +424,10 @@ class Config(object): # pylint: disable=too-many-public-methods
         return editor
 
     @classmethod
-    def _get_edited_content(cls, content, form):
+    def _get_edited_content(cls, content):
         """Read and set the user provided values from editor."""
 
-        editor = Editor(content, form)
+        editor = Editor(content)
         editor.read_content()
         cls.config['content']['data'] = editor.get_edited_data()
         cls.config['content']['brief'] = editor.get_edited_brief()
@@ -422,10 +439,12 @@ class Config(object): # pylint: disable=too-many-public-methods
                    cls.get_content_group(),
                    cls.get_content_tags(),
                    cls.get_content_links(),
-                   None, # UTC
-                   None, # Metadata
-                   None, # Key
-                   None) # Testing
+                   cls.get_category(),
+                   None, # filename
+                   None, # utc
+                   None, # digest
+                   None, # metadata
+                   None) # key
 
         return content
 

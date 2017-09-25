@@ -16,8 +16,10 @@ class SnippetHelper(object):
                  'docker',
                  ('docker-ce', 'docker', 'moby', 'container', 'cleanup'),
                  ('https://docs.docker.com/engine/reference/commandline/rm/',),
-                 'f4852122e1aa5b28d88181f9852960cc9e991fcc263a2e17f22db2cec98c3d0b',
+                 Const.SNIPPET,
+                 '',
                  None,
+                 'f4852122e1aa5b28d88181f9852960cc9e991fcc263a2e17f22db2cec98c3d0b',
                  None,
                  None,
                  """--content 'docker rm --volumes $(docker ps --all --quiet)'
@@ -32,8 +34,10 @@ class SnippetHelper(object):
                  ('docker-ce', 'docker', 'moby', 'container', 'cleanup'),
                  ('https://docs.docker.com/engine/reference/commandline/rm/',
                   'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'),
+                 Const.SNIPPET,
+                 '',
+                 'None',
                  '6f9e21abdc2e4c53d04d77eff024708086c0a583f1be3dd761774353e9d2b74f',
-                 None,
                  None,
                  None,
                  """-c 'docker rm --force redis'
@@ -114,7 +118,7 @@ class SnippetHelper(object):
     @staticmethod
     def compare_db(testcase, snippet, reference):
         """Compare snippes when they are in database format."""
-        print("snippet %s" % (snippet,))
+
         # Test that all fields excluding id and onwards are equal.
         testcase.assertEqual(snippet[CONTENT], Const.DELIMITER_CONTENT.join(reference[CONTENT]))
         testcase.assertEqual(snippet[BRIEF:TAGS], reference[BRIEF:TAGS])

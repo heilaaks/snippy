@@ -1,8 +1,10 @@
 content:
 - brief: Remove all docker containers with volumes
+  category: snippets
   content: !!python/tuple
   - docker rm --volumes $(docker ps --all --quiet)
   digest: f4852122e1aa5b28d88181f9852960cc9e991fcc263a2e17f22db2cec98c3d0b
+  filename: ''
   group: docker
   links: !!python/tuple
   - https://docs.docker.com/engine/reference/commandline/rm/
@@ -12,16 +14,19 @@ content:
   - docker
   - docker-ce
   - moby
-  utc: '2017-09-17 20:18:32'
+  utc: '2017-09-25 12:26:25'
 - brief: Find pattern from files
+  category: snippets
   content: !!python/tuple
-  - grep -rin './' -e 'pattern'
-  - grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
-  digest: 114608211f10bd95ddb96264f481b99fe0c8bf5d7f3f63f1025996406f7ff293
+  - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
+  - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'
+  - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
+  digest: 2cb20b6d2efce97c0c61a657ce33961b015e18ceebc2172add59a0d42d23872c
+  filename: ''
   group: linux
   links: !!python/tuple
   - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux
   tags: !!python/tuple
   - linux
   - search
-  utc: '2017-09-17 20:18:46'
+  utc: '2017-09-25 12:27:20'

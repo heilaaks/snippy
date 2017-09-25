@@ -35,7 +35,7 @@ class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few
 
         sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
         snippy = Snippy()
-        snippy.run()
+        snippy.run_cli()
         references = Snippet().get_references(0)
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=references[0][DIGEST])[0], references[0])
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, content=references[0][CONTENT])[0], references[0])

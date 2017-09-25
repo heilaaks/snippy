@@ -16,7 +16,7 @@ class TestArgumentsCreateSnippet(object):
         sys.argv = ['snippy', 'create']
         obj = Arguments()
         assert obj.get_operation() == 'create'
-        assert obj.get_content_type() == 'snippet'
+        assert obj.get_content_category() == 'snippets'
         assert obj.get_content_data() == ''
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == []

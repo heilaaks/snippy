@@ -100,10 +100,10 @@ class Arguments(object):
         # content options
         content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Arguments.ARGS_CATEGO))
         content_meg = content.add_mutually_exclusive_group()
-        content_meg.add_argument('--snippet', action='store_const', dest='type', const='snippet', help=argparse.SUPPRESS)
-        content_meg.add_argument('--solution', action='store_const', dest='type', const='solution', help=argparse.SUPPRESS)
-        content_meg.add_argument('--all', action='store_const', dest='type', const='all', help=argparse.SUPPRESS)
-        content_meg.set_defaults(type='snippet')
+        content_meg.add_argument('--snippet', action='store_const', dest='cat', const='snippets', help=argparse.SUPPRESS)
+        content_meg.add_argument('--solution', action='store_const', dest='cat', const='solutions', help=argparse.SUPPRESS)
+        content_meg.add_argument('--all', action='store_const', dest='cat', const='all', help=argparse.SUPPRESS)
+        content_meg.set_defaults(cat='snippets')
 
         # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Arguments.ARGS_EDITOR))
@@ -148,12 +148,12 @@ class Arguments(object):
         return cls.args.operation
 
     @classmethod
-    def get_content_type(cls):
-        """Return content type."""
+    def get_content_category(cls):
+        """Return content category."""
 
-        cls.logger.info('parsed content type with value "%s"', cls.args.type)
+        cls.logger.info('parsed content category with value "%s"', cls.args.cat)
 
-        return cls.args.type
+        return cls.args.cat
 
     @classmethod
     def get_content_data(cls):

@@ -206,8 +206,10 @@ class Format(object):
                       'group': content[Const.GROUP],
                       'tags': content[Const.TAGS],
                       'links': content[Const.LINKS],
-                      'digest': content[Const.DIGEST],
-                      'utc': content[Const.UTC]}
+                      'category': content[Const.CATEGORY],
+                      'filename': content[Const.FILENAME],
+                      'utc': content[Const.UTC],
+                      'digest': content[Const.DIGEST]}
 
         return dictionary
 
@@ -219,7 +221,11 @@ class Format(object):
                    dictionary['brief'],
                    dictionary['group'],
                    dictionary['tags'],
-                   dictionary['links']]
+                   dictionary['links'],
+                   dictionary['category'],
+                   dictionary['filename'],
+                   dictionary['utc'],
+                   dictionary['digest']]
         digest = Format.calculate_digest(content)
         content.append(digest)
 

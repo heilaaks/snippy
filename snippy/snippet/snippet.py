@@ -20,9 +20,9 @@ class Snippet(object):
         """Create new snippet."""
 
         self.logger.debug('creating new snippet')
-        snippet = Config.get_content(form=Const.SNIPPET)
+        snippet = Config.get_content()
         if snippet[Const.CONTENT]:
-            cause = self.storage.create(Const.SNIPPET, snippet)
+            cause = self.storage.create(snippet)
             if cause == Const.DB_DUPLICATE:
                 snippets = self.storage.search(Const.SNIPPET, content=snippet[Const.CONTENT])
                 if len(snippets) == 1:
@@ -64,12 +64,12 @@ class Snippet(object):
 
         if len(snippets) == 1:
             if content_digest:
-                snippet = Config.get_content(content=snippets[0], form=Const.SNIPPET)
+                snippet = Config.get_content(content=snippets[0])
                 content_digest = snippets[0][Const.DIGEST]
             elif snippet_data:
-                snippet = Config.get_content(use_editor=True, form=Const.SNIPPET)
+                snippet = Config.get_content(use_editor=True)
                 content_digest = snippets[0][Const.DIGEST]
-            self.storage.update(Const.SNIPPET, snippet, content_digest)
+            self.storage.update(snippet, content_digest)
         elif not snippets:
             Config.set_cause('cannot find snippet to be updated with %s' % log_string)
         else:
@@ -105,7 +105,7 @@ class Snippet(object):
 
         self.logger.debug('exporting snippets %s', Config.get_operation_file())
         snippets = self.storage.export_content(Const.SNIPPET)
-        Migrate().print_file(Const.SNIPPET, snippets)
+        Migrate().print_file(snippets)
 
     def import_all(self):
         """Import snippets."""
@@ -113,12 +113,13 @@ class Snippet(object):
         self.logger.debug('importing snippets %s', Config.get_operation_file())
         snippets = Migrate().load_dictionary(Config.get_operation_file())
         snippets = Format.get_storage(snippets['content'])
-        self.storage.import_content(Const.SNIPPET, snippets)
+        self.storage.import_content(snippets)
 
     def run(self):
         """Run the snippet management operation."""
 
         self.logger.info('managing snippet')
+        Config.set_category(Const.SNIPPET)
         if Config.is_operation_create():
             self.create()
         elif Config.is_operation_search():

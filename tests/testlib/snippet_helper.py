@@ -100,6 +100,8 @@ class SnippetHelper(object):
         testcase.assertEqual(snippet[BRIEF:TAGS], reference[BRIEF:TAGS])
         SnippetHelper._assert_count_equal(testcase, snippet[TAGS], reference[TAGS])
         SnippetHelper._assert_count_equal(testcase, snippet[LINKS], reference[LINKS])
+        testcase.assertEqual(snippet[CATEGORY], reference[CATEGORY])
+        testcase.assertEqual(snippet[FILENAME], reference[FILENAME])
         testcase.assertEqual(snippet[DIGEST], reference[DIGEST])
         testcase.assertEqual(snippet[METADATA], reference[METADATA])
 
@@ -113,6 +115,8 @@ class SnippetHelper(object):
         assert isinstance(snippet[GROUP], six.string_types)
         assert isinstance(snippet[TAGS], tuple)
         assert isinstance(snippet[LINKS], tuple)
+        assert isinstance(snippet[CATEGORY], six.string_types)
+        assert isinstance(snippet[FILENAME], six.string_types)
         assert isinstance(snippet[DIGEST], six.string_types)
 
     @staticmethod
@@ -124,6 +128,8 @@ class SnippetHelper(object):
         testcase.assertEqual(snippet[BRIEF:TAGS], reference[BRIEF:TAGS])
         testcase.assertEqual(snippet[TAGS], Const.DELIMITER_TAGS.join(sorted(reference[TAGS])))
         SnippetHelper._assert_count_equal(testcase, snippet[LINKS], Const.DELIMITER_LINKS.join(sorted(reference[LINKS])))
+        testcase.assertEqual(snippet[CATEGORY], reference[CATEGORY])
+        testcase.assertEqual(snippet[FILENAME], reference[FILENAME])
         testcase.assertEqual(snippet[DIGEST], reference[DIGEST])
         testcase.assertEqual(snippet[METADATA], reference[METADATA])
 
@@ -133,6 +139,8 @@ class SnippetHelper(object):
         assert isinstance(snippet[GROUP], six.string_types)
         assert isinstance(snippet[TAGS], six.string_types)
         assert isinstance(snippet[LINKS], six.string_types)
+        assert isinstance(snippet[CATEGORY], six.string_types)
+        assert isinstance(snippet[FILENAME], six.string_types)
         assert isinstance(snippet[DIGEST], six.string_types)
 
     @staticmethod

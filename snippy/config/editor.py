@@ -88,7 +88,7 @@ class Editor(object): # pylint: disable-all
             if match:
                 brief = match.group(1).strip()
         self.logger.debug('parsed content brief from editor "%s"', brief)
-        
+
         return brief
 
     def get_edited_group(self):
@@ -106,7 +106,7 @@ class Editor(object): # pylint: disable-all
             if match:
                 group = match.group(1).strip()
         self.logger.debug('parsed content group from editor "%s"', group)
-        
+
         return group
 
     def get_edited_tags(self):
@@ -122,7 +122,7 @@ class Editor(object): # pylint: disable-all
             if match:
                 tags = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_TAGS)))
         self.logger.debug('parsed content tags from editor "%s"', tags)
-        
+
         return tags
 
     def get_edited_links(self):
@@ -137,8 +137,21 @@ class Editor(object): # pylint: disable-all
         else:
             links = tuple(re.findall('> (http.*)', self.edited))
         self.logger.debug('parsed content links from editor "%s"', links)
-        
+
         return links
+
+    def get_edited_filename(self):
+        """Return solution filename from editor."""
+
+        # Only solutions use the optional file variable.
+        filename = Const.EMPTY
+        if self.content[Const.CATEGORY] == Const.SOLUTION:
+            match = re.search(r'## FILE  :\s+(\S+)', self.edited)
+            if match:
+                filename = match.group(1)
+        self.logger.debug('parsed content filename from editor "%s"', filename)
+
+        return filename
 
     def _set_template_data(self, template):
         """Update template content data."""

@@ -46,8 +46,8 @@ class Sqlite3Db(object):
         cause = Const.DB_FAILURE
         if self.conn:
             table = content[Const.CATEGORY]
-            query = ('INSERT OR ROLLBACK INTO ' + table + '(content, brief, groups, tags, links, digest, metadata) ' +
-                     'VALUES(?,?,?,?,?,?,?)')
+            query = ('INSERT OR ROLLBACK INTO ' + table + '(content, brief, groups, tags, links, filename, digest, ' +
+                     'metadata) VALUES(?,?,?,?,?,?,?,?)')
             self.logger.debug('insert "%s" with digest %.16s', content[Const.BRIEF], digest)
             try:
                 # The join/map is sorted because it seems that this somehow randomly changes
@@ -57,6 +57,7 @@ class Sqlite3Db(object):
                                             content[Const.GROUP],
                                             Const.DELIMITER_TAGS.join(map(str, sorted(content[Const.TAGS]))),
                                             Const.DELIMITER_LINKS.join(map(str, sorted(content[Const.LINKS]))),
+                                            content[Const.FILENAME],
                                             digest,
                                             metadata))
                 self.conn.commit()

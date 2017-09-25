@@ -133,15 +133,15 @@ class Format(object):
     def get_file_string(content):
         """Format content file to string."""
 
-        file = Const.EMPTY
+        filename = Const.EMPTY
         match = re.search(r'## FILE  :\s+(\S+)', Format.get_content_string(content))
         if match:
-            file = match.group(1)
+            filename = match.group(1)
 
-        if '<SNIPPY_FILE>' in file:
-            file = Const.EMPTY
+        if '<SNIPPY_FILE>' in filename:
+            filename = Const.EMPTY
 
-        return file
+        return filename
 
     @classmethod
     def get_keywords(cls, keywords):

@@ -37,6 +37,7 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['content']['group'] = cls._parse_content_group()
         cls.config['content']['tags'] = cls._parse_content_tags()
         cls.config['content']['links'] = cls._parse_content_links()
+        cls.config['content']['filename'] = Const.EMPTY
         cls.config['operation'] = {}
         cls.config['operation']['task'] = cls._parse_operation()
         cls.config['operation']['file'] = {}
@@ -84,7 +85,7 @@ class Config(object): # pylint: disable=too-many-public-methods
                        cls.get_content_tags(),
                        cls.get_content_links(),
                        cls.get_category(),
-                       None, # filename
+                       cls.get_filename(),
                        None, # utc
                        None, # digest
                        None, # metadata
@@ -199,6 +200,12 @@ class Config(object): # pylint: disable=too-many-public-methods
         """Return digest identifying the content."""
 
         return cls.config['digest']
+
+    @classmethod
+    def get_filename(cls):
+        """Return solution filename."""
+
+        return cls.config['content']['filename']
 
     @classmethod
     def is_search_all(cls):
@@ -434,13 +441,14 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['content']['group'] = editor.get_edited_group()
         cls.config['content']['tags'] = editor.get_edited_tags()
         cls.config['content']['links'] = editor.get_edited_links()
+        cls.config['content']['filename'] = editor.get_edited_filename()
         content = (cls.get_content_data(),
                    cls.get_content_brief(),
                    cls.get_content_group(),
                    cls.get_content_tags(),
                    cls.get_content_links(),
                    cls.get_category(),
-                   None, # filename
+                   cls.get_filename(),
                    None, # utc
                    None, # digest
                    None, # metadata

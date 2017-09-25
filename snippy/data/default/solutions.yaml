@@ -92,7 +92,7 @@ content:
   - '## whiteboard'
   - '################################################################################'
   digest: 48a6ca75e5d1f1a45997c749d25f0d4e18ecd4b378a842716c3f0b7b8aa50b12
-  filename: ''
+  filename: kubernetes-docker-log-driver-kafka.txt
   group: docker
   links: !!python/tuple
   - https://github.com/MickayG/moby-kafka-logdriver
@@ -107,4 +107,4 @@ content:
   - logs2kafka
   - moby
   - plugin
-  utc: '2017-09-25 12:25:39'
+  utc: '2017-09-25 18:50:58'

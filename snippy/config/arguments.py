@@ -88,7 +88,8 @@ class Arguments(object):
     def __init__(self):
         Arguments.logger = Logger(__name__).get()
 
-        parser = argparse.ArgumentParser(prog='snippy', add_help=False,
+        parser = argparse.ArgumentParser(prog='snippy',
+                                         add_help=False,
                                          usage=Arguments.ARGS_USAGE,
                                          epilog=Const.NEWLINE.join(Arguments.ARGS_EPILOG),
                                          formatter_class=argparse.RawTextHelpFormatter)

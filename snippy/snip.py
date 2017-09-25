@@ -21,17 +21,6 @@ class Snippy(object):
         self.snippet = Snippet(self.storage)
         self.solution = Solution(self.storage)
 
-    def release(self):
-        """Release session."""
-
-        Logger.exit(self.config.get_exit_cause())
-        self.storage.disconnect()
-        self.storage = None
-        self.snippet = None
-        self.solution = None
-        self.config = None
-        self.logger = None
-
     def run_cli(self):
         """Run command line session."""
 
@@ -46,6 +35,17 @@ class Snippy(object):
             self.solution.run()
         else:
             Config.set_cause('content category \'all\' is supported only with search operation')
+
+    def release(self):
+        """Release session."""
+
+        Logger.exit(self.config.get_exit_cause())
+        self.storage.disconnect()
+        self.storage = None
+        self.snippet = None
+        self.solution = None
+        self.config = None
+        self.logger = None
 
 
 def main():

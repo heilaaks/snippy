@@ -1,7 +1,7 @@
 content:
 - brief: Testing docker log drivers
   category: solutions
-  content: !!python/tuple
+  data: !!python/tuple
   - '################################################################################'
   - '## BRIEF : Testing docker log drivers'
   - '##'

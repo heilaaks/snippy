@@ -278,7 +278,7 @@ class Format(object): # pylint: disable=too-many-public-methods
     def _get_dictionary(content):
         """Convert content into dictionary."""
 
-        dictionary = {'content': content[Const.DATA],
+        dictionary = {'data': content[Const.DATA],
                       'brief': content[Const.BRIEF],
                       'group': content[Const.GROUP],
                       'tags': content[Const.TAGS],

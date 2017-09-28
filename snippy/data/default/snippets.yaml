@@ -1,7 +1,7 @@
 content:
 - brief: Remove all docker containers with volumes
   category: snippets
-  content: !!python/tuple
+  data: !!python/tuple
   - docker rm --volumes $(docker ps --all --quiet)
   digest: f4852122e1aa5b28d88181f9852960cc9e991fcc263a2e17f22db2cec98c3d0b
   filename: ''
@@ -17,7 +17,7 @@ content:
   utc: '2017-09-25 12:26:25'
 - brief: Find pattern from files
   category: snippets
-  content: !!python/tuple
+  data: !!python/tuple
   - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
   - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'
   - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}

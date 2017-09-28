@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Fix importing utc timestamps. The timestamp is not read from imported file.
    - [ ] Calculate digest from first element up to but not including digest.
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] Fix importing unknown file that terminates with exception.
@@ -19,6 +18,7 @@
    - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
+   - [x] Fixed importing utc timestamps. The timestamp is not created again when content is imported.
    - [x] Added filename from solution to database.
    - [x] Added import defaults with for snippets and solutions.
    - [x] Fixed solution update that duplicated the header.

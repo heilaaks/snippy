@@ -83,7 +83,7 @@ class Sqlite3Db(object):
     def select_content(self, category, keywords=None, digest=None, content=None):
         """Select content."""
 
-        rows = []
+        rows = ()
         if self.conn:
             # The regex based queries contain the same amount of regex queries than there are
             # keywords. The reason is that each keyword (one keyword) must be searched from all
@@ -109,12 +109,10 @@ class Sqlite3Db(object):
                 columns = ['tags']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
             elif digest:
-                query = ('SELECT data, brief, groups, tags, links, category, filename, utc, digest, metadata, id ' +
-                         'FROM contents WHERE digest LIKE ?')
+                query = ('SELECT * FROM contents WHERE digest LIKE ?')
                 qargs = [digest+'%']
             elif content:
-                query = ('SELECT data, brief, groups, tags, links, category, filename, utc, digest, metadata, id ' +
-                         'FROM contents WHERE data=?')
+                query = ('SELECT * FROM contents WHERE data=?')
                 qargs = [Const.DELIMITER_DATA.join(map(str, content))]
             else:
                 self.logger.error('exiting because of internal error where search query was not defined')
@@ -136,6 +134,7 @@ class Sqlite3Db(object):
     def select_all_content(self, category):
         """Select all content."""
 
+        rows = ()
         if self.conn:
             self.logger.debug('select all contents from category %s', category)
             query = ('SELECT * FROM contents WHERE category=?')
@@ -143,13 +142,13 @@ class Sqlite3Db(object):
             try:
                 self.cursor.execute(query, qargs)
 
-                return self.cursor.fetchall()
+                rows = self.cursor.fetchall()
             except sqlite3.Error as exception:
                 self.logger.exception('deleting from sqlite3 database failed with exception "%s"', exception)
         else:
             self.logger.error('sqlite3 database connection did not exist while all entries were being queried')
 
-        return []
+        return rows
 
     def update_content(self, content, digest_updated, digest_new, utc, metadata=None):
         """Update existing content."""

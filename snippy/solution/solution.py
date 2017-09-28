@@ -24,7 +24,7 @@ class Solution(object):
         if solution:
             cause = self.storage.create(solution)
             if cause == Const.DB_DUPLICATE:
-                solutions = self.storage.search(Const.SOLUTION, content=solution[Const.CONTENT])
+                solutions = self.storage.search(Const.SOLUTION, content=solution[Const.DATA])
                 if len(solutions) == 1:
                     Config.set_cause('content already exist with digest %.16s' % solutions[0][Const.DIGEST])
                 else:

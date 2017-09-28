@@ -23,8 +23,9 @@ class Storage(object):
     def create(self, content):
         """Create content."""
 
+        utc = Format.get_utc_time()
         digest = Format.calculate_digest(content)
-        cause = self.database.insert_content(content, digest)
+        cause = self.database.insert_content(content, digest, utc)
 
         return cause
 
@@ -39,13 +40,14 @@ class Storage(object):
     def update(self, content, digest_updated):
         """Update content."""
 
+        utc = Format.get_utc_time()
         digest = Format.calculate_digest(content)
-        self.database.update_content(content, digest_updated, digest)
+        self.database.update_content(content, digest_updated, digest, utc)
 
-    def delete(self, category, digest):
+    def delete(self, digest):
         """Delete content."""
 
-        cause = self.database.delete_content(category, digest)
+        cause = self.database.delete_content(digest)
 
         return cause
 
@@ -88,7 +90,7 @@ class Storage(object):
     def _get_tuple_from_db_row(row):
         """Convert single row from database into content in a tuple."""
 
-        content = (tuple(row[Const.CONTENT].split(Const.DELIMITER_CONTENT)),
+        content = (tuple(row[Const.DATA].split(Const.DELIMITER_DATA)),
                    row[Const.BRIEF],
                    row[Const.GROUP],
                    tuple(row[Const.TAGS].split(Const.DELIMITER_TAGS)),

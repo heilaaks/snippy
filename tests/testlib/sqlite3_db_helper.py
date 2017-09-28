@@ -17,7 +17,7 @@ class Sqlite3DbHelper(object):
         """Select all snippets."""
 
         conn, cursor = Sqlite3DbHelper._connect_db()
-        cursor.execute('SELECT * FROM snippets')
+        cursor.execute('SELECT * FROM contents')
         rows = cursor.fetchall()
         cursor.close()
         conn.close()
@@ -31,7 +31,7 @@ class Sqlite3DbHelper(object):
         # In successful case the database table does not exist anymore
         conn, cursor = Sqlite3DbHelper._connect_db()
         try:
-            cursor.execute('DELETE FROM snippets')
+            cursor.execute('DELETE FROM contents')
             conn.commit()
         except sqlite3.OperationalError:
             pass

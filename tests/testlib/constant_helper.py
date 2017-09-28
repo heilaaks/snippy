@@ -5,7 +5,7 @@
 from snippy.config import Constants as Const
 
 # Short versions from constanst for test readability.
-CONTENT = Const.CONTENT
+DATA = Const.DATA
 BRIEF = Const.BRIEF
 GROUP = Const.GROUP
 TAGS = Const.TAGS

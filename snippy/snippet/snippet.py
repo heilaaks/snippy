@@ -21,10 +21,10 @@ class Snippet(object):
 
         self.logger.debug('creating new snippet')
         snippet = Config.get_content()
-        if snippet[Const.CONTENT]:
+        if snippet[Const.DATA]:
             cause = self.storage.create(snippet)
             if cause == Const.DB_DUPLICATE:
-                snippets = self.storage.search(Const.SNIPPET, content=snippet[Const.CONTENT])
+                snippets = self.storage.search(Const.SNIPPET, content=snippet[Const.DATA])
                 if len(snippets) == 1:
                     Config.set_cause('content already exist with digest %.16s' % snippets[0][Const.DIGEST])
                 else:

@@ -4,7 +4,6 @@
 
 import re
 import os.path
-import datetime
 import pkg_resources
 from snippy.config import Constants as Const
 from snippy.logger import Logger
@@ -65,7 +64,7 @@ class Editor(object): # pylint: disable-all
 
         data = ()
         if self.content[Const.CATEGORY] == Const.SNIPPET:
-            match = re.search('%s(.*)%s' % (Const.EDITOR_CONTENT_HEAD, Const.EDITOR_CONTENT_TAIL), self.edited, re.DOTALL)
+            match = re.search('%s(.*)%s' % (Const.EDITOR_DATA_HEAD, Const.EDITOR_DATA_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
         else:
@@ -156,7 +155,7 @@ class Editor(object): # pylint: disable-all
     def _set_template_data(self, template):
         """Update template content data."""
 
-        data = Format.get_content_string(self.content)
+        data = Format.get_data_string(self.content)
         if data:
             if self.content[Const.CATEGORY] == Const.SOLUTION:
                 template = data
@@ -178,8 +177,7 @@ class Editor(object): # pylint: disable-all
     def _set_template_date(self, template):
         """Update template content date."""
 
-        utc = datetime.datetime.utcnow()
-        template = template.replace('<SNIPPY_DATE>', utc.strftime("%Y-%m-%d %H:%M:%S"))
+        template = template.replace('<SNIPPY_DATE>', Format.get_utc_time())
 
         return template
 

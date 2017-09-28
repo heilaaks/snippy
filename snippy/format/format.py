@@ -4,10 +4,11 @@
 
 import re
 import hashlib
+import datetime
 from snippy.config import Constants as Const
 
 
-class Format(object):
+class Format(object): # pylint: disable=too-many-public-methods
     """Data formatting and conversions."""
 
     @staticmethod
@@ -22,7 +23,7 @@ class Format(object):
                                                            snippet[Const.GROUP], \
                                                            snippet[Const.DIGEST])
             text = text + Const.EMPTY.join([Format.console_snippet(colors) % (content, line) \
-                                            for line in snippet[Const.CONTENT]])
+                                            for line in snippet[Const.DATA]])
             text = text + Const.NEWLINE
             text = Format.console_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet[Const.TAGS]))
             text = text + Const.EMPTY.join([Format.console_links(colors) % (links, link) \
@@ -49,7 +50,7 @@ class Format(object):
             text = text + Const.NEWLINE
 
             text = text + Const.EMPTY.join([Format.console_solution(colors) % (content, line) \
-                                            for line in solution[Const.CONTENT]])
+                                            for line in solution[Const.DATA]])
 
         return text
 
@@ -85,10 +86,70 @@ class Format(object):
         return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   # %s\n'
 
     @staticmethod
-    def get_content_string(content):
+    def get_db_data(content):
+        """Format content data for database storage."""
+
+        data = Const.DELIMITER_DATA.join(map(str, content[Const.DATA]))
+
+        return data
+
+    @staticmethod
+    def get_db_brief(content):
+        """Format content brief for database storage."""
+
+        brief = content[Const.BRIEF]
+
+        return brief
+
+    @staticmethod
+    def get_db_group(content):
+        """Format content group for database storage."""
+
+        group = content[Const.GROUP]
+
+        return group
+
+    @staticmethod
+    def get_db_tags(content):
+        """Format content tags for database storage."""
+
+        # The map is sorted because it seems that this somehow randomly changes
+        # the order of tags in the string. This seems to happen only in Python 2.7.
+        tags = Const.DELIMITER_TAGS.join(map(str, sorted(content[Const.TAGS])))
+
+        return tags
+
+    @staticmethod
+    def get_db_links(content):
+        """Format content links for database storage."""
+
+        # The map is sorted because it seems that this somehow randomly changes
+        # the order of tags in the string. This seems to happen only in Python 2.7.
+        links = Const.DELIMITER_LINKS.join(map(str, sorted(content[Const.LINKS])))
+
+        return links
+
+    @staticmethod
+    def get_db_category(content):
+        """Format content category for database storage."""
+
+        category = content[Const.CATEGORY]
+
+        return category
+
+    @staticmethod
+    def get_db_filename(content):
+        """Format content filename for database storage."""
+
+        filename = content[Const.FILENAME]
+
+        return filename
+
+    @staticmethod
+    def get_data_string(content):
         """Format content data to string."""
 
-        data = Const.DELIMITER_CONTENT.join(map(str, content[Const.CONTENT]))
+        data = Const.DELIMITER_DATA.join(map(str, content[Const.DATA]))
 
         return data
 
@@ -104,12 +165,7 @@ class Format(object):
     def get_group_string(content):
         """Format content group to string."""
 
-        # If the group is in default value, don't show it to end user
-        # since it may be confusing. If there is no input for the group
-        # the default is set back.
-        group = Const.EMPTY
-        if not content[Const.GROUP] == Const.DEFAULT_GROUP:
-            group = content[Const.GROUP]
+        group = content[Const.GROUP]
 
         return group
 
@@ -134,7 +190,7 @@ class Format(object):
         """Format content file to string."""
 
         filename = Const.EMPTY
-        match = re.search(r'## FILE  :\s+(\S+)', Format.get_content_string(content))
+        match = re.search(r'## FILE  :\s+(\S+)', Format.get_data_string(content))
         if match:
             filename = match.group(1)
 
@@ -190,7 +246,7 @@ class Format(object):
 
     @staticmethod
     def calculate_digest(content):
-        """Calculate digest for the data."""
+        """Calculate digest for the content and timestamp."""
 
         data_string = Format._get_string(content)
         digest = hashlib.sha256(data_string.encode('UTF-8')).hexdigest()
@@ -198,10 +254,31 @@ class Format(object):
         return digest
 
     @staticmethod
+    def get_utc_time():
+        """Get UTC time."""
+
+        utc = datetime.datetime.utcnow()
+
+        return utc.strftime("%Y-%m-%d %H:%M:%S")
+
+    @staticmethod
+    def _get_string(content):
+        """Convert content into one string."""
+
+        content_str = Const.EMPTY.join(map(str, content[Const.DATA]))
+        content_str = content_str + Const.EMPTY.join(content[Const.BRIEF:Const.TAGS])
+        content_str = content_str + Const.EMPTY.join(sorted(content[Const.TAGS]))
+        content_str = content_str + Const.EMPTY.join(sorted(content[Const.LINKS]))
+        content_str = content_str + content[Const.CATEGORY]
+        content_str = content_str + content[Const.FILENAME]
+
+        return content_str
+
+    @staticmethod
     def _get_dictionary(content):
         """Convert content into dictionary."""
 
-        dictionary = {'content': content[Const.CONTENT],
+        dictionary = {'content': content[Const.DATA],
                       'brief': content[Const.BRIEF],
                       'group': content[Const.GROUP],
                       'tags': content[Const.TAGS],
@@ -217,7 +294,7 @@ class Format(object):
     def _get_tuple_from_dictionary(dictionary):
         """Convert single dictionary entry into tuple."""
 
-        content = [dictionary['content'],
+        content = [dictionary['data'],
                    dictionary['brief'],
                    dictionary['group'],
                    dictionary['tags'],
@@ -230,14 +307,3 @@ class Format(object):
         content.append(digest)
 
         return tuple(content)
-
-    @staticmethod
-    def _get_string(content):
-        """Convert content into one string."""
-
-        content_str = Const.EMPTY.join(map(str, content[Const.CONTENT]))
-        content_str = content_str + Const.EMPTY.join(content[Const.BRIEF:Const.TAGS])
-        content_str = content_str + Const.EMPTY.join(sorted(content[Const.TAGS]))
-        content_str = content_str + Const.EMPTY.join(sorted(content[Const.LINKS]))
-
-        return content_str

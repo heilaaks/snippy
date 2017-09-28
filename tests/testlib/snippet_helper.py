@@ -19,7 +19,7 @@ class SnippetHelper(object):
                  Const.SNIPPET,
                  '',
                  None,
-                 'f4852122e1aa5b28d88181f9852960cc9e991fcc263a2e17f22db2cec98c3d0b',
+                 '467cdee334da208d403d3d9eb326829a3e1b8ee5980e5159f665eb77882c50bc',
                  None,
                  None,
                  """--content 'docker rm --volumes $(docker ps --all --quiet)'
@@ -96,7 +96,7 @@ class SnippetHelper(object):
         """Compare two snippets."""
 
         # Test that all fields excluding id and onwards are equal.
-        SnippetHelper._assert_count_equal(testcase, snippet[CONTENT], reference[CONTENT])
+        SnippetHelper._assert_count_equal(testcase, snippet[DATA], reference[DATA])
         testcase.assertEqual(snippet[BRIEF:TAGS], reference[BRIEF:TAGS])
         SnippetHelper._assert_count_equal(testcase, snippet[TAGS], reference[TAGS])
         SnippetHelper._assert_count_equal(testcase, snippet[LINKS], reference[LINKS])
@@ -110,7 +110,7 @@ class SnippetHelper(object):
         testcase.assertEqual(snippet[LINKS], tuple(sorted(reference[LINKS])))
 
         # Test that tags and links are lists and rest of the fields strings.
-        assert isinstance(snippet[CONTENT], tuple)
+        assert isinstance(snippet[DATA], tuple)
         assert isinstance(snippet[BRIEF], six.string_types)
         assert isinstance(snippet[GROUP], six.string_types)
         assert isinstance(snippet[TAGS], tuple)
@@ -124,7 +124,7 @@ class SnippetHelper(object):
         """Compare snippes when they are in database format."""
 
         # Test that all fields excluding id and onwards are equal.
-        testcase.assertEqual(snippet[CONTENT], Const.DELIMITER_CONTENT.join(reference[CONTENT]))
+        testcase.assertEqual(snippet[DATA], Const.DELIMITER_DATA.join(reference[DATA]))
         testcase.assertEqual(snippet[BRIEF:TAGS], reference[BRIEF:TAGS])
         testcase.assertEqual(snippet[TAGS], Const.DELIMITER_TAGS.join(sorted(reference[TAGS])))
         SnippetHelper._assert_count_equal(testcase, snippet[LINKS], Const.DELIMITER_LINKS.join(sorted(reference[LINKS])))
@@ -134,7 +134,7 @@ class SnippetHelper(object):
         testcase.assertEqual(snippet[METADATA], reference[METADATA])
 
         # Test that tags and links are lists and rest of the fields strings.
-        assert isinstance(snippet[CONTENT], six.string_types)
+        assert isinstance(snippet[DATA], six.string_types)
         assert isinstance(snippet[BRIEF], six.string_types)
         assert isinstance(snippet[GROUP], six.string_types)
         assert isinstance(snippet[TAGS], six.string_types)

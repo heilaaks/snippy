@@ -40,31 +40,30 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_content(self, content, digest, metadata=None):
+    def insert_content(self, content, digest, utc, metadata=None):
         """Insert content into database."""
 
         cause = Const.DB_FAILURE
         if self.conn:
-            table = content[Const.CATEGORY]
-            query = ('INSERT OR ROLLBACK INTO ' + table + '(content, brief, groups, tags, links, filename, digest, ' +
-                     'metadata) VALUES(?,?,?,?,?,?,?,?)')
+            query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, utc, ' +
+                     'digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?)')
             self.logger.debug('insert "%s" with digest %.16s', content[Const.BRIEF], digest)
             try:
-                # The join/map is sorted because it seems that this somehow randomly changes
-                # the order of tags in the string. This seems to happen only in Python 2.7.
-                self.cursor.execute(query, (Format.get_content_string(content),
-                                            content[Const.BRIEF],
-                                            content[Const.GROUP],
-                                            Const.DELIMITER_TAGS.join(map(str, sorted(content[Const.TAGS]))),
-                                            Const.DELIMITER_LINKS.join(map(str, sorted(content[Const.LINKS]))),
-                                            content[Const.FILENAME],
+                self.cursor.execute(query, (Format.get_db_data(content),
+                                            Format.get_db_brief(content),
+                                            Format.get_db_group(content),
+                                            Format.get_db_tags(content),
+                                            Format.get_db_links(content),
+                                            Format.get_db_category(content),
+                                            Format.get_db_filename(content),
+                                            utc,
                                             digest,
                                             metadata))
                 self.conn.commit()
                 cause = Const.DB_INSERT_OK
             except sqlite3.IntegrityError as exception:
                 cause = Const.DB_DUPLICATE
-                self.logger.info('unique constraint violation with content "%s"', content[Const.CONTENT])
+                self.logger.info('unique constraint violation with content "%s"', content[Const.DATA])
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
         else:
@@ -76,11 +75,12 @@ class Sqlite3Db(object):
         """Insert multiple contents into database."""
 
         for content in contents:
+            utc = content[Const.UTC]
             digest = content[Const.DIGEST]
-            content = content[Const.CONTENT:Const.DIGEST]
-            self.insert_content(content, digest)
+            content = content[Const.DATA:Const.DIGEST]
+            self.insert_content(content, digest, utc)
 
-    def select_content(self, table, keywords=None, digest=None, content=None):
+    def select_content(self, category, keywords=None, digest=None, content=None):
         """Select content."""
 
         rows = []
@@ -92,31 +92,30 @@ class Sqlite3Db(object):
             # can be counted by multiplying the query keywords (e.g 3)and the searched colums.
             #
             # Example queries:
-            #     1) SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id
-            #        FROM snippets WHERE (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?
-            #        or links REGEXP ?) ORDER BY id ASC
-            #     2) SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id
-            #        FROM snippets WHERE (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?
-            #        or links REGEXP ?) OR (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?
-            #        or links REGEXP ?) OR (content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?
-            #        or links REGEXP ?) ORDER BY id ASC
+            # 1) SELECT * FROM contents WHERE (data REGEXP ? or brief REGEXP ? or groups REGEXP ?
+            #    or tags REGEXP ? or links REGEXP ? and category = ?) ORDER BY id ASC
+            # 2) SELECT * FROM contents WHERE
+            #    (data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?) AND (category = ?) OR
+            #    (data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?) AND (category = ?) OR
+            #    (data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?) AND (category = ?)
+            #    ORDER BY id ASC
             if keywords and Config.is_search_all():
-                columns = ['content', 'brief', 'groups', 'tags', 'links']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, table)
+                columns = ['data', 'brief', 'groups', 'tags', 'links']
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
             elif keywords and Config.is_search_grp():
                 columns = ['groups']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, table)
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
             elif keywords and Config.is_search_tag():
                 columns = ['tags']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, table)
+                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
             elif digest:
-                query = ('SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id FROM '
-                         + table + ' WHERE digest LIKE ?')
+                query = ('SELECT data, brief, groups, tags, links, category, filename, utc, digest, metadata, id ' +
+                         'FROM contents WHERE digest LIKE ?')
                 qargs = [digest+'%']
             elif content:
-                query = ('SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id FROM '
-                         + table + ' WHERE content=?')
-                qargs = [Const.DELIMITER_CONTENT.join(map(str, content))]
+                query = ('SELECT data, brief, groups, tags, links, category, filename, utc, digest, metadata, id ' +
+                         'FROM contents WHERE data=?')
+                qargs = [Const.DELIMITER_DATA.join(map(str, content))]
             else:
                 self.logger.error('exiting because of internal error where search query was not defined')
                 sys.exit(1)
@@ -134,14 +133,15 @@ class Sqlite3Db(object):
 
         return rows
 
-    def select_all_content(self, table):
+    def select_all_content(self, category):
         """Select all content."""
 
         if self.conn:
-            query = ('SELECT * FROM ' + table)
-            self.logger.debug('select all contents from table %s', table)
+            self.logger.debug('select all contents from category %s', category)
+            query = ('SELECT * FROM contents WHERE category=?')
+            qargs = [category]
             try:
-                self.cursor.execute(query)
+                self.cursor.execute(query, qargs)
 
                 return self.cursor.fetchall()
             except sqlite3.Error as exception:
@@ -151,21 +151,23 @@ class Sqlite3Db(object):
 
         return []
 
-    def update_content(self, content, digest_updated, digest_new, metadata=None):
+    def update_content(self, content, digest_updated, digest_new, utc, metadata=None):
         """Update existing content."""
 
         if self.conn:
-            table = content[Const.CATEGORY]
-            query = ('UPDATE ' + table + ' SET content=?, brief=?, groups=?, tags=?, links=?, digest=?, metadata=? ' +
-                     'WHERE digest LIKE ?')
+            query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, utc=?, '
+                     'digest=?, metadata=? WHERE digest LIKE ?')
             self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
                               content[Const.BRIEF])
             try:
-                self.cursor.execute(query, (Format.get_content_string(content),
-                                            content[Const.BRIEF],
-                                            content[Const.GROUP],
-                                            Const.DELIMITER_TAGS.join(map(str, content[Const.TAGS])),
-                                            Const.DELIMITER_LINKS.join(map(str, content[Const.LINKS])),
+                self.cursor.execute(query, (Format.get_db_data(content),
+                                            Format.get_db_brief(content),
+                                            Format.get_db_group(content),
+                                            Format.get_db_tags(content),
+                                            Format.get_db_links(content),
+                                            Format.get_db_category(content),
+                                            Format.get_db_filename(content),
+                                            utc,
                                             digest_new,
                                             metadata,
                                             digest_updated))
@@ -175,12 +177,12 @@ class Sqlite3Db(object):
         else:
             self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
 
-    def delete_content(self, table, digest):
-        """Delete one content based on given digest."""
+    def delete_content(self, digest):
+        """Delete single content based on given digest."""
 
         cause = Const.DB_FAILURE
         if self.conn:
-            query = ('DELETE FROM ' + table + ' WHERE digest LIKE ?')
+            query = ('DELETE FROM contents WHERE digest LIKE ?')
             self.logger.debug('delete content with digest %s', digest)
             try:
                 self.cursor.execute(query, (digest+'%',))
@@ -252,27 +254,26 @@ class Sqlite3Db(object):
         return re.search(expr, item, re.IGNORECASE) is not None
 
     @staticmethod
-    def _make_regexp_query(keywords, columns, table):
+    def _make_regexp_query(keywords, columns, category):
         """Generate SQL query parameters for specific fields and keywords."""
 
         query_args = []
-        query = ('SELECT content, brief, groups, tags, links, category, filename, utc, digest, metadata, id FROM '
-                 + table + ' WHERE ')
+        query = ('SELECT * FROM contents WHERE ')
 
         # Generate regexp search like:
-        #   1. '(content REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) '
-        #   2. '(tags REGEXP ?) '
+        #   1. '(data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ? AND category=?) '
+        #   2. '(tags REGEXP ? AND category=?) '
         search = '('
         for column in columns:
             search = search + column + ' REGEXP ? OR '
         search = search[:-4] # Remove last ' OR ' added by the loop.
-        search = search + ') '
+        search = search + ') AND (category=?) '
 
         # Generate token for each searched column like
         for token in keywords:
             query = query + search + 'OR '
-            query_args = query_args + [token] * len(columns) # Token for each search colum in the row.
+            query_args = query_args + [token] * len(columns) + [category] # Token for each search colum in the row.
         query = query[:-3] # Remove last 'OR ' added by the loop.
-        query = query + ' ORDER BY id ASC'
+        query = query + 'ORDER BY id ASC'
 
         return (query, query_args)

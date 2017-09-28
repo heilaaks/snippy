@@ -331,7 +331,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         arg = cls.args.get_content_data()
         if arg:
-            content = arg.split(Const.DELIMITER_CONTENT)
+            content = arg.split(Const.DELIMITER_DATA)
 
             return tuple(content)
 

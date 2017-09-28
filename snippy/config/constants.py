@@ -26,14 +26,14 @@ class Constants(object): # pylint: disable=too-few-public-methods
     ALL = 'all'
 
     # Content delimiters
-    DELIMITER_CONTENT = NEWLINE
+    DELIMITER_DATA = NEWLINE
     DELIMITER_TAGS = ','
     DELIMITER_LINKS = '>' # Disallowed characters in URI: <|>|#|%|"
     DELIMITER_SPACE = SPACE
     DELIMITER_NEWLINE = NEWLINE
 
     # Content index numbers in data structures.
-    CONTENT = 0
+    DATA = 0
     BRIEF = 1
     GROUP = 2
     TAGS = 3
@@ -69,8 +69,8 @@ class Constants(object): # pylint: disable=too-few-public-methods
     DB_ENTRY_NOT_FOUND = 'not-found'
 
     # Editor inputs
-    EDITOR_CONTENT_HEAD = '# Add mandatory snippet below.\n'
-    EDITOR_CONTENT_TAIL = '# Add optional brief description below.\n'
+    EDITOR_DATA_HEAD = '# Add mandatory snippet below.\n'
+    EDITOR_DATA_TAIL = '# Add optional brief description below.\n'
     EDITOR_BRIEF_HEAD = '# Add optional brief description below.\n'
     EDITOR_BRIEF_TAIL = '# Add optional single group below.\n'
     EDITOR_GROUP_HEAD = '# Add optional single group below.\n'

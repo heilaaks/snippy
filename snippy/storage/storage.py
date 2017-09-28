@@ -37,12 +37,12 @@ class Storage(object):
 
         return entries
 
-    def update(self, content, digest_updated):
+    def update(self, content):
         """Update content."""
 
         utc = Format.get_utc_time()
         digest = Format.calculate_digest(content)
-        self.database.update_content(content, digest_updated, digest, utc)
+        self.database.update_content(content, digest, utc)
 
     def delete(self, digest):
         """Delete content."""

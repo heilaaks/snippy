@@ -449,10 +449,10 @@ class Config(object): # pylint: disable=too-many-public-methods
                    cls.get_content_links(),
                    cls.get_category(),
                    cls.get_filename(),
-                   None, # utc
-                   None, # digest
-                   None, # metadata
-                   None) # key
+                   content[Const.UTC],
+                   content[Const.DIGEST],
+                   content[Const.METADATA],
+                   content[Const.KEY])
 
         return content
 

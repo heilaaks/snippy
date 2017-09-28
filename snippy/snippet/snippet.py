@@ -65,11 +65,9 @@ class Snippet(object):
         if len(snippets) == 1:
             if content_digest:
                 snippet = Config.get_content(content=snippets[0])
-                content_digest = snippets[0][Const.DIGEST]
             elif snippet_data:
                 snippet = Config.get_content(content=snippets[0], use_editor=True)
-                content_digest = snippets[0][Const.DIGEST]
-            self.storage.update(snippet, content_digest)
+            self.storage.update(snippet)
         elif not snippets:
             Config.set_cause('cannot find snippet to be updated with %s' % log_string)
         else:

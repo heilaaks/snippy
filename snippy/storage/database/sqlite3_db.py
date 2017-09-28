@@ -150,13 +150,13 @@ class Sqlite3Db(object):
 
         return rows
 
-    def update_content(self, content, digest_updated, digest_new, utc, metadata=None):
+    def update_content(self, content, digest, utc, metadata=None):
         """Update existing content."""
 
         if self.conn:
             query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, utc=?, '
                      'digest=?, metadata=? WHERE digest LIKE ?')
-            self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', digest_updated, digest_new,
+            self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', content[Const.DIGEST], digest,
                               content[Const.BRIEF])
             try:
                 self.cursor.execute(query, (Format.get_db_data(content),
@@ -167,9 +167,9 @@ class Sqlite3Db(object):
                                             Format.get_db_category(content),
                                             Format.get_db_filename(content),
                                             utc,
-                                            digest_new,
+                                            digest,
                                             metadata,
-                                            digest_updated))
+                                            content[Const.DIGEST]))
                 self.conn.commit()
             except sqlite3.Error as exception:
                 self.logger.exception('updating sqlite3 database failed with exception "%s"', exception)

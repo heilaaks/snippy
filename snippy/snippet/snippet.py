@@ -67,7 +67,7 @@ class Snippet(object):
                 snippet = Config.get_content(content=snippets[0])
                 content_digest = snippets[0][Const.DIGEST]
             elif snippet_data:
-                snippet = Config.get_content(use_editor=True)
+                snippet = Config.get_content(content=snippets[0], use_editor=True)
                 content_digest = snippets[0][Const.DIGEST]
             self.storage.update(snippet, content_digest)
         elif not snippets:

@@ -260,8 +260,8 @@ class Sqlite3Db(object):
         query = ('SELECT * FROM contents WHERE ')
 
         # Generate regexp search like:
-        #   1. '(data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ? AND category=?) '
-        #   2. '(tags REGEXP ? AND category=?) '
+        #   1. '(data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) AND (category=?) '
+        #   2. '(tags REGEXP ?) AND (category=?) '
         search = '('
         for column in columns:
             search = search + column + ' REGEXP ? OR '

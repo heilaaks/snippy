@@ -36,7 +36,7 @@ class SnippetHelper(object):
                   'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'),
                  Const.SNIPPET,
                  '',
-                 'None',
+                 None,
                  '6f9e21abdc2e4c53d04d77eff024708086c0a583f1be3dd761774353e9d2b74f',
                  None,
                  None,

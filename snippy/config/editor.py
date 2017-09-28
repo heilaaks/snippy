@@ -208,8 +208,8 @@ class Editor(object): # pylint: disable-all
     def _set_template_file(self, template):
         """Update template content file."""
 
-        file = Format.get_file_string(self.content)
-        template = template.replace('<SNIPPY_FILE>', file)
+        filename = Format.get_filename_string(self.content)
+        template = template.replace('<SNIPPY_FILE>', filename)
 
         return template
 

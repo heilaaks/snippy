@@ -186,16 +186,10 @@ class Format(object): # pylint: disable=too-many-public-methods
         return links
 
     @staticmethod
-    def get_file_string(content):
+    def get_filename_string(content):
         """Format content file to string."""
 
-        filename = Const.EMPTY
-        match = re.search(r'## FILE  :\s+(\S+)', Format.get_data_string(content))
-        if match:
-            filename = match.group(1)
-
-        if '<SNIPPY_FILE>' in filename:
-            filename = Const.EMPTY
+        filename = content[Const.FILENAME]
 
         return filename
 

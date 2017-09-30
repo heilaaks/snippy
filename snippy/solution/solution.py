@@ -23,13 +23,13 @@ class Solution(object):
         if solution.has_data():
             cause = self.storage.create(solution)
             if cause == Const.DB_DUPLICATE:
-                solutions = self.storage.search(Const.SOLUTION, content=solution[Const.DATA])
+                solutions = self.storage.search(Const.SOLUTION, data=solution.get_data())
                 if len(solutions) == 1:
                     Config.set_cause('content already exist with digest %.16s' % solutions[0].get_digest())
                 else:
                     self.logger.error('unexpected number of solutions %d received while searching', len(solutions))
         else:
-            Config.set_cause('mandatory content not defined')
+            Config.set_cause('mandatory content data not defined')
 
     def search(self):
         """Search solutions."""

@@ -30,11 +30,11 @@ class Storage(object):
 
         return cause
 
-    def search(self, category, keywords=None, digest=None, content=None):
+    def search(self, category, keywords=None, digest=None, data=None):
         """Search content."""
 
-        rows = self.database.select_content(category, keywords, digest, content)
-        contents = Storage._get_content(rows)
+        rows = self.database.select_content(category, keywords, digest, data)
+        contents = Storage._get_contents(rows)
 
         return contents
 
@@ -56,7 +56,7 @@ class Storage(object):
         """Export content."""
 
         rows = self.database.select_all_content(category)
-        contents = Storage._get_content(rows)
+        contents = Storage._get_contents(rows)
 
         return contents
 
@@ -78,7 +78,7 @@ class Storage(object):
         self.database.debug()
 
     @staticmethod
-    def _get_content(rows):
+    def _get_contents(rows):
         """Convert database rows to tuple of content."""
 
         contents = []

@@ -6,12 +6,12 @@ import re
 import sys
 import os.path
 import inspect
+import datetime
 import pkg_resources
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Arguments
 from snippy.config import Editor
-from snippy.format import Format
 from snippy.content import Content
 
 
@@ -314,6 +314,14 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         return cls.config['exit_code']
 
+    @staticmethod
+    def get_utc_time():
+        """Get UTC time."""
+
+        utc = datetime.datetime.utcnow()
+
+        return utc.strftime("%Y-%m-%d %H:%M:%S")
+
     @classmethod
     def _parse_operation(cls):
         """Process the operation for the content."""
@@ -364,7 +372,7 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         arg = cls.args.get_content_tags()
 
-        return Format.get_keywords(arg)
+        return Editor.get_keywords(arg)
 
     @classmethod
     def _parse_content_links(cls):
@@ -404,7 +412,7 @@ class Config(object): # pylint: disable=too-many-public-methods
             arg = cls.args.get_search_grp()
             field = Const.SEARCH_GRP
 
-        return (field, Format.get_keywords(arg))
+        return (field, Editor.get_keywords(arg))
 
     @classmethod
     def _parse_search_filter(cls):
@@ -435,7 +443,7 @@ class Config(object): # pylint: disable=too-many-public-methods
     def _get_edited_content(cls, content):
         """Read and set the user provided values from editor."""
 
-        editor = Editor(content)
+        editor = Editor(content, Config.get_utc_time())
         editor.read_content()
         cls.config['content']['data'] = editor.get_edited_data()
         cls.config['content']['brief'] = editor.get_edited_brief()

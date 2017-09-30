@@ -5,7 +5,6 @@
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
-from snippy.format import Format
 from snippy.migrate import Migrate
 
 
@@ -43,7 +42,6 @@ class Snippet(object):
             snippets = self.storage.search(Const.SNIPPET, keywords=keywords)
         elif content:
             snippets = self.storage.search(Const.SNIPPET, content=content)
-        snippets = Format.get_snippet_text(snippets, colors=True)
         Migrate().print_terminal(snippets)
 
     def update(self):
@@ -103,14 +101,13 @@ class Snippet(object):
 
         self.logger.debug('exporting snippets %s', Config.get_operation_file())
         snippets = self.storage.export_content(Const.SNIPPET)
-        Migrate().print_file(snippets)
+        Migrate().dump(snippets)
 
     def import_all(self):
         """Import snippets."""
 
         self.logger.debug('importing snippets %s', Config.get_operation_file())
-        snippets = Migrate().load_dictionary(Config.get_operation_file())
-        snippets = Format.get_storage(snippets['content'])
+        snippets = Migrate().load(Config.get_operation_file())
         self.storage.import_content(snippets)
 
     def run(self):

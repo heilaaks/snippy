@@ -5,7 +5,6 @@
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
-from snippy.format import Format
 from snippy.migrate import Migrate
 
 
@@ -40,8 +39,7 @@ class Solution(object):
         keywords = Config.get_search_keywords()
         if keywords:
             solutions = self.storage.search(Const.SOLUTION, keywords=keywords)
-            solutions = Format.get_solution_text(solutions, colors=True)
-            Migrate().print_terminal(solutions)
+        Migrate().print_terminal(solutions)
 
     def update(self):
         """Update existing solution."""
@@ -83,14 +81,13 @@ class Solution(object):
 
         self.logger.debug('exporting solutions %s', Config.get_operation_file())
         solutions = self.storage.export_content(Const.SOLUTION)
-        Migrate().print_file(solutions)
+        Migrate().dump(solutions)
 
     def import_all(self):
         """Import solutions."""
 
         self.logger.debug('importing solutions %s', Config.get_operation_file())
-        solutions = Migrate().load_dictionary(Config.get_operation_file())
-        solutions = Format.get_storage(solutions['content'])
+        solutions = Migrate().load(Config.get_operation_file())
         self.storage.import_content(solutions)
 
     def run(self):

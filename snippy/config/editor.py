@@ -7,16 +7,16 @@ import os.path
 import pkg_resources
 from snippy.config import Constants as Const
 from snippy.logger import Logger
-from snippy.format import Format
 
 
 class Editor(object): # pylint: disable-all
     """Editor based configuration."""
 
-    def __init__(self, content):
+    def __init__(self, content, utc):
         self.logger = Logger(__name__).get()
         self.content = content
         self.edited = Const.EMPTY
+        self.utc = utc
 
     def read_content(self):
         """Read the content from editor."""
@@ -115,7 +115,7 @@ class Editor(object): # pylint: disable-all
         if self.content.is_snippet():
             match = re.search('%s(.*)%s' % (Const.EDITOR_TAGS_HEAD, Const.EDITOR_TAGS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
-                tags = Format.get_keywords([match.group(1)])
+                tags = Editor.get_keywords([match.group(1)])
         else:
             match = re.search('## TAGS  :\s*(.*)', self.edited)
             if match:
@@ -152,6 +152,30 @@ class Editor(object): # pylint: disable-all
 
         return filename
 
+    @staticmethod
+    def get_keywords(keywords):
+        """Preprocess the user given keyword list. The keywords are for example the
+        user provided tags or the search keywords. The user may use various formats
+        so each item in a list may be for example a string of comma separated tags.
+
+        The dot is a special case. It is allowed for the regexp to match and print
+        all records."""
+
+        # Examples: Support processing of:
+        #           1. -t docker container cleanup
+        #           2. -t docker, container, cleanup
+        #           3. -t 'docker container cleanup'
+        #           4. -t 'docker, container, cleanup'
+        #           5. -t dockertesting', container-managemenet', cleanup_testing
+        #           6. --sall '.'
+        kw_list = []
+        for tag in keywords:
+            kw_list = kw_list + re.findall(r"[\w\-\.]+", tag)
+
+        sorted_list = sorted(kw_list)
+
+        return tuple(sorted_list)
+
     def _set_template_data(self, template):
         """Update template content data."""
 
@@ -177,7 +201,7 @@ class Editor(object): # pylint: disable-all
     def _set_template_date(self, template):
         """Update template content date."""
 
-        template = template.replace('<SNIPPY_DATE>', Format.get_utc_time())
+        template = template.replace('<SNIPPY_DATE>', self.utc)
 
         return template
 

@@ -4,7 +4,7 @@
 
 from snippy.config import Constants as Const
 from snippy.logger import Logger
-from snippy.format import Format
+from snippy.config import Config
 from snippy.content import Content
 from snippy.storage.database import Sqlite3Db as Database
 
@@ -24,7 +24,7 @@ class Storage(object):
     def create(self, content):
         """Create content."""
 
-        utc = Format.get_utc_time()
+        utc = Config.get_utc_time()
         digest = content.compute_digest()
         cause = self.database.insert_content(content, digest, utc)
 
@@ -41,7 +41,7 @@ class Storage(object):
     def update(self, content):
         """Update content."""
 
-        utc = Format.get_utc_time()
+        utc = Config.get_utc_time()
         digest = content.compute_digest()
         self.database.update_content(content, digest, utc)
 

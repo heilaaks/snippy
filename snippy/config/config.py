@@ -432,10 +432,7 @@ class Config(object): # pylint: disable=too-many-public-methods
     def _parse_editor(cls):
         """Process editor usage."""
 
-        # Implicitly force editor in case of update operation with message digest.
         editor = cls.args.get_editor()
-        if cls.is_operation_update() and cls.get_content_digest():
-            editor = True
 
         return editor
 

@@ -29,7 +29,7 @@ class Snippet(object):
                 else:
                     self.logger.error('unexpected number of snippets %d received while searching', len(snippets))
         else:
-            Config.set_cause('mandatory content data not defined')
+            Config.set_cause('mandatory snippet data not defined')
 
     def search(self):
         """Search snippets."""
@@ -61,10 +61,7 @@ class Snippet(object):
             log_string = 'content %.20s' % content_data
 
         if len(snippets) == 1:
-            if content_digest:
-                snippet = Config.get_content(content=snippets[0])
-            elif content_data:
-                snippet = Config.get_content(content=snippets[0], use_editor=True)
+            snippet = Config.get_content(content=snippets[0], use_editor=True)
             self.storage.update(snippet)
         elif not snippets:
             Config.set_cause('cannot find snippet to be updated with %s' % log_string)

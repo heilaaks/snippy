@@ -4,6 +4,7 @@
 
 import re
 import sys
+import os.path
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
@@ -119,29 +120,32 @@ class Migrate(object):
                 sys.exit()
 
     @classmethod
-    def load(cls, contents):
+    def load(cls, filename):
         """Load dictionary to import contents."""
 
+        snippets = ()
         dictionary = {}
+        cls.logger.debug('importing contents from file %s', filename)
+        if os.path.isfile(filename):
+            with open(filename, 'r') as infile:
+                try:
+                    if Config.is_file_type_yaml():
+                        import yaml
 
-        cls.logger.debug('importing contents from file')
-        with open(contents, 'r') as infile:
-            try:
-                if Config.is_file_type_yaml():
-                    import yaml
+                        dictionary = yaml.load(infile)
+                    elif Config.is_file_type_json():
+                        import json
 
-                    dictionary = yaml.load(infile)
-                elif Config.is_file_type_json():
-                    import json
+                        dictionary = json.load(infile)
+                    else:
+                        cls.logger.info('unknown export format')
+                except (yaml.YAMLError, TypeError) as exception:
+                    cls.logger.exception('fatal exception while loading the import file %s "%s"', filename, exception)
+                    sys.exit()
 
-                    dictionary = json.load(infile)
-                else:
-                    cls.logger.info('unknown export format')
-            except (yaml.YAMLError, TypeError) as exception:
-                cls.logger.exception('fatal exception while loading the import file %s "%s"', contents, exception)
-                sys.exit()
-
-        snippets = Migrate._get_contents(dictionary['content'])
+            snippets = Migrate._get_contents(dictionary['content'])
+        else:
+            Config.set_cause('cannot read file %s' % filename)
 
         return snippets
 

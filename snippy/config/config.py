@@ -3,7 +3,6 @@
 """config.py: Configuration management."""
 
 import re
-import sys
 import os.path
 import inspect
 import datetime
@@ -31,6 +30,7 @@ class Config(object): # pylint: disable=too-many-public-methods
     def _set_config(cls):
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
+        cls.config['exit_code'] = 'OK'
         cls.config['content'] = {}
         cls.config['content']['category'] = cls._parse_content_category()
         cls.config['content']['data'] = cls._parse_content_data()
@@ -56,7 +56,6 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['storage']['schema']['path'] = pkg_resources.resource_filename('snippy', 'data/config')
         cls.config['storage']['schema']['file'] = 'database.sql'
         cls.config['storage']['in_memory'] = False
-        cls.config['exit_code'] = 'OK'
 
         cls.logger.debug('configured value from positional argument as "%s"', cls.config['operation']['task'])
         cls.logger.debug('configured value from content category as "%s"', cls.config['content']['category'])
@@ -464,16 +463,13 @@ class Config(object): # pylint: disable=too-many-public-methods
 
     @classmethod
     def _parse_operation_file(cls):
-        """Process file for operation."""
+        """Return the filename and the format of the file."""
 
-        return cls._get_file_type(cls.args.get_operation_file())
-
-    @classmethod
-    def _get_file_type(cls, filename):
-        """Return the file format and file."""
+        filename = cls.args.get_operation_file()
+        filetype = Const.FILE_TYPE_NONE
 
         if not filename:
-            return (Const.EMPTY, Const.FILE_TYPE_NONE)
+            return (filename, filetype)
 
         # Import default content with keyword 'default'.
         default_file = 'snippets.yaml'
@@ -482,31 +478,22 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         if filename == 'defaults':
             filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/default'), default_file)
+            filetype = Const.FILE_TYPE_YAML
 
-            return (filename, Const.FILE_TYPE_YAML)
-
-        # Import content from user specified file.
-        filename, file_extension = os.path.splitext(filename)
-        if filename and ('yaml' in file_extension or 'yml' in file_extension):
-            filename = filename + '.yaml'
-
-            return (filename, Const.FILE_TYPE_YAML)
-        elif filename and 'json' in file_extension:
-            filename = filename + '.json'
-
-            return (filename, Const.FILE_TYPE_JSON)
-
-        elif filename and ('txt' in file_extension or 'text' in file_extension):
-            filename = filename + '.txt'
+        # Content to/from user specified file.
+        name, extension = os.path.splitext(filename)
+        if name and ('yaml' in extension or 'yml' in extension):
+            filetype = Const.FILE_TYPE_YAML
+        elif name and 'json' in extension:
+            filetype = Const.FILE_TYPE_JSON
+        elif name and ('txt' in extension or 'text' in extension):
+            filetype = Const.FILE_TYPE_TEXT
             if cls.is_operation_import():
-                cls.logger.error('unsupported file format for import "%s"', file_extension)
-                sys.exit(1)
-
-            return (filename, Const.FILE_TYPE_TEXT)
+                Config.set_cause('unsupported file format "%s" for import operation %s' % (extension, filename))
         else:
-            cls.logger.info('unsupported export file format "%s"', file_extension)
+            Config.set_cause('cannot identify file format for file %s' % filename)
 
-        return (Const.EMPTY, Const.FILE_TYPE_YAML)
+        return (filename, filetype)
 
     @staticmethod
     def _caller():

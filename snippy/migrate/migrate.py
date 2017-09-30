@@ -35,7 +35,7 @@ class Migrate(object):
             if match:
                 print(Const.NEWLINE.join(match))
                 print()
-        else:
+        elif text:
             print(text)
 
     @staticmethod
@@ -49,9 +49,10 @@ class Migrate(object):
             else:
                 text = text + Migrate.get_solution_text(idx, content, colors)
 
-        # Set only one empty line at the end of string for beautified output.
-        text = text.rstrip()
-        text = text + Const.NEWLINE
+        if contents:
+            # Set only one empty line at the end of string for beautified output.
+            text = text.rstrip()
+            text = text + Const.NEWLINE
 
         return text
 

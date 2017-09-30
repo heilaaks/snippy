@@ -2,7 +2,6 @@
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
-   - [ ] Add docker container for the project.
    - [ ] Update documents.
    - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add digest check when importing data.
@@ -16,6 +15,7 @@
    - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
+   - [x] Added docker container for the snippy.
    - [x] Fixed importing unknown file that terminates with exception.
    - [x] Fixed importing utc timestamps. The timestamp is not created again when content is imported.
    - [x] Added filename from solution to database.

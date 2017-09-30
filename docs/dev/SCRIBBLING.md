@@ -83,6 +83,16 @@ Random notes and scribling during development.
    $ make
    ```
 
+   ```
+   $ make docker
+   $ 
+   $ sudo docker run heilaaks/snippy search --sall .
+   $ vi ~/.bashrc
+     alias snippy-d='sudo docker run heilaaks/snippy'
+   $ source ~/.bashrc
+   $ snippy-d search --sall .
+   ```
+
 ## Bling
 
 http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-package/

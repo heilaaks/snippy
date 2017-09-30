@@ -24,7 +24,7 @@ lint:
 	-pylint --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
 	-pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
 
-docker: clean-db
+docker: clean clean-db
 	docker build -t heilaaks/snippy .
 
 clean:

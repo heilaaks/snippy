@@ -98,11 +98,11 @@ class SnippetHelper(object):
         """Compare two snippets."""
 
         # Test that all fields excluding id and onwards are equal.
-        SnippetHelper._assert_count_equal(testcase, snippet.get_data(), reference.get_data())
+        six.assertCountEqual(testcase, snippet.get_data(), reference.get_data())
         testcase.assertEqual(snippet.get_brief(), reference.get_brief())
         testcase.assertEqual(snippet.get_group(), reference.get_group())
-        SnippetHelper._assert_count_equal(testcase, snippet.get_tags(), reference.get_tags())
-        SnippetHelper._assert_count_equal(testcase, snippet.get_links(), reference.get_links())
+        six.assertCountEqual(testcase, snippet.get_tags(), reference.get_tags())
+        six.assertCountEqual(testcase, snippet.get_links(), reference.get_links())
         testcase.assertEqual(snippet.get_category(), reference.get_category())
         testcase.assertEqual(snippet.get_filename(), reference.get_filename())
         testcase.assertEqual(snippet.get_digest(), reference.get_digest())
@@ -131,7 +131,7 @@ class SnippetHelper(object):
         testcase.assertEqual(snippet[BRIEF], reference.get_brief(Const.STRING_CONTENT))
         testcase.assertEqual(snippet[GROUP], reference.get_group(Const.STRING_CONTENT))
         testcase.assertEqual(snippet[TAGS], reference.get_tags(Const.STRING_CONTENT))
-        SnippetHelper._assert_count_equal(testcase, snippet[LINKS], reference.get_links(Const.STRING_CONTENT))
+        six.assertCountEqual(testcase, snippet[LINKS], reference.get_links(Const.STRING_CONTENT))
         testcase.assertEqual(snippet[CATEGORY], reference.get_category(Const.STRING_CONTENT))
         testcase.assertEqual(snippet[FILENAME], reference.get_filename(Const.STRING_CONTENT))
         testcase.assertEqual(snippet[DIGEST], reference.get_digest(Const.STRING_CONTENT))
@@ -146,12 +146,3 @@ class SnippetHelper(object):
         assert isinstance(snippet[CATEGORY], six.string_types)
         assert isinstance(snippet[FILENAME], six.string_types)
         assert isinstance(snippet[DIGEST], six.string_types)
-
-    @staticmethod
-    def _assert_count_equal(testcase, snippet, reference):
-        """Compare lists."""
-
-        if not Const.PYTHON2:
-            testcase.assertCountEqual(snippet, reference)
-        else:
-            testcase.assertItemsEqual(snippet, reference)

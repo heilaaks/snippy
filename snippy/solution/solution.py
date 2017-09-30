@@ -19,7 +19,7 @@ class Solution(object):
         """Create new solution."""
 
         self.logger.debug('creating new solution')
-        solution = Config.get_content()
+        solution = Config.get_content(use_editor=True)
         if solution.has_data():
             cause = self.storage.create(solution)
             if cause == Const.DB_DUPLICATE:

@@ -49,6 +49,10 @@ class Migrate(object):
             else:
                 text = text + Migrate.get_solution_text(idx, content, colors)
 
+        # Set only one empty line at the end of string for beautified output.
+        text = text.rstrip()
+        text = text + Const.NEWLINE
+
         return text
 
     @staticmethod
@@ -70,6 +74,7 @@ class Migrate(object):
                                         for link in snippet.get_links()])
         text = text + Const.NEWLINE
 
+
         return text
 
     @staticmethod
@@ -90,6 +95,7 @@ class Migrate(object):
 
         text = text + Const.EMPTY.join([Migrate._console_solution(colors) % (data, line) \
                                         for line in solution.get_data()])
+        text = text + Const.NEWLINE
 
         return text
 

@@ -33,7 +33,7 @@ setup(
             'snippy = snippy.snip:main'
         ],
     },
-    install_requires=[],
+    install_requires=['pyyaml'],
     extras_require={
         'dev': tests_require + docs_require,
         'test': tests_require,

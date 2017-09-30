@@ -8,9 +8,10 @@ import sys
 class Constants(object): # pylint: disable=too-few-public-methods
     """Globals constants for the tool."""
 
-    NEWLINE = '\n'
     SPACE = ' '
     EMPTY = ''
+    COMMA = ','
+    NEWLINE = '\n'
     EMPTY_LIST = []
     EMPTY_TUPLE = ()
 
@@ -26,11 +27,11 @@ class Constants(object): # pylint: disable=too-few-public-methods
     ALL = 'all'
 
     # Content delimiters
+    DELIMITER_NEWLINE = NEWLINE
+    DELIMITER_SPACE = SPACE
     DELIMITER_DATA = NEWLINE
     DELIMITER_TAGS = ','
-    DELIMITER_LINKS = '>' # Disallowed characters in URI: <|>|#|%|"
-    DELIMITER_SPACE = SPACE
-    DELIMITER_NEWLINE = NEWLINE
+    DELIMITER_LINKS = NEWLINE
 
     # Content index numbers in data structures.
     DATA = 0
@@ -45,6 +46,10 @@ class Constants(object): # pylint: disable=too-few-public-methods
     METADATA = 9
     KEY = 10
     TESTING = 11
+
+    # Content formats
+    NATIVE_CONTENT = 0 # Native format from content.
+    STRING_CONTENT = 1 # Single String from content.
 
     # Default values for content fields.
     DEFAULT_GROUP = 'default'

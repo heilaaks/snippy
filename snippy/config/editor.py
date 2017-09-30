@@ -31,7 +31,7 @@ class Editor(object): # pylint: disable-all
         template = self._set_template_group(template)
         template = self._set_template_tags(template)
         template = self._set_template_links(template)
-        template = self._set_template_file(template)
+        template = self._set_template_filename(template)
         template = template.encode('UTF-8')
 
         editor = os.environ.get('EDITOR', 'vi')
@@ -49,7 +49,7 @@ class Editor(object): # pylint: disable-all
         """Return content template."""
 
         template = Const.EMPTY
-        if self.content[Const.CATEGORY] == Const.SNIPPET:
+        if self.content.is_snippet():
             file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
         else:
             file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
@@ -63,7 +63,7 @@ class Editor(object): # pylint: disable-all
         """Return content data from editor."""
 
         data = ()
-        if self.content[Const.CATEGORY] == Const.SNIPPET:
+        if self.content.is_snippet():
             match = re.search('%s(.*)%s' % (Const.EDITOR_DATA_HEAD, Const.EDITOR_DATA_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
@@ -77,7 +77,7 @@ class Editor(object): # pylint: disable-all
         """Return content brief from editor."""
 
         brief = Const.EMPTY
-        if self.content[Const.CATEGORY] == Const.SNIPPET:
+        if self.content.is_snippet():
             match = re.search('%s(.*)%s' % (Const.EDITOR_BRIEF_HEAD, Const.EDITOR_BRIEF_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
@@ -94,7 +94,7 @@ class Editor(object): # pylint: disable-all
         """Return content group from editor."""
 
         group = Const.EMPTY
-        if self.content[Const.CATEGORY] == Const.SNIPPET:
+        if self.content.is_snippet():
             match = re.search('%s(.*)%s' % (Const.EDITOR_GROUP_HEAD, Const.EDITOR_GROUP_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
@@ -112,7 +112,7 @@ class Editor(object): # pylint: disable-all
         """Return content tags from editor."""
 
         tags = ()
-        if self.content[Const.CATEGORY] == Const.SNIPPET:
+        if self.content.is_snippet():
             match = re.search('%s(.*)%s' % (Const.EDITOR_TAGS_HEAD, Const.EDITOR_TAGS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 tags = Format.get_keywords([match.group(1)])
@@ -129,7 +129,7 @@ class Editor(object): # pylint: disable-all
 
         # In case of solution, the links are read from the whole content data.
         links = ()
-        if self.content[Const.CATEGORY] == Const.SNIPPET:
+        if self.content.is_snippet():
             match = re.search('%s(.*)%s' % (Const.EDITOR_LINKS_HEAD, Const.EDITOR_LINKS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 links = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
@@ -144,7 +144,7 @@ class Editor(object): # pylint: disable-all
 
         # Only solutions use the optional file variable.
         filename = Const.EMPTY
-        if self.content[Const.CATEGORY] == Const.SOLUTION:
+        if self.content.get_category() == Const.SOLUTION:
             match = re.search(r'## FILE  :\s+(\S+)', self.edited)
             if match:
                 filename = match.group(1)
@@ -155,9 +155,9 @@ class Editor(object): # pylint: disable-all
     def _set_template_data(self, template):
         """Update template content data."""
 
-        data = Format.get_data_string(self.content)
+        data = self.content.get_data(Const.STRING_CONTENT)
         if data:
-            if self.content[Const.CATEGORY] == Const.SOLUTION:
+            if self.content.get_category() == Const.SOLUTION:
                 template = data
             else:
                 template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
@@ -169,7 +169,7 @@ class Editor(object): # pylint: disable-all
     def _set_template_brief(self, template):
         """Update template content brief."""
 
-        brief = Format.get_brief_string(self.content)
+        brief = self.content.get_brief(Const.STRING_CONTENT)
         template = template.replace('<SNIPPY_BRIEF>', brief)
 
         return template
@@ -184,7 +184,7 @@ class Editor(object): # pylint: disable-all
     def _set_template_group(self, template):
         """Update template content group."""
 
-        group = Format.get_group_string(self.content)
+        group = self.content.get_group(Const.STRING_CONTENT)
         template = template.replace('<SNIPPY_GROUP>', group)
 
         return template
@@ -192,7 +192,7 @@ class Editor(object): # pylint: disable-all
     def _set_template_tags(self, template):
         """Update template content tags."""
 
-        tags = Format.get_tags_string(self.content)
+        tags = self.content.get_tags(Const.STRING_CONTENT)
         template = template.replace('<SNIPPY_TAGS>', tags)
 
         return template
@@ -200,15 +200,15 @@ class Editor(object): # pylint: disable-all
     def _set_template_links(self, template):
         """Update template content links."""
 
-        links = Format.get_links_string(self.content)
+        links = self.content.get_links(Const.STRING_CONTENT)
         template = template.replace('<SNIPPY_LINKS>', links)
 
         return template
 
-    def _set_template_file(self, template):
+    def _set_template_filename(self, template):
         """Update template content file."""
 
-        filename = Format.get_filename_string(self.content)
+        filename = self.content.get_filename(Const.STRING_CONTENT)
         template = template.replace('<SNIPPY_FILE>', filename)
 
         return template

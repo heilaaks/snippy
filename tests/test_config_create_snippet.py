@@ -29,7 +29,7 @@ class TestConfigCreateSnippet(unittest.TestCase):
         assert isinstance(obj.get_search_keywords(), tuple)
         assert isinstance(obj.get_search_filter(), str)
         assert isinstance(obj.get_operation_file(), str)
-        assert obj.get_content() == snippet
+        assert obj.get_content().get() == snippet
         assert obj.is_operation_create()
         assert not obj.is_operation_search()
         assert not obj.is_operation_update()

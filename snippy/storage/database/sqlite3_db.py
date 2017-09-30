@@ -9,7 +9,6 @@ import sqlite3
 from snippy.config import Constants as Const
 from snippy.logger import Logger
 from snippy.config import Config
-from snippy.format import Format
 
 
 class Sqlite3Db(object):
@@ -47,15 +46,15 @@ class Sqlite3Db(object):
         if self.conn:
             query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, utc, ' +
                      'digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?)')
-            self.logger.debug('insert "%s" with digest %.16s', content[Const.BRIEF], digest)
+            self.logger.debug('insert "%s" with digest %.16s', content.get_brief(), digest)
             try:
-                self.cursor.execute(query, (Format.get_db_data(content),
-                                            Format.get_db_brief(content),
-                                            Format.get_db_group(content),
-                                            Format.get_db_tags(content),
-                                            Format.get_db_links(content),
-                                            Format.get_db_category(content),
-                                            Format.get_db_filename(content),
+                self.cursor.execute(query, (content.get_data(Const.STRING_CONTENT),
+                                            content.get_brief(Const.STRING_CONTENT),
+                                            content.get_group(Const.STRING_CONTENT),
+                                            content.get_tags(Const.STRING_CONTENT),
+                                            content.get_links(Const.STRING_CONTENT),
+                                            content.get_category(Const.STRING_CONTENT),
+                                            content.get_filename(Const.STRING_CONTENT),
                                             utc,
                                             digest,
                                             metadata))
@@ -63,7 +62,7 @@ class Sqlite3Db(object):
                 cause = Const.DB_INSERT_OK
             except sqlite3.IntegrityError as exception:
                 cause = Const.DB_DUPLICATE
-                self.logger.info('unique constraint violation with content "%s"', content[Const.DATA])
+                self.logger.info('unique constraint violation with content "%s"', content.get_data())
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
         else:
@@ -75,12 +74,11 @@ class Sqlite3Db(object):
         """Insert multiple contents into database."""
 
         for content in contents:
-            utc = content[Const.UTC]
-            digest = content[Const.DIGEST]
-            content = content[Const.DATA:Const.DIGEST]
+            utc = content.get_utc()
+            digest = content.get_digest()
             self.insert_content(content, digest, utc)
 
-    def select_content(self, category, keywords=None, digest=None, content=None):
+    def select_content(self, category, keywords=None, digest=None, data=None):
         """Select content."""
 
         rows = ()
@@ -111,9 +109,9 @@ class Sqlite3Db(object):
             elif digest:
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
                 qargs = [digest+'%']
-            elif content:
+            elif data:
                 query = ('SELECT * FROM contents WHERE data=?')
-                qargs = [Const.DELIMITER_DATA.join(map(str, content))]
+                qargs = [Const.DELIMITER_DATA.join(map(str, data))]
             else:
                 self.logger.error('exiting because of internal error where search query was not defined')
                 sys.exit(1)
@@ -156,20 +154,20 @@ class Sqlite3Db(object):
         if self.conn:
             query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, utc=?, '
                      'digest=?, metadata=? WHERE digest LIKE ?')
-            self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', content[Const.DIGEST], digest,
-                              content[Const.BRIEF])
+            self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', content.get_digest(), digest,
+                              content.get_brief())
             try:
-                self.cursor.execute(query, (Format.get_db_data(content),
-                                            Format.get_db_brief(content),
-                                            Format.get_db_group(content),
-                                            Format.get_db_tags(content),
-                                            Format.get_db_links(content),
-                                            Format.get_db_category(content),
-                                            Format.get_db_filename(content),
+                self.cursor.execute(query, (content.get_data(Const.STRING_CONTENT),
+                                            content.get_brief(Const.STRING_CONTENT),
+                                            content.get_group(Const.STRING_CONTENT),
+                                            content.get_tags(Const.STRING_CONTENT),
+                                            content.get_links(Const.STRING_CONTENT),
+                                            content.get_category(Const.STRING_CONTENT),
+                                            content.get_filename(Const.STRING_CONTENT),
                                             utc,
                                             digest,
                                             metadata,
-                                            content[Const.DIGEST]))
+                                            content.get_digest(Const.STRING_CONTENT)))
                 self.conn.commit()
             except sqlite3.Error as exception:
                 self.logger.exception('updating sqlite3 database failed with exception "%s"', exception)

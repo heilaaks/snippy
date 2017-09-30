@@ -12,6 +12,7 @@ from snippy.logger import Logger
 from snippy.config import Arguments
 from snippy.config import Editor
 from snippy.format import Format
+from snippy.content import Content
 
 
 class Config(object): # pylint: disable=too-many-public-methods
@@ -79,17 +80,17 @@ class Config(object): # pylint: disable=too-many-public-methods
         # Set the defaults from commmand line for editor. If content is not
         # provided at all, it tells that operation is done with digest only.
         if not content:
-            content = (cls.get_content_data(),
-                       cls.get_content_brief(),
-                       cls.get_content_group(),
-                       cls.get_content_tags(),
-                       cls.get_content_links(),
-                       cls.get_category(),
-                       cls.get_filename(),
-                       None, # utc
-                       None, # digest
-                       None, # metadata
-                       None) # key
+            content = Content((cls.get_content_data(),
+                               cls.get_content_brief(),
+                               cls.get_content_group(),
+                               cls.get_content_tags(),
+                               cls.get_content_links(),
+                               cls.get_category(),
+                               cls.get_filename(),
+                               None,  # utc
+                               None,  # digest
+                               None,  # metadata
+                               None)) # key
 
         if cls.is_editor() or use_editor:
             content = Config._get_edited_content(content)
@@ -442,17 +443,17 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.config['content']['tags'] = editor.get_edited_tags()
         cls.config['content']['links'] = editor.get_edited_links()
         cls.config['content']['filename'] = editor.get_edited_filename()
-        content = (cls.get_content_data(),
-                   cls.get_content_brief(),
-                   cls.get_content_group(),
-                   cls.get_content_tags(),
-                   cls.get_content_links(),
-                   cls.get_category(),
-                   cls.get_filename(),
-                   content[Const.UTC],
-                   content[Const.DIGEST],
-                   content[Const.METADATA],
-                   content[Const.KEY])
+        content.set((cls.get_content_data(),
+                     cls.get_content_brief(),
+                     cls.get_content_group(),
+                     cls.get_content_tags(),
+                     cls.get_content_links(),
+                     cls.get_category(),
+                     cls.get_filename(),
+                     content.get_utc(),
+                     content.get_digest(),
+                     content.get_metadata(),
+                     content.get_key()))
 
         return content
 

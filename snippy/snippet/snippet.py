@@ -21,12 +21,12 @@ class Snippet(object):
 
         self.logger.debug('creating new snippet')
         snippet = Config.get_content()
-        if snippet[Const.DATA]:
+        if snippet.has_data():
             cause = self.storage.create(snippet)
             if cause == Const.DB_DUPLICATE:
-                snippets = self.storage.search(Const.SNIPPET, content=snippet[Const.DATA])
+                snippets = self.storage.search(Const.SNIPPET, content=snippet.get_data())
                 if len(snippets) == 1:
-                    Config.set_cause('content already exist with digest %.16s' % snippets[0][Const.DIGEST])
+                    Config.set_cause('content already exist with digest %.16s' % snippets[0].get_digest())
                 else:
                     self.logger.error('unexpected number of snippets %d received while searching', len(snippets))
         else:
@@ -91,8 +91,8 @@ class Snippet(object):
             log_string = 'content %.20s' % snippet_data
 
         if len(snippets) == 1:
-            content_digest = snippets[0][Const.DIGEST]
-            self.storage.delete(Const.SNIPPET, content_digest)
+            content_digest = snippets[0].get_digest()
+            self.storage.delete(content_digest)
         elif not snippets:
             Config.set_cause('cannot find snippet to be deleted with %s' % log_string)
         else:

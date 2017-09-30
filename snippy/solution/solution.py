@@ -21,12 +21,12 @@ class Solution(object):
 
         self.logger.debug('creating new solution')
         solution = Config.get_content()
-        if solution:
+        if solution.has_data():
             cause = self.storage.create(solution)
             if cause == Const.DB_DUPLICATE:
                 solutions = self.storage.search(Const.SOLUTION, content=solution[Const.DATA])
                 if len(solutions) == 1:
-                    Config.set_cause('content already exist with digest %.16s' % solutions[0][Const.DIGEST])
+                    Config.set_cause('content already exist with digest %.16s' % solutions[0].get_digest())
                 else:
                     self.logger.error('unexpected number of solutions %d received while searching', len(solutions))
         else:
@@ -71,8 +71,8 @@ class Solution(object):
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
 
         if len(solutions) == 1:
-            content_digest = solutions[0][Const.DIGEST]
-            self.storage.delete(Const.SOLUTION, content_digest)
+            content_digest = solutions[0].get_digest()
+            self.storage.delete(content_digest)
         elif not solutions:
             Config.set_cause('cannot find solution to be deleted with digest %.16s' % content_digest)
         else:
@@ -82,8 +82,8 @@ class Solution(object):
         """Export solutions."""
 
         self.logger.debug('exporting solutions %s', Config.get_operation_file())
-        solution = self.storage.export_content(Const.SOLUTION)
-        Migrate().print_file(solution)
+        solutions = self.storage.export_content(Const.SOLUTION)
+        Migrate().print_file(solutions)
 
     def import_all(self):
         """Import solutions."""

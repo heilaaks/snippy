@@ -7,7 +7,6 @@ import mock
 from snippy.config import Constants as Const
 from snippy.config import Config
 from snippy.storage.database import Sqlite3Db
-from tests.testlib.constant_helper import * # pylint: disable=wildcard-import,unused-wildcard-import
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
@@ -24,8 +23,8 @@ class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase):
 
         references = Snippet().get_references(sliced='0:2')
         keywords = ['foo', 'engine', 'digitalocean']
-        self.sqlite.insert_content(references[0][DATA:TESTING], references[0][DIGEST], references[0][METADATA])
-        self.sqlite.insert_content(references[1][DATA:TESTING], references[1][DIGEST], references[1][METADATA])
+        self.sqlite.insert_content(references[0], references[0].get_digest(), references[0].get_metadata())
+        self.sqlite.insert_content(references[1], references[1].get_digest(), references[1].get_metadata())
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[0], references[0])
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[1], references[1])
         assert len(Database.select_all_snippets()) == 2
@@ -42,8 +41,8 @@ class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase):
 
         references = Snippet().get_references(sliced='0:2')
         keywords = ['foo', 'engine', 'digitalocean']
-        self.sqlite.insert_content(references[0][DATA:TESTING], references[0][DIGEST], references[0][METADATA])
-        self.sqlite.insert_content(references[1][DATA:TESTING], references[1][DIGEST], references[1][METADATA])
+        self.sqlite.insert_content(references[0], references[0].get_digest(), references[0].get_metadata())
+        self.sqlite.insert_content(references[1], references[1].get_digest(), references[1].get_metadata())
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[0], references[0])
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[1], references[1])
         assert len(Database.select_all_snippets()) == 2

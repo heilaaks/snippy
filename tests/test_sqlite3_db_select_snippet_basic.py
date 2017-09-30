@@ -6,7 +6,6 @@ import unittest
 import mock
 from snippy.config import Config
 from snippy.storage.database import Sqlite3Db
-from tests.testlib.constant_helper import * # pylint: disable=wildcard-import,unused-wildcard-import
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
@@ -23,7 +22,7 @@ class TestSqlite3DbSelectSnippetBasic(unittest.TestCase):
 
         references = Snippet().get_references(1)
         keywords = ['foo', 'bar', 'digitalocean']
-        self.sqlite.insert_content(references[0][DATA:TESTING], references[0][DIGEST], references[0][METADATA])
+        self.sqlite.insert_content(references[0], references[0].get_digest(), references[0].get_metadata())
         Snippet().compare_db(self, (self.sqlite.select_content('snippets', keywords))[0], references[0])
         assert len(self.sqlite.select_content('snippets', keywords)) == 1
         self.sqlite.disconnect()

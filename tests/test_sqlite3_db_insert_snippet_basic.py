@@ -6,7 +6,6 @@ import unittest
 import mock
 from snippy.config import Config
 from snippy.storage.database import Sqlite3Db
-from tests.testlib.constant_helper import * # pylint: disable=wildcard-import,unused-wildcard-import
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
@@ -18,7 +17,7 @@ class TestSqlite3DbInsertSnippetBasic(unittest.TestCase):
         """Test that snippet with tags, brief or links is stored."""
 
         references = Snippet().get_references(0)
-        self.sqlite.insert_content(references[0][DATA:TESTING], references[0][DIGEST], references[0][METADATA])
+        self.sqlite.insert_content(references[0], references[0].get_digest(), references[0].get_metadata())
         Snippet().compare_db(self, (Database.select_all_snippets())[0], references[0])
         assert len(Database.select_all_snippets()) == 1
         self.sqlite.disconnect()
@@ -27,7 +26,7 @@ class TestSqlite3DbInsertSnippetBasic(unittest.TestCase):
         """Test that snippet can be added with multiple links."""
 
         references = Snippet().get_references(1)
-        self.sqlite.insert_content(references[0][DATA:TESTING], references[0][DIGEST], references[0][METADATA])
+        self.sqlite.insert_content(references[0], references[0].get_digest(), references[0].get_metadata())
         Snippet().compare_db(self, (Database.select_all_snippets())[0], references[0])
         assert len(Database.select_all_snippets()) == 1
         self.sqlite.disconnect()

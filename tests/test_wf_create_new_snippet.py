@@ -37,6 +37,7 @@ class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few
         snippy = Snippy()
         snippy.run_cli()
         references = Snippet().get_references(0)
+        print(Database.select_all_snippets())
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=references[0].get_digest())[0], references[0])
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, content=references[0].get_data())[0], references[0])
         assert len(snippy.storage.search(Const.SNIPPET, digest=references[0].get_digest())) == 1

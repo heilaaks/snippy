@@ -52,7 +52,7 @@ class Content(object):
     def get_group(self, form=Const.NATIVE_CONTENT): # pylint: disable=unused-argument
         """Return content group."""
 
-        return self.content[Const.BRIEF]
+        return self.content[Const.GROUP]
 
     def get_tags(self, form=Const.NATIVE_CONTENT):
         """Return content tags."""

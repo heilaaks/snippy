@@ -20,7 +20,7 @@ class SnippetHelper(object):
                  Const.SNIPPET,
                  '',
                  None,
-                 '99425f6e97c83897350629a3a5a90ce36db6ff07b658e2c3d695980533286711',
+                 'cf2a161acb1195bb425efc5b09ef92783af41be914bf196a3c8e07e6fc08debd',
                  None,
                  None,
                  """--content 'docker rm --volumes $(docker ps --all --quiet)'

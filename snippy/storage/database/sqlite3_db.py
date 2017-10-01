@@ -98,7 +98,7 @@ class Sqlite3Db(object):
             #    (data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?) AND (category = ?)
             #    ORDER BY id ASC
             if keywords and Config.is_search_all():
-                columns = ['data', 'brief', 'groups', 'tags', 'links']
+                columns = ['data', 'brief', 'groups', 'tags', 'links', 'digest']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
             elif keywords and Config.is_search_grp():
                 columns = ['groups']

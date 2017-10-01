@@ -27,6 +27,9 @@ lint:
 docker: clean clean-db
 	docker build -t heilaaks/snippy .
 
+security-scan:
+	- bandit -r snippy | tee tests/bandit/bandit.txt
+
 clean:
 	find . \( -name \*.pyc -o -name \*.pyo -o -name __pycache__ \) -prune -exec rm -rf {} +
 	rm -drf .cache
@@ -48,4 +51,4 @@ clean:
 clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall dev test coverage docs lint docker clean clean-db
+.PHONY: install upgrade uninstall dev test coverage docs lint docker security-scan clean clean-db

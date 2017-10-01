@@ -54,6 +54,13 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Bandit - security lint for Python
+   $ pip install bandit
+   $ bandit -r snippy
+   ```
+
+
+   ```
    # Running pytests tests
    $ pytest
    ```

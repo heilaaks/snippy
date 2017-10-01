@@ -4,8 +4,8 @@ Workflows
 Searching
 ---------
 
-Printing all examples on console
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Printing all examples on terminal
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 It is possible to print all snippets on screen by using dot in the search
 query. The search is a regexp query but the only special character passed

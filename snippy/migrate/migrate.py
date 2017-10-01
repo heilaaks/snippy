@@ -59,20 +59,20 @@ class Migrate(object):
 
     @staticmethod
     def get_snippet_text(idx, snippet, colors=False):
-        """Format snippets for console or pure text output."""
+        """Format snippets for terminal or pure text output."""
 
 
         text = Const.EMPTY
         data = Const.EMPTY
         links = Const.EMPTY
-        text = text + Migrate._console_header(colors) % (idx, snippet.get_brief(),
-                                                         snippet.get_group(), \
-                                                         snippet.get_digest())
-        text = text + Const.EMPTY.join([Migrate._console_snippet(colors) % (data, line) \
+        text = text + Migrate._terminal_header(colors) % (idx, snippet.get_brief(),
+                                                          snippet.get_group(), \
+                                                          snippet.get_digest())
+        text = text + Const.EMPTY.join([Migrate._terminal_snippet(colors) % (data, line) \
                                         for line in snippet.get_data()])
         text = text + Const.NEWLINE
-        text = Migrate._console_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet.get_tags()))
-        text = text + Const.EMPTY.join([Migrate._console_links(colors) % (links, link) \
+        text = Migrate._terminal_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet.get_tags()))
+        text = text + Const.EMPTY.join([Migrate._terminal_links(colors) % (links, link) \
                                         for link in snippet.get_links()])
         text = text + Const.NEWLINE
 
@@ -81,21 +81,21 @@ class Migrate(object):
 
     @staticmethod
     def get_solution_text(idx, solution, colors=False):
-        """Format solutions for console or pure text output."""
+        """Format solutions for terminal or pure text output."""
 
         text = Const.EMPTY
         data = Const.EMPTY
         links = Const.EMPTY
-        text = text + Migrate._console_header(colors) % (idx, solution.get_brief(),
-                                                         solution.get_group(), \
-                                                         solution.get_digest())
+        text = text + Migrate._terminal_header(colors) % (idx, solution.get_brief(),
+                                                          solution.get_group(), \
+                                                          solution.get_digest())
         text = text + Const.NEWLINE
-        text = Migrate._console_tags(colors) % (text, Const.DELIMITER_TAGS.join(solution.get_tags()))
-        text = text + Const.EMPTY.join([Migrate._console_links(colors) % (links, link) \
+        text = Migrate._terminal_tags(colors) % (text, Const.DELIMITER_TAGS.join(solution.get_tags()))
+        text = text + Const.EMPTY.join([Migrate._terminal_links(colors) % (links, link) \
                                         for link in solution.get_links()])
         text = text + Const.NEWLINE
 
-        text = text + Const.EMPTY.join([Migrate._console_solution(colors) % (data, line) \
+        text = text + Const.EMPTY.join([Migrate._terminal_solution(colors) % (data, line) \
                                         for line in solution.get_data()])
         text = text + Const.NEWLINE
 
@@ -158,32 +158,32 @@ class Migrate(object):
         return snippets
 
     @staticmethod
-    def _console_header(colors=False):
+    def _terminal_header(colors=False):
         """Format content text header."""
 
         return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0m @%s \x1b[0;2m[%.16s]\x1b[0m\n' if colors \
                else '%d. %s @%s [%.16s]\n'
 
     @staticmethod
-    def _console_snippet(colors=False):
+    def _terminal_snippet(colors=False):
         """Format snippet text."""
 
         return '%s   \x1b[91m$\x1b[0m %s\n' if colors else '%s   $ %s\n'
 
     @staticmethod
-    def _console_solution(colors=False):
+    def _terminal_solution(colors=False):
         """Format solution text."""
 
         return '%s   \x1b[91m:\x1b[0m %s\n' if colors else '%s   : %s\n'
 
     @staticmethod
-    def _console_links(colors=False):
+    def _terminal_links(colors=False):
         """Format content links."""
 
         return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   > %s\n'
 
     @staticmethod
-    def _console_tags(colors=False):
+    def _terminal_tags(colors=False):
         """Format content tags."""
 
         return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   # %s\n'

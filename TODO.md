@@ -1,10 +1,9 @@
 ## TODO
    - [ ] Fix updating solution without --solution option causes the content to be created as snippet.
    - [ ] Fix importing invalid message digest. If the digest is not correct, it is blidly imported.
-   - [ ] Why error and exception logs are suddenly visible with default setting without --debug or -vv?
    - [ ] Add tox to run tests on multiple Python versions.
+   - [ ] Add tests for terminal outputs to verify list handling in tags and links.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
-   - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents.
    - [ ] Add digest check when importing data.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
@@ -32,7 +31,7 @@
    - [x] Fixed Python 2.7 compatibility.
    - [x] Changed content to be tuple so that it is bit nicer in the yaml and future processing should be easier.
    - [x] Added new storage location with packaging and import defaults.
-   - [x] Changed order of links and tags in the console output.
+   - [x] Changed order of links and tags in the terminal output.
    - [x] Fixed the pip packaging and added the uninstall in Makefile.
    - [x] Fixed Apache license layout in generated document. Now the lincese is just pure text.
    - [x] Fixed the make docs and _static folder by creating dummy content and changing the name to source.
@@ -69,5 +68,5 @@
    - [x] Added text format export on top of yaml and json.
    - [x] Added multiline command snippets.
    - [x] Added input from editor.
-   - [x] Changed tags to behave like links in exported yaml and json files. Keep console output of tags as string.
+   - [x] Changed tags to behave like links in exported yaml and json files. Keep terminal output of tags as string.
    - [x] Fixed argument testing and printing for tags and find arguments

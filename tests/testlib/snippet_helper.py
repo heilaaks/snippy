@@ -6,7 +6,6 @@ import re
 import six
 from snippy.config import Constants as Const
 from snippy.content import Content
-from tests.testlib.constant_helper import * # pylint: disable=wildcard-import,unused-wildcard-import
 
 
 class SnippetHelper(object):
@@ -57,9 +56,9 @@ class SnippetHelper(object):
         if sliced:
             sliced = sliced.split(':')
             snippets = SnippetHelper.SNIPPETS[int(sliced[0]):int(sliced[1])]
-            snippets = [Content(x[DATA:TESTING]) for x in snippets]
+            snippets = [Content(x[Const.DATA:Const.TESTING]) for x in snippets]
         else:
-            snippets = [Content(SnippetHelper.SNIPPETS[index][DATA:TESTING])]
+            snippets = [Content(SnippetHelper.SNIPPETS[index][Const.DATA:Const.TESTING])]
 
         return tuple(snippets)
 
@@ -68,7 +67,7 @@ class SnippetHelper(object):
         """Get command line arguments from snippets list."""
 
         args = [re.sub(regexp, Const.EMPTY, arg)
-                for arg in re.split("('.*?'| )", SnippetHelper.SNIPPETS[snippet][TESTING], flags=re.DOTALL) if arg.strip()]
+                for arg in re.split("('.*?'| )", SnippetHelper.SNIPPETS[snippet][Const.TESTING], flags=re.DOTALL) if arg.strip()]
 
         # Replace multiple spaces with one. These are coming from the snippet
         # definition that splits for example the link parameter to multiple
@@ -84,14 +83,6 @@ class SnippetHelper(object):
         command = Const.SPACE.join(SnippetHelper.get_command_args(snippet, Const.NEWLINE))
 
         return command
-
-    @staticmethod
-    def get_digest(snippet):
-        """Return digest for specified snippet."""
-
-        digest = SnippetHelper.SNIPPETS[snippet][DIGEST]
-
-        return digest
 
     @staticmethod
     def compare(testcase, snippet, reference):
@@ -127,22 +118,22 @@ class SnippetHelper(object):
         """Compare snippes when they are in database format."""
 
         # Test that all fields excluding id and onwards are equal.
-        testcase.assertEqual(snippet[DATA], reference.get_data(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[BRIEF], reference.get_brief(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[GROUP], reference.get_group(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[TAGS], reference.get_tags(Const.STRING_CONTENT))
-        six.assertCountEqual(testcase, snippet[LINKS], reference.get_links(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[CATEGORY], reference.get_category(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[FILENAME], reference.get_filename(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[DIGEST], reference.get_digest(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[METADATA], reference.get_metadata(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.DATA], reference.get_data(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.BRIEF], reference.get_brief(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.GROUP], reference.get_group(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.TAGS], reference.get_tags(Const.STRING_CONTENT))
+        six.assertCountEqual(testcase, snippet[Const.LINKS], reference.get_links(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.CATEGORY], reference.get_category(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.FILENAME], reference.get_filename(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.DIGEST], reference.get_digest(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.METADATA], reference.get_metadata(Const.STRING_CONTENT))
 
         # Test that tags and links are lists and rest of the fields strings.
-        assert isinstance(snippet[DATA], six.string_types)
-        assert isinstance(snippet[BRIEF], six.string_types)
-        assert isinstance(snippet[GROUP], six.string_types)
-        assert isinstance(snippet[TAGS], six.string_types)
-        assert isinstance(snippet[LINKS], six.string_types)
-        assert isinstance(snippet[CATEGORY], six.string_types)
-        assert isinstance(snippet[FILENAME], six.string_types)
-        assert isinstance(snippet[DIGEST], six.string_types)
+        assert isinstance(snippet[Const.DATA], six.string_types)
+        assert isinstance(snippet[Const.BRIEF], six.string_types)
+        assert isinstance(snippet[Const.GROUP], six.string_types)
+        assert isinstance(snippet[Const.TAGS], six.string_types)
+        assert isinstance(snippet[Const.LINKS], six.string_types)
+        assert isinstance(snippet[Const.CATEGORY], six.string_types)
+        assert isinstance(snippet[Const.FILENAME], six.string_types)
+        assert isinstance(snippet[Const.DIGEST], six.string_types)

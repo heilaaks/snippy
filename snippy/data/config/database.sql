@@ -2,7 +2,7 @@
 
 -- Schema for Snippy application.
 
--- Snippets are short command examples.
+-- Content is short command or solution example.
 create table if not exists contents (
     data        text not null unique,
     brief       text default '',

@@ -8,6 +8,7 @@ import sys
 import sqlite3
 from snippy.config import Constants as Const
 from snippy.logger import Logger
+from snippy.cause import Cause
 from snippy.config import Config
 
 
@@ -42,7 +43,7 @@ class Sqlite3Db(object):
     def insert_content(self, content, digest, utc, metadata=None):
         """Insert content into database."""
 
-        cause = Const.DB_FAILURE
+        cause = Cause.DB_FAILURE
         if self.conn:
             query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, utc, ' +
                      'digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?)')
@@ -59,9 +60,9 @@ class Sqlite3Db(object):
                                             digest,
                                             metadata))
                 self.conn.commit()
-                cause = Const.DB_INSERT_OK
+                cause = Cause.DB_INSERT_OK
             except sqlite3.IntegrityError as exception:
-                cause = Const.DB_DUPLICATE
+                cause = Cause.DB_DUPLICATE
                 self.logger.info('unique constraint violation with content "%s"', content.get_data())
             except sqlite3.Error as exception:
                 self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
@@ -177,7 +178,7 @@ class Sqlite3Db(object):
     def delete_content(self, digest):
         """Delete single content based on given digest."""
 
-        cause = Const.DB_FAILURE
+        cause = Cause.DB_FAILURE
         if self.conn:
             query = ('DELETE FROM contents WHERE digest LIKE ?')
             self.logger.debug('delete content with digest %s', digest)
@@ -185,10 +186,10 @@ class Sqlite3Db(object):
                 self.cursor.execute(query, (digest+'%',))
                 if self.cursor.rowcount == 1:
                     self.conn.commit()
-                    cause = Const.DB_DELETE_OK
+                    cause = Cause.DB_DELETE_OK
                 elif self.cursor.rowcount == 0:
-                    Config.set_cause('cannot find content to be deleted with digest %s' % digest)
-                    cause = Const.DB_ENTRY_NOT_FOUND
+                    Cause.set('cannot find content to be deleted with digest %s' % digest)
+                    cause = Cause.DB_ENTRY_NOT_FOUND
                 else:
                     self.logger.info('unexpected row count %d while deleting with digest %s', self.cursor.rowcount, digest)
             except sqlite3.Error as exception:

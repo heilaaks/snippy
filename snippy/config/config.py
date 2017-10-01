@@ -4,11 +4,11 @@
 
 import re
 import os.path
-import inspect
 import datetime
 import pkg_resources
 from snippy.config import Constants as Const
 from snippy.logger import Logger
+from snippy.cause import Cause
 from snippy.config import Arguments
 from snippy.config import Editor
 from snippy.content import Content
@@ -30,7 +30,6 @@ class Config(object): # pylint: disable=too-many-public-methods
     def _set_config(cls):
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
-        cls.config['exit_code'] = 'OK'
         cls.config['content'] = {}
         cls.config['content']['category'] = cls._parse_content_category()
         cls.config['content']['data'] = cls._parse_content_data()
@@ -297,22 +296,6 @@ class Config(object): # pylint: disable=too-many-public-methods
 
         return cls.config['storage']['in_memory']
 
-    @classmethod
-    def set_cause(cls, cause):
-        """Set failure cause."""
-
-        cls.logger.info('%s from module %s', cause, cls._caller())
-
-        # Only allow one update to get the original cause.
-        if cls.config['exit_code'] == 'OK':
-            cls.config['exit_code'] = 'NOK: ' + cause
-
-    @classmethod
-    def get_exit_cause(cls):
-        """Return exit cause for the tool."""
-
-        return cls.config['exit_code']
-
     @staticmethod
     def get_utc_time():
         """Get UTC time."""
@@ -489,15 +472,8 @@ class Config(object): # pylint: disable=too-many-public-methods
         elif name and ('txt' in extension or 'text' in extension):
             filetype = Const.FILE_TYPE_TEXT
             if cls.is_operation_import():
-                Config.set_cause('unsupported file format "%s" for import operation %s' % (extension, filename))
+                Cause.set('unsupported file format "%s" for import operation %s' % (extension, filename))
         else:
-            Config.set_cause('cannot identify file format for file %s' % filename)
+            Cause.set('cannot identify file format for file %s' % filename)
 
         return (filename, filetype)
-
-    @staticmethod
-    def _caller():
-        caller = inspect.stack()[2]
-        module = inspect.getmodule(caller[0])
-
-        return module.__name__

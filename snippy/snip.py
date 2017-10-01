@@ -3,6 +3,7 @@
 """Snippy - Command and solution management from console."""
 
 from snippy.logger import Logger
+from snippy.cause import Cause
 from snippy.config import Config
 from snippy.storage import Storage
 from snippy.snippet import Snippet
@@ -34,12 +35,12 @@ class Snippy(object):
             self.snippet.run()
             self.solution.run()
         else:
-            Config.set_cause('content category \'all\' is supported only with search operation')
+            Cause.set('content category \'all\' is supported only with search operation')
 
     def release(self):
         """Release session."""
 
-        Logger.exit(self.config.get_exit_cause())
+        Logger.exit(Cause.get())
         self.storage.disconnect()
         self.storage = None
         self.snippet = None

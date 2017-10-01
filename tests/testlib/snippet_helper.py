@@ -47,8 +47,6 @@ class SnippetHelper(object):
                     -l 'https://docs.docker.com/engine/reference/commandline/rm/
                         https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'"""))
 
-
-
     @staticmethod
     def get_references(index=0, sliced=None):
         """Return specified snippet."""

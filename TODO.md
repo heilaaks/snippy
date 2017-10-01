@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Why error and exception logs are suddenly visible with default setting without --debug or -vv?
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.

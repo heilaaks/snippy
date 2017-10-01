@@ -7,6 +7,7 @@ import sys
 import os.path
 from snippy.config import Constants as Const
 from snippy.logger import Logger
+from snippy.cause import Cause
 from snippy.config import Config
 from snippy.content import Content
 
@@ -152,7 +153,7 @@ class Migrate(object):
 
             snippets = Migrate._get_contents(dictionary['content'])
         else:
-            Config.set_cause('cannot read file %s' % filename)
+            Cause.set('cannot read file %s' % filename)
 
         return snippets
 

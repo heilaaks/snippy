@@ -64,11 +64,3 @@ class Constants(object): # pylint: disable=too-few-public-methods
     SEARCH_ALL = 'all'
     SEARCH_TAG = 'tag'
     SEARCH_GRP = 'grp'
-
-    # Database
-    DB_INSERT_OK = 'insert-ok'
-    DB_UPDATE_OK = 'update-ok'
-    DB_DELETE_OK = 'delete-ok'
-    DB_DUPLICATE = 'unique-constraint-violation'
-    DB_FAILURE = 'internal-failure'
-    DB_ENTRY_NOT_FOUND = 'not-found'

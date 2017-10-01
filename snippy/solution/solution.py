@@ -4,6 +4,7 @@
 
 from snippy.config import Constants as Const
 from snippy.logger import Logger
+from snippy.cause import Cause
 from snippy.config import Config
 from snippy.migrate import Migrate
 
@@ -22,14 +23,14 @@ class Solution(object):
         solution = Config.get_content(use_editor=True)
         if solution.has_data():
             cause = self.storage.create(solution)
-            if cause == Const.DB_DUPLICATE:
+            if cause == Cause.DB_DUPLICATE:
                 solutions = self.storage.search(Const.SOLUTION, data=solution.get_data())
                 if len(solutions) == 1:
-                    Config.set_cause('solution already exist with digest %.16s' % solutions[0].get_digest())
+                    Cause.set('solution already exist with digest %.16s' % solutions[0].get_digest())
                 else:
                     self.logger.error('unexpected number of solutions %d received while searching', len(solutions))
         else:
-            Config.set_cause('mandatory content data not defined')
+            Cause.set('mandatory content data not defined')
 
     def search(self):
         """Search solutions."""
@@ -54,7 +55,7 @@ class Solution(object):
             solution = Config.get_content(content=solutions[0], use_editor=True)
             self.storage.update(solution)
         elif not solutions:
-            Config.set_cause('cannot find solution to be updated with digest %.16s' % content_digest)
+            Cause.set('cannot find solution to be updated with digest %.16s' % content_digest)
         else:
             self.logger.error('cannot update multiple soutions with same digest %.16s', content_digest)
 
@@ -72,7 +73,7 @@ class Solution(object):
             content_digest = solutions[0].get_digest()
             self.storage.delete(content_digest)
         elif not solutions:
-            Config.set_cause('cannot find solution to be deleted with digest %.16s' % content_digest)
+            Cause.set('cannot find solution to be deleted with digest %.16s' % content_digest)
         else:
             self.logger.error('cannot delete multiple soutions with same digest %.16s', content_digest)
 

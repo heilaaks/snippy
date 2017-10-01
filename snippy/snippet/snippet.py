@@ -4,6 +4,7 @@
 
 from snippy.config import Constants as Const
 from snippy.logger import Logger
+from snippy.cause import Cause
 from snippy.config import Config
 from snippy.migrate import Migrate
 
@@ -22,14 +23,14 @@ class Snippet(object):
         snippet = Config.get_content()
         if snippet.has_data():
             cause = self.storage.create(snippet)
-            if cause == Const.DB_DUPLICATE:
+            if cause == Cause.DB_DUPLICATE:
                 snippets = self.storage.search(Const.SNIPPET, data=snippet.get_data())
                 if len(snippets) == 1:
-                    Config.set_cause('snippet already exist with digest %.16s' % snippets[0].get_digest())
+                    Cause.set('snippet already exist with digest %.16s' % snippets[0].get_digest())
                 else:
                     self.logger.error('unexpected number of snippets %d received while searching', len(snippets))
         else:
-            Config.set_cause('mandatory snippet data not defined')
+            Cause.set('mandatory snippet data not defined')
 
     def search(self):
         """Search snippets."""
@@ -64,7 +65,7 @@ class Snippet(object):
             snippet = Config.get_content(content=snippets[0], use_editor=True)
             self.storage.update(snippet)
         elif not snippets:
-            Config.set_cause('cannot find snippet to be updated with %s' % log_string)
+            Cause.set('cannot find snippet to be updated with %s' % log_string)
         else:
             self.logger.error('cannot update multiple snippets with same %s', log_string)
 
@@ -89,7 +90,7 @@ class Snippet(object):
             content_digest = snippets[0].get_digest()
             self.storage.delete(content_digest)
         elif not snippets:
-            Config.set_cause('cannot find snippet to be deleted with %s' % log_string)
+            Cause.set('cannot find snippet to be deleted with %s' % log_string)
         else:
             self.logger.error('cannot delete multiple snippets with same %s', log_string)
 

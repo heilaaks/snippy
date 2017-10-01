@@ -7,6 +7,7 @@ import os.path
 import pkg_resources
 from snippy.config import Constants as Const
 from snippy.logger import Logger
+from snippy.cause import Cause
 
 
 class Editor(object): # pylint: disable-all
@@ -46,27 +47,29 @@ class Editor(object): # pylint: disable-all
         template = self._set_template_filename(template)
         template = template.encode('UTF-8')
 
-        editor = os.environ.get('EDITOR', 'vi')
-        self.logger.info('using editor %s', editor)
+        editor = self._get_editor()
+        self.logger.info('using %s as editor', editor)
         with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
             outfile.write(template)
             outfile.flush()
-            call([editor, outfile.name])
-            outfile.seek(0)
-            message = outfile.read()
-
-        self.edited = message.decode('UTF-8')
+            try: 
+                call([editor, outfile.name])
+                outfile.seek(0)
+                message = outfile.read()
+                self.edited = message.decode('UTF-8')
+            except Exception as exception:
+                Cause.set('cannot find editor %s %s' % (editor, exception))
 
     def read_template(self):
         """Return content template."""
 
         template = Const.EMPTY
         if self.content.is_snippet():
-            file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
+            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
         else:
-            file = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
+            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
 
-        with open(file, 'r') as infile:
+        with open(filename, 'r') as infile:
             template = infile.read()
 
         return template
@@ -268,3 +271,20 @@ class Editor(object): # pylint: disable-all
             return value_list
 
         return Const.EMPTY_TUPLE
+
+    def _get_editor(self):
+        """Try to resolve the editor in a secure way."""
+
+        # Runnin code blindly from environment variable is not safe because
+        # the call would execute any command into environment.
+        editor = os.environ.get('EDITOR', 'vi')
+
+        # Avoid usage other than supported editors as of now for security
+        # and functionality reasons. What is the safe way to check the
+        # environment variables? What is the generic way to use editor in
+        # Windows and Mac?
+        if editor != 'vi':
+            self.logger.info('enforcing vi as default editor instead of %s', editor)
+            editor = 'vii'
+
+        return editor

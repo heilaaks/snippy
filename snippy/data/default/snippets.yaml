@@ -1,14 +1,14 @@
 content:
 - brief: Remove all docker containers with volumes
   category: snippets
-  data: !!python/tuple
+  data:
   - docker rm --volumes $(docker ps --all --quiet)
   digest: f4852122e1aa5b28d88181f9852960cc9e991fcc263a2e17f22db2cec98c3d0b
   filename: ''
   group: docker
-  links: !!python/tuple
+  links:
   - https://docs.docker.com/engine/reference/commandline/rm/
-  tags: !!python/tuple
+  tags:
   - cleanup
   - container
   - docker
@@ -17,16 +17,16 @@ content:
   utc: '2017-09-25 12:26:25'
 - brief: Find pattern from files
   category: snippets
-  data: !!python/tuple
+  data:
   - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
   - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'
   - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
   digest: 2cb20b6d2efce97c0c61a657ce33961b015e18ceebc2172add59a0d42d23872c
   filename: ''
   group: linux
-  links: !!python/tuple
+  links:
   - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux
-  tags: !!python/tuple
+  tags:
   - linux
   - search
   utc: '2017-09-25 12:27:20'

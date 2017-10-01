@@ -112,7 +112,7 @@ class Migrate(object):
                 if Config.is_file_type_yaml():
                     import yaml
 
-                    yaml.dump(dictionary_list, outfile, default_flow_style=False)
+                    yaml.safe_dump(dictionary_list, outfile, default_flow_style=False)
                 elif Config.is_file_type_json():
                     import json
 
@@ -139,7 +139,7 @@ class Migrate(object):
                     if Config.is_file_type_yaml():
                         import yaml
 
-                        dictionary = yaml.load(infile)
+                        dictionary = yaml.safe_load(infile)
                     elif Config.is_file_type_json():
                         import json
 

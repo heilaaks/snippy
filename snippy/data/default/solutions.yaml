@@ -1,7 +1,7 @@
 content:
 - brief: Testing docker log drivers
   category: solutions
-  data: !!python/tuple
+  data:
   - '################################################################################'
   - '## BRIEF : Testing docker log drivers'
   - '##'
@@ -94,11 +94,11 @@ content:
   digest: 48a6ca75e5d1f1a45997c749d25f0d4e18ecd4b378a842716c3f0b7b8aa50b12
   filename: kubernetes-docker-log-driver-kafka.txt
   group: docker
-  links: !!python/tuple
+  links:
   - https://github.com/MickayG/moby-kafka-logdriver
   - https://github.com/garo/logs2kafka
   - https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ
-  tags: !!python/tuple
+  tags:
   - docker
   - driver
   - kafka

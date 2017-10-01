@@ -12,6 +12,18 @@ from snippy.logger import Logger
 class Editor(object): # pylint: disable-all
     """Editor based configuration."""
 
+    # Editor inputs
+    DATA_HEAD = '# Add mandatory snippet below.\n'
+    DATA_TAIL = '# Add optional brief description below.\n'
+    BRIEF_HEAD = '# Add optional brief description below.\n'
+    BRIEF_TAIL = '# Add optional single group below.\n'
+    GROUP_HEAD = '# Add optional single group below.\n'
+    GROUP_TAIL = '# Add optional comma separated list of tags below.\n'
+    TAGS_HEAD = '# Add optional comma separated list of tags below.\n'
+    TAGS_TAIL = '# Add optional links below one link per line.\n'
+    LINKS_HEAD = '# Add optional links below one link per line.\n'
+    LINKS_TAIL = '.'
+
     def __init__(self, content, utc):
         self.logger = Logger(__name__).get()
         self.content = content
@@ -64,7 +76,7 @@ class Editor(object): # pylint: disable-all
 
         data = ()
         if self.content.is_snippet():
-            match = re.search('%s(.*)%s' % (Const.EDITOR_DATA_HEAD, Const.EDITOR_DATA_TAIL), self.edited, re.DOTALL)
+            match = re.search('%s(.*)%s' % (Editor.DATA_HEAD, Editor.DATA_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
         else:
@@ -78,7 +90,7 @@ class Editor(object): # pylint: disable-all
 
         brief = Const.EMPTY
         if self.content.is_snippet():
-            match = re.search('%s(.*)%s' % (Const.EDITOR_BRIEF_HEAD, Const.EDITOR_BRIEF_TAIL), self.edited, re.DOTALL)
+            match = re.search('%s(.*)%s' % (Editor.BRIEF_HEAD, Editor.BRIEF_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
                 brief = Const.DELIMITER_SPACE.join(lines)
@@ -95,7 +107,7 @@ class Editor(object): # pylint: disable-all
 
         group = Const.EMPTY
         if self.content.is_snippet():
-            match = re.search('%s(.*)%s' % (Const.EDITOR_GROUP_HEAD, Const.EDITOR_GROUP_TAIL), self.edited, re.DOTALL)
+            match = re.search('%s(.*)%s' % (Editor.GROUP_HEAD, Editor.GROUP_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
                 group = Const.DELIMITER_SPACE.join(lines)
@@ -113,7 +125,7 @@ class Editor(object): # pylint: disable-all
 
         tags = ()
         if self.content.is_snippet():
-            match = re.search('%s(.*)%s' % (Const.EDITOR_TAGS_HEAD, Const.EDITOR_TAGS_TAIL), self.edited, re.DOTALL)
+            match = re.search('%s(.*)%s' % (Editor.TAGS_HEAD, Editor.TAGS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 tags = Editor.get_keywords([match.group(1)])
         else:
@@ -130,7 +142,7 @@ class Editor(object): # pylint: disable-all
         # In case of solution, the links are read from the whole content data.
         links = ()
         if self.content.is_snippet():
-            match = re.search('%s(.*)%s' % (Const.EDITOR_LINKS_HEAD, Const.EDITOR_LINKS_TAIL), self.edited, re.DOTALL)
+            match = re.search('%s(.*)%s' % (Editor.LINKS_HEAD, Editor.LINKS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 links = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
         else:

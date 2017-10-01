@@ -72,15 +72,3 @@ class Constants(object): # pylint: disable=too-few-public-methods
     DB_DUPLICATE = 'unique-constraint-violation'
     DB_FAILURE = 'internal-failure'
     DB_ENTRY_NOT_FOUND = 'not-found'
-
-    # Editor inputs
-    EDITOR_DATA_HEAD = '# Add mandatory snippet below.\n'
-    EDITOR_DATA_TAIL = '# Add optional brief description below.\n'
-    EDITOR_BRIEF_HEAD = '# Add optional brief description below.\n'
-    EDITOR_BRIEF_TAIL = '# Add optional single group below.\n'
-    EDITOR_GROUP_HEAD = '# Add optional single group below.\n'
-    EDITOR_GROUP_TAIL = '# Add optional comma separated list of tags below.\n'
-    EDITOR_TAGS_HEAD = '# Add optional comma separated list of tags below.\n'
-    EDITOR_TAGS_TAIL = '# Add optional links below one link per line.\n'
-    EDITOR_LINKS_HEAD = '# Add optional links below one link per line.\n'
-    EDITOR_LINKS_TAIL = '.'

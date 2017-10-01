@@ -25,7 +25,7 @@ class Solution(object):
             if cause == Const.DB_DUPLICATE:
                 solutions = self.storage.search(Const.SOLUTION, data=solution.get_data())
                 if len(solutions) == 1:
-                    Config.set_cause('content already exist with digest %.16s' % solutions[0].get_digest())
+                    Config.set_cause('solution already exist with digest %.16s' % solutions[0].get_digest())
                 else:
                     self.logger.error('unexpected number of solutions %d received while searching', len(solutions))
         else:

@@ -471,6 +471,8 @@ python snip.py search --sgrp . # Returns three snippets
 4. Search with content
 python snip.py search -c 'docker rm --volumes $(docker ps --all --quiet)'
 
+5. Search content with digest
+
 ######################
 ## Exporting snipppets
 ######################

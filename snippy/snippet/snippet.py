@@ -25,7 +25,7 @@ class Snippet(object):
             if cause == Const.DB_DUPLICATE:
                 snippets = self.storage.search(Const.SNIPPET, data=snippet.get_data())
                 if len(snippets) == 1:
-                    Config.set_cause('content already exist with digest %.16s' % snippets[0].get_digest())
+                    Config.set_cause('snippet already exist with digest %.16s' % snippets[0].get_digest())
                 else:
                     self.logger.error('unexpected number of snippets %d received while searching', len(snippets))
         else:

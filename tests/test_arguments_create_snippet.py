@@ -3,6 +3,7 @@
 """test_arguments_create_snippet.py: Test command line argumens for creating new snippets."""
 
 import sys
+from snippy.config import Constants as Const
 from snippy.config import Arguments
 from tests.testlib.arguments_helper import ArgumentsHelper
 
@@ -16,7 +17,7 @@ class TestArgumentsCreateSnippet(object):
         sys.argv = ['snippy', 'create']
         obj = Arguments()
         assert obj.get_operation() == 'create'
-        assert obj.get_content_category() == 'snippets'
+        assert obj.get_content_category() == Const.SNIPPET
         assert obj.get_content_data() == ''
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == []

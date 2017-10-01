@@ -21,9 +21,9 @@ class Constants(object): # pylint: disable=too-few-public-methods
     # Digest
     DIGEST_MIN_LENGTH = 16
 
-    # Content categories that must match SQL table names.
-    SNIPPET = 'snippets'
-    SOLUTION = 'solutions'
+    # Content categories.
+    SNIPPET = 'snippet'
+    SOLUTION = 'solution'
     ALL = 'all'
 
     # Content delimiters

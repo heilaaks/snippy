@@ -9,7 +9,7 @@ create table if not exists contents (
     groups      text default '',
     tags        text default '',
     links       text default '',
-    category    text default 'snippets',
+    category    text default 'snippet',
     filename    text default '',
     utc         datetime default current_timestamp,
     digest      blob(64),

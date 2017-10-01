@@ -1,6 +1,6 @@
 content:
 - brief: Testing docker log drivers
-  category: solutions
+  category: solution
   data:
   - '################################################################################'
   - '## BRIEF : Testing docker log drivers'

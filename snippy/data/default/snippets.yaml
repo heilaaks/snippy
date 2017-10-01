@@ -1,6 +1,6 @@
 content:
 - brief: Remove all docker containers with volumes
-  category: snippets
+  category: snippet
   data:
   - docker rm --volumes $(docker ps --all --quiet)
   digest: cf2a161acb1195bb425efc5b09ef92783af41be914bf196a3c8e07e6fc08debd
@@ -16,7 +16,7 @@ content:
   - moby
   utc: '2017-10-01 11:53:08'
 - brief: Find pattern from files
-  category: snippets
+  category: snippet
   data:
   - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
   - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'

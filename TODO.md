@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Fix import content that already exist that leads to NOK cause. In this case it should silenty be ok?
    - [ ] Fix updating solution without --solution option causes the content to be created as snippet.
    - [ ] Fix importing invalid message digest. If the digest is not correct, it is blidly imported.
    - [ ] Add tox to run tests on multiple Python versions.

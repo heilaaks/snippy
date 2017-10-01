@@ -3,7 +3,6 @@
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Add tests for console and file outputs to verify list handling in tags and links.
    - [ ] Update documents.
-   - [ ] Avoid string formatting when passing the log string to logger. Pass just the parameters for performance.
    - [ ] Add digest check when importing data.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix importing the same data again. There could be a notice if the content already exist.
@@ -15,6 +14,7 @@
    - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
+   - [x] Changed log string formatting to avoid doing the formatting with '.format()' when passing the string.
    - [x] Added docker container for the snippy.
    - [x] Fixed importing unknown file that terminates with exception.
    - [x] Fixed importing utc timestamps. The timestamp is not created again when content is imported.

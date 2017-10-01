@@ -222,7 +222,7 @@ class Sqlite3Db(object):
             with open(Config.get_storage_schema(), 'rt') as schema_file:
                 schema = schema_file.read()
                 conn.executescript(schema)
-            self.logger.debug('sqlite3 database persisted in {:s}'.format(location))
+            self.logger.debug('sqlite3 database persisted in %s', location)
         except sqlite3.Error as exception:
             self.logger.exception('creating sqlite3 database failed with exception "%s"', exception)
 
@@ -238,9 +238,9 @@ class Sqlite3Db(object):
             if os.path.exists(Config.get_storage_path()) and os.access(Config.get_storage_path(), os.W_OK):
                 location = Config.get_storage_file()
             else:
-                self.logger.error('storage path does not exist or is not accessible: {:s}'.format(Config.get_storage_path()))
+                self.logger.error('storage path does not exist or is not accessible: %s', Config.get_storage_path())
 
-                sys.exit('storage path does not exist or is not accessible: {:s}'.format(Config.get_storage_path()))
+                sys.exit('storage path does not exist or is not accessible: %s' % Config.get_storage_path())
 
         return location
 

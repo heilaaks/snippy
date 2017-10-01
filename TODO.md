@@ -1,4 +1,6 @@
 ## TODO
+   - [ ] Fix updaring solution without --solution option. The updates ok but the category is marked as snippet.
+   - [ ] Fix importing invalid message digest. If the digest is not correct, it is blidly imported.
    - [ ] Why error and exception logs are suddenly visible with default setting without --debug or -vv?
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?

@@ -122,7 +122,7 @@ class Migrate(object):
                     outfile.write(Migrate.get_terminal_text(contents, colors=False))
                 else:
                     cls.logger.info('unknown export format')
-            except (yaml.YAMLError, TypeError) as exception:
+            except (TypeError, ValueError, yaml.YAMLError) as exception:
                 cls.logger.exception('fatal failure to generate formatted export file "%s"', exception)
                 sys.exit()
 
@@ -146,7 +146,7 @@ class Migrate(object):
                         dictionary = json.load(infile)
                     else:
                         cls.logger.info('unknown export format')
-                except (yaml.YAMLError, TypeError) as exception:
+                except (TypeError, ValueError, yaml.YAMLError) as exception:
                     cls.logger.exception('fatal exception while loading the import file %s "%s"', filename, exception)
                     sys.exit()
 

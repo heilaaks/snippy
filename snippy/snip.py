@@ -35,12 +35,12 @@ class Snippy(object):
             self.snippet.run()
             self.solution.run()
         else:
-            Cause.set('content category \'all\' is supported only with search operation')
+            Cause.set_text('content category \'all\' is supported only with search operation')
 
     def release(self):
         """Release session."""
 
-        Logger.exit(Cause.get())
+        Logger.exit(Cause.get_text())
         self.storage.disconnect()
         self.storage = None
         self.snippet = None

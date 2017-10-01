@@ -9,39 +9,26 @@ from snippy.logger import Logger
 class Cause(object):
     """Cause code management."""
 
-    # Cause: ok
     ALL_OK = 'OK'
 
-    # Cause: Database
-    DB_INSERT_OK = 'insert-ok'
-    DB_UPDATE_OK = 'update-ok'
-    DB_DELETE_OK = 'delete-ok'
-    DB_DUPLICATE = 'unique-constraint-violation'
-    DB_FAILURE = 'internal-failure'
-    DB_ENTRY_NOT_FOUND = 'not-found'
-
-    # Cause: Editor
-    EDITOR_FAILURE = 'editor-internal-failure'
-    EDITOR_NOT_SUPPORTED = 'editor-not-supported'
-
-    cause = ALL_OK
+    cause_text = ALL_OK
     logger = Logger(__name__).get()
 
     @classmethod
-    def set(cls, cause):
+    def set_text(cls, cause_text):
         """Set failure cause."""
 
-        cls.logger.info('%s from module %s', cause, cls._caller())
+        cls.logger.info('%s from module %s', cause_text, cls._caller())
 
         # Only allow one update to get the original cause.
-        if cls.cause == Cause.ALL_OK:
-            cls.cause = 'NOK: ' + cause
+        if cls.cause_text == Cause.ALL_OK:
+            cls.cause_text = 'NOK: ' + cause_text
 
     @classmethod
-    def get(cls):
-        """Return exit cause for the tool."""
+    def get_text(cls):
+        """Return cause in text format."""
 
-        return cls.cause
+        return cls.cause_text
 
     @staticmethod
     def _caller():

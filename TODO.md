@@ -1,5 +1,5 @@
 ## TODO
-   - [ ] Fix updaring solution without --solution option. The updates ok but the category is marked as snippet.
+   - [ ] Fix updating solution without --solution option causes the content to be created as snippet.
    - [ ] Fix importing invalid message digest. If the digest is not correct, it is blidly imported.
    - [ ] Why error and exception logs are suddenly visible with default setting without --debug or -vv?
    - [ ] Add tox to run tests on multiple Python versions.
@@ -17,6 +17,7 @@
    - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
+   - [x] Changed cause management to allow the code flow with empty defaults till the end.
    - [x] Changed log string formatting to avoid doing the formatting with '.format()' when passing the string.
    - [x] Added docker container for the snippy.
    - [x] Fixed importing unknown file that terminates with exception.

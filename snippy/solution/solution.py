@@ -22,15 +22,9 @@ class Solution(object):
         self.logger.debug('creating new solution')
         solution = Config.get_content(use_editor=True)
         if solution.has_data():
-            cause = self.storage.create(solution)
-            if cause == Cause.DB_DUPLICATE:
-                solutions = self.storage.search(Const.SOLUTION, data=solution.get_data())
-                if len(solutions) == 1:
-                    Cause.set('solution already exist with digest %.16s' % solutions[0].get_digest())
-                else:
-                    self.logger.error('unexpected number of solutions %d received while searching', len(solutions))
+            self.storage.create(solution)
         else:
-            Cause.set('mandatory content data not defined')
+            Cause.set_text('mandatory solution data not defined')
 
     def search(self):
         """Search solutions."""
@@ -55,9 +49,9 @@ class Solution(object):
             solution = Config.get_content(content=solutions[0], use_editor=True)
             self.storage.update(solution)
         elif not solutions:
-            Cause.set('cannot find solution to be updated with digest %.16s' % content_digest)
+            Cause.set_text('cannot find solution to be updated with digest {:.16}'.format(content_digest))
         else:
-            self.logger.error('cannot update multiple soutions with same digest %.16s', content_digest)
+            Cause.set_text('cannot update multiple soutions with same digest {:.16}'.format(content_digest))
 
     def delete(self):
         """Delete solutions."""
@@ -73,9 +67,9 @@ class Solution(object):
             content_digest = solutions[0].get_digest()
             self.storage.delete(content_digest)
         elif not solutions:
-            Cause.set('cannot find solution to be deleted with digest %.16s' % content_digest)
+            Cause.set_text('cannot find solution to be deleted with digest {:.16}'.format(content_digest))
         else:
-            self.logger.error('cannot delete multiple soutions with same digest %.16s', content_digest)
+            Cause.set_text('cannot delete multiple soutions with same digest {:.16}'.format(content_digest))
 
     def export_all(self):
         """Export solutions."""

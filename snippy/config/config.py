@@ -472,8 +472,8 @@ class Config(object): # pylint: disable=too-many-public-methods
         elif name and ('txt' in extension or 'text' in extension):
             filetype = Const.FILE_TYPE_TEXT
             if cls.is_operation_import():
-                Cause.set('unsupported file format "%s" for import operation %s' % (extension, filename))
+                Cause.set_text('unsupported file format {} for import operation {}'.format(extension, filename))
         else:
-            Cause.set('cannot identify file format for file %s' % filename)
+            Cause.set_text('cannot identify file format for file {}'.format(filename))
 
         return (filename, filetype)

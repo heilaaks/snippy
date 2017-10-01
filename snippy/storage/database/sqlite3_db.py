@@ -4,7 +4,6 @@
 
 import os
 import re
-import sys
 import sqlite3
 from snippy.config import Constants as Const
 from snippy.logger import Logger
@@ -43,7 +42,6 @@ class Sqlite3Db(object):
     def insert_content(self, content, digest, utc, metadata=None):
         """Insert content into database."""
 
-        cause = Cause.DB_FAILURE
         if self.conn:
             query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, utc, ' +
                      'digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?)')
@@ -60,16 +58,12 @@ class Sqlite3Db(object):
                                             digest,
                                             metadata))
                 self.conn.commit()
-                cause = Cause.DB_INSERT_OK
             except sqlite3.IntegrityError as exception:
-                cause = Cause.DB_DUPLICATE
-                self.logger.info('unique constraint violation with content "%s"', content.get_data())
+                Cause.set_text('content data already exist with digest {:.16}'.format(self._get_db_digest(content)))
             except sqlite3.Error as exception:
-                self.logger.exception('inserting into sqlite3 database failed with exception "%s"', exception)
+                Cause.set_text('inserting into database failed with exception {}'.format(exception))
         else:
-            self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
-
-        return cause
+            Cause.set_text('internal error prevented inserting into database')
 
     def bulk_insert_content(self, contents):
         """Insert multiple contents into database."""
@@ -98,6 +92,8 @@ class Sqlite3Db(object):
             #    (data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?) AND (category = ?) OR
             #    (data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ?) AND (category = ?)
             #    ORDER BY id ASC
+            query = ()
+            qargs = []
             if keywords and Config.is_search_all():
                 columns = ['data', 'brief', 'groups', 'tags', 'links', 'digest']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
@@ -114,17 +110,16 @@ class Sqlite3Db(object):
                 query = ('SELECT * FROM contents WHERE data=?')
                 qargs = [Const.DELIMITER_DATA.join(map(str, data))]
             else:
-                self.logger.error('exiting because of internal error where search query was not defined')
-                sys.exit(1)
+                Cause.set_text('internal error where search query was not defined')
 
             self.logger.debug('running select query "%s"', query)
             try:
                 self.cursor.execute(query, qargs)
                 rows = self.cursor.fetchall()
             except sqlite3.Error as exception:
-                self.logger.exception('selecting from sqlite3 database failed with exception "%s"', exception)
+                Cause.set_text('selecting from database failed with exception {}'.format(exception))
         else:
-            self.logger.error('sqlite3 database connection did not exist while selecting records was execured')
+            Cause.set_text('internal error prevented searching from database')
 
         self.logger.debug('selected rows %s', rows)
 
@@ -143,9 +138,9 @@ class Sqlite3Db(object):
 
                 rows = self.cursor.fetchall()
             except sqlite3.Error as exception:
-                self.logger.exception('deleting from sqlite3 database failed with exception "%s"', exception)
+                Cause.set_text('selecting all from database failed with exception {}'.format(exception))
         else:
-            self.logger.error('sqlite3 database connection did not exist while all entries were being queried')
+            Cause.set_text('internal error prevented selecting all content from database')
 
         return rows
 
@@ -171,14 +166,13 @@ class Sqlite3Db(object):
                                             content.get_digest(Const.STRING_CONTENT)))
                 self.conn.commit()
             except sqlite3.Error as exception:
-                self.logger.exception('updating sqlite3 database failed with exception "%s"', exception)
+                Cause.set_text('updating database failed with exception {}'.format(exception))
         else:
-            self.logger.error('sqlite3 database connection did not exist while new entry was being insert')
+            Cause.set_text('internal error prevented updaring content in database')
 
     def delete_content(self, digest):
         """Delete single content based on given digest."""
 
-        cause = Cause.DB_FAILURE
         if self.conn:
             query = ('DELETE FROM contents WHERE digest LIKE ?')
             self.logger.debug('delete content with digest %s', digest)
@@ -186,18 +180,14 @@ class Sqlite3Db(object):
                 self.cursor.execute(query, (digest+'%',))
                 if self.cursor.rowcount == 1:
                     self.conn.commit()
-                    cause = Cause.DB_DELETE_OK
                 elif self.cursor.rowcount == 0:
-                    Cause.set('cannot find content to be deleted with digest %s' % digest)
-                    cause = Cause.DB_ENTRY_NOT_FOUND
+                    Cause.set_text('cannot find content to be deleted with digest {:.16}'.format(digest))
                 else:
                     self.logger.info('unexpected row count %d while deleting with digest %s', self.cursor.rowcount, digest)
             except sqlite3.Error as exception:
-                self.logger.exception('deleting from sqlite3 database failed with exception "%s"', exception)
+                Cause.set_text('deleting from database failed with exception {}'.format(exception))
         else:
-            self.logger.error('sqlite3 database connection did not exist while content was being deleted')
-
-        return cause
+            Cause.set_text('internal error prevented deleting content from database')
 
     def debug(self):
         """Dump the whole database."""
@@ -207,12 +197,12 @@ class Sqlite3Db(object):
                 self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
                 self.logger.debug('sqlite3 dump %s', self.cursor.fetchall())
             except sqlite3.Error as exception:
-                self.logger.exception('dumping sqlite3 database failed with exception "%s"', exception)
+                Cause.set_text('dumping database failed with exception {}'.format(exception))
 
     def _create_db(self):
         """Create the database."""
 
-        location = self._get_db_location()
+        location = Sqlite3Db._get_db_location()
         try:
             if not Const.PYTHON2:
                 conn = sqlite3.connect(location, check_same_thread=False, uri=True)
@@ -225,23 +215,23 @@ class Sqlite3Db(object):
                 conn.executescript(schema)
             self.logger.debug('sqlite3 database persisted in %s', location)
         except sqlite3.Error as exception:
-            self.logger.exception('creating sqlite3 database failed with exception "%s"', exception)
+            Cause.set_text('creating database failed with exception {}'.format(exception))
 
         return (conn, cursor)
 
-    def _get_db_location(self):
+    @staticmethod
+    def _get_db_location():
         """Get the location where there the database is going to be stored."""
 
-        location = ''
+        location = Const.EMPTY
+
         if Config.is_storage_in_memory():
             location = "file::memory:?cache=shared"
         else:
             if os.path.exists(Config.get_storage_path()) and os.access(Config.get_storage_path(), os.W_OK):
                 location = Config.get_storage_file()
             else:
-                self.logger.error('storage path does not exist or is not accessible: %s', Config.get_storage_path())
-
-                sys.exit('storage path does not exist or is not accessible: %s' % Config.get_storage_path())
+                Cause.set_text('storage path does not exist or is not accessible: {}'.format(Config.get_storage_path()))
 
         return location
 
@@ -275,3 +265,16 @@ class Sqlite3Db(object):
         query = query + 'ORDER BY id ASC'
 
         return (query, query_args)
+
+    def _get_db_digest(self, content):
+        """Return digest of given content from database."""
+
+        digest = Const.EMPTY
+        category = content.get_category(Const.STRING_CONTENT)
+        contents = self.select_content(category, data=content.get_data())
+        if len(contents) == 1:
+            digest = contents[0][Const.DIGEST]
+        else:
+            self.logger.error('unexpected number %d of %s received while searching', len(contents), category)
+
+        return digest

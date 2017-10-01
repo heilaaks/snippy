@@ -22,15 +22,9 @@ class Snippet(object):
         self.logger.debug('creating new snippet')
         snippet = Config.get_content()
         if snippet.has_data():
-            cause = self.storage.create(snippet)
-            if cause == Cause.DB_DUPLICATE:
-                snippets = self.storage.search(Const.SNIPPET, data=snippet.get_data())
-                if len(snippets) == 1:
-                    Cause.set('snippet already exist with digest %.16s' % snippets[0].get_digest())
-                else:
-                    self.logger.error('unexpected number of snippets %d received while searching', len(snippets))
+            self.storage.create(snippet)
         else:
-            Cause.set('mandatory snippet data not defined')
+            Cause.set_text('mandatory snippet data not defined')
 
     def search(self):
         """Search snippets."""
@@ -65,9 +59,9 @@ class Snippet(object):
             snippet = Config.get_content(content=snippets[0], use_editor=True)
             self.storage.update(snippet)
         elif not snippets:
-            Cause.set('cannot find snippet to be updated with %s' % log_string)
+            Cause.set_text('cannot find snippet to be updated with %s' % log_string)
         else:
-            self.logger.error('cannot update multiple snippets with same %s', log_string)
+            Cause.set_text('cannot update multiple snippets with same {}'.format(log_string))
 
     def delete(self):
         """Delete snippet."""
@@ -90,9 +84,9 @@ class Snippet(object):
             content_digest = snippets[0].get_digest()
             self.storage.delete(content_digest)
         elif not snippets:
-            Cause.set('cannot find snippet to be deleted with %s' % log_string)
+            Cause.set_text('cannot find snippet to be deleted with %s' % log_string)
         else:
-            self.logger.error('cannot delete multiple snippets with same %s', log_string)
+            Cause.set_text('cannot delete multiple snippets with same {}'.format(log_string))
 
     def export_all(self):
         """Export snippets."""

@@ -153,7 +153,7 @@ class Migrate(object):
 
             snippets = Migrate._get_contents(dictionary['content'])
         else:
-            Cause.set('cannot read file %s' % filename)
+            Cause.set_text('cannot read file {}'.format(filename))
 
         return snippets
 

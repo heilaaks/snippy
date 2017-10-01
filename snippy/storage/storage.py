@@ -26,9 +26,7 @@ class Storage(object):
 
         utc = Config.get_utc_time()
         digest = content.compute_digest()
-        cause = self.database.insert_content(content, digest, utc)
-
-        return cause
+        self.database.insert_content(content, digest, utc)
 
     def search(self, category, keywords=None, digest=None, data=None):
         """Search content."""
@@ -48,9 +46,7 @@ class Storage(object):
     def delete(self, digest):
         """Delete content."""
 
-        cause = self.database.delete_content(digest)
-
-        return cause
+        self.database.delete_content(digest)
 
     def export_content(self, category):
         """Export content."""

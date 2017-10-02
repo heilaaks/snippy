@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_wf_create_new_snippet.py: Test workflows for creating new snippets."""
+"""test_wf_create_new_snippet.py: Test workflows for creating snippets."""
 
 import sys
 import unittest
@@ -12,15 +12,15 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
 
-class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
-    """Test workflows for creating new snippets."""
+class TestWorkflowCreateSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
+    """Test workflows for creating snippets."""
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     def test_creating_new_snippet_from_command_line(self, mock__get_db_location):
         """Create snippet from command line with all parameters.
 
         Workflow:
-            @ creating snippet
+            @ create snippet
         Execution:
             $ python snip.py create SnippetHelper().get_snippet(0)
         Expected results:
@@ -37,7 +37,6 @@ class TestWorkflowCreateNewSnippet(unittest.TestCase): # pylint: disable=too-few
         snippy = Snippy()
         snippy.run_cli()
         references = Snippet().get_references(0)
-        print(Database.select_all_snippets())
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=references[0].get_digest())[0], references[0])
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=references[0].get_data())[0], references[0])
         assert len(snippy.storage.search(Const.SNIPPET, digest=references[0].get_digest())) == 1

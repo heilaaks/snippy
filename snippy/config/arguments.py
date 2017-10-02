@@ -141,6 +141,12 @@ class Arguments(object):
         Arguments.args = parser.parse_args()
 
     @classmethod
+    def reset(cls):
+        """Reset the arguments."""
+
+        Arguments.args = {}
+
+    @classmethod
     def get_operation(cls):
         """Return the requested operation for the content."""
 

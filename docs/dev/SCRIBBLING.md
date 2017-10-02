@@ -177,6 +177,9 @@ grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
 
     # Pytest
     > https://media.readthedocs.org/pdf/pytest/3.0.2/pytest.pdf
+    
+    # Mocking cookbook
+    > http://chase-seibert.github.io/blog/2015/06/25/python-mocking-cookbook.html
 
 #######################################
 ## Tox
@@ -193,6 +196,13 @@ grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
     > https://stackoverflow.com/questions/779495/python-access-data-in-package-subdirectory
     > http://peterdowns.com/posts/first-time-with-pypi.html
     > https://testpypi.python.org/pypi?%3Aaction=register_form
+
+#######################################
+## Security
+#######################################
+
+    # File security
+    > https://security.openstack.org/guidelines/dg_using-temporary-files-securely.html
 
 #######################################
 ## PyPI

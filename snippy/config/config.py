@@ -72,6 +72,16 @@ class Config(object): # pylint: disable=too-many-public-methods
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
+    def reset(cls):
+        """Reset the configuration."""
+
+        Config.args.reset()
+        Config.args = {}
+        Config.config = {}
+
+        return Config()
+
+    @classmethod
     def get_content(cls, content=None, use_editor=None):
         """Return content after it has been optionally edited."""
 

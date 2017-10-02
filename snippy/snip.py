@@ -37,6 +37,13 @@ class Snippy(object):
         else:
             Cause.set_text('content category \'all\' is supported only with search operation')
 
+    def reset(self):
+        """Reset session."""
+
+        self.config = Config.reset()
+        self.snippet = Snippet(self.storage)
+        self.solution = Solution(self.storage)
+
     def release(self):
         """Release session."""
 

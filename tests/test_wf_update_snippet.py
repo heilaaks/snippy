@@ -20,7 +20,7 @@ class TestWorkflowUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-pu
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     def test_updating_snippet_with_digest(self, mock_get_db_location, mock_call_editor):
-        """Updated snippet from command line based on with digest.
+        """Updated snippet from command line based on digest.
 
         Workflow:
             @ update snippet
@@ -58,7 +58,7 @@ class TestWorkflowUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-pu
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=merged.get_digest())[0], merged)
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest='05cee463e8adc32')[0], merged)
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest='%.16s' % merged.get_digest())[0], merged)
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=updates.get_data())[0], merged)
         assert len(snippy.storage.search(Const.SNIPPET, data=merged.get_data())) == 1
 

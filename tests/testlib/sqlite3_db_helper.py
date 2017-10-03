@@ -6,6 +6,7 @@ import sqlite3
 import os.path
 import pkg_resources
 from snippy.config import Constants as Const
+from snippy.storage import Storage
 
 
 class Sqlite3DbHelper(object):
@@ -23,6 +24,18 @@ class Sqlite3DbHelper(object):
         conn.close()
 
         return rows
+
+    @staticmethod
+    def get_contents():
+        """Return database as content tuple."""
+
+        conn, cursor = Sqlite3DbHelper._connect_db()
+        cursor.execute('SELECT * FROM contents')
+        rows = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        return Storage()._get_contents(rows) # pylint: disable=protected-access
 
     @staticmethod
     def delete_all_snippets():

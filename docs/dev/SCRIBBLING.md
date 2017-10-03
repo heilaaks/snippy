@@ -172,6 +172,13 @@ grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
 
 
 #######################################
+## Formatting
+#######################################
+
+    # Colors
+    > https://github.com/shiena/ansicolor/blob/master/README.md
+
+#######################################
 ## Pytest
 #######################################
 
@@ -341,8 +348,7 @@ https://docs.docker.com/engine/reference/commandline/rm/
 ########################
 ## Creating new snippets
 ########################
-https://github.com/shiena/ansicolor/blob/master/README.md
-1. Create snippet from command line with all parameters
+1. Create snippet from command line with all parameters (DONE)
 python snip.py create --content 'docker rm -v $(docker ps -a -q)' --brief 'Remove all docker containers' --group 'docker' --tags docker,container,cleanup --links 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 
 2. Create new snippet from command line with only mandatory parameter content
@@ -397,7 +403,7 @@ python snip.py create
 ## Updating snippets
 ####################
 
-1. Update snippet content with only mandatory parameters with digest
+1. Update snippet content with only mandatory parameters with digest (DONE)
 python snip.py create -c 'docker rm -v $(docker ps -a -q)'
 python snip.py update --digest 22c0ca5bbc9797b
 
@@ -427,7 +433,7 @@ python snip.py update -c '111111111111111'
 ## Deleting snippets
 ####################
 
-1. Delete snippet with digest
+1. Delete snippet with digest (DONE)
 python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'moby' -t moby,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
@@ -446,7 +452,6 @@ python snip.py delete --digest 111111111111111
 5. Test that empty digest does not delete snippet when there is only one snippet
 
 6. Test that deleting snippet requires at least 16 character hash to make sure that user does not accidentally use e.g. '2' that would delete all snippets which hash is starting with '2'.
-
 
 #####################
 ## Searching snippets

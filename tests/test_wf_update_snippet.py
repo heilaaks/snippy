@@ -6,6 +6,7 @@ import sys
 import unittest
 import mock
 from snippy.snip import Snippy
+from snippy.cause import Cause
 from snippy.config import Constants as Const
 from snippy.config import Editor
 from snippy.storage.database import Sqlite3Db
@@ -24,12 +25,17 @@ class TestWorkflowUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-pu
         Workflow:
             @ update snippet
         Execution:
-            $ python snip.py update SnippetHelper().get_snippet(0)
+            $ python snip.py create SnippetHelper().get_snippet(0)
+            $ python snip.py update -d 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
         Expected results:
             1 Snippet can be updated based on digest.
             2 Snippet is updated with editor when only digest option is provided.
             3 Only content data gets updated and remaining fields are not changed.
-            4 Exit cause is OK.
+            4 Updated content can be found with new digest in long format.
+            5 Updated content can be found with new digest in short format.
+            6 Updated content can be found with new data.
+            7 Only one entry exist in storage after update operation
+            8 Exit cause is OK.
         """
 
         initial = Snippet().get_references(0)
@@ -41,16 +47,22 @@ class TestWorkflowUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-pu
         # Create original snippet.
         sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
         snippy = Snippy()
-        snippy.run_cli()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())[0], initial)
         assert len(snippy.storage.search(Const.SNIPPET, data=initial.get_data())) == 1
 
         # Update original snippet based on digest. Only content data is updated.
         sys.argv = ['snippy', 'update', '-d', initial.get_digest()]
         snippy.reset()
-        snippy.run_cli()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=merged.get_digest())[0], merged)
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest='05cee463e8adc32')[0], merged)
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=updates.get_data())[0], merged)
         assert len(snippy.storage.search(Const.SNIPPET, data=merged.get_data())) == 1
+
+        # Release all resources
         snippy.release()
 
     # pylint: disable=duplicate-code

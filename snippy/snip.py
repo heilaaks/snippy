@@ -17,6 +17,7 @@ class Snippy(object):
     def __init__(self):
         Logger.set_level()
         self.logger = Logger(__name__).get()
+        self.cause = Cause()
         self.config = Config()
         self.storage = Storage()
         self.snippet = Snippet(self.storage)
@@ -37,9 +38,12 @@ class Snippy(object):
         else:
             Cause.set_text('content category \'all\' is supported only with search operation')
 
+        return Cause.get_text()
+
     def reset(self):
         """Reset session."""
 
+        self.cause = Cause.reset()
         self.config = Config.reset()
         self.snippet = Snippet(self.storage)
         self.solution = Solution(self.storage)
@@ -53,6 +57,7 @@ class Snippy(object):
         self.snippet = None
         self.solution = None
         self.config = None
+        self.cause = None
         self.logger = None
 
 

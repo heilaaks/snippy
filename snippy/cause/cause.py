@@ -15,6 +15,12 @@ class Cause(object):
     logger = Logger(__name__).get()
 
     @classmethod
+    def reset(cls):
+        """Reset the cause to initial state."""
+
+        cls.cause_text = Cause.ALL_OK
+
+    @classmethod
     def set_text(cls, cause_text):
         """Set failure cause."""
 

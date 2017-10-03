@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_sqlite3_db_delete_snippet_basic.py: Test deleting snippets from the sqlite3 database."""
+"""test_ut_sqlite3db_delete.py: Test deleting snippets from the sqlite3 database."""
 
 import unittest
 import mock
@@ -11,7 +11,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
 
-class TestSqlite3DbDeleteSnippetBasic(unittest.TestCase):
+class TestUtSqlite3dbDelete(unittest.TestCase):
     """Testing deleting snippets from database with basic tests."""
 
     @mock.patch.object(Config, 'is_search_all')

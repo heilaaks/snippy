@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-"""test_arguments_search_snippet_with_keywords.py: Test command line argumens for searching snippets with keywords."""
+"""test_ut_arguments_search.py: Test command line argumens for searching snippets with keywords."""
 
 import sys
 from snippy.config import Arguments
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 
-class TestArgumentsSearchSnippetWithKeywords(object):
+class TestUtArgumentsSearch(object):
     """Testing command line argument for search snippets with keywords."""
 
     def test_search_with_one_kw(self):

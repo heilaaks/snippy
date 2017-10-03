@@ -1,31 +1,34 @@
 #!/usr/bin/env python3
 
-"""test_sqlite3_db_select_snippet_basic.py: Test selecting snippets from the sqlite3 database."""
+"""test_ut_sqlite3db_insert.py: Test inserting snippet into the sqlite3 database."""
 
 import unittest
 import mock
-from snippy.config import Constants as Const
 from snippy.config import Config
 from snippy.storage.database import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
 
-class TestSqlite3DbSelectSnippetBasic(unittest.TestCase):
-    """Testing selecting of snippets from database with basic tests."""
+class TestUtSqlite3dbInsert(unittest.TestCase):
+    """Testing inserting new snippets with basic tests."""
 
-    @mock.patch.object(Config, 'is_search_all')
-    def test_select_keyword_matching_links_column(self, mock_is_search_all):
-        """Test that snippet can be selected with regexp keywords. In this
-        case only the last keyword matches to links column."""
+    def test_insert_with_all_parameters(self):
+        """Test that snippet with tags, brief or links is stored."""
 
-        mock_is_search_all.return_value = True
+        initial = Snippet().get_references(0)
+        self.sqlite.insert_content(initial, initial.get_digest(), initial.get_metadata())
+        Snippet().compare_db(self, (Database.select_all_snippets())[0], initial)
+        assert len(Database.select_all_snippets()) == 1
+        self.sqlite.disconnect()
+
+    def test_insert_multiple_links(self):
+        """Test that snippet can be added with multiple links."""
 
         initial = Snippet().get_references(1)
-        keywords = ['foo', 'bar', 'digitalocean']
         self.sqlite.insert_content(initial, initial.get_digest(), initial.get_metadata())
-        Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[0], initial)
-        assert len(self.sqlite.select_content(Const.SNIPPET, keywords)) == 1
+        Snippet().compare_db(self, (Database.select_all_snippets())[0], initial)
+        assert len(Database.select_all_snippets()) == 1
         self.sqlite.disconnect()
 
     # pylint: disable=duplicate-code

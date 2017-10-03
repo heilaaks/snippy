@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_config_create_snippet.py: Test tool configuration management for creating new snippets."""
+"""test_ut_config_create.py: Test tool configuration management for creating new snippets."""
 
 import sys
 import unittest
@@ -9,7 +9,7 @@ from snippy.config import Config
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 
-class TestConfigCreateSnippet(unittest.TestCase):
+class TestUtConfigCreate(unittest.TestCase):
     """Testing configurationg management for creating snippets."""
 
     def test_no_arguments(self):

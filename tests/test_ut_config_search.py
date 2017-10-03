@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_config_search_snippet_with_keywords.py: Test tool configuration management to search snippets."""
+"""test_ut_config_search.py: Test tool configuration management to search snippets."""
 
 import sys
 import unittest
@@ -8,8 +8,8 @@ from snippy.config import Config
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 
-class TestConfigSearchSnippetWithKeywords(unittest.TestCase):
-    """Testing configurationg management for searching snippets."""
+class TestUtConfigSearch(unittest.TestCase):
+    """Testing configuration management for searching snippets."""
 
     def test_search_with_one_kw(self):
         """Test that search can be used with one keyword."""

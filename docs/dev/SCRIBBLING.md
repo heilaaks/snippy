@@ -211,6 +211,9 @@ grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
     # File security
     > https://security.openstack.org/guidelines/dg_using-temporary-files-securely.html
 
+    # Codeclimate
+    > https://codeclimate.com
+
 #######################################
 ## PyPI
 #######################################

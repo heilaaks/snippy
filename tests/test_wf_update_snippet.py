@@ -14,7 +14,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
 
-class TestWorkflowUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
+class TestWfUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
     """Test workflows for updating snippets."""
 
     @mock.patch.object(Editor, 'call_editor')

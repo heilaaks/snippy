@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_arguments_create_snippet.py: Test command line argumens for creating new snippets."""
+"""test_ut_arguments_create.py: Test command line argumens for creating new snippets."""
 
 import sys
 from snippy.config import Constants as Const
@@ -8,7 +8,7 @@ from snippy.config import Arguments
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 
-class TestArgumentsCreateSnippet(object):
+class TestUtArgumentsCreate(object):
     """Testing command line arguments for creating snippets."""
 
     def test_no_arguments(self):

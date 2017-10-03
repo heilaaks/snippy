@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_wf_create_new_snippet.py: Test workflows for creating snippets."""
+"""test_wf_create_snippet.py: Test workflows for creating snippets."""
 
 import sys
 import unittest
@@ -13,7 +13,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
 
-class TestWorkflowCreateSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
+class TestWfCreateSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
     """Test workflows for creating snippets."""
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')

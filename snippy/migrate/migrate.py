@@ -51,7 +51,13 @@ class Migrate(object):
                 text = text + Migrate.get_solution_text(idx, content, colors)
 
             if debug:
-                text = text + '   ! category : ' + content.get_category()
+                text = text + Migrate._terminal_category(colors) % content.get_category()
+                text = text + Migrate._terminal_filename(colors) % content.get_filename()
+                text = text + Migrate._terminal_utc(colors) % content.get_utc()
+                text = text + Migrate._terminal_digest(colors) % (content.get_digest(),
+                                                                  content.get_digest() == content.compute_digest())
+                text = text + Migrate._terminal_metadata(colors) % content.get_metadata()
+                text = text + Migrate._terminal_key(colors) % content.get_key()
 
         if contents:
             # Set only one empty line at the end of string for beautified output.
@@ -132,7 +138,7 @@ class Migrate(object):
 
     @classmethod
     def load(cls, filename):
-        """Load dictionary to import contents."""
+        """Load contents from file."""
 
         snippets = ()
         dictionary = {}
@@ -190,6 +196,42 @@ class Migrate(object):
         """Format content links."""
 
         return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   > %s\n'
+
+    @staticmethod
+    def _terminal_category(colors=False):
+        """Format content category."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m : %s\n' if colors else '   ! category : %s\n'
+
+    @staticmethod
+    def _terminal_filename(colors=False):
+        """Format content filename."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m : %s\n' if colors else '   ! filename : %s\n'
+
+    @staticmethod
+    def _terminal_utc(colors=False):
+        """Format content utc."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mutc\x1b[0m      : %s\n' if colors else '   ! utc      : %s\n'
+
+    @staticmethod
+    def _terminal_digest(colors=False):
+        """Format content digest."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m   : %s (%s)\n' if colors else '   ! digest   : %s (%s)\n'
+
+    @staticmethod
+    def _terminal_metadata(colors=False):
+        """Format content metadata."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m : %s\n' if colors else '   ! metadata : %s\n'
+
+    @staticmethod
+    def _terminal_key(colors=False):
+        """Format content key."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m      : %s\n' if colors else '   ! key      : %s\n'
 
     @staticmethod
     def get_dictionary_list(contents):

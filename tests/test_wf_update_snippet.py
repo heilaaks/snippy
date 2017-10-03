@@ -28,6 +28,8 @@ class TestWorkflowUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-pu
         Expected results:
             1 Snippet can be updated based on digest.
             2 Snippet is updated with editor when only digest option is provided.
+            3 Only content data gets updated and remaining fields are not changed.
+            4 Exit cause is OK.
         """
 
         initial = Snippet().get_references(0)
@@ -47,8 +49,6 @@ class TestWorkflowUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-pu
         sys.argv = ['snippy', 'update', '-d', initial.get_digest()]
         snippy.reset()
         snippy.run_cli()
-        snippets = snippy.storage.search(Const.SNIPPET, digest=merged.get_digest())
-        print(snippets[0])
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=merged.get_digest())[0], merged)
         assert len(snippy.storage.search(Const.SNIPPET, data=merged.get_data())) == 1
         snippy.release()

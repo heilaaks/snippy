@@ -1,7 +1,5 @@
 ## TODO
-   - [ ] Fix debug print by adding remaining columns with proper formatting.
    - [ ] Fix editing no changes to template which changes the digest which should not change in this case.
-   - [ ] Add the print stuff for the class that allows print(content) and a nice print. Was it __STR__?
    - [ ] Fix import content that already exist that leads to NOK cause. In this case it should silenty be ok?
    - [ ] Fix updating solution without --solution option causes the content to be created as snippet.
    - [ ] Fix importing invalid message digest. If the digest is not correct, it is blidly imported.
@@ -20,6 +18,7 @@
    - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
+   - [x] Added easy printing for the Content() so that print(content) works. By default the colors are used.
    - [x] Changed cause management to allow the code flow with empty defaults till the end.
    - [x] Changed log string formatting to avoid doing the formatting with '.format()' when passing the string.
    - [x] Added docker container for the snippy.

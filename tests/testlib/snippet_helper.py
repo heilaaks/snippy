@@ -5,6 +5,7 @@
 import re
 import six
 from snippy.config import Constants as Const
+from snippy.config import Editor
 from snippy.content import Content
 
 
@@ -55,10 +56,11 @@ class SnippetHelper(object):
             sliced = sliced.split(':')
             snippets = SnippetHelper.SNIPPETS[int(sliced[0]):int(sliced[1])]
             snippets = [Content(x[Const.DATA:Const.TESTING]) for x in snippets]
+            snippets = tuple(snippets)
         else:
-            snippets = [Content(SnippetHelper.SNIPPETS[index][Const.DATA:Const.TESTING])]
+            snippets = Content(SnippetHelper.SNIPPETS[index][Const.DATA:Const.TESTING])
 
-        return tuple(snippets)
+        return snippets
 
     @staticmethod
     def get_command_args(snippet, regexp=r'^\'|\'$|\n'): # ' <-- For UltraEditor code highlights problem.
@@ -81,6 +83,24 @@ class SnippetHelper(object):
         command = Const.SPACE.join(SnippetHelper.get_command_args(snippet, Const.NEWLINE))
 
         return command
+
+    @staticmethod
+    def get_edited_message(initial, updates, columns):
+        """Create mocked editor default template and new content with merged updates."""
+
+        # Merge the content from initial set based on updates data from columns
+        # defined by user. Calculate the digest for merged content and convert
+        # back to Content().
+        merged_list = initial.get_list()
+        updates_list = updates.get_list()
+        for column in columns:
+            merged_list[column] = updates_list[column]
+        merged = Content((merged_list))
+        merged_list[Const.DIGEST] = merged.compute_digest()
+        merged = Content((merged_list))
+        template = Editor(merged, '2017-10-01 11:53:17').get_template()
+
+        return (template, merged)
 
     @staticmethod
     def compare(testcase, snippet, reference):

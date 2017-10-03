@@ -40,7 +40,7 @@ class Migrate(object):
             print(text)
 
     @staticmethod
-    def get_terminal_text(contents, colors=False):
+    def get_terminal_text(contents, colors=False, debug=False):
         """Format content for terminal output."""
 
         text = Const.EMPTY
@@ -49,6 +49,9 @@ class Migrate(object):
                 text = text + Migrate.get_snippet_text(idx, content, colors)
             else:
                 text = text + Migrate.get_solution_text(idx, content, colors)
+
+            if debug:
+                text = text + '   ! category : ' + content.get_category()
 
         if contents:
             # Set only one empty line at the end of string for beautified output.
@@ -177,16 +180,16 @@ class Migrate(object):
         return '%s   \x1b[91m:\x1b[0m %s\n' if colors else '%s   : %s\n'
 
     @staticmethod
-    def _terminal_links(colors=False):
-        """Format content links."""
-
-        return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   > %s\n'
-
-    @staticmethod
     def _terminal_tags(colors=False):
         """Format content tags."""
 
         return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   # %s\n'
+
+    @staticmethod
+    def _terminal_links(colors=False):
+        """Format content links."""
+
+        return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   > %s\n'
 
     @staticmethod
     def get_dictionary_list(contents):

@@ -14,6 +14,13 @@ class Content(object):
         self.logger = Logger(__name__).get()
         self.content = content
 
+    def __str__(self):
+        """Format string from the class object."""
+
+        from snippy.migrate import Migrate
+
+        return Migrate().get_terminal_text((self,), debug=True)
+
     def get(self):
         """Get content."""
 
@@ -124,3 +131,20 @@ class Content(object):
         content_str = content_str + self.get_filename(Const.STRING_CONTENT)
 
         return content_str
+
+    def get_list(self):
+        """Convert content into mutable list."""
+
+        content = [self.get_data(),
+                   self.get_brief(),
+                   self.get_group(),
+                   self.get_tags(),
+                   self.get_links(),
+                   self.get_category(),
+                   self.get_filename(),
+                   self.get_utc(),
+                   self.get_digest(),
+                   self.get_metadata(),
+                   self.get_key()]
+
+        return content

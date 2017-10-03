@@ -34,31 +34,22 @@ class Editor(object): # pylint: disable-all
     def read_content(self):
         """Read the content from editor."""
 
-        import tempfile
-        from subprocess import call
+        template = self.get_template()
+        self.edited = self.call_editor(template)
+
+    def get_template(self):
+        """Get template for editor."""
 
         template = self.read_template()
-        template = self._set_template_data(template)
-        template = self._set_template_brief(template)
-        template = self._set_template_date(template)
-        template = self._set_template_group(template)
-        template = self._set_template_tags(template)
-        template = self._set_template_links(template)
-        template = self._set_template_filename(template)
-        template = template.encode('UTF-8')
+        template = self.set_template_data(template)
+        template = self.set_template_brief(template)
+        template = self.set_template_date(template)
+        template = self.set_template_group(template)
+        template = self.set_template_tags(template)
+        template = self.set_template_links(template)
+        template = self.set_template_filename(template)
 
-        editor = self._get_editor()
-        self.logger.info('using %s as editor', editor)
-        with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
-            outfile.write(template)
-            outfile.flush()
-            try: 
-                call([editor, outfile.name])
-                outfile.seek(0)
-                message = outfile.read()
-                self.edited = message.decode('UTF-8')
-            except Exception as exception:
-                Cause.set('cannot find editor %s %s' % (editor, exception))
+        return template
 
     def read_template(self):
         """Return content template."""
@@ -73,6 +64,31 @@ class Editor(object): # pylint: disable-all
             template = infile.read()
 
         return template
+
+    def call_editor(self, template):
+        """Run editor session."""
+
+        import tempfile
+        from subprocess import call
+
+        # External dependencies are isolated in this method to ease
+        # testing. This method is mocked to return the edited text.
+        message = Const.EMPTY
+        template = template.encode('UTF-8')
+        editor = self._get_editor()
+        self.logger.info('using %s as editor', editor)
+        with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
+            outfile.write(template)
+            outfile.flush()
+            try:
+                call([editor, outfile.name])
+                outfile.seek(0)
+                message = outfile.read()
+                message = message.decode('UTF-8')
+            except Exception as exception:
+                Cause.set('cannot find editor %s %s' % (editor, exception))
+
+        return message
 
     def get_edited_data(self):
         """Return content data from editor."""
@@ -191,7 +207,7 @@ class Editor(object): # pylint: disable-all
 
         return tuple(sorted_list)
 
-    def _set_template_data(self, template):
+    def set_template_data(self, template):
         """Update template content data."""
 
         data = self.content.get_data(Const.STRING_CONTENT)
@@ -205,7 +221,7 @@ class Editor(object): # pylint: disable-all
 
         return template
 
-    def _set_template_brief(self, template):
+    def set_template_brief(self, template):
         """Update template content brief."""
 
         brief = self.content.get_brief(Const.STRING_CONTENT)
@@ -213,14 +229,14 @@ class Editor(object): # pylint: disable-all
 
         return template
 
-    def _set_template_date(self, template):
+    def set_template_date(self, template):
         """Update template content date."""
 
         template = template.replace('<SNIPPY_DATE>', self.utc)
 
         return template
 
-    def _set_template_group(self, template):
+    def set_template_group(self, template):
         """Update template content group."""
 
         group = self.content.get_group(Const.STRING_CONTENT)
@@ -228,7 +244,7 @@ class Editor(object): # pylint: disable-all
 
         return template
 
-    def _set_template_tags(self, template):
+    def set_template_tags(self, template):
         """Update template content tags."""
 
         tags = self.content.get_tags(Const.STRING_CONTENT)
@@ -236,7 +252,7 @@ class Editor(object): # pylint: disable-all
 
         return template
 
-    def _set_template_links(self, template):
+    def set_template_links(self, template):
         """Update template content links."""
 
         links = self.content.get_links(Const.STRING_CONTENT)
@@ -244,33 +260,13 @@ class Editor(object): # pylint: disable-all
 
         return template
 
-    def _set_template_filename(self, template):
+    def set_template_filename(self, template):
         """Update template content file."""
 
         filename = self.content.get_filename(Const.STRING_CONTENT)
         template = template.replace('<SNIPPY_FILE>', filename)
 
         return template
-
-    @classmethod
-    def _get_user_string(cls, edited_string, constants):
-        """Parse string type value from editor input."""
-
-        value_list = cls._get_user_tuple(edited_string, constants)
-
-        return constants['delimiter'].join(value_list)
-
-    @classmethod
-    def _get_user_tuple(cls, edited_string, constants):
-        """Parse list type value from editor input."""
-
-        user_answer = re.search('%s(.*)%s' % (constants['head'], constants['tail']), edited_string, re.DOTALL)
-        if user_answer and not user_answer.group(1).isspace():
-            value_list = tuple(map(lambda s: s.strip(), user_answer.group(1).rstrip().split(constants['delimiter'])))
-
-            return value_list
-
-        return Const.EMPTY_TUPLE
 
     def _get_editor(self):
         """Try to resolve the editor in a secure way."""

@@ -36,11 +36,11 @@ class TestWorkflowCreateSnippet(unittest.TestCase): # pylint: disable=too-few-pu
         sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
         snippy = Snippy()
         snippy.run_cli()
-        references = Snippet().get_references(0)
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=references[0].get_digest())[0], references[0])
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=references[0].get_data())[0], references[0])
-        assert len(snippy.storage.search(Const.SNIPPET, digest=references[0].get_digest())) == 1
-        assert len(snippy.storage.search(Const.SNIPPET, data=references[0].get_data())) == 1
+        initial = Snippet().get_references(0)
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())[0], initial)
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=initial.get_data())[0], initial)
+        assert len(snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())) == 1
+        assert len(snippy.storage.search(Const.SNIPPET, data=initial.get_data())) == 1
         snippy.release()
 
     # pylint: disable=duplicate-code

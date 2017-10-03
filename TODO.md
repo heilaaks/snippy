@@ -1,4 +1,6 @@
 ## TODO
+   - [ ] Fix debug print by adding remaining columns with proper formatting.
+   - [ ] Fix editing no changes to template which changes the digest which should not change in this case.
    - [ ] Add the print stuff for the class that allows print(content) and a nice print. Was it __STR__?
    - [ ] Fix import content that already exist that leads to NOK cause. In this case it should silenty be ok?
    - [ ] Fix updating solution without --solution option causes the content to be created as snippet.

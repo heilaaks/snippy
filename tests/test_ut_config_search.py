@@ -2,6 +2,7 @@
 
 """test_ut_config_search.py: Test tool configuration management to search snippets."""
 
+from __future__ import print_function
 import sys
 import unittest
 from snippy.config import Config

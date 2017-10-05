@@ -2,6 +2,7 @@
 
 """arguments.py: Command line argument management."""
 
+from __future__ import print_function
 import sys
 import argparse
 from snippy.config import Constants as Const

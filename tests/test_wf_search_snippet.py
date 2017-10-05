@@ -2,10 +2,8 @@
 
 """test_wf_search_snippet.py: Test workflows for searching snippets."""
 
-from __future__ import print_function
 import sys
 import unittest
-from io import StringIO
 import mock
 from snippy.snip import Snippy
 from snippy.cause import Cause
@@ -13,6 +11,10 @@ from snippy.config import Constants as Const
 from snippy.storage.database import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
+if not Const.PYTHON2:
+    from io import StringIO # pylint: disable=import-error
+else:
+    from StringIO import StringIO # pylint: disable=import-error
 
 
 class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
@@ -103,7 +105,6 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
         output = out.getvalue().strip()
         sys.stdout = saved_stdout
         assert cause == Cause.ALL_OK
-        print(output)
         assert output == '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]\n' \
                          '   $ docker rm --volumes $(docker ps --all --quiet)\n' \
                          '\n' \

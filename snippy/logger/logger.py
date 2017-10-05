@@ -2,6 +2,7 @@
 
 """logger.py: Common logger for the tool."""
 
+from __future__ import print_function
 import sys
 import logging
 

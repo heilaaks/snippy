@@ -2,6 +2,7 @@
 
 """profiler.py: Profiler wrapper."""
 
+from __future__ import print_function
 import cProfile
 import pstats
 import io

@@ -14,7 +14,7 @@ from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
 
 
 class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
-    """Test workflows for updating snippets."""
+    """Test workflows for deleting snippets."""
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     def test_deleting_snippet_with_digest_short_version(self, mock_get_db_location):

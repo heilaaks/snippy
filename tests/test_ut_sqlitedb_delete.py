@@ -28,7 +28,7 @@ class TestUtSqlite3dbDelete(unittest.TestCase):
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[0], references[0])
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[1], references[1])
         assert len(Database.select_all_snippets()) == 2
-        self.sqlite.delete_content('6f9e21abdc2e4c53')
+        self.sqlite.delete_content('53908d68425c61dc')
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[0], references[0])
         assert len(Database.select_all_snippets()) == 1
         self.sqlite.disconnect()
@@ -46,7 +46,7 @@ class TestUtSqlite3dbDelete(unittest.TestCase):
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[0], references[0])
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[1], references[1])
         assert len(Database.select_all_snippets()) == 2
-        self.sqlite.delete_content('6f9e21abdc2e4c53d04d77eff024708086c0a583f1be3dd761774353e9d2b74f')
+        self.sqlite.delete_content('53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5')
         Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[0], references[0])
         assert len(Database.select_all_snippets()) == 1
         self.sqlite.disconnect()

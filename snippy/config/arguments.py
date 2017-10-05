@@ -137,6 +137,7 @@ class Arguments(object):
         support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
+        support.add_argument('--no-colors', dest='no_colors', action='store_true', default=False, help=argparse.SUPPRESS)
 
         Arguments.args = parser.parse_args()
 
@@ -256,6 +257,13 @@ class Arguments(object):
 
         return cls.args.file
 
+    @classmethod
+    def get_no_colors(cls):
+        """Return if colors are disbled in terminal output."""
+
+        cls.logger.info('parsed argument --no-colors with value "%s"', cls.args.no_colors)
+
+        return cls.args.no_colors
 
 class MyHelpAction(argparse.Action): # pylint: disable=too-few-public-methods
     """Customised argparse help to print examples."""

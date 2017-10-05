@@ -38,7 +38,7 @@ class SnippetHelper(object):
                  Const.SNIPPET,
                  '',
                  None,
-                 '6f9e21abdc2e4c53d04d77eff024708086c0a583f1be3dd761774353e9d2b74f',
+                 '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                  None,
                  None,
                  """-c 'docker rm --force redis'

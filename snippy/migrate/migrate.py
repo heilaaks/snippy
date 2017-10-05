@@ -27,7 +27,7 @@ class Migrate(object):
         # In case user provided regexp filter, the ANSI color codes are removed
         # from the content in order to make the filter work as exptected.
         cls.logger.debug('printing content to terminal')
-        text = Migrate.get_terminal_text(contents, colors=True)
+        text = Migrate.get_terminal_text(contents, colors=Config.use_colors())
         regexp = Config.get_search_filter()
         if regexp:
             ansi_escape = re.compile(r'\x1b[^m]*m')

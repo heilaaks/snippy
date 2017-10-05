@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Add same search implementation into solution than snippet.
    - [ ] Fix editing no changes to template which changes the digest which should not change in this case.
    - [ ] Fix import content that already exist that leads to NOK cause. In this case it should silenty be ok?
    - [ ] Fix updating solution without --solution option causes the content to be created as snippet.

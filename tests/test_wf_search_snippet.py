@@ -30,8 +30,9 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
             $ python snip.py search --sall redis --no-color
             $ python snip.py search --sall all --no-color
             $ python snip.py search --sall docker --no-color
-            $ python snip.py search -c 'docker rm --volumes $(docker ps --all --quiet)' --no-color
             $ python snip.py search --sall 53908d68425c61dc
+            $ python snip.py search -c 'docker rm --volumes $(docker ps --all --quiet)' --no-color
+            $ python snip.py search -d 53908d68425c61dc --no-color
         Expected results:
             1 Snippet is found from data with --sall option.
             2 Snippet is found from brief with --sall option.
@@ -116,6 +117,22 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
                          '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
                          '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 
+        # Find based on content digest with --sall option.
+        out = StringIO()
+        sys.stdout = out
+        sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-colors']
+        snippy.reset()
+        cause = snippy.run_cli()
+        output = out.getvalue().strip()
+        sys.stdout = saved_stdout
+        assert cause == Cause.ALL_OK
+        assert output == '1. Remove docker image with force @docker [53908d68425c61dc]\n' \
+                         '   $ docker rm --force redis\n' \
+                         '\n' \
+                         '   # cleanup,container,docker,docker-ce,moby\n' \
+                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
+                         '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+
         # Find based on content data.
         out = StringIO()
         sys.stdout = out
@@ -131,10 +148,10 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
                          '   # cleanup,container,docker,docker-ce,moby\n' \
                          '   > https://docs.docker.com/engine/reference/commandline/rm/'
 
-        # Find based on content digest.
+        # Find based on content digest with -d|--digest option.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-colors']
+        sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc', '--no-colors']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()

@@ -31,12 +31,10 @@ class Snippet(object):
 
         self.logger.info('searching snippets')
         snippets = ()
-        keywords = Config.get_search_keywords()
-        content_data = Config.get_content_data()
-        if keywords:
-            snippets = self.storage.search(Const.SNIPPET, keywords=keywords)
-        elif content_data:
-            snippets = self.storage.search(Const.SNIPPET, data=content_data)
+        snippets = self.storage.search(Const.SNIPPET,
+                                       keywords=Config.get_search_keywords(),
+                                       digest=Config.get_content_digest(),
+                                       data=Config.get_content_data())
         Migrate().print_terminal(snippets)
 
     def update(self):

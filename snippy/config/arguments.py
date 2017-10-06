@@ -121,9 +121,9 @@ class Arguments(object):
         # search options
         search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Arguments.ARGS_SEARCH))
         search_meg = search.add_mutually_exclusive_group()
-        search_meg.add_argument('--sall', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
-        search_meg.add_argument('--stag', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
-        search_meg.add_argument('--sgrp', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
+        search_meg.add_argument('--sall', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        search_meg.add_argument('--stag', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        search_meg.add_argument('--sgrp', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--filter', type=str, dest='regexp', default='', help=argparse.SUPPRESS)
 
         # migration options
@@ -213,28 +213,61 @@ class Arguments(object):
         return cls.args.digest
 
     @classmethod
+    def is_search_all(cls):
+        """Test if search all option was used."""
+
+        return True if hasattr(cls.args, 'sall')  else False
+
+    @classmethod
     def get_search_all(cls):
         """Return keywords to search from all fields."""
 
-        cls.logger.info('parsed argument --sall with value %s', cls.args.sall)
+        sall = None
+        if cls.is_search_all():
+            sall = cls.args.sall
+            cls.logger.info('parsed argument --sall with value %s', cls.args.sall)
+        else:
+            cls.logger.info('argument --sall was not used')
 
-        return cls.args.sall
+        return sall
+
+    @classmethod
+    def is_search_tag(cls):
+        """Test if search tag option was used."""
+
+        return True if hasattr(cls.args, 'stag')  else False
 
     @classmethod
     def get_search_tag(cls):
         """Return keywords to search only from tags."""
 
-        cls.logger.info('parsed argument --stag with value %s', cls.args.stag)
+        stag = None
+        if cls.is_search_tag():
+            stag = cls.args.stag
+            cls.logger.info('parsed argument --stag with value %s', cls.args.stag)
+        else:
+            cls.logger.info('argument --stag was not used')
 
-        return cls.args.stag
+        return stag
+
+    @classmethod
+    def is_search_grp(cls):
+        """Test if search grp option was used."""
+
+        return True if hasattr(cls.args, 'sgrp')  else False
 
     @classmethod
     def get_search_grp(cls):
         """Return keywords to search only from groups."""
 
-        cls.logger.info('parsed argument --sgrp with value %s', cls.args.sgrp)
+        sgrp = None
+        if cls.is_search_grp():
+            sgrp = cls.args.sgrp
+            cls.logger.info('parsed argument --sgrp with value %s', cls.args.sgrp)
+        else:
+            cls.logger.info('argument --sgrp was not used')
 
-        return cls.args.sgrp
+        return sgrp
 
     @classmethod
     def get_search_filter(cls):

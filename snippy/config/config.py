@@ -402,15 +402,20 @@ class Config(object): # pylint: disable=too-many-public-methods
         """Process the user given search keywords and field."""
 
         arg = ()
-        field = Const.SEARCH_ALL
-        if cls.args.get_search_all():
+        field = Const.NO_SEARCH
+        if cls.args.is_search_all():
             arg = cls.args.get_search_all()
-        elif cls.args.get_search_tag():
+            field = Const.SEARCH_ALL
+        elif cls.args.is_search_tag():
             arg = cls.args.get_search_tag()
             field = Const.SEARCH_TAG
-        elif cls.args.get_search_grp():
+        elif cls.args.is_search_grp():
             arg = cls.args.get_search_grp()
             field = Const.SEARCH_GRP
+
+        if not arg and (field != Const.NO_SEARCH):
+            cls.logger.info('listing all content from category because no keywords were provided')
+            arg = ('.')
 
         return (field, Editor.get_keywords(arg))
 

@@ -24,9 +24,9 @@ class TestUtArgumentsCreate(object):
         assert obj.get_content_tags() == []
         assert obj.get_content_links() == ''
         assert obj.get_content_digest() == ''
-        assert obj.get_search_all() == []
-        assert obj.get_search_tag() == []
-        assert obj.get_search_grp() == []
+        assert obj.get_search_all() is None
+        assert obj.get_search_tag() is None
+        assert obj.get_search_grp() is None
         assert obj.get_search_filter() == ''
         assert not obj.get_editor()
         assert obj.get_operation_file() == ''

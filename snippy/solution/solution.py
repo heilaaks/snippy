@@ -30,10 +30,12 @@ class Solution(object):
         """Search solutions."""
 
         self.logger.info('searching solutions')
-        keywords = Config.get_search_keywords()
-        if keywords:
-            solutions = self.storage.search(Const.SOLUTION, keywords=keywords)
+        solutions = self.storage.search(Const.SOLUTION,
+                                        keywords=Config.get_search_keywords(),
+                                        digest=Config.get_content_digest(),
+                                        data=Config.get_content_data())
         Migrate().print_terminal(solutions)
+
 
     def update(self):
         """Update existing solution."""

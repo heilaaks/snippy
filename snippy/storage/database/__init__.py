@@ -1,2 +1,2 @@
 # pylint: disable=missing-docstring
-from .sqlite3_db import Sqlite3Db
+from .sqlite3db import Sqlite3Db

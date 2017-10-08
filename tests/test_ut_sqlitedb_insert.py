@@ -7,7 +7,7 @@ import mock
 from snippy.config import Config
 from snippy.storage.database import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlite3_db_helper import Sqlite3DbHelper as Database
+from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestUtSqlite3dbInsert(unittest.TestCase):

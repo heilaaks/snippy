@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""sqlite3_db_helper.py: Helper methods for Sqlite3 database testing."""
+"""sqlite3db_helper.py: Helper methods for Sqlite3 database testing."""
 
 import sqlite3
 import os.path

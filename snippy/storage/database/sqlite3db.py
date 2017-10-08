@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""sqlite3_db.py: Database management."""
+"""sqlite3db.py: Database management."""
 
 import os
 import re

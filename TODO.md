@@ -12,7 +12,7 @@
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix importing the same data again. There could be a notice if the content already exist.
    - [ ] Fix case described in log 11448a2e90dab3a2837c1a971798721095d1c160 somehow and make test_wf a bit nicer?
-   - [ ] Why random test_sqlite3_db_delete_snippet_basic failure if DB insert tag map/join not sorted?
+   - [ ] Why random test_sqlite3db_delete_snippet failure if DB insert tag map/join not sorted?
    - [ ] Test Flake8 lint. It seems to require specific version for specific Python version.
    - [ ] Test BytePackager/packagecore.
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.

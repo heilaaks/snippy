@@ -25,20 +25,20 @@ class Migrate(object):
     def print_terminal(cls, contents):
         """Print content into terminal."""
 
-        # In case user provided regexp filter, the ANSI color codes are removed
-        # from the content in order to make the filter work as exptected.
         cls.logger.debug('printing content to terminal')
-        text = Migrate.get_terminal_text(contents, colors=Config.use_colors())
         regexp = Config.get_search_filter()
         if regexp:
-            ansi_escape = re.compile(r'\x1b[^m]*m')
-            text = ansi_escape.sub('', text)
+            # In case user provided regexp filter, the ANSI color codes are
+            # not used in order to make the filter work as exptected.
+            text = Migrate.get_terminal_text(contents, colors=False)
             match = re.findall(regexp, text)
             if match:
                 print(Const.NEWLINE.join(match))
                 print()
-        elif text:
-            print(text)
+        else:
+            text = Migrate.get_terminal_text(contents, colors=Config.use_colors())
+            if text:
+                print(text)
 
     @staticmethod
     def get_terminal_text(contents, colors=False, debug=False):

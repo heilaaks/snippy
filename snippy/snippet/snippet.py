@@ -30,7 +30,6 @@ class Snippet(object):
         """Search snippets."""
 
         self.logger.info('searching snippets')
-        snippets = ()
         snippets = self.storage.search(Const.SNIPPET,
                                        keywords=Config.get_search_keywords(),
                                        digest=Config.get_content_digest(),

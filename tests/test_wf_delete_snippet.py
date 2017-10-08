@@ -28,7 +28,7 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
         Expected results:
             1 Snippet can be deleted based on digest short version.
             2 There is no content in database after the snippet is deleted.
-            2 Exit cause is OK.
+            3 Exit cause is OK.
         """
 
         initial = Snippet().get_references(0)
@@ -65,7 +65,7 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
         Expected results:
             1 Snippet can be deleted based on digest long version.
             2 There is no content in database after the snippet is deleted.
-            2 Exit cause is OK.
+            3 Exit cause is OK.
         """
 
         initial = Snippet().get_references(0)

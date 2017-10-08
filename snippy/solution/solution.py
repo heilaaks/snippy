@@ -30,7 +30,6 @@ class Solution(object):
         """Search solutions."""
 
         self.logger.info('searching solutions')
-        solutions = ()
         keywords = Config.get_search_keywords()
         if keywords:
             solutions = self.storage.search(Const.SOLUTION, keywords=keywords)

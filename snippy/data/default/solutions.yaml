@@ -91,7 +91,7 @@ content:
   - '################################################################################'
   - '## whiteboard'
   - '################################################################################'
-  digest: b2248b07ca95f1c087143669f9b1850b91c31ad00e6934864dd486aac9221400
+  digest: ec11663bee073799189abb72f9b57f942fb47dd3886f17024de65771a49c790d
   filename: kubernetes-docker-log-driver-kafka.txt
   group: docker
   links:
@@ -107,4 +107,4 @@ content:
   - logs2kafka
   - moby
   - plugin
-  utc: '2017-10-01 11:54:12'
+  utc: '2017-10-12 11:53:17'

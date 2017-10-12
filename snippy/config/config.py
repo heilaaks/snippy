@@ -462,7 +462,7 @@ class Config(object): # pylint: disable=too-many-public-methods
                      cls.get_content_group(),
                      cls.get_content_tags(),
                      cls.get_content_links(),
-                     cls.get_category(),
+                     content.get_category(),
                      cls.get_filename(),
                      content.get_utc(),
                      content.get_digest(),

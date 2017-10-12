@@ -68,10 +68,16 @@ class Sqlite3Db(object):
     def bulk_insert_content(self, contents):
         """Insert multiple contents into database."""
 
+        inserted = 0
         for content in contents:
             utc = content.get_utc()
             digest = content.get_digest()
-            self.insert_content(content, digest, utc)
+            if not self.select_content(content.get_category(), data=content.get_data()):
+                inserted = inserted + 1
+                self.insert_content(content, digest, utc)
+            else:
+                self.logger.debug('content data already exists "%s"', content.get_data())
+        self.logger.debug('inserted %d out of %d content', inserted, len(contents))
 
     def select_content(self, category, keywords=None, digest=None, data=None):
         """Select content."""

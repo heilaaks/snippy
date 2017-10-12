@@ -3,7 +3,7 @@ content:
   category: snippet
   data:
   - docker rm --volumes $(docker ps --all --quiet)
-  digest: cf2a161acb1195bb425efc5b09ef92783af41be914bf196a3c8e07e6fc08debd
+  digest: 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
   filename: ''
   group: docker
   links:
@@ -14,14 +14,14 @@ content:
   - docker
   - docker-ce
   - moby
-  utc: '2017-10-01 11:53:08'
+  utc: '2017-10-12 11:52:11'
 - brief: Find pattern from files
   category: snippet
   data:
   - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
   - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'
   - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
-  digest: 26197a69d5a8f98c749fdd9d503219f1ead01f5f7fac5b98f81a4d0be9f737cc
+  digest: c2fe7687d4e3d45d7f562a8671171aca820a179592990ae51b7ac5f77336cf37
   filename: ''
   group: linux
   links:
@@ -29,4 +29,4 @@ content:
   tags:
   - linux
   - search
-  utc: '2017-10-01 11:53:17'
+  utc: '2017-10-12 11:52:20'

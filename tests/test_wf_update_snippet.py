@@ -20,12 +20,13 @@ class TestWfUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     def test_updating_snippet_with_digest(self, mock_get_db_location, mock_call_editor):
-        """Updated snippet from command line based on digest.
+        """Update snippet from command line based on digest.
 
         Workflow:
             @ update snippet
         Execution:
             $ python snip.py create SnippetHelper().get_snippet(0)
+            $ python snip.py create SnippetHelper().get_snippet(2)
             $ python snip.py update -d 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
         Expected results:
             1 Snippet can be updated based on digest.
@@ -34,23 +35,16 @@ class TestWfUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
             4 Updated content can be found with new digest in long format.
             5 Updated content can be found with new digest in short format.
             6 Updated content can be found with new data.
-            7 Only one entry exist in storage after update operation
+            7 Two entries are still stored after update operation.
             8 Exit cause is OK.
         """
 
         initial = Snippet().get_references(0)
         updates = Snippet().get_references(1)
         (message, merged) = Snippet().get_edited_message(initial, updates, (Const.DATA,))
-        mock_get_db_location.return_value = Database.get_storage()
         mock_call_editor.return_value = message
-
-        # Create original snippet.
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
-        snippy = Snippy()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())[0], initial)
-        assert len(snippy.storage.search(Const.SNIPPET, data=initial.get_data())) == 1
+        mock_get_db_location.return_value = Database.get_storage()
+        snippy = self.add_snippets()
 
         # Update original snippet based on digest. Only content data is updated.
         sys.argv = ['snippy', 'update', '-d', initial.get_digest()]
@@ -64,6 +58,103 @@ class TestWfUpdateSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
 
         # Release all resources
         snippy.release()
+
+    @mock.patch.object(Editor, 'call_editor')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_updating_snippet_using_solution_category(self, mock_get_db_location, mock_call_editor):
+        """Update snippet but accidentally defining solution category from command line.
+
+        Workflow:
+            @ update snippet
+        Execution:
+            $ python snip.py create SnippetHelper().get_snippet(0)
+            $ python snip.py create SnippetHelper().get_snippet(2)
+            $ python snip.py update --solution -d 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
+        Expected results:
+            1 Category is not changed from snippet to solution.
+            2 Exit cause is OK.
+        """
+
+        initial = Snippet().get_references(0)
+        updates = Snippet().get_references(1)
+        (message, merged) = Snippet().get_edited_message(initial, updates, (Const.DATA,))
+        mock_call_editor.return_value = message
+        mock_get_db_location.return_value = Database.get_storage()
+        snippy = self.add_snippets()
+
+        # Accidentally define the category to be solution
+        sys.argv = ['snippy', 'update', '--solution', '-d', initial.get_digest()]
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=merged.get_digest())[0], merged)
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest='%.16s' % merged.get_digest())[0], merged)
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=updates.get_data())[0], merged)
+        assert len(snippy.storage.search(Const.SNIPPET, data=merged.get_data())) == 1
+
+        # Release all resources
+        snippy.release()
+
+    @mock.patch.object(Editor, 'call_editor')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_updating_snippet_with_unknown_digest(self, mock_get_db_location, mock_call_editor):
+        """Updating snippet with misspelled message digest.
+
+        Workflow:
+            @ update snippet
+        Execution:
+            $ python snip.py create SnippetHelper().get_snippet(0)
+            $ python snip.py create SnippetHelper().get_snippet(2)
+            $ python snip.py update -d 123456789ABCDEF0
+        Expected results:
+            1 Original snippet is not updated.
+            2 Original snippet can be found with original digest short and long versions.
+            3 Original snippet can be found with original data.
+            4 Exit cause is NOK and indicates the failure.
+        """
+
+        initial = Snippet().get_references(0)
+        updates = Snippet().get_references(1)
+        (message, _) = Snippet().get_edited_message(initial, updates, (Const.DATA,))
+        mock_call_editor.return_value = message
+        mock_get_db_location.return_value = Database.get_storage()
+        snippy = self.add_snippets()
+
+        # Accidentally misspell the message digest.
+        sys.argv = ['snippy', 'update', '-d', '123456789ABCDEF0']
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == 'NOK: cannot find snippet to be updated with digest 123456789ABCDEF0'
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())[0], initial)
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest='%.16s' % initial.get_digest())[0], initial)
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=initial.get_data())[0], initial)
+        assert len(snippy.storage.search(Const.SNIPPET, data=initial.get_data())) == 1
+
+        # Release all resources
+        snippy.release()
+
+    def add_snippets(self):
+        """Add snippets that are being updated in tests."""
+
+        snippet1 = Snippet().get_references(0)
+        snippet3 = Snippet().get_references(2)
+
+        # Create two snippets that are updated in tests.
+        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
+        snippy = Snippy()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=snippet1.get_digest())[0], snippet1)
+        assert len(snippy.storage.search(Const.SNIPPET, data=snippet1.get_data())) == 1
+        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(2)
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=snippet3.get_digest())[0], snippet3)
+        assert len(snippy.storage.search(Const.SNIPPET, data=snippet3.get_data())) == 1
+        assert len(Database.select_all_snippets()) == 2
+
+        return snippy
 
     # pylint: disable=duplicate-code
     def tearDown(self):

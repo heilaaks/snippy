@@ -155,6 +155,9 @@ python runner create --brief 'Find pattern from files' --group linux --tags linu
 grep -rin './' -e 'pattern'
 grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
 
+# Multiline snippet from command line interface
+$ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndocker images -q --filter dangling=true | xargs docker rmi' -b 'Remove all exited containers and dangling images' -g 'docker' -t docker-ce,docker,moby,container,cleanup,image -l 'https://docs.docker.com/engine/reference/commandline/rm/ https://docs.docker.com/engine/reference/commandline/images/ https://docs.docker.com/engine/reference/commandline/rmi/'
+> https://stackoverflow.com/questions/26517674/passing-newline-within-string-into-a-python-script-from-the-command-line
 
 #######################################
 ## Logging
@@ -431,6 +434,12 @@ python snip.py update --digest 111111111111111
 
 7. Update snippet with unknown content
 python snip.py update -c '111111111111111'
+
+8. Update snippet by defining solution category in command line (DONE)
+python snip.py update --solution -d 22c0ca5bbc9797b
+
+9. Update solution by leaving the category out (defaults snippet) from command line
+python snip.py update -d 22c0ca5bbc9797b
 
 ####################
 ## Deleting snippets

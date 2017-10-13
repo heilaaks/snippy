@@ -46,7 +46,28 @@ class SnippetHelper(object):
                     -g 'docker'
                     -t docker-ce,docker,moby,container,cleanup
                     -l 'https://docs.docker.com/engine/reference/commandline/rm/
-                        https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'"""))
+                        https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'"""),
+
+                (('docker rm $(docker ps --all -q -f status=exited)', 'docker images -q --filter dangling=true | xargs docker rmi'),
+                 'Remove all exited containers and dangling images',
+                 'docker',
+                 ('docker-ce', 'docker', 'moby', 'container', 'cleanup', 'image'),
+                 ('https://docs.docker.com/engine/reference/commandline/rm/',
+                  'https://docs.docker.com/engine/reference/commandline/images/',
+                  'https://docs.docker.com/engine/reference/commandline/rmi/'),
+                 Const.SNIPPET,
+                 '',
+                 None,
+                 '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                 None,
+                 None,
+                 """-c 'docker rm $(docker ps --all -q -f status=exited)\ndocker images -q --filter dangling=true | xargs docker rmi'
+                    -b 'Remove all exited containers and dangling images'
+                    -g 'docker'
+                    -t docker-ce,docker,moby,container,cleanup,image
+                    -l 'https://docs.docker.com/engine/reference/commandline/rm/
+                        https://docs.docker.com/engine/reference/commandline/images/
+                        https://docs.docker.com/engine/reference/commandline/rmi/'"""))
 
     @staticmethod
     def get_references(index=0, sliced=None):
@@ -63,7 +84,7 @@ class SnippetHelper(object):
         return snippets
 
     @staticmethod
-    def get_command_args(snippet, regexp=r'^\'|\'$|\n'): # ' <-- For UltraEditor code highlights problem.
+    def get_command_args(snippet, regexp=r'^\'|\'$'): # ' <-- For UltraEditor code highlights problem.
         """Get command line arguments from snippets list."""
 
         args = [re.sub(regexp, Const.EMPTY, arg)

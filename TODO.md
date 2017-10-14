@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Fix export operation WF test that creates emptys files. Mocking of file create is not properly made.
    - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?

@@ -5,7 +5,6 @@
 import sys
 import unittest
 import mock
-from snippy.snip import Snippy
 from snippy.cause import Cause
 from snippy.config import Constants as Const
 from snippy.storage.database import Sqlite3Db
@@ -65,13 +64,13 @@ class TestWfDeleteSnippet(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         snippy = Snippet.add_snippets(self)
 
-        # Create original snippet.
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
-        snippy = Snippy()
+        # Delete snippet with digest long version.
+        sys.argv = ['snippy', 'delete', '-d', initial.get_digest()]
+        snippy.reset()
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())[0], initial)
-        assert len(snippy.storage.search(Const.SNIPPET, data=initial.get_data())) == 1
+        assert not snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())
+        assert len(Database.get_contents()) == 1
 
         # Release all resources
         snippy.release()

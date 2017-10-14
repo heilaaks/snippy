@@ -3,10 +3,14 @@
 """snippet_helper.py: Helper methods for snippet testing."""
 
 import re
+import sys
 import six
 from snippy.config import Constants as Const
+from snippy.cause import Cause
 from snippy.config import Editor
 from snippy.content import Content
+from snippy.snip import Snippy
+from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class SnippetHelper(object):
@@ -176,3 +180,29 @@ class SnippetHelper(object):
         assert isinstance(snippet[Const.CATEGORY], six.string_types)
         assert isinstance(snippet[Const.FILENAME], six.string_types)
         assert isinstance(snippet[Const.DIGEST], six.string_types)
+
+    @staticmethod
+    def add_snippets(testcase):
+        """Add two default snippets for testing purposes."""
+
+        snippet1 = SnippetHelper.get_references(0)
+        snippet2 = SnippetHelper.get_references(1)
+
+        # Snippet1
+        sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(0)
+        snippy = Snippy()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        SnippetHelper.compare(testcase, snippy.storage.search(Const.SNIPPET, digest=snippet1.get_digest())[0], snippet1)
+        assert len(snippy.storage.search(Const.SNIPPET, data=snippet1.get_data())) == 1
+
+        # Snippet2
+        sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(1)
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        SnippetHelper.compare(testcase, snippy.storage.search(Const.SNIPPET, digest=snippet2.get_digest())[0], snippet2)
+        assert len(snippy.storage.search(Const.SNIPPET, data=snippet2.get_data())) == 1
+        assert len(Database.select_all_snippets()) == 2
+
+        return snippy

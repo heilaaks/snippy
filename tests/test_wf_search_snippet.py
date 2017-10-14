@@ -5,7 +5,6 @@
 import sys
 import unittest
 import mock
-from snippy.snip import Snippy
 from snippy.cause import Cause
 from snippy.config import Constants as Const
 from snippy.storage.database import Sqlite3Db
@@ -48,24 +47,8 @@ class TestWfSearchSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
         """
 
         saved_stdout = sys.stdout
-        snippet1 = Snippet().get_references(0)
-        snippet2 = Snippet().get_references(1)
         mock_get_db_location.return_value = Database.get_storage()
-
-        # Create two snippets where search is made.
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
-        snippy = Snippy()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=snippet1.get_digest())[0], snippet1)
-        assert len(snippy.storage.search(Const.SNIPPET, data=snippet1.get_data())) == 1
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(1)
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=snippet2.get_digest())[0], snippet2)
-        assert len(snippy.storage.search(Const.SNIPPET, data=snippet2.get_data())) == 1
-        assert len(Database.select_all_snippets()) == 2
+        snippy = Snippet.add_snippets(self)
 
         # Find from snippet2 data.
         out = StringIO()
@@ -222,7 +205,7 @@ class TestWfSearchSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
 
         saved_stdout = sys.stdout
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = self.add_snippets()
+        snippy = Snippet.add_snippets(self)
 
         # Find snippet based on content data.
         out = StringIO()
@@ -259,7 +242,7 @@ class TestWfSearchSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
 
         saved_stdout = sys.stdout
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = self.add_snippets()
+        snippy = Snippet.add_snippets(self)
 
         # Find based on content digest with -d|--digest option.
         out = StringIO()
@@ -279,29 +262,6 @@ class TestWfSearchSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
 
         # Release all resources
         snippy.release()
-
-    def add_snippets(self):
-        """Add snippets where the searches are made."""
-
-        snippet1 = Snippet().get_references(0)
-        snippet2 = Snippet().get_references(1)
-
-        # Create two snippets where search is made.
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
-        snippy = Snippy()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=snippet1.get_digest())[0], snippet1)
-        assert len(snippy.storage.search(Const.SNIPPET, data=snippet1.get_data())) == 1
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(1)
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=snippet2.get_digest())[0], snippet2)
-        assert len(snippy.storage.search(Const.SNIPPET, data=snippet2.get_data())) == 1
-        assert len(Database.select_all_snippets()) == 2
-
-        return snippy
 
     # pylint: disable=duplicate-code
     def tearDown(self):

@@ -27,20 +27,13 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
             $ python snip.py delete -d 54e41e9b52a02b63
         Expected results:
             1 Snippet can be deleted based on digest short version.
-            2 There is no content in database after the snippet is deleted.
+            2 There is one snippet left in database after the delete operation.
             3 Exit cause is OK.
         """
 
         initial = Snippet().get_references(0)
         mock_get_db_location.return_value = Database.get_storage()
-
-        # Create original snippet.
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
-        snippy = Snippy()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())[0], initial)
-        assert len(snippy.storage.search(Const.SNIPPET, data=initial.get_data())) == 1
+        snippy = Snippet.add_snippets(self)
 
         # Delete snippet with digest short version.
         sys.argv = ['snippy', 'delete', '-d', '%.16s' % initial.get_digest()]
@@ -48,7 +41,7 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
         assert not snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())
-        assert not Database.get_contents()
+        assert len(Database.get_contents()) == 1
 
         # Release all resources
         snippy.release()
@@ -64,12 +57,13 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
             $ python snip.py delete -d 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
         Expected results:
             1 Snippet can be deleted based on digest long version.
-            2 There is no content in database after the snippet is deleted.
+            2 There is one snippet left in database after the delete operation.
             3 Exit cause is OK.
         """
 
         initial = Snippet().get_references(0)
         mock_get_db_location.return_value = Database.get_storage()
+        snippy = Snippet.add_snippets(self)
 
         # Create original snippet.
         sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
@@ -78,14 +72,6 @@ class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-m
         assert cause == Cause.ALL_OK
         Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())[0], initial)
         assert len(snippy.storage.search(Const.SNIPPET, data=initial.get_data())) == 1
-
-        # Delete snippet with digest long version.
-        sys.argv = ['snippy', 'delete', '-d', initial.get_digest()]
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        assert not snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())
-        assert not Database.get_contents()
 
         # Release all resources
         snippy.release()

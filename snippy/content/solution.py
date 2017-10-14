@@ -7,6 +7,7 @@ from snippy.logger import Logger
 from snippy.cause import Cause
 from snippy.config import Config
 from snippy.migrate import Migrate
+from snippy.content import Content
 
 
 class Solution(object):
@@ -20,7 +21,7 @@ class Solution(object):
         """Create new solution."""
 
         self.logger.debug('creating new solution')
-        solution = Config.get_content(use_editor=True)
+        solution = Config.get_content(Content(), use_editor=True)
         if solution.has_data():
             self.storage.create(solution)
         else:

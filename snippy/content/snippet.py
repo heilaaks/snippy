@@ -7,6 +7,7 @@ from snippy.logger import Logger
 from snippy.cause import Cause
 from snippy.config import Config
 from snippy.migrate import Migrate
+from snippy.content import Content
 
 
 class Snippet(object):
@@ -20,7 +21,7 @@ class Snippet(object):
         """Create new snippet."""
 
         self.logger.debug('creating new snippet')
-        snippet = Config.get_content()
+        snippet = Config.get_content(Content())
         if snippet.has_data():
             self.storage.create(snippet)
         else:

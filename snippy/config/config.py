@@ -11,7 +11,6 @@ from snippy.logger import Logger
 from snippy.cause import Cause
 from snippy.config import Arguments
 from snippy.config import Editor
-from snippy.content import Content
 
 
 class Config(object): # pylint: disable=too-many-public-methods
@@ -84,23 +83,8 @@ class Config(object): # pylint: disable=too-many-public-methods
         return Config()
 
     @classmethod
-    def get_content(cls, content=None, use_editor=None):
+    def get_content(cls, content, use_editor=None):
         """Return content after it has been optionally edited."""
-
-        # Set the defaults from commmand line for editor. If content is not
-        # provided at all, it tells that operation is done with digest only.
-        if not content:
-            content = Content((cls.get_content_data(),
-                               cls.get_content_brief(),
-                               cls.get_content_group(),
-                               cls.get_content_tags(),
-                               cls.get_content_links(),
-                               cls.get_category(),
-                               cls.get_filename(),
-                               None,  # utc
-                               None,  # digest
-                               None,  # metadata
-                               None)) # key
 
         if cls.is_editor() or use_editor:
             content = Config._get_edited_content(content)

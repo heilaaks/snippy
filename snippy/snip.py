@@ -6,8 +6,8 @@ from snippy.logger import Logger
 from snippy.cause import Cause
 from snippy.config import Config
 from snippy.storage import Storage
-from snippy.snippet import Snippet
-from snippy.solution import Solution
+from snippy.content import Snippet
+from snippy.content import Solution
 from snippy.profiler import Profiler
 
 

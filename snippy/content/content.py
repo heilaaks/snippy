@@ -5,14 +5,28 @@
 import hashlib
 from snippy.config import Constants as Const
 from snippy.logger import Logger
+from snippy.config import Config
 
 
 class Content(object):
-    """Store content."""
+    """Manage content."""
 
-    def __init__(self, content):
+    def __init__(self, content=None):
         self.logger = Logger(__name__).get()
-        self.content = content
+        if not content:
+            self.content = (Config.get_content_data(),
+                            Config.get_content_brief(),
+                            Config.get_content_group(),
+                            Config.get_content_tags(),
+                            Config.get_content_links(),
+                            Config.get_category(),
+                            Config.get_filename(),
+                            None, # utc
+                            None, # digest
+                            None, # metadata
+                            None) # key
+        else:
+            self.content = content
 
     def __str__(self):
         """Format string from the class object."""

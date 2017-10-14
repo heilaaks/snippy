@@ -1,17 +1,13 @@
 ## TODO
-   - [ ] Add tests for terminal outputs to verify list handling in tags and links.
-   - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Update documents.
-   - [ ] Add digest check when importing data.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
-   - [ ] Fix importing the same data again. There could be a notice if the content already exist.
-   - [ ] Fix case described in log 11448a2e90dab3a2837c1a971798721095d1c160 somehow and make test_wf a bit nicer?
-   - [ ] Why random test_sqlite3db_delete_snippet failure if DB insert tag map/join not sorted?
+   - [ ] How to document tests and create test document? Grepping commands and descriptions?
+   - [ ] Fix case described in 'git log 11448a2e90dab3a' and somehow and make test_wf a bit nicer?
    - [ ] Test Flake8 lint. It seems to require specific version for specific Python version.
    - [ ] Test BytePackager/packagecore.
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
-   - [ ] Fix Python2 test failure for workflow cases. If the data is left in file based DB, it fails cases.
-   - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
+   - [ ] It seems that in Python2 when database test fails, it leaves hanging resources and DB clean does not work?
+   - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
    - [x] Added tox to run tests with multiple Python versions.

@@ -230,6 +230,15 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     pip3 install --user --index-url https://test.pypi.org/simple/ snippy
     pip3 uninstall snippy
 
+    # Release
+    $ git tag -a v0.1.0 -m "Experimental alpha release"
+    $ git push -u origin master
+    $ python setup.py sdist # Build
+    $ twine register dist/snippy-0.1.0.tar.gz
+    $ twine upload dist/*
+    $ python setup.py sdist upload -r pypi
+    $ python setup.py sdist
+
     # Source dist for PyPI
     python setup.py sdist
     python setup.py sdist bdist_wheel

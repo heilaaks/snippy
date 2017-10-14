@@ -13,7 +13,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfCreateSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
+class TestWfCreateSnippet(unittest.TestCase):
     """Test workflows for creating snippets."""
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')

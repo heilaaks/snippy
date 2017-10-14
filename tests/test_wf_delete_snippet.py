@@ -13,7 +13,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfDeleteSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
+class TestWfDeleteSnippet(unittest.TestCase):
     """Test workflows for deleting snippets."""
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')

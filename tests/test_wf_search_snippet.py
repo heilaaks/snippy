@@ -16,7 +16,7 @@ else:
     from StringIO import StringIO # pylint: disable=import-error
 
 
-class TestWfSearchSnippet(unittest.TestCase): # pylint: disable=too-few-public-methods
+class TestWfSearchSnippet(unittest.TestCase):
     """Test workflows for searching snippets."""
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')

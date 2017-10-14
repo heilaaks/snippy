@@ -13,8 +13,7 @@ RUN apk add --no-cache python3 && \
     pip3 install . && \
     snippy import --snippet -f defaults && \
     snippy import --solution -f defaults && \
-    rm -r /root/.cache && \
-    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi
+    rm -r /root/.cache
 
 ENTRYPOINT ["snippy"]
 CMD ["--help"]

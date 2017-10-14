@@ -73,6 +73,10 @@ class Sqlite3Db(object):
             utc = content.get_utc()
             digest = content.get_digest()
             if not self.select_content(content.get_category(), data=content.get_data()):
+                if digest != content.compute_digest():
+                    self.logger.debug('invalid digest found and updated while importing content "%s"', content.get_data())
+                    digest = content.compute_digest()
+
                 inserted = inserted + 1
                 self.insert_content(content, digest, utc)
             else:

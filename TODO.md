@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Fix importing invalid message digest. If the digest is not correct, it is blidly imported.
    - [ ] Add tox to run tests on multiple Python versions.
    - [ ] Add tests for terminal outputs to verify list handling in tags and links.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
@@ -15,6 +14,7 @@
    - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
+   - [x] Fixed invalid message digest during import. Now the digest is checked and updated if needed.
    - [x] Fixed updating solution without --solution option causes the content to be created as snippet.
    - [x] Fixed import content data that already exist. If the data is already in there, it is still OK case.
    - [x] Added same search implementation into solution than snippet.

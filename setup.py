@@ -1,6 +1,6 @@
 from setuptools import setup, find_packages
 
-tests_require = ('pytest', 'pytest-cov', 'codecov', 'mock', 'six')
+tests_require = ('pytest', 'pytest-cov', 'tox', 'codecov', 'mock', 'six')
 docs_require = ('sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme')
 exec(open('snippy/version.py').read())
 

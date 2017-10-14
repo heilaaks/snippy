@@ -34,6 +34,7 @@ clean:
 	find . \( -name \*.pyc -o -name \*.pyo -o -name __pycache__ \) -prune -exec rm -rf {} +
 	rm -drf .cache
 	rm -drf .coverage
+	rm -drf .tox
 	rm -dfr build
 	rm -dfr dist
 	rm -drf docs/build/*

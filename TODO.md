@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Add tox to run tests on multiple Python versions.
    - [ ] Add tests for terminal outputs to verify list handling in tags and links.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Update documents.
@@ -11,9 +10,11 @@
    - [ ] Test Flake8 lint. It seems to require specific version for specific Python version.
    - [ ] Test BytePackager/packagecore.
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
+   - [ ] Fix Python2 test failure for workflow cases. If the data is left in file based DB, it fails cases.
    - [ ] Fix accidental commit of snippy.db with hooks when repo is closed. The file should be always zero.
 
 ## DONE
+   - [x] Added tox to run tests with multiple Python versions.
    - [x] Fixed invalid message digest during import. Now the digest is checked and updated if needed.
    - [x] Fixed updating solution without --solution option causes the content to be created as snippet.
    - [x] Fixed import content data that already exist. If the data is already in there, it is still OK case.

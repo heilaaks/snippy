@@ -11,6 +11,7 @@ dist/
 .cache
 .coverage
 .coverage.*
+.tox
 coverage.xml
 htmlcov/
 pytestdebug.log

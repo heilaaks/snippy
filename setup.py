@@ -11,7 +11,9 @@ setup(
     author_email='laaksonen.heikki.j@gmail.com',
     url='https://github.com/heilaaks/snippy',
     description='Command and solution example management from terminal.',
-    long_description='Manage command examples and solutions directly from command line.',
+    long_description="""Manage command examples and solutions directly from command line. The tool is
+                        intended to support software development workflow by collecting various command
+                        examples and troubleshooting solutions into one manager.""",
     license='Apache 2.0',
     classifiers=[
         'Development Status :: 4 - Beta',

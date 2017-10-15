@@ -300,6 +300,26 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     # Ansicolor
     https://github.com/shiena/ansicolor/blob/master/README.md
 
+
+#######################################
+## Class design
+#######################################
+
+
+    # Use absolute imports
+    > https://stackoverflow.com/questions/4209641/absolute-vs-explicit-relative-import-of-python-module
+    
+    # How to include
+    > https://www.reddit.com/r/Python/comments/1bbbwk/whats_your_opinion_on_what_to_include_in_init_py/
+
+
+            Config
+            
+                from snippy.config import Arguments
+                from snippy.config import Editor
+
+
+
 #######################################
 ## Command line design
 #######################################

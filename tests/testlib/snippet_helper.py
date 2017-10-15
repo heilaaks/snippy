@@ -5,11 +5,11 @@
 import re
 import sys
 import six
-from snippy.config import Constants as Const
-from snippy.cause import Cause
-from snippy.config import Editor
-from snippy.content import Content
 from snippy.snip import Snippy
+from snippy.config.constants import Constants as Const
+from snippy.cause.cause import Cause
+from snippy.config.editor import Editor
+from snippy.content.content import Content
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 

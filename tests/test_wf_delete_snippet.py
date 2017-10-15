@@ -5,9 +5,9 @@
 import sys
 import unittest
 import mock
-from snippy.cause import Cause
-from snippy.config import Constants as Const
-from snippy.storage.database import Sqlite3Db
+from snippy.config.constants import Constants as Const
+from snippy.cause.cause import Cause
+from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 

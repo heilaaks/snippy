@@ -2,13 +2,13 @@
 
 """Snippy - Command and solution management from console."""
 
-from snippy.logger import Logger
-from snippy.cause import Cause
-from snippy.config import Config
-from snippy.storage import Storage
-from snippy.content import Snippet
-from snippy.content import Solution
-from snippy.profiler import Profiler
+from snippy.logger.logger import Logger
+from snippy.cause.cause import Cause
+from snippy.config.config import Config
+from snippy.storage.storage import Storage
+from snippy.content.snippet import Snippet
+from snippy.content.solution import Solution
+from snippy.profiler.profiler import Profiler
 
 
 class Snippy(object):

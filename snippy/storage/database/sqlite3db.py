@@ -5,10 +5,10 @@
 import os
 import re
 import sqlite3
-from snippy.config import Constants as Const
-from snippy.logger import Logger
-from snippy.cause import Cause
-from snippy.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.logger.logger import Logger
+from snippy.cause.cause import Cause
+from snippy.config.config import Config
 
 
 class Sqlite3Db(object):

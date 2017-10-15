@@ -3,9 +3,9 @@
 """content.py: Store content."""
 
 import hashlib
-from snippy.config import Constants as Const
-from snippy.logger import Logger
-from snippy.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.logger.logger import Logger
+from snippy.config.config import Config
 
 
 class Content(object):

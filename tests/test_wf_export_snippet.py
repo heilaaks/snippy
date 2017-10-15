@@ -6,9 +6,10 @@ import sys
 import unittest
 import mock
 import yaml
-from snippy.cause import Cause
-from snippy.config import Config
-from snippy.storage.database import Sqlite3Db
+from snippy.cause.cause import Cause
+from snippy.config.config import Config
+from snippy.migrate.migrate import Migrate
+from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -19,8 +20,8 @@ class TestWfImportSnippet(unittest.TestCase):
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    @mock.patch('snippy.migrate.open', new_callable=mock.mock_open, create=True)
-    #@mock.patch.object(Migrate, 'builtins.open', new_callable=mock.mock_open, create=True)
+    #@mock.patch('snippy.migrate.open', new_callable=mock.mock_open, create=True)
+    @mock.patch.object(Migrate, 'builtins.open', new_callable=mock.mock_open, create=True)
     def test_exporting_snippets(self, mock_file, mock_get_db_location, mock_get_utc_time, mock_safe_dump): # pylint: disable=unused-argument
         """Export snippets to defaults file.
 

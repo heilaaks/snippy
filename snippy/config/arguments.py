@@ -5,9 +5,9 @@
 from __future__ import print_function
 import sys
 import argparse
-from snippy.config import Constants as Const
-from snippy.logger import Logger
 from snippy.version import __version__
+from snippy.config.constants import Constants as Const
+from snippy.logger.logger import Logger
 
 
 class Arguments(object):

@@ -5,9 +5,9 @@
 import re
 import os.path
 import pkg_resources
-from snippy.config import Constants as Const
-from snippy.logger import Logger
-from snippy.cause import Cause
+from snippy.config.constants import Constants as Const
+from snippy.logger.logger import Logger
+from snippy.cause.cause import Cause
 
 
 class Editor(object): # pylint: disable-all

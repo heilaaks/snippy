@@ -3,7 +3,7 @@
 """cause.py: Cause code management."""
 
 import inspect
-from snippy.logger import Logger
+from snippy.logger.logger import Logger
 
 
 class Cause(object):

@@ -6,11 +6,11 @@ import re
 import os.path
 import datetime
 import pkg_resources
-from snippy.config import Constants as Const
-from snippy.logger import Logger
-from snippy.cause import Cause
-from snippy.config import Arguments
-from snippy.config import Editor
+from snippy.config.constants import Constants as Const
+from snippy.logger.logger import Logger
+from snippy.cause.cause import Cause
+from snippy.config.arguments import Arguments
+from snippy.config.editor import Editor
 
 
 class Config(object): # pylint: disable=too-many-public-methods

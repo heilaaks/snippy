@@ -5,8 +5,8 @@
 import sqlite3
 import os.path
 import pkg_resources
-from snippy.config import Constants as Const
-from snippy.storage import Storage
+from snippy.config.constants import Constants as Const
+from snippy.storage.storage import Storage
 
 
 class Sqlite3DbHelper(object):

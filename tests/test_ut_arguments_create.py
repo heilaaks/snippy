@@ -4,8 +4,8 @@
 
 from __future__ import print_function
 import sys
-from snippy.config import Constants as Const
-from snippy.config import Arguments
+from snippy.config.constants import Constants as Const
+from snippy.config.arguments import Arguments
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 

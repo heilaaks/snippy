@@ -2,12 +2,12 @@
 
 """solution.py: Solution management."""
 
-from snippy.config import Constants as Const
-from snippy.logger import Logger
-from snippy.cause import Cause
-from snippy.config import Config
-from snippy.migrate import Migrate
-from snippy.content import Content
+from snippy.config.constants import Constants as Const
+from snippy.logger.logger import Logger
+from snippy.cause.cause import Cause
+from snippy.config.config import Config
+from snippy.migrate.migrate import Migrate
+from snippy.content.content import Content
 
 
 class Solution(object):

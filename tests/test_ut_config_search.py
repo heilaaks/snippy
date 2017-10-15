@@ -5,7 +5,7 @@
 from __future__ import print_function
 import sys
 import unittest
-from snippy.config import Config
+from snippy.config.config import Config
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 

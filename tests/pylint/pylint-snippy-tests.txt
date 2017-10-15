@@ -1,4 +1,6 @@
+************* Module tests.test_wf_export_snippet
+W: 11, 0: Unused Migrate imported from snippy.migrate.migrate (unused-import)
 
---------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+-------------------------------------------------------------------
+Your code has been rated at 9.99/10 (previous run: 10.00/10, -0.01)
 

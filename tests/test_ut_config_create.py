@@ -5,9 +5,9 @@
 from __future__ import print_function
 import sys
 import unittest
-from snippy.config import Constants as Const
-from snippy.config import Config
-from snippy.content import Content
+from snippy.config.constants import Constants as Const
+from snippy.config.config import Config
+from snippy.content.content import Content
 from tests.testlib.arguments_helper import ArgumentsHelper
 
 

@@ -6,11 +6,11 @@ from __future__ import print_function
 import re
 import sys
 import os.path
-from snippy.config import Constants as Const
-from snippy.logger import Logger
-from snippy.cause import Cause
-from snippy.config import Config
-from snippy.content import Content
+from snippy.config.constants import Constants as Const
+from snippy.logger.logger import Logger
+from snippy.cause.cause import Cause
+from snippy.config.config import Config
+from snippy.content.content import Content
 
 
 class Migrate(object):

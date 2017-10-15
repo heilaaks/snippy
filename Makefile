@@ -55,4 +55,4 @@ clean:
 clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall dev test coverage docs lint flake 8docker security-scan clean clean-db
+.PHONY: install upgrade uninstall dev test coverage docs lint flake8 docker security-scan clean clean-db

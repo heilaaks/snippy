@@ -128,7 +128,7 @@ class Arguments(object):
 
         # migration options
         migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Arguments.ARGS_MIGRAT))
-        migrat.add_argument('--template', type=argparse.FileType('w'), help=argparse.SUPPRESS)
+        migrat.add_argument('--template', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
         # support options
         support = parser.add_argument_group(title='support options')
@@ -298,6 +298,25 @@ class Arguments(object):
         cls.logger.info('parsed argument --no-ansi with value "%s"', cls.args.no_ansi)
 
         return cls.args.no_ansi
+
+    @classmethod
+    def is_content_template(cls):
+        """Test if template option was used."""
+
+        return True if hasattr(cls.args, 'template') else False
+
+    @classmethod
+    def get_content_template(cls):
+        """Return the file where the content template is stored."""
+
+        template = None
+        if cls.is_content_template():
+            template = cls.args.template
+            cls.logger.info('parsed argument --template with value %s', cls.args.template)
+        else:
+            cls.logger.info('argument --template was not used')
+
+        return template
 
 
 class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

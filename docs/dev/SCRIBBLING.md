@@ -585,6 +585,13 @@ python snip.py export
 python snip.py export --snippet  # Creates snippets.yaml
 python snip.py export --solution # Creates solutions.yaml
 
+5. Export template
+python runner export --template snippet.txt
+python runner export --solution --template solution.txt
+
+6. Export template without template name (should fail with NOK)
+python runner export --template
+
 ######################
 ## Importing snipppets
 ######################

@@ -75,9 +75,12 @@ class Solution(object):
     def export_all(self):
         """Export solutions."""
 
-        self.logger.debug('exporting solutions %s', Config.get_operation_file())
-        solutions = self.storage.export_content(Const.SOLUTION)
-        Migrate().dump(solutions)
+        if Config.is_export_template():
+            self.export_template()
+        else:
+            self.logger.debug('exporting solutions %s', Config.get_operation_file())
+            solutions = self.storage.export_content(Const.SOLUTION)
+            Migrate().dump(solutions)
 
     def import_all(self):
         """Import solutions."""
@@ -86,6 +89,19 @@ class Solution(object):
         dictionary = Migrate().load(Config.get_operation_file())
         solutions = Content().load(dictionary)
         self.storage.import_content(solutions)
+
+    def export_template(self):
+        """Export solution template."""
+
+        template = Config.get_template()
+        filename = Config.get_template_filename()
+        self.logger.debug('exporting solution template to file %s', filename)
+        try:
+            with open(filename, 'w') as outfile:
+                outfile.write(template)
+        except IOError as exception:
+            self.logger.exception('fatal failure in creating solution template file "%s"', exception)
+            Cause.set_text('cannot export solution template {}'.format(filename))
 
     def run(self):
         """Run the solution management operation."""

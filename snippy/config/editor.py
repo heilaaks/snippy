@@ -40,7 +40,7 @@ class Editor(object):  # pylint: disable-all
     def get_template(self):
         """Get template for editor."""
 
-        template = self.read_template()
+        template = Editor.read_template(self.content.get_category())
         template = self.set_template_data(template)
         template = self.set_template_brief(template)
         template = self.set_template_date(template)
@@ -48,20 +48,6 @@ class Editor(object):  # pylint: disable-all
         template = self.set_template_tags(template)
         template = self.set_template_links(template)
         template = self.set_template_filename(template)
-
-        return template
-
-    def read_template(self):
-        """Return content template."""
-
-        template = Const.EMPTY
-        if self.content.is_snippet():
-            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
-        else:
-            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
-
-        with open(filename, 'r') as infile:
-            template = infile.read()
 
         return template
 
@@ -183,30 +169,6 @@ class Editor(object):  # pylint: disable-all
 
         return filename
 
-    @staticmethod
-    def get_keywords(keywords):
-        """Preprocess the user given keyword list. The keywords are for example the
-        user provided tags or the search keywords. The user may use various formats
-        so each item in a list may be for example a string of comma separated tags.
-
-        The dot is a special case. It is allowed for the regexp to match and print
-        all records."""
-
-        # Examples: Support processing of:
-        #           1. -t docker container cleanup
-        #           2. -t docker, container, cleanup
-        #           3. -t 'docker container cleanup'
-        #           4. -t 'docker, container, cleanup'
-        #           5. -t dockertesting', container-managemenet', cleanup_testing
-        #           6. --sall '.'
-        kw_list = []
-        for tag in keywords:
-            kw_list = kw_list + re.findall(r"[\w\-\.]+", tag)
-
-        sorted_list = sorted(kw_list)
-
-        return tuple(sorted_list)
-
     def set_template_data(self, template):
         """Update template content data."""
 
@@ -265,6 +227,45 @@ class Editor(object):  # pylint: disable-all
 
         filename = self.content.get_filename(Const.STRING_CONTENT)
         template = template.replace('<SNIPPY_FILE>', filename)
+
+        return template
+
+    @staticmethod
+    def get_keywords(keywords):
+        """Preprocess the user given keyword list. The keywords are for example the
+        user provided tags or the search keywords. The user may use various formats
+        so each item in a list may be for example a string of comma separated tags.
+
+        The dot is a special case. It is allowed for the regexp to match and print
+        all records."""
+
+        # Examples: Support processing of:
+        #           1. -t docker container cleanup
+        #           2. -t docker, container, cleanup
+        #           3. -t 'docker container cleanup'
+        #           4. -t 'docker, container, cleanup'
+        #           5. -t dockertesting', container-managemenet', cleanup_testing
+        #           6. --sall '.'
+        kw_list = []
+        for tag in keywords:
+            kw_list = kw_list + re.findall(r"[\w\-\.]+", tag)
+
+        sorted_list = sorted(kw_list)
+
+        return tuple(sorted_list)
+
+    @staticmethod
+    def read_template(category):
+        """Return content template."""
+
+        template = Const.EMPTY
+        if category == Const.SNIPPET:
+            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
+        else:
+            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
+
+        with open(filename, 'r') as infile:
+            template = infile.read()
 
         return template
 

@@ -37,6 +37,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['content']['tags'] = cls._parse_content_tags()
         cls.config['content']['links'] = cls._parse_content_links()
         cls.config['content']['filename'] = Const.EMPTY
+        cls.config['content']['template'] = cls._parse_content_template()
         cls.config['operation'] = {}
         cls.config['operation']['task'] = cls._parse_operation()
         cls.config['operation']['file'] = {}
@@ -122,6 +123,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if cls.config['operation']['task'] == 'export' else False
 
     @classmethod
+    def is_export_template(cls):
+        """Test if operation was export template."""
+
+        return True if cls.config['operation']['task'] == 'export' and cls.config['content']['template'] else False
+
+    @classmethod
     def is_operation_import(cls):
         """Test if operation was import."""
 
@@ -198,9 +205,15 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
     @classmethod
     def get_filename(cls):
-        """Return solution filename."""
+        """Return content filename."""
 
         return cls.config['content']['filename']
+
+    @classmethod
+    def get_template_filename(cls):
+        """Return template filename."""
+
+        return cls.config['content']['template']
 
     @classmethod
     def is_search_all(cls):
@@ -267,6 +280,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if ANSI characters like colors are disabled in the command output."""
 
         return False if cls.config['switches']['no_ansi'] else True
+
+    @classmethod
+    def get_template(cls):
+        """Return template suitable for operation category."""
+
+        return Editor.read_template(cls.get_category())
 
     @classmethod
     def get_storage_path(cls):
@@ -369,6 +388,26 @@ class Config(object):  # pylint: disable=too-many-public-methods
         link_list = sorted(link_list)
 
         return tuple(link_list)
+
+    @classmethod
+    def _parse_content_template(cls):
+        """Parse the content template filename."""
+
+        filename = cls.args.get_content_template()
+
+        if cls.args.is_content_template():
+            # Set defaults if  user did not provide any.
+            default_file = 'snippet.text'
+            if Config.is_category_solution():
+                default_file = 'solution.text'
+            if not filename:
+                filename = os.path.join('./', default_file)
+
+            _, extension = os.path.splitext(filename)
+            if not ('txt' in extension or 'text' in extension):
+                Cause.set_text('only text files are supported for content template {}'.format(filename))
+
+        return filename
 
     @classmethod
     def _parse_digest(cls):
@@ -475,7 +514,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         if not filename:
             filename = os.path.join('./', default_file)
 
-        # User defined fontent to/from user specified file.
+        # User defined content to/from user specified file.
         name, extension = os.path.splitext(filename)
         if name and ('yaml' in extension or 'yml' in extension):
             filetype = Const.FILE_TYPE_YAML

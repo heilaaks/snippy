@@ -1,5 +1,6 @@
 ## TODO
-   - [ ] Fix missing export for template file.
+   - [ ] Fix exporting the template. The argparse seems to fail if no arguments to --template which makes empty logic useless.
+   - [ ] Add import from file which is created based on template.
    - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
@@ -11,6 +12,7 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added missing export of content template file.
    - [x] Fixed exporting without specifying the file for operation.
    - [x] Fixed export operation workflow test to properly mock the generated file.
    - [x] Added tox to run tests with multiple Python versions.

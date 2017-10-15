@@ -82,16 +82,19 @@ class Snippet(object):
             content_digest = snippets[0].get_digest()
             self.storage.delete(content_digest)
         elif not snippets:
-            Cause.set_text('cannot find snippet to be deleted with %s' % log_string)
+            Cause.set_text('cannot find snippet to be deleted with {}'.format(log_string))
         else:
             Cause.set_text('cannot delete multiple snippets with same {}'.format(log_string))
 
     def export_all(self):
         """Export snippets."""
 
-        self.logger.debug('exporting snippets %s', Config.get_operation_file())
-        snippets = self.storage.export_content(Const.SNIPPET)
-        Migrate().dump(snippets)
+        if Config.is_export_template():
+            self.export_template()
+        else:
+            self.logger.debug('exporting snippets %s', Config.get_operation_file())
+            snippets = self.storage.export_content(Const.SNIPPET)
+            Migrate().dump(snippets)
 
     def import_all(self):
         """Import snippets."""
@@ -100,6 +103,19 @@ class Snippet(object):
         dictionary = Migrate().load(Config.get_operation_file())
         snippets = Content().load(dictionary)
         self.storage.import_content(snippets)
+
+    def export_template(self):
+        """Export snippet template."""
+
+        template = Config.get_template()
+        filename = Config.get_template_filename()
+        self.logger.debug('exporting snippet template to file %s', filename)
+        try:
+            with open(filename, 'w') as outfile:
+                outfile.write(template)
+        except IOError as exception:
+            self.logger.exception('fatal failure in creating snippet template file "%s"', exception)
+            Cause.set_text('cannot export snippet template {}'.format(filename))
 
     def run(self):
         """Run the snippet management operation."""

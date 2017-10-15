@@ -192,6 +192,13 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     > http://chase-seibert.github.io/blog/2015/06/25/python-mocking-cookbook.html
 
 #######################################
+## Mocks
+#######################################
+
+    # Mock only specific builtin.
+    > http://www.voidspace.org.uk/python/weblog/arch_d7_2010_10_02.shtml#e1188
+
+#######################################
 ## Tox
 #######################################
 

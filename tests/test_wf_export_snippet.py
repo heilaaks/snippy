@@ -8,7 +8,6 @@ import mock
 import yaml
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from snippy.migrate.migrate import Migrate
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -20,8 +19,7 @@ class TestWfImportSnippet(unittest.TestCase):
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    #@mock.patch('snippy.migrate.open', new_callable=mock.mock_open, create=True)
-    @mock.patch.object(Migrate, 'builtins.open', new_callable=mock.mock_open, create=True)
+    @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
     def test_exporting_snippets(self, mock_file, mock_get_db_location, mock_get_utc_time, mock_safe_dump): # pylint: disable=unused-argument
         """Export snippets to defaults file.
 
@@ -33,7 +31,8 @@ class TestWfImportSnippet(unittest.TestCase):
             $ python snip.py export -f defaults
         Expected results:
             1 Two snippets are exported.
-            2 Exit cause is OK.
+            2 Correct file is created and it is only for write.
+            3 Exit cause is OK.
         """
 
         mock_get_db_location.return_value = Database.get_storage()
@@ -66,7 +65,7 @@ class TestWfImportSnippet(unittest.TestCase):
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
         mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
-        #   mock_file.assert_called_once_with("fileA")
+        mock_file.assert_called_once_with('./snippets.yaml', 'w')
 
         # Release all resources
         snippy.release()

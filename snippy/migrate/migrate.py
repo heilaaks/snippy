@@ -10,7 +10,6 @@ from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from snippy.content.content import Content
 
 
 class Migrate(object):
@@ -139,9 +138,8 @@ class Migrate(object):
 
     @classmethod
     def load(cls, filename):
-        """Load contents from file."""
+        """Load dictionary from file."""
 
-        snippets = ()
         dictionary = {}
         cls.logger.debug('importing contents from file %s', filename)
         if os.path.isfile(filename):
@@ -161,11 +159,10 @@ class Migrate(object):
                     cls.logger.exception('fatal exception while loading the import file %s "%s"', filename, exception)
                     sys.exit()
 
-            snippets = Migrate._get_contents(dictionary['content'])
         else:
             Cause.set_text('cannot read file {}'.format(filename))
 
-        return snippets
+        return dictionary
 
     @staticmethod
     def _terminal_header(colors=False):
@@ -259,31 +256,3 @@ class Migrate(object):
                       'digest': content.get_digest()}
 
         return dictionary
-
-    @staticmethod
-    def _get_contents(dictionary):
-        """Convert dictionary to content tupe."""
-
-        contents = []
-        for entry in dictionary:
-            contents.append(Migrate._get_content(entry))
-
-        return tuple(contents)
-
-    @staticmethod
-    def _get_content(dictionary):
-        """Convert single dictionary entry into Content object."""
-
-        content = Content([dictionary['data'],
-                           dictionary['brief'],
-                           dictionary['group'],
-                           dictionary['tags'],
-                           dictionary['links'],
-                           dictionary['category'],
-                           dictionary['filename'],
-                           dictionary['utc'],
-                           dictionary['digest'],
-                           None,  # metadata
-                           None]) # key
-
-        return content

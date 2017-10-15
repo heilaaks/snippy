@@ -1,6 +1,4 @@
-************* Module snippy.content.content
-E: 34, 8: No name 'Migrate' in module 'snippy.migrate' (no-name-in-module)
 
--------------------------------------------------------------------
-Your code has been rated at 9.95/10 (previous run: 10.00/10, -0.05)
+--------------------------------------------------------------------
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 

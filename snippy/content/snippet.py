@@ -97,7 +97,8 @@ class Snippet(object):
         """Import snippets."""
 
         self.logger.debug('importing snippets %s', Config.get_operation_file())
-        snippets = Migrate().load(Config.get_operation_file())
+        dictionary = Migrate().load(Config.get_operation_file())
+        snippets = Content().load(dictionary)
         self.storage.import_content(snippets)
 
     def run(self):

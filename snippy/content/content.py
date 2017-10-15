@@ -31,7 +31,7 @@ class Content(object):
     def __str__(self):
         """Format string from the class object."""
 
-        from snippy.migrate import Migrate
+        from snippy.migrate.migrate import Migrate
 
         return Migrate().get_terminal_text((self,), colors=True, debug=True)
 
@@ -160,5 +160,42 @@ class Content(object):
                    self.get_digest(),
                    self.get_metadata(),
                    self.get_key()]
+
+        return content
+
+    @classmethod
+    def load(cls, dictionary):
+        """Load contents from dictionary."""
+
+        contents = Content._get_contents(dictionary['content'])
+
+        return contents
+
+
+    @staticmethod
+    def _get_contents(dictionary):
+        """Convert dictionary to content tupe."""
+
+        contents = []
+        for entry in dictionary:
+            contents.append(Content._get_content(entry))
+
+        return tuple(contents)
+
+    @staticmethod
+    def _get_content(dictionary):
+        """Convert single dictionary entry into Content object."""
+
+        content = Content([dictionary['data'],
+                           dictionary['brief'],
+                           dictionary['group'],
+                           dictionary['tags'],
+                           dictionary['links'],
+                           dictionary['category'],
+                           dictionary['filename'],
+                           dictionary['utc'],
+                           dictionary['digest'],
+                           None,  # metadata
+                           None]) # key
 
         return content

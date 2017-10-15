@@ -461,19 +461,21 @@ class Config(object):  # pylint: disable=too-many-public-methods
         filename = cls.args.get_operation_file()
         filetype = Const.FILE_TYPE_NONE
 
-        if not filename:
-            return (filename, filetype)
-
-        # Import default content with keyword 'default'.
+        # Operate import and exports default content with keyword 'defaults'.
         default_file = 'snippets.yaml'
         if Config.is_category_solution():
             default_file = 'solutions.yaml'
-
         if filename == 'defaults':
             filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/default'), default_file)
             filetype = Const.FILE_TYPE_YAML
 
-        # Content to/from user specified file.
+        # In case user did not provide filename, set defaults. For example
+        # if user defined export or import operation without the file, the
+        # default files are used.
+        if not filename:
+            filename = os.path.join('./', default_file)
+
+        # User defined fontent to/from user specified file.
         name, extension = os.path.splitext(filename)
         if name and ('yaml' in extension or 'yml' in extension):
             filetype = Const.FILE_TYPE_YAML

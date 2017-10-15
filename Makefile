@@ -47,9 +47,11 @@ clean:
 	rm -f pytestdebug.log
 	rm -f snippets.json
 	rm -f snippets.txt
+	rm -f snippets.text
 	rm -f snippets.yaml
 	rm -f solutions.json
 	rm -f solutions.txt
+	rm -f solutions.text
 	rm -f solutions.yaml
 
 clean-db:

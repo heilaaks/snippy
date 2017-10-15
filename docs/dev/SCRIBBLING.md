@@ -580,6 +580,11 @@ python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all dock
 python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'moby' -t moby,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
 python snip.py export --file ./snippets.txt
 
+4. Export without file to use default file
+python snip.py export
+python snip.py export --snippet  # Creates snippets.yaml
+python snip.py export --solution # Creates solutions.yaml
+
 ######################
 ## Importing snipppets
 ######################
@@ -603,6 +608,21 @@ python snip.py import --file ./snippets.json
 4. Import snippet defaults: 1) python runner import -f defaults 2) python runner import --snippet -f defaults
 
 5. Import solution defaults: python runner import --solution -f defaults
+
+6. Import content from invalid file
+python runner import -f foo.yaml
+
+7. Import content from unidentified file format
+python runner import -f foo.bar
+
+8. Import content from text file (not supported)
+python runner import -f foo.txt
+
+8. Import content without specifying the file (that defaults to snippets.yaml or solutions.yaml)
+python runner import
+python runner import --solution
+
+
 
 ########################
 ## Supplementary options

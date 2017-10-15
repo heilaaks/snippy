@@ -1,6 +1,5 @@
 ## TODO
    - [ ] Fix missing export for template file.
-   - [ ] Fix exporting without the file: python runner export --template snippets.txt
    - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
@@ -12,6 +11,7 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed exporting without specifying the file for operation.
    - [x] Fixed export operation workflow test to properly mock the generated file.
    - [x] Added tox to run tests with multiple Python versions.
    - [x] Fixed invalid message digest during import. Now the digest is checked and updated if needed.

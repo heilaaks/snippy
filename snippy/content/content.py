@@ -167,7 +167,10 @@ class Content(object):
     def load(cls, dictionary):
         """Load contents from dictionary."""
 
-        contents = Content._get_contents(dictionary['content'])
+        contents = ()
+
+        if 'content' in dictionary:
+            contents = Content._get_contents(dictionary['content'])
 
         return contents
 

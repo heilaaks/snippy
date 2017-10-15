@@ -307,6 +307,17 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     # Ansicolor
     https://github.com/shiena/ansicolor/blob/master/README.md
 
+#######################################
+## Docker Hub
+#######################################
+
+    # Push docker hub with Fedora
+    $ docker login docker.io
+    $ docker tag <image-hash> docker.io/<docker-hub-user-id>/<name>
+    $ docker push docker.io/<docker-hub-user-id>/<name>
+    
+    # Pull
+    $ docker pull heilaaks/snippy:v0.1.0
 
 #######################################
 ## Class design

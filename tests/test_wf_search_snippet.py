@@ -28,13 +28,13 @@ class TestWfSearchSnippet(unittest.TestCase):
         Execution:
             $ python snip.py create SnippetHelper().get_snippet(0)
             $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py search --sall redis --no-color  # Match only data
-            $ python snip.py search --sall all --no-color    # Match only brief
-            $ python snip.py search --sall docker --no-color # Match only group
-            $ python snip.py search --sall moby --no-color   # Match only tags
-            $ python snip.py search --sall 53908d68425c61dc --no-color
-            $ python snip.py search --sall . --no-color
-            $ python snip.py search --sall --no-color
+            $ python snip.py search --sall redis --no-ansi  # Match only data
+            $ python snip.py search --sall all --no-ansi    # Match only brief
+            $ python snip.py search --sall docker --no-ansi # Match only group
+            $ python snip.py search --sall moby --no-ansi   # Match only tags
+            $ python snip.py search --sall 53908d68425c61dc --no-ansi
+            $ python snip.py search --sall . --no-ansi
+            $ python snip.py search --sall --no-ansi
         Expected results:
             1 Snippet is found from data with --sall option.
             2 Snippet is found from brief with --sall option.
@@ -53,7 +53,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         # Find from snippet2 data.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'redis', '--no-colors']
+        sys.argv = ['snippy', 'search', '--sall', 'redis', '--no-ansi']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -69,7 +69,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         # Find from snippet1 brief.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'all', '--no-colors']
+        sys.argv = ['snippy', 'search', '--sall', 'all', '--no-ansi']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -84,7 +84,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         # Find from group that results both snippets.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'docker', '--no-colors']
+        sys.argv = ['snippy', 'search', '--sall', 'docker', '--no-ansi']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -106,7 +106,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         # Find from tags that results both snippets.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'moby', '--no-colors']
+        sys.argv = ['snippy', 'search', '--sall', 'moby', '--no-ansi']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -128,7 +128,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         # Find based on content digest with --sall option.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-colors']
+        sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -144,7 +144,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         # List all snippets based on '.' keyword.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '.', '--no-colors']
+        sys.argv = ['snippy', 'search', '--sall', '.', '--no-ansi']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -166,7 +166,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         # List all snippets when no keywords are provided.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '--no-colors']
+        sys.argv = ['snippy', 'search', '--sall', '--no-ansi']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -197,7 +197,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         Execution:
             $ python snip.py create SnippetHelper().get_snippet(0)
             $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py search -c 'docker rm --volumes $(docker ps --all --quiet)' --no-color
+            $ python snip.py search -c 'docker rm --volumes $(docker ps --all --quiet)' --no-ansi
         Expected results:
             1 Snippet is found based on content data.
             2 Exit cause is OK.
@@ -210,7 +210,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         # Find snippet based on content data.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '--no-colors']
+        sys.argv = ['snippy', 'search', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -234,7 +234,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         Execution:
             $ python snip.py create SnippetHelper().get_snippet(0)
             $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py search -d 53908d68425c61dc --no-color
+            $ python snip.py search -d 53908d68425c61dc --no-ansi
         Expected results:
             1 Snippet is found based on content digest.
             2 Exit cause is OK.
@@ -247,7 +247,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         # Find based on content digest with -d|--digest option.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc', '--no-colors']
+        sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi']
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()

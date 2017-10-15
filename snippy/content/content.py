@@ -33,7 +33,7 @@ class Content(object):
 
         from snippy.migrate.migrate import Migrate
 
-        return Migrate().get_terminal_text((self,), colors=True, debug=True)
+        return Migrate().get_terminal_text((self,), ansi=True, debug=True)
 
     def get(self):
         """Get content."""

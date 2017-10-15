@@ -1,4 +1,6 @@
 ## TODO
+   - [ ] Fix missing export for template file.
+   - [ ] Fix exporting without the file: python runner export --template snippets.txt
    - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?

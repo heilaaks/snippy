@@ -48,7 +48,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['input'] = {}
         cls.config['input']['editor'] = cls._parse_editor()
         cls.config['switches'] = {}
-        cls.config['switches']['no_colors'] = cls._parse_no_color()
+        cls.config['switches']['no_ansi'] = cls._parse_no_ansi()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
         cls.config['storage']['file'] = 'snippy.db'
@@ -263,10 +263,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if cls.config['operation']['file']['type'] == Const.FILE_TYPE_TEXT else False
 
     @classmethod
-    def use_colors(cls):
-        """Test if colors are disabled in the command output."""
+    def use_ansi(cls):
+        """Test if ANSI characters like colors are disabled in the command output."""
 
-        return False if cls.config['switches']['no_colors'] else True
+        return False if cls.config['switches']['no_ansi'] else True
 
     @classmethod
     def get_storage_path(cls):
@@ -423,10 +423,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.args.get_editor()
 
     @classmethod
-    def _parse_no_color(cls):
-        """Process color usage in terminal output."""
+    def _parse_no_ansi(cls):
+        """Process ANSI control character usage in terminal output."""
 
-        return cls.args.get_no_colors()
+        return cls.args.get_no_ansi()
 
     @classmethod
     def _get_edited_content(cls, content):

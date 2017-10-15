@@ -24,8 +24,8 @@ commands from the search query.
 
 .. code:: bash
 
-    snippy search --sall . | grep --color=never '\$'
-    snippy search --sgrp docker | grep --color=never '\$'
+    snippy search --sall . --no-ansi | grep '\$'
+    snippy search --sgrp docker --no-ansi | grep '\$'
 
 Filtering out solution content to list only the metadata.
 

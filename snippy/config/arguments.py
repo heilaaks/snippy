@@ -64,7 +64,7 @@ class Arguments(object):
                      '    Searching and filtering content.',
                      '      $ snippy search --snippet --sall docker,moby',
                      '      $ snippy search --snippet --sall .',
-                     '      $ snippy search --snippet --sall . | grep --color=never \'\\$\'',
+                     '      $ snippy search --snippet --sall . --no-ansi | grep \'\\$\'',
                      '      $ snippy search --solution --sall .',
                      '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
                      '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
@@ -138,7 +138,7 @@ class Arguments(object):
         support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('--no-colors', dest='no_colors', action='store_true', default=False, help=argparse.SUPPRESS)
+        support.add_argument('--no-ansi', dest='no_ansi', action='store_true', default=False, help=argparse.SUPPRESS)
 
         Arguments.args = parser.parse_args()
 
@@ -292,12 +292,12 @@ class Arguments(object):
         return cls.args.file
 
     @classmethod
-    def get_no_colors(cls):
-        """Return if colors are disbled in terminal output."""
+    def get_no_ansi(cls):
+        """Return if ANSI characters like color codes are disbled in terminal output."""
 
-        cls.logger.info('parsed argument --no-colors with value "%s"', cls.args.no_colors)
+        cls.logger.info('parsed argument --no-ansi with value "%s"', cls.args.no_ansi)
 
-        return cls.args.no_colors
+        return cls.args.no_ansi
 
 
 class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

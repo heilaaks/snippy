@@ -27,37 +27,37 @@ class Migrate(object):
         cls.logger.debug('printing content to terminal')
         regexp = Config.get_search_filter()
         if regexp:
-            # In case user provided regexp filter, the ANSI color codes are
-            # not used in order to make the filter work as exptected.
-            text = Migrate.get_terminal_text(contents, colors=False)
+            # In case user provided regexp filter, the ANSI control characters for
+            # colors are not used in order to make the filter work as exptected.
+            text = Migrate.get_terminal_text(contents, ansi=False)
             match = re.findall(regexp, text)
             if match:
                 print(Const.NEWLINE.join(match))
                 print()
         else:
-            text = Migrate.get_terminal_text(contents, colors=Config.use_colors())
+            text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi())
             if text:
                 print(text)
 
     @staticmethod
-    def get_terminal_text(contents, colors=False, debug=False):
+    def get_terminal_text(contents, ansi=False, debug=False):
         """Format content for terminal output."""
 
         text = Const.EMPTY
         for idx, content in enumerate(contents, start=1):
             if content.is_snippet():
-                text = text + Migrate.get_snippet_text(idx, content, colors)
+                text = text + Migrate.get_snippet_text(idx, content, ansi)
             else:
-                text = text + Migrate.get_solution_text(idx, content, colors)
+                text = text + Migrate.get_solution_text(idx, content, ansi)
 
             if debug:
-                text = text + Migrate._terminal_category(colors) % content.get_category()
-                text = text + Migrate._terminal_filename(colors) % content.get_filename()
-                text = text + Migrate._terminal_utc(colors) % content.get_utc()
-                text = text + Migrate._terminal_digest(colors) % (content.get_digest(),
-                                                                  content.get_digest() == content.compute_digest())
-                text = text + Migrate._terminal_metadata(colors) % content.get_metadata()
-                text = text + Migrate._terminal_key(colors) % content.get_key()
+                text = text + Migrate._terminal_category(ansi) % content.get_category()
+                text = text + Migrate._terminal_filename(ansi) % content.get_filename()
+                text = text + Migrate._terminal_utc(ansi) % content.get_utc()
+                text = text + Migrate._terminal_digest(ansi) % (content.get_digest(),
+                                                                content.get_digest() == content.compute_digest())
+                text = text + Migrate._terminal_metadata(ansi) % content.get_metadata()
+                text = text + Migrate._terminal_key(ansi) % content.get_key()
 
         if contents:
             # Set only one empty line at the end of string for beautified output.
@@ -67,42 +67,42 @@ class Migrate(object):
         return text
 
     @staticmethod
-    def get_snippet_text(idx, snippet, colors=False):
+    def get_snippet_text(idx, snippet, ansi=False):
         """Format snippets for terminal or pure text output."""
 
         text = Const.EMPTY
         data = Const.EMPTY
         links = Const.EMPTY
-        text = text + Migrate._terminal_header(colors) % (idx, snippet.get_brief(),
-                                                          snippet.get_group(),
-                                                          snippet.get_digest())
-        text = text + Const.EMPTY.join([Migrate._terminal_snippet(colors) % (data, line)
+        text = text + Migrate._terminal_header(ansi) % (idx, snippet.get_brief(),
+                                                        snippet.get_group(),
+                                                        snippet.get_digest())
+        text = text + Const.EMPTY.join([Migrate._terminal_snippet(ansi) % (data, line)
                                         for line in snippet.get_data()])
         text = text + Const.NEWLINE
-        text = Migrate._terminal_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet.get_tags()))
-        text = text + Const.EMPTY.join([Migrate._terminal_links(colors) % (links, link)
+        text = Migrate._terminal_tags(ansi) % (text, Const.DELIMITER_TAGS.join(snippet.get_tags()))
+        text = text + Const.EMPTY.join([Migrate._terminal_links(ansi) % (links, link)
                                         for link in snippet.get_links()])
         text = text + Const.NEWLINE
 
         return text
 
     @staticmethod
-    def get_solution_text(idx, solution, colors=False):
+    def get_solution_text(idx, solution, ansi=False):
         """Format solutions for terminal or pure text output."""
 
         text = Const.EMPTY
         data = Const.EMPTY
         links = Const.EMPTY
-        text = text + Migrate._terminal_header(colors) % (idx, solution.get_brief(),
-                                                          solution.get_group(),
-                                                          solution.get_digest())
+        text = text + Migrate._terminal_header(ansi) % (idx, solution.get_brief(),
+                                                        solution.get_group(),
+                                                        solution.get_digest())
         text = text + Const.NEWLINE
-        text = Migrate._terminal_tags(colors) % (text, Const.DELIMITER_TAGS.join(solution.get_tags()))
-        text = text + Const.EMPTY.join([Migrate._terminal_links(colors) % (links, link)
+        text = Migrate._terminal_tags(ansi) % (text, Const.DELIMITER_TAGS.join(solution.get_tags()))
+        text = text + Const.EMPTY.join([Migrate._terminal_links(ansi) % (links, link)
                                         for link in solution.get_links()])
         text = text + Const.NEWLINE
 
-        text = text + Const.EMPTY.join([Migrate._terminal_solution(colors) % (data, line)
+        text = text + Const.EMPTY.join([Migrate._terminal_solution(ansi) % (data, line)
                                         for line in solution.get_data()])
         text = text + Const.NEWLINE
 
@@ -127,7 +127,7 @@ class Migrate(object):
                     json.dump(dictionary_list, outfile)
                     outfile.write(Const.NEWLINE)
                 elif Config.is_file_type_text():
-                    outfile.write(Migrate.get_terminal_text(contents, colors=False))
+                    outfile.write(Migrate.get_terminal_text(contents, ansi=False))
                 else:
                     cls.logger.info('unknown export format')
             except (TypeError, ValueError, yaml.YAMLError) as exception:
@@ -163,71 +163,71 @@ class Migrate(object):
         return dictionary
 
     @staticmethod
-    def _terminal_header(colors=False):
+    def _terminal_header(ansi=False):
         """Format content text header."""
 
-        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0m @%s \x1b[0;2m[%.16s]\x1b[0m\n' if colors \
+        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0m @%s \x1b[0;2m[%.16s]\x1b[0m\n' if ansi \
                else '%d. %s @%s [%.16s]\n'
 
     @staticmethod
-    def _terminal_snippet(colors=False):
+    def _terminal_snippet(ansi=False):
         """Format snippet text."""
 
-        return '%s   \x1b[91m$\x1b[0m %s\n' if colors else '%s   $ %s\n'
+        return '%s   \x1b[91m$\x1b[0m %s\n' if ansi else '%s   $ %s\n'
 
     @staticmethod
-    def _terminal_solution(colors=False):
+    def _terminal_solution(ansi=False):
         """Format solution text."""
 
-        return '%s   \x1b[91m:\x1b[0m %s\n' if colors else '%s   : %s\n'
+        return '%s   \x1b[91m:\x1b[0m %s\n' if ansi else '%s   : %s\n'
 
     @staticmethod
-    def _terminal_tags(colors=False):
+    def _terminal_tags(ansi=False):
         """Format content tags."""
 
-        return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   # %s\n'
+        return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if ansi else '%s   # %s\n'
 
     @staticmethod
-    def _terminal_links(colors=False):
+    def _terminal_links(ansi=False):
         """Format content links."""
 
-        return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if colors else '%s   > %s\n'
+        return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if ansi else '%s   > %s\n'
 
     @staticmethod
-    def _terminal_category(colors=False):
+    def _terminal_category(ansi=False):
         """Format content category."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m : %s\n' if colors else '   ! category : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m : %s\n' if ansi else '   ! category : %s\n'
 
     @staticmethod
-    def _terminal_filename(colors=False):
+    def _terminal_filename(ansi=False):
         """Format content filename."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m : %s\n' if colors else '   ! filename : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m : %s\n' if ansi else '   ! filename : %s\n'
 
     @staticmethod
-    def _terminal_utc(colors=False):
+    def _terminal_utc(ansi=False):
         """Format content utc."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mutc\x1b[0m      : %s\n' if colors else '   ! utc      : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mutc\x1b[0m      : %s\n' if ansi else '   ! utc      : %s\n'
 
     @staticmethod
-    def _terminal_digest(colors=False):
+    def _terminal_digest(ansi=False):
         """Format content digest."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m   : %s (%s)\n' if colors else '   ! digest   : %s (%s)\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m   : %s (%s)\n' if ansi else '   ! digest   : %s (%s)\n'
 
     @staticmethod
-    def _terminal_metadata(colors=False):
+    def _terminal_metadata(ansi=False):
         """Format content metadata."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m : %s\n' if colors else '   ! metadata : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m : %s\n' if ansi else '   ! metadata : %s\n'
 
     @staticmethod
-    def _terminal_key(colors=False):
+    def _terminal_key(ansi=False):
         """Format content key."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m      : %s\n' if colors else '   ! key      : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m      : %s\n' if ansi else '   ! key      : %s\n'
 
     @staticmethod
     def get_dictionary_list(contents):

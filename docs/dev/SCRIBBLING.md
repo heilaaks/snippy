@@ -320,11 +320,26 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     > https://www.reddit.com/r/Python/comments/1bbbwk/whats_your_opinion_on_what_to_include_in_init_py/
 
 
-            Config
-            
-                from snippy.config import Arguments
-                from snippy.config import Editor
+    # Class hierarchy design notes
+    
+    1. Any class can import Constants()
+    
+    2. Any class can import Logger()
+    
+    3. Any class can import Cause()
+    
+    4. Migrate() should be kept in state where anyone can import it.
+    
+    5. Only the Config() can import and imported classes must not import outside config sub-package.
+        A) Arguments()
+        B) Editor()
 
+    6. Only Storage(), Snippet() and Solution() can import Content()
+    
+    7. Only Storage() can import Sqlite3db()
+    
+    8. Content() is designed to be used by Snippet() and Solution(). It is not designed to abstract
+       or hide Snippet() or Solution() classes.
 
 
 #######################################

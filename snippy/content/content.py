@@ -21,10 +21,10 @@ class Content(object):
                             Config.get_content_links(),
                             Config.get_category(),
                             Config.get_filename(),
-                            None, # utc
-                            None, # digest
-                            None, # metadata
-                            None) # key
+                            None,  # utc
+                            None,  # digest
+                            None,  # metadata
+                            None)  # key
         else:
             self.content = content
 
@@ -65,12 +65,12 @@ class Content(object):
 
         return data
 
-    def get_brief(self, form=Const.NATIVE_CONTENT): # pylint: disable=unused-argument
+    def get_brief(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
         """Return content brief."""
 
         return self.content[Const.BRIEF]
 
-    def get_group(self, form=Const.NATIVE_CONTENT): # pylint: disable=unused-argument
+    def get_group(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
         """Return content group."""
 
         return self.content[Const.GROUP]
@@ -171,7 +171,6 @@ class Content(object):
 
         return contents
 
-
     @staticmethod
     def _get_contents(dictionary):
         """Convert dictionary to content tupe."""
@@ -195,7 +194,7 @@ class Content(object):
                            dictionary['filename'],
                            dictionary['utc'],
                            dictionary['digest'],
-                           None,  # metadata
-                           None]) # key
+                           None,   # metadata
+                           None])  # key
 
         return content

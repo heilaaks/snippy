@@ -13,7 +13,7 @@ from snippy.config.arguments import Arguments
 from snippy.config.editor import Editor
 
 
-class Config(object): # pylint: disable=too-many-public-methods
+class Config(object):  # pylint: disable=too-many-public-methods
     """Global configuration management."""
 
     args = {}
@@ -367,7 +367,6 @@ class Config(object): # pylint: disable=too-many-public-methods
         #           1. -l docker container cleanup # Space separated string of links
         link_list = links.split()
         link_list = sorted(link_list)
-
 
         return tuple(link_list)
 

@@ -5,7 +5,7 @@
 import sys
 
 
-class Constants(object): # pylint: disable=too-few-public-methods
+class Constants(object):  # pylint: disable=too-few-public-methods
     """Globals constants for the tool."""
 
     SPACE = ' '
@@ -48,8 +48,8 @@ class Constants(object): # pylint: disable=too-few-public-methods
     TESTING = 11
 
     # Content formats
-    NATIVE_CONTENT = 0 # Native format from content.
-    STRING_CONTENT = 1 # Single String from content.
+    NATIVE_CONTENT = 0  # Native format from content.
+    STRING_CONTENT = 1  # Single String from content.
 
     # Default values for content fields.
     DEFAULT_GROUP = 'default'

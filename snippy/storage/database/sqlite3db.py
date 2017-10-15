@@ -264,14 +264,14 @@ class Sqlite3Db(object):
         search = '('
         for column in columns:
             search = search + column + ' REGEXP ? OR '
-        search = search[:-4] # Remove last ' OR ' added by the loop.
+        search = search[:-4]  # Remove last ' OR ' added by the loop.
         search = search + ') AND (category=?) '
 
         # Generate token for each searched column like
         for token in keywords:
             query = query + search + 'OR '
-            query_args = query_args + [token] * len(columns) + [category] # Token for each search colum in the row.
-        query = query[:-3] # Remove last 'OR ' added by the loop.
+            query_args = query_args + [token] * len(columns) + [category]  # Token for each search colum in the row.
+        query = query[:-3]  # Remove last 'OR ' added by the loop.
         query = query + 'ORDER BY id ASC'
 
         return (query, query_args)

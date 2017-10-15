@@ -10,7 +10,7 @@ from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 
 
-class Editor(object): # pylint: disable-all
+class Editor(object):  # pylint: disable-all
     """Editor based configuration."""
 
     # Editor inputs

@@ -70,21 +70,19 @@ class Migrate(object):
     def get_snippet_text(idx, snippet, colors=False):
         """Format snippets for terminal or pure text output."""
 
-
         text = Const.EMPTY
         data = Const.EMPTY
         links = Const.EMPTY
         text = text + Migrate._terminal_header(colors) % (idx, snippet.get_brief(),
-                                                          snippet.get_group(), \
+                                                          snippet.get_group(),
                                                           snippet.get_digest())
-        text = text + Const.EMPTY.join([Migrate._terminal_snippet(colors) % (data, line) \
+        text = text + Const.EMPTY.join([Migrate._terminal_snippet(colors) % (data, line)
                                         for line in snippet.get_data()])
         text = text + Const.NEWLINE
         text = Migrate._terminal_tags(colors) % (text, Const.DELIMITER_TAGS.join(snippet.get_tags()))
-        text = text + Const.EMPTY.join([Migrate._terminal_links(colors) % (links, link) \
+        text = text + Const.EMPTY.join([Migrate._terminal_links(colors) % (links, link)
                                         for link in snippet.get_links()])
         text = text + Const.NEWLINE
-
 
         return text
 
@@ -96,15 +94,15 @@ class Migrate(object):
         data = Const.EMPTY
         links = Const.EMPTY
         text = text + Migrate._terminal_header(colors) % (idx, solution.get_brief(),
-                                                          solution.get_group(), \
+                                                          solution.get_group(),
                                                           solution.get_digest())
         text = text + Const.NEWLINE
         text = Migrate._terminal_tags(colors) % (text, Const.DELIMITER_TAGS.join(solution.get_tags()))
-        text = text + Const.EMPTY.join([Migrate._terminal_links(colors) % (links, link) \
+        text = text + Const.EMPTY.join([Migrate._terminal_links(colors) % (links, link)
                                         for link in solution.get_links()])
         text = text + Const.NEWLINE
 
-        text = text + Const.EMPTY.join([Migrate._terminal_solution(colors) % (data, line) \
+        text = text + Const.EMPTY.join([Migrate._terminal_solution(colors) % (data, line)
                                         for line in solution.get_data()])
         text = text + Const.NEWLINE
 

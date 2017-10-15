@@ -216,7 +216,7 @@ class Arguments(object):
     def is_search_all(cls):
         """Test if search all option was used."""
 
-        return True if hasattr(cls.args, 'sall')  else False
+        return True if hasattr(cls.args, 'sall') else False
 
     @classmethod
     def get_search_all(cls):
@@ -235,7 +235,7 @@ class Arguments(object):
     def is_search_tag(cls):
         """Test if search tag option was used."""
 
-        return True if hasattr(cls.args, 'stag')  else False
+        return True if hasattr(cls.args, 'stag') else False
 
     @classmethod
     def get_search_tag(cls):
@@ -254,7 +254,7 @@ class Arguments(object):
     def is_search_grp(cls):
         """Test if search grp option was used."""
 
-        return True if hasattr(cls.args, 'sgrp')  else False
+        return True if hasattr(cls.args, 'sgrp') else False
 
     @classmethod
     def get_search_grp(cls):
@@ -299,7 +299,8 @@ class Arguments(object):
 
         return cls.args.no_colors
 
-class MyHelpAction(argparse.Action): # pylint: disable=too-few-public-methods
+
+class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """Customised argparse help to print examples."""
 
     def __call__(self, parser, namespace, values, option_string=None):

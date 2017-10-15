@@ -70,5 +70,6 @@ def main():
     snippy.release()
     Profiler.disable()
 
+
 if __name__ == "__main__":
     main()

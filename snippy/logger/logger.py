@@ -11,7 +11,7 @@ class Logger(object):
     """Logging wrapper."""
 
     def __init__(self, module):
-        attributes = {'appName':'snippy'}
+        attributes = {'appName': 'snippy'}
         self.logger = logging.getLogger('snippy.' + module)
         handler = logging.StreamHandler()
         log_format = '%(asctime)s %(process)d[%(lineno)04d] <%(levelno)s>: %(threadName)s@%(filename)-13s : %(message)s'
@@ -45,6 +45,7 @@ class Logger(object):
             Logger(__name__).get().info('exiting with cause %s', cause.lower())
         elif '-q' not in sys.argv:
             print(cause)
+
 
 class CustomFormatter(logging.Formatter):
     """Custom log formatter."""

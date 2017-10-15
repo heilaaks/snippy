@@ -37,7 +37,6 @@ class Solution(object):
                                         data=Config.get_content_data())
         Migrate().print_terminal(solutions)
 
-
     def update(self):
         """Update existing solution."""
 

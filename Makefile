@@ -24,6 +24,9 @@ lint:
 	-pylint --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
 	-pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
 
+flake8:
+	-flake8 --config tests/flake8/flake9.ini snippy
+
 docker: clean clean-db
 	docker build -t heilaaks/snippy .
 
@@ -52,4 +55,4 @@ clean:
 clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall dev test coverage docs lint docker security-scan clean clean-db
+.PHONY: install upgrade uninstall dev test coverage docs lint flake 8docker security-scan clean clean-db

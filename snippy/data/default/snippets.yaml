@@ -114,19 +114,17 @@ content:
   - moby
   - run
   utc: '2017-10-16 12:43:15'
-- brief: Use screen session
+- brief: Compile with screen window manager
   category: snippet
   data:
-  - screen
+  - screen -h 10000
   - screen -X sessionname snippy.compile
-  - '<ctrl-a> + :'
-  - scrollback 10000
   - <ctrl-ad>
   - screen -ls
-  - 'screen -r snippy.compile # Reconnect'
-  - 'screen -d snippy.compile # Detach'
+  - screen -r snippy.compile
+  - screen -d snippy.compile
   - 'echo $STY # Response like 13153.pts-3 tells that screen is active'
-  digest: e2650f82bb73ec6f4ce85e39c9665a4fd385ab627281d146fe6331897b3d2441
+  digest: 9869a3866df270fc44715ec2d9508c0c65a35a6d69b09f6ce95806a09ef82fb5
   filename: ''
   group: linux
   links:
@@ -134,4 +132,5 @@ content:
   tags:
   - linux
   - screen
-  utc: '2017-10-16 13:10:48'
+  - terminal
+  utc: '2017-10-16 19:10:55'

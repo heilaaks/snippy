@@ -21,15 +21,16 @@ content:
   - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
   - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'
   - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
-  digest: 8f1ce8e194195e95732bfed2eeb4f31ce3ca1cb9deccf410e85024b3d7ff5a51
+  digest: dd328a21c1941983bbd20be51b0d84e76cafdd0a5b3f5b5e5728e9c9f3d7111c
   filename: ''
   group: linux
   links:
+  - http://www.skrenta.com/rt/man/grep.1.html
   - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux/
   tags:
   - linux
   - search
-  utc: '2017-10-13 06:57:09'
+  utc: '2017-10-16 12:09:34'
 - brief: Remove all exited containers and dangling images
   category: snippet
   data:
@@ -50,3 +51,87 @@ content:
   - image
   - moby
   utc: '2017-10-13 06:56:00'
+- brief: Stop and delete all running containers and images
+  category: snippet
+  data:
+  - docker stop $(docker ps -aq)
+  - docker rm $(docker ps -a -q)
+  - docker rmi $(docker images -q)
+  digest: a516e2d6f8aa5c6fe94a0eac1e4585ab4b29db047e274df4902d03377e43e22c
+  filename: ''
+  group: docker
+  links:
+  - https://docs.docker.com/engine/reference/commandline/rm/
+  - https://docs.docker.com/engine/reference/commandline/rmi/
+  - https://docs.docker.com/engine/reference/commandline/stop/
+  tags:
+  - cleanup
+  - container
+  - delete
+  - docker
+  - docker-ce
+  - moby
+  - stop
+  utc: '2017-10-16 12:06:07'
+- brief: Build docker containers
+  category: snippet
+  data:
+  - docker build -t heilaaks/snippy .
+  - docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy}
+    -t heilaaks/snippy .
+  - docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy}
+    --no-cache -t heilaaks/snippy .
+  digest: 682d09d1143816732441dcda5e67f9de8e60e06b6fe01abf67efa150bd24596c
+  filename: ''
+  group: docker
+  links:
+  - https://docs.docker.com/engine/reference/commandline/build/
+  tags:
+  - build
+  - container
+  - docker
+  - docker-ce
+  - moby
+  utc: '2017-10-16 12:34:20'
+- brief: Run containers and connect to them
+  category: snippet
+  data:
+  - docker run -td heilaaks/snippy tail -f /dev/null
+  - docker exec -it 9782f882ab34 /bin/bash
+  - docker exec -it $(docker ps | egrep -m 1 'kibana:latest' | awk '{print $1}') /bin/bash
+  digest: 4b9882c41365b0ea51b23004b610b2a017ee87156d173482876bb77e59f83b2a
+  filename: ''
+  group: docker
+  links:
+  - https://docs.docker.com/engine/reference/commandline/exec/
+  - https://docs.docker.com/engine/reference/commandline/run/
+  tags:
+  - container
+  - docker
+  - docker-ce
+  - exec
+  - lingering
+  - moby
+  - run
+  utc: '2017-10-16 12:43:15'
+- brief: Use screen session
+  category: snippet
+  data:
+  - screen
+  - screen -X sessionname snippy.compile
+  - '<ctrl-a> + :'
+  - scrollback 10000
+  - <ctrl-ad>
+  - screen -ls
+  - 'screen -r snippy.compile # Reconnect'
+  - 'screen -d snippy.compile # Detach'
+  - 'echo $STY # Response like 13153.pts-3 tells that screen is active'
+  digest: e2650f82bb73ec6f4ce85e39c9665a4fd385ab627281d146fe6331897b3d2441
+  filename: ''
+  group: linux
+  links:
+  - http://www.skrenta.com/rt/man/screen.1.html
+  tags:
+  - linux
+  - screen
+  utc: '2017-10-16 13:10:48'

@@ -107,7 +107,7 @@ class Snippet(object):
     def export_template(self):
         """Export snippet template."""
 
-        template = Config.get_template()
+        template = Config.get_template(Content())
         filename = Config.get_template_filename()
         self.logger.debug('exporting snippet template to file %s', filename)
         try:

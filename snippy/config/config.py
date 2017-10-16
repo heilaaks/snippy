@@ -282,10 +282,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return False if cls.config['switches']['no_ansi'] else True
 
     @classmethod
-    def get_template(cls):
+    def get_template(cls, content):
         """Return template suitable for operation category."""
 
-        return Editor.read_template(cls.get_category())
+        return Editor(content, cls.get_utc_time()).get_template()
 
     @classmethod
     def get_storage_path(cls):

@@ -46,13 +46,13 @@ clean:
 	rm -f coverage.xml
 	rm -f pytestdebug.log
 	rm -f snippets.json
-	rm -f snippets.txt
-	rm -f snippets.text
 	rm -f snippets.yaml
+	rm -f snippet*.text
+	rm -f snippets.txt
 	rm -f solutions.json
-	rm -f solutions.txt
-	rm -f solutions.text
 	rm -f solutions.yaml
+	rm -f solution*.text
+	rm -f solutions.txt
 
 clean-db:
 	> snippy/data/storage/snippy.db

@@ -93,7 +93,7 @@ class Solution(object):
     def export_template(self):
         """Export solution template."""
 
-        template = Config.get_template()
+        template = Config.get_template(Content())
         filename = Config.get_template_filename()
         self.logger.debug('exporting solution template to file %s', filename)
         try:

@@ -28,7 +28,7 @@ flake8:
 	-flake8 --config tests/flake8/flake9.ini snippy
 
 docker: clean clean-db
-	docker build -t heilaaks/snippy .
+	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .
 
 security-scan:
 	- bandit -r snippy | tee tests/bandit/bandit.txt

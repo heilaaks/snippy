@@ -64,7 +64,7 @@ class Arguments(object):
                      '    Searching and filtering content.',
                      '      $ snippy search --snippet --sall docker,moby',
                      '      $ snippy search --snippet --sall .',
-                     '      $ snippy search --snippet --sall . --no-ansi | grep \'\\$\'',
+                     '      $ snippy search --snippet --sall . --no-ansi | grep \'\\$\' | sort',
                      '      $ snippy search --solution --sall .',
                      '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
                      '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',

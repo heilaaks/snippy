@@ -77,11 +77,10 @@ content:
   category: snippet
   data:
   - docker build -t heilaaks/snippy .
+  - docker build --no-cache -t heilaaks/snippy .
   - docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy}
     -t heilaaks/snippy .
-  - docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy}
-    --no-cache -t heilaaks/snippy .
-  digest: 682d09d1143816732441dcda5e67f9de8e60e06b6fe01abf67efa150bd24596c
+  digest: 76e05e954e18f7668faf25ded614b7af79dfed6c4f59dc902f42559357de72d8
   filename: ''
   group: docker
   links:
@@ -92,7 +91,7 @@ content:
   - docker
   - docker-ce
   - moby
-  utc: '2017-10-16 12:34:20'
+  utc: '2017-10-16 19:42:19'
 - brief: Run containers and connect to them
   category: snippet
   data:

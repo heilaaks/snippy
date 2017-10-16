@@ -10,10 +10,10 @@ setup(
     author='Heikki J. Laaksonen',
     author_email='laaksonen.heikki.j@gmail.com',
     url='https://github.com/heilaaks/snippy',
-    description='Command and solution example management from terminal.',
-    long_description="""Manage command examples and solutions directly from command line. The tool is
-                        intended to support software development workflow by collecting various command
-                        examples and troubleshooting solutions into one manager.""",
+    description='Command and solution management from console.',
+    long_description="""Manage command examples and solutions directly from command line. The tool
+                        is intended to support software development and troubleshooting workflows by
+                        collecting command examples and troubleshooting solutions into one manager.""",
     license='Apache 2.0',
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -30,7 +30,7 @@ setup(
         'Natural Language :: English',
         'Topic :: Utilities'
     ],
-    keywords='command solution snippet manager terminal',
+    keywords='command solution snippet manager console',
     packages=find_packages(exclude=['tests', 'tests.testlib']),
     package_dir={'snippy': 'snippy'},
     package_data={'snippy': ['data/config/*', 'data/default/*', 'data/template/*', 'data/storage/*']},

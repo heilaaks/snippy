@@ -40,7 +40,7 @@ class Editor(object):  # pylint: disable-all
     def get_template(self):
         """Get template for editor."""
 
-        template = Editor.read_template(self.content.get_category())
+        template = self.read_template()
         template = self.set_template_data(template)
         template = self.set_template_brief(template)
         template = self.set_template_date(template)
@@ -254,12 +254,11 @@ class Editor(object):  # pylint: disable-all
 
         return tuple(sorted_list)
 
-    @staticmethod
-    def read_template(category):
+    def read_template(self):
         """Return content template."""
 
         template = Const.EMPTY
-        if category == Const.SNIPPET:
+        if self.content.is_snippet():
             filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
         else:
             filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')

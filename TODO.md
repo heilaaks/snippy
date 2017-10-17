@@ -2,7 +2,6 @@
    - [ ] Move exporting of template into Migrate.dump()?
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Fix loading text file may cause exception that is not handled because only yaml and json is taken care.
-   - [ ] Fix exporting the template. The argparse seems to fail if no arguments to --template which makes empty logic useless.
    - [ ] Add import from file which is created based on template.
    - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
@@ -15,6 +14,7 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Changed argument parsing for template file. The argparse fails already if no arguments are set to --template.
    - [x] Added missing export of content template file.
    - [x] Fixed exporting without specifying the file for operation.
    - [x] Fixed export operation workflow test to properly mock the generated file.

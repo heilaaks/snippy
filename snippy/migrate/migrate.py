@@ -112,6 +112,9 @@ class Migrate(object):
     def dump(cls, contents):
         """Dump contents into file."""
 
+        if not Config.is_supported_file_format():
+            return
+
         export_file = Config.get_operation_file()
         cls.logger.debug('exporting contents to file %s', export_file)
         with open(export_file, 'w') as outfile:
@@ -140,6 +143,10 @@ class Migrate(object):
 
         dictionary = {}
         dictionary_list = []
+
+        if not Config.is_supported_file_format():
+            return dictionary
+
         cls.logger.debug('importing contents from file %s', filename)
         if os.path.isfile(filename):
             with open(filename, 'r') as infile:

@@ -296,6 +296,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if cls.config['operation']['file']['type'] == Const.FILE_TYPE_TEXT else False
 
     @classmethod
+    def is_supported_file_format(cls):
+        """Test if file format is supported."""
+
+        return True if cls.is_file_type_yaml() or cls.is_file_type_json() or cls.is_file_type_text() else False
+
+    @classmethod
     def use_ansi(cls):
         """Test if ANSI characters like colors are disabled in the command output."""
 

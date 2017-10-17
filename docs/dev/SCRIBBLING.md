@@ -606,6 +606,9 @@ python runner export --template
 7. Export template with file without extension
 python runner export --template file
 
+8. Export with unsupported file format foo.bar. This must not create empty file foo.bar
+python runner export --file foo.bar
+
 ######################
 ## Importing snipppets
 ######################

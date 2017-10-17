@@ -1,13 +1,11 @@
 ## TODO
    - [ ] Move exporting of template into Migrate.dump()?
    - [ ] Refactor importing of text template since it is bit messy at the moment.
-   - [ ] Fix loading text file may cause exception that is not handled because only yaml and json is taken care.
-   - [ ] Add import from file which is created based on template.
    - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Fix case described in 'git log 11448a2e90dab3a' and somehow and make test_wf a bit nicer?
-   - [ ] Test Flake8 lint. It seems to require specific version for specific Python version.
+   - [ ] Add support importing multiple contents in text format like with json and yaml.
    - [ ] Test BytePackager/packagecore.
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
    - [ ] It seems that in Python2 when database test fails, it leaves hanging resources and DB clean does not work?
@@ -15,6 +13,7 @@
 
 ## DONE
    - [x] Changed argument parsing for template file. The argparse fails already if no arguments are set to --template.
+   - [x] Added import from file which was created from template.
    - [x] Added missing export of content template file.
    - [x] Fixed exporting without specifying the file for operation.
    - [x] Fixed export operation workflow test to properly mock the generated file.

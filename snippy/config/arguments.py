@@ -82,8 +82,8 @@ class Arguments(object):
                      '      $ snippy export --snippet -f snippets.json',
                      '      $ snippy export --snippet -f snippets.text',
                      '      $ snippy import --snippet -f snippets.yaml',
-                     '      $ snippy export --solution -f contents.yaml',
-                     '      $ snippy import --solution -f contents.yaml',
+                     '      $ snippy export --solution -f solutions.yaml',
+                     '      $ snippy import --solution -f solutions.yaml',
                      '') + ARGS_COPYRIGHT
 
     def __init__(self):

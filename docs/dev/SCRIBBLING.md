@@ -600,8 +600,11 @@ python snip.py export --solution # Creates solutions.yaml
 python runner export --template snippet.txt
 python runner export --solution --template solution.txt
 
-6. Export template without template name (should fail with NOK)
+6. Export template without template name (should fail with argparse error demaning only one argument: snippy: error: argument --template: expected one argument)
 python runner export --template
+
+7. Export template with file without extension
+python runner export --template file
 
 ######################
 ## Importing snipppets
@@ -636,10 +639,15 @@ python runner import -f foo.bar
 8. Import content from text file (not supported)
 python runner import -f foo.txt
 
-8. Import content without specifying the file (that defaults to snippets.yaml or solutions.yaml)
+9. Import content without specifying the file (that defaults to snippets.yaml or solutions.yaml)
 python runner import
 python runner import --solution
 
+10. Import text template with on solution
+python runner import -f solution.txt
+
+11. Import text template with on snippet
+python runner import -f snippet.txt
 
 
 ########################

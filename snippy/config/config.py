@@ -414,9 +414,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Parse the content template filename."""
 
         filename = cls.args.get_content_template()
-
-        if cls.args.is_content_template():
-            # Set defaults if  user did not provide any.
+        if filename:
             default_file = 'snippet.text'
             if Config.is_category_solution():
                 default_file = 'solution.text'

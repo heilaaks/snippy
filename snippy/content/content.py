@@ -50,6 +50,11 @@ class Content(object):
 
         return True if self.content[Const.CATEGORY] == Const.SNIPPET else False
 
+    def is_solution(self):
+        """Test if content is solution."""
+
+        return True if self.content[Const.CATEGORY] == Const.SOLUTION else False
+
     def has_data(self):
         """Test if content has data defined."""
 
@@ -132,6 +137,23 @@ class Content(object):
         digest = hashlib.sha256(data_string.encode('UTF-8')).hexdigest()
 
         return digest
+
+    def update_digest(self):
+        """Update content message digest."""
+
+        content = self.get_list()
+        content[Const.DIGEST] = self.compute_digest()
+        self.content = (content[Const.DATA],
+                        content[Const.BRIEF],
+                        content[Const.GROUP],
+                        content[Const.TAGS],
+                        content[Const.LINKS],
+                        content[Const.CATEGORY],
+                        content[Const.FILENAME],
+                        content[Const.UTC],
+                        content[Const.DIGEST],
+                        content[Const.METADATA],
+                        content[Const.KEY])
 
     def get_string(self):
         """Convert content into one string."""

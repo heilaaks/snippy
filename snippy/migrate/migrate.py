@@ -135,10 +135,11 @@ class Migrate(object):
                 sys.exit()
 
     @classmethod
-    def load(cls, filename):
+    def load(cls, filename, content):
         """Load dictionary from file."""
 
         dictionary = {}
+        dictionary_list = []
         cls.logger.debug('importing contents from file %s', filename)
         if os.path.isfile(filename):
             with open(filename, 'r') as infile:
@@ -151,6 +152,10 @@ class Migrate(object):
                         import json
 
                         dictionary = json.load(infile)
+                    elif Config.is_file_type_text():
+                        content = Config.get_edited_contents(content, infile.read())
+                        dictionary_list.append(Migrate._get_dict_entry(content))
+                        dictionary['content'] = dictionary_list
                     else:
                         cls.logger.info('unknown export format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:

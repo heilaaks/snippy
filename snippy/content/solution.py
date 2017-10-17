@@ -86,7 +86,7 @@ class Solution(object):
         """Import solutions."""
 
         self.logger.debug('importing solutions %s', Config.get_operation_file())
-        dictionary = Migrate().load(Config.get_operation_file())
+        dictionary = Migrate().load(Config.get_operation_file(), Content())
         solutions = Content().load(dictionary)
         self.storage.import_content(solutions)
 

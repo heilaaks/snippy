@@ -1,4 +1,7 @@
 ## TODO
+   - [ ] Move exporting of template into Migrate.dump()?
+   - [ ] Refactor importing of text template since it is bit messy at the moment.
+   - [ ] Fix loading text file may cause exception that is not handled because only yaml and json is taken care.
    - [ ] Fix exporting the template. The argparse seems to fail if no arguments to --template which makes empty logic useless.
    - [ ] Add import from file which is created based on template.
    - [ ] Update documents.

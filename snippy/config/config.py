@@ -84,11 +84,31 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return Config()
 
     @classmethod
-    def get_content(cls, content, use_editor=None):
+    def get_content(cls, content, use_editor=False):
         """Return content after it has been optionally edited."""
 
         if cls.is_editor() or use_editor:
             content = Config._get_edited_content(content)
+
+        return content
+
+    @classmethod
+    def get_edited_contents(cls, content, edited):
+        """Return contents from specified text file."""
+
+        editor = Editor(content, Config.get_utc_time(), edited)
+        content.set((editor.get_edited_data(),
+                     editor.get_edited_brief(),
+                     editor.get_edited_group(),
+                     editor.get_edited_tags(),
+                     editor.get_edited_links(),
+                     content.get_category(),
+                     editor.get_edited_filename(),
+                     content.get_utc(),
+                     content.get_digest(),
+                     content.get_metadata(),
+                     content.get_key()))
+        content.update_digest()
 
         return content
 
@@ -522,8 +542,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
             filetype = Const.FILE_TYPE_JSON
         elif name and ('txt' in extension or 'text' in extension):
             filetype = Const.FILE_TYPE_TEXT
-            if cls.is_operation_import():
-                Cause.set_text('unsupported file format {} for import operation {}'.format(extension, filename))
         else:
             Cause.set_text('cannot identify file format for file {}'.format(filename))
 

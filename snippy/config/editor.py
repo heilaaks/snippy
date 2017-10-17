@@ -25,10 +25,12 @@ class Editor(object):  # pylint: disable-all
     LINKS_HEAD = '# Add optional links below one link per line.\n'
     LINKS_TAIL = '.'
 
-    def __init__(self, content, utc):
+    def __init__(self, content, utc, edited=Const.EMPTY):
         self.logger = Logger(__name__).get()
         self.content = content
-        self.edited = Const.EMPTY
+        self.is_snippet = self.content.is_snippet()
+        self.is_solution = self.content.is_solution()
+        self.edited = edited
         self.utc = utc
 
     def read_content(self):
@@ -80,7 +82,7 @@ class Editor(object):  # pylint: disable-all
         """Return content data from editor."""
 
         data = ()
-        if self.content.is_snippet():
+        if self.is_snippet:
             match = re.search('%s(.*)%s' % (Editor.DATA_HEAD, Editor.DATA_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
@@ -94,7 +96,7 @@ class Editor(object):  # pylint: disable-all
         """Return content brief from editor."""
 
         brief = Const.EMPTY
-        if self.content.is_snippet():
+        if self.is_snippet:
             match = re.search('%s(.*)%s' % (Editor.BRIEF_HEAD, Editor.BRIEF_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
@@ -111,7 +113,7 @@ class Editor(object):  # pylint: disable-all
         """Return content group from editor."""
 
         group = Const.EMPTY
-        if self.content.is_snippet():
+        if self.is_snippet:
             match = re.search('%s(.*)%s' % (Editor.GROUP_HEAD, Editor.GROUP_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
@@ -129,7 +131,7 @@ class Editor(object):  # pylint: disable-all
         """Return content tags from editor."""
 
         tags = ()
-        if self.content.is_snippet():
+        if self.is_snippet:
             match = re.search('%s(.*)%s' % (Editor.TAGS_HEAD, Editor.TAGS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 tags = Editor.get_keywords([match.group(1)])
@@ -146,7 +148,7 @@ class Editor(object):  # pylint: disable-all
 
         # In case of solution, the links are read from the whole content data.
         links = ()
-        if self.content.is_snippet():
+        if self.is_snippet:
             match = re.search('%s(.*)%s' % (Editor.LINKS_HEAD, Editor.LINKS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
                 links = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
@@ -161,7 +163,7 @@ class Editor(object):  # pylint: disable-all
 
         # Only solutions use the optional file variable.
         filename = Const.EMPTY
-        if self.content.get_category() == Const.SOLUTION:
+        if self.is_solution:
             match = re.search(r'## FILE  :\s+(\S+)', self.edited)
             if match:
                 filename = match.group(1)

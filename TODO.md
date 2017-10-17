@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Fix importing template so that user does not have to define category.
    - [ ] Move exporting of template into Migrate.dump()?
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Update documents.

@@ -119,15 +119,15 @@ class Migrate(object):
         cls.logger.debug('exporting contents to file %s', export_file)
         with open(export_file, 'w') as outfile:
             try:
-                dictionary_list = {'content': Migrate.get_dictionary_list(contents)}
+                dictionary = {'content': Migrate.get_dictionary_list(contents)}
                 if Config.is_file_type_yaml():
                     import yaml
 
-                    yaml.safe_dump(dictionary_list, outfile, default_flow_style=False)
+                    yaml.safe_dump(dictionary, outfile, default_flow_style=False)
                 elif Config.is_file_type_json():
                     import json
 
-                    json.dump(dictionary_list, outfile)
+                    json.dump(dictionary, outfile)
                     outfile.write(Const.NEWLINE)
                 elif Config.is_file_type_text():
                     outfile.write(Migrate.get_terminal_text(contents, ansi=False))
@@ -142,8 +142,6 @@ class Migrate(object):
         """Load dictionary from file."""
 
         dictionary = {}
-        dictionary_list = []
-
         if not Config.is_supported_file_format():
             return dictionary
 
@@ -160,9 +158,8 @@ class Migrate(object):
 
                         dictionary = json.load(infile)
                     elif Config.is_file_type_text():
-                        content = Config.get_edited_contents(content, infile.read())
-                        dictionary_list.append(Migrate._get_dict_entry(content))
-                        dictionary['content'] = dictionary_list
+                        contents = Config.get_edited_contents(content, infile.read())
+                        dictionary = {'content': Migrate.get_dictionary_list(contents)}
                     else:
                         cls.logger.info('unknown export format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:

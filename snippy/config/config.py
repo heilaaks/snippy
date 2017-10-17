@@ -96,6 +96,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_edited_contents(cls, content, edited):
         """Return contents from specified text file."""
 
+        contents = []
         editor = Editor(content, Config.get_utc_time(), edited)
         content.set((editor.get_edited_data(),
                      editor.get_edited_brief(),
@@ -109,8 +110,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
                      content.get_metadata(),
                      content.get_key()))
         content.update_digest()
+        contents.append(content)
 
-        return content
+        return contents
 
     @classmethod
     def is_operation_create(cls):

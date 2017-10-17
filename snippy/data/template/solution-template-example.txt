@@ -1,10 +1,12 @@
 ################################################################################
 ## BRIEF : Testing docker log drivers
 ##
+## DATE  : 2017-10-17 17:50:55
 ## GROUP : docker
 ## TAGS  : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka
 ## FILE  : kubernetes-docker-log-driver-kafka.txt
 ################################################################################
+
 
 ################################################################################
 ## description

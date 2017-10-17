@@ -34,9 +34,10 @@ class Arguments(object):
     ARGS_SEARCH = ('  --sall [KW,...]               search keywords from all fields',
                    '  --stag [KW,...]               search keywords only from tags',
                    '  --sgrp [KW,...]               search keywords only from groups',
-                   '  --filter REGEXP               filter search output with regexp')
+                   '  --filter REGEXP               filter search output with regexp',
+                   '  --no-ansi                     remove ANSI characters from output')
     ARGS_MIGRAT = ('  -f, --file FILE               define file for operation',
-                   '  --template FILE               create template for defined content')
+                   '  --template FILE               create category specific template ')
     ARGS_EPILOG = ('symbols:',
                    '    $    snippet',
                    '    :    solution',

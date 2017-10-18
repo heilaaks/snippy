@@ -573,7 +573,7 @@ python snip.py search -c 'docker rm --volumes $(docker ps --all --quiet)'
 ## Exporting snipppets
 ######################
 
-1. Export all snippets into yaml file
+1. Export all snippets into yaml file (DONE)
 python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'moby' -t moby,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
@@ -597,17 +597,15 @@ python snip.py export --snippet  # Creates snippets.yaml
 python snip.py export --solution # Creates solutions.yaml
 
 5. Export template
-python runner export --template snippet.txt
-python runner export --solution --template solution.txt
-
-6. Export template without template name (should fail with argparse error demaning only one argument: snippy: error: argument --template: expected one argument)
 python runner export --template
+python runner export --solution --template
+python runner export --snippet --template
 
-7. Export template with file without extension
-python runner export --template file
-
-8. Export with unsupported file format foo.bar. This must not create empty file foo.bar
+6. Export with unsupported file format foo.bar. This must not create empty file foo.bar
 python runner export --file foo.bar
+
+7. Export defaults
+python runner export --defaults
 
 ######################
 ## Importing snipppets
@@ -652,6 +650,14 @@ python runner import -f solution.txt
 11. Import text template with on snippet
 python runner import -f snippet.txt
 
+12. Import template
+python runner import --template
+python runner import --solution --template
+python runner import --snippet --template
+
+13. import defaults
+python import export --defaults
+
 
 ########################
 ## Supplementary options
@@ -676,3 +682,5 @@ python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker
 
 6. Print profiling results with --profile option
 python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container' --profile
+
+7. Suppress ANSI characters with --no-ansi (DONE)

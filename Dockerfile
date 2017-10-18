@@ -13,8 +13,8 @@ RUN apk add --no-cache python3 && \
     rm -r /usr/lib/python*/ensurepip && \
     pip3 install --upgrade pip setuptools && \
     pip3 install . && \
-    snippy import --snippet -f defaults -q && \
-    snippy import --solution -f defaults -q && \
+    snippy import --snippet --defaults -q && \
+    snippy import --solution --defaults -q && \
     rm -r /root/.cache
 
 RUN chown -R snippy:root . && \

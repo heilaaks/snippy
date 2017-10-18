@@ -30,7 +30,9 @@ class TestUtArgumentsCreate(object):
         assert obj.get_search_filter() == ''
         assert not obj.get_editor()
         assert obj.get_operation_file() == ''
-        assert not obj.get_no_ansi()
+        assert not obj.is_no_ansi()
+        assert not obj.is_defaults()
+        assert not obj.is_template()
 
     def test_create_snippet_without_optional_arguments(self):
         """Test that new snippet can be created without optional arguments."""

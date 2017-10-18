@@ -24,7 +24,6 @@ class Arguments(object):
                    '  --solution                    operate solutions',
                    '  --all                         operate all content (search only)')
     ARGS_EDITOR = ('  -e, --editor                  use vi editor to add content',
-                   '  -f, --file FILE               define file for operation',
                    '  -c, --content CONTENT         define example content',
                    '  -b, --brief BRIEF             define content brief description',
                    '  -g, --group GROUP             define content group',
@@ -37,7 +36,8 @@ class Arguments(object):
                    '  --filter REGEXP               filter search output with regexp',
                    '  --no-ansi                     remove ANSI characters from output')
     ARGS_MIGRAT = ('  -f, --file FILE               define file for operation',
-                   '  --template FILE               create category specific template ')
+                   '  --defaults                    migrate category specific defaults',
+                   '  --template                    migrate category specific template',)
     ARGS_EPILOG = ('symbols:',
                    '    $    snippet',
                    '    :    solution',
@@ -58,11 +58,11 @@ class Arguments(object):
                    '') + ARGS_COPYRIGHT
 
     ARGS_EXAMPLES = ('examples:',
-                     '    Creating new content.',
+                     '    Creating new content:',
                      '      $ snippy create --snippet --editor',
                      '      $ snippy create --snippet -c \'docker ps\' -b \'list containers\' -t docker,moby',
                      '',
-                     '    Searching and filtering content.',
+                     '    Searching and filtering content:',
                      '      $ snippy search --snippet --sall docker,moby',
                      '      $ snippy search --snippet --sall .',
                      '      $ snippy search --snippet --sall . --no-ansi | grep \'\\$\' | sort',
@@ -71,15 +71,24 @@ class Arguments(object):
                      '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
                      '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
                      '',
-                     '    Updating content.',
+                     '    Updating content:',
                      '      $ snippy update --snippet -d 44afdd0c59e17159',
                      '      $ snippy update --snippet -c \'docker ps\'',
                      '',
-                     '    Deleting content.',
+                     '    Deleting content:',
                      '      $ snippy delete --snippet -d 44afdd0c59e17159',
                      '      $ snippy delete --snippet -c \'docker ps\'',
                      '',
-                     '    Migrating content.',
+                     '    Migrating default content:',
+                     '      $ snippy import --snippet --defaults',
+                     '      $ snippy import --solution --defaults',
+                     '',
+                     '    Migrating content templates:',
+                     '      $ snippy export --solution --template',
+                     '      $ snippy import --solution --template',
+                     '      $ snippy import --solution -f solution-template.txt',
+                     '',
+                     '    Migrating content:',
                      '      $ snippy export --snippet -f snippets.yaml',
                      '      $ snippy export --snippet -f snippets.json',
                      '      $ snippy export --snippet -f snippets.text',
@@ -112,7 +121,6 @@ class Arguments(object):
         # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Arguments.ARGS_EDITOR))
         options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
-        options.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-c', '--content', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-g', '--group', type=str, default=Const.DEFAULT_GROUP, help=argparse.SUPPRESS)
@@ -130,7 +138,10 @@ class Arguments(object):
 
         # migration options
         migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Arguments.ARGS_MIGRAT))
-        migrat.add_argument('--template', type=str, default=None, help=argparse.SUPPRESS)
+        migrat_meg = migrat.add_mutually_exclusive_group()
+        migrat_meg.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
+        migrat_meg.add_argument('--defaults', action='store_true', default=False, help=argparse.SUPPRESS)
+        migrat_meg.add_argument('--template', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # support options
         support = parser.add_argument_group(title='support options')
@@ -294,16 +305,24 @@ class Arguments(object):
         return cls.args.file
 
     @classmethod
-    def get_no_ansi(cls):
-        """Return if ANSI characters like color codes are disbled in terminal output."""
+    def is_no_ansi(cls):
+        """Return usage of ANSI characters like color codes in terminal output."""
 
         cls.logger.info('parsed argument --no-ansi with value "%s"', cls.args.no_ansi)
 
         return cls.args.no_ansi
 
     @classmethod
-    def get_content_template(cls):
-        """Return the file where the content template is saved."""
+    def is_defaults(cls):
+        """Return the usage of defaults in migration operation."""
+
+        cls.logger.info('parsed argument --defaults with value %s', cls.args.defaults)
+
+        return cls.args.defaults
+
+    @classmethod
+    def is_template(cls):
+        """Return the usage of template in migration operation."""
 
         cls.logger.info('parsed argument --template with value %s', cls.args.template)
 

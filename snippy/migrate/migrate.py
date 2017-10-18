@@ -115,9 +115,9 @@ class Migrate(object):
         if not Config.is_supported_file_format():
             return
 
-        export_file = Config.get_operation_file()
-        cls.logger.debug('exporting contents to file %s', export_file)
-        with open(export_file, 'w') as outfile:
+        filename = Config.get_operation_file()
+        cls.logger.debug('exporting contents %s', filename)
+        with open(filename, 'w') as outfile:
             try:
                 dictionary = {'content': Migrate.get_dictionary_list(contents)}
                 if Config.is_file_type_yaml():
@@ -136,6 +136,19 @@ class Migrate(object):
             except (TypeError, ValueError, yaml.YAMLError) as exception:
                 cls.logger.exception('fatal failure to generate formatted export file "%s"', exception)
                 sys.exit()
+
+    @classmethod
+    def dump_template(cls, template):
+        """Dump content template into file."""
+
+        filename = Config.get_operation_file()
+        cls.logger.debug('exporting content template %s', filename)
+        with open(filename, 'w') as outfile:
+            try:
+                outfile.write(template)
+            except IOError as exception:
+                cls.logger.exception('fatal failure in creating snippet template file "%s"', exception)
+                Cause.set_text('cannot export snippet template {}'.format(filename))
 
     @classmethod
     def load(cls, filename, content):

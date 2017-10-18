@@ -49,10 +49,12 @@ clean:
 	rm -f snippets.yaml
 	rm -f snippet*.text
 	rm -f snippets.txt
+	rm -f snippet-template.txt
 	rm -f solutions.json
 	rm -f solutions.yaml
 	rm -f solution*.text
 	rm -f solutions.txt
+	rm -f solution-template.txt
 
 clean-db:
 	> snippy/data/storage/snippy.db

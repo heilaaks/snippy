@@ -30,16 +30,19 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
         cls.config['content'] = {}
-        cls.config['content']['category'] = cls._parse_content_category()
+        cls.config['content']['category'] = cls.args.get_content_category()
         cls.config['content']['data'] = cls._parse_content_data()
         cls.config['content']['brief'] = cls._parse_content_brief()
         cls.config['content']['group'] = cls._parse_content_group()
         cls.config['content']['tags'] = cls._parse_content_tags()
         cls.config['content']['links'] = cls._parse_content_links()
         cls.config['content']['filename'] = Const.EMPTY
-        cls.config['content']['template'] = cls._parse_content_template()
+        cls.config['options'] = {}
+        cls.config['options']['no_ansi'] = cls.args.is_no_ansi()
+        cls.config['options']['migrate_defaults'] = cls.args.is_defaults()
+        cls.config['options']['migrate_template'] = cls.args.is_template()
         cls.config['operation'] = {}
-        cls.config['operation']['task'] = cls._parse_operation()
+        cls.config['operation']['task'] = cls.args.get_operation()
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
         cls.config['digest'] = cls._parse_digest()
@@ -47,9 +50,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['search']['field'], cls.config['search']['keywords'] = cls._parse_search()
         cls.config['search']['filter'] = cls._parse_search_filter()
         cls.config['input'] = {}
-        cls.config['input']['editor'] = cls._parse_editor()
-        cls.config['switches'] = {}
-        cls.config['switches']['no_ansi'] = cls._parse_no_ansi()
+        cls.config['input']['editor'] = cls.args.get_editor()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
         cls.config['storage']['file'] = 'snippy.db'
@@ -145,16 +146,22 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if cls.config['operation']['task'] == 'export' else False
 
     @classmethod
-    def is_export_template(cls):
-        """Test if operation was export template."""
-
-        return True if cls.config['operation']['task'] == 'export' and cls.config['content']['template'] else False
-
-    @classmethod
     def is_operation_import(cls):
         """Test if operation was import."""
 
         return True if cls.config['operation']['task'] == 'import' else False
+
+    @classmethod
+    def is_migrate_defaults(cls):
+        """Test if migrate operation was related to content defaults."""
+
+        return True if cls.config['options']['migrate_defaults'] else False
+
+    @classmethod
+    def is_migrate_template(cls):
+        """Test if migrate operation was related to content template."""
+
+        return True if cls.config['options']['migrate_template'] else False
 
     @classmethod
     def is_category_snippet(cls):
@@ -232,12 +239,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['content']['filename']
 
     @classmethod
-    def get_template_filename(cls):
-        """Return template filename."""
-
-        return cls.config['content']['template']
-
-    @classmethod
     def is_search_all(cls):
         """Test if all fields are searched."""
 
@@ -307,7 +308,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def use_ansi(cls):
         """Test if ANSI characters like colors are disabled in the command output."""
 
-        return False if cls.config['switches']['no_ansi'] else True
+        return False if cls.config['options']['no_ansi'] else True
 
     @classmethod
     def get_template(cls, content):
@@ -352,18 +353,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         utc = datetime.datetime.utcnow()
 
         return utc.strftime("%Y-%m-%d %H:%M:%S")
-
-    @classmethod
-    def _parse_operation(cls):
-        """Process the operation for the content."""
-
-        return cls.args.get_operation()
-
-    @classmethod
-    def _parse_content_category(cls):
-        """Process the content category."""
-
-        return cls.args.get_content_category()
 
     @classmethod
     def _parse_content_data(cls):
@@ -418,24 +407,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return tuple(link_list)
 
     @classmethod
-    def _parse_content_template(cls):
-        """Parse the content template filename."""
-
-        filename = cls.args.get_content_template()
-        if filename:
-            default_file = 'snippet.text'
-            if Config.is_category_solution():
-                default_file = 'solution.text'
-            if not filename:
-                filename = os.path.join('./', default_file)
-
-            _, extension = os.path.splitext(filename)
-            if not ('txt' in extension or 'text' in extension):
-                Cause.set_text('only text files are supported for content template {}'.format(filename))
-
-        return filename
-
-    @classmethod
     def _parse_digest(cls):
         """Process message digest identifying the operation target."""
 
@@ -482,18 +453,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return regexp
 
     @classmethod
-    def _parse_editor(cls):
-        """Process editor usage."""
-
-        return cls.args.get_editor()
-
-    @classmethod
-    def _parse_no_ansi(cls):
-        """Process ANSI control character usage in terminal output."""
-
-        return cls.args.get_no_ansi()
-
-    @classmethod
     def _get_edited_content(cls, content):
         """Read and set the user provided values from editor."""
 
@@ -526,19 +485,25 @@ class Config(object):  # pylint: disable=too-many-public-methods
         filename = cls.args.get_operation_file()
         filetype = Const.FILE_TYPE_NONE
 
-        # Operate import and exports default content with keyword 'defaults'.
-        default_file = 'snippets.yaml'
+        defaults = 'snippets.yaml'
+        template = 'snippet-template.txt'
         if Config.is_category_solution():
-            default_file = 'solutions.yaml'
-        if filename == 'defaults':
-            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/default'), default_file)
-            filetype = Const.FILE_TYPE_YAML
+            defaults = 'solutions.yaml'
+            template = 'solution-template.txt'
+
+        # Run migrate operation with default content.
+        if cls.is_migrate_defaults():
+            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/default'), defaults)
+
+        # Run migrate operation with content template.
+        if cls.is_migrate_template():
+            filename = os.path.join('./', template)
 
         # In case user did not provide filename, set defaults. For example
         # if user defined export or import operation without the file, the
         # default files are used.
         if not filename:
-            filename = os.path.join('./', default_file)
+            filename = os.path.join('./', defaults)
 
         # User defined content to/from user specified file.
         name, extension = os.path.splitext(filename)

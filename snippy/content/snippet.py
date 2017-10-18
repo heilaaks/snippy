@@ -89,8 +89,10 @@ class Snippet(object):
     def export_all(self):
         """Export snippets."""
 
-        if Config.is_export_template():
-            self.export_template()
+        if Config.is_migrate_template():
+            self.logger.debug('exporting snippet template %s', Config.get_operation_file())
+            template = Config.get_template(Content())
+            Migrate().dump_template(template)
         else:
             self.logger.debug('exporting snippets %s', Config.get_operation_file())
             snippets = self.storage.export_content(Const.SNIPPET)
@@ -103,19 +105,6 @@ class Snippet(object):
         dictionary = Migrate().load(Config.get_operation_file(), Content())
         snippets = Content().load(dictionary)
         self.storage.import_content(snippets)
-
-    def export_template(self):
-        """Export snippet template."""
-
-        template = Config.get_template(Content())
-        filename = Config.get_template_filename()
-        self.logger.debug('exporting snippet template to file %s', filename)
-        try:
-            with open(filename, 'w') as outfile:
-                outfile.write(template)
-        except IOError as exception:
-            self.logger.exception('fatal failure in creating snippet template file "%s"', exception)
-            Cause.set_text('cannot export snippet template {}'.format(filename))
 
     def run(self):
         """Run the snippet management operation."""

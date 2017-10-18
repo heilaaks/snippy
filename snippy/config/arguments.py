@@ -69,7 +69,7 @@ class Arguments(object):
                      '      $ snippy search --solution --sall .',
                      '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
                      '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
-                     '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\.\s\'',
+                     '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
                      '',
                      '    Updating content.',
                      '      $ snippy update --snippet -d 44afdd0c59e17159',

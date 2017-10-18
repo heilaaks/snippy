@@ -25,7 +25,7 @@ lint:
 	-pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
 
 flake8:
-	-flake8 --config tests/flake8/flake9.ini snippy
+	-flake8 --config tests/flake8/flake8.ini snippy
 
 docker: clean clean-db
 	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .

@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Fix importing template so that user does not have to define category.
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
@@ -12,6 +11,7 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed importing a template so that user does not have to define category in command line.
    - [x] Changed argument parsing for template file. The argparse fails already if no arguments are set to --template.
    - [x] Added import from file which was created from template.
    - [x] Added missing export of content template file.

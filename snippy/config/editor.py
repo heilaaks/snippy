@@ -28,9 +28,9 @@ class Editor(object):  # pylint: disable-all
     def __init__(self, content, utc, edited=Const.EMPTY):
         self.logger = Logger(__name__).get()
         self.content = content
-        self.is_snippet = self.content.is_snippet()
-        self.is_solution = self.content.is_solution()
         self.edited = edited
+        self.is_snippet = self.get_edited_category() == Const.SNIPPET
+        self.is_solution = self.get_edited_category() == Const.SOLUTION
         self.utc = utc
 
     def read_content(self):
@@ -38,6 +38,8 @@ class Editor(object):  # pylint: disable-all
 
         template = self.get_template()
         self.edited = self.call_editor(template)
+        self.is_snippet = self.get_edited_category() == Const.SNIPPET
+        self.is_solution = self.get_edited_category() == Const.SOLUTION
 
     def get_template(self):
         """Get template for editor."""
@@ -157,6 +159,16 @@ class Editor(object):  # pylint: disable-all
         self.logger.debug('parsed content links from editor "%s"', links)
 
         return links
+
+    def get_edited_category(self):
+        """Return content category based on edited content."""
+
+        category = Const.SOLUTION
+
+        if Editor.DATA_HEAD in self.edited and Editor.BRIEF_HEAD:
+            category = Const.SNIPPET
+
+        return category
 
     def get_edited_filename(self):
         """Return solution filename from editor."""
@@ -286,3 +298,12 @@ class Editor(object):  # pylint: disable-all
             editor = 'vii'
 
         return editor
+
+    def _verify_category(self):
+        """Verify and get the content category based on edited content."""
+
+        category = Const.SOLUTION
+        if Editor.DATA_HEAD in self.edited and Editor.BRIEF_HEAD:
+            category = Const.SNIPPET
+
+        return category

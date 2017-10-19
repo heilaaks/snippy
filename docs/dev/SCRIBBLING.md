@@ -608,7 +608,7 @@ python runner export --file foo.bar
 python runner export --defaults
 
 ######################
-## Importing snipppets
+## Importing content
 ######################
 
 1. Import snippets from yaml file
@@ -655,9 +655,8 @@ python runner import --template
 python runner import --solution --template
 python runner import --snippet --template
 
-13. import defaults
+13. Import defaults
 python import export --defaults
-
 
 ########################
 ## Supplementary options

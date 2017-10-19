@@ -133,3 +133,166 @@ content:
   - screen
   - terminal
   utc: '2017-10-16 19:10:55'
+- brief: Install docker compose
+  category: snippet
+  data:
+  - curl -L "https://github.com/docker/compose/releases/download/1.16.1/docker-compose-$(uname
+    -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  - chmod +x /usr/local/bin/docker-compose
+  - docker-compose --version
+  digest: c84f9cb928e82ecb0ebaa6abd50254df3132b9b2dbb6f921ce7fc067f8073616
+  filename: ''
+  group: docker
+  links:
+  - https://docs.docker.com/compose/install/
+  - https://github.com/docker/compose/releases/
+  tags:
+  - compose
+  - container
+  - docker
+  - docker-ce
+  - install
+  - moby
+  utc: '2017-10-19 10:25:26'
+- brief: Install docker-ce
+  category: snippet
+  data:
+  - yum remove docker-engine
+  - yum install -y yum-utils device-mapper-persistent-data lvm2
+  - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  - yum install -y ftp://195.220.108.108/linux/centos/7.3.1611/extras/x86_64/Packages/container-selinux-2.19-2.1.el7.noarch.rpm
+  - yum -y install docker-ce
+  - systemctl daemon-reload
+  - systemctl restart docker
+  digest: ec167c939e72ca643e321591bc5ba78eb2d05b5208528a6f2058359274a72dd7
+  filename: ''
+  group: docker
+  links:
+  - https://docs.docker.com/engine/installation/#server
+  - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/
+  - https://docs.docker.com/release-notes/docker-ce/
+  - https://github.com/docker/for-linux/issues/20#issuecomment-316930840
+  tags:
+  - container
+  - docker
+  - docker-ce
+  - install
+  - moby
+  - rhel
+  - rpm
+  utc: '2017-10-19 10:44:53'
+- brief: Initialize, deploy and remove docker swarm
+  category: snippet
+  data:
+  - docker swarm init
+  - docker stack deploy --compose-file docker-compose.yml devstack
+  - docker stack ls
+  - docker service ls
+  - docker stack rm devstack
+  - docker-compose -f docker-compose.yml down -v
+  - docker swarm leave --force
+  - docker info | grep Swarm
+  digest: 5f4d6ab736055173668d1e985c71ed6ec7ec7df0068940955e06f85e31fe65d7
+  filename: ''
+  group: docker
+  links:
+  - https://docs.docker.com/engine/reference/commandline/service_ls/
+  - https://docs.docker.com/engine/reference/commandline/stack/
+  - https://docs.docker.com/engine/reference/commandline/swarm_init/
+  - https://docs.docker.com/engine/swarm/
+  tags:
+  - compose
+  - container
+  - deploy
+  - docker
+  - docker-ce
+  - moby
+  - swarm
+  utc: '2017-10-19 10:55:01'
+- brief: Solve docker networking 'has active endpoints' problem
+  category: snippet
+  data:
+  - docker network ls
+  - docker network inspect y0fdm2xoyuca
+  - docker network disconnect -f y0fdm2xoyuca devstack_logstash.1.7iqgrfd2xwcidj87zbkmauw4l
+  - docker network rm y0fdm2xoyuca
+  digest: 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c
+  filename: ''
+  group: docker
+  links:
+  - https://github.com/moby/moby/issues/23302
+  tags:
+  - container
+  - docker
+  - docker-ce
+  - moby
+  - network
+  - remove
+  - solution
+  - swarm
+  utc: '2017-10-19 11:02:06'
+- brief: Print Elasticsearch basic information
+  category: snippet
+  data:
+  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/health?v"
+  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
+  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/nodes?v"
+  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
+  digest: 7ee03840ba9bc3b31b02703aa57c312c860eecb05b58e0f0472096a090497ce8
+  filename: ''
+  group: elasticsearch
+  links:
+  - https://www.elastic.co/guide/en/elasticsearch/reference/current/cat.html
+  tags:
+  - api
+  - cat
+  - curl
+  - database
+  - elastic
+  - elasticsearch
+  - rest
+  - secured
+  utc: '2017-10-19 11:11:09'
+- brief: Print logs from Kubernetes pods
+  category: snippet
+  data:
+  - kubectl get pods
+  - kubectl logs nginx-3107262526-k01hd
+  digest: 14bc2d09409aba29b447a297cbef932465620348dbe39ad1483af7d4f914839e
+  filename: ''
+  group: kubernetes
+  links:
+  - https://kubernetes.io/docs/user-guide/kubectl-cheatsheet/
+  tags:
+  - container
+  - docker
+  - docker-ce
+  - kubernetes
+  - logginig
+  - moby
+  utc: '2017-10-19 11:17:37'
+- brief: List, dump and delete Elasticsearch indices
+  category: snippet
+  data:
+  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
+  - curl -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
+  - curl -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
+  digest: 4e1e723133d65592de5acac8c0e309d5a67071d27e3ee80b96ee01549f8453fe
+  filename: ''
+  group: elasticsearch
+  links:
+  - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html
+  tags:
+  - api
+  - cat
+  - curl
+  - database
+  - delete
+  - dump
+  - elastic
+  - elasticsearch
+  - index
+  - list
+  - rest
+  - secured
+  utc: '2017-10-19 11:22:35'

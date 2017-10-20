@@ -68,8 +68,18 @@ class Sqlite3Db(object):
     def bulk_insert_content(self, contents):
         """Insert multiple contents into database."""
 
+        # Common failure cases:
+        # 1. User imports default content again. In this case there is a list of contents.
+        # 2. User imports content from template. In this case there is a single failing content.
+
+        cause = Const.EMPTY
         inserted = 0
         for content in contents:
+            if not content.get_data():
+                cause = 'no content was inserted due to missing mandatory content data'
+                self.logger.info(cause)
+
+                continue
             utc = content.get_utc()
             digest = content.get_digest()
             if not self.select_content(content.get_category(), data=content.get_data()):
@@ -80,8 +90,13 @@ class Sqlite3Db(object):
                 inserted = inserted + 1
                 self.insert_content(content, digest, utc)
             else:
-                self.logger.debug('content data already exists "%s"', content.get_data())
+                cause = 'no content was inserted because content data already existed'
+                self.logger.info(cause)
+
         self.logger.debug('inserted %d out of %d content', inserted, len(contents))
+
+        if not inserted:
+            Cause.set_text(cause)
 
     def select_content(self, category, keywords=None, digest=None, data=None):
         """Select content."""
@@ -120,7 +135,9 @@ class Sqlite3Db(object):
                 query = ('SELECT * FROM contents WHERE data=?')
                 qargs = [Const.DELIMITER_DATA.join(map(str, data))]
             else:
-                Cause.set_text('internal error where search query was not defined')
+                Cause.set_text('internal error where search query could not be defined')
+
+                return rows
 
             self.logger.debug('running select query "%s"', query)
             try:

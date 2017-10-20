@@ -1,4 +1,8 @@
 ## TODO
+   - [ ] Upgrading snippy does not update new defaults? Tried with make install to install new version.
+   - [ ] Fix crash that is caused empty Content. Change the line editor.get_edited_category() to content.get_digest()
+   - [ ] Add python runner export -d 123 to export content (solution) to text file specified in the Content.
+   - [ ] Add solution print option so that it can be directly forwarded to file like: search --solution --sall nginx --plain > test.txt
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.

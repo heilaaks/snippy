@@ -656,7 +656,11 @@ python runner import --solution --template
 python runner import --snippet --template
 
 13. Import defaults
-python import export --defaults
+python import --defaults
+
+14. Import templates without any changes
+python import -f solution-template.txt
+python import -f snippet-template.txt
 
 ########################
 ## Supplementary options

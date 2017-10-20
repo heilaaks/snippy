@@ -238,7 +238,7 @@ content:
   - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
   - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/nodes?v"
   - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
-  digest: 7ee03840ba9bc3b31b02703aa57c312c860eecb05b58e0f0472096a090497ce8
+  digest: 72f8be195888c70a43fdd3487b348810df1a05f36ee3cbfaad84ada8c3fb8091
   filename: ''
   group: elasticsearch
   links:
@@ -251,8 +251,8 @@ content:
   - elastic
   - elasticsearch
   - rest
-  - secured
-  utc: '2017-10-19 11:11:09'
+  - security
+  utc: '2017-10-20 07:09:19'
 - brief: Print logs from Kubernetes pods
   category: snippet
   data:
@@ -277,7 +277,7 @@ content:
   - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
   - curl -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
   - curl -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
-  digest: 4e1e723133d65592de5acac8c0e309d5a67071d27e3ee80b96ee01549f8453fe
+  digest: 6f2c4a38fcf8b3af38b72199ca501e9f7bab33dd92536a3433e74a87ee24a79f
   filename: ''
   group: elasticsearch
   links:
@@ -294,5 +294,39 @@ content:
   - index
   - list
   - rest
-  - secured
-  utc: '2017-10-19 11:22:35'
+  - security
+  utc: '2017-10-20 05:42:53'
+- brief: Debug TLS/SSL connection
+  category: snippet
+  data:
+  - openssl s_client -debug -connect 10.183.19.189:443
+  - openssl s_client -debug -connect kafka:9093 -tls1
+  - openssl s_client -debug -connect kafka:9093 -tls1_2
+  digest: 4ec6013e6bca3193d1417d4085049bd8803d446fa33f8fc0f9ecacbf723e2f0d
+  filename: ''
+  group: security
+  links:
+  - https://wiki.openssl.org/index.php/Command_Line_Utilities
+  tags:
+  - debug
+  - openssl
+  - security
+  - ssl
+  - tls
+  utc: '2017-10-20 05:42:26'
+- brief: Test if specific port is open
+  category: snippet
+  data:
+  - nc -v 10.183.19.189 443
+  - nmap 10.183.19.189
+  digest: f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d
+  filename: ''
+  group: linux
+  links:
+  - https://www.commandlinux.com/man-page/man1/nc.1.html
+  tags:
+  - linux
+  - netcat
+  - networking
+  - port
+  utc: '2017-10-20 07:08:45'

@@ -138,10 +138,11 @@ class Migrate(object):
                 sys.exit()
 
     @classmethod
-    def dump_template(cls, template):
+    def dump_template(cls, content):
         """Dump content template into file."""
 
-        filename = Config.get_operation_file()
+        filename = Config.get_operation_file(content_filename=content.get_filename())
+        template = Config.get_content_template(content)
         cls.logger.debug('exporting content template %s', filename)
         with open(filename, 'w') as outfile:
             try:
@@ -171,7 +172,7 @@ class Migrate(object):
 
                         dictionary = json.load(infile)
                     elif Config.is_file_type_text():
-                        contents = Config.get_edited_contents(content, infile.read())
+                        contents = Config.get_file_contents(content, infile.read())
                         dictionary = {'content': Migrate.get_dictionary_list(contents)}
                     else:
                         cls.logger.info('unknown export format')

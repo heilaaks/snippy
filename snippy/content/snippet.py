@@ -41,7 +41,7 @@ class Snippet(object):
         """Update existing snippet."""
 
         snippets = ()
-        content_digest = Config.get_content_digest()
+        content_digest = Config.get_content_valid_digest()
         content_data = Config.get_content_data()
         log_string = 'invalid digest %.16s' % content_digest
         if content_digest:
@@ -66,10 +66,10 @@ class Snippet(object):
 
         self.logger.debug('deleting snippet')
         snippets = ()
-        content_digest = Config.get_content_digest()
+        content_digest = Config.get_content_valid_digest()
         content_data = Config.get_content_data()
         log_string = 'invalid digest %.16s' % content_digest
-        if content_digest and len(content_digest) >= Const.DIGEST_MIN_LENGTH:
+        if content_digest:
             self.logger.debug('deleting snippet with digest %.16s', content_digest)
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
             log_string = 'digest %.16s' % content_digest
@@ -89,10 +89,14 @@ class Snippet(object):
     def export_all(self):
         """Export snippets."""
 
+        content_digest = Config.get_content_valid_digest()
         if Config.is_migrate_template():
             self.logger.debug('exporting snippet template %s', Config.get_operation_file())
-            template = Config.get_template(Content())
-            Migrate().dump_template(template)
+            Migrate().dump_template(Content())
+        elif content_digest:
+            self.logger.debug('exporting snippet with digest %.16s', content_digest)
+            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
+            Migrate().dump_template(snippets[0])
         else:
             self.logger.debug('exporting snippets %s', Config.get_operation_file())
             snippets = self.storage.export_content(Const.SNIPPET)
@@ -101,10 +105,23 @@ class Snippet(object):
     def import_all(self):
         """Import snippets."""
 
-        self.logger.debug('importing snippets %s', Config.get_operation_file())
-        dictionary = Migrate().load(Config.get_operation_file(), Content())
-        snippets = Content().load(dictionary)
-        self.storage.import_content(snippets)
+        content_digest = Config.get_content_valid_digest()
+        if content_digest:
+            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
+            if len(snippets) == 1:
+                dictionary = Migrate().load(Config.get_operation_file(), Content())
+                contents = Content().load(dictionary)
+                snippets[0].migrate_edited(contents)
+                self.storage.update(snippets[0])
+            elif not snippets:
+                Cause.set_text('cannot find snippet to be imported with digest {:.16}'.format(content_digest))
+            else:
+                Cause.set_text('cannot import multiple snippets with same digest {:.16}'.format(content_digest))
+        else:
+            self.logger.debug('importing snippets %s', Config.get_operation_file())
+            dictionary = Migrate().load(Config.get_operation_file(), Content())
+            snippets = Content().load(dictionary)
+            self.storage.import_content(snippets)
 
     def run(self):
         """Run the snippet management operation."""

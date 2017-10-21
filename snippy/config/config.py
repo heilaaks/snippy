@@ -94,7 +94,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return content
 
     @classmethod
-    def get_edited_contents(cls, content, edited):
+    def get_file_contents(cls, content, edited):
         """Return contents from specified text file."""
 
         contents = []
@@ -114,6 +114,15 @@ class Config(object):  # pylint: disable=too-many-public-methods
         contents.append(content)
 
         return contents
+
+    @classmethod
+    def get_content_template(cls, content):
+        """Return content in text template."""
+
+        editor = Editor(content, Config.get_utc_time())
+        template = editor.get_template()
+
+        return template
 
     @classmethod
     def is_operation_create(cls):
@@ -233,6 +242,16 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['digest']
 
     @classmethod
+    def get_content_valid_digest(cls):
+        """Return digest identifying the content."""
+
+        digest = Const.EMPTY
+        if len(cls.config['digest']) >= Const.DIGEST_MIN_LENGTH:
+            digest = cls.config['digest']
+
+        return digest
+
+    @classmethod
     def get_filename(cls):
         """Return content filename."""
 
@@ -275,10 +294,22 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['input']['editor']
 
     @classmethod
-    def get_operation_file(cls):
+    def get_operation_file(cls, content_filename=Const.EMPTY):
         """Return file for operation."""
 
-        return cls.config['operation']['file']['name']
+        filename = cls.config['operation']['file']['name']
+
+        # In case of exporting single content, the filename can be read
+        # from the content or if missing, generated here.
+        if cls.is_operation_export() and cls.get_content_digest():
+            if content_filename:
+                filename = content_filename
+            elif Config.is_category_snippet():
+                filename = 'snippet.' + Const.FILE_TYPE_TEXT
+            else:
+                filename = 'solution.' + Const.FILE_TYPE_TEXT
+
+        return filename
 
     @classmethod
     def is_file_type_yaml(cls):
@@ -309,12 +340,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if ANSI characters like colors are disabled in the command output."""
 
         return False if cls.config['options']['no_ansi'] else True
-
-    @classmethod
-    def get_template(cls, content):
-        """Return template suitable for operation category."""
-
-        return Editor(content, cls.get_utc_time()).get_template()
 
     @classmethod
     def get_storage_path(cls):

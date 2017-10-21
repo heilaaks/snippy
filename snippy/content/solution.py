@@ -41,8 +41,8 @@ class Solution(object):
         """Update existing solution."""
 
         solution = ()
-        content_digest = Config.get_content_digest()
-        if content_digest and len(content_digest) >= Const.DIGEST_MIN_LENGTH:
+        content_digest = Config.get_content_valid_digest()
+        if content_digest:
             self.logger.debug('updating soulution with digest %.16s', content_digest)
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
 
@@ -59,8 +59,8 @@ class Solution(object):
 
         self.logger.debug('deleting solution')
         solutions = ()
-        content_digest = Config.get_content_digest()
-        if content_digest and len(content_digest) >= Const.DIGEST_MIN_LENGTH:
+        content_digest = Config.get_content_valid_digest()
+        if content_digest:
             self.logger.debug('deleting soulution with digest %.16s', content_digest)
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
 
@@ -75,10 +75,14 @@ class Solution(object):
     def export_all(self):
         """Export solutions."""
 
+        content_digest = Config.get_content_valid_digest()
         if Config.is_migrate_template():
             self.logger.debug('exporting solution template %s', Config.get_operation_file())
-            template = Config.get_template(Content())
-            Migrate().dump_template(template)
+            Migrate().dump_template(Content())
+        elif content_digest:
+            self.logger.debug('exporting solution with digest %.16s', content_digest)
+            snippets = self.storage.search(Const.SOLUTION, digest=content_digest)
+            Migrate().dump_template(snippets[0])
         else:
             self.logger.debug('exporting solutions %s', Config.get_operation_file())
             solutions = self.storage.export_content(Const.SOLUTION)
@@ -87,10 +91,23 @@ class Solution(object):
     def import_all(self):
         """Import solutions."""
 
-        self.logger.debug('importing solutions %s', Config.get_operation_file())
-        dictionary = Migrate().load(Config.get_operation_file(), Content())
-        solutions = Content().load(dictionary)
-        self.storage.import_content(solutions)
+        content_digest = Config.get_content_valid_digest()
+        if content_digest:
+            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
+            if len(solutions) == 1:
+                dictionary = Migrate().load(Config.get_operation_file(), Content())
+                contents = Content().load(dictionary)
+                solutions[0].migrate_edited(contents)
+                self.storage.update(solutions[0])
+            elif not solutions:
+                Cause.set_text('cannot find solution to be imported with digest {:.16}'.format(content_digest))
+            else:
+                Cause.set_text('cannot import multiple solutions with same digest {:.16}'.format(content_digest))
+        else:
+            self.logger.debug('importing solutions %s', Config.get_operation_file())
+            dictionary = Migrate().load(Config.get_operation_file(), Content())
+            solutions = Content().load(dictionary)
+            self.storage.import_content(solutions)
 
     def run(self):
         """Run the solution management operation."""

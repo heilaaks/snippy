@@ -607,6 +607,10 @@ python runner export --file foo.bar
 7. Export defaults
 python runner export --defaults
 
+8. Export specific content indentified by message digest
+python runner export -d e95e9092c92e3440 # Works for snippets and solutions and creates text file
+
+
 ######################
 ## Importing content
 ######################
@@ -664,6 +668,10 @@ python import -f snippet-template.txt
 
 15. Importing yaml file that contains snippet that is already stored. (DONE)
 
+16. Import (update) specific content from file. The content category must be read automatically
+python import -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt # import content with category defaulting to snippet
+python import --solution -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt
+python import --snippet -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt
 
 ########################
 ## Supplementary options

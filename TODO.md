@@ -1,12 +1,10 @@
 ## TODO
-   - [ ] Upgrading snippy does not update new defaults? Tried with make install to install new version.
-   - [ ] Fix crash that is caused empty Content. Change the line editor.get_edited_category() to content.get_digest()
-   - [ ] Add python runner export -d 123 to export content (solution) to text file specified in the Content.
-   - [ ] Add solution print option so that it can be directly forwarded to file like: search --solution --sall nginx --plain > test.txt
+   - [ ] Add search output option to allow directing to file like: search --solution --sall nginx --plain > test.txt
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] How to document tests and create test document? Grepping commands and descriptions?
+   - [ ] Fix upgrading snippy does not update new defaults? Tried with make install to install new version.
    - [ ] Fix case described in 'git log 11448a2e90dab3a' and somehow and make test_wf a bit nicer?
    - [ ] Add support importing multiple contents in text format like with json and yaml.
    - [ ] Test BytePackager/packagecore.
@@ -15,6 +13,7 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added support to specify migrated content with message digest. This allows exporting and importing (updating) content.
    - [x] Fixed importing a template so that user does not have to define category in command line.
    - [x] Changed argument parsing for template file. The argparse fails already if no arguments are set to --template.
    - [x] Added import from file which was created from template.

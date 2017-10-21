@@ -185,6 +185,32 @@ class Content(object):
 
         return content
 
+    def migrate_edited(self, contents):
+        """Migrate edited content."""
+
+        # Only the content that can be directly modified by user is migrated.
+        if contents:
+            migrated = contents[0]
+            content = self.get_list()
+            content[Const.DATA] = migrated.get_data()
+            content[Const.BRIEF] = migrated.get_brief()
+            content[Const.GROUP] = migrated.get_group()
+            content[Const.TAGS] = migrated.get_tags()
+            content[Const.LINKS] = migrated.get_links()
+            content[Const.FILENAME] = migrated.get_filename()
+            content[Const.UTC] = migrated.get_utc()
+            self.content = (content[Const.DATA],
+                            content[Const.BRIEF],
+                            content[Const.GROUP],
+                            content[Const.TAGS],
+                            content[Const.LINKS],
+                            content[Const.CATEGORY],
+                            content[Const.FILENAME],
+                            content[Const.UTC],
+                            content[Const.DIGEST],
+                            content[Const.METADATA],
+                            content[Const.KEY])
+
     @classmethod
     def load(cls, dictionary):
         """Load contents from dictionary."""

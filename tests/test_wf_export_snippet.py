@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_wf_export_snippet.py: Test workflows for importing snippets."""
+"""test_wf_export_snippet.py: Test workflows for exporting snippets."""
 
 import sys
 import unittest
@@ -28,7 +28,7 @@ class TestWfImportSnippet(unittest.TestCase):
         Execution:
             $ python snip.py create SnippetHelper().get_snippet(0)
             $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py export -f defaults
+            $ python snip.py export -f ./snippets.yaml
         Expected results:
             1 Two snippets are exported.
             2 Correct file is created and it is only for write.

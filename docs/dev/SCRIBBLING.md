@@ -611,7 +611,7 @@ python runner export --defaults
 ## Importing content
 ######################
 
-1. Import snippets from yaml file
+1. Import snippets from yaml file (DONE)
 python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'moby' -t moby,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
@@ -661,6 +661,9 @@ python import --defaults
 14. Import templates without any changes
 python import -f solution-template.txt
 python import -f snippet-template.txt
+
+15. Importing yaml file that contains snippet that is already stored. (DONE)
+
 
 ########################
 ## Supplementary options

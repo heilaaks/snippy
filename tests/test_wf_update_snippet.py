@@ -72,7 +72,8 @@ class TestWfUpdateSnippet(unittest.TestCase):
             $ python snip.py update --solution -d 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
         Expected results:
             1 Category is not changed from snippet to solution.
-            2 Exit cause is OK.
+            2 Snippet is updated normally.
+            3 Exit cause is OK.
         """
 
         initial = Snippet().get_references(0)

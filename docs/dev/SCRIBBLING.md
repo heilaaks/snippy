@@ -190,6 +190,9 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     
     # Mocking cookbook
     > http://chase-seibert.github.io/blog/2015/06/25/python-mocking-cookbook.html
+    
+    # List tests
+    $ cat tests/test_wf_* | grep -E '[[:space:]]{12}\$' | grep -Ev SnippetHelp
 
 #######################################
 ## Mocks
@@ -602,7 +605,7 @@ python runner export --solution --template
 python runner export --snippet --template (DONE)
 
 6. Export with unsupported file format foo.bar. This must not create empty file foo.bar
-python runner export --file foo.bar
+python runner export --file foo.bar (DONE)
 
 7. Export defaults
 python runner export --defaults

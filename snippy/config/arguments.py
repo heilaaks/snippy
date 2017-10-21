@@ -143,7 +143,7 @@ class Arguments(object):
         # migration options
         migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Arguments.ARGS_MIGRAT))
         migrat_meg = migrat.add_mutually_exclusive_group()
-        migrat_meg.add_argument('-f', '--file', type=str, default='', help=argparse.SUPPRESS)
+        migrat_meg.add_argument('-f', '--file', type=str, dest='filename', default='', help=argparse.SUPPRESS)
         migrat_meg.add_argument('--defaults', action='store_true', default=False, help=argparse.SUPPRESS)
         migrat_meg.add_argument('--template', action='store_true', default=False, help=argparse.SUPPRESS)
 
@@ -304,9 +304,9 @@ class Arguments(object):
     def get_operation_file(cls):
         """Return file for operation."""
 
-        cls.logger.info('parsed argument --file with value "%s"', cls.args.file)
+        cls.logger.info('parsed argument --file with value "%s"', cls.args.filename)
 
-        return cls.args.file
+        return cls.args.filename
 
     @classmethod
     def is_no_ansi(cls):

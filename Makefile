@@ -23,15 +23,13 @@ docs:
 lint:
 	-pylint --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
 	-pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
-
-flake8:
 	-flake8 --config tests/flake8/flake8.ini snippy
 
 docker: clean clean-db
 	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .
 
 security-scan:
-	- bandit -r snippy | tee tests/bandit/bandit.txt
+	-bandit -r snippy | tee tests/bandit/bandit.txt
 
 clean:
 	find . \( -name \*.pyc -o -name \*.pyo -o -name __pycache__ \) -prune -exec rm -rf {} +
@@ -59,4 +57,4 @@ clean:
 clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall dev test coverage docs lint flake8 docker security-scan clean clean-db
+.PHONY: install upgrade uninstall dev test coverage docs lint docker security-scan clean clean-db

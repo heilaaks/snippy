@@ -41,11 +41,11 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['options']['no_ansi'] = cls.args.is_no_ansi()
         cls.config['options']['migrate_defaults'] = cls.args.is_defaults()
         cls.config['options']['migrate_template'] = cls.args.is_template()
+        cls.config['digest'] = cls._parse_digest()
         cls.config['operation'] = {}
         cls.config['operation']['task'] = cls.args.get_operation()
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
-        cls.config['digest'] = cls._parse_digest()
         cls.config['search'] = {}
         cls.config['search']['field'], cls.config['search']['keywords'] = cls._parse_search()
         cls.config['search']['filter'] = cls._parse_search_filter()
@@ -298,16 +298,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Return file for operation."""
 
         filename = cls.config['operation']['file']['name']
-
-        # In case of exporting single content, the filename can be read
-        # from the content or if missing, generated here.
-        if cls.is_operation_export() and cls.get_content_digest():
-            if content_filename:
-                filename = content_filename
-            elif Config.is_category_snippet():
-                filename = 'snippet.' + Const.FILE_TYPE_TEXT
-            else:
-                filename = 'solution.' + Const.FILE_TYPE_TEXT
+        if cls.is_operation_export() and content_filename:
+            filename = content_filename
 
         return filename
 
@@ -523,6 +515,14 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # Run migrate operation with content template.
         if cls.is_migrate_template():
             filename = os.path.join('./', template)
+
+        # Run export operation with specified content without specifying
+        # the operation file.
+        if cls.is_operation_export() and cls.get_content_digest():
+            if Config.is_category_snippet() and not filename:
+                filename = 'snippet.' + Const.FILE_TYPE_TEXT
+            elif Config.is_category_solution() and not filename:
+                filename = 'solution.' + Const.FILE_TYPE_TEXT
 
         # In case user did not provide filename, set defaults. For example
         # if user defined export or import operation without the file, the

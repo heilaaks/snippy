@@ -1,4 +1,6 @@
 ## TODO
+   - [ ] Why is default content Debugging Elastic Beats utc null? Fix.
+   - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] Add search output option to allow directing to file like: search --solution --sall nginx --plain > test.txt
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Update documents.

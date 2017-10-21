@@ -592,14 +592,14 @@ python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with 
 python snip.py export --file ./snippets.txt
 
 4. Export without file to use default file
-python snip.py export
+python snip.py export (DONE)
 python snip.py export --snippet  # Creates snippets.yaml
 python snip.py export --solution # Creates solutions.yaml
 
 5. Export template
-python runner export --template
+python runner export --template (DONE)
 python runner export --solution --template
-python runner export --snippet --template
+python runner export --snippet --template (DONE)
 
 6. Export with unsupported file format foo.bar. This must not create empty file foo.bar
 python runner export --file foo.bar
@@ -607,8 +607,11 @@ python runner export --file foo.bar
 7. Export defaults
 python runner export --defaults
 
-8. Export specific content indentified by message digest
-python runner export -d e95e9092c92e3440 # Works for snippets and solutions and creates text file
+8. Export specific content indentified by message digest into default file. This works for snippets and solutions and creates text file
+python runner export -d e95e9092c92e3440 (DONE)
+
+9. Export specific content into specified file
+python runner export -d e95e9092c92e3440 -f testing.txt (DONE)
 
 
 ######################

@@ -6,6 +6,7 @@ import sys
 import unittest
 import mock
 import yaml
+from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.storage.database.sqlite3db import Sqlite3Db
@@ -13,31 +14,37 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfImportSnippet(unittest.TestCase):
+class TestWfExportSnippet(unittest.TestCase):
     """Test workflows for exporting snippets."""
 
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
-    def test_exporting_snippets(self, mock_file, mock_get_db_location, mock_get_utc_time, mock_safe_dump): # pylint: disable=unused-argument
-        """Export snippets to defaults file.
+    def test_export_all_snippets_yaml(self, mock_file, mock_get_db_location, mock_get_utc_time, mock_safe_dump): # pylint: disable=unused-argument
+        """Export snippets to defined yaml file.
 
         Workflow:
             @ export snippet
         Execution:
             $ python snip.py create SnippetHelper().get_snippet(0)
             $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py export -f ./snippets.yaml
+            $ python snip.py export
+            $ python snip.py export -f ./defined-snippets.yaml
+            $ python snip.py export --snippet -f ./defined-snippets.yaml
         Expected results:
             1 Two snippets are exported.
-            2 Correct file is created and it is only for write.
+            2 Filename defined from command line will be honored when the whole content is exported.
+            3 Default filename will be used when user does not defined exported filename.
             3 Exit cause is OK.
         """
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         snippy = Snippet.add_snippets(self)
+
+        # Export all snippets and not define filename where to write. This will result default filename for content.
+        mock_file.reset_mock()
         export = {'content': [{'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
                                'brief': 'Remove all docker containers with volumes',
                                'group': 'docker',
@@ -58,14 +65,195 @@ class TestWfImportSnippet(unittest.TestCase):
                                'filename': '',
                                'utc': '2017-10-14 19:56:31',
                                'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'}]}
-
-        # Export snippets.
-        sys.argv = ['snippy', 'export', '-f', './snippets.yaml']
+        sys.argv = ['snippy', 'export']
         snippy.reset()
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
         mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
         mock_file.assert_called_once_with('./snippets.yaml', 'w')
+
+        # Export all snippets in defined yaml file
+        mock_file.reset_mock()
+        export = export
+        sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml']
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
+        mock_file.assert_called_once_with('./defined-snippets.yaml', 'w')
+
+        # Export all snippets by explicitly using the snippet category and filename.
+        mock_file.reset_mock()
+        export = export
+        sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet']
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
+        mock_file.assert_called_once_with('./defined-snippets.yaml', 'w')
+
+        # Release all resources
+        snippy.release()
+
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
+    def test_export_defined_snippet(self, mock_file, mock_get_db_location, mock_get_utc_time):
+        """Export defined snippets.
+
+        Workflow:
+            @ export snippet
+        Execution:
+            $ python snip.py create SnippetHelper().get_snippet(0)
+            $ python snip.py create SnippetHelper().get_snippet(1)
+            $ python snip.py export -d 53908d68425c61dc
+            $ python snip.py export -d 53908d68425c61dc -f defined-snippet.txt
+        Expected results:
+            1 Only defined snippet is exported.
+            2 Default filename snippet.text will be created with correct content when file is not defined.
+            3 Filename defined from command line will be honored when defined content is exported.
+            4 Exit cause is always OK.
+        """
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        snippy = Snippet.add_snippets(self)
+
+        # Export defined snippet into default text file.
+        export = ('# Commented lines will be ignored.',
+                  '#',
+                  '# Add mandatory snippet below.',
+                  'docker rm --force redis',
+                  '',
+                  '# Add optional brief description below.',
+                  'Remove docker image with force',
+                  '',
+                  '# Add optional single group below.',
+                  'docker',
+                  '',
+                  '# Add optional comma separated list of tags below.',
+                  'cleanup,container,docker,docker-ce,moby',
+                  '',
+                  '# Add optional links below one link per line.',
+                  'https://docs.docker.com/engine/reference/commandline/rm/',
+                  'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                  '',
+                  '')
+        sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc']
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        mock_file.assert_called_once_with('snippet.text', 'w')
+        file_handle = mock_file.return_value.__enter__.return_value
+        file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+
+        # Export defined snippet into specified file.
+        mock_file.reset_mock()
+        sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt']
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        mock_file.assert_called_once_with('defined-snippet.txt', 'w')
+        file_handle = mock_file.return_value.__enter__.return_value
+        file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+
+        # Release all resources
+        snippy.release()
+
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
+    def test_export_snippet_template(self, mock_file, mock_get_db_location, mock_get_utc_time):
+        """Export snippet template.
+
+        Workflow:
+            @ export snippet
+        Execution:
+            $ python snip.py create SnippetHelper().get_snippet(0)
+            $ python snip.py create SnippetHelper().get_snippet(1)
+            $ python snip.py export --template
+            $ python snip.py export --snippet --template
+        Expected results:
+            1 Snippet template is created to default file.
+            2 Exit cause is OK.
+        """
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        snippy = Snippet.add_snippets(self)
+
+        # Export snippet template.
+        mock_file.reset_mock()
+        export = ('# Commented lines will be ignored.',
+                  '#',
+                  '# Add mandatory snippet below.',
+                  '',
+                  '',
+                  '# Add optional brief description below.',
+                  '',
+                  '',
+                  '# Add optional single group below.',
+                  'default',
+                  '',
+                  '# Add optional comma separated list of tags below.',
+                  '',
+                  '',
+                  '# Add optional links below one link per line.',
+                  '',
+                  '',
+                  '')
+        sys.argv = ['snippy', 'export', '--template']
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        mock_file.assert_called_once_with('./snippet-template.txt', 'w')
+        file_handle = mock_file.return_value.__enter__.return_value
+        file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+
+        # Export snippet template and explicitly define content category.
+        mock_file.reset_mock()
+        export = export
+        sys.argv = ['snippy', 'export', '--snippet', '--template']
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == Cause.ALL_OK
+        mock_file.assert_called_once_with('./snippet-template.txt', 'w')
+        file_handle = mock_file.return_value.__enter__.return_value
+        file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+
+        # Release all resources
+        snippy.release()
+
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
+    def test_export_snippet_unsupported_file_format(self, mock_file, mock_get_db_location, mock_get_utc_time):
+        """Export snippet defining unsupported file format.
+
+        Workflow:
+            @ export snippet
+        Execution:
+            $ python snip.py create SnippetHelper().get_snippet(0)
+            $ python snip.py create SnippetHelper().get_snippet(1)
+            $ python snip.py export --snippet -f foo.bar
+        Expected results:
+            1 No file is created and no exporting is done.
+            2 Exit cause is NOK.
+        """
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        snippy = Snippet.add_snippets(self)
+
+        # Export snippet template.
+        mock_file.reset_mock()
+        sys.argv = ['snippy', 'export', '-f', 'foo.bar']
+        snippy.reset()
+        cause = snippy.run_cli()
+        assert cause == 'NOK: cannot identify file format for file foo.bar'
+        mock_file.assert_not_called()
+        file_handle = mock_file.return_value.__enter__.return_value
+        file_handle.write.assert_not_called()
 
         # Release all resources
         snippy.release()

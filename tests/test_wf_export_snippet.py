@@ -36,7 +36,7 @@ class TestWfExportSnippet(unittest.TestCase):
             1 Two snippets are exported.
             2 Filename defined from command line will be honored when the whole content is exported.
             3 Default filename will be used when user does not defined exported filename.
-            3 Exit cause is OK.
+            4 Exit cause is OK.
         """
 
         mock_get_db_location.return_value = Database.get_storage()

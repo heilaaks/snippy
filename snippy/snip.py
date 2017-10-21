@@ -53,6 +53,7 @@ class Snippy(object):
 
         Logger.exit(Cause.get_text())
         self.storage.disconnect()
+        self.cause = Cause.reset()
         self.storage = None
         self.snippet = None
         self.solution = None

@@ -35,7 +35,24 @@ class Sqlite3DbHelper(object):
         cursor.close()
         conn.close()
 
-        return Storage()._get_contents(rows) # pylint: disable=protected-access
+        return Storage()._get_contents(rows)  # pylint: disable=protected-access
+
+    @staticmethod
+    def get_solutions():
+        """Return solutions from database as content tuple."""
+
+        conn, cursor = Sqlite3DbHelper._connect_db()
+        query = ('SELECT * FROM contents WHERE category=?')
+        qargs = ['solution']
+        try:
+            cursor.execute(query, qargs)
+            rows = cursor.fetchall()
+        except sqlite3.Error as exception:
+            print(exception)
+        cursor.close()
+        conn.close()
+
+        return Storage()._get_contents(rows)  # pylint: disable=protected-access
 
     @staticmethod
     def delete_all_snippets():

@@ -43,7 +43,7 @@ class TestWfExportSnippet(unittest.TestCase):
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         snippy = Snippet.add_snippets(self)
 
-        # Export all snippets and not define filename where to write. This will result default filename for content.
+        # Export all solutions without defining file name.
         mock_file.reset_mock()
         export = {'content': [{'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
                                'brief': 'Remove all docker containers with volumes',

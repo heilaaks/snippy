@@ -1,4 +1,7 @@
 ## TODO
+   - [ ] Fix the snip.py and reset Config which is not needed anymore (it seems).
+   - [ ] Fix last line missed from solution import? See test_wf_export_solution and the pop.
+   - [ ] Fix import with empty solution? It seems to go trhough even though data missing?
    - [ ] Why is default content Debugging Elastic Beats utc null? Fix.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] Add search output option to allow directing to file like: search --solution --sall nginx --plain > test.txt

@@ -616,9 +616,14 @@ python runner export -d e95e9092c92e3440 (DONE)
 9. Export specific content into specified file
 python runner export -d e95e9092c92e3440 -f testing.txt (DONE)
 
+######################
+## Exporting solutions
+######################
+
+1. Exported solution into yaml file (DONE)
 
 ######################
-## Importing content
+## Importing snippet
 ######################
 
 1. Import snippets from yaml file (DONE)
@@ -678,6 +683,12 @@ python import -f snippet-template.txt
 python import -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt # import content with category defaulting to snippet
 python import --solution -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt
 python import --snippet -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt
+
+######################
+## Importing solution
+######################
+
+1. Import solution from yaml file (DONE)
 
 ########################
 ## Supplementary options

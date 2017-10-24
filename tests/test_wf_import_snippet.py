@@ -19,8 +19,7 @@ class TestWfImportSnippet(unittest.TestCase):
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
-    def test_importing_snippets(self, mock_file, mock_isfile, mock_get_db_location, mock_safe_load):
+    def test_importing_snippets(self, mock_isfile, mock_get_db_location, mock_safe_load):
         """Import snippets from defined yaml file.
 
         Workflow:
@@ -61,16 +60,29 @@ class TestWfImportSnippet(unittest.TestCase):
         snippy = Snippet.add_snippets(self)
 
         # Import snippets from yaml file.
-        sys.argv = ['snippy', 'import', '-f', './snippets.yaml']
-        snippy.reset()
-        assert len(Database.get_contents()) == 2
-        content_before = snippy.storage.search(Const.SNIPPET, data=snippets['content'][0]['data'])
-        cause = snippy.run_cli()
-        content_after = snippy.storage.search(Const.SNIPPET, data=snippets['content'][0]['data'])
-        assert cause == Cause.ALL_OK
-        mock_file.assert_called_once_with('./snippets.yaml', 'r')
-        Snippet().compare(self, content_after[0], content_before[0])
-        assert len(Database.get_contents()) == 3
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mocked_file:
+            sys.argv = ['snippy', 'import', '-f', './snippets.yaml']
+            snippy.reset()
+            assert len(Database.get_contents()) == 2
+            content_before = snippy.storage.search(Const.SNIPPET, data=snippets['content'][0]['data'])
+            cause = snippy.run_cli()
+            content_after = snippy.storage.search(Const.SNIPPET, data=snippets['content'][0]['data'])
+            assert cause == Cause.ALL_OK
+            mocked_file.assert_called_once_with('./snippets.yaml', 'r')
+            Snippet().compare(self, content_after[0], content_before[0])
+            assert len(Database.get_contents()) == 3
+
+            # Verify the imported solution by exporting it again to text file.
+            content = snippy.storage.search(Const.SNIPPET, digest='53908d68425c61dc')
+            (message, _) = Snippet().get_edited_message(content[0], content[0], ())
+            mocked_file.reset_mock()
+            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mocked_file.assert_called_once_with('defined-snippet.txt', 'w')
+            file_handle = mocked_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(message)
 
         # Release all resources
         snippy.release()

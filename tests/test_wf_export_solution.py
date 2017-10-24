@@ -27,6 +27,8 @@ class TestWfExportSolution(unittest.TestCase):
         Workflow:
             @ export solution
         Execution:
+            $ python snip.py create SnippetHelper().get_snippet(0)
+            $ python snip.py create SnippetHelper().get_snippet(1)
             $ python snip.py import SolutionHelper().get_solution(0)
             $ python snip.py import SolutionHelper().get_solution(1)
             $ python snip.py export --solution
@@ -43,34 +45,27 @@ class TestWfExportSolution(unittest.TestCase):
         mock_isfile.return_value = True
         snippy = Snippet.add_snippets(self)
         snippy = Solution.add_solutions(snippy)
+        export = {'content': [{'data': tuple(Solution.SOLUTIONS_TEXT[0]),
+                               'brief': 'Debugging Elastic Beats',
+                               'group': 'beats',
+                               'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
+                               'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
+                               'category': 'solution',
+                               'filename': 'howto-debug-elastic-beats.txt',
+                               'utc': None,
+                               'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
+                              {'data': tuple(Solution.SOLUTIONS_TEXT[1]),
+                               'brief': 'Debugging nginx',
+                               'group': 'nginx',
+                               'tags': ('debug', 'howto', 'logging', 'nginx'),
+                               'links': ('https://www.nginx.com/resources/admin-guide/debug/',),
+                               'category': 'solution',
+                               'filename': 'howto-debug-nginx.txt',
+                               'utc': None,
+                               'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
 
         # Export all solutions without defining file name.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mocked_file:
-            exported_data1 = Solution.SOLUTIONS_TEXT[0]
-            exported_data1.pop()
-            exported_data1 = tuple(exported_data1)
-            exported_data2 = Solution.SOLUTIONS_TEXT[1]
-            exported_data2.pop()
-            exported_data2 = tuple(exported_data2)
-            export = {'content': [{'data': exported_data1,
-                                   'brief': 'Debugging Elastic Beats',
-                                   'group': 'beats',
-                                   'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
-                                   'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
-                                   'category': 'solution',
-                                   'filename': 'howto-debug-elastic-beats.txt',
-                                   'utc': None,
-                                   'digest': 'e95e9092c92e3440e975d34d4799c7d707f6d319eab36365d08cdcb04de4bd11'},
-                                  {'data': exported_data2,
-                                   'brief': 'Debugging nginx',
-                                   'group': 'nginx',
-                                   'tags': ('debug', 'howto', 'logging', 'nginx'),
-                                   'links': ('https://www.nginx.com/resources/admin-guide/debug/',),
-                                   'category': 'solution',
-                                   'filename': 'howto-debug-nginx.txt',
-                                   'utc': None,
-                                   'digest': '69779f83c3c649e1a61745aaa83d0cdb7fb80285c797e9439c25ea0ac75e4d29'}]}
-
             sys.argv = ['snippy', 'export', '--solution']
             snippy.reset()
             cause = snippy.run_cli()

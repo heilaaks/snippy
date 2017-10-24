@@ -89,7 +89,7 @@ class Editor(object):  # pylint: disable-all
             if match and not match.group(1).isspace():
                 data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
         else:
-            data = tuple(self.edited.rstrip().split(Const.NEWLINE))
+            data = tuple(self.edited.split(Const.NEWLINE))
         self.logger.debug('parsed content data from editor "%s"', data)
 
         return data

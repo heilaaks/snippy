@@ -1,6 +1,5 @@
 ## TODO
    - [ ] Fix the snip.py and reset Config which is not needed anymore (it seems).
-   - [ ] Fix last line missed from solution import? See test_wf_export_solution and the pop.
    - [ ] Fix import with empty solution? It seems to go trhough even though data missing?
    - [ ] Why is default content Debugging Elastic Beats utc null? Fix.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
@@ -18,6 +17,7 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed the last missing from solution import.
    - [x] Added support to specify migrated content with message digest. This allows exporting and importing (updating) content.
    - [x] Fixed importing a template so that user does not have to define category in command line.
    - [x] Changed argument parsing for template file. The argparse fails already if no arguments are set to --template.

@@ -297,8 +297,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_operation_file(cls, content_filename=Const.EMPTY):
         """Return file for operation."""
 
+        # Use the content filename only in case of export operation and
+        # when the user did not define the target file from command line.
         filename = cls.config['operation']['file']['name']
-        if cls.is_operation_export() and content_filename:
+        if cls.is_operation_export() and content_filename and not cls.args.get_operation_file():
             filename = content_filename
 
         return filename

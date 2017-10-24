@@ -168,7 +168,8 @@ class SolutionHelper(object):  # pylint: disable=too-few-public-methods
                        '    $ docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' k8s_POD_logstash...',
                        '    $ docker inspect --format \'{{ .NetworkSettings.IPAddress }}\' k8s_POD_kafka-0...',
                        '    $ docker inspect $(docker ps | grep POD | awk \'{print $1}\') | grep -E "Hostname|NetworkID',
-                       '    $ docker inspect $(docker ps | grep POD | awk \'{print $1}\') | while read line ; do egrep -E \'"Hostname"|"IPAddress"\' ; done | while read line ; do echo $line ; done',
+                       '    $ docker inspect $(docker ps | grep POD | awk \'{print $1}\') | while read line ; do egrep ' +
+                       '-E \'"Hostname"|"IPAddress"\' ; done | while read line ; do echo $line ; done',
                        '',
                        '################################################################################',
                        '## solutions',

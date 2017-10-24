@@ -86,7 +86,6 @@ class TestWfImportSolution(unittest.TestCase):
             file_handle = mocked_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2]))
 
-
         # Release all resources
         snippy.release()
 

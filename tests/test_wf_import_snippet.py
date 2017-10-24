@@ -21,7 +21,7 @@ class TestWfImportSnippet(unittest.TestCase):
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
     def test_importing_snippets(self, mock_file, mock_isfile, mock_get_db_location, mock_safe_load):
-        """Export snippets to defaults file.
+        """Import snippets from defined yaml file.
 
         Workflow:
             @ import snippet
@@ -31,7 +31,7 @@ class TestWfImportSnippet(unittest.TestCase):
             $ python snip.py import -f ./snippets.yaml
         Expected results:
             1 One snippet is imported.
-            2 One imported snippet data already exist and the existing is not updated.
+            2 One imported snippet data already exist and the existing one is not updated.
             3 Two existing snippets are not changed when one new snippet is imported.
             4 Exit cause is OK.
         """
@@ -60,7 +60,7 @@ class TestWfImportSnippet(unittest.TestCase):
         mock_safe_load.return_value = snippets
         snippy = Snippet.add_snippets(self)
 
-        # Import snippets.
+        # Import snippets from yaml file.
         sys.argv = ['snippy', 'import', '-f', './snippets.yaml']
         snippy.reset()
         assert len(Database.get_contents()) == 2

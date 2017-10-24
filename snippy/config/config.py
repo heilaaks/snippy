@@ -41,6 +41,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['options']['no_ansi'] = cls.args.is_no_ansi()
         cls.config['options']['migrate_defaults'] = cls.args.is_defaults()
         cls.config['options']['migrate_template'] = cls.args.is_template()
+        cls.config['options']['debug'] = cls.args.is_debug()
         cls.config['digest'] = cls._parse_digest()
         cls.config['operation'] = {}
         cls.config['operation']['task'] = cls.args.get_operation()
@@ -372,6 +373,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         utc = datetime.datetime.utcnow()
 
         return utc.strftime("%Y-%m-%d %H:%M:%S")
+
+    @classmethod
+    def is_debug(cls):
+        """Test if debug option was used."""
+
+        return True if cls.config['options']['debug'] else False
 
     @classmethod
     def _parse_content_data(cls):

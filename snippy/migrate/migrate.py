@@ -35,7 +35,7 @@ class Migrate(object):
                 print(Const.NEWLINE.join(match))
                 print()
         else:
-            text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi())
+            text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi(), debug=Config.is_debug())
             if text:
                 print(text)
 
@@ -58,6 +58,7 @@ class Migrate(object):
                                                                 content.get_digest() == content.compute_digest())
                 text = text + Migrate._terminal_metadata(ansi) % content.get_metadata()
                 text = text + Migrate._terminal_key(ansi) % content.get_key()
+                text = text + Const.NEWLINE
 
         if contents:
             # Set only one empty line at the end of string for beautified output.

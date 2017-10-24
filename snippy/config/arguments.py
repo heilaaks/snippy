@@ -332,6 +332,14 @@ class Arguments(object):
 
         return cls.args.template
 
+    @classmethod
+    def is_debug(cls):
+        """Return the usage of debug option."""
+
+        cls.logger.info('parsed argument --debug with value %s', cls.args.debug)
+
+        return cls.args.debug
+
 
 class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """Customised argparse help to print examples."""

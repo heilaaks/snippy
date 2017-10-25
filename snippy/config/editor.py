@@ -89,7 +89,8 @@ class Editor(object):  # pylint: disable-all
             if match and not match.group(1).isspace():
                 data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
         else:
-            data = tuple(self.edited.split(Const.NEWLINE))
+            # Remove unnecessary newlines at the end and making sure there is one at the end.
+            data = tuple(self.edited.rstrip().split(Const.NEWLINE) + [Const.EMPTY])
         self.logger.debug('parsed content data from editor "%s"', data)
 
         return data

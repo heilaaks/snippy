@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_wf_import_solution.py: Test workflows for importing snippets."""
+"""test_wf_import_solution.py: Test workflows for importing solutions."""
 
 import sys
 import unittest
@@ -15,12 +15,12 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestWfImportSolution(unittest.TestCase):
-    """Test workflows for importing snippets."""
+    """Test workflows for importing solutions."""
 
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_importing_snippets(self, mock_isfile, mock_get_db_location, mock_safe_load):
+    def test_importing_solutions(self, mock_isfile, mock_get_db_location, mock_safe_load):
         """Import solutions from defined yaml file.
 
         Workflow:
@@ -64,7 +64,7 @@ class TestWfImportSolution(unittest.TestCase):
         snippy = Solution.add_solutions(snippy)
 
         # Import solutions from yaml file.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mocked_file:
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             sys.argv = ['snippy', 'import', '-f', './solutions.yaml']
             snippy.reset()
             assert len(Database.get_contents()) == 4
@@ -72,18 +72,18 @@ class TestWfImportSolution(unittest.TestCase):
             cause = snippy.run_cli()
             content_after = snippy.storage.search(Const.SOLUTION, data=solutions['content'][0]['data'])
             assert cause == Cause.ALL_OK
-            mocked_file.assert_called_once_with('./solutions.yaml', 'r')
+            mock_file.assert_called_once_with('./solutions.yaml', 'r')
             Snippet().compare(self, content_after[0], content_before[0])
             assert len(Database.get_contents()) == 5
 
             # Verify the imported solution by exporting it again to text file.
-            mocked_file.reset_mock()
+            mock_file.reset_mock()
             sys.argv = ['snippy', 'export', '-d', '50249fd7264a8af3', '-f', 'defined-solution.txt']
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
-            mocked_file.assert_called_once_with('defined-solution.txt', 'w')
-            file_handle = mocked_file.return_value.__enter__.return_value
+            mock_file.assert_called_once_with('defined-solution.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2]))
 
         # Release all resources

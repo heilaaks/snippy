@@ -20,8 +20,7 @@ class TestWfExportSnippet(unittest.TestCase):
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
-    def test_export_all_snippets_yaml(self, mock_file, mock_get_db_location, mock_get_utc_time, mock_safe_dump): # pylint: disable=unused-argument
+    def test_export_all_snippets_yaml(self, mock_get_db_location, mock_get_utc_time, mock_safe_dump):
         """Export snippets to defined yaml file.
 
         Workflow:
@@ -41,10 +40,6 @@ class TestWfExportSnippet(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
-        snippy = Snippet.add_snippets(self)
-
-        # Export all solutions without defining file name.
-        mock_file.reset_mock()
         export = {'content': [{'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
                                'brief': 'Remove all docker containers with volumes',
                                'group': 'docker',
@@ -65,40 +60,41 @@ class TestWfExportSnippet(unittest.TestCase):
                                'filename': '',
                                'utc': '2017-10-14 19:56:31',
                                'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'}]}
-        sys.argv = ['snippy', 'export']
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
-        mock_file.assert_called_once_with('./snippets.yaml', 'w')
+        snippy = Snippet.add_snippets(self)
+
+        # Export all snippets without defining file name.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
+            mock_file.assert_called_once_with('./snippets.yaml', 'w')
 
         # Export all snippets in defined yaml file
-        mock_file.reset_mock()
-        export = export
-        sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml']
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
-        mock_file.assert_called_once_with('./defined-snippets.yaml', 'w')
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
+            mock_file.assert_called_once_with('./defined-snippets.yaml', 'w')
 
         # Export all snippets by explicitly using the snippet category and filename.
-        mock_file.reset_mock()
-        export = export
-        sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet']
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
-        mock_file.assert_called_once_with('./defined-snippets.yaml', 'w')
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
+            mock_file.assert_called_once_with('./defined-snippets.yaml', 'w')
 
         # Release all resources
         snippy.release()
 
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
-    def test_export_defined_snippet(self, mock_file, mock_get_db_location, mock_get_utc_time):
+    def test_export_defined_snippet(self, mock_get_db_location, mock_get_utc_time):
         """Export defined snippets.
 
         Workflow:
@@ -117,9 +113,6 @@ class TestWfExportSnippet(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
-        snippy = Snippet.add_snippets(self)
-
-        # Export defined snippet into default text file.
         export = ('# Commented lines will be ignored.',
                   '#',
                   '# Add mandatory snippet below.',
@@ -139,31 +132,34 @@ class TestWfExportSnippet(unittest.TestCase):
                   'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                   '',
                   '')
-        sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc']
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        mock_file.assert_called_once_with('snippet.text', 'w')
-        file_handle = mock_file.return_value.__enter__.return_value
-        file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+        snippy = Snippet.add_snippets(self)
+
+        # Export defined snippet into default text file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('snippet.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(export))
 
         # Export defined snippet into specified file.
-        mock_file.reset_mock()
-        sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt']
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        mock_file.assert_called_once_with('defined-snippet.txt', 'w')
-        file_handle = mock_file.return_value.__enter__.return_value
-        file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(export))
 
         # Release all resources
         snippy.release()
 
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
-    def test_export_snippet_template(self, mock_file, mock_get_db_location, mock_get_utc_time):
+    def test_export_snippet_template(self, mock_get_db_location, mock_get_utc_time):
         """Export snippet template.
 
         Workflow:
@@ -180,10 +176,6 @@ class TestWfExportSnippet(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
-        snippy = Snippet.add_snippets(self)
-
-        # Export snippet template.
-        mock_file.reset_mock()
         export = ('# Commented lines will be ignored.',
                   '#',
                   '# Add mandatory snippet below.',
@@ -202,32 +194,34 @@ class TestWfExportSnippet(unittest.TestCase):
                   '',
                   '',
                   '')
-        sys.argv = ['snippy', 'export', '--template']
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        mock_file.assert_called_once_with('./snippet-template.txt', 'w')
-        file_handle = mock_file.return_value.__enter__.return_value
-        file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+        snippy = Snippet.add_snippets(self)
+
+        # Export snippet template.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export', '--template']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./snippet-template.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(export))
 
         # Export snippet template and explicitly define content category.
-        mock_file.reset_mock()
-        export = export
-        sys.argv = ['snippy', 'export', '--snippet', '--template']
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        mock_file.assert_called_once_with('./snippet-template.txt', 'w')
-        file_handle = mock_file.return_value.__enter__.return_value
-        file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export', '--snippet', '--template']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./snippet-template.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(export))
 
         # Release all resources
         snippy.release()
 
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    @mock.patch('snippy.migrate.migrate.open', new_callable=mock.mock_open, create=True)
-    def test_export_snippet_unsupported_file_format(self, mock_file, mock_get_db_location, mock_get_utc_time):
+    def test_export_snippet_unsupported_file_format(self, mock_get_db_location, mock_get_utc_time):
         """Export snippet defining unsupported file format.
 
         Workflow:
@@ -246,14 +240,14 @@ class TestWfExportSnippet(unittest.TestCase):
         snippy = Snippet.add_snippets(self)
 
         # Export snippet template.
-        mock_file.reset_mock()
-        sys.argv = ['snippy', 'export', '-f', 'foo.bar']
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == 'NOK: cannot identify file format for file foo.bar'
-        mock_file.assert_not_called()
-        file_handle = mock_file.return_value.__enter__.return_value
-        file_handle.write.assert_not_called()
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export', '-f', 'foo.bar']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot identify file format for file foo.bar'
+            mock_file.assert_not_called()
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_not_called()
 
         # Release all resources
         snippy.release()

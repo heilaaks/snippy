@@ -65,21 +65,21 @@ class TestWfExportSolution(unittest.TestCase):
                                'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
 
         # Export all solutions without defining file name.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mocked_file:
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             sys.argv = ['snippy', 'export', '--solution']
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
-            mocked_file.assert_called_once_with('./solutions.yaml', 'w')
+            mock_file.assert_called_once_with('./solutions.yaml', 'w')
             mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
 
         # Export all solutions in defined yaml file
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mocked_file:
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             sys.argv = ['snippy', 'export', '--solution', '-f', './defined-solutions.yaml']
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
-            mocked_file.assert_called_once_with('./defined-solutions.yaml', 'w')
+            mock_file.assert_called_once_with('./defined-solutions.yaml', 'w')
             mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
 
         # Release all resources

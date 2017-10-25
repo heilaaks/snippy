@@ -177,8 +177,8 @@ class Editor(object):  # pylint: disable-all
         # Only solutions use the optional file variable.
         filename = Const.EMPTY
         if self.is_solution:
-            match = re.search(r'## FILE  :\s+(\S+)', self.edited)
-            if match:
+            match = re.search(r'## FILE  :\s*?(\S+|$)', self.edited, re.MULTILINE)
+            if match and match.group(1):
                 filename = match.group(1)
         self.logger.debug('parsed content filename from editor "%s"', filename)
 

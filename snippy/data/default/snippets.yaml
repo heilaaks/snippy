@@ -36,7 +36,7 @@ content:
   data:
   - docker rm $(docker ps --all -q -f status=exited)
   - docker images -q --filter dangling=true | xargs docker rmi
-  digest: 49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73
+  digest: e2921a5a2124d046a16f2cae43f24af44267670a85e7b7564548911b1fe96021
   filename: ''
   group: docker
   links:
@@ -50,7 +50,8 @@ content:
   - docker-ce
   - image
   - moby
-  utc: '2017-10-13 06:56:00'
+  - prune
+  utc: '2017-10-24 07:07:05'
 - brief: Stop and delete all running containers and images
   category: snippet
   data:
@@ -330,3 +331,35 @@ content:
   - networking
   - port
   utc: '2017-10-20 07:08:45'
+- brief: Manage Elasticsearch templates
+  category: snippet
+  data:
+  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_template/*" | python -m json.tool
+  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk*" | python
+    -m json.tool
+  - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters"
+    -d '{}'
+  - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters*"
+  - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk.counters-2017.10.24"
+  - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk*"
+  digest: e09b9ca4ff48177df0fdfa84835fa49dd6c400a10187f203d0844f812022e46d
+  filename: ''
+  group: elasticsearch
+  links:
+  - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html
+  tags:
+  - api
+  - create
+  - curl
+  - database
+  - delete
+  - dump
+  - elastic
+  - elasticsearch
+  - index
+  - read
+  - rest
+  - security
+  - template
+  - update
+  utc: '2017-10-24 07:14:04'

@@ -15,7 +15,7 @@ from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfExportSolution(unittest.TestCase):
+class TestWfExportSolution(unittest.TestCase): # pylint: disable-all
     """Test workflows for exporting solutions."""
 
     @mock.patch.object(yaml, 'safe_dump')
@@ -28,12 +28,8 @@ class TestWfExportSolution(unittest.TestCase):
         Workflow:
             @ export solution
         Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py import SolutionHelper().get_solution(0)
-            $ python snip.py import SolutionHelper().get_solution(1)
-            $ python snip.py export --solution
-            $ python snip.py export --solution -f ./defined-solutions.yaml
+            $ snippy export --solution
+            $ snippy export --solution -f ./defined-solutions.yaml
         Expected results:
             1 Two solutions are exported.
             2 Filename defined from command line will be honored when the whole content is exported.
@@ -65,18 +61,18 @@ class TestWfExportSolution(unittest.TestCase):
                                'utc': None,
                                'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
 
-        # Export all solutions without defining file name.
+        ## Brief: Export solutions into yaml file. Filename is not defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'export', '--solution']
+            sys.argv = ['snippy', 'export', '--solution']  ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./solutions.yaml', 'w')
             mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
 
-        # Export all solutions in defined yaml file.
+        ## Brief: Export solutions into yaml file. Filename is defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'export', '--solution', '-f', './defined-solutions.yaml']
+            sys.argv = ['snippy', 'export', '--solution', '-f', './defined-solutions.yaml'] ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
@@ -92,10 +88,6 @@ class TestWfExportSolution(unittest.TestCase):
         Workflow:
             @ export solution
         Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py import SolutionHelper().get_solution(0)
-            $ python snip.py import SolutionHelper().get_solution(1)
             $ python snip.py export --solution -d a96accc25dd23ac0
             $ python snip.py export --solution -d a96accc25dd23ac0 -f ./defined-solutions.text
         Expected results:
@@ -113,9 +105,10 @@ class TestWfExportSolution(unittest.TestCase):
         snippy = Snippet.add_snippets(self)
         snippy = Solution.add_solutions(snippy)
 
-        # Export defined solution to text file defined in the solution.
+        ## Brief: Export solution based on message digest. Filename is defined in solution data but not in
+        ##        command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0']
+            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0']  ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
@@ -123,9 +116,10 @@ class TestWfExportSolution(unittest.TestCase):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0]))
 
-        # Export defined solution to text file defined in the command line.
+        ## Brief: Export solution based on message digest. Filename is defined in command line and in
+        ##        solution data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt']
+            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt']  ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
@@ -133,8 +127,8 @@ class TestWfExportSolution(unittest.TestCase):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0]))
 
-        # Export defined solution to text file when there is no file name in content data or
-        # in command line. In this case there is extra space in the content data FILE template.
+        ## Brief: Export solution based on message digest. Filename not defined in solution data or in
+        ##        command line. In this case the template contains default spacing with one space.
         mocked_data = Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  : ')
         mocked_open = mock.mock_open(read_data=mocked_data)
@@ -146,7 +140,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 3
 
             mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '--solution', '-d', '7a5bf1bc09939f42']
+            sys.argv = ['snippy', 'export', '--solution', '-d', '7a5bf1bc09939f42']  ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
@@ -154,8 +148,8 @@ class TestWfExportSolution(unittest.TestCase):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(mocked_data)
 
-        # Export defined solution to text file when there is no file name in content data or
-        # in command line. In this case there is no space in the content data FILE template.
+        ## Brief: Export solution based on message digest. Filename not defined in solution data or in
+        ##        command line. In this case there is no space after colon.
         mocked_data = Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  :')
         mocked_open = mock.mock_open(read_data=mocked_data)
@@ -173,7 +167,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 3
 
             mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '--solution', '-d', '2c4298ff3c582fe5']
+            sys.argv = ['snippy', 'export', '--solution', '-d', '2c4298ff3c582fe5']  ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
@@ -181,8 +175,8 @@ class TestWfExportSolution(unittest.TestCase):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(mocked_data)
 
-        # Export defined solution to text file when there is no file name in content data or
-        # in command line. In this case there are additional spaces around the file name.
+        ## Brief: Export solution based on message digest. Filename is defined in solution data but not in
+        ##        command line. In this case there are extra spaces around the filename.
         mocked_data = Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt',
                                           '## FILE  :  kubernetes-docker-log-driver-kafka.txt ')
@@ -201,13 +195,79 @@ class TestWfExportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 3
 
             mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '--solution', '-d', '745c9e70eacc304b']
+            sys.argv = ['snippy', 'export', '--solution', '-d', '745c9e70eacc304b']  ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('kubernetes-docker-log-driver-kafka.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(mocked_data)
+
+        # Release all resources
+        snippy.release()
+
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_export_solution_template(self, mock_get_db_location, mock_get_utc_time):
+        """Export solution template.
+
+        Workflow:
+            @ export solution
+        Execution:
+            $ snippy export --solution --template
+        Expected results:
+            1 Solution template is created to default file.
+            2 Exit cause is OK.
+        """
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        template = ('################################################################################',
+                    '## BRIEF : ',
+                    '##',
+                    '## DATE  : 2017-10-14 19:56:31',
+                    '## GROUP : default',
+                    '## TAGS  : ',
+                    '## FILE  : ',
+                    '################################################################################',
+                    '',
+                    '',
+                    '################################################################################',
+                    '## description',
+                    '################################################################################',
+                    '',
+                    '################################################################################',
+                    '## references',
+                    '################################################################################',
+                    '',
+                    '################################################################################',
+                    '## commands',
+                    '################################################################################',
+                    '',
+                    '################################################################################',
+                    '## solutions',
+                    '################################################################################',
+                    '',
+                    '################################################################################',
+                    '## configurations',
+                    '################################################################################',
+                    '',
+                    '################################################################################',
+                    '## whiteboard',
+                    '################################################################################',
+                    '',
+                    '')
+
+        ## Brief: Export solution template to default file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            from snippy.snip import Snippy
+            sys.argv = ['snippy', 'export', '--solution', '--template']  ## workflow
+            snippy = Snippy()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./solution-template.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(template))
 
         # Release all resources
         snippy.release()

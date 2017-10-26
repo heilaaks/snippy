@@ -10,7 +10,7 @@ from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 
 
-class Editor(object):  # pylint: disable-all
+class Editor(object):
     """Editor based configuration."""
 
     # Editor inputs
@@ -75,8 +75,8 @@ class Editor(object):  # pylint: disable-all
                 outfile.seek(0)
                 message = outfile.read()
                 message = message.decode('UTF-8')
-            except Exception as exception:
-                Cause.set('cannot find editor %s %s' % (editor, exception))
+            except OSError as exception:
+                Cause.set_text('required editor %s not installed %s' % (editor, exception))
 
         return message
 
@@ -105,7 +105,7 @@ class Editor(object):  # pylint: disable-all
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
                 brief = Const.DELIMITER_SPACE.join(lines)
         else:
-            match = re.search('## BRIEF :\s*(.*)', self.edited)
+            match = re.search(r'## BRIEF :\s*(.*)', self.edited)
             if match:
                 brief = match.group(1).strip()
         self.logger.debug('parsed content brief from editor "%s"', brief)
@@ -123,7 +123,7 @@ class Editor(object):  # pylint: disable-all
                 group = Const.DELIMITER_SPACE.join(lines)
 
         else:
-            match = re.search('## GROUP :\s*(.*)', self.edited)
+            match = re.search(r'## GROUP :\s*(.*)', self.edited)
             if match:
                 group = match.group(1).strip()
         self.logger.debug('parsed content group from editor "%s"', group)
@@ -139,7 +139,7 @@ class Editor(object):  # pylint: disable-all
             if match and not match.group(1).isspace():
                 tags = Editor.get_keywords([match.group(1)])
         else:
-            match = re.search('## TAGS  :\s*(.*)', self.edited)
+            match = re.search(r'## TAGS  :\s*(.*)', self.edited)
             if match:
                 tags = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_TAGS)))
         self.logger.debug('parsed content tags from editor "%s"', tags)

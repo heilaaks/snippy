@@ -348,9 +348,13 @@ class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
         """Customised example printing to override positional arguments."""
 
         if option_string == '-h' or option_string == '--help':
-            if 'examples' not in sys.argv:
-                parser.print_help()
-            else:
+            if 'examples' in sys.argv:
                 print(Const.NEWLINE.join(Arguments.ARGS_EXAMPLES))
+            elif 'tests' in sys.argv:
+                from snippy.devel.reference import Reference
+                test = Reference()
+                test.print_tests()
+            else:
+                parser.print_help()
 
         parser.exit()

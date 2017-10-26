@@ -620,18 +620,26 @@ python runner export -d e95e9092c92e3440 -f testing.txt (DONE)
 ## Exporting solutions
 ######################
 
-1. Exporting solutions into yaml file (DONE)
+1. Export solutions into yaml file. Filename is not defined in command line. (DONE)
 snippet export --solution
+
+2. Export solutions into yaml file. Filename is defined in command line. (DONE)
 snippet export --solution -f ./defined-solutions.yaml
 
-2. Exporting defined solution with filename from command line (DONE)
+3. Export solution based on message digest. Filename is defined in command line and in solution data. (DONE)
 snippet export --solution -d a96accc25dd23ac0 -f ./defined-solutions.text
 
-3. Exporting defined solution with filename coming from solution data (DONE)
+4. Export solution based on message digest. Filename not defined in solution data or in command line. (DONE)
 snippet export --solution -d a96accc25dd23ac0
 
-4. Exporting defined solution when filename is not defined in command line or in solution data (DONE)
+5. Export solution based on message digest. Filename is defined in solution data but not in command line. (DONE)
 snippet export --solution -d a96accc25dd23ac0
+
+6. Export solution based on message digest. Filename is not defined in command line or in solution data. (DONE)
+snippet export --solution -d a96accc25dd23ac0
+
+7. Export solution template to default file. (DONE)
+snippy export --solution --template
 
 ######################
 ## Importing snippet

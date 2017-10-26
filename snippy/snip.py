@@ -8,7 +8,7 @@ from snippy.config.config import Config
 from snippy.storage.storage import Storage
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
-from snippy.profiler.profiler import Profiler
+from snippy.devel.profiler import Profiler
 
 
 class Snippy(object):

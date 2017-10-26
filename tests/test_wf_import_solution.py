@@ -26,8 +26,6 @@ class TestWfImportSolution(unittest.TestCase):
         Workflow:
             @ import solution
         Execution:
-            $ python snip.py import SolutionHelper().get_solution(0)
-            $ python snip.py import SolutionHelper().get_solution(1)
             $ python snip.py import -f ./solutions.yaml
         Expected results:
             1 One solution is imported.
@@ -63,9 +61,9 @@ class TestWfImportSolution(unittest.TestCase):
         snippy = Snippet.add_snippets(self)
         snippy = Solution.add_solutions(snippy)
 
-        # Import solutions from yaml file.
+        ## Brief: Import two solutions from yaml file by defining the file from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'import', '-f', './solutions.yaml']
+            sys.argv = ['snippy', 'import', '-f', './solutions.yaml']  ## workflow
             snippy.reset()
             assert len(Database.get_contents()) == 4
             content_before = snippy.storage.search(Const.SOLUTION, data=solutions['content'][0]['data'])

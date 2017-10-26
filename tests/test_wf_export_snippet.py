@@ -62,27 +62,28 @@ class TestWfExportSnippet(unittest.TestCase):
                                'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'}]}
         snippy = Snippet.add_snippets(self)
 
-        # Export all snippets without defining file name.
+        ## Brief: Export all snippets without defining target file name from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'export']
+            sys.argv = ['snippy', 'export']  ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
             mock_file.assert_called_once_with('./snippets.yaml', 'w')
 
-        # Export all snippets in defined yaml file
+        ## Brief: Export all snippets into yaml file defined from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml']
+            sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml']  ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_safe_dump.assert_called_with(export, mock.ANY, default_flow_style=mock.ANY)
             mock_file.assert_called_once_with('./defined-snippets.yaml', 'w')
 
-        # Export all snippets by explicitly using the snippet category and filename.
+        ## Brief: Export all snippets into yaml file defined from command line by explicitly defining
+        ##        the content category.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet']
+            sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet']  ## workflow
             snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK

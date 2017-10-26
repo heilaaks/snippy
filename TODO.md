@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Check the next (python2) vs. readline (python3) for devel.reference.
    - [ ] Fix the snip.py and reset Config which is not needed anymore (it seems).
    - [ ] Fix import with empty solution? It seems to go trhough even though data missing?
    - [ ] Why is default content Debugging Elastic Beats utc null? Fix.

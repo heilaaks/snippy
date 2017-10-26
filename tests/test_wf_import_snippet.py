@@ -59,9 +59,9 @@ class TestWfImportSnippet(unittest.TestCase):
         mock_safe_load.return_value = snippets
         snippy = Snippet.add_snippets(self)
 
-        # Import snippets from yaml file.
+        ## Brief: Import snippets from yaml file that is defined from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'import', '-f', './snippets.yaml']
+            sys.argv = ['snippy', 'import', '-f', './snippets.yaml']   ## workflow
             snippy.reset()
             assert len(Database.get_contents()) == 2
             content_before = snippy.storage.search(Const.SNIPPET, data=snippets['content'][0]['data'])

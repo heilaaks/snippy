@@ -50,10 +50,10 @@ class TestWfSearchSnippet(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         snippy = Snippet.add_snippets(self)
 
-        # Find from snippet2 data.
+        ## Brief: Search snippets from all fields matching to data field content.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'redis', '--no-ansi']
+        sys.argv = ['snippy', 'search', '--sall', 'redis', '--no-ansi']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -66,10 +66,10 @@ class TestWfSearchSnippet(unittest.TestCase):
                          '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
                          '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 
-        # Find from snippet1 brief.
+        ## Brief: Search snippets from all fields matching to brief field content.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'all', '--no-ansi']
+        sys.argv = ['snippy', 'search', '--sall', 'all', '--no-ansi']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -81,10 +81,10 @@ class TestWfSearchSnippet(unittest.TestCase):
                          '   # cleanup,container,docker,docker-ce,moby\n' \
                          '   > https://docs.docker.com/engine/reference/commandline/rm/'
 
-        # Find from group that results both snippets.
+        ## Brief: Search snippets from all fields matching to group field content.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'docker', '--no-ansi']
+        sys.argv = ['snippy', 'search', '--sall', 'docker', '--no-ansi']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -103,10 +103,10 @@ class TestWfSearchSnippet(unittest.TestCase):
                          '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
                          '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 
-        # Find from tags that results both snippets.
+        ## Brief: Search snippets from all fields matching to tags field content.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'moby', '--no-ansi']
+        sys.argv = ['snippy', 'search', '--sall', 'moby', '--no-ansi']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -125,10 +125,10 @@ class TestWfSearchSnippet(unittest.TestCase):
                          '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
                          '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 
-        # Find based on content digest with --sall option.
+        ## Brief: Search snippets from all fields matching to digest field content.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi']
+        sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -141,10 +141,10 @@ class TestWfSearchSnippet(unittest.TestCase):
                          '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
                          '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 
-        # List all snippets based on '.' keyword.
+        ## Brief: List all snippets by defining search criteria of search all to 'match any'.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '.', '--no-ansi']
+        sys.argv = ['snippy', 'search', '--sall', '.', '--no-ansi']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -163,10 +163,10 @@ class TestWfSearchSnippet(unittest.TestCase):
                          '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
                          '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 
-        # List all snippets when no keywords are provided.
+        ## Brief: List all snippets by leaving search criteria of search all as empty.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '--no-ansi']
+        sys.argv = ['snippy', 'search', '--sall', '--no-ansi']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -207,10 +207,10 @@ class TestWfSearchSnippet(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         snippy = Snippet.add_snippets(self)
 
-        # Find snippet based on content data.
+        ## Brief: Search snippets based on snippet data.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi']
+        sys.argv = ['snippy', 'search', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()
@@ -244,10 +244,10 @@ class TestWfSearchSnippet(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         snippy = Snippet.add_snippets(self)
 
-        # Find based on content digest with -d|--digest option.
+        ## Brief: Search snippet by explicitly defining 16 character long partial message digest.
         out = StringIO()
         sys.stdout = out
-        sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi']
+        sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         output = out.getvalue().strip()

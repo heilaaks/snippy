@@ -121,8 +121,8 @@ class TestWfUpdateSnippet(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         snippy = self.add_snippets()
 
-        # Accidentally misspell the message digest.
-        sys.argv = ['snippy', 'update', '-d', '123456789ABCDEF0']
+        ## Brief: Try to update digest with misspelled message digest.
+        sys.argv = ['snippy', 'update', '-d', '123456789ABCDEF0']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
         assert cause == 'NOK: cannot find snippet to be updated with digest 123456789ABCDEF0'

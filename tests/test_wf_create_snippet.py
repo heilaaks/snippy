@@ -36,8 +36,8 @@ class TestWfCreateSnippet(unittest.TestCase):
         initial = Snippet().get_references(0)
         mock__get_db_location.return_value = Database.get_storage()
 
-        # Create original snippet.
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
+        ## Brief: Create new snippet by defining all content parameters from command line.
+        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)  ## workflow
         snippy = Snippy()
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK

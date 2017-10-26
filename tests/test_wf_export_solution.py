@@ -15,7 +15,7 @@ from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfExportSolution(unittest.TestCase): # pylint: disable-all
+class TestWfExportSolution(unittest.TestCase):
     """Test workflows for exporting solutions."""
 
     @mock.patch.object(yaml, 'safe_dump')
@@ -208,7 +208,7 @@ class TestWfExportSolution(unittest.TestCase): # pylint: disable-all
 
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_export_solution_template(self, mock_get_db_location, mock_get_utc_time):
+    def test_export_solution_template(self, mock_get_db_location, mock_get_utc_time):  # pylint:disable=duplicate-code
         """Export solution template.
 
         Workflow:

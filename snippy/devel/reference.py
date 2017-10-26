@@ -28,13 +28,16 @@ class Reference(object):
     def create_test_document(self):
         """Create test documentation from test files."""
 
-        files = []
-        files.append(pkg_resources.resource_filename('tests', 'test_wf_export_solution.py'))
-        for file in files:
-            with open(file, 'r') as infile:
+        tests = pkg_resources.resource_listdir('tests', Const.EMPTY)
+        regex = re.compile(r'test_wf.*\.py')
+        tests = [testcase for testcase in tests if regex.match(testcase)]
+        for testcase in tests:
+            testfile = pkg_resources.resource_filename('tests', testcase)
+            with open(testfile, 'r') as infile:
                 wf_brief = ''
                 for line in infile:
-                    brief = Reference.get_brief(line, infile)
+
+                    brief, line = Reference.get_brief(line, infile)
                     if brief:
                         wf_brief = brief
                     wf_command = Reference.get_command(line)
@@ -89,13 +92,13 @@ class Reference(object):
             brief = brief.strip()
             while True:
                 line = infile.readline()
-                match = re.search(r'\s+##\s+(.*)', line)
+                match = re.search(r'\s{3,}##\s+(.*)', line)  # Avoid matching the '  ## workflow' tag with leading spaces.
                 if match:
                     brief = brief + ' ' + match.group(1).strip()
                 else:
                     break
 
-        return brief
+        return (brief, line)
 
     @staticmethod
     def get_command(line):

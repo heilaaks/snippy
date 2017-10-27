@@ -28,6 +28,11 @@ class Reference(object):
     def create_test_document(self):
         """Create test documentation from test files."""
 
+        try:
+            pkg_resources.resource_isdir('tests', '')
+        except ModuleNotFoundError:
+            return
+
         tests = pkg_resources.resource_listdir('tests', Const.EMPTY)
         regex = re.compile(r'test_wf.*\.py')
         tests = [testcase for testcase in tests if regex.match(testcase)]
@@ -58,8 +63,9 @@ class Reference(object):
             text = text + Const.NEWLINE
 
         # Set only one empty line at the end of string for beautified output.
-        text = text.rstrip()
-        text = text + Const.NEWLINE
+        if text:
+            text = text.rstrip()
+            text = text + Const.NEWLINE
 
         return text
 
@@ -67,7 +73,8 @@ class Reference(object):
     def output_test_document(text):
         """Print test document to console."""
 
-        print(text)
+        if text:
+            print(text)
 
     @staticmethod
     def _terminal_command(ansi=False):
@@ -91,7 +98,7 @@ class Reference(object):
             brief = match.group(1)
             brief = brief.strip()
             while True:
-                line = infile.readline()
+                line = next(infile)
                 match = re.search(r'\s{3,}##\s+(.*)', line)  # Avoid matching the '  ## workflow' tag with leading spaces.
                 if match:
                     brief = brief + ' ' + match.group(1).strip()

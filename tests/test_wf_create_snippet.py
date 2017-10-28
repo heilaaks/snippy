@@ -20,10 +20,6 @@ class TestWfCreateSnippet(unittest.TestCase):
     def test_creating_new_snippet_from_command_line(self, mock__get_db_location):
         """Create snippet from command line with all parameters.
 
-        Workflow:
-            @ create snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
         Expected results:
             1 Long versions from command line options work.
             2 Only one entry is read from storage and it can be read with digest or content.

@@ -25,11 +25,6 @@ class TestWfExportSolution(unittest.TestCase):
     def test_export_all_solutions_yaml(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_safe_dump):
         """Export solutions to defined yaml file.
 
-        Workflow:
-            @ export solution
-        Execution:
-            $ snippy export --solution
-            $ snippy export --solution -f ./defined-solutions.yaml
         Expected results:
             1 Two solutions are exported.
             2 Filename defined from command line will be honored when the whole content is exported.
@@ -85,11 +80,6 @@ class TestWfExportSolution(unittest.TestCase):
     def test_export_defined_solution(self, mock_isfile, mock_get_db_location, mock_get_utc_time):  # pylint: disable=too-many-statements
         """Export solutions to defined yaml file.
 
-        Workflow:
-            @ export solution
-        Execution:
-            $ python snip.py export --solution -d a96accc25dd23ac0
-            $ python snip.py export --solution -d a96accc25dd23ac0 -f ./defined-solutions.text
         Expected results:
             1 Only defined solution is exported.
             2 Filename defined in the content data will be used when no file is defined from command line.
@@ -211,10 +201,6 @@ class TestWfExportSolution(unittest.TestCase):
     def test_export_solution_template(self, mock_get_db_location, mock_get_utc_time):  # pylint:disable=duplicate-code
         """Export solution template.
 
-        Workflow:
-            @ export solution
-        Execution:
-            $ snippy export --solution --template
         Expected results:
             1 Solution template is created to default file.
             2 Exit cause is OK.

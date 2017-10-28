@@ -23,14 +23,6 @@ class TestWfExportSnippet(unittest.TestCase):
     def test_export_all_snippets_yaml(self, mock_get_db_location, mock_get_utc_time, mock_safe_dump):
         """Export snippets to defined yaml file.
 
-        Workflow:
-            @ export snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py export
-            $ python snip.py export -f ./defined-snippets.yaml
-            $ python snip.py export --snippet -f ./defined-snippets.yaml
         Expected results:
             1 Two snippets are exported.
             2 Filename defined from command line will be honored when the whole content is exported.
@@ -98,13 +90,6 @@ class TestWfExportSnippet(unittest.TestCase):
     def test_export_defined_snippet(self, mock_get_db_location, mock_get_utc_time):
         """Export defined snippets.
 
-        Workflow:
-            @ export snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py export -d 53908d68425c61dc
-            $ python snip.py export -d 53908d68425c61dc -f defined-snippet.txt
         Expected results:
             1 Only defined snippet is exported.
             2 Default filename snippet.text will be created with correct content when file is not defined.
@@ -163,13 +148,6 @@ class TestWfExportSnippet(unittest.TestCase):
     def test_export_snippet_template(self, mock_get_db_location, mock_get_utc_time):
         """Export snippet template.
 
-        Workflow:
-            @ export snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py export --template
-            $ python snip.py export --snippet --template
         Expected results:
             1 Snippet template is created to default file.
             2 Exit cause is OK.
@@ -225,12 +203,6 @@ class TestWfExportSnippet(unittest.TestCase):
     def test_export_snippet_unsupported_file_format(self, mock_get_db_location, mock_get_utc_time):
         """Export snippet defining unsupported file format.
 
-        Workflow:
-            @ export snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py export --snippet -f foo.bar
         Expected results:
             1 No file is created and no exporting is done.
             2 Exit cause is NOK.

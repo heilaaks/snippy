@@ -23,8 +23,6 @@ class TestWfImportSolution(unittest.TestCase):
     def test_importing_solutions(self, mock_isfile, mock_get_db_location, mock_safe_load):
         """Import solutions from defined yaml file.
 
-        Workflow:
-            @ import solution
         Expected results:
             1 One solution is imported.
             2 One imported solution data already exist and the existing one is not updated.
@@ -90,8 +88,6 @@ class TestWfImportSolution(unittest.TestCase):
     def test_import_empty_solution_template(self, mock_isfile, mock_get_db_location):
         """Import solution from template.
 
-        Workflow:
-            @ import solution
         Expected results:
             1 Solution template that is not changed at all cannot be imported.
             2 Exit cause is NOK.
@@ -122,8 +118,6 @@ class TestWfImportSolution(unittest.TestCase):
     def test_import_solution_template(self, mock_isfile, mock_get_db_location):
         """Import solution from template.
 
-        Workflow:
-            @ import solution
         Expected results:
             1 Template is imported even though the header part is not changed.
             2 Exit cause is OK.

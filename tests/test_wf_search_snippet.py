@@ -23,18 +23,6 @@ class TestWfSearchSnippet(unittest.TestCase):
     def test_searching_snippets_with_sall_option(self, mock_get_db_location): # pylint: disable=too-many-statements
         """Search snippet with --sall option.
 
-        Workflow:
-            @ search snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py search --sall redis --no-ansi  # Match only data
-            $ python snip.py search --sall all --no-ansi    # Match only brief
-            $ python snip.py search --sall docker --no-ansi # Match only group
-            $ python snip.py search --sall moby --no-ansi   # Match only tags
-            $ python snip.py search --sall 53908d68425c61dc --no-ansi
-            $ python snip.py search --sall . --no-ansi
-            $ python snip.py search --sall --no-ansi
         Expected results:
             1 Snippet is found from data with --sall option.
             2 Snippet is found from brief with --sall option.
@@ -192,12 +180,6 @@ class TestWfSearchSnippet(unittest.TestCase):
     def test_searching_snippet_with_content(self, mock_get_db_location): # pylint: disable=too-many-statements
         """Search snippet with --content option.
 
-        Workflow:
-            @ search snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py search -c 'docker rm --volumes $(docker ps --all --quiet)' --no-ansi
         Expected results:
             1 Snippet is found based on content data.
             2 Exit cause is OK.
@@ -229,12 +211,6 @@ class TestWfSearchSnippet(unittest.TestCase):
     def test_searching_snippet_with_digest(self, mock_get_db_location): # pylint: disable=too-many-statements
         """Search snippet with --digest option.
 
-        Workflow:
-            @ search snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py search -d 53908d68425c61dc --no-ansi
         Expected results:
             1 Snippet is found based on content digest.
             2 Exit cause is OK.

@@ -22,12 +22,6 @@ class TestWfUpdateSnippet(unittest.TestCase):
     def test_updating_snippet_with_digest(self, mock_get_db_location, mock_call_editor):
         """Update snippet from command line based on digest.
 
-        Workflow:
-            @ update snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(2)
-            $ python snip.py update -d 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
         Expected results:
             1 Snippet can be updated based on digest.
             2 Snippet is updated with editor when only digest option is provided.
@@ -64,12 +58,6 @@ class TestWfUpdateSnippet(unittest.TestCase):
     def test_updating_snippet_using_solution_category(self, mock_get_db_location, mock_call_editor):
         """Update snippet but accidentally defining solution category from command line.
 
-        Workflow:
-            @ update snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(2)
-            $ python snip.py update --solution -d 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
         Expected results:
             1 Category is not changed from snippet to solution.
             2 Snippet is updated normally.
@@ -101,12 +89,6 @@ class TestWfUpdateSnippet(unittest.TestCase):
     def test_updating_snippet_with_unknown_digest(self, mock_get_db_location, mock_call_editor):
         """Updating snippet with misspelled message digest.
 
-        Workflow:
-            @ update snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(2)
-            $ python snip.py update -d 123456789ABCDEF0
         Expected results:
             1 Original snippet is not updated.
             2 Original snippet can be found with original digest short and long versions.

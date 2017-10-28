@@ -22,12 +22,6 @@ class TestWfImportSnippet(unittest.TestCase):
     def test_importing_snippets(self, mock_isfile, mock_get_db_location, mock_safe_load):
         """Import snippets from defined yaml file.
 
-        Workflow:
-            @ import snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py create SnippetHelper().get_snippet(1)
-            $ python snip.py import -f ./snippets.yaml
         Expected results:
             1 One snippet is imported.
             2 One imported snippet data already exist and the existing one is not updated.

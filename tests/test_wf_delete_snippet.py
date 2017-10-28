@@ -19,11 +19,6 @@ class TestWfDeleteSnippet(unittest.TestCase):
     def test_deleting_snippet_with_digest_short_version(self, mock_get_db_location):
         """Delete snippet from command line based on digest short version.
 
-        Workflow:
-            @ delete snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py delete -d 54e41e9b52a02b63
         Expected results:
             1 Snippet can be deleted based on digest short version.
             2 There is one snippet left in database after the delete operation.
@@ -49,11 +44,6 @@ class TestWfDeleteSnippet(unittest.TestCase):
     def test_deleting_snippet_with_digest_log_version(self, mock_get_db_location):
         """Delete snippet from command line based on digest short version.
 
-        Workflow:
-            @ delete snippet
-        Execution:
-            $ python snip.py create SnippetHelper().get_snippet(0)
-            $ python snip.py delete -d 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
         Expected results:
             1 Snippet can be deleted based on digest long version.
             2 There is one snippet left in database after the delete operation.

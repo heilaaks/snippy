@@ -89,7 +89,7 @@ class Editor(object):
             if match and not match.group(1).isspace():
                 data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
         else:
-            # Remove unnecessary newlines at the end and making sure there is one at the end.
+            # Remove unnecessary newlines at the end and make sure there is one at the end.
             data = tuple(self.edited.rstrip().split(Const.NEWLINE) + [Const.EMPTY])
         self.logger.debug('parsed content data from editor "%s"', data)
 
@@ -105,7 +105,7 @@ class Editor(object):
                 lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
                 brief = Const.DELIMITER_SPACE.join(lines)
         else:
-            match = re.search(r'## BRIEF :\s*(.*)', self.edited)
+            match = re.search(r'## BRIEF :\s*?(.*|$)', self.edited, re.MULTILINE)
             if match:
                 brief = match.group(1).strip()
         self.logger.debug('parsed content brief from editor "%s"', brief)
@@ -123,7 +123,7 @@ class Editor(object):
                 group = Const.DELIMITER_SPACE.join(lines)
 
         else:
-            match = re.search(r'## GROUP :\s*(.*)', self.edited)
+            match = re.search(r'## GROUP :\s*?(\S+|$)', self.edited, re.MULTILINE)
             if match:
                 group = match.group(1).strip()
         self.logger.debug('parsed content group from editor "%s"', group)
@@ -139,7 +139,7 @@ class Editor(object):
             if match and not match.group(1).isspace():
                 tags = Editor.get_keywords([match.group(1)])
         else:
-            match = re.search(r'## TAGS  :\s*(.*)', self.edited)
+            match = re.search(r'## TAGS  :\s*?(.*|$)', self.edited, re.MULTILINE)
             if match:
                 tags = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_TAGS)))
         self.logger.debug('parsed content tags from editor "%s"', tags)

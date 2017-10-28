@@ -1,7 +1,5 @@
 ## TODO
    - [ ] Fix the reset Config which is not needed anymore (it seems). It is again all cases fail after one failure.
-   - [ ] Fix import with empty solution? It seems to go through even though data missing?
-   - [ ] Why is default content Debugging Elastic Beats utc null? Fix.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] Add search output option to allow directing to file like: search --solution --sall nginx --plain > test.txt
    - [ ] Refactor importing of text template since it is bit messy at the moment.
@@ -17,6 +15,7 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed content utc time being null. The time was not read from the template and it may have resulted None time.
    - [x] Fixed the file next() (python2) vs. readline() (python3) for devel.reference.
    - [x] Fixed the last missing empty line(s) from solution import.
    - [x] Added support to specify migrated content with message digest (update specific content).

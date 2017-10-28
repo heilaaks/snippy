@@ -107,7 +107,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
                      editor.get_edited_links(),
                      editor.get_edited_category(),
                      editor.get_edited_filename(),
-                     content.get_utc(),
+                     editor.get_edited_date(),
                      content.get_digest(),
                      content.get_metadata(),
                      content.get_key()))

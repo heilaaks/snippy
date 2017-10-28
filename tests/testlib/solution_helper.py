@@ -249,6 +249,9 @@ class SolutionHelper(object):  # pylint: disable=too-few-public-methods
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(SolutionHelper.SOLUTIONS_TEXT[0]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
             sys.argv = ['snippy', 'import', '-f', 'howto-debug-elastic-beats.txt']
+            if not snippy:
+                from snippy.snip import Snippy
+                snippy = Snippy()
             snippy.reset()
             cause = snippy.run_cli()
             print(cause)

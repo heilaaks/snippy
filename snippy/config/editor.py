@@ -4,6 +4,7 @@
 
 import re
 import os.path
+import datetime
 import pkg_resources
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
@@ -112,6 +113,29 @@ class Editor(object):
 
         return brief
 
+    def get_edited_date(self):
+        """Return content date from editor."""
+
+        # Read the time from 1) content or 2) time set for the object or from template.
+        # The first two time stamps are used because it can be that user did not set
+        # the date and time correctly to ISO 8601.
+        if self.content.get_utc():
+            date = self.content.get_utc()
+        else:
+            date = self.utc
+        if self.is_solution:
+            match = re.search(r'## DATE  :\s*?(.*|$)', self.edited, re.MULTILINE)
+            if match:
+                try:
+                    datetime.datetime.strptime(match.group(1).strip(), '%Y-%m-%d %H:%M:%S')
+                    date = match.group(1).strip()
+                except ValueError:
+                    self.logger.info('incorrect date and time format "%s"', match.group(1))
+
+        self.logger.debug('parsed content date from editor "%s"', date)
+
+        return date
+
     def get_edited_group(self):
         """Return content group from editor."""
 
@@ -209,7 +233,13 @@ class Editor(object):
     def set_template_date(self, template):
         """Update template content date."""
 
-        template = template.replace('<SNIPPY_DATE>', self.utc)
+        if '<SNIPPY_DATE>' in template:
+            template = template.replace('<SNIPPY_DATE>', self.utc)
+        else:
+            match = re.search(r'(## DATE  :\s*?$)', template, re.MULTILINE)
+            if match and self.content.get_utc():
+                match.group(1).rstrip()
+                template = template.replace(match.group(1), match.group(1) + Const.SPACE + self.content.get_utc())
 
         return template
 

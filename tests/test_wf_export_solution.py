@@ -44,7 +44,7 @@ class TestWfExportSolution(unittest.TestCase):
                                'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
                                'category': 'solution',
                                'filename': 'howto-debug-elastic-beats.txt',
-                               'utc': None,
+                               'utc': '2017-10-20 11:11:19',
                                'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
                               {'data': tuple(Solution.SOLUTIONS_TEXT[1]),
                                'brief': 'Debugging nginx',
@@ -53,7 +53,7 @@ class TestWfExportSolution(unittest.TestCase):
                                'links': ('https://www.nginx.com/resources/admin-guide/debug/',),
                                'category': 'solution',
                                'filename': 'howto-debug-nginx.txt',
-                               'utc': None,
+                               'utc': '2017-10-20 06:16:27',
                                'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
 
         ## Brief: Export solutions into yaml file. Filename is not defined in command line.
@@ -165,8 +165,8 @@ class TestWfExportSolution(unittest.TestCase):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(mocked_data)
 
-        ## Brief: Export solution based on message digest. Filename is defined in solution data but not in
-        ##        command line. In this case there are extra spaces around the filename.
+        ## Brief: Export solution based on message digest. Filename is defined in solution data but
+        ##        not in command line. In this case there are extra spaces around the filename.
         mocked_data = Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt',
                                           '## FILE  :  kubernetes-docker-log-driver-kafka.txt ')
@@ -220,6 +220,53 @@ class TestWfExportSolution(unittest.TestCase):
             mock_file.assert_called_once_with('./solution-template.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(template))
+
+        # Release all resources
+        snippy.release()
+
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_export_solution_incomplete_header(self, mock_isfile, mock_get_db_location, mock_get_utc_time):  # pylint:disable=duplicate-code
+        """Export solution that was updated with undefined header.
+
+        Expected results:
+            1 Solution is exported with header updated with data previously made available.
+            2 Exit cause is OK.
+        """
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        mock_isfile.return_value = True
+        snippy = Solution.add_solutions(None)
+
+        ## Brief: Export solution that has been updated with empty date field. The export
+        ##        operation must fill the date if it is available. The import operation with
+        ##        content identified by message digest is considered an update operation. In
+        ##        case of update, the timestamp is set to match to update time and not the
+        ##        one read from the template.
+        mocked_data = Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0])
+        original = mocked_data
+        mocked_data = mocked_data.replace('## DATE  : 2017-10-20 11:11:19',
+                                          '## DATE  : ')
+        mocked_open = mock.mock_open(read_data=mocked_data)
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+
+            sys.argv = ['snippy', 'import', '-f', 'mocked_file.txt', '-d', 'a96accc25dd23ac0']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_solutions()) == 2
+
+            mock_file.reset_mock()
+            original = original.replace('## DATE  : 2017-10-20 11:11:19', '## DATE  :  2017-10-14 19:56:31')
+            sys.argv = ['snippy', 'export', '--solution', '-d', '2b4428c3c022abff']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(original)
 
         # Release all resources
         snippy.release()

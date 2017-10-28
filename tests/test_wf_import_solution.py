@@ -87,6 +87,62 @@ class TestWfImportSolution(unittest.TestCase):
         # Release all resources
         snippy.release()
 
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_import_solution_template(self, mock_isfile, mock_get_db_location):
+        """Import solution from template.
+
+        Workflow:
+            @ import solution
+        Execution:
+            $ snippy import -f ./template.txt
+        Expected results:
+            1 Empty text template is imported.
+            2 Exit cause is OK.
+        """
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
+
+        ## Brief: Import empty solution template
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            from snippy.snip import Snippy
+            from snippy.content.content import Content
+
+            content = Content((Solution.TEMPLATE,
+                               Const.EMPTY,
+                               'default',
+                               (Const.EMPTY,),
+                               (Const.EMPTY,),
+                               Const.SOLUTION,
+                               Const.EMPTY,
+                               None,
+                               '7d989ed7aca34708c3aa2c1dc06ca02bff48b1b919f162d7ad88ef5a64e439b9',
+                               None,
+                               1))
+            sys.argv = ['snippy', 'import', '-f', './solution-template.txt']  ## workflow
+            snippy = Snippy()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            snippy.storage.search(Const.SOLUTION, digest='7d989ed7aca34708')
+            mock_file.assert_called_once_with('./solution-template.txt', 'r')
+            assert len(Database.get_contents()) == 1
+            Snippet().compare(self, snippy.storage.search(Const.SOLUTION, digest='7d989ed7aca34708')[0], content)
+
+            # Verify the imported solution by exporting it again to text file.
+            mock_file.reset_mock()
+            sys.argv = ['snippy', 'export', '-d', '7d989ed7aca34708', '-f', 'defined-solution.txt']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-solution.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE))
+
+        # Release all resources
+        snippy.release()
+
     # pylint: disable=duplicate-code
     def tearDown(self):
         """Teardown each test."""

@@ -2,6 +2,7 @@
 
 """content.py: Store content."""
 
+import re
 import hashlib
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
@@ -11,7 +12,7 @@ from snippy.config.config import Config
 class Content(object):
     """Manage content."""
 
-    def __init__(self, content=None):
+    def __init__(self, content=None, category=None):
         self.logger = Logger(__name__).get()
         if not content:
             self.content = (Config.get_content_data(),
@@ -27,6 +28,9 @@ class Content(object):
                             None)  # key
         else:
             self.content = content
+
+        if category:
+            self._update_category(category)
 
     def __str__(self):
         """Format string from the class object."""
@@ -59,6 +63,16 @@ class Content(object):
         """Test if content has data defined."""
 
         return True if self.content[Const.DATA] else False
+
+    def has_valid_data(self):
+        """Test if content data is valid."""
+
+        # The content data must not be an empty template.
+        template = Config.get_content_template(Content(content=None, category=self.get_category()))
+        template = re.sub(r'## DATE  :.*', '## DATE  :', template)
+        data = re.sub(r'## DATE  :.*', '## DATE  :', self.get_data(form=Const.STRING_CONTENT))
+
+        return False if data == template else True
 
     def get_data(self, form=Const.NATIVE_CONTENT):
         """Return content data."""
@@ -143,6 +157,23 @@ class Content(object):
 
         content = self.get_list()
         content[Const.DIGEST] = self.compute_digest()
+        self.content = (content[Const.DATA],
+                        content[Const.BRIEF],
+                        content[Const.GROUP],
+                        content[Const.TAGS],
+                        content[Const.LINKS],
+                        content[Const.CATEGORY],
+                        content[Const.FILENAME],
+                        content[Const.UTC],
+                        content[Const.DIGEST],
+                        content[Const.METADATA],
+                        content[Const.KEY])
+
+    def _update_category(self, category):
+        """Update content categor."""
+
+        content = self.get_list()
+        content[Const.CATEGORY] = category
         self.content = (content[Const.DATA],
                         content[Const.BRIEF],
                         content[Const.GROUP],

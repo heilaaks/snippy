@@ -75,11 +75,17 @@ class Sqlite3Db(object):
         cause = Const.EMPTY
         inserted = 0
         for content in contents:
-            if not content.get_data():
+            if not content.has_data():
                 cause = 'no content was inserted due to missing mandatory content data'
                 self.logger.info(cause)
 
                 continue
+            if not content.has_valid_data():
+                cause = 'content data is not valid - content template cannot be inserted'
+                self.logger.info(cause)
+
+                continue
+
             utc = content.get_utc()
             digest = content.get_digest()
             if not self.select_content(content.get_category(), data=content.get_data()):

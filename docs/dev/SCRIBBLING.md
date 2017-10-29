@@ -250,6 +250,31 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     > https://codeclimate.com
 
 #######################################
+## Releasing
+#######################################
+
+    # Release PyPI
+    > https://pypi.org/project/snippy/
+    $ git tag -a v0.5.0 -m "Experimental beta release"
+    $ git push -u origin v0.5.0
+    $ python setup.py sdist # Build source distribution
+    $ twine register dist/snippy-0.5.0.tar.gz
+    $ twine upload dist/*
+
+    # Push docker hub with Fedora
+    $ sudo docker login docker.io
+    $ docker tag <image-hash> docker.io/<docker-hub-user-id>/<name>
+    $ docker push docker.io/<docker-hub-user-id>/<name>
+    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:v0.5.0
+    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:latest
+    $ sudo docker push docker.io/heilaaks/snippy:v0.5.0
+    $ sudo docker push docker.io/heilaaks/snippy:latest
+    
+    # Pull
+    $ docker pull heilaaks/snippy:v0.1.0
+
+
+#######################################
 ## PyPI
 #######################################
 
@@ -263,13 +288,11 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     pip3 uninstall snippy
 
     # Release
-    $ git tag -a v0.1.0 -m "Experimental alpha release"
-    $ git push -u origin master
-    $ python setup.py sdist # Build
-    $ twine register dist/snippy-0.1.0.tar.gz
+    $ git tag -a v0.5.0 -m "Experimental beta release"
+    $ git push -u origin v0.5.0
+    $ python setup.py sdist # Build source distribution
+    $ twine register dist/snippy-0.5.0.tar.gz
     $ twine upload dist/*
-    $ python setup.py sdist upload -r pypi
-    $ python setup.py sdist
 
     # Source dist for PyPI
     python setup.py sdist
@@ -337,9 +360,13 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 #######################################
 
     # Push docker hub with Fedora
-    $ docker login docker.io
+    $ sudo docker login docker.io
     $ docker tag <image-hash> docker.io/<docker-hub-user-id>/<name>
     $ docker push docker.io/<docker-hub-user-id>/<name>
+    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:v0.5.0
+    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:latest
+    $ docker push docker.io/heilaaks/snippy:v0.5.0
+    $ docker push docker.io/heilaaks/snippy:latest
     
     # Pull
     $ docker pull heilaaks/snippy:v0.1.0

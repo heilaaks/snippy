@@ -1,11 +1,9 @@
 ## TODO
+   - [ ] Update documents.
    - [ ] Fix the reset Config which is not needed anymore (it seems). It is again all cases fail after one failure.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
-   - [ ] Add search output option to allow directing to file like: search --solution --sall nginx --plain > test.txt
    - [ ] Refactor importing of text template since it is bit messy at the moment.
-   - [ ] Update documents.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
-   - [ ] How to document tests and create test document? Grepping commands and descriptions?
    - [ ] Fix upgrading snippy does not update new defaults? Tried with make install to install new version.
    - [ ] Fix case described in 'git log 11448a2e90dab3a' and somehow and make test_wf a bit nicer?
    - [ ] Add support importing multiple contents in text format like with json and yaml.

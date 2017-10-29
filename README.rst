@@ -1,4 +1,4 @@
-|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-docs|
+|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-docs| |badge-health|
 
 Features
 ========
@@ -17,15 +17,27 @@ update, delete, import and export.
 Installation
 ============
 
-Installaltion can be made from PyPI or from Docker Hub.
+Installaltion from PyPI.
 
 .. code:: bash
 
     pip install snippy
 
+Installing from Docker Hub.
+
 .. code:: bash
 
     docker run heilaaks/snippy
+
+Installing from repository
+
+.. code:: bash
+
+   git clone https://github.com/heilaaks/snippy.git
+   cd snippy
+   make install
+   snippy --help
+   make uninstall
 
 Usage
 =====
@@ -43,6 +55,9 @@ of failure.
 The tool is used by the author in Linux environment. There is an edit functionality with
 editor that always assumes vi editor. This limitation can be circumvented by using text
 based templates to import content or command line options in case of snippets.
+
+The workflow section below contains the basic use cases. Please see more detailed
+documentation from `Read the Docs`_.
 
 Workflows
 =========
@@ -177,7 +192,7 @@ Bug Reports and Feature Requests
 --------------------------------
 
 Run the failing command with --debug option to get a better idea what is failing. Bug reports are
-wellcomed. Please fill a bug report based on _contrib
+wellcomed. Please fill bug report based on contributing_ guidelines.
 
 
 .. |badge-pypiv| image:: https://img.shields.io/pypi/v/snippy.svg
@@ -195,6 +210,9 @@ wellcomed. Please fill a bug report based on _contrib
 .. |badge-docs| image:: https://readthedocs.org/projects/snippy/badge/?version=latest
    :target: http://snippy.readthedocs.io/en/latest/?badge=latest
 
-.. _docs: http://snippy.readthedocs.io/en/latest/
+.. |badge-health| image:: https://landscape.io/github/heilaaks/snippy/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/heilaaks/snippy/master
 
-.. _contrib: https://github.com/heilaaks/snippy/blob/master/CONTROBUTUING.rst
+.. _Read the Docs: http://snippy.readthedocs.io/en/latest/
+
+.. _contributing: https://github.com/heilaaks/snippy/blob/master/CONTRIBUTING.rst

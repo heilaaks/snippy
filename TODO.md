@@ -3,6 +3,7 @@
    - [ ] Fix import failure message in case same solution data is imported twice.
    - [ ] Fix the reset Config which is not needed anymore (it seems). It is again all cases fail after one failure.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
+   - [ ] Check signing commits (https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix upgrading snippy does not update new defaults? Tried with make install to install new version.

@@ -17,7 +17,7 @@ storage installed into the same location as the tool.
 
 .. raw:: html
 
-<a href="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO"><img src="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO.png"/></a>
+    <a href="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO"><img src="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO.png"/></a>
 
 Installation
 ============

@@ -326,7 +326,7 @@ class Editor(object):
         # Windows and Mac?
         if editor != 'vi':
             self.logger.info('enforcing vi as default editor instead of %s', editor)
-            editor = 'vii'
+            editor = 'vi'
 
         return editor
 

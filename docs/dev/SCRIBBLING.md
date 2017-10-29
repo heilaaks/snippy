@@ -104,6 +104,27 @@ Random notes and scribling during development.
 
 http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-package/
 
+    # Recoding
+    > http://linuxbrew.sh/
+    > https://asciinema.org/
+    $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
+    $ /home/linuxbrew/.linuxbrew/bin/brew install asciinema
+    $ export PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
+    
+    asciinema rec snippy.json
+    snippy --help
+    snippy search --sall .
+    snippy import --defaults
+    snippy import --solution --defaults
+    snippy search --sall elastic
+    snippy search --solution --sall kafka | grep -Ev '[^\s]+:'
+    snippy export -d ec11663bee073799
+    ll
+    snippy import -d ec11663bee073799 -f kubernetes-docker-log-driver-kafka.txt
+    snippy search --solution --sall . | grep -Ev '[^\s]+:'
+    ctrl-d
+    https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
+
 ## Travis CI and tooling
 
 Add '[ci skip]' to commitlog in order to prevent the CI build.
@@ -117,6 +138,7 @@ http://snippy.readthedocs.io/en/latest/
 ## Documents
 
 Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=PA357&dq=Should+I+use+root+or+logger+or+module+name+logger&source=bl&ots=eNYyAjE-IP&sig=MPee2BYjTYu4epc2NlESCG0x3so&hl=en&sa=X&ved=0ahUKEwiylOaLhunVAhXDK5oKHWSaCn04ChDoAQhGMAY#v=onepage&q=Should%20I%20use%20root%20or%20logger%20or%20module%20name%20logger&f=false
+
 
 #######################################
 ## Devel

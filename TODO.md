@@ -1,5 +1,6 @@
 ## TODO
    - [ ] Update documents.
+   - [ ] Fix import failure message in case same solution data is imported twice.
    - [ ] Fix the reset Config which is not needed anymore (it seems). It is again all cases fail after one failure.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] Refactor importing of text template since it is bit messy at the moment.

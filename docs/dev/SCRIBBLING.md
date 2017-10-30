@@ -756,7 +756,29 @@ python import --snippet -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt
 ## Importing solution
 ######################
 
-1. Import solution from yaml file (DONE)
+  snippy import --solution                                      # Uses default file /solutions.yaml  (TESTED)
+  snippy import --solution -f ./all-solutions.yaml              # Import all solutions from yaml file (TESTED)
+  snippy import --solution -f ./all-solutions.json              # Import all solutions from json file
+  snippy import --solution -f ./all-solutions.txt               # Import all solutions from txt file
+  snippy import --solution -f ./all-solutions.text              # Import all solutions from txt file
+  
+  snippy import --solution -f ./solution-template.yaml          # Import one content from yaml template
+  snippy import --solution -f ./solution-template.json          # Import one content from json template
+  snippy import --solution -f ./solution-template.txt           # Import one content from text template
+  snippy import --solution -f ./solution-template.text          # Import one content from text template
+  snippy import --solution -f ./foo.bar                         # Import one content from unknown file format
+
+  snippy import --solution -f ./solution-template.yaml -d 12345 # Updte one content from yaml template
+  snippy import --solution -f ./solution-template.json -d 12345 # Import one content from json template
+  snippy import --solution -f ./solution-template.txt  -d 12345 # Import one content from text template
+  snippy import --solution -f ./solution-template.text -d 12345 # Import one content from text template
+  snippy import --solution -f ./solution-template.text -d 00000 # Import one content with digest not found
+
+  snippy import --solution -f ./solution-template.txt   # Import solutuon template without any changes
+  
+  snippy import --solution --defaults                   # Import solution defaults
+  
+  snippy import --solution --template                   # Must produce error
 
 ########################
 ## Supplementary options

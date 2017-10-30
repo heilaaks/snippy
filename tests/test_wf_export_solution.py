@@ -25,7 +25,7 @@ class TestWfExportSolution(unittest.TestCase):
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_all_solutions_yaml(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    def test_export_all_solutions(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export all solutions."""
 
         mock_get_db_location.return_value = Database.get_storage()

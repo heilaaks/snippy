@@ -69,6 +69,22 @@ class Sqlite3DbHelper(object):
         conn.close()
 
     @staticmethod
+    def delete_solutions():
+        """Delete all solutions from database."""
+
+        # In successful case the database table does not exist anymore
+        conn, cursor = Sqlite3DbHelper._connect_db()
+        query = ('DELETE FROM contents WHERE category=?')
+        qargs = ['solution']
+        try:
+            cursor.execute(query, qargs)
+            conn.commit()
+        except sqlite3.OperationalError:
+            pass
+        cursor.close()
+        conn.close()
+
+    @staticmethod
     def get_schema():
         """Return the file where the database schema is located."""
 

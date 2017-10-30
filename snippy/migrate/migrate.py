@@ -127,7 +127,6 @@ class Migrate(object):
                 elif Config.is_file_type_json():
                     import json
 
-                    print(json.dump(dictionary))
                     json.dump(dictionary, outfile)
                     outfile.write(Const.NEWLINE)
                 elif Config.is_file_type_text():

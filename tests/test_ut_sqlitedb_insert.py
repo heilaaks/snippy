@@ -45,6 +45,6 @@ class TestUtSqlite3dbInsert(unittest.TestCase):
     def tearDown(self):
         """Teardown each test."""
 
-        Database.delete_all_snippets()
+        Database.delete_all_contents()
         self.sqlite.disconnect()
         Database.delete_storage()

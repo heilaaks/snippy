@@ -49,5 +49,5 @@ class TestWfCreateSnippet(unittest.TestCase):
     def tearDown(self):
         """Teardown each test."""
 
-        Database.delete_all_snippets()
+        Database.delete_all_contents()
         Database.delete_storage()

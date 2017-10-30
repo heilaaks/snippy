@@ -7,6 +7,7 @@ import unittest
 import json
 import yaml
 import mock
+import pkg_resources
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
@@ -320,7 +321,7 @@ class TestWfExportSolution(unittest.TestCase):
 
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_export_solution_template(self, mock_get_db_location, mock_get_utc_time):  # pylint:disable=duplicate-code
+    def test_export_solution_template(self, mock_get_db_location, mock_get_utc_time):
         """Export solution template."""
 
         mock_get_db_location.return_value = Database.get_storage()
@@ -342,10 +343,69 @@ class TestWfExportSolution(unittest.TestCase):
         # Release all resources
         snippy.release()
 
+    @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_solution_incomplete_header(self, mock_isfile, mock_get_db_location, mock_get_utc_time):  # pylint:disable=duplicate-code
+    def test_export_solution_defaults(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump):
+        """Export solution defaults."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        mock_isfile.return_value = True
+        snippy = Snippet.add_snippets(self)
+        snippy = Solution.add_solutions(snippy)
+        export_dict = {'content': [{'data': tuple(Solution.SOLUTIONS_TEXT[0]),
+                                    'brief': 'Debugging Elastic Beats',
+                                    'group': 'beats',
+                                    'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
+                                    'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
+                                    'category': 'solution',
+                                    'filename': 'howto-debug-elastic-beats.txt',
+                                    'utc': '2017-10-20 11:11:19',
+                                    'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
+                                   {'data': tuple(Solution.SOLUTIONS_TEXT[1]),
+                                    'brief': 'Debugging nginx',
+                                    'group': 'nginx',
+                                    'tags': ('debug', 'howto', 'logging', 'nginx'),
+                                    'links': ('https://www.nginx.com/resources/admin-guide/debug/',),
+                                    'category': 'solution',
+                                    'filename': 'howto-debug-nginx.txt',
+                                    'utc': '2017-10-20 06:16:27',
+                                    'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
+
+        ## Brief: Export solution defaults. All solutions should be exported into predefined file
+        ##        location under tool data folder in yaml format.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export', '--solution', '--defaults']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
+            mock_file.assert_called_once_with(defaults_solutions, 'w')
+            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+
+        ## Brief: Try to export solution defaults when there are no stored solutions. No files
+        ##        should be created and OK should printed for end user. The reason is that
+        ##        processing list of zero items is considered as an OK case.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            Database.delete_all_contents()
+            mock_file.reset_mock()
+            mock_yaml_dump.reset_mock()
+            sys.argv = ['snippy', 'export', '--solution', '--defaults']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_not_called()
+            mock_yaml_dump.assert_not_called()
+
+        # Release all resources
+        snippy.release()
+
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_export_solution_incomplete_header(self, mock_isfile, mock_get_db_location, mock_get_utc_time):
         """Export solution without date field."""
 
         mock_get_db_location.return_value = Database.get_storage()
@@ -390,5 +450,5 @@ class TestWfExportSolution(unittest.TestCase):
     def tearDown(self):
         """Teardown each test."""
 
-        Database.delete_all_snippets()
+        Database.delete_all_contents()
         Database.delete_storage()

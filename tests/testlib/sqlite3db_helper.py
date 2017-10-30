@@ -55,8 +55,8 @@ class Sqlite3DbHelper(object):
         return Storage()._get_contents(rows)  # pylint: disable=protected-access
 
     @staticmethod
-    def delete_all_snippets():
-        """Delete all snippets."""
+    def delete_all_contents():
+        """Delete all content from database."""
 
         # In successful case the database table does not exist anymore
         conn, cursor = Sqlite3DbHelper._connect_db()

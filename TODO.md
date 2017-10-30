@@ -1,5 +1,7 @@
 ## TODO
    - [ ] Update documents.
+   - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
+   - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix import failure message in case same solution data is imported twice.
    - [ ] Fix the reset Config which is not needed anymore (it seems). It is again all cases fail after one failure.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?

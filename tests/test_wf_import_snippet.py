@@ -76,7 +76,7 @@ class TestWfImportSnippet(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(message)
+            file_handle.write.assert_has_calls([mock.call(message), mock.call(Const.NEWLINE)])
 
         # Release all resources
         snippy.release()

@@ -128,7 +128,7 @@ class TestWfExportSnippet(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(export)), mock.call(Const.NEWLINE)])
 
         # Export defined snippet into specified file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -138,7 +138,7 @@ class TestWfExportSnippet(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(Const.NEWLINE.join(export))
+            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(export)), mock.call(Const.NEWLINE)])
 
         # Release all resources
         snippy.release()

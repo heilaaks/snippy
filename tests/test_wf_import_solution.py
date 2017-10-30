@@ -78,7 +78,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-solution.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2]))
+            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2])), mock.call(Const.NEWLINE)])
 
         # Release all resources
         snippy.release()
@@ -162,7 +162,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-solution.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(template)
+            file_handle.write.assert_has_calls([mock.call(template), mock.call(Const.NEWLINE)])
 
         # Release all resources
         snippy.release()

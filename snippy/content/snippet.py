@@ -89,6 +89,7 @@ class Snippet(object):
     def export_all(self):
         """Export snippets."""
 
+        filename = Config.get_operation_file()
         content_digest = Config.get_content_valid_digest()
         if Config.is_migrate_template():
             self.logger.debug('exporting snippet template %s', Config.get_operation_file())
@@ -96,11 +97,14 @@ class Snippet(object):
         elif content_digest:
             self.logger.debug('exporting snippet with digest %.16s', content_digest)
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
-            Migrate().dump_template(snippets[0])
+            if len(snippets) == 1:
+                filename = Config.get_operation_file(content_filename=snippets[0].get_filename())
+            print("filename %s" % filename)
+            Migrate().dump(snippets, filename)
         else:
             self.logger.debug('exporting snippets %s', Config.get_operation_file())
             snippets = self.storage.export_content(Const.SNIPPET)
-            Migrate().dump(snippets)
+            Migrate().dump(snippets, filename)
 
     def import_all(self):
         """Import snippets."""

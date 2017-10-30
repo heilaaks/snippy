@@ -110,13 +110,12 @@ class Migrate(object):
         return text
 
     @classmethod
-    def dump(cls, contents):
+    def dump(cls, contents, filename):
         """Dump contents into file."""
 
         if not Config.is_supported_file_format():
             return
 
-        filename = Config.get_operation_file()
         cls.logger.debug('exporting contents %s', filename)
         with open(filename, 'w') as outfile:
             try:
@@ -128,13 +127,17 @@ class Migrate(object):
                 elif Config.is_file_type_json():
                     import json
 
+                    print(json.dump(dictionary))
                     json.dump(dictionary, outfile)
                     outfile.write(Const.NEWLINE)
                 elif Config.is_file_type_text():
-                    outfile.write(Migrate.get_terminal_text(contents, ansi=False))
+                    for content in contents:
+                        template = Config.get_content_template(content)
+                        outfile.write(template)
+                        outfile.write(Const.NEWLINE)
                 else:
                     cls.logger.info('unknown export format')
-            except (TypeError, ValueError, yaml.YAMLError) as exception:
+            except (IOError, TypeError, ValueError, yaml.YAMLError) as exception:
                 cls.logger.exception('fatal failure to generate formatted export file "%s"', exception)
                 sys.exit()
 

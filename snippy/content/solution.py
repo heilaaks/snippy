@@ -75,18 +75,21 @@ class Solution(object):
     def export_all(self):
         """Export solutions."""
 
+        filename = Config.get_operation_file()
         content_digest = Config.get_content_valid_digest()
         if Config.is_migrate_template():
             self.logger.debug('exporting solution template %s', Config.get_operation_file())
             Migrate().dump_template(Content())
         elif content_digest:
             self.logger.debug('exporting solution with digest %.16s', content_digest)
-            snippets = self.storage.search(Const.SOLUTION, digest=content_digest)
-            Migrate().dump_template(snippets[0])
+            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
+            if len(solutions) == 1:
+                filename = Config.get_operation_file(content_filename=solutions[0].get_filename())
+            Migrate().dump(solutions, filename)
         else:
             self.logger.debug('exporting solutions %s', Config.get_operation_file())
             solutions = self.storage.export_content(Const.SOLUTION)
-            Migrate().dump(solutions)
+            Migrate().dump(solutions, filename)
 
     def import_all(self):
         """Import solutions."""

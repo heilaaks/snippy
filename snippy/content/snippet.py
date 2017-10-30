@@ -99,7 +99,8 @@ class Snippet(object):
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
             if len(snippets) == 1:
                 filename = Config.get_operation_file(content_filename=snippets[0].get_filename())
-            print("filename %s" % filename)
+            elif not snippets:
+                Cause.set_text('cannot find snippet to be exported with digest {:.16}'.format(content_digest))
             Migrate().dump(snippets, filename)
         else:
             self.logger.debug('exporting snippets %s', Config.get_operation_file())

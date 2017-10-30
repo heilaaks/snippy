@@ -109,8 +109,8 @@ class TestWfExportSolution(unittest.TestCase):
                                                 mock.call(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[1])),
                                                 mock.call(Const.NEWLINE)])
 
-        ## Brief: Try to export all solutions into file format that is not supported. This should result
-        ##        error string for end user and no files should be created.
+        ## Brief: Try to export all solutions into file format that is not supported. This should
+        ##        result error text for end user and no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             sys.argv = ['snippy', 'export', '--solution', '-f', './foo.bar'] ## workflow
             snippy.reset()
@@ -155,7 +155,8 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0])), mock.call(Const.NEWLINE)])
+            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0])),
+                                                mock.call(Const.NEWLINE)])
 
         ## Brief: Export defined solution based on message digest. File name is not defined in
         ##        solution metada or by command line -f|--file option. This should result the
@@ -177,7 +178,8 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('solution.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(mocked_data), mock.call(Const.NEWLINE)])
+            file_handle.write.assert_has_calls([mock.call(mocked_data),
+                                                mock.call(Const.NEWLINE)])
 
         ## Brief: Export defined solution based on message digest. File name is defined in solution
         ##        metadata and in command line -f|--file option. This should result the file name
@@ -214,7 +216,8 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0])), mock.call(Const.NEWLINE)])
+            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0])),
+                                                mock.call(Const.NEWLINE)])
 
         ## Brief: Export defined solution based on message digest. File name is defined in solution
         ##        metadata and in command line -f|--file option. This should result the file name
@@ -227,7 +230,8 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0])), mock.call(Const.NEWLINE)])
+            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0])),
+                                                mock.call(Const.NEWLINE)])
 
         ## Brief: Try to export defined solution based on message digest into file format that is
         ##        not supported. This should result error string for end user and no files should
@@ -267,7 +271,8 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('solution.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(mocked_data), mock.call(Const.NEWLINE)])
+            file_handle.write.assert_has_calls([mock.call(mocked_data),
+                                                mock.call(Const.NEWLINE)])
 
         ## Brief: Export defined solution based on message digest. File name is not defined in
         ##        solution metadata or by command line -f|--file option. In this case there are
@@ -296,7 +301,19 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('kubernetes-docker-log-driver-kafka.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(mocked_data), mock.call(Const.NEWLINE)])
+            file_handle.write.assert_has_calls([mock.call(mocked_data),
+                                                mock.call(Const.NEWLINE)])
+
+        ## Brief: Try to export defined solution based on message digest that cannot be found.
+        ##        This should result error text for end user and no files should be created.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            sys.argv = ['snippy', 'export', '--solution', '-d', '123456789abcdef0', '-f' './defined-solution.text']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find solution to be exported with digest 123456789abcdef0'
+            mock_file.assert_not_called()
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_not_called()
 
         # Release all resources
         snippy.release()
@@ -304,12 +321,7 @@ class TestWfExportSolution(unittest.TestCase):
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     def test_export_solution_template(self, mock_get_db_location, mock_get_utc_time):  # pylint:disable=duplicate-code
-        """Export solution template.
-
-        Expected results:
-            1 Solution template is created to default file.
-            2 Exit cause is OK.
-        """
+        """Export solution template."""
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
@@ -334,30 +346,26 @@ class TestWfExportSolution(unittest.TestCase):
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     def test_export_solution_incomplete_header(self, mock_isfile, mock_get_db_location, mock_get_utc_time):  # pylint:disable=duplicate-code
-        """Export solution that was updated with undefined header.
-
-        Expected results:
-            1 Solution is exported with header updated with data previously made available.
-            2 Exit cause is OK.
-        """
+        """Export solution without date field."""
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
         snippy = Solution.add_solutions(None)
 
-        ## Brief: Export solution that has been updated with empty date field. The export
-        ##        operation must fill the date if it is available. The import operation with
-        ##        content identified by message digest is considered an update operation. In
-        ##        case of update, the timestamp is set to match to update time and not the
-        ##        one read from the template.
+        ## Brief: Export solution that has been updated with empty date field in the content
+        ##        data. The export operation must fill the date in text content from solution
+        ##        metadata. The import operation with content identified by message digest is
+        ##        considered as update operation. In case of update operation, the content
+        ##        metadata timestamp is set to match the update time. The date in the solution
+        ##        content data is not changes because it is considered that end user may want
+        ##        to keep it as is.
         mocked_data = Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0])
         original = mocked_data
         mocked_data = mocked_data.replace('## DATE  : 2017-10-20 11:11:19',
                                           '## DATE  : ')
         mocked_open = mock.mock_open(read_data=mocked_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-
             sys.argv = ['snippy', 'import', '-f', 'mocked_file.txt', '-d', 'a96accc25dd23ac0']
             snippy.reset()
             cause = snippy.run_cli()
@@ -372,7 +380,8 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(original), mock.call(Const.NEWLINE)])
+            file_handle.write.assert_has_calls([mock.call(original),
+                                                mock.call(Const.NEWLINE)])
 
         # Release all resources
         snippy.release()

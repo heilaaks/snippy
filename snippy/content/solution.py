@@ -85,6 +85,8 @@ class Solution(object):
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
             if len(solutions) == 1:
                 filename = Config.get_operation_file(content_filename=solutions[0].get_filename())
+            elif not solutions:
+                Cause.set_text('cannot find solution to be exported with digest {:.16}'.format(content_digest))
             Migrate().dump(solutions, filename)
         else:
             self.logger.debug('exporting solutions %s', Config.get_operation_file())

@@ -116,6 +116,9 @@ class Migrate(object):
         if not Config.is_supported_file_format():
             return
 
+        if not contents:
+            return
+
         cls.logger.debug('exporting contents %s', filename)
         with open(filename, 'w') as outfile:
             try:

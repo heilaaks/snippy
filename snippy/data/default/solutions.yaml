@@ -5,6 +5,7 @@ content:
   - '################################################################################'
   - '## BRIEF : Testing docker log drivers'
   - '##'
+  - '## DATE  : 2017-10-30 08:17:10'
   - '## GROUP : docker'
   - '## TAGS  : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka'
   - '## FILE  : kubernetes-docker-log-driver-kafka.txt'
@@ -91,7 +92,8 @@ content:
   - '################################################################################'
   - '## whiteboard'
   - '################################################################################'
-  digest: ec11663bee073799189abb72f9b57f942fb47dd3886f17024de65771a49c790d
+  - ''
+  digest: ce6ef2f0408ff3780dc4f34b93d281cd2a3c6b8d36ebfb8929b1d86f803e98b8
   filename: kubernetes-docker-log-driver-kafka.txt
   group: docker
   links:
@@ -107,7 +109,7 @@ content:
   - logs2kafka
   - moby
   - plugin
-  utc: '2017-10-12 11:53:17'
+  utc: '2017-10-30 08:24:28'
 - brief: Debugging nginx
   category: solution
   data:
@@ -268,7 +270,8 @@ content:
   - '          }'
   - '      }'
   - '      '' | tee /etc/nginx/conf.d/default.conf && nginx -s reload'
-  digest: a3a4e02a7ce5021c64ca79efaa3018a12f3e3cb8f4a70196786a305b0aa90dc9
+  - ''
+  digest: 115a2bd73c6e262922a9ae6de9a8ab4b18f7aa5c1fc5dbdd12721429ac949996
   filename: howto-debug-nginx.txt
   group: nginx
   links:
@@ -278,7 +281,7 @@ content:
   - howto
   - logging
   - nginx
-  utc: '2017-10-20 06:46:39'
+  utc: '2017-10-30 08:21:19'
 - brief: Debugging Elastic Beats
   category: solution
   data:
@@ -394,8 +397,7 @@ content:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  - ''
-  digest: 4b7ef784a57fcc720b29d0c847d72c761b7ba93a225bc82a76fbd1888c1a3cda
+  digest: 76a1a02951f6bcb423103b67c1deafd79c0ae19e46dedda910c2770cc2c2e26e
   filename: howto-debug-elastic-beats.txt
   group: beats
   links:
@@ -407,4 +409,4 @@ content:
   - debug
   - filebeat
   - howto
-  utc: '2017-10-25 11:02:58'
+  utc: '2017-10-30 08:21:40'

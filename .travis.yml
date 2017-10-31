@@ -12,8 +12,8 @@ install:
 before_script:
   - ulimit -c unlimited -S
 script:
-# - "python -m pytest ./tests/test_*.py --cov snippy -vv"
-  - "gdb -ex r --args python -m pytest ./tests/test_*.py --cov snippy -vv"
+  - "python -m pytest ./tests/test_*.py --cov snippy -vv"
+#  - "gdb -ex r --args python -m pytest ./tests/test_*.py --cov snippy -vv"
 after_success:
   - codecov
 after_failure:

@@ -235,21 +235,33 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     > http://lint.travis-ci.org/
     > http://podoliaka.org/2016/04/10/debugging-cpython-gdb/
     $ vi .travis.yaml
+      language: python
+      python:
+              #  - "2.7"
+              #  - "3.4"
+        - "3.5"
+          #  - "3.6"
+      before_install:
+        - sudo apt-get install -y gdb python-dbg
+        - "pip install -e .[test]"
       install:
-      - sudo apt-get install -y gdb python-debuginfo
-      
+        - "pip install -r requirements.txt"
       before_script:
-      - ulimit -c unlimited -S       # enable core dumps
-
+        - ulimit -c unlimited -S
+      script:
+        - "python -m pytest ./tests/test_*.py --cov snippy -vv"
+        #  - "gdb -ex r --args python -m pytest ./tests/test_*.py --cov snippy -vv" # This command hangs in the gdb prompt.
+      after_success:
+        - codecov
       after_failure:
-      - COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1) # find core file
-      - if [[ -f "$COREFILE" ]]; then gdb -c "$COREFILE" example -ex "thread apply all bt" -ex "set pagination 0" -batch; fi
+        - ls -al
+        - pwd
+        - find / -name '*core*'
+        - COREFILE=$(find . -maxdepth 1 -name "core" | head -n 1) # find core file
+        - if [[ -f "$COREFILE" ]]; then gdb -c "$COREFILE" example -ex "thread apply all bt" -ex "set pagination 0" -batch; fi
+        - gdb -c ./core example -ex "thread apply all py-list" -ex "set pagination 0" -batch
+        - gdb -c ./core example -ex "py-list" -ex "set pagination 0" -batch
 
-"gdb -ex r --args python pytest ./tests/test_*.py --cov snippy -vv"
-
-"python -m pytest ./tests/test_*.py --cov snippy -vv"
-
-python3-dbg python3-dev
 
 #######################################
 ## Mocks

@@ -242,7 +242,7 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
         - "3.5"
         - "3.6"
       before_install:
-        - "sudo apt-get install -y gdb python-dbg"
+        - "sudo apt-get install -y gdb python-dbg" # Install libsqlite3-0-dbg?
         - "pip install -e .[test]"
       install:
         - "pip install -r requirements.txt"

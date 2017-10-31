@@ -32,6 +32,19 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Install Python3.4 virtual environment.
+   $ cd /opt
+   $ sudo curl -O https://www.python.org/ftp/python/3.4.7/Python-3.4.7.tgz
+   $ sudo tar xzvf Python-3.4.7.tgz
+   $ cd Python-3.4.7
+   $ sudo ./configure --enable-shared --prefix=/usr/local LDFLAGS="-Wl,--rpath=/usr/local/lib" 
+   $ sudo make altinstall
+   $ python3.4 -m venv myvirtualenv
+   $ . myvirtualenv/bin/activate
+   $ python --version
+   ```
+
+   ```
    # Example commands for the Python virtualenvwrapper.
    $ lssitepackages
    $ lsvirtualenv
@@ -787,16 +800,16 @@ snippy import --solution -f ./all-solutions.yaml              # Import all solut
 snippy import --solution -f ./all-solutions.json              # Import all solutions from json file (TESTED)
 snippy import --solution -f ./all-solutions.txt               # Import all solutions from txt file (TESTED)
 snippy import --solution -f ./all-solutions.text              # Import all solutions from txt file (TESTED)
-snippy import -f ./all-solutions.yaml                         # Import all solutions without defining content category.
-snippy import -f ./all-solutions.yaml
-snippy import -f ./all-solutions.txt
-snippy import -f ./all-solutions.text
+snippy import -f ./all-solutions.yaml                         # Import all solutions without defining content category. (TESTED)
+snippy import -f ./all-solutions.json (TESTED)
+snippy import -f ./all-solutions.txt (TESTED)
+snippy import -f ./all-solutions.text (TESTED)
 
 snippy import --solution -f ./solution-template.yaml          # Import one content from yaml template
 snippy import --solution -f ./solution-template.json          # Import one content from json template
 snippy import --solution -f ./solution-template.txt           # Import one content from text template
 snippy import --solution -f ./solution-template.text          # Import one content from text template
-snippy import --solution -f ./foo.bar                         # Import one content from unknown file format
+snippy import --solution -f ./foo.bar                         # Import one content from unknown file format (TESTED)
 
 snippy import --solution -f ./solution-template.yaml -d 12345 # Import (update) one content from yaml template
 snippy import --solution -f ./solution-template.json -d 12345 # Import (update) one content from json template

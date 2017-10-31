@@ -7,6 +7,7 @@ import unittest
 import json
 import yaml
 import mock
+import pkg_resources
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.storage.database.sqlite3db import Sqlite3Db
@@ -74,6 +75,18 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_contents()) == 4
             self.verify_imported_solutions(snippy, mock_file)
 
+        ## Brief: Import all solutions from yaml file without specifying the solution category.
+        ##        File name and format are extracted from command line option -f|--file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            Database.delete_solutions()
+            sys.argv = ['snippy', 'import', '-f', './all-solutions.yaml']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
+            assert len(Database.get_solutions()) == 2
+            self.verify_imported_solutions(snippy, mock_file)
+
         ## Brief: Import all solutions from json file. File name and format are extracted from
         ##        command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -84,6 +97,18 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.json', 'r')
             assert len(Database.get_contents()) == 4
+            self.verify_imported_solutions(snippy, mock_file)
+
+        ## Brief: Import all solutions from json file without specifying the solution category.
+        ##        File name and format are extracted from command line option -f|--file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            Database.delete_solutions()
+            sys.argv = ['snippy', 'import', '-f', './all-solutions.json']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./all-solutions.json', 'r')
+            assert len(Database.get_solutions()) == 2
             self.verify_imported_solutions(snippy, mock_file)
 
         ## Brief: Import all solutions from txt file. File name and format are extracted from
@@ -97,6 +122,21 @@ class TestWfImportSolution(unittest.TestCase):
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_contents()) == 4
+            mock_file.assert_called_once_with('./all-solutions.txt', 'r')
+            self.verify_imported_solutions(snippy, mock_file)
+
+        ## Brief: Import all solutions from txt file without specifying the solution category.
+        ##        File name and format are extracted from command line option -f|--file. File
+        ##        extension is '*.txt' in this case.
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0]) +
+                                     Const.NEWLINE+Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            Database.delete_solutions()
+            sys.argv = ['snippy', 'import', '-f', './all-solutions.txt']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
             self.verify_imported_solutions(snippy, mock_file)
 
@@ -115,6 +155,22 @@ class TestWfImportSolution(unittest.TestCase):
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
             self.verify_imported_solutions(snippy, mock_file)
 
+        ## Brief: Import all solutions from txt file without specifying the solution category.
+        ##        File name and format are extracted from command line option -f|--file. File
+        ##        extension is '*.text' in this case.
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0]) +
+                                     Const.NEWLINE +
+                                     Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            Database.delete_solutions()
+            sys.argv = ['snippy', 'import', '-f', './all-solutions.text']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_solutions()) == 2
+            mock_file.assert_called_once_with('./all-solutions.text', 'r')
+            self.verify_imported_solutions(snippy, mock_file)
+
         ## Brief: Try to import empty solution template. The operation will fail because
         ##        content templates without any modifications cannot be imported.
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE))
@@ -127,8 +183,64 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_contents()) == 2
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
+        ## Brief: Try to import solution from file which file format is not supported. This
+        ##        should result error text for end user and no files should be read.
+        mocked_open = mock.mock_open(read_data=Solution.SOLUTIONS_TEXT[0])
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            Database.delete_solutions()
+            sys.argv = ['snippy', 'import', '--solution', '-f', './foo.bar']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot identify file format for file ./foo.bar'
+            assert len(Database.get_contents()) == 2
+            mock_file.assert_not_called()
+
         # Release all resources
         snippy.release()
+
+    @mock.patch.object(yaml, 'safe_load')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_import_solution_defaults(self, mock_isfile, mock_get_db_location, mock_yaml_load):
+        """Import solutions defaults."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
+        import_dict = {'content': [{'data': tuple(Solution.SOLUTIONS_TEXT[0]),
+                                    'brief': 'Debugging Elastic Beats',
+                                    'group': 'beats',
+                                    'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
+                                    'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
+                                    'category': 'solution',
+                                    'filename': 'howto-debug-elastic-beats.txt',
+                                    'utc': None,
+                                    'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
+                                   {'data': tuple(Solution.SOLUTIONS_TEXT[2]),
+                                    'brief': 'Testing docker log drivers',
+                                    'group': 'docker',
+                                    'tags': ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin'),
+                                    'links': ('https://github.com/MickayG/moby-kafka-logdriver',
+                                              'https://github.com/garo/logs2kafka',
+                                              'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'),
+                                    'category': 'solution',
+                                    'filename': 'kubernetes-docker-log-driver-kafka.txt',
+                                    'utc': '2017-10-12 11:53:17',
+                                    'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'}]}
+        mock_yaml_load.return_value = import_dict
+        snippy = Snippet.add_snippets(self)
+
+        ## Brief: Import solution defaults. All solutions should be imported from predefined file
+        ##        location under tool data folder from yaml format.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            Database.delete_solutions()
+            sys.argv = ['snippy', 'import', '--solution', '--defaults']  ## workflow
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_solutions()) == 2
+            defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
+            mock_file.assert_called_once_with(defaults_solutions, 'r')
+            self.verify_imported_solutions(snippy, mock_file)
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -164,6 +276,7 @@ class TestWfImportSolution(unittest.TestCase):
                                1))
             sys.argv = ['snippy', 'import', '-f', './solution-template.txt']  ## workflow
             snippy = Snippy()
+            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             snippy.storage.search(Const.SOLUTION, digest='63f2007703d70c8f')

@@ -2,7 +2,7 @@ language: python
 python:
   - "2.7"
   - "3.4"
-  - "3.5"
+# - "3.5" # Causes core dump from sqlite
   - "3.6"
 before_install:
   - "sudo apt-get install -y gdb python-dbg"
@@ -12,8 +12,8 @@ install:
 before_script:
   - "ulimit -c unlimited -S"
 script:
-# - "python -m pytest ./tests/test_*.py --cov snippy -vv"
-  - "gdb -ex r -x .travis.gdb --args python -m pytest ./tests/test_*.py --cov snippy -vv"
+ - "python -m pytest ./tests/test_*.py --cov snippy -vv"
+#  - "gdb -ex r -x .travis.gdb --args python -m pytest ./tests/test_*.py --cov snippy -vv" # Should this have '-ex "set pagination 0" -batch' to prevent prompt?
 after_success:
   - codecov
 after_failure:

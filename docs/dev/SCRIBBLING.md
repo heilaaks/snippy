@@ -237,31 +237,50 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     $ vi .travis.yaml
       language: python
       python:
-              #  - "2.7"
-              #  - "3.4"
+        - "2.7"
+        - "3.4"
         - "3.5"
-          #  - "3.6"
+        - "3.6"
       before_install:
-        - sudo apt-get install -y gdb python-dbg
+        - "sudo apt-get install -y gdb python-dbg"
         - "pip install -e .[test]"
       install:
         - "pip install -r requirements.txt"
       before_script:
-        - ulimit -c unlimited -S
+        - "ulimit -c unlimited -S"
       script:
-        - "python -m pytest ./tests/test_*.py --cov snippy -vv"
-        #  - "gdb -ex r --args python -m pytest ./tests/test_*.py --cov snippy -vv" # This command hangs in the gdb prompt.
+      # - "python -m pytest ./tests/test_*.py --cov snippy -vv"
+        - "gdb -ex r -x .travis.gdb --args python -m pytest ./tests/test_*.py --cov snippy -vv"
       after_success:
         - codecov
       after_failure:
         - ls -al
-        - pwd
-        - find / -name '*core*'
-        - COREFILE=$(find . -maxdepth 1 -name "core" | head -n 1) # find core file
-        - if [[ -f "$COREFILE" ]]; then gdb -c "$COREFILE" example -ex "thread apply all bt" -ex "set pagination 0" -batch; fi
-        - gdb -c ./core example -ex "thread apply all py-list" -ex "set pagination 0" -batch
-        - gdb -c ./core example -ex "py-list" -ex "set pagination 0" -batch
+        - gdb -c ./core example -ex "thread info" -ex "set pagination 0" -batch
 
+       Program received signal SIGSEGV, Segmentation fault.
+       0x0000000000000000 in ?? ()
+       #0  0x0000000000000000 in ?? ()
+       #1  0x00007ffff1846e5c in ?? () from /usr/lib/x86_64-linux-gnu/libsqlite3.so.0
+       #2  0x00007ffff1847013 in ?? () from /usr/lib/x86_64-linux-gnu/libsqlite3.so.0
+       #3  0x00007ffff185b6b9 in ?? () from /usr/lib/x86_64-linux-gnu/libsqlite3.so.0
+       #4  0x00007ffff1883a75 in ?? () from /usr/lib/x86_64-linux-gnu/libsqlite3.so.0
+       #5  0x00007ffff188bf87 in sqlite3_step ()
+          from /usr/lib/x86_64-linux-gnu/libsqlite3.so.0
+       #6  0x00007ffff1addb6e in pysqlite_step (statement=0xfa2268, 
+           connection=<optimized out>)
+           at /tmp/python-build.20170626083852.6823/Python-3.5.3/Modules/_sqlite/util.c:37
+       #7  0x00007ffff1adb879 in _pysqlite_query_execute (self=0x7ffff0eded50, 
+           multiple=0, args=<optimized out>)
+           at /tmp/python-build.20170626083852.6823/Python-3.5.3/Modules/_sqlite/cursor---Type <return> to continue, or q <return> to quit---
+
+    # Gdb - if there is no stack trace, the bt command fails in .travis.gdb
+      [Inferior 1 (process 4590) exited normally]
+      
+      .travis.gdb:1: Error in sourced command file:
+      
+      No stack.
+      
+      (gdb) 
 
 #######################################
 ## Mocks

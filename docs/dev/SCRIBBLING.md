@@ -229,10 +229,11 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     # List tests
     $ cat tests/test_wf_* | grep -E '[[:space:]]{12}\$' | grep -Ev SnippetHelp
     
-    # Travis core
+    # Travis core debugging
     > http://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
     > https://wiki.python.org/moin/DebuggingWithGdb
     > http://lint.travis-ci.org/
+    > http://podoliaka.org/2016/04/10/debugging-cpython-gdb/
     $ vi .travis.yaml
       install:
       - sudo apt-get install -y gdb python-debuginfo
@@ -244,7 +245,11 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
       - COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1) # find core file
       - if [[ -f "$COREFILE" ]]; then gdb -c "$COREFILE" example -ex "thread apply all bt" -ex "set pagination 0" -batch; fi
 
+"gdb -ex r --args python pytest ./tests/test_*.py --cov snippy -vv"
 
+"python -m pytest ./tests/test_*.py --cov snippy -vv"
+
+python3-dbg python3-dev
 
 #######################################
 ## Mocks

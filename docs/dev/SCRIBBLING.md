@@ -228,6 +228,22 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     
     # List tests
     $ cat tests/test_wf_* | grep -E '[[:space:]]{12}\$' | grep -Ev SnippetHelp
+    
+    # Travis core
+    > http://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
+    > http://lint.travis-ci.org/
+    $ vi .travis.yaml
+      install:
+      - sudo apt-get install -y gdb  # install gdb
+      
+      before_script:
+      - ulimit -c unlimited -S       # enable core dumps
+
+      after_failure:
+      - COREFILE=$(find . -maxdepth 1 -name "core*" | head -n 1) # find core file
+      - if [[ -f "$COREFILE" ]]; then gdb -c "$COREFILE" example -ex "thread apply all bt" -ex "set pagination 0" -batch; fi
+
+
 
 #######################################
 ## Mocks

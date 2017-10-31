@@ -690,6 +690,32 @@ snippet export --solution -d a96accc25dd23ac0
 7. Export solution template to default file. (DONE)
 snippy export --solution --template
 
+snippy export --solution                                      # All solutions in default file solutions.yaml. (TESTED) 
+snippy export --solution -f ./file-s.txt                      # All solutions in file defined file in text format. (TESTED) 
+snippy export --solution -f ./file-s.text                     # All solutions in file defined file in text format. (TESTED) 
+snippy export --solution -f ./file-s.yaml                     # All solutions in file defined file in yaml format. (TESTED) 
+snippy export --solution -f ./file-s.json                     # All solutions in file defined file in json format. (TESTED)
+nippy export --solution -f ./file-s.foo                      # Unknown file format results error and no export is made. (TESTED)
+
+snippy export --solution -d ce6ef2f0408ff378                  # One content in file and format defined by content metadata. (TESTED)
+snippy export --solution -d ce6ef2f0408ff378                  # One content in file and format by tool default when metadata is not set. (TESTED)
+snippy export --solution -d a96accc25dd23ac0 -f ./file-s.txt  # One content in file always in text format. (TESTED)
+snippy export --solution -d a96accc25dd23ac0 -f ./file-s.text # One content in file always in text format. (TESTED)
+snippy export --solution -d a96accc25dd23ac0 -f ./file-s.yaml # One content in file always in yaml format. (TESTED)
+snippy export --solution -d a96accc25dd23ac0 -f ./file-s.json # One content in file always in json format. (TESTED)
+snippy export --solution -d a96accc25dd23ac0 -f ./file-s.foo  # Unknown file format results error and no export is made. (TESTED)
+
+snippy export -d ce6ef2f0408ff378 # Export solution without defining the content category
+snippy export -d a96accc25dd23ac0 -f ./file-s.txt
+snippy export -d a96accc25dd23ac0 -f ./file-s.text
+snippy export -d a96accc25dd23ac0 -f ./file-s.yaml
+snippy export -d a96accc25dd23ac0 -f ./file-s.json
+snippy export -d a96accc25dd23ac0 -f ./file-s.foo
+
+snippy export --solution --defaults                           # All solutions in yaml format into default location that stores the defaults.
+snippy export --solution --template                           # Always just the template to solution-template.txt. (TESTED)
+
+
 ######################
 ## Importing snippet
 ######################
@@ -756,29 +782,33 @@ python import --snippet -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt
 ## Importing solution
 ######################
 
-  snippy import --solution                                      # Uses default file /solutions.yaml  (TESTED)
-  snippy import --solution -f ./all-solutions.yaml              # Import all solutions from yaml file (TESTED)
-  snippy import --solution -f ./all-solutions.json              # Import all solutions from json file
-  snippy import --solution -f ./all-solutions.txt               # Import all solutions from txt file
-  snippy import --solution -f ./all-solutions.text              # Import all solutions from txt file
-  
-  snippy import --solution -f ./solution-template.yaml          # Import one content from yaml template
-  snippy import --solution -f ./solution-template.json          # Import one content from json template
-  snippy import --solution -f ./solution-template.txt           # Import one content from text template
-  snippy import --solution -f ./solution-template.text          # Import one content from text template
-  snippy import --solution -f ./foo.bar                         # Import one content from unknown file format
+snippy import --solution                                      # Uses default file /solutions.yaml  (TESTED)
+snippy import --solution -f ./all-solutions.yaml              # Import all solutions from yaml file (TESTED)
+snippy import --solution -f ./all-solutions.json              # Import all solutions from json file (TESTED)
+snippy import --solution -f ./all-solutions.txt               # Import all solutions from txt file (TESTED)
+snippy import --solution -f ./all-solutions.text              # Import all solutions from txt file (TESTED)
+snippy import -f ./all-solutions.yaml                         # Import all solutions without defining content category.
+snippy import -f ./all-solutions.yaml
+snippy import -f ./all-solutions.txt
+snippy import -f ./all-solutions.text
 
-  snippy import --solution -f ./solution-template.yaml -d 12345 # Updte one content from yaml template
-  snippy import --solution -f ./solution-template.json -d 12345 # Import one content from json template
-  snippy import --solution -f ./solution-template.txt  -d 12345 # Import one content from text template
-  snippy import --solution -f ./solution-template.text -d 12345 # Import one content from text template
-  snippy import --solution -f ./solution-template.text -d 00000 # Import one content with digest not found
+snippy import --solution -f ./solution-template.yaml          # Import one content from yaml template
+snippy import --solution -f ./solution-template.json          # Import one content from json template
+snippy import --solution -f ./solution-template.txt           # Import one content from text template
+snippy import --solution -f ./solution-template.text          # Import one content from text template
+snippy import --solution -f ./foo.bar                         # Import one content from unknown file format
 
-  snippy import --solution -f ./solution-template.txt   # Import solutuon template without any changes
+snippy import --solution -f ./solution-template.yaml -d 12345 # Import (update) one content from yaml template
+snippy import --solution -f ./solution-template.json -d 12345 # Import (update) one content from json template
+snippy import --solution -f ./solution-template.txt  -d 12345 # Import (update) one content from text template
+snippy import --solution -f ./solution-template.text -d 12345 # Import (update) one content from text template
+snippy import --solution -f ./solution-template.text -d 00000 # Import (update) one content with digest not found
+
+snippy import --solution -f ./solution-template.txt   # Import solution template without any changes (TESTED)
   
-  snippy import --solution --defaults                   # Import solution defaults
+snippy import --solution --defaults                   # Import solution defaults
   
-  snippy import --solution --template                   # Must produce error
+snippy import --solution --template                   # Must produce error
 
 ########################
 ## Supplementary options

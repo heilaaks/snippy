@@ -178,7 +178,7 @@ class Migrate(object):
 
                         dictionary = json.load(infile)
                     elif Config.is_file_type_text():
-                        contents = Config.get_file_contents(content, infile.read())
+                        contents = Config.get_text_contents(content, infile.readlines())
                         dictionary = {'content': Migrate.get_dictionary_list(contents)}
                     else:
                         cls.logger.info('unknown export format')

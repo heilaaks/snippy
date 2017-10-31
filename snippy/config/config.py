@@ -3,6 +3,7 @@
 """config.py: Configuration management."""
 
 import re
+import copy
 import os.path
 import datetime
 import pkg_resources
@@ -95,26 +96,49 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return content
 
     @classmethod
-    def get_file_contents(cls, content, edited):
+    def get_text_contents(cls, content, edited):
         """Return contents from specified text file."""
 
         contents = []
-        editor = Editor(content, Config.get_utc_time(), edited)
-        content.set((editor.get_edited_data(),
-                     editor.get_edited_brief(),
-                     editor.get_edited_group(),
-                     editor.get_edited_tags(),
-                     editor.get_edited_links(),
-                     editor.get_edited_category(),
-                     editor.get_edited_filename(),
-                     editor.get_edited_date(),
-                     content.get_digest(),
-                     content.get_metadata(),
-                     content.get_key()))
-        content.update_digest()
-        contents.append(content)
+        solutions = []
+        solutions = Config.split_text_solutions(edited)
+        for solution in solutions:
+            content_copy = copy.copy(content)
+            editor = Editor(content_copy, Config.get_utc_time(), solution)
+            content_copy.set((editor.get_edited_data(),
+                              editor.get_edited_brief(),
+                              editor.get_edited_group(),
+                              editor.get_edited_tags(),
+                              editor.get_edited_links(),
+                              editor.get_edited_category(),
+                              editor.get_edited_filename(),
+                              editor.get_edited_date(),
+                              content_copy.get_digest(),
+                              content_copy.get_metadata(),
+                              content_copy.get_key()))
+            content_copy.update_digest()
+            contents.append(content_copy)
 
         return contents
+
+    @classmethod
+    def split_text_solutions(cls, edited):
+        """Split solution content from a text file."""
+
+        # Find line numbers that are in the second line of the content. The matching
+        # line numbers are substracted with one to get the first line of the solution.
+        # The first item from the list is popped and used as a head and following items
+        # are treated as as line numbers where the next solution starts.
+        solutions = []
+        line_numbers = [i for i, line in enumerate(edited) if line.startswith('## BRIEF :')]
+        line_numbers[:] = [x-1 for x in line_numbers]
+        head = line_numbers.pop(0)
+        for line in line_numbers:
+            solutions.append(Const.EMPTY.join(edited[head:line]))
+            head = line
+        solutions.append(Const.EMPTY.join(edited[head:]))
+
+        return solutions
 
     @classmethod
     def get_content_template(cls, content):

@@ -231,10 +231,11 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     
     # Travis core
     > http://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
+    > https://wiki.python.org/moin/DebuggingWithGdb
     > http://lint.travis-ci.org/
     $ vi .travis.yaml
       install:
-      - sudo apt-get install -y gdb  # install gdb
+      - sudo apt-get install -y gdb python-debuginfo
       
       before_script:
       - ulimit -c unlimited -S       # enable core dumps

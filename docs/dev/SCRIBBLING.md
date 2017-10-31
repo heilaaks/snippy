@@ -293,8 +293,8 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 
 
     # Testing
-    python setup.py register -r testpypi
-    python setup.py sdist upload -r testpypi
+    $ python setup.py sdist # Build source distribution
+    $ python setup.py sdist upload -r testpypi
     sudo pip install --index-url https://test.pypi.org/simple/ snippy
     sudo pip uninstall snippy
     pip3 install --user --index-url https://test.pypi.org/simple/ snippy

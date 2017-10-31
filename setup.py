@@ -11,9 +11,10 @@ setup(
     author_email='laaksonen.heikki.j@gmail.com',
     url='https://github.com/heilaaks/snippy',
     description='Command and solution management from console.',
-    long_description="""Manage command examples and solutions directly from command line. The tool
-                        is intended to support software development and troubleshooting workflows by
-                        collecting command examples and troubleshooting solutions into one manager.""",
+    long_description='Manage command examples and solutions directly from command line.' +
+                     'Snippy tool is intended to support software development and troubleshooting ' +
+                     'workflows by collecting command examples and troubleshooting solutions ' +
+                     'into one manager.',
     license='Apache 2.0',
     classifiers=[
         'Development Status :: 4 - Beta',

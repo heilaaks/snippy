@@ -99,12 +99,20 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_text_contents(cls, content, edited):
         """Return contents from specified text file."""
 
+        data = []
         contents = []
-        solutions = []
-        solutions = Config.split_text_solutions(edited)
-        for solution in solutions:
+        editor = Editor(content, Config.get_utc_time(), edited)
+        if editor.get_edited_category() == Const.SNIPPET:
+            data = Config.split_text_content(edited, '# Add mandatory snippet below', 2)
+        elif editor.get_edited_category() == Const.SOLUTION:
+            data = Config.split_text_content(edited, '## BRIEF :', 1)
+        else:
+            Cause.set_text('could not identify text template content category')
+
+        editor = None
+        for item in data:
             content_copy = copy.copy(content)
-            editor = Editor(content_copy, Config.get_utc_time(), solution)
+            editor = Editor(content_copy, Config.get_utc_time(), item)
             content_copy.set((editor.get_edited_data(),
                               editor.get_edited_brief(),
                               editor.get_edited_group(),
@@ -122,21 +130,22 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return contents
 
     @classmethod
-    def split_text_solutions(cls, edited):
+    def split_text_content(cls, edited, split, offset):
         """Split solution content from a text file."""
 
-        # Find line numbers that are in the second line of the content. The matching
-        # line numbers are substracted with one to get the first line of the solution.
+        # Find line numbers that are identified by split tag and offset. The matching
+        # line numbers are substracted with offset to get the first line of the solution.
         # The first item from the list is popped and used as a head and following items
         # are treated as as line numbers where the next solution starts.
         solutions = []
-        line_numbers = [i for i, line in enumerate(edited) if line.startswith('## BRIEF :')]
-        line_numbers[:] = [x-1 for x in line_numbers]
-        head = line_numbers.pop(0)
-        for line in line_numbers:
-            solutions.append(Const.EMPTY.join(edited[head:line]))
-            head = line
-        solutions.append(Const.EMPTY.join(edited[head:]))
+        line_numbers = [i for i, line in enumerate(edited) if line.startswith(split)]
+        line_numbers[:] = [x-offset for x in line_numbers]
+        if line_numbers:
+            head = line_numbers.pop(0)
+            for line in line_numbers:
+                solutions.append(Const.EMPTY.join(edited[head:line]))
+                head = line
+            solutions.append(Const.EMPTY.join(edited[head:]))
 
         return solutions
 

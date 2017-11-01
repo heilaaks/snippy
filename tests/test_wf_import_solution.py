@@ -67,6 +67,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all solutions from yaml file. File name and format are extracted from
         ##        command line option -f|--file.
@@ -80,6 +81,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all solutions from yaml file without specifying the solution category.
         ##        File name and format are extracted from command line option -f|--file.
@@ -93,6 +95,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all solutions from json file. File name and format are extracted from
         ##        command line option -f|--file.
@@ -106,6 +109,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all solutions from json file without specifying the solution category.
         ##        File name and format are extracted from command line option -f|--file.
@@ -119,6 +123,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all solutions from txt file. File name and format are extracted from
         ##        command line option -f|--file. File extension is '*.txt' in this case.
@@ -134,6 +139,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all solutions from txt file without specifying the solution category.
         ##        File name and format are extracted from command line option -f|--file. File
@@ -150,6 +156,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all solutions from txt file. File name and format are extracted from
         ##        command line option -f|--file. File extension is '*.text' in this case.
@@ -166,6 +173,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all solutions from txt file without specifying the solution category.
         ##        File name and format are extracted from command line option -f|--file. File
@@ -183,6 +191,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Try to import empty solution template. The operation will fail because
         ##        content templates without any modifications cannot be imported.
@@ -195,6 +204,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert not Database.get_contents()
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Try to import solution from file which file format is not supported. This
         ##        should result error text for end user and no files should be read.
@@ -208,6 +218,7 @@ class TestWfImportSolution(unittest.TestCase):
             mock_file.assert_not_called()
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
@@ -244,6 +255,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import defined solution based on message digest. File name is defined from command line as
         ##        json file which contain one solution. One line in the content data was updated.
@@ -257,6 +269,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import defined solution based on message digest. File name is defined from command line as
         ##        text file which contain one solution. One line in the content data was updated. The file
@@ -272,6 +285,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import defined solution based on message digest. File name is defined from command line as
         ##        text file which contain one solution. One line in the content data was updated. The file
@@ -287,6 +301,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
@@ -333,6 +348,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -368,6 +384,7 @@ class TestWfImportSolution(unittest.TestCase):
             Solution.test_content(snippy, mock_file, {'63f2007703d70c8f': template})
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
     # pylint: disable=duplicate-code
     def tearDown(self):

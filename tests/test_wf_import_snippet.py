@@ -63,6 +63,7 @@ class TestWfImportSnippet(unittest.TestCase):
             Snippet.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all snippets from yaml file. File name and format are extracted from
         ##        command line option -f|--file.
@@ -76,6 +77,7 @@ class TestWfImportSnippet(unittest.TestCase):
             Snippet.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all snippets from json file. File name and format are extracted from
         ##        command line option -f|--file.
@@ -89,6 +91,7 @@ class TestWfImportSnippet(unittest.TestCase):
             Snippet.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
         ## Brief: Import all snippets from txt file. File name and format are extracted from
         ##        command line option -f|--file. File extension is '*.txt' in this case.
@@ -105,6 +108,7 @@ class TestWfImportSnippet(unittest.TestCase):
             Snippet.test_content(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
+            Database.delete_storage()
 
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
@@ -134,12 +138,11 @@ class TestWfImportSnippet(unittest.TestCase):
                                     'utc': '2017-10-20 07:08:45',
                                     'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'}]}
         mock_yaml_load.return_value = import_dict
-        snippy = Snippet.add_snippets(self)
 
         ## Brief: Import snippets from yaml file that is defined from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_snippets(self)
             sys.argv = ['snippy', 'import', '-f', './snippets.yaml']   ## workflow
-            snippy.reset()
             assert len(Database.get_contents()) == 2
             content_before = snippy.storage.search(Const.SNIPPET, data=import_dict['content'][0]['data'])
             cause = snippy.run_cli()

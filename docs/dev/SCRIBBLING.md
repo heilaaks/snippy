@@ -250,7 +250,7 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
         - "ulimit -c unlimited -S"
       script:
       # - "python -m pytest ./tests/test_*.py --cov snippy -vv"
-        - "gdb -ex r -x .travis.gdb --args python -m pytest ./tests/test_*.py --cov snippy -vv"
+      #  - "gdb -ex r -x .travis.gdb --args python -m pytest ./tests/test_*.py --cov snippy -vv" # Should this have '-ex "set pagination 0" -batch' to prevent prompt?
       after_success:
         - codecov
       after_failure:

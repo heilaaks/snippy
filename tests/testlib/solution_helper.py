@@ -12,6 +12,9 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class SolutionHelper(object):  # pylint: disable=too-few-public-methods
     """Helper methods for solution testing."""
 
+    BEATS = 0
+    NGINX = 1
+    KAFKA = 2
     SOLUTIONS_TEXT = (['################################################################################',
                        '## BRIEF : Debugging Elastic Beats',
                        '##',
@@ -254,7 +257,6 @@ class SolutionHelper(object):  # pylint: disable=too-few-public-methods
                 snippy = Snippy()
             snippy.reset()
             cause = snippy.run_cli()
-            print(cause)
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
 
@@ -267,3 +269,36 @@ class SolutionHelper(object):  # pylint: disable=too-few-public-methods
             assert len(Database.get_solutions()) == 2
 
         return snippy
+
+    @staticmethod
+    def add_one(snippy, index):
+        """Add one default solution for testing purposes."""
+
+        if not snippy:
+            from snippy.snip import Snippy
+            snippy = Snippy()
+
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(SolutionHelper.SOLUTIONS_TEXT[index]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+            sys.argv = ['snippy', 'import', '-f', 'one-solution.txt']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_solutions()) == 1
+
+        return snippy
+
+    @staticmethod
+    def test_content(snippy, mock_file, content):
+        """Compare given content against data read with message digest."""
+
+        for digest in content:
+            mock_file.reset_mock()
+            sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-content.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(content[digest]),
+                                                mock.call(Const.NEWLINE)])

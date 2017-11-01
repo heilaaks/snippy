@@ -38,12 +38,12 @@ class Sqlite3DbHelper(object):
         return Storage()._get_contents(rows)  # pylint: disable=protected-access
 
     @staticmethod
-    def get_solutions():
-        """Return solutions from database as content tuple."""
+    def get_category(category):
+        """Return content based on category."""
 
         conn, cursor = Sqlite3DbHelper._connect_db()
         query = ('SELECT * FROM contents WHERE category=?')
-        qargs = ['solution']
+        qargs = [category]
         try:
             cursor.execute(query, qargs)
             rows = cursor.fetchall()
@@ -53,6 +53,18 @@ class Sqlite3DbHelper(object):
         conn.close()
 
         return Storage()._get_contents(rows)  # pylint: disable=protected-access
+
+    @staticmethod
+    def get_snippets():
+        """Return snippets from database as content tuple."""
+
+        return Sqlite3DbHelper.get_category(Const.SNIPPET)
+
+    @staticmethod
+    def get_solutions():
+        """Return solutions from database as content tuple."""
+
+        return Sqlite3DbHelper.get_category(Const.SOLUTION)
 
     @staticmethod
     def delete_all_contents():

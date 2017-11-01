@@ -5,6 +5,7 @@
 import re
 import sys
 import six
+import mock
 from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
@@ -110,6 +111,15 @@ class SnippetHelper(object):
         return command
 
     @staticmethod
+    def get_template(content):
+        """Return text template from content dictionary."""
+
+        contents = Content().load({'content': [content]})
+        editor = Editor(contents[0], '2017-10-01 11:53:17')
+
+        return editor.get_template()
+
+    @staticmethod
     def get_edited_message(initial, updates, columns):
         """Create mocked editor default template and new content with merged updates."""
 
@@ -206,3 +216,18 @@ class SnippetHelper(object):
         assert len(Database.select_all_snippets()) == 2
 
         return snippy
+
+    @staticmethod
+    def test_content(snippy, mock_file, content):
+        """Compare given content against data read with message digest."""
+
+        for digest in content:
+            mock_file.reset_mock()
+            sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-content.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(SnippetHelper.get_template(content[digest])),
+                                                mock.call(Const.NEWLINE)])

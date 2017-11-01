@@ -18,7 +18,7 @@ class Snippy(object):
         Logger.set_level()
         self.logger = Logger(__name__).get()
         self.cause = Cause()
-        self.config = Config()
+        self.config = None
         self.storage = Storage()
         self.snippet = Snippet(self.storage)
         self.solution = Solution(self.storage)
@@ -27,6 +27,7 @@ class Snippy(object):
         """Run command line session."""
 
         self.logger.info('running command line interface')
+        self.config = Config()
         self.storage.init()
         if Config.is_category_snippet():
             self.snippet.run()
@@ -44,7 +45,7 @@ class Snippy(object):
         """Reset session."""
 
         self.cause = Cause.reset()
-        self.config = Config()
+        self.config = Config().reset()
         self.snippet = Snippet(self.storage)
         self.solution = Solution(self.storage)
 

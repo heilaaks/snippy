@@ -3,21 +3,21 @@
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix import failure message in case same solution data is imported twice.
-   - [ ] Fix PyPI long description. The current format in setup.py causes the white spaces to be added to description.
-   - [ ] Fix the reset Config which is not needed anymore (it seems). It is again all cases fail after one failure.
+   - [ ] If no content is imported at all, there is OK. This should be likely NOK. This is coming from bulk insert.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] Check signing commits (https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix upgrading snippy does not update new defaults? Tried with make install to install new version.
    - [ ] Fix case described in 'git log 11448a2e90dab3a' and somehow and make test_wf a bit nicer?
-   - [ ] Add support importing multiple contents in text format like with json and yaml.
    - [ ] Test BytePackager/packagecore.
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
    - [ ] It seems that in Python2 when database test fails, it leaves hanging resources and DB clean does not work?
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added support for importing multiple contents from text format.
+   - [x] Fixed PyPI long description that was wrapping lines incorrect.
    - [x] Fixed content utc time being null. The time was not read from the template and it may have resulted None time.
    - [x] Fixed the file next() (python2) vs. readline() (python3) for devel.reference.
    - [x] Fixed the last missing empty line(s) from solution import.

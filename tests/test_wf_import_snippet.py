@@ -110,11 +110,42 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Import all snippets from text file. File name and format are extracted from
+        ##        command line option -f|--file. File extension is '*.text' in this case.
+        mocked_open = mock.mock_open(read_data=Snippet.get_template(import_dict['content'][0]) +
+                                     Const.NEWLINE +
+                                     Snippet.get_template(import_dict['content'][1]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            snippy = Snippy()
+            sys.argv = ['snippy', 'import', '-f', './all-snippets.text']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 2
+            mock_file.assert_called_once_with('./all-snippets.text', 'r')
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to import snippet from file which file format is not supported. This
+        ##        should result error text for end user and no files should be read.
+        mocked_open = mock.mock_open(read_data=Snippet.get_template(import_dict['content'][0]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            snippy = Snippy()
+            sys.argv = ['snippy', 'import', '-f', './foo.bar']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot identify file format for file ./foo.bar'
+            assert not Database.get_contents()
+            mock_file.assert_not_called()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_importing_snippets_existing(self, mock_isfile, mock_get_db_location, mock_yaml_load):
-        """Import all snippets."""
+    def test_import_existing_snippets(self, mock_isfile, mock_get_db_location, mock_yaml_load):
+        """Import snippets already existing."""
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
@@ -139,7 +170,10 @@ class TestWfImportSnippet(unittest.TestCase):
                                     'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'}]}
         mock_yaml_load.return_value = import_dict
 
-        ## Brief: Import snippets from yaml file that is defined from command line.
+        ## Brief: Import snippets from yaml file that is defined from command line. In this case
+        ##        one of the two snippets is already existing. Because the content existing is
+        ##        not considered as an error and another snippet is imported successfully, the
+        ##        result cause is OK.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_snippets(self)
             sys.argv = ['snippy', 'import', '-f', './snippets.yaml']   ## workflow
@@ -151,21 +185,11 @@ class TestWfImportSnippet(unittest.TestCase):
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
             Snippet().compare(self, content_after[0], content_before[0])
             assert len(Database.get_contents()) == 3
-
-            # Verify the imported snippet by exporting it again to text file.
-            content = snippy.storage.search(Const.SNIPPET, digest='53908d68425c61dc')
-            (message, _) = Snippet().get_edited_message(content[0], content[0], ())
-            mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt']
-            snippy.reset()
-            cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(message), mock.call(Const.NEWLINE)])
-
-        # Release all resources
-        snippy.release()
+            Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': import_dict['content'][0],
+                                                     'f3fd167c64b6f97e': import_dict['content'][1]})
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
     # pylint: disable=duplicate-code
     def tearDown(self):

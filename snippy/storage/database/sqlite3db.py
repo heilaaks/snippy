@@ -101,7 +101,7 @@ class Sqlite3Db(object):
 
         self.logger.debug('inserted %d out of %d content', inserted, len(contents))
 
-        if not inserted:
+        if not inserted and cause:
             Cause.set_text(cause)
 
     def select_content(self, category, keywords=None, digest=None, data=None):

@@ -4,6 +4,7 @@
 
 import sys
 import mock
+from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -246,14 +247,13 @@ class SolutionHelper(object):  # pylint: disable=too-few-public-methods
                 '')
 
     @staticmethod
-    def add_solutions(snippy):
-        """Add two default solutions for testing purposes."""
+    def add_defaults(snippy):
+        """Add default solutions for testing purposes."""
 
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(SolutionHelper.SOLUTIONS_TEXT[0]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
             sys.argv = ['snippy', 'import', '-f', 'howto-debug-elastic-beats.txt']
             if not snippy:
-                from snippy.snip import Snippy
                 snippy = Snippy()
             snippy.reset()
             cause = snippy.run_cli()
@@ -275,7 +275,6 @@ class SolutionHelper(object):  # pylint: disable=too-few-public-methods
         """Add one default solution for testing purposes."""
 
         if not snippy:
-            from snippy.snip import Snippy
             snippy = Snippy()
 
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(SolutionHelper.SOLUTIONS_TEXT[index]))

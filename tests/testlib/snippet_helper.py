@@ -192,28 +192,24 @@ class SnippetHelper(object):
         assert isinstance(snippet[Const.DIGEST], six.string_types)
 
     @staticmethod
-    def add_snippets(testcase):
-        """Add two default snippets for testing purposes."""
+    def add_defaults(snippy):
+        """Add default snippets for testing purposes."""
 
-        snippet1 = SnippetHelper.get_references(0)
-        snippet2 = SnippetHelper.get_references(1)
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(0)
+            if not snippy:
+                snippy = Snippy()
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
 
-        # Snippet1
-        sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(0)
-        snippy = Snippy()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        SnippetHelper.compare(testcase, snippy.storage.search(Const.SNIPPET, digest=snippet1.get_digest())[0], snippet1)
-        assert len(snippy.storage.search(Const.SNIPPET, data=snippet1.get_data())) == 1
-
-        # Snippet2
-        sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(1)
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        SnippetHelper.compare(testcase, snippy.storage.search(Const.SNIPPET, digest=snippet2.get_digest())[0], snippet2)
-        assert len(snippy.storage.search(Const.SNIPPET, data=snippet2.get_data())) == 1
-        assert len(Database.select_all_snippets()) == 2
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(1)
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 2
 
         return snippy
 

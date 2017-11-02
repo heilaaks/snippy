@@ -36,7 +36,7 @@ class TestWfSearchSnippet(unittest.TestCase):
 
         saved_stdout = sys.stdout
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = Snippet.add_snippets(self)
+        snippy = Snippet.add_defaults(None)
 
         ## Brief: Search snippets from all fields matching to data field content.
         out = StringIO()
@@ -187,7 +187,7 @@ class TestWfSearchSnippet(unittest.TestCase):
 
         saved_stdout = sys.stdout
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = Snippet.add_snippets(self)
+        snippy = Snippet.add_defaults(None)
 
         ## Brief: Search snippets based on snippet data.
         out = StringIO()
@@ -218,7 +218,7 @@ class TestWfSearchSnippet(unittest.TestCase):
 
         saved_stdout = sys.stdout
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = Snippet.add_snippets(self)
+        snippy = Snippet.add_defaults(None)
 
         ## Brief: Search snippet by explicitly defining 16 character long partial message digest.
         out = StringIO()

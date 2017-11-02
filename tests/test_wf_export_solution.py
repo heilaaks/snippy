@@ -31,8 +31,8 @@ class TestWfExportSolution(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
-        snippy = Snippet.add_snippets(self)
-        snippy = Solution.add_solutions(snippy)
+        snippy = Snippet.add_defaults(None)
+        snippy = Solution.add_defaults(snippy)
         export_dict = {'content': [{'data': tuple(Solution.SOLUTIONS_TEXT[0]),
                                     'brief': 'Debugging Elastic Beats',
                                     'group': 'beats',
@@ -135,8 +135,8 @@ class TestWfExportSolution(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
-        snippy = Snippet.add_snippets(self)
-        snippy = Solution.add_solutions(snippy)
+        snippy = Snippet.add_defaults(None)
+        snippy = Solution.add_defaults(snippy)
         export_dict = {'content': [{'data': tuple(Solution.SOLUTIONS_TEXT[0]),
                                     'brief': 'Debugging Elastic Beats',
                                     'group': 'beats',
@@ -353,8 +353,8 @@ class TestWfExportSolution(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
-        snippy = Snippet.add_snippets(self)
-        snippy = Solution.add_solutions(snippy)
+        snippy = Snippet.add_defaults(None)
+        snippy = Solution.add_defaults(snippy)
         export_dict = {'content': [{'data': tuple(Solution.SOLUTIONS_TEXT[0]),
                                     'brief': 'Debugging Elastic Beats',
                                     'group': 'beats',
@@ -411,7 +411,7 @@ class TestWfExportSolution(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
-        snippy = Solution.add_solutions(None)
+        snippy = Solution.add_defaults(None)
 
         ## Brief: Export solution that has been updated with empty date field in the content
         ##        data. The export operation must fill the date in text content from solution

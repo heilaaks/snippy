@@ -320,20 +320,18 @@ class TestWfImportSolution(unittest.TestCase):
                                     'filename': 'howto-debug-elastic-beats.txt',
                                     'utc': None,
                                     'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
-                                   {'data': tuple(Solution.SOLUTIONS_TEXT[2]),
-                                    'brief': 'Testing docker log drivers',
-                                    'group': 'docker',
-                                    'tags': ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin'),
-                                    'links': ('https://github.com/MickayG/moby-kafka-logdriver',
-                                              'https://github.com/garo/logs2kafka',
-                                              'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'),
+                                   {'data': tuple(Solution.SOLUTIONS_TEXT[1]),
+                                    'brief': 'Debugging nginx',
+                                    'group': 'nginx',
+                                    'tags': ('nginx', 'debug', 'logging', 'howto'),
+                                    'links': ('https://www.nginx.com/resources/admin-guide/debug/', ),
                                     'category': 'solution',
-                                    'filename': 'kubernetes-docker-log-driver-kafka.txt',
+                                    'filename': 'howto-debug-nginx.txt',
                                     'utc': '2017-10-12 11:53:17',
-                                    'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'}]}
+                                    'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
         mock_yaml_load.return_value = import_dict
         compare_content = {'a96accc25dd23ac0': Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.BEATS]),
-                           'eeef5ca3ec9cd364': Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.KAFKA])}
+                           '61a24a156f5e9d2d': Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.NGINX])}
 
         ## Brief: Import solution defaults. All solutions should be imported from predefined file
         ##        location under tool data folder from yaml format.
@@ -342,6 +340,22 @@ class TestWfImportSolution(unittest.TestCase):
             sys.argv = ['snippy', 'import', '--solution', '--defaults']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
+            assert len(Database.get_solutions()) == 2
+            defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
+            mock_file.assert_called_once_with(defaults_solutions, 'r')
+            Solution.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to import solution defaults again. The second import should fail with an error
+        ##        because the content already exist. The error text must be the same for all content
+        ##        categories.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'import', '--solution', '--defaults']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: no content was inserted because content data already existed'
             assert len(Database.get_solutions()) == 2
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'r')

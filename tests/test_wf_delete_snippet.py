@@ -27,7 +27,7 @@ class TestWfDeleteSnippet(unittest.TestCase):
 
         initial = Snippet().get_references(0)
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = Snippet.add_snippets(self)
+        snippy = Snippet.add_defaults(None)
 
         # Delete snippet with digest short version.
         sys.argv = ['snippy', 'delete', '-d', '%.16s' % initial.get_digest()]
@@ -52,7 +52,7 @@ class TestWfDeleteSnippet(unittest.TestCase):
 
         initial = Snippet().get_references(0)
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = Snippet.add_snippets(self)
+        snippy = Snippet.add_defaults(None)
 
         # Delete snippet with digest long version.
         sys.argv = ['snippy', 'delete', '-d', initial.get_digest()]

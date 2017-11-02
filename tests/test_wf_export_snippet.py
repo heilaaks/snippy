@@ -52,7 +52,7 @@ class TestWfExportSnippet(unittest.TestCase):
                                'filename': '',
                                'utc': '2017-10-14 19:56:31',
                                'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'}]}
-        snippy = Snippet.add_snippets(self)
+        snippy = Snippet.add_defaults(None)
 
         ## Brief: Export all snippets without defining target file name from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -118,7 +118,7 @@ class TestWfExportSnippet(unittest.TestCase):
                   'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                   '',
                   '')
-        snippy = Snippet.add_snippets(self)
+        snippy = Snippet.add_defaults(None)
 
         # Export defined snippet into default text file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -173,7 +173,7 @@ class TestWfExportSnippet(unittest.TestCase):
                   '',
                   '',
                   '')
-        snippy = Snippet.add_snippets(self)
+        snippy = Snippet.add_defaults(None)
 
         # Export snippet template.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -210,7 +210,7 @@ class TestWfExportSnippet(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
-        snippy = Snippet.add_snippets(self)
+        snippy = Snippet.add_defaults(None)
 
         # Export snippet template.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:

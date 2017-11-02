@@ -14,4 +14,3 @@
 
 # Add optional links below one link per line.
 <SNIPPY_LINKS>
-

@@ -263,6 +263,7 @@ class Editor(object):
         """Update template content links."""
 
         links = self.content.get_links(Const.STRING_CONTENT)
+        links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
         template = template.replace('<SNIPPY_LINKS>', links)
 
         return template

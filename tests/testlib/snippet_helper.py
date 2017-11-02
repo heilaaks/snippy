@@ -74,6 +74,24 @@ class SnippetHelper(object):
                         https://docs.docker.com/engine/reference/commandline/images/
                         https://docs.docker.com/engine/reference/commandline/rmi/'"""))
 
+    TEMPLATE = ('# Commented lines will be ignored.',
+                '#',
+                '# Add mandatory snippet below.',
+                '',
+                '',
+                '# Add optional brief description below.',
+                '',
+                '',
+                '# Add optional single group below.',
+                'default',
+                '',
+                '# Add optional comma separated list of tags below.',
+                '',
+                '',
+                '# Add optional links below one link per line.',
+                '',
+                '')
+
     @staticmethod
     def get_references(index=0, sliced=None):
         """Return specified snippet."""

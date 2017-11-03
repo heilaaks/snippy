@@ -80,8 +80,8 @@ class Sqlite3Db(object):
                 self.logger.info(cause)
 
                 continue
-            if not content.has_valid_data():
-                cause = 'content data is not valid - content template cannot be inserted'
+            if content.is_data_template():
+                cause = 'no content was stored because the content data is matching to empty template'
                 self.logger.info(cause)
 
                 continue

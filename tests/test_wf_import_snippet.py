@@ -2,6 +2,7 @@
 
 """test_wf_import_snippet.py: Test workflows for importing snippets."""
 
+#import re
 import sys
 import unittest
 import json
@@ -142,6 +143,94 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+    @mock.patch.object(json, 'load')
+    @mock.patch.object(yaml, 'safe_load')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_import_defined_snippet(self, mock_isfile, mock_get_db_location, mock_yaml_load, mock_json_load):
+        """Import defined snippet."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
+        import_dict = {'content': [{'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
+                                    'brief': 'Remove all docker containers with volumes',
+                                    'group': 'docker',
+                                    'tags': ('cleanup', 'container', 'docker', 'docker-ce', 'moby'),
+                                    'links': ('https://docs.docker.com/engine/reference/commandline/rm/', ),
+                                    'category': 'snippet',
+                                    'filename': '',
+                                    'utc': '2017-10-14 22:22:22',
+                                    'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'}]}
+#        import_text = Snippet.get_template(import_dict['content'][0]) + Const.NEWLINE
+        mock_yaml_load.return_value = import_dict
+        mock_json_load.return_value = import_dict
+
+        ## Brief: Import defined solution based on message digest. File name is defined from command line as
+        ##        yaml file which contain one solution. Content was not updated in this case.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
+            mock_file.assert_called_once_with('one-snippet.yaml', 'r')
+            Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': import_dict['content'][0]})
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Import defined solution based on message digest. File name is defined from command line as
+        ##        yaml file which contain one solution. Content tags were updated.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            import_dict_updated = import_dict.copy()
+            import_dict_updated['content'][0]['tags'] = ('new', 'tags', 'set')
+            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
+            mock_file.assert_called_once_with('one-snippet.yaml', 'r')
+            Snippet.test_content(snippy, mock_file, {'4525613eaecd5297': import_dict_updated['content'][0]})
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Import defined solution based on message digest. File name is defined from command line as
+        ##        json file which contain one solution. Content brief were updated.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            import_dict_updated = import_dict.copy()
+            import_dict_updated['content'][0]['brief'] = 'Updated brief description'
+            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
+            mock_file.assert_called_once_with('one-snippet.json', 'r')
+            Snippet.test_content(snippy, mock_file, {'1dc962f7384e03c0': import_dict_updated['content'][0]})
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Import defined solution based on message digest. File name is defined from command line as
+        ##        text file which contain one solution. Content links were updated. The file extenansion is
+        ##        '*.txt' in this case.
+#        import_text = re.sub(r'https://docs.*', 'https://new.link', import_text)
+#        mocked_open = mock.mock_open(read_data=import_text)
+#        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+#            import_dict_updated = import_dict.copy()
+#            import_dict_updated['content'][0]['links'] = ('https://new.link', )
+#            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+#            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt']  ## workflow
+#            cause = snippy.run_cli()
+#            assert cause == Cause.ALL_OK
+#            print(Database.get_snippets()[0])
+#            assert len(Database.get_snippets()) == 1
+#            mock_file.assert_called_once_with('one-snippet.txt', 'r')
+#            Snippet.test_content(snippy, mock_file, {'7681559ca5c001e2': import_dict_updated['content'][0]})
+#            snippy.release()
+#            snippy = None
+#            Database.delete_storage()
+
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -201,6 +290,30 @@ class TestWfImportSnippet(unittest.TestCase):
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'r')
             Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_import_snippet_template(self, mock_isfile, mock_get_db_location):
+        """Import snippets from text template."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
+        template = Const.NEWLINE.join(Snippet.TEMPLATE)
+
+        ## Brief: Try to import snippet template without any changes. This should result error
+        ##        text for end user and no files should be read. The error text must be the same
+        ##        for all content types.
+        mocked_open = mock.mock_open(read_data=template)
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            snippy = Snippy()
+            sys.argv = ['snippy', 'import', '--template']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: no content was stored because the content data is matching to empty template'
+            assert not Database.get_snippets()
+            mock_file.assert_called_once_with('./snippet-template.txt', 'r')
             snippy.release()
             snippy = None
             Database.delete_storage()

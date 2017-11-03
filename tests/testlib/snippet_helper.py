@@ -17,6 +17,9 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class SnippetHelper(object):
     """Helper methods for snippet testing."""
 
+    REMOVE = 0
+    FORCED = 1
+    EXITED = 2
     SNIPPETS = ((('docker rm --volumes $(docker ps --all --quiet)',),
                  'Remove all docker containers with volumes',
                  'docker',
@@ -228,6 +231,22 @@ class SnippetHelper(object):
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
+
+        return snippy
+
+    @staticmethod
+    def add_one(snippy, index):
+        """Add one default snippet for testing purposes."""
+
+        if not snippy:
+            snippy = Snippy()
+
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(index)
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
 
         return snippy
 

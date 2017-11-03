@@ -771,14 +771,14 @@ snippy export --solution -d a96accc25dd23ac0 -f ./file-s.yaml # One content in f
 snippy export --solution -d a96accc25dd23ac0 -f ./file-s.json # One content in file always in json format. (TESTED)
 snippy export --solution -d a96accc25dd23ac0 -f ./file-s.foo  # Unknown file format results error and no export is made. (TESTED)
 
-snippy export -d ce6ef2f0408ff378 # Export solution without defining the content category
-snippy export -d a96accc25dd23ac0 -f ./file-s.txt
-snippy export -d a96accc25dd23ac0 -f ./file-s.text
-snippy export -d a96accc25dd23ac0 -f ./file-s.yaml
-snippy export -d a96accc25dd23ac0 -f ./file-s.json
+snippy export -d ce6ef2f0408ff378 # Export solution without defining the content category. (TESTED)
+snippy export -d a96accc25dd23ac0 -f ./file-s.txt (TESTED)
+snippy export -d a96accc25dd23ac0 -f ./file-s.text (TESTED)
+snippy export -d a96accc25dd23ac0 -f ./file-s.yaml (TESTED)
+snippy export -d a96accc25dd23ac0 -f ./file-s.json (TESTED)
 snippy export -d a96accc25dd23ac0 -f ./file-s.foo
 
-snippy export --solution --defaults                           # All solutions in yaml format into default location that stores the defaults.
+snippy export --solution --defaults                           # All solutions in yaml format into default location that stores the defaults. (TESTED)
 snippy export --solution --template                           # Always just the template to solution-template.txt. (TESTED)
 
 
@@ -860,10 +860,10 @@ snippy import -f ./all-solutions.json (TESTED)
 snippy import -f ./all-solutions.txt (TESTED)
 snippy import -f ./all-solutions.text (TESTED)
 
-snippy import --solution -f ./solution-template.yaml          # Import one content from yaml template
-snippy import --solution -f ./solution-template.json          # Import one content from json template
-snippy import --solution -f ./solution-template.txt           # Import one content from text template
-snippy import --solution -f ./solution-template.text          # Import one content from text template
+snippy import --solution -f ./solution-template.yaml          # Import one content from yaml template (TESTED)
+snippy import --solution -f ./solution-template.json          # Import one content from json template (TESTED)
+snippy import --solution -f ./solution-template.txt           # Import one content from text template (TESTED)
+snippy import --solution -f ./solution-template.text          # Import one content from text template (TESTED)
 snippy import --solution -f ./foo.bar                         # Import one content from unknown file format (TESTED)
 
 snippy import --solution -f ./solution-template.yaml -d 12345 # Import (update) one content from yaml template (TESTED)
@@ -876,9 +876,7 @@ snippy import --solution -f ./solution-template.txt   # Import solution template
   
 snippy import --solution --defaults                   # Import solution defaults (TESTED)
   
-snippy import --solution --template                   # Must produce error
-
-
+snippy import --solution --template                   # Must produce error (TESTED)
 
 ########################
 ## Supplementary options

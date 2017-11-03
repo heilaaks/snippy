@@ -64,15 +64,18 @@ class Content(object):
 
         return True if self.content[Const.DATA] else False
 
-    def has_valid_data(self):
-        """Test if content data is valid."""
+    def is_data_template(self, edited=None):
+        """Test if content data is empty template."""
 
-        # The content data must not be an empty template.
         template = Config.get_content_template(Content(content=None, category=self.get_category()))
+        if not edited:
+            content = self.get_data(form=Const.STRING_CONTENT)
+        else:
+            content = edited
         template = re.sub(r'## DATE  :.*', '## DATE  :', template)
-        data = re.sub(r'## DATE  :.*', '## DATE  :', self.get_data(form=Const.STRING_CONTENT))
+        content = re.sub(r'## DATE  :.*', '## DATE  :', content)
 
-        return False if data == template else True
+        return True if content == template else False
 
     def get_data(self, form=Const.NATIVE_CONTENT):
         """Return content data."""

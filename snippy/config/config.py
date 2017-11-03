@@ -125,6 +125,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
                               content_copy.get_metadata(),
                               content_copy.get_key()))
             content_copy.update_digest()
+            if content_copy.is_data_template(edited=item):
+                Cause.set_text('no content was stored because the content data is matching to empty template')
+
             contents.append(content_copy)
 
         return contents

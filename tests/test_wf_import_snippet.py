@@ -144,6 +144,35 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Try to import snippet from file that is not existing. The file extension
+        ##        is one of supported formats..
+        mocked_open = mock.mock_open(read_data=Snippet.get_template(import_dict['content'][0]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            mock_isfile.return_value = False
+            snippy = Snippy()
+            sys.argv = ['snippy', 'import', '-f', './foo.yaml']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot read file ./foo.yaml'
+            assert not Database.get_contents()
+            mock_file.assert_not_called()
+            mock_isfile.return_value = True
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to import snippet from text file that is empty.
+        mocked_open = mock.mock_open(read_data=Const.EMPTY)
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            snippy = Snippy()
+            sys.argv = ['snippy', 'import', '-f', './all-snippets.txt']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: no content found to be stored'
+            assert not Database.get_snippets()
+            mock_file.assert_called_once_with('./all-snippets.txt', 'r')
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
@@ -167,8 +196,8 @@ class TestWfImportSnippet(unittest.TestCase):
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict
 
-        ## Brief: Import defined solution based on message digest. File name is defined from command line as
-        ##        yaml file which contain one solution. Content was not updated in this case.
+        ## Brief: Import defined snippet based on message digest. File name is defined from command line as
+        ##        yaml file which contain one snippet. Content was not updated in this case.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_yaml_load.return_value = import_dict
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
@@ -182,8 +211,8 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import defined solution based on message digest. File name is defined from command line as
-        ##        yaml file which contain one solution. Content tags were updated.
+        ## Brief: Import defined snippet based on message digest. File name is defined from command line as
+        ##        yaml file which contain one snippet. Content tags were updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             import_dict['content'][0]['tags'] = ('new', 'tags', 'set')
             mock_yaml_load.return_value = import_dict
@@ -199,8 +228,8 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import defined solution based on message digest. File name is defined from command line as
-        ##        json file which contain one solution. Content brief were updated.
+        ## Brief: Import defined snippet based on message digest. File name is defined from command line as
+        ##        json file which contain one snippet. Content brief were updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             import_dict['content'][0]['brief'] = 'Updated brief description'
             mock_json_load.return_value = import_dict
@@ -216,8 +245,8 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import defined solution based on message digest. File name is defined from command line as
-        ##        text file which contain one solution. Content links were updated. The file extenansion is
+        ## Brief: Import defined snippet based on message digest. File name is defined from command line as
+        ##        text file which contain one snippet. Content links were updated. The file extenansion is
         ##        '*.txt' in this case.
         import_text = re.sub(r'https://docs.*', 'https://new.link', import_text)
         mocked_open = mock.mock_open(read_data=import_text)
@@ -235,8 +264,8 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import defined solution based on message digest. File name is defined from command line as
-        ##        text file which contain one solution. Content links were updated. The file extenansion is
+        ## Brief: Import defined snippet based on message digest. File name is defined from command line as
+        ##        text file which contain one snippet. Content links were updated. The file extenansion is
         ##        '*.text' in this case.
         import_text = re.sub(r'https://docs.*', 'https://new.link', import_text)
         mocked_open = mock.mock_open(read_data=import_text)

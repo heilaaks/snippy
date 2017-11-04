@@ -66,7 +66,7 @@ class TestWfDeleteSnippet(unittest.TestCase):
             Database.delete_storage()
 
         ## Brief: Try to delete snippet with empty message digest. Nothing should be deleted
-        ##        in this case because there is more than one content left.
+        ##        in this case because there is more than one content stored.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'delete', '-d', '']  ## workflow
@@ -77,8 +77,8 @@ class TestWfDeleteSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Delete snippet with empty message digest when there is only one content.
-        ##        left. In this case the last content can be deleted with empty digest.
+        ## Brief: Delete snippet with empty message digest when there is only one content
+        ##        stored. In this case the last content can be deleted with empty digest.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
             sys.argv = ['snippy', 'delete', '-d', '']  ## workflow
@@ -122,15 +122,28 @@ class TestWfDeleteSnippet(unittest.TestCase):
         ##        content data is not truncated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all)']  ## workflow
+            sys.argv = ['snippy', 'delete', '--content', 'docker rm --volumes']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: cannot find content with content data \'docker rm --volumes $(docker ps --all)\''
+            assert cause == 'NOK: cannot find content with content data \'docker rm --volumes\''
             assert len(Database.get_snippets()) == 2
             snippy.release()
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to delete snippet with empty content data.
+        ## Brief: Try to delete snippet with content data that does not exist. In this case the
+        ##        content data is truncated.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all)']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find content with content data \'docker rm --volumes $(docker p...\''
+            assert len(Database.get_snippets()) == 2
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to delete snippet with empty content data. Nothing should be deleted
+        ##        in this case because there is more than one content left.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'delete', '--content', '']  ## workflow

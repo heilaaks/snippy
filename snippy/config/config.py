@@ -312,7 +312,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
                 text = 'cannot use empty message digest to %s content' % operation
         elif cls.is_content_data():
             if cls.get_content_data():
-                data = cls.get_content_data()
+                data = Const.EMPTY.join(cls.get_content_data())
                 data = data[:30] + (data[30:] and '...')
                 if not contents:
                     text = 'cannot find content with content data \'%s\'' % data

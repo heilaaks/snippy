@@ -99,10 +99,10 @@ class TestWfUpdateSnippet(unittest.TestCase):
         snippy = self.add_snippets()
 
         ## Brief: Try to update digest with misspelled message digest.
-        sys.argv = ['snippy', 'update', '-d', '123456789ABCDEF0']  ## workflow
+        sys.argv = ['snippy', 'update', '-d', '123456789abcdef0']  ## workflow
         snippy.reset()
         cause = snippy.run_cli()
-        assert cause == 'NOK: cannot find snippet to be updated with digest 123456789ABCDEF0'
+        assert cause == 'NOK: cannot find snippet to be updated with digest 123456789abcdef0'
         Snippet.compare(self, Database.get_content(initial.get_digest())[0], initial)
 
         # Release all resources

@@ -101,6 +101,9 @@ class Sqlite3Db(object):
 
         self.logger.debug('inserted %d out of %d content', inserted, len(contents))
 
+        if not contents:
+            cause = 'no content found to be stored'
+
         if not inserted and cause:
             Cause.set_text(cause)
 

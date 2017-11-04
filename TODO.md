@@ -3,7 +3,6 @@
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
-   - [ ] Fix import failure message in case same solution data is imported twice.
    - [ ] If no content is imported at all, there is OK. This should be likely NOK. This is coming from bulk insert.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] Check signing commits (https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
@@ -17,6 +16,7 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed import failure message when same solution data was imported twice.
    - [x] Added support for importing multiple contents from text format.
    - [x] Fixed PyPI long description that was wrapping lines incorrect.
    - [x] Fixed content utc time being null. The time was not read from the template and it may have resulted None time.

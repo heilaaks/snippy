@@ -635,9 +635,7 @@ python snip.py delete --digest 111111111111111
 
 4. Test deleting snippets with content that is not found (TESTED)
 
-5. Test that empty digest does not delete snippet when there is only one snippet
-
-6. Test that deleting snippet requires at least 16 character hash to make sure that user does not accidentally use e.g. '2' that would delete all snippets which hash is starting with '2'.
+5. Test that empty digest does not delete snippet when there are two snippet (TESTED)
 
 #####################
 ## Searching snippets
@@ -787,36 +785,36 @@ python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with 
 python snip.py export --file ./snippets.yaml
 python snip.py import --file ./snippets.yaml
 
-2. Import snippets from json file
+2. Import snippets from json file (DONE)
 python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
 python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'moby' -t moby,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
 python snip.py export --file ./snippets.json
 python snip.py import --file ./snippets.json
 
-3. Import same snippet yaml file again
+3. Import same snippet yaml file again (DONE)
 
-4. Import snippet defaults: 1) python runner import -f defaults 2) python runner import --snippet -f defaults
+4. Import snippet defaults: 1) python runner import -f defaults 2) python runner import --snippet -f defaults (DONE)
 
-5. Import solution defaults: python runner import --solution -f defaults
+5. Import solution defaults: python runner import --solution -f defaults (DONE)
 
 6. Import content from invalid file
-python runner import -f foo.yaml
+python runner import -f foo.yaml (DONE)
 
-7. Import content from unidentified file format
+7. Import content from unidentified file format (DONE)
 python runner import -f foo.bar
 
-8. Import content from text file (not supported)
+8. Import content from text file (DONE)
 python runner import -f foo.txt
 
-9. Import content without specifying the file (that defaults to snippets.yaml or solutions.yaml)
+9. Import content without specifying the file (that defaults to snippets.yaml or solutions.yaml) (DONE)
 python runner import
 python runner import --solution
 
-10. Import text template with on solution
+10. Import text template with on solution (DONE)
 python runner import -f solution.txt
 
-11. Import text template with on snippet
+11. Import text template with on snippet (DONE)
 python runner import -f snippet.txt
 
 12. Import template
@@ -825,18 +823,18 @@ python runner import --solution --template
 python runner import --snippet --template
 
 13. Import defaults
-python import --defaults
+python import --defaults (DONE)
 
 14. Import templates without any changes
-python import -f solution-template.txt
-python import -f snippet-template.txt
+python import -f solution-template.txt (DONE)
+python import -f snippet-template.txt (DONE)
 
 15. Importing yaml file that contains snippet that is already stored. (DONE)
 
 16. Import (update) specific content from file. The content category must be read automatically
-python import -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt # import content with category defaulting to snippet
-python import --solution -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt
-python import --snippet -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt
+python import -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt # import content with category defaulting to snippet (DONE)
+python import --solution -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt (DONE)
+python import --snippet -d e95e9092c92e3440 -f howto-debug-elastic-beats.txt (DONE)
 
 ######################
 ## Importing solution

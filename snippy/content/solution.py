@@ -57,20 +57,16 @@ class Solution(object):
     def delete(self):
         """Delete solutions."""
 
-        self.logger.debug('deleting solution')
-        solutions = ()
-        content_digest = Config.get_content_valid_digest()
-        if content_digest:
-            self.logger.debug('deleting soulution with digest %.16s', content_digest)
-            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
-
+        solutions = self.storage.search(Const.SOLUTION,
+                                        keywords=Config.get_search_keywords(),
+                                        digest=Config.get_content_digest(),
+                                        data=Config.get_content_data())
         if len(solutions) == 1:
-            content_digest = solutions[0].get_digest()
-            self.storage.delete(content_digest)
-        elif not solutions:
-            Cause.set_text('cannot find solution to be deleted with digest {:.16}'.format(content_digest))
+            self.logger.debug('deleting snippet with digest %.16s', solutions[0].get_digest())
+            self.storage.delete(solutions[0].get_digest())
         else:
-            Cause.set_text('cannot delete multiple soutions with same digest {:.16}'.format(content_digest))
+            text = Config.validate_search_context(solutions, 'delete')
+            Cause.set_text(text)
 
     def export_all(self):
         """Export solutions."""

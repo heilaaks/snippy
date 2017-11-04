@@ -35,7 +35,7 @@ class Solution(object):
                                         keywords=Config.get_search_keywords(),
                                         digest=Config.get_content_digest(),
                                         data=Config.get_content_data())
-        Migrate().print_terminal(solutions)
+        Migrate.print_terminal(solutions)
 
     def update(self):
         """Update existing solution."""
@@ -79,7 +79,7 @@ class Solution(object):
         content_digest = Config.get_content_valid_digest()
         if Config.is_migrate_template():
             self.logger.debug('exporting solution template %s', Config.get_operation_file())
-            Migrate().dump_template(Content())
+            Migrate.dump_template(Content())
         elif content_digest:
             self.logger.debug('exporting solution with digest %.16s', content_digest)
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
@@ -87,11 +87,11 @@ class Solution(object):
                 filename = Config.get_operation_file(content_filename=solutions[0].get_filename())
             elif not solutions:
                 Cause.set_text('cannot find solution to be exported with digest {:.16}'.format(content_digest))
-            Migrate().dump(solutions, filename)
+            Migrate.dump(solutions, filename)
         else:
             self.logger.debug('exporting solutions %s', Config.get_operation_file())
             solutions = self.storage.export_content(Const.SOLUTION)
-            Migrate().dump(solutions, filename)
+            Migrate.dump(solutions, filename)
 
     def import_all(self):
         """Import solutions."""

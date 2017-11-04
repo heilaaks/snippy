@@ -15,10 +15,7 @@ from snippy.config.config import Config
 class Migrate(object):
     """Import and export management."""
 
-    logger = None
-
-    def __init__(self):
-        Migrate.logger = Logger(__name__).get()
+    logger = Logger(__name__).get()
 
     @classmethod
     def print_terminal(cls, contents):

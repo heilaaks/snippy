@@ -35,7 +35,7 @@ class Snippet(object):
                                        keywords=Config.get_search_keywords(),
                                        digest=Config.get_content_digest(),
                                        data=Config.get_content_data())
-        Migrate().print_terminal(snippets)
+        Migrate.print_terminal(snippets)
 
     def update(self):
         """Update existing snippet."""
@@ -93,7 +93,7 @@ class Snippet(object):
         content_digest = Config.get_content_valid_digest()
         if Config.is_migrate_template():
             self.logger.debug('exporting snippet template %s', Config.get_operation_file())
-            Migrate().dump_template(Content())
+            Migrate.dump_template(Content())
         elif content_digest:
             self.logger.debug('exporting snippet with digest %.16s', content_digest)
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
@@ -101,11 +101,11 @@ class Snippet(object):
                 filename = Config.get_operation_file(content_filename=snippets[0].get_filename())
             elif not snippets:
                 Cause.set_text('cannot find snippet to be exported with digest {:.16}'.format(content_digest))
-            Migrate().dump(snippets, filename)
+            Migrate.dump(snippets, filename)
         else:
             self.logger.debug('exporting snippets %s', Config.get_operation_file())
             snippets = self.storage.export_content(Const.SNIPPET)
-            Migrate().dump(snippets, filename)
+            Migrate.dump(snippets, filename)
 
     def import_all(self):
         """Import snippets."""

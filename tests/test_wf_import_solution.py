@@ -374,7 +374,6 @@ class TestWfImportSolution(unittest.TestCase):
             sys.argv = ['snippy', 'import', '--solution', '-f', 'one-solution.txt']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
-            print(Database.get_solutions()[0])
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
@@ -389,7 +388,6 @@ class TestWfImportSolution(unittest.TestCase):
             sys.argv = ['snippy', 'import', '--solution', '-f', 'one-solution.text']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
-            print(Database.get_solutions()[0])
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.text', 'r')
             Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
@@ -488,7 +486,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
-            Snippet().compare(self, snippy.storage.search(Const.SOLUTION, digest='63f2007703d70c8f')[0], content)
+            Snippet.compare(self, Database.get_content('63f2007703d70c8f')[0], content)
             Solution.test_content(snippy, mock_file, {'63f2007703d70c8f': edited_template})
             snippy.release()
             snippy = None

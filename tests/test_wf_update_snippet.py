@@ -45,10 +45,8 @@ class TestWfUpdateSnippet(unittest.TestCase):
         snippy.reset()
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=merged.get_digest())[0], merged)
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest='%.16s' % merged.get_digest())[0], merged)
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=updates.get_data())[0], merged)
-        assert len(snippy.storage.search(Const.SNIPPET, data=merged.get_data())) == 1
+        assert len(Database.get_snippets()) == 2
+        Snippet.compare(self, Database.get_content(merged.get_digest())[0], merged)
 
         # Release all resources
         snippy.release()
@@ -76,10 +74,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
         snippy.reset()
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=merged.get_digest())[0], merged)
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest='%.16s' % merged.get_digest())[0], merged)
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=updates.get_data())[0], merged)
-        assert len(snippy.storage.search(Const.SNIPPET, data=merged.get_data())) == 1
+        Snippet.compare(self, Database.get_content(merged.get_digest())[0], merged)
 
         # Release all resources
         snippy.release()
@@ -108,10 +103,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
         snippy.reset()
         cause = snippy.run_cli()
         assert cause == 'NOK: cannot find snippet to be updated with digest 123456789ABCDEF0'
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())[0], initial)
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest='%.16s' % initial.get_digest())[0], initial)
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=initial.get_data())[0], initial)
-        assert len(snippy.storage.search(Const.SNIPPET, data=initial.get_data())) == 1
+        Snippet.compare(self, Database.get_content(initial.get_digest())[0], initial)
 
         # Release all resources
         snippy.release()
@@ -127,14 +119,14 @@ class TestWfUpdateSnippet(unittest.TestCase):
         snippy = Snippy()
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=snippet1.get_digest())[0], snippet1)
-        assert len(snippy.storage.search(Const.SNIPPET, data=snippet1.get_data())) == 1
+        Snippet.compare(self, Database.get_content(snippet1.get_digest())[0], snippet1)
+        assert len(Database.get_content(snippet1.get_digest())) == 1
         sys.argv = ['snippy', 'create'] + Snippet().get_command_args(2)
         snippy.reset()
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=snippet3.get_digest())[0], snippet3)
-        assert len(snippy.storage.search(Const.SNIPPET, data=snippet3.get_data())) == 1
+        Snippet.compare(self, Database.get_content(snippet3.get_digest())[0], snippet3)
+        assert len(Database.get_content(snippet3.get_digest())) == 1
         assert len(Database.select_all_snippets()) == 2
 
         return snippy

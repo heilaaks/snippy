@@ -6,7 +6,6 @@ import sys
 import unittest
 import mock
 from snippy.snip import Snippy
-from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
@@ -37,10 +36,8 @@ class TestWfCreateSnippet(unittest.TestCase):
         snippy = Snippy()
         cause = snippy.run_cli()
         assert cause == Cause.ALL_OK
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())[0], initial)
-        Snippet().compare(self, snippy.storage.search(Const.SNIPPET, data=initial.get_data())[0], initial)
-        assert len(snippy.storage.search(Const.SNIPPET, digest=initial.get_digest())) == 1
-        assert len(snippy.storage.search(Const.SNIPPET, data=initial.get_data())) == 1
+        assert len(Database.get_snippets()) == 1
+        Snippet.compare(self, Database.get_content(initial.get_digest())[0], initial)
 
         # Release all resources
         snippy.release()

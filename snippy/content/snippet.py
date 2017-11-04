@@ -64,27 +64,16 @@ class Snippet(object):
     def delete(self):
         """Delete snippet."""
 
-        self.logger.debug('deleting snippet')
-        snippets = ()
-        content_digest = Config.get_content_valid_digest()
-        content_data = Config.get_content_data()
-        log_string = 'invalid digest %.16s' % content_digest
-        if content_digest:
-            self.logger.debug('deleting snippet with digest %.16s', content_digest)
-            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
-            log_string = 'digest %.16s' % content_digest
-        elif content_data:
-            self.logger.debug('deleting snippet with content "%s"', content_data)
-            snippets = self.storage.search(Const.SNIPPET, data=content_data)
-            log_string = 'content %.20s' % content_data
-
+        snippets = self.storage.search(Const.SNIPPET,
+                                       keywords=Config.get_search_keywords(),
+                                       digest=Config.get_content_digest(),
+                                       data=Config.get_content_data())
         if len(snippets) == 1:
-            content_digest = snippets[0].get_digest()
-            self.storage.delete(content_digest)
-        elif not snippets:
-            Cause.set_text('cannot find snippet to be deleted with {}'.format(log_string))
+            self.logger.debug('deleting snippet with digest %.16s', snippets[0].get_digest())
+            self.storage.delete(snippets[0].get_digest())
         else:
-            Cause.set_text('cannot delete multiple snippets with same {}'.format(log_string))
+            text = Config.validate_search_context(snippets, 'delete')
+            Cause.set_text(text)
 
     def export_all(self):
         """Export snippets."""

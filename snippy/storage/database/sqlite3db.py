@@ -88,7 +88,7 @@ class Sqlite3Db(object):
 
             utc = content.get_utc()
             digest = content.get_digest()
-            if not self.select_content(content.get_category(), data=content.get_data()):
+            if not self._select_content_data(content.get_data()):
                 if digest != content.compute_digest():
                     self.logger.debug('invalid digest found and updated while importing content "%s"', content.get_data())
                     digest = content.compute_digest()
@@ -134,10 +134,10 @@ class Sqlite3Db(object):
             elif keywords and Config.is_search_tag():
                 columns = ['tags']
                 query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
-            elif digest:
+            elif Config.is_content_digest():
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
                 qargs = [digest+'%']
-            elif data:
+            elif Config.is_content_data():
                 query = ('SELECT * FROM contents WHERE data=?')
                 qargs = [Const.DELIMITER_DATA.join(map(str, data))]
             else:
@@ -151,6 +151,26 @@ class Sqlite3Db(object):
                 rows = self.cursor.fetchall()
             except sqlite3.Error as exception:
                 Cause.set_text('selecting from database failed with exception {}'.format(exception))
+        else:
+            Cause.set_text('internal error prevented searching from database')
+
+        self.logger.debug('selected rows %s', rows)
+
+        return rows
+
+    def _select_content_data(self, data):
+        """Select content based on data."""
+
+        rows = ()
+        if self.conn:
+            query = ('SELECT * FROM contents WHERE data=?')
+            qargs = [Const.DELIMITER_DATA.join(map(str, data))]
+            self.logger.debug('running select query "%s"', query)
+            try:
+                self.cursor.execute(query, qargs)
+                rows = self.cursor.fetchall()
+            except sqlite3.Error as exception:
+                Cause.set_text('selecting data from database failed with exception {}'.format(exception))
         else:
             Cause.set_text('internal error prevented searching from database')
 
@@ -304,7 +324,7 @@ class Sqlite3Db(object):
 
         digest = Const.EMPTY
         category = content.get_category(Const.STRING_CONTENT)
-        contents = self.select_content(category, data=content.get_data())
+        contents = self._select_content_data(content.get_data())
         if len(contents) == 1:
             digest = contents[0][Const.DIGEST]
         else:

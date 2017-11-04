@@ -52,7 +52,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['search']['field'], cls.config['search']['keywords'] = cls._parse_search()
         cls.config['search']['filter'] = cls._parse_search_filter()
         cls.config['input'] = {}
-        cls.config['input']['editor'] = cls.args.get_editor()
+        cls.config['input']['editor'] = cls.args.is_editor()
+        cls.config['input']['digest'] = cls.args.is_content_digest()
+        cls.config['input']['data'] = cls.args.is_content_data()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
         cls.config['storage']['file'] = 'snippy.db'
@@ -285,8 +287,43 @@ class Config(object):  # pylint: disable=too-many-public-methods
         digest = Const.EMPTY
         if len(cls.config['digest']) >= Const.DIGEST_MIN_LENGTH:
             digest = cls.config['digest']
+        else:
+            cls.logger.info('too short digest %d, minimum length is %d', len(cls.config['digest']), Const.DIGEST_MIN_LENGTH)
 
         return digest
+
+    @classmethod
+    def validate_search_context(cls, contents, operation):
+        """Validate content search context."""
+
+        # Search keys are treated in priority order of 1) digest, 2) content data
+        # and 3) search keywords. Search keywords are already validated and invalid
+        # keywords are interpreted as 'list all' which is always correct at this
+        # point.
+        text = Const.EMPTY
+        cls.logger.info('validating search context with %d results', len(contents))
+        if cls.is_content_digest():
+            if cls.get_content_digest():
+                if not contents:
+                    text = 'cannot find content with message digest %s' % cls.get_content_digest()
+                elif len(contents) > 1:
+                    text = 'given digest %.16s matches too many times %d' % len(contents)
+            else:
+                text = 'cannot use empty message digest to %s content' % operation
+        elif cls.is_content_data():
+            if cls.get_content_data():
+                data = cls.get_content_data()
+                data = data[:30] + (data[30:] and '...')
+                if not contents:
+                    text = 'cannot find content with content data \'%s\'' % data
+                elif len(contents) > 1:
+                    text = 'given content data %s matches too many times %d' % len(contents)
+            else:
+                text = 'cannot use empty content data to %s content' % operation
+        else:
+            text = 'no message digest, content data or search keywords were provided'
+
+        return text
 
     @classmethod
     def get_filename(cls):
@@ -313,6 +350,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if cls.config['search']['field'] == Const.SEARCH_TAG else False
 
     @classmethod
+    def is_search_keywords(cls):
+        """Test if search is made with any keyword field."""
+
+        return True if cls.config['search']['field'] != Const.NO_SEARCH else False
+
+    @classmethod
     def get_search_keywords(cls):
         """Return list of search keywords."""
 
@@ -329,6 +372,18 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if editor is used to input content."""
 
         return cls.config['input']['editor']
+
+    @classmethod
+    def is_content_data(cls):
+        """Test if content data was defined from command line."""
+
+        return cls.config['input']['data']
+
+    @classmethod
+    def is_content_digest(cls):
+        """Test if content digest was defined from command line."""
+
+        return cls.config['input']['digest']
 
     @classmethod
     def get_operation_file(cls, content_filename=Const.EMPTY):

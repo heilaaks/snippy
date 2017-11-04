@@ -1,5 +1,6 @@
 ## TODO
    - [ ] Update documents.
+   - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix import failure message in case same solution data is imported twice.

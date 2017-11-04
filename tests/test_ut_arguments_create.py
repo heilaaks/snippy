@@ -19,16 +19,16 @@ class TestUtArgumentsCreate(object):
         obj = Arguments()
         assert obj.get_operation() == 'create'
         assert obj.get_content_category() == Const.SNIPPET
-        assert obj.get_content_data() == ''
+        assert obj.get_content_data() is None
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == []
         assert obj.get_content_links() == ''
-        assert obj.get_content_digest() == ''
+        assert obj.get_content_digest() is None
         assert obj.get_search_all() is None
         assert obj.get_search_tag() is None
         assert obj.get_search_grp() is None
         assert obj.get_search_filter() == ''
-        assert not obj.get_editor()
+        assert not obj.is_editor()
         assert obj.get_operation_file() == ''
         assert not obj.is_no_ansi()
         assert not obj.is_defaults()

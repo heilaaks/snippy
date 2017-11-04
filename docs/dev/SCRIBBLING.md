@@ -625,21 +625,15 @@ python snip.py update -d 22c0ca5bbc9797b
 ## Deleting snippets
 ####################
 
-1. Delete snippet with digest (DONE)
-python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'moby' -t moby,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
+1. Delete snippet with digest (TESTED)
 python snip.py delete --digest 22c0ca5bbc9797b
 
-2. Delete snippet with unknown digest
-python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-python snip.py create -c 'docker rmi $(docker images -a -q)' -b 'Remove all docker images' -g 'docker' -t docker,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-python snip.py create -c 'docker rm --force redis' -b 'Remove docker image with force' -g 'moby' -t moby,images,remove -l 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes https://docs.docker.com/engine/reference/commandline/rm/'
+2. Delete snippet with unknown digest (TESTED)
 python snip.py delete --digest 111111111111111
 
-3. Test deleting snippets with content that is found
+3. Test deleting snippets with content that is found (TESTED)
 
-4. Test deleting snippets with content that is not found
+4. Test deleting snippets with content that is not found (TESTED)
 
 5. Test that empty digest does not delete snippet when there is only one snippet
 

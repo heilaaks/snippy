@@ -378,9 +378,9 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(None)
             sys.argv = ['snippy', 'import', '-f', './snippets.yaml']   ## workflow
             assert len(Database.get_contents()) == 2
-            content_before = snippy.storage.search(Const.SNIPPET, data=import_dict['content'][0]['data'])
+            content_before = Database.get_content('54e41e9b52a02b63')
             cause = snippy.run_cli()
-            content_after = snippy.storage.search(Const.SNIPPET, data=import_dict['content'][0]['data'])
+            content_after = Database.get_content('54e41e9b52a02b63')
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
             Snippet().compare(self, content_after[0], content_before[0])

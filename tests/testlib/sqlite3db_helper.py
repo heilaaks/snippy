@@ -37,6 +37,24 @@ class Sqlite3DbHelper(object):
 
         return Storage()._get_contents(rows)  # pylint: disable=protected-access
 
+
+    @staticmethod
+    def get_content(digest):
+        """Return content based on digest."""
+
+        conn, cursor = Sqlite3DbHelper._connect_db()
+        query = ('SELECT * FROM contents WHERE digest LIKE ?')
+        qargs = [digest+'%']
+        try:
+            cursor.execute(query, qargs)
+            rows = cursor.fetchall()
+        except sqlite3.Error as exception:
+            print(exception)
+        cursor.close()
+        conn.close()
+
+        return Storage()._get_contents(rows)  # pylint: disable=protected-access
+
     @staticmethod
     def get_category(category):
         """Return content based on category."""

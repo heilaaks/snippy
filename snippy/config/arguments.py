@@ -125,12 +125,12 @@ class Arguments(object):
         # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Arguments.ARGS_EDITOR))
         options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
-        options.add_argument('-c', '--content', type=str, default='', help=argparse.SUPPRESS)
+        options.add_argument('-c', '--content', type=str, dest='data', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
         options.add_argument('-g', '--group', type=str, default=Const.DEFAULT_GROUP, help=argparse.SUPPRESS)
         options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-l', '--links', type=str, default='', help=argparse.SUPPRESS)
-        options.add_argument('-d', '--digest', type=str, default='', help=argparse.SUPPRESS)
+        options.add_argument('-d', '--digest', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
         # search options
         search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Arguments.ARGS_SEARCH))
@@ -182,12 +182,23 @@ class Arguments(object):
         return cls.args.cat
 
     @classmethod
+    def is_content_data(cls):
+        """Test if content data option was used."""
+
+        return True if hasattr(cls.args, 'data') else False
+
+    @classmethod
     def get_content_data(cls):
         """Return content data."""
 
-        cls.logger.info('parsed argument --content with value "%s"', cls.args.content)
+        data = None
+        if cls.is_content_data():
+            data = cls.args.data
+            cls.logger.info('parsed argument --content with value %s', cls.args.data)
+        else:
+            cls.logger.info('argument --content was not used')
 
-        return cls.args.content
+        return data
 
     @classmethod
     def get_content_brief(cls):
@@ -222,12 +233,23 @@ class Arguments(object):
         return cls.args.links
 
     @classmethod
+    def is_content_digest(cls):
+        """Test if content digest option was used."""
+
+        return True if hasattr(cls.args, 'digest') else False
+
+    @classmethod
     def get_content_digest(cls):
         """Return digest identifying the content."""
 
-        cls.logger.info('parsed argument --digest with value "%s"', cls.args.digest)
+        digest = None
+        if cls.is_content_digest():
+            digest = cls.args.digest
+            cls.logger.info('parsed argument --digest with value %s', cls.args.digest)
+        else:
+            cls.logger.info('argument --digest was not used')
 
-        return cls.args.digest
+        return digest
 
     @classmethod
     def is_search_all(cls):
@@ -295,8 +317,8 @@ class Arguments(object):
         return cls.args.regexp
 
     @classmethod
-    def get_editor(cls):
-        """Return the usage of editor for the operation."""
+    def is_editor(cls):
+        """Test usage of editor for the operation."""
 
         return cls.args.editor
 

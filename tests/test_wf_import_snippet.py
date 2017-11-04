@@ -2,8 +2,9 @@
 
 """test_wf_import_snippet.py: Test workflows for importing snippets."""
 
-#import re
+import re
 import sys
+import copy
 import unittest
 import json
 import yaml
@@ -161,13 +162,15 @@ class TestWfImportSnippet(unittest.TestCase):
                                     'filename': '',
                                     'utc': '2017-10-14 22:22:22',
                                     'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'}]}
-#        import_text = Snippet.get_template(import_dict['content'][0]) + Const.NEWLINE
+        import_dict_orig = copy.deepcopy(import_dict)
+        import_text = Snippet.get_template(import_dict['content'][0]) + Const.NEWLINE
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict
 
         ## Brief: Import defined solution based on message digest. File name is defined from command line as
         ##        yaml file which contain one solution. Content was not updated in this case.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            mock_yaml_load.return_value = import_dict
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
             sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml']  ## workflow
             cause = snippy.run_cli()
@@ -182,15 +185,16 @@ class TestWfImportSnippet(unittest.TestCase):
         ## Brief: Import defined solution based on message digest. File name is defined from command line as
         ##        yaml file which contain one solution. Content tags were updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            import_dict_updated = import_dict.copy()
-            import_dict_updated['content'][0]['tags'] = ('new', 'tags', 'set')
+            import_dict['content'][0]['tags'] = ('new', 'tags', 'set')
+            mock_yaml_load.return_value = import_dict
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
             sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
-            Snippet.test_content(snippy, mock_file, {'4525613eaecd5297': import_dict_updated['content'][0]})
+            Snippet.test_content(snippy, mock_file, {'4525613eaecd5297': import_dict['content'][0]})
+            import_dict = copy.deepcopy(import_dict_orig)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -198,15 +202,16 @@ class TestWfImportSnippet(unittest.TestCase):
         ## Brief: Import defined solution based on message digest. File name is defined from command line as
         ##        json file which contain one solution. Content brief were updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            import_dict_updated = import_dict.copy()
-            import_dict_updated['content'][0]['brief'] = 'Updated brief description'
+            import_dict['content'][0]['brief'] = 'Updated brief description'
+            mock_json_load.return_value = import_dict
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
             sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.json', 'r')
-            Snippet.test_content(snippy, mock_file, {'1dc962f7384e03c0': import_dict_updated['content'][0]})
+            Snippet.test_content(snippy, mock_file, {'f07547e7c692741a': import_dict['content'][0]})
+            import_dict = copy.deepcopy(import_dict_orig)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -214,22 +219,21 @@ class TestWfImportSnippet(unittest.TestCase):
         ## Brief: Import defined solution based on message digest. File name is defined from command line as
         ##        text file which contain one solution. Content links were updated. The file extenansion is
         ##        '*.txt' in this case.
-#        import_text = re.sub(r'https://docs.*', 'https://new.link', import_text)
-#        mocked_open = mock.mock_open(read_data=import_text)
-#        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-#            import_dict_updated = import_dict.copy()
-#            import_dict_updated['content'][0]['links'] = ('https://new.link', )
-#            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
-#            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt']  ## workflow
-#            cause = snippy.run_cli()
-#            assert cause == Cause.ALL_OK
-#            print(Database.get_snippets()[0])
-#            assert len(Database.get_snippets()) == 1
-#            mock_file.assert_called_once_with('one-snippet.txt', 'r')
-#            Snippet.test_content(snippy, mock_file, {'7681559ca5c001e2': import_dict_updated['content'][0]})
-#            snippy.release()
-#            snippy = None
-#            Database.delete_storage()
+        import_text = re.sub(r'https://docs.*', 'https://new.link', import_text)
+        mocked_open = mock.mock_open(read_data=import_text)
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            import_dict['content'][0]['links'] = ('https://new.link', )
+            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
+            mock_file.assert_called_once_with('one-snippet.txt', 'r')
+            Snippet.test_content(snippy, mock_file, {'7681559ca5c001e2': import_dict['content'][0]})
+            import_dict = copy.deepcopy(import_dict_orig)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')

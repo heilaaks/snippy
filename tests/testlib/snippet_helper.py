@@ -135,7 +135,7 @@ class SnippetHelper(object):
     def get_template(content):
         """Return text template from content dictionary."""
 
-        contents = Content().load({'content': [content]})
+        contents = Content.load({'content': [content]})
         editor = Editor(contents[0], '2017-10-01 11:53:17')
 
         return editor.get_template()

@@ -235,6 +235,25 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Import defined solution based on message digest. File name is defined from command line as
+        ##        text file which contain one solution. Content links were updated. The file extenansion is
+        ##        '*.text' in this case.
+        import_text = re.sub(r'https://docs.*', 'https://new.link', import_text)
+        mocked_open = mock.mock_open(read_data=import_text)
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            import_dict['content'][0]['links'] = ('https://new.link', )
+            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
+            mock_file.assert_called_once_with('one-snippet.text', 'r')
+            Snippet.test_content(snippy, mock_file, {'7681559ca5c001e2': import_dict['content'][0]})
+            import_dict = copy.deepcopy(import_dict_orig)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')

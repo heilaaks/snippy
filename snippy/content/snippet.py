@@ -114,8 +114,8 @@ class Snippet(object):
         if content_digest:
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
             if len(snippets) == 1:
-                dictionary = Migrate().load(Config.get_operation_file(), Content())
-                contents = Content().load(dictionary)
+                dictionary = Migrate.load(Config.get_operation_file(), Content())
+                contents = Content.load(dictionary)
                 snippets[0].migrate_edited(contents)
                 self.storage.update(snippets[0])
             elif not snippets:
@@ -124,8 +124,8 @@ class Snippet(object):
                 Cause.set_text('cannot import multiple snippets with same digest {:.16}'.format(content_digest))
         else:
             self.logger.debug('importing snippets %s', Config.get_operation_file())
-            dictionary = Migrate().load(Config.get_operation_file(), Content())
-            snippets = Content().load(dictionary)
+            dictionary = Migrate.load(Config.get_operation_file(), Content())
+            snippets = Content.load(dictionary)
             self.storage.import_content(snippets)
 
     def run(self):

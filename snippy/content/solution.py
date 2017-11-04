@@ -100,8 +100,8 @@ class Solution(object):
         if content_digest:
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
             if len(solutions) == 1:
-                dictionary = Migrate().load(Config.get_operation_file(), Content())
-                contents = Content().load(dictionary)
+                dictionary = Migrate.load(Config.get_operation_file(), Content())
+                contents = Content.load(dictionary)
                 solutions[0].migrate_edited(contents)
                 self.storage.update(solutions[0])
             elif not solutions:
@@ -110,8 +110,8 @@ class Solution(object):
                 Cause.set_text('cannot import multiple solutions with same digest {:.16}'.format(content_digest))
         else:
             self.logger.debug('importing solutions %s', Config.get_operation_file())
-            dictionary = Migrate().load(Config.get_operation_file(), Content())
-            solutions = Content().load(dictionary)
+            dictionary = Migrate.load(Config.get_operation_file(), Content())
+            solutions = Content.load(dictionary)
             self.storage.import_content(solutions)
 
     def run(self):

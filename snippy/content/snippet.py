@@ -38,28 +38,19 @@ class Snippet(object):
         Migrate.print_terminal(snippets)
 
     def update(self):
-        """Update existing snippet."""
+        """Update snippet."""
 
-        snippets = ()
-        content_digest = Config.get_content_valid_digest()
-        content_data = Config.get_content_data()
-        log_string = 'invalid digest %.16s' % content_digest
-        if content_digest:
-            self.logger.debug('updating snippet with digest %.16s', content_digest)
-            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
-            log_string = 'digest %.16s' % content_digest
-        elif content_data:
-            self.logger.debug('updating snippet with content "%s"', content_data)
-            snippets = self.storage.search(Const.SNIPPET, data=content_data)
-            log_string = 'content %.20s' % content_data
-
+        snippets = self.storage.search(Const.SNIPPET,
+                                       keywords=Config.get_search_keywords(),
+                                       digest=Config.get_content_digest(),
+                                       data=Config.get_content_data())
         if len(snippets) == 1:
+            self.logger.debug('updating snippet with digest %.16s', snippets[0].get_digest())
             snippet = Config.get_content(content=snippets[0], use_editor=True)
             self.storage.update(snippet)
-        elif not snippets:
-            Cause.set_text('cannot find snippet to be updated with %s' % log_string)
         else:
-            Cause.set_text('cannot update multiple snippets with same {}'.format(log_string))
+            text = Config.validate_search_context(snippets, 'update')
+            Cause.set_text(text)
 
     def delete(self):
         """Delete snippet."""

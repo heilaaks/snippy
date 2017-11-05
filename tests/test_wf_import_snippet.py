@@ -291,26 +291,7 @@ class TestWfImportSnippet(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        import_dict = {'content': [{'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
-                                    'brief': 'Remove all docker containers with volumes',
-                                    'group': 'docker',
-                                    'tags': ('cleanup', 'container', 'docker', 'docker-ce', 'moby'),
-                                    'links': ('https://docs.docker.com/engine/reference/commandline/rm/', ),
-                                    'category': 'snippet',
-                                    'filename': '',
-                                    'utc': '2017-10-14 22:22:22',
-                                    'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'},
-                                   {'data': ('docker rm --force redis', ),
-                                    'brief': 'Remove docker image with force',
-                                    'group': 'docker',
-                                    'tags': ('docker-ce', 'docker', 'moby', 'container', 'cleanup'),
-                                    'links': ('https://docs.docker.com/engine/reference/commandline/rm/',
-                                              'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-' +
-                                              'images-containers-and-volumes'),
-                                    'category': 'snippet',
-                                    'filename': '',
-                                    'utc': '2017-10-20 07:08:45',
-                                    'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'}]}
+        import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
         mock_yaml_load.return_value = import_dict
         compare_content = {'54e41e9b52a02b63': import_dict['content'][0],
                            '53908d68425c61dc': import_dict['content'][1]}

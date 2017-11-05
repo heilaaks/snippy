@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Update documents.
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
+   - [ ] Add tests to use search keywords for update and delete operations.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] If no content is imported at all, there is OK. This should be likely NOK. This is coming from bulk insert.

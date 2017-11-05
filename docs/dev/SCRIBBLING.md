@@ -609,7 +609,7 @@ python snip.py update --content 'docker rm -v $(docker ps -a -q)' --brief 'Remov
 python snip.py create --content 'docker rm -v $(docker ps -a -q)' --brief 'Remove all docker containers' --group 'docker' --tags docker,container,cleanup --links 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 python snip.py update --content 'docker rm -v $(docker ps -a -q)' --brief 'Remove all docker containers' --group 'docker' --tags docker,container,cleanup --links 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
 
-6. Update snippet with unknown digest
+6. Update snippet with unknown digest (DONE)
 python snip.py update --digest 111111111111111
 
 7. Update snippet with unknown content

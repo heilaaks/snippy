@@ -31,7 +31,6 @@ class TestWfDeleteSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-
         ## Brief: Delete snippet with very short version of digest that matches to one snippet.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Snippet.add_defaults(Snippy())

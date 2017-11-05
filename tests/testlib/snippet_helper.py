@@ -11,15 +11,61 @@ from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.config.editor import Editor
 from snippy.content.content import Content
+from snippy.migrate.migrate import Migrate
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class SnippetHelper(object):
     """Helper methods for snippet testing."""
 
+    UTC = '2017-10-01 11:53:17'
     REMOVE = 0
     FORCED = 1
     EXITED = 2
+    NETCAT = 3
+    DEFAULTS = ({'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
+                 'brief': 'Remove all docker containers with volumes',
+                 'group': 'docker',
+                 'tags': ('cleanup', 'container', 'docker', 'docker-ce', 'moby'),
+                 'links': ('https://docs.docker.com/engine/reference/commandline/rm/', ),
+                 'category': 'snippet',
+                 'filename': '',
+                 'utc': '2017-10-14 22:22:22',
+                 'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'},
+                {'data': ('docker rm --force redis', ),
+                 'brief': 'Remove docker image with force',
+                 'group': 'docker',
+                 'tags': ('docker-ce', 'docker', 'moby', 'container', 'cleanup'),
+                 'links': ('https://docs.docker.com/engine/reference/commandline/rm/',
+                           'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-' +
+                           'images-containers-and-volumes'),
+                 'category': 'snippet',
+                 'filename': '',
+                 'utc': '2017-10-20 07:08:45',
+                 'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'},
+                {'data': ('docker rm $(docker ps --all -q -f status=exited)',
+                          'docker images -q --filter dangling=true | xargs docker rmi'),
+                 'brief': 'Remove all exited containers and dangling images',
+                 'group': 'docker',
+                 'tags': ('docker-ce', 'docker', 'moby', 'container', 'cleanup', 'image'),
+                 'links': ('https://docs.docker.com/engine/reference/commandline/rm/',
+                           'https://docs.docker.com/engine/reference/commandline/images/',
+                           'https://docs.docker.com/engine/reference/commandline/rmi/'),
+                 'category': 'snippet',
+                 'filename': '',
+                 'utc': '2017-10-20 07:08:45',
+                 'digest': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73'},
+                {'data': ('nc -v 10.183.19.189 443',
+                          'nmap 10.183.19.189'),
+                 'brief': 'Test if specific port is open',
+                 'group': 'linux',
+                 'tags': ('linux', 'netcat', 'networking', 'port'),
+                 'links': ('https://www.commandlinux.com/man-page/man1/nc.1.html',),
+                 'category': 'snippet',
+                 'filename': '',
+                 'utc': '2017-10-20 07:08:45',
+                 'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'})
+
     SNIPPETS = ((('docker rm --volumes $(docker ps --all --quiet)',),
                  'Remove all docker containers with volumes',
                  'docker',
@@ -132,15 +178,6 @@ class SnippetHelper(object):
         return command
 
     @staticmethod
-    def get_template(content):
-        """Return text template from content dictionary."""
-
-        contents = Content.load({'content': [content]})
-        editor = Editor(contents[0], '2017-10-01 11:53:17')
-
-        return editor.get_template()
-
-    @staticmethod
     def get_edited_message(initial, updates, columns):
         """Create mocked editor default template and new content with merged updates."""
 
@@ -213,6 +250,45 @@ class SnippetHelper(object):
         assert isinstance(snippet[Const.DIGEST], six.string_types)
 
     @staticmethod
+    def get_content(template):
+        """Transform text template to content."""
+
+        content = Content(content=(Const.EMPTY,)*11, category=Const.SNIPPET)
+        editor = Editor(Content(content=(Const.EMPTY,)*11, category=Const.SNIPPET), SnippetHelper.UTC, template)
+        content.set((editor.get_edited_data(),
+                     editor.get_edited_brief(),
+                     editor.get_edited_group(),
+                     editor.get_edited_tags(),
+                     editor.get_edited_links(),
+                     editor.get_edited_category(),
+                     editor.get_edited_filename(),
+                     editor.get_edited_date(),
+                     content.get_digest(),
+                     content.get_metadata(),
+                     content.get_key()))
+        content.update_digest()
+
+        return content
+
+    @staticmethod
+    def get_dictionary(template):
+        """Transform template to dictinary."""
+
+        content = SnippetHelper.get_content(template)
+        dictionary = Migrate.get_dictionary_list([content])
+
+        return dictionary[0]
+
+    @staticmethod
+    def get_template(dictionary):
+        """Transform dictionary to text template."""
+
+        contents = Content.load({'content': [dictionary]})
+        editor = Editor(contents[0], '2017-10-01 11:53:17')
+
+        return editor.get_template()
+
+    @staticmethod
     def add_defaults(snippy):
         """Add default snippets for testing purposes."""
 
@@ -252,7 +328,7 @@ class SnippetHelper(object):
 
     @staticmethod
     def test_content(snippy, mock_file, content):
-        """Compare given content against data read with message digest."""
+        """Compare given dictionary against content stored in database based on message digest."""
 
         for digest in content:
             mock_file.reset_mock()

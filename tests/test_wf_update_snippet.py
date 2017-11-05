@@ -6,8 +6,6 @@ import sys
 import unittest
 import mock
 from snippy.snip import Snippy
-from snippy.config.constants import Constants as Const
-from snippy.cause.cause import Cause
 from snippy.config.editor import Editor
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
@@ -19,117 +17,179 @@ class TestWfUpdateSnippet(unittest.TestCase):
 
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_updating_snippet_with_digest(self, mock_get_db_location, mock_call_editor):
-        """Update snippet from command line based on digest.
+    def test_update_snippet_with_digest(self, mock_get_db_location, mock_call_editor):
+        """Update snippet with digest."""
 
-        Expected results:
-            1 Snippet can be updated based on digest.
-            2 Snippet is updated with editor when only digest option is provided.
-            3 Only content data gets updated and remaining fields are not changed.
-            4 Updated content can be found with new digest in long format.
-            5 Updated content can be found with new digest in short format.
-            6 Updated content can be found with new data.
-            7 Two entries are still stored after update operation.
-            8 Exit cause is OK.
-        """
-
-        initial = Snippet().get_references(0)
-        updates = Snippet().get_references(1)
-        (message, merged) = Snippet().get_edited_message(initial, updates, (Const.DATA,))
-        mock_call_editor.return_value = message
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = self.add_snippets()
 
-        # Update original snippet based on digest. Only content data is updated.
-        sys.argv = ['snippy', 'update', '-d', initial.get_digest()]
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
-        Snippet.compare(self, Database.get_content(merged.get_digest())[0], merged)
+        ## Brief: Update snippet based on short message digest. Only the content data is updated.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'af8c89629dc1a531': Snippet.get_dictionary(template),
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '-d', '54e41e9b52a02b63']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
-        # Release all resources
-        snippy.release()
+        ## Brief: Update snippet based on very short message digest. This must match to a single
+        ##        snippet that must be updated.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'af8c89629dc1a531': Snippet.get_dictionary(template),
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '-d', '54e41']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Update snippet based on long message digest. Only the content data is updated.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'af8c89629dc1a531': Snippet.get_dictionary(template),
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Update snippet based on message digest and accidentally define solution
+        ##        category. In this case the snippet is updated properly regardless of
+        ##        incorrect category.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'af8c89629dc1a531': Snippet.get_dictionary(template),
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to update snippet with message digest that cannot be found. No changes must
+        ##        be made to stored content.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '-d', '123456789abcdef0']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to update snippet with empty message digest. Nothing should be updated
+        ##        in this case because the empty digest matches to more than one snippet. Only
+        ##        one content can be updated at the time.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '-d', '']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot use empty message digest to update content'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to update snippet with one digit digest that matches two snippets. Note!
+        ##        not change the snippets because this case is produced with real message digests
+        ##        that just happen to have same digit starting both of the cases.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '-d', '5']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: given digest 5 matches (2) more than once preventing the operation'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_updating_snippet_using_solution_category(self, mock_get_db_location, mock_call_editor):
-        """Update snippet but accidentally defining solution category from command line.
+    def test_update_snippet_with_data(self, mock_get_db_location, mock_call_editor):
+        """Update snippet with data."""
 
-        Expected results:
-            1 Category is not changed from snippet to solution.
-            2 Snippet is updated normally.
-            3 Exit cause is OK.
-        """
-
-        initial = Snippet().get_references(0)
-        updates = Snippet().get_references(1)
-        (message, merged) = Snippet().get_edited_message(initial, updates, (Const.DATA,))
-        mock_call_editor.return_value = message
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = self.add_snippets()
 
-        # Accidentally define the category to be solution
-        sys.argv = ['snippy', 'update', '--solution', '-d', initial.get_digest()]
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        Snippet.compare(self, Database.get_content(merged.get_digest())[0], merged)
+        ## Brief: Update snippet based on content data.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'af8c89629dc1a531': Snippet.get_dictionary(template),
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
-        # Release all resources
-        snippy.release()
-
-    @mock.patch.object(Editor, 'call_editor')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_updating_snippet_with_unknown_digest(self, mock_get_db_location, mock_call_editor):
-        """Updating snippet with misspelled message digest.
-
-        Expected results:
-            1 Original snippet is not updated.
-            2 Original snippet can be found with original digest short and long versions.
-            3 Original snippet can be found with original data.
-            4 Exit cause is NOK and indicates the failure.
-        """
-
-        initial = Snippet().get_references(0)
-        updates = Snippet().get_references(1)
-        (message, _) = Snippet().get_edited_message(initial, updates, (Const.DATA,))
-        mock_call_editor.return_value = message
-        mock_get_db_location.return_value = Database.get_storage()
-        snippy = self.add_snippets()
-
-        ## Brief: Try to update digest with misspelled message digest.
-        sys.argv = ['snippy', 'update', '-d', '123456789abcdef0']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == 'NOK: cannot find snippet to be updated with digest 123456789abcdef0'
-        Snippet.compare(self, Database.get_content(initial.get_digest())[0], initial)
-
-        # Release all resources
-        snippy.release()
-
-    def add_snippets(self):
-        """Add snippets that are being updated in tests."""
-
-        snippet1 = Snippet().get_references(0)
-        snippet3 = Snippet().get_references(2)
-
-        # Create two snippets that are updated in tests.
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)
-        snippy = Snippy()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        Snippet.compare(self, Database.get_content(snippet1.get_digest())[0], snippet1)
-        assert len(Database.get_content(snippet1.get_digest())) == 1
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(2)
-        snippy.reset()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        Snippet.compare(self, Database.get_content(snippet3.get_digest())[0], snippet3)
-        assert len(Database.get_content(snippet3.get_digest())) == 1
-        assert len(Database.select_all_snippets()) == 2
-
-        return snippy
+        ## Brief: Try to update snippet with empty content data. Nothing should be update
+        ##        in this case because there is more than one content left.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '-c', '']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot use empty content data to update content'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
     # pylint: disable=duplicate-code
     def tearDown(self):

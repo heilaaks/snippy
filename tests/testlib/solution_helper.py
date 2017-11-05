@@ -289,7 +289,7 @@ class SolutionHelper(object):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     def test_content(snippy, mock_file, content):
-        """Compare given content against data read with message digest."""
+        """Compare given dictionary against content stored in database based on message digest."""
 
         for digest in content:
             mock_file.reset_mock()

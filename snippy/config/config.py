@@ -307,7 +307,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
                 if not contents:
                     text = 'cannot find content with message digest %s' % cls.get_content_digest()
                 elif len(contents) > 1:
-                    text = 'given digest %.16s matches too many times %d' % len(contents)
+                    text = ('given digest %.16s matches (%d) more than once preventing ' +
+                            'the operation') % (cls.get_content_digest(), len(contents))
             else:
                 text = 'cannot use empty message digest to %s content' % operation
         elif cls.is_content_data():
@@ -317,7 +318,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
                 if not contents:
                     text = 'cannot find content with content data \'%s\'' % data
                 elif len(contents) > 1:
-                    text = 'given content data %s matches too many times %d' % len(contents)
+                    text = ('given content data %s matches (%d) more than once preventing the ' +
+                            'operation') % (data, len(contents))
             else:
                 text = 'cannot use empty content data to %s content' % operation
         else:

@@ -40,19 +40,17 @@ class Solution(object):
     def update(self):
         """Update existing solution."""
 
-        solution = ()
-        content_digest = Config.get_content_valid_digest()
-        if content_digest:
-            self.logger.debug('updating soulution with digest %.16s', content_digest)
-            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
-
+        solutions = self.storage.search(Const.SOLUTION,
+                                        keywords=Config.get_search_keywords(),
+                                        digest=Config.get_content_digest(),
+                                        data=Config.get_content_data())
         if len(solutions) == 1:
+            self.logger.debug('updating solution with digest %.16s', solutions[0].get_digest())
             solution = Config.get_content(content=solutions[0], use_editor=True)
             self.storage.update(solution)
-        elif not solutions:
-            Cause.set_text('cannot find solution to be updated with digest {:.16}'.format(content_digest))
         else:
-            Cause.set_text('cannot update multiple soutions with same digest {:.16}'.format(content_digest))
+            text = Config.validate_search_context(solutions, 'update')
+            Cause.set_text(text)
 
     def delete(self):
         """Delete solutions."""
@@ -62,7 +60,7 @@ class Solution(object):
                                         digest=Config.get_content_digest(),
                                         data=Config.get_content_data())
         if len(solutions) == 1:
-            self.logger.debug('deleting snippet with digest %.16s', solutions[0].get_digest())
+            self.logger.debug('deleting solution with digest %.16s', solutions[0].get_digest())
             self.storage.delete(solutions[0].get_digest())
         else:
             text = Config.validate_search_context(solutions, 'delete')

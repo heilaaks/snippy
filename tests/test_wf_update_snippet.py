@@ -208,8 +208,8 @@ class TestWfUpdateSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to update snippet with empty content data. Nothing should be update
-        ##        in this case because there is more than one content left.
+        ## Brief: Try to update snippet with empty content data. Nothing must be updated
+        ##        in this case because there is more than one content stored.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')

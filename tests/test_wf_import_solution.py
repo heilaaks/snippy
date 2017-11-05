@@ -30,7 +30,7 @@ class TestWfImportSolution(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        import_dict = {'content': [{'data': tuple(Solution.SOLUTIONS_TEXT[0]),
+        import_dict = {'content': [{'data': tuple(Solution.DEFAULT_TEXT[0]),
                                     'brief': 'Debugging Elastic Beats',
                                     'group': 'beats',
                                     'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
@@ -39,7 +39,7 @@ class TestWfImportSolution(unittest.TestCase):
                                     'filename': 'howto-debug-elastic-beats.txt',
                                     'utc': None,
                                     'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
-                                   {'data': tuple(Solution.SOLUTIONS_TEXT[2]),
+                                   {'data': tuple(Solution.DEFAULT_TEXT[2]),
                                     'brief': 'Testing docker log drivers',
                                     'group': 'docker',
                                     'tags': ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin'),
@@ -52,8 +52,8 @@ class TestWfImportSolution(unittest.TestCase):
                                     'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'}]}
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict
-        compare_content = {'a96accc25dd23ac0': Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.BEATS]),
-                           'eeef5ca3ec9cd364': Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.KAFKA])}
+        compare_content = {'a96accc25dd23ac0': Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.BEATS]),
+                           'eeef5ca3ec9cd364': Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.KAFKA])}
 
         ## Brief: Import all solutions. File name is not defined in commmand line. This should
         ##        result tool internal default file name ./solutions.yaml being used by default.
@@ -64,7 +64,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./solutions.yaml', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -78,7 +78,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -93,7 +93,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 2
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -107,7 +107,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.json', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -122,15 +122,15 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 2
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./all-solutions.json', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
 
         ## Brief: Import all solutions from txt file. File name and format are extracted from
         ##        command line option -f|--file. File extension is '*.txt' in this case.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0]) +
-                                     Const.NEWLINE+Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2]))
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[0]) +
+                                     Const.NEWLINE+Const.NEWLINE.join(Solution.DEFAULT_TEXT[2]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', './all-solutions.txt']  ## workflow
@@ -138,7 +138,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -146,8 +146,8 @@ class TestWfImportSolution(unittest.TestCase):
         ## Brief: Import all solutions from txt file without specifying the solution category.
         ##        File name and format are extracted from command line option -f|--file. File
         ##        extension is '*.txt' in this case.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0]) +
-                                     Const.NEWLINE+Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2]))
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[0]) +
+                                     Const.NEWLINE+Const.NEWLINE.join(Solution.DEFAULT_TEXT[2]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './all-solutions.txt']  ## workflow
@@ -156,16 +156,16 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 2
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
 
         ## Brief: Import all solutions from txt file. File name and format are extracted from
         ##        command line option -f|--file. File extension is '*.text' in this case.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0]) +
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[0]) +
                                      Const.NEWLINE +
-                                     Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2]))
+                                     Const.NEWLINE.join(Solution.DEFAULT_TEXT[2]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', './all-solutions.text']  ## workflow
@@ -173,7 +173,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -181,9 +181,9 @@ class TestWfImportSolution(unittest.TestCase):
         ## Brief: Import all solutions from txt file without specifying the solution category.
         ##        File name and format are extracted from command line option -f|--file. File
         ##        extension is '*.text' in this case.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[0]) +
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[0]) +
                                      Const.NEWLINE +
-                                     Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[2]))
+                                     Const.NEWLINE.join(Solution.DEFAULT_TEXT[2]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './all-solutions.text']  ## workflow
@@ -192,7 +192,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 2
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -208,7 +208,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.yaml', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -228,7 +228,7 @@ class TestWfImportSolution(unittest.TestCase):
 
         ## Brief: Try to import solution from file which file format is not supported. This
         ##        should result error text for end user and no files should be read.
-        mocked_open = mock.mock_open(read_data=Solution.SOLUTIONS_TEXT[0])
+        mocked_open = mock.mock_open(read_data=Solution.DEFAULT_TEXT[0])
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', './foo.bar']  ## workflow
@@ -249,7 +249,7 @@ class TestWfImportSolution(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        updated_solution = Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.NGINX])
+        updated_solution = Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX])
         updated_solution = updated_solution.replace('# Instructions how to debug nginx', '# Changed instruction set')
         import_dict = {'content': [{'data': tuple(updated_solution.split(Const.NEWLINE)),
                                     'brief': 'Debugging nginx',
@@ -272,7 +272,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
-            Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
+            Solution.test_content_text(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -287,7 +287,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
-            Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
+            Solution.test_content_text(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -301,7 +301,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.json', 'r')
-            Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
+            Solution.test_content_text(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -317,7 +317,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.txt', 'r')
-            Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
+            Solution.test_content_text(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -333,7 +333,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.text', 'r')
-            Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
+            Solution.test_content_text(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -350,7 +350,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('one-solution.text', 'r')
-            Solution.test_content(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
+            Solution.test_content_text(snippy, mock_file, {'8eb8eaa15d745af3': updated_solution})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -364,8 +364,8 @@ class TestWfImportSolution(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        import_text = Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.NGINX])
-        import_dict = {'content': [{'data': tuple(Solution.SOLUTIONS_TEXT[Solution.NGINX]),
+        import_text = Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX])
+        import_dict = {'content': [{'data': tuple(Solution.DEFAULT_TEXT[Solution.NGINX]),
                                     'brief': 'Debugging nginx',
                                     'group': 'nginx',
                                     'tags': ('nginx', 'debug', 'logging', 'howto'),
@@ -385,7 +385,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
+            Solution.test_content_text(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -398,13 +398,13 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.json', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
+            Solution.test_content_text(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
             snippy.release()
             snippy = None
             Database.delete_storage()
 
         ## Brief: Import new solution from text file. In this case the file extension is '*.txt'.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.NGINX]))
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', 'one-solution.txt']  ## workflow
@@ -412,14 +412,14 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.txt', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
+            Solution.test_content_text(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
             snippy.release()
             snippy = None
             Database.delete_storage()
 
         ## Brief: Import new solution from text file without specifying the content category
         ##        explicitly. In this case the file extension is '*.txt'.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.NGINX]))
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', 'one-solution.txt']  ## workflow
@@ -428,13 +428,13 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('one-solution.txt', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
+            Solution.test_content_text(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
             snippy.release()
             snippy = None
             Database.delete_storage()
 
         ## Brief: Import new solution from text file. In this case the file extension is '*.text'.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.NGINX]))
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', 'one-solution.text']  ## workflow
@@ -442,7 +442,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.text', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
+            Solution.test_content_text(snippy, mock_file, {'61a24a156f5e9d2d': import_text})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -455,7 +455,7 @@ class TestWfImportSolution(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        import_dict = {'content': [{'data': tuple(Solution.SOLUTIONS_TEXT[0]),
+        import_dict = {'content': [{'data': tuple(Solution.DEFAULT_TEXT[0]),
                                     'brief': 'Debugging Elastic Beats',
                                     'group': 'beats',
                                     'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
@@ -464,7 +464,7 @@ class TestWfImportSolution(unittest.TestCase):
                                     'filename': 'howto-debug-elastic-beats.txt',
                                     'utc': None,
                                     'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
-                                   {'data': tuple(Solution.SOLUTIONS_TEXT[1]),
+                                   {'data': tuple(Solution.DEFAULT_TEXT[1]),
                                     'brief': 'Debugging nginx',
                                     'group': 'nginx',
                                     'tags': ('nginx', 'debug', 'logging', 'howto'),
@@ -474,8 +474,8 @@ class TestWfImportSolution(unittest.TestCase):
                                     'utc': '2017-10-12 11:53:17',
                                     'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
         mock_yaml_load.return_value = import_dict
-        compare_content = {'a96accc25dd23ac0': Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.BEATS]),
-                           '61a24a156f5e9d2d': Const.NEWLINE.join(Solution.SOLUTIONS_TEXT[Solution.NGINX])}
+        compare_content = {'a96accc25dd23ac0': Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.BEATS]),
+                           '61a24a156f5e9d2d': Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX])}
 
         ## Brief: Import solution defaults. All solutions should be imported from predefined file
         ##        location under tool data folder from yaml format.
@@ -487,7 +487,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 2
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -503,7 +503,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert len(Database.get_solutions()) == 2
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content_text(snippy, mock_file, compare_content)
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -540,7 +540,7 @@ class TestWfImportSolution(unittest.TestCase):
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
             Snippet.compare(self, Database.get_content('63f2007703d70c8f')[0], content)
-            Solution.test_content(snippy, mock_file, {'63f2007703d70c8f': edited_template})
+            Solution.test_content_text(snippy, mock_file, {'63f2007703d70c8f': edited_template})
             snippy.release()
             snippy = None
             Database.delete_storage()

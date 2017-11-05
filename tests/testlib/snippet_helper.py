@@ -191,7 +191,7 @@ class SnippetHelper(object):
         merged = Content((merged_list))
         merged_list[Const.DIGEST] = merged.compute_digest()
         merged = Content((merged_list))
-        template = Editor(merged, '2017-10-01 11:53:17').get_template()
+        template = Editor(merged, SnippetHelper.UTC).get_template()
 
         return (template, merged)
 
@@ -284,7 +284,7 @@ class SnippetHelper(object):
         """Transform dictionary to text template."""
 
         contents = Content.load({'content': [dictionary]})
-        editor = Editor(contents[0], '2017-10-01 11:53:17')
+        editor = Editor(contents[0], SnippetHelper.UTC)
 
         return editor.get_template()
 
@@ -327,10 +327,10 @@ class SnippetHelper(object):
         return snippy
 
     @staticmethod
-    def test_content(snippy, mock_file, content):
+    def test_content(snippy, mock_file, dictionary):
         """Compare given dictionary against content stored in database based on message digest."""
 
-        for digest in content:
+        for digest in dictionary:
             mock_file.reset_mock()
             sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
             snippy.reset()
@@ -338,5 +338,5 @@ class SnippetHelper(object):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-content.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(SnippetHelper.get_template(content[digest])),
+            file_handle.write.assert_has_calls([mock.call(SnippetHelper.get_template(dictionary[digest])),
                                                 mock.call(Const.NEWLINE)])

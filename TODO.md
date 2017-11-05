@@ -1,5 +1,6 @@
 ## TODO
    - [ ] Update documents.
+   - [ ] Fix test_content_text away to use Snippet.test_content(). This syncs the solution and snippet helpers.
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
    - [ ] Add tests to use search keywords for update and delete operations.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.

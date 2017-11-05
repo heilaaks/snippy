@@ -14,7 +14,7 @@ class Content(object):
 
     def __init__(self, content=None, category=None):
         self.logger = Logger(__name__).get()
-        if not content:
+        if content is None:
             self.content = (Config.get_content_data(),
                             Config.get_content_brief(),
                             Config.get_content_group(),

@@ -612,13 +612,13 @@ python snip.py update --content 'docker rm -v $(docker ps -a -q)' --brief 'Remov
 6. Update snippet with unknown digest (DONE)
 python snip.py update --digest 111111111111111
 
-7. Update snippet with unknown content
+7. Update snippet with unknown content (DONE)
 python snip.py update -c '111111111111111'
 
 8. Update snippet by defining solution category in command line (DONE)
 python snip.py update --solution -d 22c0ca5bbc9797b
 
-9. Update solution by leaving the category out (defaults snippet) from command line
+9. Update solution by leaving the category out (defaults snippet) from command line (DONE)
 python snip.py update -d 22c0ca5bbc9797b
 
 ####################

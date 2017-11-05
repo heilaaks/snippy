@@ -74,6 +74,24 @@ class TestWfUpdateSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Update snippet based on message digest and explicitly define the content
+        ##        category.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'af8c89629dc1a531': Snippet.get_dictionary(template),
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '--snippet', '-d', '54e41e9b52a02b63']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
         ## Brief: Update snippet based on message digest and accidentally define solution
         ##        category. In this case the snippet is updated properly regardless of
         ##        incorrect category.
@@ -167,6 +185,23 @@ class TestWfUpdateSnippet(unittest.TestCase):
             sys.argv = ['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'OK'
+            assert len(Database.get_snippets()) == 2
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to update snippet based on content data that is not found.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+            compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
+                               '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]}
+            mock_call_editor.return_value = template
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'update', '-c', 'snippet not existing']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find content with content data \'snippet not existing\''
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, compare_content)
             snippy.release()

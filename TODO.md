@@ -4,6 +4,8 @@
    - [ ] Add tests to use search keywords for update and delete operations.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
+   - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
+   - [ ] Add upgrade procedure. How?
    - [ ] If no content is imported at all, there is OK. This should be likely NOK. This is coming from bulk insert.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] Check signing commits (https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)

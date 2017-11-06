@@ -30,25 +30,7 @@ class TestWfImportSnippet(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        import_dict = {'content': [{'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
-                                    'brief': 'Remove all docker containers with volumes',
-                                    'group': 'docker',
-                                    'tags': ('cleanup', 'container', 'docker', 'docker-ce', 'moby'),
-                                    'links': ('https://docs.docker.com/engine/reference/commandline/rm/', ),
-                                    'category': 'snippet',
-                                    'filename': '',
-                                    'utc': '2017-10-14 22:22:22',
-                                    'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'},
-                                   {'data': ('nc -v 10.183.19.189 443',
-                                             'nmap 10.183.19.189'),
-                                    'brief': 'Test if specific port is open',
-                                    'group': 'linux',
-                                    'tags': ('linux', 'netcat', 'networking', 'port'),
-                                    'links': ('https://www.commandlinux.com/man-page/man1/nc.1.html',),
-                                    'category': 'snippet',
-                                    'filename': '',
-                                    'utc': '2017-10-20 07:08:45',
-                                    'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'}]}
+        import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict
         compare_content = {'54e41e9b52a02b63': import_dict['content'][0],
@@ -191,6 +173,7 @@ class TestWfImportSnippet(unittest.TestCase):
                                     'filename': '',
                                     'utc': '2017-10-14 22:22:22',
                                     'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'}]}
+        #import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE]]}
         import_dict_orig = copy.deepcopy(import_dict)
         import_text = Snippet.get_template(import_dict['content'][0]) + Const.NEWLINE
         mock_yaml_load.return_value = import_dict
@@ -359,25 +342,7 @@ class TestWfImportSnippet(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        import_dict = {'content': [{'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
-                                    'brief': 'Remove all docker containers with volumes',
-                                    'group': 'docker',
-                                    'tags': ('cleanup', 'container', 'docker', 'docker-ce', 'moby'),
-                                    'links': ('https://docs.docker.com/engine/reference/commandline/rm/', ),
-                                    'category': 'snippet',
-                                    'filename': '',
-                                    'utc': '2017-10-14 22:22:22',
-                                    'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'},
-                                   {'data': ('nc -v 10.183.19.189 443',
-                                             'nmap 10.183.19.189'),
-                                    'brief': 'Test if specific port is open',
-                                    'group': 'linux',
-                                    'tags': ('linux', 'netcat', 'networking', 'port'),
-                                    'links': ('https://www.commandlinux.com/man-page/man1/nc.1.html',),
-                                    'category': 'snippet',
-                                    'filename': '',
-                                    'utc': '2017-10-20 07:08:45',
-                                    'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'}]}
+        import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}
         mock_yaml_load.return_value = import_dict
 
         ## Brief: Import snippets from yaml file that is defined from command line. In this case

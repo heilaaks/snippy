@@ -64,7 +64,7 @@ class SolutionHelper(object):
                          ''),
                  'brief': 'Debugging Elastic Beats',
                  'group': 'beats',
-                 'tags': ('Elastic', 'beats', 'filebeat', 'debug', 'howto'),
+                 'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
                  'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
                  'category' :'solution',
                  'filename' :'howto-debug-elastic-beats.txt',
@@ -134,7 +134,7 @@ class SolutionHelper(object):
                          ''),
                  'brief': 'Debugging nginx',
                  'group': 'nginx',
-                 'tags': ('nginx', 'debug', 'logging', 'howto'),
+                 'tags': ('debug', 'howto', 'logging', 'nginx'),
                  'links': ('https://www.nginx.com/resources/admin-guide/debug/', ),
                  'category': 'solution',
                  'filename': 'howto-debug-nginx.txt',
@@ -564,20 +564,4 @@ class SolutionHelper(object):
             mock_file.assert_called_once_with('defined-content.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(SolutionHelper.get_template(dictionary[digest])),
-                                                mock.call(Const.NEWLINE)])
-
-    ##  Deprecated. Use the test_content because it works the same with snippets.
-    @staticmethod
-    def test_content_text(snippy, mock_file, content):
-        """Compare given dictionary against content stored in database based on message digest."""
-
-        for digest in content:
-            mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
-            snippy.reset()
-            cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-content.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(content[digest]),
                                                 mock.call(Const.NEWLINE)])

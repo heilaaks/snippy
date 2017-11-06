@@ -31,24 +31,7 @@ class TestWfExportSolution(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
-        export_dict = {'content': [{'data': tuple(Solution.DEFAULT_TEXT[0]),
-                                    'brief': 'Debugging Elastic Beats',
-                                    'group': 'beats',
-                                    'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
-                                    'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
-                                    'category': 'solution',
-                                    'filename': 'howto-debug-elastic-beats.txt',
-                                    'utc': '2017-10-20 11:11:19',
-                                    'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
-                                   {'data': tuple(Solution.DEFAULT_TEXT[1]),
-                                    'brief': 'Debugging nginx',
-                                    'group': 'nginx',
-                                    'tags': ('debug', 'howto', 'logging', 'nginx'),
-                                    'links': ('https://www.nginx.com/resources/admin-guide/debug/',),
-                                    'category': 'solution',
-                                    'filename': 'howto-debug-nginx.txt',
-                                    'utc': '2017-10-20 06:16:27',
-                                    'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
+        export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
         ## Brief: Export all solutions into file. File name or format are not defined in command
         ##        line which should result tool default file and format.
@@ -148,15 +131,7 @@ class TestWfExportSolution(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
-        export_dict = {'content': [{'data': tuple(Solution.DEFAULT_TEXT[0]),
-                                    'brief': 'Debugging Elastic Beats',
-                                    'group': 'beats',
-                                    'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
-                                    'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
-                                    'category': 'solution',
-                                    'filename': 'howto-debug-elastic-beats.txt',
-                                    'utc': '2017-10-20 11:11:19',
-                                    'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'}]}
+        export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
         ## Brief: Export defined solution based on message digest. File name is defined in solution
         ##        metadata but not by command line -f|--file option.
@@ -448,24 +423,7 @@ class TestWfExportSolution(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
-        export_dict = {'content': [{'data': tuple(Solution.DEFAULT_TEXT[0]),
-                                    'brief': 'Debugging Elastic Beats',
-                                    'group': 'beats',
-                                    'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
-                                    'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
-                                    'category': 'solution',
-                                    'filename': 'howto-debug-elastic-beats.txt',
-                                    'utc': '2017-10-20 11:11:19',
-                                    'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
-                                   {'data': tuple(Solution.DEFAULT_TEXT[1]),
-                                    'brief': 'Debugging nginx',
-                                    'group': 'nginx',
-                                    'tags': ('debug', 'howto', 'logging', 'nginx'),
-                                    'links': ('https://www.nginx.com/resources/admin-guide/debug/',),
-                                    'category': 'solution',
-                                    'filename': 'howto-debug-nginx.txt',
-                                    'utc': '2017-10-20 06:16:27',
-                                    'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
+        export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
         ## Brief: Export solution defaults. All solutions should be exported into predefined file
         ##        location under tool data folder in yaml format.

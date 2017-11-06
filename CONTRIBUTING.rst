@@ -10,20 +10,22 @@ what author sees important. Currently the project can be considered as a beta re
 Bug reports
 -----------
 
-Please report tool version, export content to yaml file and run the failing command with
-debug option. Please mention also operaring system, test if vi editor is installed and
-what is the value of EDITOR environment variable.
+Please report the tool version, export content to yaml file and run the failing command
+with debug option. Please mention also operaring system, test if vi editor is installed
+and what is the value of EDITOR environment variable.
 
 Modify the failing command below to match the failed command and attach the compressed
-result file to bug report with bug report template below::
-
-    Problem description
-    
-    Expected behavior
-    
-    Snippet from failure log
+result file to the github issue report with the failure report template below.
 
 .. code-block:: none
+
+    ## Actual behavior
+    
+    ## Expected behavior
+    
+    ## Steps to reproduce
+
+    ## Commands to excecute
 
     snippy export --snippet --debug >> snippy-$(snippy --version).log 2>&1
     snippy export --solution --debug >> snippy-$(snippy --version).log 2>&1
@@ -33,3 +35,5 @@ result file to bug report with bug report template below::
     which vi >> snippy-$(snippy --version).log 2>&1
     env | grep EDITOR >> snippy-$(snippy --version).log 2>&1
     tar -czvf snippy-$(snippy --version).tar.gz snippy-$(snippy --version).log solutions.yaml snippets.yaml
+
+.. _issue: https://github.com/heilaaks/snippy/issues

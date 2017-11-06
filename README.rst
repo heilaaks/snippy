@@ -3,75 +3,78 @@
 Features
 ========
 
-Manage command snippets and solution examples directly from console. The tool is designed
-to support software development and troubleshooting workflows by collecting frequently
-used command examples and troubleshooting solutions into one manager.
+Manage command snippets and solution examples directly from console. The tool
+is designed to support software development and troubleshooting workflows by
+collecting command examples and troubleshooting solutions into one manager.
+The tool may be helpful for example when working with different open source
+components that all have different configuration settings and troubleshooting
+methods. You can share the best examples through common data serialization
+languages YAML or JSON.
 
-Content is divided to two categories called snippets and solutions. Snippets are short
-command examples and solutions longer solution descriptions. You can combine for example
-links and tags with the content in order to help searching and tracking the content.
+Content is divided into two categories called snippets and solutions. Snippets
+are short command examples and solutions are longer solution descriptions. You
+can combine metadata like links and tags with the content in order to help
+searching and tracking the content.
 
-You can operate snippet or solution content with six basic operations: create, search,
-update, delete, import and export. These operations manage the content in persistent
-storage installed into the same location as the tool.
+You can operate snippet or solution content with six basic operations: create,
+search, update, delete, import and export. These operations manage the content
+in persistent file storage installed into the same location as the tool.
 
 .. raw:: html
 
-    <a href="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO"><img src="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO.png"/></a>
+   <a href="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO"><img src="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO.png"/></a>
 
 Installation
 ============
 
-Installaltion from PyPI.
+Installing from PyPI.
 
 .. code-block:: none
 
-    pip install snippy
+   pip install snippy
 
 Installing from Docker Hub.
 
 .. code-block:: none
 
-    docker run heilaaks/snippy
+   docker pull heilaaks/snippy
 
-Installing from repository
+Installing from repository.
 
 .. code-block:: none
 
    git clone https://github.com/heilaaks/snippy.git
    cd snippy
    make install
-   snippy --help
-   make uninstall
 
 Usage
 =====
 
-Snippy commands always include content operation and category. The content operation is
-one of the six basic operations and the category is either snippet or solution. The
-content category is snippet by default. Metadata attached to the content allows adding
-brief description of the content, single group to which the content belongs, list of
-tags to assist search operations and a list of links for more information about the
-content.
+Snippy commands always include content operation and category. The content operation
+is one of the six basic operations and the category is either snippet or solution.
+The content category is snippet by default. Metadata attached to the content allows
+adding brief description of the content, single group to which the content belongs,
+list of tags to assist search operations and a list of links for more information
+about the content.
 
-The search output allows identifying snippets ($), solutions (:), groups (@), tags (#)
-and links (>). This allows easier post processing the content with Linux command line
-tools.
-
-Snippy tool outputs always OK after a successful operation and NOK with a failure
-string in case of failure. You can use ``--debug`` option with the command to help
-investigating problems. For more detailed troubleshooting instructions, please refer
-to contributing_ instructions.
+Snippy tool outputs always OK after successful operation and NOK with a failure
+string in case of failure. You can use debug option with the command to investigate
+possible problems. For more detailed troubleshooting instructions, please refer
+to the contributing_ instructions.
 
 The workflow section below contains the basic use cases. Please see more detailed
 documentation from `Read the Docs`_.
 
 .. note::
 
-    The tool is used by the author in Linux environment. There is an edit functionality
-    with editor that always assumes vi editor. This limitation can be circumvented by
-    using text based templates to import content or command line options in case of
-    snippets.
+   The tool is used by the author in Linux environment. There is an edit functionality
+   with editor that always assumes vi editor. This limitation can be circumvented by
+   using text based templates to import content or command line options in case of
+   snippets.
+
+.. note::
+
+   The default content is provided "as is" basis without warranties of any kind.
 
 Workflows
 =========
@@ -83,8 +86,8 @@ Use help option with keyword examples to read about basic usage.
 
 .. code-block:: none
 
-    snippy --help
-    snippy --help examples
+   snippy --help
+   snippy --help examples
 
 Importing default content
 -------------------------
@@ -94,9 +97,21 @@ content for snippets and solutions.
 
 .. code-block:: none
 
-    snippy import --snippet --defaults
-    snippy import --solution --defaults
+   snippy import --snippet --defaults
+   snippy import --solution --defaults
 
+Using docker container
+----------------------
+
+Snippy tool is available also from Docker container. In this case the default content
+is already imported. How ever, the content cannot be changed because the container is
+immuateble and the content is not mapped from any volume from the host machine. Exactly
+same commands work with container version than the command line version.
+
+.. code-block:: none
+
+   docker run heilaaks/snippy --help
+   docker run heilaaks/snippy search --sall docker
 
 Searching content
 -----------------
@@ -110,8 +125,8 @@ to any character.
 
 .. code-block:: none
 
-    snippy search --sall .
-    snippy search --solution --sall .
+   snippy search --sall .
+   snippy search --solution --sall .
 
 Filtering with grep
 ~~~~~~~~~~~~~~~~~~~
@@ -121,14 +136,14 @@ search query.
 
 .. code-block:: none
 
-    snippy search --sall . --no-ansi | grep '\$'
-    snippy search --sgrp docker --no-ansi | grep '\$'
+   snippy search --sall . --no-ansi | grep '\$'
+   snippy search --sgrp docker --no-ansi | grep '\$'
 
 Filtering out solution content to list only the metadata.
 
 .. code-block:: none
 
-    snippy search --solution --sall . | grep -Ev '[^\s]+:'
+   snippy search --solution --sall . | grep -Ev '[^\s]+:'
 
 Creating content
 ----------------
@@ -142,7 +157,7 @@ links related to the snippet.
 
 .. code-block:: none
 
-    snippy create --snippet --editor
+   snippy create --snippet --editor
 
 Create snippet from text template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -151,8 +166,8 @@ Following commands allows using a text template to import new snippet.
 
 .. code-block:: none
 
-    snippy export --snippet --template
-    snippy import --snippet -f snippet-template.txt
+   snippy export --snippet --template
+   snippy import --snippet -f snippet-template.txt
 
 Create solution from text template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -161,8 +176,8 @@ Following commands allows using a text template to import new solution.
 
 .. code-block:: none
 
-    snippy export --solution --template
-    snippy import --snippet -f solution-template.txt
+   snippy export --solution --template
+   snippy import --snippet -f solution-template.txt
 
 Updating content
 ----------------
@@ -176,7 +191,7 @@ automatically after the file is saved and editor is exit.
 
 .. code-block:: none
 
-    snippy update --digest 54e41e9b52a02b63
+   snippy update --digest 54e41e9b52a02b63
 
 Update solution from text template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -186,8 +201,8 @@ file and importing it again.
 
 .. code-block:: none
 
-    snippy export --digest 4b7ef784a57fcc72
-    snippy import --digest 4b7ef784a57fcc72 --file howto-debug-elastic-beats.txt
+   snippy export --digest 4b7ef784a57fcc72
+   snippy import --digest 4b7ef784a57fcc72 --file howto-debug-elastic-beats.txt
 
 Migrating content
 -----------------
@@ -202,8 +217,10 @@ same directory where the command was executed. You can define the file name and 
 
 .. code-block:: none
 
-    snippy export --solution
-    snippy export --snippet
+   snippy export --snippet
+   snippy export --snippet -f my-snippets.yaml
+   snippy export --solution
+   snippy export --solution -f my-solutions.yaml
 
 Importing content
 ~~~~~~~~~~~~~~~~~
@@ -214,16 +231,16 @@ is executed. You can define the file name and path with the ``-f|--file`` option
 
 .. code-block:: none
 
-    snippy import --solution
-    snippy import --snippet
+   snippy import --snippet
+   snippy import --solution
 
 Contributing
 ============
 
-Bug Reports and Feature Requests
+Bug reports and feature Requests
 --------------------------------
 
-Run the failing command with --debug option to get a better idea what is failing. Please
+Run the failing command with ``--debug`` option to get a better idea what is failing. Please
 fill a bug report based on contributing_ instructions.
 
 

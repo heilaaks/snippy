@@ -164,16 +164,7 @@ class TestWfImportSnippet(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        import_dict = {'content': [{'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
-                                    'brief': 'Remove all docker containers with volumes',
-                                    'group': 'docker',
-                                    'tags': ('cleanup', 'container', 'docker', 'docker-ce', 'moby'),
-                                    'links': ('https://docs.docker.com/engine/reference/commandline/rm/', ),
-                                    'category': 'snippet',
-                                    'filename': '',
-                                    'utc': '2017-10-14 22:22:22',
-                                    'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'}]}
-        #import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE]]}
+        import_dict = {'content': [copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])]}
         import_dict_orig = copy.deepcopy(import_dict)
         import_text = Snippet.get_template(import_dict['content'][0]) + Const.NEWLINE
         mock_yaml_load.return_value = import_dict
@@ -350,18 +341,18 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        not considered as an error and another snippet is imported successfully, the
         ##        result cause is OK.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults(None)
+            snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'import', '-f', './snippets.yaml']   ## workflow
-            assert len(Database.get_contents()) == 2
-            content_before = Database.get_content('54e41e9b52a02b63')
             cause = snippy.run_cli()
-            content_after = Database.get_content('54e41e9b52a02b63')
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
-            Snippet().compare(self, content_after[0], content_before[0])
             assert len(Database.get_contents()) == 3
-            Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': import_dict['content'][0],
-                                                     'f3fd167c64b6f97e': import_dict['content'][1]})
+            print(Database.get_snippets()[0])
+            print(Database.get_snippets()[1])
+            print(Database.get_snippets()[2])
+            Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
+                                                     '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED],
+                                                     'f3fd167c64b6f97e': Snippet.DEFAULTS[Snippet.NETCAT]})
             snippy.release()
             snippy = None
             Database.delete_storage()

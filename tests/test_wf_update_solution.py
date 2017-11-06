@@ -28,15 +28,14 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'f8ded660166ebeef': Solution.get_dictionary(template),
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -46,15 +45,14 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'f8ded660166ebeef': Solution.get_dictionary(template),
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'update', '--solution', '--digest', 'a96ac']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -63,15 +61,14 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'f8ded660166ebeef': Solution.get_dictionary(template),
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -82,15 +79,14 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'f8ded660166ebeef': Solution.get_dictionary(template),
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'update', '--snippet', '-d', 'a96accc25dd23ac0']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -102,15 +98,14 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'f8ded660166ebeef': Solution.get_dictionary(template),
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'update', '-d', 'a96accc25dd23ac0']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -120,15 +115,14 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'update', '--solution', '-d', '123456789abcdef0']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -139,15 +133,14 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'update', '--solution', '-d', '']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: cannot use empty message digest to update content'
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -165,8 +158,6 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'f8ded660166ebeef': Solution.get_dictionary(template),
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             data = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
@@ -174,7 +165,8 @@ class TestWfUpdateSolution(unittest.TestCase):
             cause = snippy.run_cli()
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -183,15 +175,14 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'update', '--solution', '--content', 'solution not existing']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: cannot find content with content data \'solution not existing\''
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -201,15 +192,14 @@ class TestWfUpdateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
-            compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'update', '--solution', '-c', '']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: cannot use empty content data to update content'
             assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Solution.test_content(snippy, mock_file, {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
+                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
             snippy.release()
             snippy = None
             Database.delete_storage()

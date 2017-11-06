@@ -1,4 +1,6 @@
+************* Module tests.test_wf_delete_solution
+W:  9, 0: Unused Constants imported from snippy.config.constants as Const (unused-import)
 
 --------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+Your code has been rated at 10.00/10 (previous run: 10.00/10, -0.00)
 

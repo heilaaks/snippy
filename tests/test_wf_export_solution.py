@@ -81,9 +81,9 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.DEFAULT_TEXT[0])),
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
                                                 mock.call(Const.NEWLINE),
-                                                mock.call(Const.NEWLINE.join(Solution.DEFAULT_TEXT[1])),
+                                                mock.call(Solution.get_template(Solution.DEFAULTS[Solution.NGINX])),
                                                 mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
@@ -98,9 +98,9 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.DEFAULT_TEXT[0])),
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
                                                 mock.call(Const.NEWLINE),
-                                                mock.call(Const.NEWLINE.join(Solution.DEFAULT_TEXT[1])),
+                                                mock.call(Solution.get_template(Solution.DEFAULTS[Solution.NGINX])),
                                                 mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
@@ -143,7 +143,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.DEFAULT_TEXT[0])),
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
                                                 mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
@@ -160,7 +160,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.DEFAULT_TEXT[0])),
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
                                                 mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
@@ -169,7 +169,7 @@ class TestWfExportSolution(unittest.TestCase):
         ## Brief: Export defined solution based on message digest. File name is not defined in
         ##        solution metada or by command line -f|--file option. This should result the
         ##        file name and format defined by tool internal defaults.
-        mocked_data = Const.NEWLINE.join(Solution.DEFAULT_TEXT[2])
+        mocked_data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  : ')
         mocked_open = mock.mock_open(read_data=mocked_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
@@ -259,7 +259,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.DEFAULT_TEXT[0])),
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
                                                 mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
@@ -289,7 +289,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(Solution.DEFAULT_TEXT[0])),
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
                                                 mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
@@ -326,7 +326,7 @@ class TestWfExportSolution(unittest.TestCase):
         ## Brief: Export defined solution based on message digest. File name is not defined in
         ##        solution metadata or by command line -f|--file option. In this case there is
         ##        no space after colon. In this case there is no space after colon.
-        mocked_data = Const.NEWLINE.join(Solution.DEFAULT_TEXT[2])
+        mocked_data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  :')
         mocked_open = mock.mock_open(read_data=mocked_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
@@ -352,7 +352,7 @@ class TestWfExportSolution(unittest.TestCase):
         ## Brief: Export defined solution based on message digest. File name is not defined in
         ##        solution metadata or by command line -f|--file option. In this case there are
         ##        extra spaces around file name.
-        mocked_data = Const.NEWLINE.join(Solution.DEFAULT_TEXT[2])
+        mocked_data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt',
                                           '## FILE  :  kubernetes-docker-log-driver-kafka.txt ')
         mocked_open = mock.mock_open(read_data=mocked_data)
@@ -471,7 +471,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        metadata timestamp is set to match the update time. The date in the solution
         ##        content data is not changes because it is considered that end user may want
         ##        to keep it as is.
-        mocked_data = Const.NEWLINE.join(Solution.DEFAULT_TEXT[0])
+        mocked_data = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         original = mocked_data
         mocked_data = mocked_data.replace('## DATE  : 2017-10-20 11:11:19',
                                           '## DATE  : ')

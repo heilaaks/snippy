@@ -125,7 +125,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ## Brief: Delete solution based on content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            data = Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX])
+            data = Solution.get_template(Solution.DEFAULTS[Solution.NGINX])
             sys.argv = ['snippy', 'delete', '--solution', '--content', data]  ## workflow
             cause = snippy.run_cli()
             assert cause == 'OK'
@@ -150,7 +150,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ##        content data is truncated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            data = Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.KAFKA])
+            data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
             sys.argv = ['snippy', 'delete', '--solution', '--content', data]  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: cannot find content with content data \'##############################...\''

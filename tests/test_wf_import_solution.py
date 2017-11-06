@@ -29,26 +29,7 @@ class TestWfImportSolution(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        import_dict = {'content': [{'data': tuple(Solution.DEFAULT_TEXT[0]),
-                                    'brief': 'Debugging Elastic Beats',
-                                    'group': 'beats',
-                                    'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
-                                    'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
-                                    'category': 'solution',
-                                    'filename': 'howto-debug-elastic-beats.txt',
-                                    'utc': None,
-                                    'digest': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
-                                   {'data': tuple(Solution.DEFAULT_TEXT[2]),
-                                    'brief': 'Testing docker log drivers',
-                                    'group': 'docker',
-                                    'tags': ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin'),
-                                    'links': ('https://github.com/MickayG/moby-kafka-logdriver',
-                                              'https://github.com/garo/logs2kafka',
-                                              'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'),
-                                    'category': 'solution',
-                                    'filename': 'kubernetes-docker-log-driver-kafka.txt',
-                                    'utc': '2017-10-12 11:53:17',
-                                    'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'}]}
+        import_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.KAFKA]]}
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict
         compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
@@ -128,8 +109,8 @@ class TestWfImportSolution(unittest.TestCase):
 
         ## Brief: Import all solutions from txt file. File name and format are extracted from
         ##        command line option -f|--file. File extension is '*.txt' in this case.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[0]) +
-                                     Const.NEWLINE+Const.NEWLINE.join(Solution.DEFAULT_TEXT[2]))
+        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]) +
+                                     Solution.get_template(Solution.DEFAULTS[Solution.KAFKA]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', './all-solutions.txt']  ## workflow
@@ -145,8 +126,8 @@ class TestWfImportSolution(unittest.TestCase):
         ## Brief: Import all solutions from txt file without specifying the solution category.
         ##        File name and format are extracted from command line option -f|--file. File
         ##        extension is '*.txt' in this case.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[0]) +
-                                     Const.NEWLINE+Const.NEWLINE.join(Solution.DEFAULT_TEXT[2]))
+        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]) +
+                                     Solution.get_template(Solution.DEFAULTS[Solution.KAFKA]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './all-solutions.txt']  ## workflow
@@ -162,9 +143,9 @@ class TestWfImportSolution(unittest.TestCase):
 
         ## Brief: Import all solutions from txt file. File name and format are extracted from
         ##        command line option -f|--file. File extension is '*.text' in this case.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[0]) +
+        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]) +
                                      Const.NEWLINE +
-                                     Const.NEWLINE.join(Solution.DEFAULT_TEXT[2]))
+                                     Solution.get_template(Solution.DEFAULTS[Solution.KAFKA]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', './all-solutions.text']  ## workflow
@@ -180,9 +161,9 @@ class TestWfImportSolution(unittest.TestCase):
         ## Brief: Import all solutions from txt file without specifying the solution category.
         ##        File name and format are extracted from command line option -f|--file. File
         ##        extension is '*.text' in this case.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[0]) +
+        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]) +
                                      Const.NEWLINE +
-                                     Const.NEWLINE.join(Solution.DEFAULT_TEXT[2]))
+                                     Solution.get_template(Solution.DEFAULTS[Solution.KAFKA]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './all-solutions.text']  ## workflow
@@ -227,7 +208,7 @@ class TestWfImportSolution(unittest.TestCase):
 
         ## Brief: Try to import solution from file which file format is not supported. This
         ##        should result error text for end user and no files should be read.
-        mocked_open = mock.mock_open(read_data=Solution.DEFAULT_TEXT[0])
+        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', './foo.bar']  ## workflow
@@ -248,7 +229,7 @@ class TestWfImportSolution(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        updated_solution = Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX])
+        updated_solution = Solution.get_template(Solution.DEFAULTS[Solution.NGINX])
         updated_solution = updated_solution.replace('# Instructions how to debug nginx', '# Changed instruction set')
         import_dict = {'content': [{'data': tuple(updated_solution.split(Const.NEWLINE)),
                                     'brief': 'Debugging nginx',
@@ -394,7 +375,7 @@ class TestWfImportSolution(unittest.TestCase):
             Database.delete_storage()
 
         ## Brief: Import new solution from text file. In this case the file extension is '*.txt'.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX]))
+        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', 'one-solution.txt']  ## workflow
@@ -409,7 +390,7 @@ class TestWfImportSolution(unittest.TestCase):
 
         ## Brief: Import new solution from text file without specifying the content category
         ##        explicitly. In this case the file extension is '*.txt'.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX]))
+        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', 'one-solution.txt']  ## workflow
@@ -424,7 +405,7 @@ class TestWfImportSolution(unittest.TestCase):
             Database.delete_storage()
 
         ## Brief: Import new solution from text file. In this case the file extension is '*.text'.
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.DEFAULT_TEXT[Solution.NGINX]))
+        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', 'one-solution.text']  ## workflow

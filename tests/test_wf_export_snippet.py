@@ -86,24 +86,6 @@ class TestWfExportSnippet(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
-        export_text = ('# Commented lines will be ignored.',
-                       '#',
-                       '# Add mandatory snippet below.',
-                       'docker rm --force redis',
-                       '',
-                       '# Add optional brief description below.',
-                       'Remove docker image with force',
-                       '',
-                       '# Add optional single group below.',
-                       'docker',
-                       '',
-                       '# Add optional comma separated list of tags below.',
-                       'cleanup,container,docker,docker-ce,moby',
-                       '',
-                       '# Add optional links below one link per line.',
-                       'https://docs.docker.com/engine/reference/commandline/rm/',
-                       'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
-                       '')
 
         ## Brief: Export defined snippet based on message digest. File name is not defined in command
         ##        line -f|--file option. This should result usage of default file name and format
@@ -115,7 +97,8 @@ class TestWfExportSnippet(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(export_text)), mock.call(Const.NEWLINE)])
+            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
+                                                mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -129,7 +112,8 @@ class TestWfExportSnippet(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Const.NEWLINE.join(export_text)), mock.call(Const.NEWLINE)])
+            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
+                                                mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
             Database.delete_storage()

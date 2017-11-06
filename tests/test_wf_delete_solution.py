@@ -6,7 +6,6 @@ import sys
 import unittest
 import mock
 from snippy.snip import Snippy
-from snippy.config.constants import Constants as Const
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database

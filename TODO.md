@@ -1,7 +1,9 @@
 ## TODO
    - [ ] Update documents.
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
+   - [ ] Fix 'snippy', 'search', '--filter', '.*(\$\s.*)' that produces internal error.
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
+   - [ ] Check the config() in Config().reset(). Should this be Config.reset()?
    - [ ] Add tests to rung search keywords (stag, sall, sgrp) for update and delete operations.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.

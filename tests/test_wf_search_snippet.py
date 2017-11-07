@@ -21,23 +21,15 @@ class TestWfSearchSnippet(unittest.TestCase):
     """Test workflows for searching snippets."""
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_searching_snippets_with_sall_option(self, mock_get_db_location): # pylint: disable=too-many-statements
-        """Search snippet with --sall option.
-
-        Expected results:
-            1 Snippet is found from data with --sall option.
-            2 Snippet is found from brief with --sall option.
-            3 Snippet is found from group with --sall option.
-            4 Snippet is found from tags with --sall option
-            5 Snippet is found with --sall option based on digest.
-            6 All snippets are listed with keyword '.' for --sall option.
-            7 All snippets are listed when no keywords are provided for --sall option.
-            8 Exit cause is always OK.
-        """
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_search_snippet_with_sall(self, mock_isfile, mock_get_db_location):
+        """Search snippet from all fields."""
 
         mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
 
-        ## Brief: Search snippets from all fields matching to data field content.
+        ## Brief: Search snippets from all fields. The match is made from one snippet
+        ##        content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('1. Remove docker image with force @docker [53908d68425c61dc]',
                       '   $ docker rm --force redis',
@@ -45,9 +37,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'search', '--sall', 'redis', '--no-ansi']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
@@ -58,209 +50,335 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        saved_stdout = sys.stdout
-        snippy = Snippet.add_defaults(None)
+        ## Brief: Search snippets from all fields. The match is made from one snippet
+        ##        brief description.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', 'all', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
-        ## Brief: Search snippets from all fields matching to data field content.
-        out = StringIO()
-        sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'redis', '--no-ansi']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        output = out.getvalue().strip()
-        sys.stdout = saved_stdout
-        assert cause == Cause.ALL_OK
-        assert output == '1. Remove docker image with force @docker [53908d68425c61dc]\n' \
-                         '   $ docker rm --force redis\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+        ## Brief: Search snippets from all fields. The match is made from two snippets
+        ##        group metadata.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', 'docker', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
-        ## Brief: Search snippets from all fields matching to brief field content.
-        out = StringIO()
-        sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'all', '--no-ansi']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        output = out.getvalue().strip()
-        sys.stdout = saved_stdout
-        assert cause == Cause.ALL_OK
-        assert output == '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]\n' \
-                         '   $ docker rm --volumes $(docker ps --all --quiet)\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/'
 
-        ## Brief: Search snippets from all fields matching to group field content.
-        out = StringIO()
-        sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'docker', '--no-ansi']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        output = out.getvalue().strip()
-        sys.stdout = saved_stdout
-        assert cause == Cause.ALL_OK
-        assert output == '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]\n' \
-                         '   $ docker rm --volumes $(docker ps --all --quiet)\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '\n' \
-                         '2. Remove docker image with force @docker [53908d68425c61dc]\n' \
-                         '   $ docker rm --force redis\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+        ## Brief: Search snippets from all fields. The match is made from two snippets
+        ##        tags metadata.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', 'moby', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
-        ## Brief: Search snippets from all fields matching to tags field content.
-        out = StringIO()
-        sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', 'moby', '--no-ansi']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        output = out.getvalue().strip()
-        sys.stdout = saved_stdout
-        assert cause == Cause.ALL_OK
-        assert output == '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]\n' \
-                         '   $ docker rm --volumes $(docker ps --all --quiet)\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '\n' \
-                         '2. Remove docker image with force @docker [53908d68425c61dc]\n' \
-                         '   $ docker rm --force redis\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-
-        ## Brief: Search snippets from all fields matching to digest field content.
-        out = StringIO()
-        sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        output = out.getvalue().strip()
-        sys.stdout = saved_stdout
-        assert cause == Cause.ALL_OK
-        assert output == '1. Remove docker image with force @docker [53908d68425c61dc]\n' \
-                         '   $ docker rm --force redis\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+        ## Brief: Search snippets from all fields. The match is made from one snippet
+        ##        digest data.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
         ## Brief: List all snippets by defining search criteria of search all to 'match any'.
-        out = StringIO()
-        sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '.', '--no-ansi']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        output = out.getvalue().strip()
-        sys.stdout = saved_stdout
-        assert cause == Cause.ALL_OK
-        assert output == '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]\n' \
-                         '   $ docker rm --volumes $(docker ps --all --quiet)\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '\n' \
-                         '2. Remove docker image with force @docker [53908d68425c61dc]\n' \
-                         '   $ docker rm --force redis\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', '.', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
-        ## Brief: List all snippets by leaving search criteria of search all as empty.
-        out = StringIO()
-        sys.stdout = out
-        sys.argv = ['snippy', 'search', '--sall', '--no-ansi']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        output = out.getvalue().strip()
-        sys.stdout = saved_stdout
-        assert cause == Cause.ALL_OK
-        assert output == '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]\n' \
-                         '   $ docker rm --volumes $(docker ps --all --quiet)\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '\n' \
-                         '2. Remove docker image with force @docker [53908d68425c61dc]\n' \
-                         '   $ docker rm --force redis\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+        ## Brief: List all snippets by leaving search criteria of search all oout completely.
+        ##        This is translated to 'match any'.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
-        # Release all resources
-        snippy.release()
+        ## Brief: List all snippets by leaving search criteria of search all as empty. This is
+        ##        translated to 'match any'.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', '', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_searching_snippet_with_content(self, mock_get_db_location): # pylint: disable=too-many-statements
-        """Search snippet with --content option.
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_search_snippet_with_stag(self, mock_isfile, mock_get_db_location):
+        """Search snippet from tag field."""
 
-        Expected results:
-            1 Snippet is found based on content data.
-            2 Exit cause is OK.
-        """
-
-        saved_stdout = sys.stdout
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = Snippet.add_defaults(None)
+        mock_isfile.return_value = True
 
-        ## Brief: Search snippets based on snippet data.
-        out = StringIO()
-        sys.stdout = out
-        sys.argv = ['snippy', 'search', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        output = out.getvalue().strip()
-        sys.stdout = saved_stdout
-        assert cause == Cause.ALL_OK
-        assert output == '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]\n' \
-                         '   $ docker rm --volumes $(docker ps --all --quiet)\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/'
-
-        # Release all resources
-        snippy.release()
+        ## Brief: Search snippets from tag field. The match is made from one snippet
+        ##        content data.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Test if specific port is open @linux [f3fd167c64b6f97e]',
+                      '   $ nc -v 10.183.19.189 443',
+                      '   $ nmap 10.183.19.189',
+                      '',
+                      '   # linux,netcat,networking,port',
+                      '   > https://www.commandlinux.com/man-page/man1/nc.1.html')
+            snippy = Snippet.add_defaults(Snippy())
+            Snippet.add_one(snippy, Snippet.NETCAT)
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--stag', 'netcat', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_searching_snippet_with_digest(self, mock_get_db_location): # pylint: disable=too-many-statements
-        """Search snippet with --digest option.
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_search_snippet_with_sgrp(self, mock_isfile, mock_get_db_location):
+        """Search snippet from group field."""
 
-        Expected results:
-            1 Snippet is found based on content digest.
-            2 Exit cause is OK.
-        """
-
-        saved_stdout = sys.stdout
         mock_get_db_location.return_value = Database.get_storage()
-        snippy = Snippet.add_defaults(None)
+        mock_isfile.return_value = True
 
-        ## Brief: Search snippet by explicitly defining 16 character long partial message digest.
-        out = StringIO()
-        sys.stdout = out
-        sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi']  ## workflow
-        snippy.reset()
-        cause = snippy.run_cli()
-        output = out.getvalue().strip()
-        sys.stdout = saved_stdout
-        assert cause == Cause.ALL_OK
-        assert output == '1. Remove docker image with force @docker [53908d68425c61dc]\n' \
-                         '   $ docker rm --force redis\n' \
-                         '\n' \
-                         '   # cleanup,container,docker,docker-ce,moby\n' \
-                         '   > https://docs.docker.com/engine/reference/commandline/rm/\n' \
-                         '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
+        ## Brief: Search snippets from tag field. The match is made from one snippet
+        ##        content data.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Test if specific port is open @linux [f3fd167c64b6f97e]',
+                      '   $ nc -v 10.183.19.189 443',
+                      '   $ nmap 10.183.19.189',
+                      '',
+                      '   # linux,netcat,networking,port',
+                      '   > https://www.commandlinux.com/man-page/man1/nc.1.html')
+            snippy = Snippet.add_defaults(Snippy())
+            Snippet.add_one(snippy, Snippet.NETCAT)
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sgrp', 'linux', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
-        # Release all resources
-        snippy.release()
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_search_snippet_with_data(self, mock_isfile, mock_get_db_location):
+        """Search snippets with --content option."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
+
+        ## Brief: Search snippets based on content data.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/')
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'search', '--content', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_searching_snippet_with_digest(self, mock_isfile, mock_get_db_location):
+        """Search snippet with --digest option."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
+
+        ## Brief: Search snippet by explicitly defining short message digest.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Search snippets by defining one digit message digest. In this case the
+        ##        searched digit matches to two snippets.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'search', '--digest', '5', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
     # pylint: disable=duplicate-code
     def tearDown(self):

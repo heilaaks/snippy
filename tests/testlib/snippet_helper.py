@@ -317,12 +317,15 @@ class SnippetHelper(object):
         if not snippy:
             snippy = Snippy()
 
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(index)
+        mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[index]))
+        print(mocked_open)
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+            sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
             snippy.reset()
+            contents = len(Database.get_snippets())
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 1
+            assert len(Database.get_snippets()) == contents + 1
 
         return snippy
 

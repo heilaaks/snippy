@@ -1,9 +1,8 @@
 ## TODO
    - [ ] Update documents.
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
-   - [ ] Fix test_content_text away to use Snippet.test_content(). This syncs the solution and snippet helpers.
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
-   - [ ] Add tests to use search keywords for update and delete operations.
+   - [ ] Add tests to rung search keywords (stag, sall, sgrp) for update and delete operations.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.

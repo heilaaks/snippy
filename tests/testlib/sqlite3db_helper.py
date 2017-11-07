@@ -42,6 +42,7 @@ class Sqlite3DbHelper(object):
     def get_content(digest):
         """Return content based on digest."""
 
+        rows = ()
         conn, cursor = Sqlite3DbHelper._connect_db()
         query = ('SELECT * FROM contents WHERE digest LIKE ?')
         qargs = [digest+'%']
@@ -59,6 +60,7 @@ class Sqlite3DbHelper(object):
     def get_category(category):
         """Return content based on category."""
 
+        rows = ()
         conn, cursor = Sqlite3DbHelper._connect_db()
         query = ('SELECT * FROM contents WHERE category=?')
         qargs = [category]

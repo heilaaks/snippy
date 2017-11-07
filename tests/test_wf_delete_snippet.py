@@ -15,10 +15,12 @@ class TestWfDeleteSnippet(unittest.TestCase):
     """Test workflows for deleting snippets."""
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_delete_snippet_with_digest(self, mock_get_db_location):
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_delete_snippet_with_digest(self, mock_isfile, mock_get_db_location):
         """Delete snippet with digest."""
 
         mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
 
         ## Brief: Delete snippet with short 16 byte version of message digest.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):

@@ -539,23 +539,25 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_search(cls):
         """Process the user given search keywords and field."""
 
-        arg = ()
+        args = ()
         field = Const.NO_SEARCH
         if cls.args.is_search_all():
-            arg = cls.args.get_search_all()
+            args = cls.args.get_search_all()
             field = Const.SEARCH_ALL
         elif cls.args.is_search_tag():
-            arg = cls.args.get_search_tag()
+            args = cls.args.get_search_tag()
             field = Const.SEARCH_TAG
         elif cls.args.is_search_grp():
-            arg = cls.args.get_search_grp()
+            args = cls.args.get_search_grp()
             field = Const.SEARCH_GRP
 
-        if not arg and (field != Const.NO_SEARCH):
+        # The args list may be empty or it can contain empty string. Both cases
+        # must be evaluated to 'match all'.
+        if not any(args) and (field != Const.NO_SEARCH):
             cls.logger.info('listing all content from category because no keywords were provided')
-            arg = ('.')
+            args = ('.')
 
-        return (field, Editor.get_keywords(arg))
+        return (field, Editor.get_keywords(args))
 
     @classmethod
     def _parse_search_filter(cls):

@@ -161,11 +161,11 @@ content:
   - yum remove docker-engine
   - yum install -y yum-utils device-mapper-persistent-data lvm2
   - yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-  - yum install -y ftp://195.220.108.108/linux/centos/7.3.1611/extras/x86_64/Packages/container-selinux-2.19-2.1.el7.noarch.rpm
+  - yum install -y ftp://ftp.pbone.net/mirror/ftp.centos.org/7.4.1708/extras/x86_64/Packages/container-selinux-2.21-2.gitba103ac.el7.noarch.rpm
   - yum -y install docker-ce
   - systemctl daemon-reload
   - systemctl restart docker
-  digest: ec167c939e72ca643e321591bc5ba78eb2d05b5208528a6f2058359274a72dd7
+  digest: 27b35baafc86eddd7cc33475066dc1d6f327f1312bf956005e3cc26636c9c54d
   filename: ''
   group: docker
   links:
@@ -181,7 +181,7 @@ content:
   - moby
   - rhel
   - rpm
-  utc: '2017-10-19 10:44:53'
+  utc: '2017-11-07 08:07:16'
 - brief: Initialize, deploy and remove docker swarm
   category: snippet
   data:
@@ -363,3 +363,17 @@ content:
   - template
   - update
   utc: '2017-10-24 07:14:04'
+- brief: Perform recursive git pull on subdirectories
+  category: snippet
+  data:
+  - find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull" \;
+  digest: ca12adbd62ce818e05ef6d48b5396ba04eaf0b485ffa6c7386d980bf01e408bc
+  filename: ''
+  group: git
+  links:
+  - http://snipplr.com/view/62314/perform-git-pull-on-subdirectory-recursive/
+  - https://stackoverflow.com/questions/3497123/run-git-pull-over-all-subdirectories
+  tags:
+  - git
+  - pull
+  utc: '2017-11-07 07:58:46'

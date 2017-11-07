@@ -5,6 +5,7 @@
 import sys
 import unittest
 import mock
+from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.storage.database.sqlite3db import Sqlite3Db
@@ -34,8 +35,30 @@ class TestWfSearchSnippet(unittest.TestCase):
             8 Exit cause is always OK.
         """
 
-        saved_stdout = sys.stdout
         mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Search snippets from all fields matching to data field content.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'search', '--sall', 'redis', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        saved_stdout = sys.stdout
         snippy = Snippet.add_defaults(None)
 
         ## Brief: Search snippets from all fields matching to data field content.

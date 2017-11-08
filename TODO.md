@@ -3,17 +3,16 @@
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
    - [ ] Fix 'snippy', 'search', '--filter', '.*(\$\s.*)' that produces internal error.
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
+   - [ ] Test that snippy.reset() really resets the config and arguments.
    - [ ] Migrate operation can combine same kind of search than in update. Do Config.is_search_context to T for digest,content,KW and run search always for second option.
-   - [ ] Check the config() in Config().reset(). Should this be Config.reset()?
-   - [ ] Add tests to rung search keywords (stag, sall, sgrp) for update and delete operations.
+   - [ ] Refactor importing of text template since it is bit messy at the moment.
+   - [ ] Add tests to run search keywords (stag, sall, sgrp) for update and delete operations.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
    - [ ] Add upgrade procedure. How?
-   - [ ] If no content is imported at all, there is OK. This should be likely NOK. This is coming from bulk insert.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] Check signing commits (https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
-   - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix upgrading snippy does not update new defaults? Tried with make install to install new version.
    - [ ] Fix case described in 'git log 11448a2e90dab3a' and somehow and make test_wf a bit nicer?
@@ -23,6 +22,8 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Changed the Config().reset() to not to create new object when calling and returning from reset().
+   - [x] Fixed incorrect OK result when no content was imported at all.
    - [x] Fixed import failure message when same solution data was imported twice.
    - [x] Added support for importing multiple contents from text format.
    - [x] Fixed PyPI long description that was wrapping lines incorrect.

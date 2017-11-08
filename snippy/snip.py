@@ -45,7 +45,7 @@ class Snippy(object):
         """Reset session."""
 
         self.cause = Cause.reset()
-        self.config = Config().reset()
+        self.config = Config.reset()
         self.snippet = Snippet(self.storage)
         self.solution = Solution(self.storage)
 

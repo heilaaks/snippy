@@ -86,8 +86,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Config.args = {}
         Config.config = {}
 
-        return Config()
-
     @classmethod
     def get_content(cls, content, use_editor=False):
         """Return content after it has been optionally edited."""

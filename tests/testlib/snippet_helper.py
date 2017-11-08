@@ -2,7 +2,6 @@
 
 """snippet_helper.py: Helper methods for snippet testing."""
 
-import re
 import sys
 import six
 import mock
@@ -18,7 +17,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class SnippetHelper(object):
     """Helper methods for snippet testing."""
 
-    UTC = '2017-10-01 11:53:17'
+    UTC = '2017-10-14 19:56:31'
     REMOVE = 0
     FORCED = 1
     EXITED = 2
@@ -66,63 +65,6 @@ class SnippetHelper(object):
                  'utc': '2017-10-20 07:08:45',
                  'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'})
 
-    SNIPPETS = ((('docker rm --volumes $(docker ps --all --quiet)',),
-                 'Remove all docker containers with volumes',
-                 'docker',
-                 ('docker-ce', 'docker', 'moby', 'container', 'cleanup'),
-                 ('https://docs.docker.com/engine/reference/commandline/rm/',),
-                 Const.SNIPPET,
-                 '',
-                 None,
-                 '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                 None,
-                 None,
-                 """--content 'docker rm --volumes $(docker ps --all --quiet)'
-                    --brief 'Remove all docker containers with volumes'
-                    --group docker
-                    --tags docker-ce,docker,moby,container,cleanup
-                    --links 'https://docs.docker.com/engine/reference/commandline/rm/'"""),
-
-                (('docker rm --force redis',),
-                 'Remove docker image with force',
-                 'docker',
-                 ('docker-ce', 'docker', 'moby', 'container', 'cleanup'),
-                 ('https://docs.docker.com/engine/reference/commandline/rm/',
-                  'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'),
-                 Const.SNIPPET,
-                 '',
-                 None,
-                 '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                 None,
-                 None,
-                 """-c 'docker rm --force redis'
-                    -b 'Remove docker image with force'
-                    -g 'docker'
-                    -t docker-ce,docker,moby,container,cleanup
-                    -l 'https://docs.docker.com/engine/reference/commandline/rm/
-                        https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'"""),
-
-                (('docker rm $(docker ps --all -q -f status=exited)', 'docker images -q --filter dangling=true | xargs docker rmi'),
-                 'Remove all exited containers and dangling images',
-                 'docker',
-                 ('docker-ce', 'docker', 'moby', 'container', 'cleanup', 'image'),
-                 ('https://docs.docker.com/engine/reference/commandline/rm/',
-                  'https://docs.docker.com/engine/reference/commandline/images/',
-                  'https://docs.docker.com/engine/reference/commandline/rmi/'),
-                 Const.SNIPPET,
-                 '',
-                 None,
-                 '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
-                 None,
-                 None,
-                 """-c 'docker rm $(docker ps --all -q -f status=exited)\ndocker images -q --filter dangling=true | xargs docker rmi'
-                    -b 'Remove all exited containers and dangling images'
-                    -g 'docker'
-                    -t docker-ce,docker,moby,container,cleanup,image
-                    -l 'https://docs.docker.com/engine/reference/commandline/rm/
-                        https://docs.docker.com/engine/reference/commandline/images/
-                        https://docs.docker.com/engine/reference/commandline/rmi/'"""))
-
     TEMPLATE = ('# Commented lines will be ignored.',
                 '#',
                 '# Add mandatory snippet below.',
@@ -142,87 +84,105 @@ class SnippetHelper(object):
                 '')
 
     @staticmethod
-    def get_references(index=0, sliced=None):
-        """Return specified snippet."""
+    def get_content(text=None, snippet=None):
+        """Transform text template to content."""
 
-        if sliced:
-            sliced = sliced.split(':')
-            snippets = SnippetHelper.SNIPPETS[int(sliced[0]):int(sliced[1])]
-            snippets = [Content(x[Const.DATA:Const.TESTING]) for x in snippets]
-            snippets = tuple(snippets)
+        if text:
+            content = Content(content=(Const.EMPTY,)*11, category=Const.SNIPPET)
+            editor = Editor(Content(content=(Const.EMPTY,)*11, category=Const.SNIPPET), SnippetHelper.UTC, text)
+            content.set((editor.get_edited_data(),
+                         editor.get_edited_brief(),
+                         editor.get_edited_group(),
+                         editor.get_edited_tags(),
+                         editor.get_edited_links(),
+                         editor.get_edited_category(),
+                         editor.get_edited_filename(),
+                         editor.get_edited_date(),
+                         content.get_digest(),
+                         content.get_metadata(),
+                         content.get_key()))
+            content.update_digest()
         else:
-            snippets = Content(SnippetHelper.SNIPPETS[index][Const.DATA:Const.TESTING])
+            content = Content.load({'content': [SnippetHelper.DEFAULTS[snippet]]})[0]
 
-        return snippets
-
-    @staticmethod
-    def get_command_args(snippet, regexp=r'^\'|\'$'): # ' <-- For UltraEditor code highlights problem.
-        """Get command line arguments from snippets list."""
-
-        args = [re.sub(regexp, Const.EMPTY, arg)
-                for arg in re.split("('.*?'| )", SnippetHelper.SNIPPETS[snippet][Const.TESTING], flags=re.DOTALL) if arg.strip()]
-
-        # Replace multiple spaces with one. These are coming from the snippet
-        # definition that splits for example the link parameter to multiple
-        # lines.
-        args = [re.sub(r'\s{2,}', Const.SPACE, argument).strip() for argument in args]
-
-        return args
+        return content
 
     @staticmethod
-    def get_command_string(snippet):
-        """Return command string from snippets list."""
+    def get_dictionary(template):
+        """Transform template to dictinary."""
 
-        command = Const.SPACE.join(SnippetHelper.get_command_args(snippet, Const.NEWLINE))
+        content = SnippetHelper.get_content(text=template)
+        dictionary = Migrate.get_dictionary_list([content])
 
-        return command
-
-    @staticmethod
-    def get_edited_message(initial, updates, columns):
-        """Create mocked editor default template and new content with merged updates."""
-
-        # Merge the content from initial set based on updates data from columns
-        # defined by user. Calculate the digest for merged content and convert
-        # back to Content().
-        merged_list = initial.get_list()
-        updates_list = updates.get_list()
-        for column in columns:
-            merged_list[column] = updates_list[column]
-        merged = Content((merged_list))
-        merged_list[Const.DIGEST] = merged.compute_digest()
-        merged = Content((merged_list))
-        template = Editor(merged, SnippetHelper.UTC).get_template()
-
-        return (template, merged)
+        return dictionary[0]
 
     @staticmethod
-    def compare(testcase, snippet, reference):
-        """Compare two snippets."""
+    def get_template(dictionary):
+        """Transform dictionary to text template."""
 
-        # Test that all fields excluding id and onwards are equal.
-        six.assertCountEqual(testcase, snippet.get_data(), reference.get_data())
-        testcase.assertEqual(snippet.get_brief(), reference.get_brief())
-        testcase.assertEqual(snippet.get_group(), reference.get_group())
-        six.assertCountEqual(testcase, snippet.get_tags(), reference.get_tags())
-        six.assertCountEqual(testcase, snippet.get_links(), reference.get_links())
-        testcase.assertEqual(snippet.get_category(), reference.get_category())
-        testcase.assertEqual(snippet.get_filename(), reference.get_filename())
-        testcase.assertEqual(snippet.get_digest(), reference.get_digest())
-        testcase.assertEqual(snippet.get_metadata(), reference.get_metadata())
+        contents = Content.load({'content': [dictionary]})
+        editor = Editor(contents[0], SnippetHelper.UTC)
 
-        # Test that the tags and links are sorted.
-        testcase.assertEqual(snippet.get_tags(), tuple(sorted(reference.get_tags())))
-        testcase.assertEqual(snippet.get_links(), tuple(sorted(reference.get_links())))
+        return editor.get_template()
 
-        # Test that tags and links are lists and rest of the fields strings.
-        assert isinstance(snippet.get_data(), tuple)
-        assert isinstance(snippet.get_brief(), six.string_types)
-        assert isinstance(snippet.get_group(), six.string_types)
-        assert isinstance(snippet.get_tags(), tuple)
-        assert isinstance(snippet.get_links(), tuple)
-        assert isinstance(snippet.get_category(), six.string_types)
-        assert isinstance(snippet.get_filename(), six.string_types)
-        assert isinstance(snippet.get_digest(), six.string_types)
+    @staticmethod
+    def add_defaults(snippy):
+        """Add default snippets for testing purposes."""
+
+        if not snippy:
+            snippy = Snippy()
+
+        mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[SnippetHelper.REMOVE]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+            sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
+
+        mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[SnippetHelper.FORCED]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+            sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 2
+
+        return snippy
+
+    @staticmethod
+    def add_one(snippy, index):
+        """Add one default snippet for testing purposes."""
+
+        if not snippy:
+            snippy = Snippy()
+
+        mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[index]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+            sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
+            snippy.reset()
+            contents = len(Database.get_snippets())
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == contents + 1
+
+        return snippy
+
+    @staticmethod
+    def test_content(snippy, mock_file, dictionary):
+        """Compare given dictionary against content stored in database based on message digest."""
+
+        for digest in dictionary:
+            mock_file.reset_mock()
+            sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
+            snippy.reset()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-content.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(SnippetHelper.get_template(dictionary[digest])),
+                                                mock.call(Const.NEWLINE)])
+
 
     @staticmethod
     def compare_db(testcase, snippet, reference):
@@ -248,98 +208,3 @@ class SnippetHelper(object):
         assert isinstance(snippet[Const.CATEGORY], six.string_types)
         assert isinstance(snippet[Const.FILENAME], six.string_types)
         assert isinstance(snippet[Const.DIGEST], six.string_types)
-
-    @staticmethod
-    def get_content(template):
-        """Transform text template to content."""
-
-        content = Content(content=(Const.EMPTY,)*11, category=Const.SNIPPET)
-        editor = Editor(Content(content=(Const.EMPTY,)*11, category=Const.SNIPPET), SnippetHelper.UTC, template)
-        content.set((editor.get_edited_data(),
-                     editor.get_edited_brief(),
-                     editor.get_edited_group(),
-                     editor.get_edited_tags(),
-                     editor.get_edited_links(),
-                     editor.get_edited_category(),
-                     editor.get_edited_filename(),
-                     editor.get_edited_date(),
-                     content.get_digest(),
-                     content.get_metadata(),
-                     content.get_key()))
-        content.update_digest()
-
-        return content
-
-    @staticmethod
-    def get_dictionary(template):
-        """Transform template to dictinary."""
-
-        content = SnippetHelper.get_content(template)
-        dictionary = Migrate.get_dictionary_list([content])
-
-        return dictionary[0]
-
-    @staticmethod
-    def get_template(dictionary):
-        """Transform dictionary to text template."""
-
-        contents = Content.load({'content': [dictionary]})
-        editor = Editor(contents[0], SnippetHelper.UTC)
-
-        return editor.get_template()
-
-    @staticmethod
-    def add_defaults(snippy):
-        """Add default snippets for testing purposes."""
-
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(0)
-            if not snippy:
-                snippy = Snippy()
-            snippy.reset()
-            cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 1
-
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            sys.argv = ['snippy', 'create'] + SnippetHelper.get_command_args(1)
-            snippy.reset()
-            cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 2
-
-        return snippy
-
-    @staticmethod
-    def add_one(snippy, index):
-        """Add one default snippet for testing purposes."""
-
-        if not snippy:
-            snippy = Snippy()
-
-        mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[index]))
-        print(mocked_open)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
-            snippy.reset()
-            contents = len(Database.get_snippets())
-            cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == contents + 1
-
-        return snippy
-
-    @staticmethod
-    def test_content(snippy, mock_file, dictionary):
-        """Compare given dictionary against content stored in database based on message digest."""
-
-        for digest in dictionary:
-            mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
-            snippy.reset()
-            cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-content.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(SnippetHelper.get_template(dictionary[digest])),
-                                                mock.call(Const.NEWLINE)])

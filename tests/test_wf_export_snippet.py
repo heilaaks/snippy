@@ -23,11 +23,13 @@ class TestWfExportSnippet(unittest.TestCase):
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_export_all_snippets(self, mock_get_db_location, mock_get_utc_time, mock_safe_dump):
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_export_all_snippets(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_safe_dump):
         """Export all snippets."""
 
+        mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        mock_get_utc_time.return_value = Snippet.UTC
         export_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export all snippets without defining target file name from command line.
@@ -102,9 +104,9 @@ class TestWfExportSnippet(unittest.TestCase):
     def test_export_defined_snippet(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export defined snippet."""
 
-        mock_get_db_location.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = Snippet.UTC
         export_dict = {'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export defined snippet based on message digest. File name is not defined in command
@@ -172,7 +174,7 @@ class TestWfExportSnippet(unittest.TestCase):
         """Export snippet template."""
 
         mock_get_db_location.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        mock_get_utc_time.return_value = Snippet.UTC
         template = Snippet.TEMPLATE
 
         ## Brief: Export snippet template. This should result file name and format based on
@@ -211,7 +213,7 @@ class TestWfExportSnippet(unittest.TestCase):
         """Export snippet defaults."""
 
         mock_get_db_location.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = '2017-10-14 19:56:31' # Snippet.UTC
+        mock_get_utc_time.return_value = Snippet.UTC
         mock_isfile.return_value = True
         export_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 

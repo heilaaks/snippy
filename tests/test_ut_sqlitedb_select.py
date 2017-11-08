@@ -21,10 +21,10 @@ class TestUtSqlite3dbSelect(unittest.TestCase):
 
         mock_is_search_all.return_value = True
 
-        initial = Snippet().get_references(1)
+        content = Snippet.get_content(snippet=Snippet.FORCED)
         keywords = ['foo', 'bar', 'digitalocean']
-        self.sqlite.insert_content(initial, initial.get_digest(), initial.get_metadata())
-        Snippet().compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[0], initial)
+        self.sqlite.insert_content(content, content.get_digest(), content.get_metadata())
+        Snippet.compare_db(self, (self.sqlite.select_content(Const.SNIPPET, keywords))[0], content)
         assert len(self.sqlite.select_content(Const.SNIPPET, keywords)) == 1
         self.sqlite.disconnect()
 

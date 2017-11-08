@@ -103,9 +103,11 @@ class TestWfDeleteSnippet(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_delete_snippet_with_data(self, mock_get_db_location):
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_delete_snippet_with_data(self, mock_isfile, mock_get_db_location):
         """Delete snippet with data."""
 
+        mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Delete snippet based on content data.

@@ -6,6 +6,7 @@ import sys
 import unittest
 import mock
 from snippy.snip import Snippy
+from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
@@ -16,31 +17,27 @@ class TestWfCreateSnippet(unittest.TestCase):
     """Test workflows for creating snippets."""
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_creating_new_snippet_from_command_line(self, mock__get_db_location):
-        """Create snippet from command line with all parameters.
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_create_snippet_from_console(self, mock_isfile, mock__get_db_location):
+        """Create snippet from console."""
 
-        Expected results:
-            1 Long versions from command line options work.
-            2 Only one entry is read from storage and it can be read with digest or content.
-            3 Content, brief, group, tags and links are read correctly.
-            4 Tags and links are presented in a list and they are sorted.
-            5 Message digest is corrent and constantly same.
-            6 Exit cause is OK.
-        """
-
-        initial = Snippet().get_references(0)
+        mock_isfile.return_value = True
         mock__get_db_location.return_value = Database.get_storage()
 
         ## Brief: Create new snippet by defining all content parameters from command line.
-        sys.argv = ['snippy', 'create'] + Snippet().get_command_args(0)  ## workflow
-        snippy = Snippy()
-        cause = snippy.run_cli()
-        assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
-        Snippet.compare(self, Database.get_content(initial.get_digest())[0], initial)
-
-        # Release all resources
-        snippy.release()
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            data = Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
+            brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
+            group = Snippet.DEFAULTS[Snippet.REMOVE]['group']
+            tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
+            links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+            compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
+            sys.argv = ['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
+            snippy = Snippy()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
+            Snippet.test_content(snippy, mock_file, compare_content)
 
     # pylint: disable=duplicate-code
     def tearDown(self):

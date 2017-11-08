@@ -17,9 +17,11 @@ class TestWfUpdateSnippet(unittest.TestCase):
 
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_update_snippet_with_digest(self, mock_get_db_location, mock_call_editor):
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_update_snippet_with_digest(self, mock_isfile, mock_get_db_location, mock_call_editor):
         """Update snippet based on digest."""
 
+        mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Update snippet based on short message digest. Only the content data is updated.
@@ -161,9 +163,11 @@ class TestWfUpdateSnippet(unittest.TestCase):
 
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_update_snippet_with_data(self, mock_get_db_location, mock_call_editor):
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_update_snippet_with_data(self, mock_isfile, mock_get_db_location, mock_call_editor):
         """Update snippet based on content data."""
 
+        mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Update snippet based on content data.

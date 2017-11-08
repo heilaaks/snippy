@@ -28,8 +28,8 @@ class TestWfImportSnippet(unittest.TestCase):
     def test_import_all_snippets(self, mock_isfile, mock_get_db_location, mock_yaml_load, mock_json_load):
         """Import all snippets."""
 
-        mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
         import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict
@@ -331,8 +331,8 @@ class TestWfImportSnippet(unittest.TestCase):
     def test_import_existing_snippets(self, mock_isfile, mock_get_db_location, mock_yaml_load):
         """Import snippets already existing."""
 
-        mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
         import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}
         mock_yaml_load.return_value = import_dict
 

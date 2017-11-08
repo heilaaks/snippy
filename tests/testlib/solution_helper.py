@@ -241,6 +241,7 @@ class SolutionHelper(object):
                  'utc': '2017-10-20 06:16:27',
                  'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'})
 
+    TEMPLATE_UTC = '2017-10-14 19:56:31'
     TEMPLATE = ('################################################################################',
                 '## BRIEF : ',
                 '##',
@@ -277,23 +278,26 @@ class SolutionHelper(object):
                 '')
 
     @staticmethod
-    def get_content(template):
+    def get_content(text=None, solution=None):
         """Transform text template to content."""
 
-        content = Content(content=(Const.EMPTY,)*11, category=Const.SOLUTION)
-        editor = Editor(Content(content=(Const.EMPTY,)*11, category=Const.SOLUTION), SolutionHelper.UTC, template)
-        content.set((editor.get_edited_data(),
-                     editor.get_edited_brief(),
-                     editor.get_edited_group(),
-                     editor.get_edited_tags(),
-                     editor.get_edited_links(),
-                     editor.get_edited_category(),
-                     editor.get_edited_filename(),
-                     editor.get_edited_date(),
-                     content.get_digest(),
-                     content.get_metadata(),
-                     content.get_key()))
-        content.update_digest()
+        if text:
+            content = Content(content=(Const.EMPTY,)*11, category=Const.SOLUTION)
+            editor = Editor(Content(content=(Const.EMPTY,)*11, category=Const.SOLUTION), SolutionHelper.UTC, text)
+            content.set((editor.get_edited_data(),
+                         editor.get_edited_brief(),
+                         editor.get_edited_group(),
+                         editor.get_edited_tags(),
+                         editor.get_edited_links(),
+                         editor.get_edited_category(),
+                         editor.get_edited_filename(),
+                         editor.get_edited_date(),
+                         content.get_digest(),
+                         content.get_metadata(),
+                         content.get_key()))
+            content.update_digest()
+        else:
+            content = Content.load({'content': [SolutionHelper.DEFAULTS[solution]]})[0]
 
         return content
 

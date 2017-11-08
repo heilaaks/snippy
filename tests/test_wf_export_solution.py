@@ -22,14 +22,12 @@ class TestWfExportSolution(unittest.TestCase):
 
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
-    @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_all_solutions(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    def test_export_all_solutions(self, mock_isfile, mock_get_db_location, mock_yaml_dump, mock_json_dump):
         """Export all solutions."""
 
         mock_get_db_location.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
         export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
@@ -125,15 +123,13 @@ class TestWfExportSolution(unittest.TestCase):
 
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
-    @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_defined_solution(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    def test_export_defined_solution(self, mock_isfile, mock_get_db_location, mock_yaml_dump, mock_json_dump):
         """Export defined solution."""
 
-        mock_get_db_location.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
         export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
         ## Brief: Export defined solution based on message digest. File name is defined in solution
@@ -407,7 +403,7 @@ class TestWfExportSolution(unittest.TestCase):
         """Export solution template."""
 
         mock_get_db_location.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        mock_get_utc_time.return_value = Solution.TEMPLATE_UTC
         template = Solution.TEMPLATE
 
         ## Brief: Export solution template. This should result file name and format based on
@@ -425,15 +421,13 @@ class TestWfExportSolution(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(yaml, 'safe_dump')
-    @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_solution_defaults(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump):
+    def test_export_solution_defaults(self, mock_isfile, mock_get_db_location, mock_yaml_dump):
         """Export solution defaults."""
 
-        mock_get_db_location.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = '2017-10-14 19:56:31'
         mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
         export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
         ## Brief: Export solution defaults. All solutions should be exported into predefined file

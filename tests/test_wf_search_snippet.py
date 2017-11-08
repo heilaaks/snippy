@@ -100,7 +100,6 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-
         ## Brief: Search snippets from all fields. The match is made from two snippets
         ##        tags metadata.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
@@ -120,6 +119,28 @@ class TestWfSearchSnippet(unittest.TestCase):
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             sys.argv = ['snippy', 'search', '--sall', 'moby', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Search snippets from all fields. The match is made from one snippet
+        ##        links metadata.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', 'tutorials', '--no-ansi']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
@@ -259,8 +280,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
-        ## Brief: Search snippets from tag field. The match is made from one snippet
-        ##        content data.
+        ## Brief: Search snippets from tag field. The match is made from one snippet.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('1. Test if specific port is open @linux [f3fd167c64b6f97e]',
                       '   $ nc -v 10.183.19.189 443',
@@ -290,8 +310,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
-        ## Brief: Search snippets from tag field. The match is made from one snippet
-        ##        content data.
+        ## Brief: Search snippets from group field. The match is made from one snippet.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('1. Test if specific port is open @linux [f3fd167c64b6f97e]',
                       '   $ nc -v 10.183.19.189 443',
@@ -304,6 +323,69 @@ class TestWfSearchSnippet(unittest.TestCase):
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             sys.argv = ['snippy', 'search', '--sgrp', 'linux', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_search_snippet_with_regxp(self, mock_isfile, mock_get_db_location):
+        """Search snippet with regexp."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
+
+        ## Brief: Search all content with regexp filter. The ansi characters must be
+        ##        automatically disabled in when the --filter option is used.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('$ docker rm --volumes $(docker ps --all --quiet)',
+                      '$ docker rm --force redis',
+                      '$ nc -v 10.183.19.189 443',
+                      '$ nmap 10.183.19.189')
+            snippy = Snippet.add_defaults(Snippy())
+            Snippet.add_one(snippy, Snippet.NETCAT)
+            Solution.add_defaults(snippy)
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', '.', '--filter', '.*(\$\s.*)']  ## workflow # pylint: disable=anomalous-backslash-in-string
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+
+        ## Brief: Search all content with regexp filter. The ansi characters must be
+        ##        automatically disabled in when the --filter option is used. This
+        ##        must match to snippet and solution commands.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('$ docker rm --volumes $(docker ps --all --quiet)',
+                      '$ docker rm --force redis',
+                      '$ nc -v 10.183.19.189 443',
+                      '$ nmap 10.183.19.189',
+                      '',
+                      '$ ./filebeat -e -c config/filebeat.yml -d "*"',
+                      '$ nginx -V 2>&1 | grep -- \'--with-debug\'',
+                      '$ ls -al /var/log/nginx/',
+                      '$ unlink /var/log/nginx/access.log',
+                      '$ unlink /var/log/nginx/error.log',
+                      '$ nginx -s reload',
+                      '$ vi conf.d/default.conf',
+                      '$ docker exec -i -t $(docker ps | egrep -m 1 \'petelk/nginx\' | awk \'{print $1}\') /bin/bash')
+            snippy = Snippet.add_defaults(Snippy())
+            Snippet.add_one(snippy, Snippet.NETCAT)
+            Solution.add_defaults(snippy)
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--all', '--sall', '.', '--filter', '\.*(\$\s.*)']  ## workflow # pylint: disable=anomalous-backslash-in-string
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
@@ -389,69 +471,6 @@ class TestWfSearchSnippet(unittest.TestCase):
             sys.stdout = StringIO()
             snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'search', '--digest', '5', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
-            result = sys.stdout.getvalue().strip()
-            sys.stdout = real_stdout
-            assert result == Const.NEWLINE.join(output)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_search_snippet_with_regxp(self, mock_isfile, mock_get_db_location):
-        """Search snippet with regexp."""
-
-        mock_get_db_location.return_value = Database.get_storage()
-        mock_isfile.return_value = True
-
-        ## Brief: Search all content with regexp filter. The ansi characters must be
-        ##        automatically disabled in when the --filter option is used.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ('$ docker rm --volumes $(docker ps --all --quiet)',
-                      '$ docker rm --force redis',
-                      '$ nc -v 10.183.19.189 443',
-                      '$ nmap 10.183.19.189')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
-            Solution.add_defaults(snippy)
-            real_stdout = sys.stdout
-            sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sall', '.', '--filter', '.*(\$\s.*)']  ## workflow # pylint: disable=anomalous-backslash-in-string
-            cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
-            result = sys.stdout.getvalue().strip()
-            sys.stdout = real_stdout
-            assert result == Const.NEWLINE.join(output)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-
-        ## Brief: Search all content with regexp filter. The ansi characters must be
-        ##        automatically disabled in when the --filter option is used. This
-        ##        must match to snippet and solution commands.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ('$ docker rm --volumes $(docker ps --all --quiet)',
-                      '$ docker rm --force redis',
-                      '$ nc -v 10.183.19.189 443',
-                      '$ nmap 10.183.19.189',
-                      '',
-                      '$ ./filebeat -e -c config/filebeat.yml -d "*"',
-                      '$ nginx -V 2>&1 | grep -- \'--with-debug\'',
-                      '$ ls -al /var/log/nginx/',
-                      '$ unlink /var/log/nginx/access.log',
-                      '$ unlink /var/log/nginx/error.log',
-                      '$ nginx -s reload',
-                      '$ vi conf.d/default.conf',
-                      '$ docker exec -i -t $(docker ps | egrep -m 1 \'petelk/nginx\' | awk \'{print $1}\') /bin/bash')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
-            Solution.add_defaults(snippy)
-            real_stdout = sys.stdout
-            sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--all', '--sall', '.', '--filter', '\.*(\$\s.*)']  ## workflow # pylint: disable=anomalous-backslash-in-string
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()

@@ -4,8 +4,10 @@
 
 import sys
 import unittest
-import mock
+import json
 import yaml
+import mock
+import pkg_resources
 from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
@@ -32,6 +34,19 @@ class TestWfExportSnippet(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'export']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_safe_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_file.assert_called_once_with('./snippets.yaml', 'w')
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export all snippets without defining target file name from command line.
+        ##        In this case the content category is defined explicitly.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--snippet']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_safe_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -79,13 +94,18 @@ class TestWfExportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+    @mock.patch.object(json, 'dump')
+    @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_export_defined_snippet(self, mock_get_db_location, mock_get_utc_time):
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_export_defined_snippet(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export defined snippet."""
 
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
+        mock_isfile.return_value = True
+        export_dict = {'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export defined snippet based on message digest. File name is not defined in command
         ##        line -f|--file option. This should result usage of default file name and format
@@ -99,6 +119,34 @@ class TestWfExportSnippet(unittest.TestCase):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
                                                 mock.call(Const.NEWLINE)])
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined snippet based on message digest. File name is  defined in command
+        ##        line as yaml file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.yaml']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
+            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined snippet based on message digest. File name is  defined in command
+        ##        line as json file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.json']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.json', 'w')
+            mock_json_dump.assert_called_with(export_dict, mock.ANY)
+            mock_json_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -151,6 +199,48 @@ class TestWfExportSnippet(unittest.TestCase):
             mock_file.assert_called_once_with('./snippet-template.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(template))
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(yaml, 'safe_dump')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_export_snippet_defaults(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump):
+        """Export snippet defaults."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = '2017-10-14 19:56:31' # Snippet.UTC
+        mock_isfile.return_value = True
+        export_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
+
+        ## Brief: Export snippet defaults. All snippets should be exported into predefined file
+        ##        location under tool data folder in yaml format.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--defaults']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
+            mock_file.assert_called_once_with(defaults_snippets, 'w')
+            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to export snippet defaults when there are no stored snippets. No files
+        ##        should be created and OK should printed for end user. The reason is that
+        ##        processing list of zero items is considered as an OK case.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippy()
+            sys.argv = ['snippy', 'export', '--defaults']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_not_called()
+            mock_yaml_dump.assert_not_called()
+            mock_yaml_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()

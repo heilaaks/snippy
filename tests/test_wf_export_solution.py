@@ -42,6 +42,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./solutions.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -55,6 +56,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -68,6 +70,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
+            mock_json_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -203,6 +206,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -216,6 +220,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -231,6 +236,7 @@ class TestWfExportSolution(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
+            mock_json_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -243,7 +249,8 @@ class TestWfExportSolution(unittest.TestCase):
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.json', 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_json_dump.assert_called_with(export_dict, mock.ANY)
+            mock_json_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -273,7 +280,9 @@ class TestWfExportSolution(unittest.TestCase):
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.txt', 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -303,7 +312,9 @@ class TestWfExportSolution(unittest.TestCase):
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.text', 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -435,6 +446,7 @@ class TestWfExportSolution(unittest.TestCase):
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -443,13 +455,13 @@ class TestWfExportSolution(unittest.TestCase):
         ##        should be created and OK should printed for end user. The reason is that
         ##        processing list of zero items is considered as an OK case.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_yaml_dump.reset_mock()
             snippy = Snippy()
             sys.argv = ['snippy', 'export', '--solution', '--defaults']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
             mock_yaml_dump.assert_not_called()
+            mock_yaml_dump.reset_mock()
             snippy.release()
             snippy = None
             Database.delete_storage()

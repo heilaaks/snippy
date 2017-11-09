@@ -82,7 +82,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def reset(cls):
         """Reset the configuration."""
 
-        Config.args.reset()
+        if Config.args: Config.args.reset()
         Config.args = {}
         Config.config = {}
 

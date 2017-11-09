@@ -323,12 +323,12 @@ class SolutionHelper(object):
     def add_defaults(snippy):
         """Add default solutions for testing purposes."""
 
+        if not snippy:
+            snippy = Snippy()
+
         mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[SolutionHelper.BEATS]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
             sys.argv = ['snippy', 'import', '-f', 'howto-debug-elastic-beats.txt']
-            if not snippy:
-                snippy = Snippy()
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -336,7 +336,6 @@ class SolutionHelper(object):
         mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[SolutionHelper.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
             sys.argv = ['snippy', 'import', '-f', 'howto-debug-nginx.txt']
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
@@ -353,7 +352,6 @@ class SolutionHelper(object):
         mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[index]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
             sys.argv = ['snippy', 'import', '-f', 'one-solution.txt']
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -367,7 +365,6 @@ class SolutionHelper(object):
         for digest in dictionary:
             mock_file.reset_mock()
             sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-content.txt', 'w')

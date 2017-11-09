@@ -5,6 +5,7 @@
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
+from snippy.config.arguments import Arguments
 from snippy.storage.storage import Storage
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
@@ -27,7 +28,7 @@ class Snippy(object):
         """Run command line session."""
 
         self.logger.info('running command line interface')
-        self.config = Config()
+        self.config = Config(Arguments())
         self.storage.init()
         if Config.is_category_snippet():
             self.snippet.run()
@@ -39,28 +40,13 @@ class Snippy(object):
         else:
             Cause.set_text('content category \'all\' is supported only with search operation')
 
-        return Cause.get_text()
-
-    def reset(self):
-        """Reset session."""
-
-        self.cause = Cause.reset()
-        self.config = Config.reset()
-        self.snippet = Snippet(self.storage)
-        self.solution = Solution(self.storage)
+        return self.cause.reset()
 
     def release(self):
         """Release session."""
 
         Logger.exit(Cause.get_text())
         self.storage.disconnect()
-        self.cause = Cause.reset()
-        self.storage = None
-        self.snippet = None
-        self.solution = None
-        self.config = None
-        self.cause = None
-        self.logger = None
 
 
 def main():

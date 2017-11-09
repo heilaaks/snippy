@@ -137,7 +137,6 @@ class TestWfExportSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0']  ## workflow
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
@@ -154,7 +153,6 @@ class TestWfExportSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'export', '-d', 'a96accc25dd23ac0']  ## workflow
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
@@ -180,7 +178,6 @@ class TestWfExportSolution(unittest.TestCase):
 
             mock_file.reset_mock()
             sys.argv = ['snippy', 'export', '--solution', '-d', '7a5bf1bc09939f42']  ## workflow
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('solution.text', 'w')
@@ -345,7 +342,6 @@ class TestWfExportSolution(unittest.TestCase):
 
             mock_file.reset_mock()
             sys.argv = ['snippy', 'export', '--solution', '-d', '2c4298ff3c582fe5']  ## workflow
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('solution.text', 'w')
@@ -372,7 +368,6 @@ class TestWfExportSolution(unittest.TestCase):
 
             mock_file.reset_mock()
             sys.argv = ['snippy', 'export', '--solution', '-d', '745c9e70eacc304b']  ## workflow
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('kubernetes-docker-log-driver-kafka.txt', 'w')
@@ -492,7 +487,6 @@ class TestWfExportSolution(unittest.TestCase):
             mock_file.reset_mock()
             original = original.replace('## DATE  : 2017-10-20 11:11:19', '## DATE  :  2017-10-14 19:56:31')
             sys.argv = ['snippy', 'export', '--solution', '-d', '2b4428c3c022abff']  ## workflow
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')

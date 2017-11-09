@@ -3,23 +3,23 @@
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
    - [ ] Fix 'snippy', 'search', '--filter', '.*(\$\s.*)' that produces internal error.
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
-   - [ ] Test that snippy.reset() really resets the config and arguments.
    - [ ] Migrate operation can combine same kind of search than in update. Do Config.is_search_context to T for digest,content,KW and run search always for second option.
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Add tests to run search keywords (stag, sall, sgrp) for update and delete operations.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
-   - [ ] Add upgrade procedure. How?
+   - [ ] Add upgrade procedure. How? Is this needed? What happens when there is content and pip upgrade is made?
+   - [ ] Fix upgrading snippy does not update new defaults? Tried with make install to install new version.
    - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] Check signing commits (https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
-   - [ ] Fix upgrading snippy does not update new defaults? Tried with make install to install new version.
    - [ ] Fix case described in 'git log 11448a2e90dab3a' and somehow and make test_wf a bit nicer?
    - [ ] Test BytePackager/packagecore.
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
    - [ ] It seems that in Python2 when database test fails, it leaves hanging resources and DB clean does not work?
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
+   - [ ] Why mocking sys.exit from arguments causes huge spike in CPU? This basically stalls tests.
 
 ## DONE
    - [x] Changed the Config().reset() to not to create new object when calling and returning from reset().

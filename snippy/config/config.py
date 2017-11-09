@@ -10,20 +10,19 @@ import pkg_resources
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
-from snippy.config.arguments import Arguments
 from snippy.config.editor import Editor
 
 
 class Config(object):  # pylint: disable=too-many-public-methods
     """Global configuration management."""
 
-    args = {}
-    config = {}
+    source = None
     logger = None
+    config = {}
 
-    def __init__(self):
+    def __init__(self, source=None):
         Config.logger = Logger(__name__).get()
-        Config.args = Arguments()
+        Config.source = source
         Config._set_config()
 
     @classmethod
@@ -31,7 +30,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
         cls.config['content'] = {}
-        cls.config['content']['category'] = cls.args.get_content_category()
+        cls.config['content']['category'] = Config.source.get_content_category()
         cls.config['content']['data'] = cls._parse_content_data()
         cls.config['content']['brief'] = cls._parse_content_brief()
         cls.config['content']['group'] = cls._parse_content_group()
@@ -39,22 +38,22 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['content']['links'] = cls._parse_content_links()
         cls.config['content']['filename'] = Const.EMPTY
         cls.config['options'] = {}
-        cls.config['options']['no_ansi'] = cls.args.is_no_ansi()
-        cls.config['options']['migrate_defaults'] = cls.args.is_defaults()
-        cls.config['options']['migrate_template'] = cls.args.is_template()
-        cls.config['options']['debug'] = cls.args.is_debug()
+        cls.config['options']['no_ansi'] = Config.source.is_no_ansi()
+        cls.config['options']['migrate_defaults'] = Config.source.is_defaults()
+        cls.config['options']['migrate_template'] = Config.source.is_template()
+        cls.config['options']['debug'] = Config.source.is_debug()
         cls.config['digest'] = cls._parse_digest()
         cls.config['operation'] = {}
-        cls.config['operation']['task'] = cls.args.get_operation()
+        cls.config['operation']['task'] = Config.source.get_operation()
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
         cls.config['search'] = {}
         cls.config['search']['field'], cls.config['search']['keywords'] = cls._parse_search()
         cls.config['search']['filter'] = cls._parse_search_filter()
         cls.config['input'] = {}
-        cls.config['input']['editor'] = cls.args.is_editor()
-        cls.config['input']['digest'] = cls.args.is_content_digest()
-        cls.config['input']['data'] = cls.args.is_content_data()
+        cls.config['input']['editor'] = Config.source.is_editor()
+        cls.config['input']['digest'] = Config.source.is_content_digest()
+        cls.config['input']['data'] = Config.source.is_content_data()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
         cls.config['storage']['file'] = 'snippy.db'
@@ -77,14 +76,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured value from search keywords as %s', cls.config['search']['keywords'])
         cls.logger.debug('configured value from search filter as %s', cls.config['search']['filter'])
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
-
-    @classmethod
-    def reset(cls):
-        """Reset the configuration."""
-
-        if Config.args: Config.args.reset()
-        Config.args = {}
-        Config.config = {}
 
     @classmethod
     def get_content(cls, content, use_editor=False):
@@ -392,7 +383,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # Use the content filename only in case of export operation and
         # when the user did not define the target file from command line.
         filename = cls.config['operation']['file']['name']
-        if cls.is_operation_export() and content_filename and not cls.args.get_operation_file():
+        if cls.is_operation_export() and content_filename and not Config.source.get_operation_file():
             filename = content_filename
 
         return filename
@@ -475,7 +466,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_content_data(cls):
         """Process content data."""
 
-        arg = cls.args.get_content_data()
+        arg = Config.source.get_content_data()
         if arg:
             content = arg.split(Const.DELIMITER_DATA)
 
@@ -487,7 +478,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_content_brief(cls):
         """Process content brief description."""
 
-        arg = cls.args.get_content_brief()
+        arg = Config.source.get_content_brief()
         if arg:
             return arg
 
@@ -497,7 +488,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_content_group(cls):
         """Process content group."""
 
-        arg = cls.args.get_content_group()
+        arg = Config.source.get_content_group()
         if arg:
             return arg
 
@@ -507,7 +498,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_content_tags(cls):
         """Process content tags."""
 
-        arg = cls.args.get_content_tags()
+        arg = Config.source.get_content_tags()
 
         return Editor.get_keywords(arg)
 
@@ -515,7 +506,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_content_links(cls):
         """Process content reference links."""
 
-        links = cls.args.get_content_links()
+        links = Config.source.get_content_links()
         # Examples: Support processing of:
         #           1. -l docker container cleanup # Space separated string of links
         link_list = links.split()
@@ -527,7 +518,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_digest(cls):
         """Process message digest identifying the operation target."""
 
-        arg = cls.args.get_content_digest()
+        arg = Config.source.get_content_digest()
         if arg:
             return arg
 
@@ -539,14 +530,14 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         args = ()
         field = Const.NO_SEARCH
-        if cls.args.is_search_all():
-            args = cls.args.get_search_all()
+        if Config.source.is_search_all():
+            args = Config.source.get_search_all()
             field = Const.SEARCH_ALL
-        elif cls.args.is_search_tag():
-            args = cls.args.get_search_tag()
+        elif Config.source.is_search_tag():
+            args = Config.source.get_search_tag()
             field = Const.SEARCH_TAG
-        elif cls.args.is_search_grp():
-            args = cls.args.get_search_grp()
+        elif Config.source.is_search_grp():
+            args = Config.source.get_search_grp()
             field = Const.SEARCH_GRP
 
         # The args list may be empty or it can contain empty string. Both cases
@@ -561,7 +552,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_search_filter(cls):
         """Process the user given search keywords and field."""
 
-        regexp = cls.args.get_search_filter()
+        regexp = Config.source.get_search_filter()
 
         try:
             re.compile(regexp)
@@ -601,7 +592,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_operation_file(cls):
         """Return the filename and the format of the file."""
 
-        filename = cls.args.get_operation_file()
+        filename = Config.source.get_operation_file()
         filetype = Const.FILE_TYPE_NONE
 
         defaults = 'snippets.yaml'

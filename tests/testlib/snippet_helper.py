@@ -135,7 +135,6 @@ class SnippetHelper(object):
         mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[SnippetHelper.REMOVE]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
             sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
@@ -143,7 +142,6 @@ class SnippetHelper(object):
         mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[SnippetHelper.FORCED]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
             sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
@@ -160,7 +158,6 @@ class SnippetHelper(object):
         mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[index]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
             sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
-            snippy.reset()
             contents = len(Database.get_snippets())
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
@@ -175,14 +172,12 @@ class SnippetHelper(object):
         for digest in dictionary:
             mock_file.reset_mock()
             sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
-            snippy.reset()
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-content.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(SnippetHelper.get_template(dictionary[digest])),
                                                 mock.call(Const.NEWLINE)])
-
 
     @staticmethod
     def compare_db(testcase, snippet, reference):

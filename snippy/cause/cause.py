@@ -18,7 +18,10 @@ class Cause(object):
     def reset(cls):
         """Reset the cause to initial state."""
 
+        cause = cls.cause_text
         cls.cause_text = Cause.ALL_OK
+
+        return cause
 
     @classmethod
     def set_text(cls, cause_text):

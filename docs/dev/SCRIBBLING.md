@@ -528,6 +528,108 @@ https://docs.docker.com/engine/reference/commandline/rm/
 
 
 #######################################
+## Test plan new
+#######################################
+
+##########################################
+## Search content
+##########################################
+
+## snippets: search all keyword
+snippy search --sall KW                                     # search --sall to match from data (DONE)
+snippy search --sall KW                                     # search --sall to match from brief (DONE)
+snippy search --sall KW                                     # search --sall to match from group (DONE)
+snippy search --sall KW                                     # search --sall to match from tags (DONE)
+snippy search --sall KW                                     # search --sall to match from links (DONE)
+snippy search --sall KW                                     # search --sall to match from digest (DONE)
+snippy search --sall KW                                     # search --sall not to match
+snippy search --sall                                        # search --sall does not have value (DONE)
+snippy search --sall ''                                     # search --sall value is empty string (DONE)
+snippy search --sall .                                      # search --sall value is dot (match any) with stored content (DONE)
+snippy search --sall .                                      # search --sall value is dot (match any) without content stored (DONE)
+snippy search --sall KW,KW                                  # search --sall with two keywords
+snippy search --sall KW,KW,KW                               # search --sall with three keywords
+
+## snippets: search tags keyword
+snippy search --stag KW                                     # search --stag to match from tags (DONE)
+snippy search --stag KW                                     # search --stag not to match
+
+## snippets: search group keyword
+snippy search --sgrp KW                                     # search --sgrp to match from group (DONE)
+snippy search --sgrp KW                                     # search --sgrp not to match
+
+## snippets: search with regepx filter
+snippy search --sall . --flter <regexp>                     # search --filter to match only commands (DONE)
+snippy search --sall . --flter <regexp>                     # search --filter not to match
+snippy search --all --sall . --filter <regexp>              # search --filter to match only commands from category --all (DONE)
+
+## snippets: search with content
+snippy search -c <content>                                  # search --content to match content (DONE)
+snippy search -c <content>                                  # search --content not to match
+
+## snippets: search with digest
+snippy search -d <digest>                                   # search --digest to match short digest (DONE)
+snippy search -d <digest>                                   # search --digest to match long digest
+snippy search -d <digest>                                   # search --digest to match multiple contents (DONE)
+snippy search -d <digest>                                   # search --digest not to match
+
+##########################################
+## Export content
+##########################################
+
+## export template to specific file.
+
+## snippets: template
+snippy export --template                                    # export snippet template (DONE)
+snippy export --snippet --template                          # export snippet template with explicit category (DONE)
+
+## solutions: template
+snippy export --solution --template                         # export solution template without --file option (DONE)
+
+## snippets: defaults
+snippy export --defaults                                    # export snippet defaults (DONE)
+snippy export --defaults                                    # export snippet defaults without stored content (DONE)
+
+## solutions: defaults
+snippy export --solution --defaults                         # export solutions defaults (DONE)
+snippy export --solution --defaults                         # export solution defaults without stored content (DONE)
+
+## snippets: all content
+snippy export                                               # export all snippets to default file (DONE)
+snippy export --snippet                                     # export all snippets to default file (DONE)
+snippy export -f ./file.yaml                                # export all snippets to yaml file (DONE)
+snippy export --file foo.bar                                # try to export all snippets to unsupported file format (DONE)
+
+## solutions: all content
+snippy export --solution                                    # export all solutions to default file (DONE)
+snippy export --solution -f ./file.yaml                     # export all solutions to yaml file (DONE)
+snippy export --solution -f ./file.json                     # export all solutions to json file (DONE)
+snippy export --solution -f ./file.txt                      # export all solutions to text file (DONE)
+snippy export --solution -f ./file.text                     # export all solutions to text file (DONE)
+snippy export --solution -f ./file.foo                      # try to export all solutions to unsupported file format (DONE)
+
+## snippets: defined content
+snippy export -d <digest>                                   # export defined snippet to default file (DONE)
+snippy export -d <digest> -f ./file.yaml                    # export defined snippet to yaml file (DONE)
+snippy export -d <digest> -f ./file.json                    # export defined snippet to json file (DONE)
+snippy export -d <digest> -f ./file.txt                     # export defined snippet to text file (DONE)
+
+## solutions: defined content
+snippy export -d <digest>                                   # export solution with digest to default file (DONE)
+snippy export --solution -d <digest>                        # export solution to file defined by solution metadata (DONE)
+snippy export --solution -d <digest>                        # export solution to file without solution metadata for file name(DONE)
+snippy export --solution -d <digest> -f ./file.yaml         # export solution to yaml file (DONE)
+snippy export -d a96accc25dd23ac0 -f ./file.yaml            # export solution to yaml file wihtout category (DONE)
+snippy export --solution -d <digest> -f ./file.json         # export solution to json file (DONE)
+snippy export -d a96accc25dd23ac0 -f ./file.json            # export solution to json file wihtout category (DONE)
+snippy export --solution -d <digest> -f ./file.txt          # export solution to text file (DONE)
+snippy export -d a96accc25dd23ac0 -f ./file.txt             # export solution to text file wihtout category (DONE)
+snippy export --solution -d <digest> -f ./file.text         # export solution to text file (DONE)
+snippy export -d a96accc25dd23ac0 -f ./file.text            # export solution to text file wihtout category (DONE)
+snippy export --solution -d <digest> -f ./file.foo          # try to export solution to unsupported file format (DONE)
+snippy export --solution -d <unknown digest> -f ./file.text # try to export solution with unknown digest (DONE)
+
+#######################################
 ## Test plan
 #######################################
 

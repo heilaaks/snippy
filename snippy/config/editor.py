@@ -317,8 +317,8 @@ class Editor(object):
     def _get_editor(self):
         """Try to resolve the editor in a secure way."""
 
-        # Runnin code blindly from environment variable is not safe because
-        # the call would execute any command into environment.
+        # Running code blindly from environment variable is not safe because
+        # the call would execute any command from environment variable.
         editor = os.environ.get('EDITOR', 'vi')
 
         # Avoid usage other than supported editors as of now for security
@@ -330,12 +330,3 @@ class Editor(object):
             editor = 'vi'
 
         return editor
-
-    def _verify_category(self):
-        """Verify and get the content category based on edited content."""
-
-        category = Const.SOLUTION
-        if Editor.DATA_HEAD in self.edited and Editor.BRIEF_HEAD:
-            category = Const.SNIPPET
-
-        return category

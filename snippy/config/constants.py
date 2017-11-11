@@ -25,6 +25,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     SNIPPET = 'snippet'
     SOLUTION = 'solution'
     ALL = 'all'
+    UNKNOWN_CONTENT = 'unknown'
 
     # Content delimiters
     DELIMITER_NEWLINE = NEWLINE

@@ -487,23 +487,23 @@ class TestWfImportSolution(unittest.TestCase):
         mock_isfile.return_value = True
         template = Const.NEWLINE.join(Solution.TEMPLATE)
 
-#        ## Brief: Import solution template that does not have any changes to file header
-#        ##        located at the top of content data. This tests a scenario where user
-#        ##        does not bother to do any changes to header which has the solution metadata.
-#        edited_template = template.replace('## description', '## description changed')
-#        mocked_open = mock.mock_open(read_data=edited_template)
-#        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-#            snippy = Snippy()
-#            sys.argv = ['snippy', 'import', '-f', './solution-template.txt']  ## workflow
-#            cause = snippy.run_cli()
-#            assert cause == Cause.ALL_OK
-#            assert len(Database.get_solutions()) == 1
-#            assert not Database.get_snippets()
-#            mock_file.assert_called_once_with('./solution-template.txt', 'r')
-#            Solution.test_content(snippy, mock_file, {'63f2007703d70c8f': Solution.get_dictionary(edited_template)})
-#            snippy.release()
-#            snippy = None
-#            Database.delete_storage()
+        ## Brief: Import solution template that does not have any changes to file header
+        ##        located at the top of content data. This tests a scenario where user
+        ##        does not bother to do any changes to header which has the solution metadata.
+        edited_template = template.replace('## description', '## description changed')
+        mocked_open = mock.mock_open(read_data=edited_template)
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            snippy = Snippy()
+            sys.argv = ['snippy', 'import', '-f', './solution-template.txt']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_solutions()) == 1
+            assert not Database.get_snippets()
+            mock_file.assert_called_once_with('./solution-template.txt', 'r')
+            Solution.test_content(snippy, mock_file, {'63f2007703d70c8f': Solution.get_dictionary(edited_template)})
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
         ## Brief: Try to import solution template without any changes. This should result error
         ##        text for end user and no files should be read. The error text must be the same

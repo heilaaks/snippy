@@ -15,6 +15,9 @@ class Editor(object):
     """Editor based configuration."""
 
     # Editor inputs
+    SOLUTION_BRIEF = '## BRIEF :'
+    SOLUTION_DATE = '## DATE  :'
+    SOLUTION_GROUP = '## GROUP :'
     DATA_HEAD = '# Add mandatory snippet below.\n'
     DATA_TAIL = '# Add optional brief description below.\n'
     BRIEF_HEAD = '# Add optional brief description below.\n'
@@ -55,6 +58,15 @@ class Editor(object):
         template = self.set_template_filename(template)
 
         return template
+
+    def is_content_identified(self):
+        """Test if content category is identified."""
+
+        identified = False
+        if self.get_edited_category() == Const.SNIPPET or self.get_edited_category() == Const.SOLUTION:
+            identified = True
+
+        return identified
 
     def call_editor(self, template):
         """Run editor session."""
@@ -188,10 +200,12 @@ class Editor(object):
     def get_edited_category(self):
         """Return content category based on edited content."""
 
-        category = Const.SOLUTION
+        category = Const.UNKNOWN_CONTENT
 
         if Editor.DATA_HEAD in self.edited and Editor.BRIEF_HEAD:
             category = Const.SNIPPET
+        elif Editor.SOLUTION_BRIEF in self.edited and Editor.SOLUTION_DATE:
+            category = Const.SOLUTION
 
         return category
 

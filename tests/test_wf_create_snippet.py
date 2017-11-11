@@ -82,7 +82,7 @@ class TestWfCreateSnippet(unittest.TestCase):
             sys.argv = ['snippy', 'create', '--editor']  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli()
-            assert cause == 'NOK: mandatory snippet data not defined'
+            assert cause == 'NOK: could not identify edited content category - please keep tags in place'
             assert not Database.get_snippets()
             snippy.release()
             snippy = None

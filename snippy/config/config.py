@@ -131,15 +131,16 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # line numbers are substracted with offset to get the first line of the solution.
         # The first item from the list is popped and used as a head and following items
         # are treated as as line numbers where the next solution starts.
+        edited_list = edited.split(Const.NEWLINE)
         solutions = []
-        line_numbers = [i for i, line in enumerate(edited) if line.startswith(split)]
+        line_numbers = [i for i, line in enumerate(edited_list) if line.startswith(split)]
         line_numbers[:] = [x-offset for x in line_numbers]
         if line_numbers:
             head = line_numbers.pop(0)
             for line in line_numbers:
-                solutions.append(Const.EMPTY.join(edited[head:line]))
+                solutions.append(Const.NEWLINE.join(edited_list[head:line]))
                 head = line
-            solutions.append(Const.EMPTY.join(edited[head:]))
+            solutions.append(Const.NEWLINE.join(edited_list[head:]))
 
         return solutions
 
@@ -573,23 +574,26 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         editor = Editor(content, Config.get_utc_time())
         editor.read_content()
-        cls.config['content']['data'] = editor.get_edited_data()
-        cls.config['content']['brief'] = editor.get_edited_brief()
-        cls.config['content']['group'] = editor.get_edited_group()
-        cls.config['content']['tags'] = editor.get_edited_tags()
-        cls.config['content']['links'] = editor.get_edited_links()
-        cls.config['content']['filename'] = editor.get_edited_filename()
-        content.set((cls.get_content_data(),
-                     cls.get_content_brief(),
-                     cls.get_content_group(),
-                     cls.get_content_tags(),
-                     cls.get_content_links(),
-                     content.get_category(),
-                     cls.get_filename(),
-                     content.get_utc(),
-                     content.get_digest(),
-                     content.get_metadata(),
-                     content.get_key()))
+        if editor.is_content_identified():
+            cls.config['content']['data'] = editor.get_edited_data()
+            cls.config['content']['brief'] = editor.get_edited_brief()
+            cls.config['content']['group'] = editor.get_edited_group()
+            cls.config['content']['tags'] = editor.get_edited_tags()
+            cls.config['content']['links'] = editor.get_edited_links()
+            cls.config['content']['filename'] = editor.get_edited_filename()
+            content.set((cls.get_content_data(),
+                         cls.get_content_brief(),
+                         cls.get_content_group(),
+                         cls.get_content_tags(),
+                         cls.get_content_links(),
+                         content.get_category(),
+                         cls.get_filename(),
+                         content.get_utc(),
+                         content.get_digest(),
+                         content.get_metadata(),
+                         content.get_key()))
+        else:
+            Cause.set_text('could not identify edited content category - please keep tags in place')
 
         return content
 

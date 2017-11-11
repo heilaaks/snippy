@@ -48,6 +48,23 @@ class TestWfCreateSolution(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Try to create same solution again with exactly the same content data.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
+            template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
+            mock_call_editor.return_value = template
+            compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
+                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
+            sys.argv = ['snippy', 'create', '--solution']  ## workflow
+            cause = snippy.run_cli()
+            #Database.print_contents()
+            assert cause == 'NOK: content data already exist with digest a96accc25dd23ac0'
+            assert len(Database.get_solutions()) == 2
+            Solution.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
         ## Brief: Try to create new solution without any changes to template.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Const.NEWLINE.join(Solution.TEMPLATE)
@@ -72,24 +89,40 @@ class TestWfCreateSolution(unittest.TestCase):
             snippy = Snippy()
             cause = snippy.run_cli()
             Database.print_contents()
-            assert cause == 'NOK: mandatory solution data not defined'
+            assert cause == 'NOK: could not identify edited content category - please keep tags in place'
             assert not Database.get_solutions()
             snippy.release()
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to create same solution again with exactly the same content data.
+        ## Brief: Try to create new solution with a template that cannot be identified. In this case
+        ##        the user has changed the input template completely and it has lost tags that identify
+        ##        it as a solution content.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_defaults(Snippy())
-            template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-            mock_call_editor.return_value = template
-            compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
-                               '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
+            template = ('################################################################################',
+                        '## description',
+                        '################################################################################',
+                        '',
+                        '################################################################################',
+                        '## solutions',
+                        '################################################################################',
+                        '',
+                        '################################################################################',
+                        '## configurations',
+                        '################################################################################',
+                        '',
+                        '################################################################################',
+                        '## whiteboard',
+                        '################################################################################',
+                        '')
+            mock_call_editor.return_value = Const.NEWLINE.join(template)
+            compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
             sys.argv = ['snippy', 'create', '--solution']  ## workflow
+            snippy = Snippy()
             cause = snippy.run_cli()
-            assert cause == 'NOK: content data already exist with digest a96accc25dd23ac0'
-            assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, compare_content)
+            Database.print_contents()
+            assert cause == 'NOK: could not identify edited content category - please keep tags in place'
+            assert not Database.get_solutions()
             snippy.release()
             snippy = None
             Database.delete_storage()

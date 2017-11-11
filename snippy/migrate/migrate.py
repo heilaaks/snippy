@@ -110,9 +110,13 @@ class Migrate(object):
         """Dump contents into file."""
 
         if not Config.is_supported_file_format():
+            cls.logger.debug('file format not supported for file %s', filename)
+
             return
 
         if not contents:
+            cls.logger.debug('no content to be exported')
+
             return
 
         cls.logger.debug('exporting contents %s', filename)
@@ -134,7 +138,7 @@ class Migrate(object):
                         outfile.write(template)
                         outfile.write(Const.NEWLINE)
                 else:
-                    cls.logger.info('unknown export format')
+                    cls.logger.info('unknown export file format')
             except (IOError, TypeError, ValueError, yaml.YAMLError) as exception:
                 cls.logger.exception('fatal failure to generate formatted export file "%s"', exception)
                 Cause.set_text('fatal failure while exporting content to file')
@@ -159,6 +163,8 @@ class Migrate(object):
 
         dictionary = {}
         if not Config.is_supported_file_format():
+            cls.logger.debug('file format not supported for file %s', filename)
+
             return dictionary
 
         cls.logger.debug('importing contents from file %s', filename)
@@ -174,10 +180,10 @@ class Migrate(object):
 
                         dictionary = json.load(infile)
                     elif Config.is_file_type_text():
-                        contents = Config.get_text_contents(content, infile.readlines())
+                        contents = Config.get_text_contents(content, infile.read())
                         dictionary = {'content': Migrate.get_dictionary_list(contents)}
                     else:
-                        cls.logger.info('unknown import format')
+                        cls.logger.info('unknown import file format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:
                     cls.logger.exception('fatal exception while loading file "%s"', exception)
                     Cause.set_text('fatal failure while importing content from file')

@@ -148,7 +148,7 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './all-snippets.txt']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: no content found to be stored'
+            assert cause == 'NOK: could not identify text template content category'
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
             snippy.release()

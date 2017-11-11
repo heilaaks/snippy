@@ -550,6 +550,37 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Try to search all solution with filter that is not syntactically correct
+        ##        regular expression.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'NOK: listed matching content without filter because it was not syntactically correct regular expression')
+            snippy = Snippet.add_defaults(Snippy())
+            Solution.add_defaults(snippy)
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', '.', '--filter', '[invalid(regexp', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: listed matching content without filter because it was not syntactically correct regular expression'
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     def test_search_snippet_with_data(self, mock_isfile, mock_get_db_location):

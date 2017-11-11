@@ -554,14 +554,15 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
     @classmethod
     def _parse_search_filter(cls):
-        """Process the user given search keywords and field."""
+        """Process the user given search filter."""
 
         regexp = Config.source.get_search_filter()
 
         try:
             re.compile(regexp)
         except re.error:
-            cls.logger.info('filter is not a valid regexp "%s"', regexp)
+            Cause.set_text('listed matching content without filter because it was not syntactically ' +
+                           'correct regular expression')
             regexp = Const.EMPTY
 
         return regexp

@@ -157,7 +157,7 @@ class Sqlite3Db(object):
         else:
             Cause.set_text('internal error prevented searching from database')
 
-        self.logger.debug('selected rows %s', rows)
+        self.logger.debug('selected %d rows %s', len(rows), rows)
 
         return rows
 

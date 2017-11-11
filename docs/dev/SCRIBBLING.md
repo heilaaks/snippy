@@ -542,25 +542,25 @@ snippy search --sall KW                                     # search --sall to m
 snippy search --sall KW                                     # search --sall to match from tags (DONE)
 snippy search --sall KW                                     # search --sall to match from links (DONE)
 snippy search --sall KW                                     # search --sall to match from digest (DONE)
-snippy search --sall KW                                     # search --sall not to match
+snippy search --sall KW                                     # search --sall not to match (DONE)
 snippy search --sall                                        # search --sall does not have value (DONE)
 snippy search --sall ''                                     # search --sall value is empty string (DONE)
 snippy search --sall .                                      # search --sall value is dot (match any) with stored content (DONE)
 snippy search --sall .                                      # search --sall value is dot (match any) without content stored (DONE)
-snippy search --sall KW,KW                                  # search --sall with two keywords
-snippy search --sall KW,KW,KW                               # search --sall with three keywords
+snippy search --sall KW,KW                                  # search --sall with two keywords (TODO)
+snippy search --sall KW,KW,KW                               # search --sall with three keywords (TODO)
 
 ## snippets: search tags keyword
 snippy search --stag KW                                     # search --stag to match from tags (DONE)
-snippy search --stag KW                                     # search --stag not to match
+snippy search --stag KW                                     # search --stag not to match (DONE)
 
 ## snippets: search group keyword
 snippy search --sgrp KW                                     # search --sgrp to match from group (DONE)
-snippy search --sgrp KW                                     # search --sgrp not to match
+snippy search --sgrp KW                                     # search --sgrp not to match (DONE)
 
 ## snippets: search with regepx filter
 snippy search --sall . --flter <regexp>                     # search --filter to match only commands (DONE)
-snippy search --sall . --flter <regexp>                     # search --filter not to match
+snippy search --sall . --flter <regexp>                     # search --filter not to match (DONE)
 snippy search --all --sall . --filter <regexp>              # search --filter to match only commands from category --all (DONE)
 
 ## snippets: search with content
@@ -569,7 +569,7 @@ snippy search -c <content>                                  # search --content n
 
 ## snippets: search with digest
 snippy search -d <digest>                                   # search --digest to match short digest (DONE)
-snippy search -d <digest>                                   # search --digest to match long digest
+snippy search -d <digest>                                   # search --digest to match long digest (DONE)
 snippy search -d <digest>                                   # search --digest to match multiple contents (DONE)
 snippy search -d <digest>                                   # search --digest not to match
 

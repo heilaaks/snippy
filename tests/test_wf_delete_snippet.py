@@ -6,9 +6,14 @@ import sys
 import unittest
 import mock
 from snippy.snip import Snippy
+from snippy.config.constants import Constants as Const
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+if not Const.PYTHON2:
+    from io import StringIO # pylint: disable=import-error
+else:
+    from StringIO import StringIO # pylint: disable=import-error
 
 
 class TestWfDeleteSnippet(unittest.TestCase):
@@ -152,6 +157,64 @@ class TestWfDeleteSnippet(unittest.TestCase):
             sys.argv = ['snippy', 'delete', '--content', '']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: cannot use empty content data to delete content'
+            assert len(Database.get_snippets()) == 2
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_delete_snippet_with_search_keyword(self, mock_isfile, mock_get_db_location):
+        """Delete snippet with search."""
+
+        mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Delete snippet based on search keyword that results one hit. In this
+        ##        case the content is deleted.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'delete', '--sall', 'redis']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 1
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Delete snippet based on search keyword that results more than one hit.
+        ##        In this case the content must not be deleted.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'delete', '--sall', 'docker']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: given search keyword matches (2) more than once preventing the operation'
+            assert len(Database.get_snippets()) == 2
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_delete_snippet_failure_stdout(self, mock_isfile, mock_get_db_location):
+        """Delete snippet with data."""
+
+        mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Delete snippet based on search keyword that results more than one hit.
+        ##        In this case the error text is read from stdout and it must contain
+        ##        the error string.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'delete', '--sall', 'docker']  ## workflow
+            cause = snippy.run_cli()
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert cause == 'NOK: given search keyword matches (2) more than once preventing the operation'
+            assert result == 'NOK: given search keyword matches (2) more than once preventing the operation'
             assert len(Database.get_snippets()) == 2
             snippy.release()
             snippy = None

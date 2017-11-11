@@ -37,7 +37,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -58,7 +60,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   $ docker rm --volumes $(docker ps --all --quiet)',
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
-                      '   > https://docs.docker.com/engine/reference/commandline/rm/')
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -86,7 +90,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -114,7 +120,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -136,7 +144,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -151,18 +161,81 @@ class TestWfSearchSnippet(unittest.TestCase):
             Database.delete_storage()
 
         ## Brief: Search snippets from all fields. The match is made from one snippet
-        ##        digest data.
+        ##        digest.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('1. Remove docker image with force @docker [53908d68425c61dc]',
                       '   $ docker rm --force redis',
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Search snippets from all fields with two keywords. The match is made
+        ##        two different snippts. In this search keywords are separated by comma.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', 'redis,--quiet', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Search snippets from all fields with three keywords. The match is made two
+        ##        different snippts. In this case search keywords are separated by spaces.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Test if specific port is open @linux [f3fd167c64b6f97e]',
+                      '   $ nc -v 10.183.19.189 443',
+                      '   $ nmap 10.183.19.189',
+                      '',
+                      '   # linux,netcat,networking,port',
+                      '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
+            Snippet.add_one(snippy, Snippet.NETCAT)
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', 'netcat --quiet all', '--no-ansi']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
@@ -185,7 +258,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -213,7 +288,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -241,7 +318,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -258,7 +337,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         ## Brief: Try to search snippets when there are no content stored. The used search
         ##        keyword matches to 'match any' that tries to list all the content.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ()
+            output = ('OK')
             snippy = Snippy()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -267,7 +346,23 @@ class TestWfSearchSnippet(unittest.TestCase):
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
-            assert result == Const.NEWLINE.join(output)
+            assert result == output
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to search snippets with keyword that does not exist.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('OK')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', 'not-found', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == output
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -287,7 +382,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   $ nmap 10.183.19.189',
                       '',
                       '   # linux,netcat,networking,port',
-                      '   > https://www.commandlinux.com/man-page/man1/nc.1.html')
+                      '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
             real_stdout = sys.stdout
@@ -298,6 +395,23 @@ class TestWfSearchSnippet(unittest.TestCase):
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Search snippets from tag field. No matches are made.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('OK')
+            snippy = Snippet.add_defaults(Snippy())
+            Snippet.add_one(snippy, Snippet.NETCAT)
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--stag', 'not-found', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == output
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -317,7 +431,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   $ nmap 10.183.19.189',
                       '',
                       '   # linux,netcat,networking,port',
-                      '   > https://www.commandlinux.com/man-page/man1/nc.1.html')
+                      '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
             real_stdout = sys.stdout
@@ -328,6 +444,24 @@ class TestWfSearchSnippet(unittest.TestCase):
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+
+        ## Brief: Search snippets from group field. No matches are made.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('OK')
+            snippy = Snippet.add_defaults(Snippy())
+            Snippet.add_one(snippy, Snippet.NETCAT)
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sgrp', 'not-found', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == output
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -346,7 +480,9 @@ class TestWfSearchSnippet(unittest.TestCase):
             output = ('$ docker rm --volumes $(docker ps --all --quiet)',
                       '$ docker rm --force redis',
                       '$ nc -v 10.183.19.189 443',
-                      '$ nmap 10.183.19.189')
+                      '$ nmap 10.183.19.189',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
             Solution.add_defaults(snippy)
@@ -379,7 +515,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '$ unlink /var/log/nginx/error.log',
                       '$ nginx -s reload',
                       '$ vi conf.d/default.conf',
-                      '$ docker exec -i -t $(docker ps | egrep -m 1 \'petelk/nginx\' | awk \'{print $1}\') /bin/bash')
+                      '$ docker exec -i -t $(docker ps | egrep -m 1 \'petelk/nginx\' | awk \'{print $1}\') /bin/bash',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
             Solution.add_defaults(snippy)
@@ -391,6 +529,24 @@ class TestWfSearchSnippet(unittest.TestCase):
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Search all content with regexp filter. There are no matches.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('OK')
+            snippy = Snippet.add_defaults(Snippy())
+            Snippet.add_one(snippy, Snippet.NETCAT)
+            Solution.add_defaults(snippy)
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--sall', '.', '--filter', 'not-found']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == output
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -409,10 +565,12 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   $ docker rm --volumes $(docker ps --all --quiet)',
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
-                      '   > https://docs.docker.com/engine/reference/commandline/rm/')
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'search', '--content', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
@@ -438,11 +596,38 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            print(result)
+            print(Const.NEWLINE.join(output))
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Search snippet by explicitly defining long message digest.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5', '--no-ansi']  ## workflow  pylint: disable=line-too-long
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
@@ -466,11 +651,43 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       '   # cleanup,container,docker,docker-ce,moby',
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'search', '--digest', '5', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Search snippets by defining empty string as message digest. This matches
+        ##        to all content in all categories.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--digest', '', '--no-ansi']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()

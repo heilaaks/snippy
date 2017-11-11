@@ -37,6 +37,18 @@ class Sqlite3DbHelper(object):
 
         return Storage()._get_contents(rows)  # pylint: disable=protected-access
 
+    @staticmethod
+    def print_contents():
+        """Print database content."""
+
+        conn, cursor = Sqlite3DbHelper._connect_db()
+        cursor.execute('SELECT * FROM contents')
+        rows = cursor.fetchall()
+        cursor.close()
+        conn.close()
+
+        for content in Storage()._get_contents(rows):  # pylint: disable=protected-access
+            print(content)
 
     @staticmethod
     def get_content(digest):

@@ -22,10 +22,10 @@ class Snippet(object):
 
         self.logger.debug('creating new snippet')
         snippet = Config.get_content(Content())
-        if snippet.has_data():
-            self.storage.create(snippet)
-        else:
+        if not snippet.has_data():
             Cause.set_text('mandatory snippet data not defined')
+        else:
+            self.storage.create(snippet)
 
     def search(self):
         """Search snippets."""

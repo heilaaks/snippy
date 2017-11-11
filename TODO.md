@@ -6,7 +6,7 @@
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
    - [ ] Migrate operation can combine same kind of search than in update. Do Config.is_search_context to T for digest,content,KW and run search always for second option.
    - [ ] Refactor importing of text template since it is bit messy at the moment.
-   - [ ] Add tests to run search keywords (stag, sall, sgrp) for update and delete operations.
+   - [ ] Add tests to create solution without proper template. Like with one word.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
@@ -24,6 +24,7 @@
    - [ ] Why mocking sys.exit from arguments causes huge spike in CPU? This basically stalls tests.
 
 ## DONE
+   - [x] Added tests to use search keywords like --stag or  --sall for delete operations.
    - [x] Changed the Config().reset() to not to create new object when calling and returning from reset().
    - [x] Fixed incorrect OK result when no content was imported at all.
    - [x] Fixed import failure message when same solution data was imported twice.

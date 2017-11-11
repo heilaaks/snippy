@@ -62,18 +62,22 @@ class Content(object):
     def has_data(self):
         """Test if content has data defined."""
 
-        return True if self.content[Const.DATA] else False
+        return False if not self.content[Const.DATA] or not any(self.content[Const.DATA]) else True
 
     def is_data_template(self, edited=None):
         """Test if content data is empty template."""
 
-        template = Config.get_content_template(Content(content=None, category=self.get_category()))
+        # Date and group fields are masked out. Date can change and the tool
+        # enforces default category on top of the template when content is saved.
+        template = Config.get_content_template(Content.get_empty(self.get_category()))
         if not edited:
             content = self.get_data(form=Const.STRING_CONTENT)
         else:
             content = edited
-        template = re.sub(r'## DATE  :.*', '## DATE  :', template)
-        content = re.sub(r'## DATE  :.*', '## DATE  :', content)
+        template = re.sub(r'## DATE  :.*', '## DATE  : ', template)
+        content = re.sub(r'## DATE  :.*', '## DATE  : ', content)
+        content = re.sub(r'## GROUP :.*', '## GROUP : ', content)
+        content = re.sub(r'# Add optional single group below.\ndefault', '# Add optional single group below.\n', content)
 
         return True if content == template else False
 
@@ -255,6 +259,24 @@ class Content(object):
             contents = Content._get_contents(dictionary['content'])
 
         return contents
+
+    @classmethod
+    def get_empty(cls, category):
+        """Get empty content."""
+
+        content = (Const.EMPTY_TUPLE,
+                   Const.EMPTY,
+                   Const.EMPTY,
+                   Const.EMPTY_TUPLE,
+                   Const.EMPTY_TUPLE,
+                   category,
+                   Const.EMPTY,
+                   None,  # utc
+                   None,  # digest
+                   None,  # metadata
+                   None)  # key
+
+        return Content(content)
 
     @staticmethod
     def _get_contents(dictionary):

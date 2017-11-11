@@ -22,10 +22,12 @@ class Solution(object):
 
         self.logger.debug('creating new solution')
         solution = Config.get_content(Content(), use_editor=True)
-        if solution.has_data():
-            self.storage.create(solution)
-        else:
+        if not solution.has_data():
             Cause.set_text('mandatory solution data not defined')
+        elif solution.is_data_template():
+            Cause.set_text('no content was stored because the solution data is matching to empty template')
+        else:
+            self.storage.create(solution)
 
     def search(self):
         """Search solutions."""

@@ -4,7 +4,6 @@
 
 from __future__ import print_function
 import re
-import sys
 import os.path
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
@@ -138,7 +137,7 @@ class Migrate(object):
                     cls.logger.info('unknown export format')
             except (IOError, TypeError, ValueError, yaml.YAMLError) as exception:
                 cls.logger.exception('fatal failure to generate formatted export file "%s"', exception)
-                sys.exit()
+                Cause.set_text('fatal failure while exporting content to file')
 
     @classmethod
     def dump_template(cls, content):
@@ -152,7 +151,7 @@ class Migrate(object):
                 outfile.write(template)
             except IOError as exception:
                 cls.logger.exception('fatal failure in creating snippet template file "%s"', exception)
-                Cause.set_text('cannot export snippet template {}'.format(filename))
+                Cause.set_text('fatal failure while exporting template {}'.format(filename))
 
     @classmethod
     def load(cls, filename, content):
@@ -178,10 +177,10 @@ class Migrate(object):
                         contents = Config.get_text_contents(content, infile.readlines())
                         dictionary = {'content': Migrate.get_dictionary_list(contents)}
                     else:
-                        cls.logger.info('unknown export format')
+                        cls.logger.info('unknown import format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:
-                    cls.logger.exception('fatal exception while loading the import file %s "%s"', filename, exception)
-                    sys.exit()
+                    cls.logger.exception('fatal exception while loading file "%s"', exception)
+                    Cause.set_text('fatal failure while importing content from file')
 
         else:
             Cause.set_text('cannot read file {}'.format(filename))

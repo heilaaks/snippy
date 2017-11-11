@@ -282,7 +282,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return digest
 
     @classmethod
-    def validate_search_context(cls, contents, operation):
+    def validate_search_context(cls, contents, operation):  # pylint: disable=too-many-branches
         """Validate content search context."""
 
         # Search keys are treated in priority order of 1) digest, 2) content data
@@ -311,6 +311,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
                             'operation') % (data, len(contents))
             else:
                 text = 'cannot use empty content data to %s content' % operation
+        elif cls.is_search_keywords():
+            if len(contents) > 1:
+                text = ('given search keyword matches (%d) more than once preventing ' +
+                        'the operation') % len(contents)
         else:
             text = 'no message digest, content data or search keywords were provided'
 

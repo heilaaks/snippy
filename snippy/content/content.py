@@ -54,11 +54,6 @@ class Content(object):
 
         return True if self.content[Const.CATEGORY] == Const.SNIPPET else False
 
-    def is_solution(self):
-        """Test if content is solution."""
-
-        return True if self.content[Const.CATEGORY] == Const.SOLUTION else False
-
     def has_data(self):
         """Test if content has data defined."""
 

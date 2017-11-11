@@ -335,6 +335,22 @@ class TestWfImportSolution(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Try to import defined solution with message digest that cannot be found. In this
+        ##        case there is one solution stored.
+        mocked_open = mock.mock_open(read_data=updated_solution)
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            snippy = Solution.add_one(Snippy(), Solution.NGINX)
+            sys.argv = ['snippy', 'import', '--solution', '-d', '123456789abcdef0', '-f', 'one-solution.text']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find solution to be imported with digest 123456789abcdef0'
+            assert len(Database.get_solutions()) == 1
+            assert not Database.get_snippets()
+            mock_file.assert_not_called()
+            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')

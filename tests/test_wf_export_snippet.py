@@ -168,6 +168,17 @@ class TestWfExportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Try to export defined snippet based on message digest that cannot be found.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '-d', '123456789abcdef0', '-f', 'defined-snippet.txt']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find snippet to be exported with digest 123456789abcdef0'
+            mock_file.assert_not_called()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     def test_export_snippet_template(self, mock_get_db_location, mock_get_utc_time):

@@ -39,6 +39,19 @@ class TestWfCreateSnippet(unittest.TestCase):
             assert len(Database.get_snippets()) == 1
             Snippet.test_content(snippy, mock_file, compare_content)
 
+        ## Brief: Try to create new snippet without defining the mandatory content data.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
+            group = Snippet.DEFAULTS[Snippet.REMOVE]['group']
+            tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
+            links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+            compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
+            sys.argv = ['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
+            snippy = Snippy()
+            cause = snippy.run_cli()
+            assert cause == 'NOK: mandatory snippet data not defined'
+            assert not Database.get_snippets()
+
     # pylint: disable=duplicate-code
     def tearDown(self):
         """Teardown each test."""

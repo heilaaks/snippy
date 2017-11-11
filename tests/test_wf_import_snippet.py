@@ -257,6 +257,22 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Try to import defined snippet with message digest that cannot be found. In this
+        ##        case there is one snippet stored.
+        mocked_open = mock.mock_open(read_data=import_text)
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            sys.argv = ['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find snippet to be imported with digest 123456789abcdef0'
+            assert len(Database.get_snippets()) == 1
+            Database.print_contents()
+            mock_file.assert_not_called()
+            Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': import_dict['content'][0]})
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')

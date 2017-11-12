@@ -29,9 +29,11 @@ class Reference(object):
     def create_test_document(self):
         """Create test documentation from test files."""
 
+        # The ImportError is the parent class of ModuleNotFoundError. The later one
+        # is only in Python 3.6 but the ImportError works with older Python versions.
         try:
             pkg_resources.resource_isdir('tests', '')
-        except ModuleNotFoundError as exception:
+        except ImportError as exception:
             Cause.set_text('test cases are not packaged with release {}'.format(exception))
 
             return

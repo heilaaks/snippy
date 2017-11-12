@@ -258,7 +258,10 @@ class TestWfConsoleHelp(unittest.TestCase):
     def test_console_help_tests_no_package(self, mock_resource_listdir, mock_resource_isdir):
         """Test printing test documentation when testing package does not exist."""
 
-        mock_resource_isdir.side_effect = ModuleNotFoundError("No module named 'tests'")
+        # The exception in Python 3.6 is ModuleNotFoundError but this is not
+        # available in earlier Python versions. The used ImportError is a partent
+        # class of ModuleNotFoundError and it works with older Python versions.
+        mock_resource_isdir.side_effect = ImportError("No module named 'tests'")
         mock_resource_listdir.return_value = ['test_ut_arguments_create.py',
                                               'test_wf_console_help.py',
                                               'test_wf_export_snippet.py']

@@ -10,6 +10,7 @@
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
+   - [ ] Add version field to metadata that can hold snippet or solution specific version. This is intended to reflect e.g. Elasticsearch version that is relevant for commands.
    - [ ] The storage.init() in snippy is called multiple times in tests since they run_cli multiple times. This leaks cursor and conn?
    - [ ] Add upgrade procedure. How? Is this needed? What happens when there is content and pip upgrade is made?
    - [ ] Fix upgrading snippy does not update new defaults? Tried with make install to install new version.

@@ -20,6 +20,7 @@ class TestWfConsoleHelp(unittest.TestCase):
     def test_console_help(self):
         """Test getting help from consoler."""
 
+        ## Brief: Print tool help.
         cause = Cause.ALL_OK
         snippy = Snippy()
         try:
@@ -75,7 +76,7 @@ class TestWfConsoleHelp(unittest.TestCase):
                       'Snippy version 0.6.0 - license Apache 2.0',
                       'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                       'Homepage https://github.com/heilaaks/snippy')
-            sys.argv = ['snippy', '--help']
+            sys.argv = ['snippy', '--help']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             snippy = Snippy()
@@ -90,8 +91,9 @@ class TestWfConsoleHelp(unittest.TestCase):
             Database.delete_storage()
 
     def test_console_help_examples(self):
-        """Test getting help from consoler."""
+        """Test getting examples from consoler."""
 
+        ## Brief: Print tool examples.
         cause = Cause.ALL_OK
         snippy = Snippy()
         try:
@@ -141,7 +143,7 @@ class TestWfConsoleHelp(unittest.TestCase):
                       'Snippy version 0.6.0 - license Apache 2.0',
                       'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                       'Homepage https://github.com/heilaaks/snippy')
-            sys.argv = ['snippy', '--help', 'examples']
+            sys.argv = ['snippy', '--help', 'examples']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli()

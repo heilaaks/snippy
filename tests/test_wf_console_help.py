@@ -289,7 +289,7 @@ class TestWfConsoleHelp(unittest.TestCase):
 
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     def test_console_very_verbose_option(self, mock_get_db_location):
-        """Test printing logs witht the tool output."""
+        """Test printing logs with the very verbose option."""
 
         mock_get_db_location.return_value = Database.get_storage()
 
@@ -300,6 +300,31 @@ class TestWfConsoleHelp(unittest.TestCase):
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
             cause = Cause.ALL_OK
             sys.argv = ['snippy', 'search', '--sall', '.', '-vv']  ## workflow
+            snippy = Snippy()
+            real_stderr = sys.stderr
+            sys.stderr = StringIO()
+            cause = snippy.run_cli()
+            result = sys.stderr.getvalue().strip()
+            sys.stderr = real_stderr
+            assert cause == Cause.ALL_OK
+            assert len(result.split(Const.NEWLINE)) > 25
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_console_debug_option(self, mock_get_db_location):
+        """Test printing logs with debug option."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Enable short logging with --debug option. Test checks that there is more
+        ##        than randomly picked largish number of logs in order to avoid matching
+        ##        logs explicitly. This just verifies that the very verbose option prints
+        ##        more logs.
+        with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
+            cause = Cause.ALL_OK
+            sys.argv = ['snippy', 'search', '--sall', '.', '--debug']  ## workflow
             snippy = Snippy()
             real_stderr = sys.stderr
             sys.stderr = StringIO()

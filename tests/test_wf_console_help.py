@@ -4,10 +4,12 @@
 
 import sys
 import unittest
+import pytest
 import mock
 from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
+from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 if not Const.PYTHON2:
     from io import StringIO # pylint: disable=import-error
@@ -282,6 +284,32 @@ class TestWfConsoleHelp(unittest.TestCase):
                 snippy.release()
                 snippy = None
                 Database.delete_storage()
+
+    @pytest.mark.skip(reason="this again slows down all tests but works independently. Why?")
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_console_very_verbose_option(self, mock_get_db_location):
+        """Test printing logs witht the tool output."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Enable short logging with -vv option. Test checks that there is more than
+        ##        randomly picked largish number of logs in order to avoid matching logs
+        ##        explicitly. This just verifies that the very verbose option prints more
+        ##        logs.
+        with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
+            cause = Cause.ALL_OK
+            sys.argv = ['snippy', 'search', '--sall', '.', '-vv']  ## workflow
+            snippy = Snippy()
+            real_stderr = sys.stderr
+            sys.stderr = StringIO()
+            cause = snippy.run_cli()
+            result = sys.stderr.getvalue().strip()
+            sys.stderr = real_stderr
+            assert cause == Cause.ALL_OK
+            assert len(result.split(Const.NEWLINE)) > 25
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
     # pylint: disable=duplicate-code
     def tearDown(self):

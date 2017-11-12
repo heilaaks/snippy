@@ -1,14 +1,14 @@
 ## TODO
    - [ ] Update documents.
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
-   - [ ] Add no-ansi to test case print. This is needed at least with test.
    - [ ] Fix 'snippy', 'search', '--filter', '.*(\$\s.*)' that produces internal error.
    - [ ] Fix it is not possible to use command line options in keywords? 'snippy', 'search', '--sall', '--all,--quiet', '--no-ansi'
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
    - [ ] Fix 'snippy search' missing the keywords. This causes internal error cause that is not nice.
+   - [ ] Test manually the exception cases for example with file with Python3 and 2.7. Some exceptions may not be in Python2.7.
+   - [ ] Add search baed on content data to work like digest so that search --content 'git log' works. The --sall 'git log' results two keywords, not string 'git log'
    - [ ] Migrate operation can combine same kind of search than in update. Do Config.is_search_context to T for digest,content,KW and run search always for second option.
    - [ ] Refactor importing of text template since it is bit messy at the moment.
-   - [ ] Add tests to create solution without proper template. Like with one word.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
@@ -25,9 +25,9 @@
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
    - [ ] It seems that in Python2 when database test fails, it leaves hanging resources and DB clean does not work?
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
-   - [ ] Why mocking sys.exit from arguments causes huge spike in CPU? This basically stalls tests.
 
 ## DONE
+   - [x] Added --no-ansi option support to test case document output.
    - [x] Added tests to use search keywords like --stag or  --sall for delete operations.
    - [x] Changed the Config().reset() to not to create new object when calling and returning from reset().
    - [x] Fixed incorrect OK result when no content was imported at all.

@@ -118,7 +118,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Solution.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\$\s.*)']  ## workflow # pylint: disable=anomalous-backslash-in-string
+            sys.argv = ['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\\$\\s.*)']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()

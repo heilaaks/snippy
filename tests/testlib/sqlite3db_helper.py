@@ -155,7 +155,9 @@ class Sqlite3DbHelper(object):
 
         # The file based database is used in testing only in case of Python2.
         if Const.PYTHON2:
-            os.remove(Sqlite3DbHelper.get_storage())
+            filename = Sqlite3DbHelper.get_storage()
+            if os.path.isfile(filename):
+                os.remove(filename)
 
     @staticmethod
     def _connect_db():

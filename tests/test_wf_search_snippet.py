@@ -488,7 +488,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             Solution.add_defaults(snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sall', '.', '--filter', '.*(\$\s.*)']  ## workflow # pylint: disable=anomalous-backslash-in-string
+            sys.argv = ['snippy', 'search', '--sall', '.', '--filter', '.*(\\$\\s.*)']  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
@@ -520,7 +520,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
             Solution.add_defaults(snippy)
-            sys.argv = ['snippy', 'search', '--all', '--sall', '.', '--filter', '\.*(\$\s.*)']  ## workflow # pylint: disable=anomalous-backslash-in-string
+            sys.argv = ['snippy', 'search', '--all', '--sall', '.', '--filter', '\\.*(\\$\\s.*)']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli()

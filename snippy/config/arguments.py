@@ -156,7 +156,6 @@ class Arguments(object):
         support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--no-ansi', dest='no_ansi', action='store_true', default=False, help=argparse.SUPPRESS)
-
         Arguments.args = parser.parse_args()
 
     @classmethod

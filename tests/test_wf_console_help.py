@@ -224,24 +224,61 @@ class TestWfConsoleHelp(unittest.TestCase):
             cause = Cause.ALL_OK
             snippy = Snippy()
             try:
-                #  output = ('   $ snippy import --filter .*(\$\s.*)',
-                #            '   # Import all snippets. File name is not defined in commmand line.',
-                #            '   # This should result tool internal default file name',
-                #            '   # ./snippets.yaml being used by default.',
-                #            '',
-                #            '   $ snippy import --filter .*(\$\s.*)',
-                #            '   # Import all snippets. File name is not defined in commmand line.',
-                #            '   # This should result tool internal default file name',
-                #            '   # ./snippets.yaml being used by default.')
+                output = ('test case reference list:',
+                          '',
+                          '   $ snippy import --filter .*(\\$\\s.*)',
+                          '   # Import all snippets. File name is not defined in commmand line.',
+                          '   # This should result tool internal default file name',
+                          '   # ./snippets.yaml being used by default.',
+                          '',
+                          '   $ snippy import --filter .*(\\$\\s.*)',
+                          '   # Import all snippets. File name is not defined in commmand line.',
+                          '   # This should result tool internal default file name',
+                          '   # ./snippets.yaml being used by default.')
                 sys.argv = ['snippy', '--help', 'tests', '--no-ansi']  ## workflow
                 real_stdout = sys.stdout
                 sys.stdout = StringIO()
                 cause = snippy.run_cli()
             except SystemExit:
-                #result = sys.stdout.getvalue().strip()
+                result = sys.stdout.getvalue().strip()
                 sys.stdout = real_stdout
+                print(result)
+                print("===")
+                print(Const.NEWLINE.join(output))
                 assert cause == Cause.ALL_OK
-                #assert result == Const.NEWLINE.join(output)
+                assert result == Const.NEWLINE.join(output)
+                snippy.release()
+                snippy = None
+                Database.delete_storage()
+
+    @mock.patch('snippy.devel.reference.pkg_resources.resource_isdir')
+    @mock.patch('snippy.devel.reference.pkg_resources.resource_listdir')
+    def test_console_help_tests_no_package(self, mock_resource_listdir, mock_resource_isdir):
+        """Test printing test documentation when testing package does not exist."""
+
+        mock_resource_isdir.side_effect = ModuleNotFoundError("No module named 'tests'")
+        mock_resource_listdir.return_value = ['test_ut_arguments_create.py',
+                                              'test_wf_console_help.py',
+                                              'test_wf_export_snippet.py']
+
+        ## Brief: Try to print tool test case reference documentation when tests are not
+        ##        packaged with the release.
+        testcase = ('')
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(testcase))
+        with mock.patch('snippy.devel.reference.open', mocked_open, create=True):
+            cause = Cause.ALL_OK
+            snippy = Snippy()
+            try:
+                output = ('')
+                sys.argv = ['snippy', '--help', 'tests']  ## workflow
+                real_stdout = sys.stdout
+                sys.stdout = StringIO()
+                cause = snippy.run_cli()
+            except SystemExit:
+                result = sys.stdout.getvalue().strip()
+                sys.stdout = real_stdout
+                assert cause == Cause.ALL_OK  # Cause is not updated because the SystemExit exception is thrown from argparse.
+                assert result == Const.NEWLINE.join(output)
                 snippy.release()
                 snippy = None
                 Database.delete_storage()

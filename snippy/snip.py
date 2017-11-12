@@ -48,6 +48,7 @@ class Snippy(object):
         """Release session."""
 
         self.storage.disconnect()
+        self.cause.reset()
 
 
 def main():

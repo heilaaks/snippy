@@ -7,6 +7,7 @@ import textwrap
 import pkg_resources
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
+from snippy.cause.cause import Cause
 
 
 class Reference(object):
@@ -18,11 +19,11 @@ class Reference(object):
         self.logger = Logger(__name__).get()
         self.tests = []
 
-    def print_tests(self):
+    def print_tests(self, ansi=True):
         """Print tests case documentation."""
 
         self.create_test_document()
-        text = self.format_test_document()
+        text = self.format_test_document(ansi)
         Reference.output_test_document(text)
 
     def create_test_document(self):
@@ -30,7 +31,9 @@ class Reference(object):
 
         try:
             pkg_resources.resource_isdir('tests', '')
-        except ModuleNotFoundError:
+        except ModuleNotFoundError as exception:
+            Cause.set_text('test cases are not packaged with release {}'.format(exception))
+
             return
 
         # Test case file mock does not support iterators. Because of this, the
@@ -51,7 +54,7 @@ class Reference(object):
                     if wf_command:
                         self.tests.append(wf_command + Reference.TEST_SEPARATOR + wf_brief)
 
-    def format_test_document(self, ansi=True):
+    def format_test_document(self, ansi):
         """Output test documentation."""
 
         text = Const.EMPTY
@@ -76,13 +79,14 @@ class Reference(object):
         """Print test document to console."""
 
         if text:
+            print('test case reference list:\n')
             print(text)
 
     @staticmethod
     def _terminal_command(ansi=False):
         """Format test case command."""
 
-        return '   \x1b[91m$\x1b[0m \x1b[1;92m%s\x1b[0m\n' if ansi else '%s   $ %s\n'
+        return '   \x1b[91m$\x1b[0m \x1b[1;92m%s\x1b[0m\n' if ansi else '   $ %s\n'
 
     @staticmethod
     def _terminal_brief(ansi=False):

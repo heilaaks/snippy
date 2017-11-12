@@ -367,8 +367,9 @@ class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
                 print(Const.NEWLINE.join(Arguments.ARGS_EXAMPLES))
             elif 'tests' in sys.argv:
                 from snippy.devel.reference import Reference
+                ansi = True if '--no-ansi' not in sys.argv else False
                 test = Reference()
-                test.print_tests()
+                test.print_tests(ansi)
             else:
                 parser.print_help()
 

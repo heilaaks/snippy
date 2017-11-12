@@ -49,6 +49,7 @@ class Snippy(object):
 
         self.storage.disconnect()
         self.cause.reset()
+        Logger.reset()
 
 
 def main():

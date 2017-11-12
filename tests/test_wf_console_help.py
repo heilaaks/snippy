@@ -4,7 +4,6 @@
 
 import sys
 import unittest
-import pytest
 import mock
 from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
@@ -288,7 +287,6 @@ class TestWfConsoleHelp(unittest.TestCase):
                 snippy = None
                 Database.delete_storage()
 
-    @pytest.mark.skip(reason="this again slows down all tests but works independently. Why?")
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     def test_console_very_verbose_option(self, mock_get_db_location):
         """Test printing logs witht the tool output."""

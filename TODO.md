@@ -5,6 +5,7 @@
    - [ ] Fix 'snippy', 'search', '--filter', '.*(\$\s.*)' that produces internal error.
    - [ ] Fix it is not possible to use command line options in keywords? 'snippy', 'search', '--sall', '--all,--quiet', '--no-ansi'
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
+   - [ ] Fix 'snippy search' missing the keywords. This causes internal error cause that is not nice.
    - [ ] Migrate operation can combine same kind of search than in update. Do Config.is_search_context to T for digest,content,KW and run search always for second option.
    - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Add tests to create solution without proper template. Like with one word.

@@ -38,6 +38,13 @@ class Logger(object):
             logging.getLogger().setLevel(logging.DEBUG)
 
     @staticmethod
+    def reset():
+        """Reset log level to default."""
+
+        logging.getLogger().disabled = True
+        logging.getLogger().setLevel(logging.WARNING)
+
+    @staticmethod
     def print_cause(cause):
         """Print exit cause for the tool."""
 

@@ -377,3 +377,18 @@ content:
   - git
   - pull
   utc: '2017-11-07 07:58:46'
+- brief: List git commit log headers
+  category: snippet
+  data:
+  - git log --pretty=oneline --abbrev-commit
+  digest: 888b1e827db42889b35373f04260304c41b03125d2c1ce0581f0d05b7adb59ed
+  filename: ''
+  group: git
+  links:
+  - https://git-scm.com/book/id/v2/Git-Basics-Viewing-the-Commit-History
+  - https://github.com/k88hudson/git-flight-rules
+  - https://stackoverflow.com/questions/4479225/how-to-output-git-log-with-the-first-line-only
+  tags:
+  - git
+  - log
+  utc: '2017-11-12 09:54:23'

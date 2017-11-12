@@ -33,16 +33,18 @@ class Reference(object):
         except ModuleNotFoundError:
             return
 
+        # Test case file mock does not support iterators. Because of this, the
+        # file is read directly to list where it is parsed.
         tests = pkg_resources.resource_listdir('tests', Const.EMPTY)
         regex = re.compile(r'test_wf.*\.py')
-        tests = [testcase for testcase in tests if regex.match(testcase)]
-        for testcase in tests:
-            testfile = pkg_resources.resource_filename('tests', testcase)
+        tests = [filename for filename in tests if regex.match(filename)]
+        for filename in tests:
+            testfile = pkg_resources.resource_filename('tests', filename)
             with open(testfile, 'r') as infile:
-                wf_brief = ''
-                for line in infile:
-
-                    brief, line = Reference.get_brief(line, infile)
+                wf_brief = Const.EMPTY
+                testcase = infile.readlines()
+                for line_nbr, line in enumerate(testcase):
+                    brief, line = Reference.get_brief(line, line_nbr, testcase)
                     if brief:
                         wf_brief = brief
                     wf_command = Reference.get_command(line)
@@ -89,33 +91,40 @@ class Reference(object):
         return '%s\n' if ansi else '%s\n'
 
     @staticmethod
-    def get_brief(line, infile):
+    def get_brief(line, line_nbr, testcase):
         """Return test case brief description."""
 
-        brief = ''
+        brief = Const.EMPTY
+        line_brief = line
         match = re.search(r'## Brief:\s+(.*)', line)
         if match:
             brief = match.group(1)
             brief = brief.strip()
-            while True:
-                line = next(infile)
-                match = re.search(r'\s{3,}##\s+(.*)', line)  # Avoid matching the '  ## workflow' tag with leading spaces.
+            line_nbr = line_nbr + 1
+            for line_brief in testcase[line_nbr:]:
+                # Avoid matching the '  ## workflow' tag with leading spaces.
+                match = re.search(r'\s{3,}##\s+(.*)', line_brief)
                 if match:
                     brief = brief + ' ' + match.group(1).strip()
                 else:
                     break
 
-        return (brief, line)
+        return (brief, line_brief)
 
     @staticmethod
     def get_command(line):
         """Return workflow command."""
 
         command = Const.EMPTY
-        match = re.search(r'(.*)##\s+workflow', line)
+
+        # The regexp below must not match to console help test case that
+        # contains example test case.
+        match = re.search(r'^\s+sys\.argv(.*)##\s+workflow', line)
         if match:
             command = match.group(1).strip()
             command = re.search(r'\[(.*)\]', command)
             command = command.group(1).replace('\'', Const.EMPTY).replace(',', Const.EMPTY)
+            # Special characters are escaped in commands.
+            command = command.replace('\\\\$', '\\$').replace('\\\\s', '\\s')
 
         return command

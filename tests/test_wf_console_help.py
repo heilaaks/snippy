@@ -4,6 +4,7 @@
 
 import sys
 import unittest
+import mock
 from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
@@ -18,7 +19,7 @@ class TestWfConsoleHelp(unittest.TestCase):
     """Test getting help from console."""
 
     def test_console_help(self):
-        """Test getting help from consoler."""
+        """Test printing help from consoler."""
 
         ## Brief: Print tool help.
         cause = Cause.ALL_OK
@@ -91,7 +92,7 @@ class TestWfConsoleHelp(unittest.TestCase):
             Database.delete_storage()
 
     def test_console_help_examples(self):
-        """Test getting examples from consoler."""
+        """Test printing examples from consoler."""
 
         ## Brief: Print tool examples.
         cause = Cause.ALL_OK
@@ -155,6 +156,95 @@ class TestWfConsoleHelp(unittest.TestCase):
             snippy.release()
             snippy = None
             Database.delete_storage()
+
+    @mock.patch('snippy.devel.reference.pkg_resources.resource_isdir')
+    @mock.patch('snippy.devel.reference.pkg_resources.resource_listdir')
+    def test_console_help_tests(self, mock_resource_listdir, mock_resource_isdir):
+        """Test printing test documentation from consoler."""
+
+        mock_resource_isdir.return_value = True
+        mock_resource_listdir.return_value = ['test_ut_arguments_create.py',
+                                              'test_wf_console_help.py',
+                                              'test_wf_export_snippet.py']
+
+        ## Brief: Print tool examples.
+        testcase = ('#!/usr/bin/env python3',
+                    '',
+                    '"""test_wf_import_snippet.py: Test workflows for importing snippets."""',
+                    '',
+                    'import re',
+                    'import sys',
+                    'import copy',
+                    'import unittest',
+                    'import json',
+                    'import yaml',
+                    'import mock',
+                    'import pkg_resources',
+                    'from snippy.snip import Snippy',
+                    'from snippy.config.constants import Constants as Const',
+                    'from snippy.cause.cause import Cause',
+                    'from snippy.storage.database.sqlite3db import Sqlite3Db',
+                    'from tests.testlib.snippet_helper import SnippetHelper as Snippet',
+                    'from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database',
+                    '',
+                    '',
+                    'class TestWfImportSnippet(unittest.TestCase):',
+                    '    """Test workflows for importing snippets."""',
+                    '',
+                    '    @mock.patch.object(json, \'load\')',
+                    '    @mock.patch.object(yaml, \'safe_load\')',
+                    '    @mock.patch.object(Sqlite3Db, \'_get_db_location\')',
+                    '    @mock.patch(\'snippy.migrate.migrate.os.path.isfile\')',
+                    '    def test_import_all_snippets(self, mock_isfile, mock_get_db_location, mock_yaml_load, mock_json_load):',
+                    '        """Import all snippets."""',
+                    '',
+                    '        mock_isfile.return_value = True',
+                    '        mock_get_db_location.return_value = Database.get_storage()',
+                    '        import_dict = {\'content\': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}',
+                    '        mock_yaml_load.return_value = import_dict',
+                    '        mock_json_load.return_value = import_dict',
+                    '        compare_content = {\'54e41e9b52a02b63\': import_dict[\'content\'][0],',
+                    '                           \'f3fd167c64b6f97e\': import_dict[\'content\'][1]}',
+                    '',
+                    '        ## Brief: Import all snippets. File name is not defined in commmand line. This should',
+                    '        ##        result tool internal default file name ./snippets.yaml being used by default.',
+                    '        with mock.patch(\'snippy.migrate.migrate.open\', mock.mock_open(), create=True) as mock_file:',
+                    '            snippy = Snippy()',
+                    '            sys.argv = [\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\']  ## workflow',
+                    '            cause = snippy.run_cli()',
+                    '            assert cause == Cause.ALL_OK',
+                    '            assert len(Database.get_snippets()) == 2',
+                    '            mock_file.assert_called_once_with(\'./snippets.yaml\', \'r\')',
+                    '            Snippet.test_content(snippy, mock_file, compare_content)',
+                    '            snippy.release()',
+                    '            snippy = None',
+                    '            Database.delete_storage()')
+        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(testcase))
+        with mock.patch('snippy.devel.reference.open', mocked_open, create=True):
+            cause = Cause.ALL_OK
+            snippy = Snippy()
+            try:
+                #  output = ('   $ snippy import --filter .*(\$\s.*)',
+                #            '   # Import all snippets. File name is not defined in commmand line.',
+                #            '   # This should result tool internal default file name',
+                #            '   # ./snippets.yaml being used by default.',
+                #            '',
+                #            '   $ snippy import --filter .*(\$\s.*)',
+                #            '   # Import all snippets. File name is not defined in commmand line.',
+                #            '   # This should result tool internal default file name',
+                #            '   # ./snippets.yaml being used by default.')
+                sys.argv = ['snippy', '--help', 'tests', '--no-ansi']  ## workflow
+                real_stdout = sys.stdout
+                sys.stdout = StringIO()
+                cause = snippy.run_cli()
+            except SystemExit:
+                #result = sys.stdout.getvalue().strip()
+                sys.stdout = real_stdout
+                assert cause == Cause.ALL_OK
+                #assert result == Const.NEWLINE.join(output)
+                snippy.release()
+                snippy = None
+                Database.delete_storage()
 
     # pylint: disable=duplicate-code
     def tearDown(self):

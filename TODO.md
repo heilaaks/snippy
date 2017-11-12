@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Update documents.
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
+   - [ ] Add no-ansi to test case print. This is needed at least with test.
    - [ ] Fix 'snippy', 'search', '--filter', '.*(\$\s.*)' that produces internal error.
    - [ ] Fix it is not possible to use command line options in keywords? 'snippy', 'search', '--sall', '--all,--quiet', '--no-ansi'
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.

@@ -5,7 +5,9 @@
 import sys
 import unittest
 import mock
+from snippy.version import __version__
 from snippy.snip import Snippy
+from snippy.snip import main
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.storage.database.sqlite3db import Sqlite3Db
@@ -22,63 +24,82 @@ class TestWfConsoleHelp(unittest.TestCase):
     def test_console_help(self):
         """Test printing help from consoler."""
 
-        ## Brief: Print tool help.
+        output = ('usage: snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]',
+                  '',
+                  'positional arguments:',
+                  '    {create,search,update,delete,export,import}',
+                  '',
+                  'content category:',
+                  '    --snippet                     operate snippets (default)',
+                  '    --solution                    operate solutions',
+                  '    --all                         operate all content (search only)',
+                  '',
+                  'edit options:',
+                  '    -e, --editor                  use vi editor to add content',
+                  '    -c, --content CONTENT         define example content',
+                  '    -b, --brief BRIEF             define content brief description',
+                  '    -g, --group GROUP             define content group',
+                  '    -t, --tags [TAG,...]          define comma separated list of tags',
+                  '    -l, --links [LINK ...]        define space separated list of links',
+                  '    -d, --digest DIGEST           idenfity content with digest',
+                  '',
+                  'search options:',
+                  '    --sall [KW,...]               search keywords from all fields',
+                  '    --stag [KW,...]               search keywords only from tags',
+                  '    --sgrp [KW,...]               search keywords only from groups',
+                  '    --filter REGEXP               filter search output with regexp',
+                  '    --no-ansi                     remove ANSI characters from output',
+                  '',
+                  'migration options:',
+                  '    -f, --file FILE               define file for operation',
+                  '    --defaults                    migrate category specific defaults',
+                  '    --template                    migrate category specific template',
+                  '',
+                  'symbols:',
+                  '    $    snippet',
+                  '    :    solution',
+                  '    @    group',
+                  '    #    tag',
+                  '    >    url',
+                  '',
+                  'examples:',
+                  '    Import default content.',
+                  '      $ snippy import --snippet --defaults',
+                  '      $ snippy import --solution --defaults',
+                  '',
+                  '    List all snippets.',
+                  '      $ snippy search --snippet --sall .',
+                  '',
+                  '    List more examples.',
+                  '      $ snippy --help examples',
+                  '',
+                  'Snippy version ' + __version__ + ' - license Apache 2.0',
+                  'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+                  'Homepage https://github.com/heilaaks/snippy')
+
+        ## Brief: Print tool help with long option.
         cause = Cause.ALL_OK
         snippy = Snippy()
         try:
-            output = ('usage: snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]',
-                      '',
-                      'positional arguments:',
-                      '    {create,search,update,delete,export,import}',
-                      '',
-                      'content category:',
-                      '    --snippet                     operate snippets (default)',
-                      '    --solution                    operate solutions',
-                      '    --all                         operate all content (search only)',
-                      '',
-                      'edit options:',
-                      '    -e, --editor                  use vi editor to add content',
-                      '    -c, --content CONTENT         define example content',
-                      '    -b, --brief BRIEF             define content brief description',
-                      '    -g, --group GROUP             define content group',
-                      '    -t, --tags [TAG,...]          define comma separated list of tags',
-                      '    -l, --links [LINK ...]        define space separated list of links',
-                      '    -d, --digest DIGEST           idenfity content with digest',
-                      '',
-                      'search options:',
-                      '    --sall [KW,...]               search keywords from all fields',
-                      '    --stag [KW,...]               search keywords only from tags',
-                      '    --sgrp [KW,...]               search keywords only from groups',
-                      '    --filter REGEXP               filter search output with regexp',
-                      '    --no-ansi                     remove ANSI characters from output',
-                      '',
-                      'migration options:',
-                      '    -f, --file FILE               define file for operation',
-                      '    --defaults                    migrate category specific defaults',
-                      '    --template                    migrate category specific template',
-                      '',
-                      'symbols:',
-                      '    $    snippet',
-                      '    :    solution',
-                      '    @    group',
-                      '    #    tag',
-                      '    >    url',
-                      '',
-                      'examples:',
-                      '    Import default content.',
-                      '      $ snippy import --snippet --defaults',
-                      '      $ snippy import --solution --defaults',
-                      '',
-                      '    List all snippets.',
-                      '      $ snippy search --snippet --sall .',
-                      '',
-                      '    List more examples.',
-                      '      $ snippy --help examples',
-                      '',
-                      'Snippy version 0.6.0 - license Apache 2.0',
-                      'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
-                      'Homepage https://github.com/heilaaks/snippy')
             sys.argv = ['snippy', '--help']  ## workflow
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            snippy = Snippy()
+            cause = snippy.run_cli()
+        except SystemExit:
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert cause == Cause.ALL_OK
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Print tool help with short option.
+        cause = Cause.ALL_OK
+        snippy = Snippy()
+        try:
+            sys.argv = ['snippy', '-h']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             snippy = Snippy()
@@ -142,7 +163,7 @@ class TestWfConsoleHelp(unittest.TestCase):
                       '      $ snippy export --solution -f solutions.yaml',
                       '      $ snippy import --solution -f solutions.yaml',
                       '',
-                      'Snippy version 0.6.0 - license Apache 2.0',
+                      'Snippy version ' + __version__ + ' - license Apache 2.0',
                       'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                       'Homepage https://github.com/heilaaks/snippy')
             sys.argv = ['snippy', '--help', 'examples']  ## workflow
@@ -318,7 +339,7 @@ class TestWfConsoleHelp(unittest.TestCase):
 
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Enable short logging with --debug option. Test checks that there is more
+        ## Brief: Enable long logging with --debug option. Test checks that there is more
         ##        than randomly picked largish number of logs in order to avoid matching
         ##        logs explicitly. This just verifies that the very verbose option prints
         ##        more logs.
@@ -335,6 +356,99 @@ class TestWfConsoleHelp(unittest.TestCase):
             assert len(result.split(Const.NEWLINE)) > 25
             snippy.release()
             snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_console_quiet_option(self, mock_get_db_location):
+        """Test disbling all output to console."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Disable all logging and output to terminal.
+        with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
+            cause = Cause.ALL_OK
+            sys.argv = ['snippy', 'search', '--sall', '.', '-q']  ## workflow
+            real_stderr = sys.stderr
+            real_stdout = sys.stdout
+            sys.stderr = StringIO()
+            sys.stdout = StringIO()
+            snippy = Snippy()
+            cause = snippy.run_cli()
+            snippy.release()
+            snippy = None
+            result_stderr = sys.stderr.getvalue().strip()
+            result_stdout = sys.stdout.getvalue().strip()
+            sys.stderr = real_stderr
+            sys.stdout = real_stdout
+            assert cause == Cause.ALL_OK
+            assert not result_stderr
+            assert not result_stdout
+            Database.delete_storage()
+
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_console_version_option(self, mock_get_db_location):
+        """Test printing tool version."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Output tool version with long option. Only the version must be
+        ##        printed and nothing else.
+        snippy = Snippy()
+        cause = Cause.ALL_OK
+        try:
+            sys.argv = ['snippy', '--version']  ## workflow
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            snippy = Snippy()
+            cause = snippy.run_cli()
+        except SystemExit:
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert cause == Cause.ALL_OK
+            assert result == __version__
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Output tool version with short option. Only the version must be
+        ##        printed and nothing else.
+        snippy = Snippy()
+        cause = Cause.ALL_OK
+        try:
+            sys.argv = ['snippy', '-v']  ## workflow
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            snippy = Snippy()
+            cause = snippy.run_cli()
+        except SystemExit:
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert cause == Cause.ALL_OK
+            assert result == __version__
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_snippy_main(self, mock_get_db_location):
+        """Test running program main with profile option."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Run program main with profile option. Test checks that there is more
+        ##        than randomly picked largish number of rows. This just verifies that
+        ##        the profile option prints lots for data.
+        with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
+            cause = Cause.ALL_OK
+            sys.argv = ['snippy', 'search', '--sall', '.', '--profile']  ## workflow
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            main()
+            result = sys.stdout.getvalue().strip()
+            print(result)
+            sys.stderr = real_stdout
+            assert cause == Cause.ALL_OK
+            assert len(result.split(Const.NEWLINE)) > 100
             Database.delete_storage()
 
     # pylint: disable=duplicate-code

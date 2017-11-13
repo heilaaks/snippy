@@ -12,6 +12,7 @@
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
+   - [ ] Fix the Makefile 'python -m pytest ./tests/test_*.py --cov snippy -vv' and Logging. The -vv option forces to logs on because snippy uses -vv option too.
    - [ ] Why some logs go to stderr and some stdout? See the test_console_very_verbose_option. This also slows down all tests again?
    - [ ] Add version field to metadata that can hold snippet or solution specific version. This is intended to reflect e.g. Elasticsearch version that is relevant for commands.
    - [ ] The storage.init() in snippy is called multiple times in tests since they run_cli multiple times. This leaks cursor and conn?

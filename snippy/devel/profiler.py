@@ -15,9 +15,6 @@ class Profiler(object):
     profiler = None
     is_enabled = False
 
-    def __init__(self):
-        Profiler.profiler = None
-
     @classmethod
     def enable(cls):
         """The profiler enabling is read directly from the system arguments because

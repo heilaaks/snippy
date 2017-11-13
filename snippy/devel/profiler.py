@@ -8,9 +8,10 @@ import pstats
 import sys
 from snippy.config.constants import Constants as Const
 if not Const.PYTHON2:
-    from io import StringIO # pylint: disable=import-error
+    from io import StringIO  # pylint: disable=import-error
 else:
-    from StringIO import StringIO # pylint: disable=import-error
+    from StringIO import StringIO  # pylint: disable=import-error
+
 
 class Profiler(object):
     """Profiler wrapper."""

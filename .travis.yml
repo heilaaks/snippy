@@ -18,7 +18,7 @@ after_success:
 after_failure:
   - 'ls -al'
   - "python -c 'import sqlite3; print(sqlite3.sqlite_version)'"
-  - 'gdb --core ./core'
   - "cat ./core |strings |grep -E '^_='"
+  - 'gdb --c ./core -ex "set pagination 0" -batch'
   - 'gdb -c ./core -ex "thread info" -ex "set pagination 0" -batch'
   - 'gdb -c ./core example -ex "bt" -ex "set pagination 0" -batch'

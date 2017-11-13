@@ -5,9 +5,12 @@
 from __future__ import print_function
 import cProfile
 import pstats
-import io
 import sys
-
+from snippy.config.constants import Constants as Const
+if not Const.PYTHON2:
+    from io import StringIO # pylint: disable=import-error
+else:
+    from StringIO import StringIO # pylint: disable=import-error
 
 class Profiler(object):
     """Profiler wrapper."""
@@ -31,7 +34,7 @@ class Profiler(object):
 
         if cls.is_enabled:
             cls.profiler.disable()
-            output_string = io.StringIO()
+            output_string = StringIO()
             cls.profiler = pstats.Stats(cls.profiler, stream=output_string).sort_stats('cumulative')
             cls.profiler.print_stats()
             cls.is_enabled = False

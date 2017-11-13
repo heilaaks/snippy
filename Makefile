@@ -11,7 +11,7 @@ dev:
 	pip install -e .[dev]
 
 test:
-	python -m pytest ./tests/test_*.py --cov snippy -vv
+	python -m pytest ./tests/test_*.py --cov snippy
 
 coverage:
 	pytest --cov=snippy --cov-report html tests/

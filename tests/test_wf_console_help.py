@@ -13,9 +13,9 @@ from snippy.cause.cause import Cause
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 if not Const.PYTHON2:
-    from io import StringIO # pylint: disable=import-error
+    from io import StringIO  # pylint: disable=import-error
 else:
-    from StringIO import StringIO # pylint: disable=import-error
+    from StringIO import StringIO  # pylint: disable=import-error
 
 
 class TestWfConsoleHelp(unittest.TestCase):
@@ -392,39 +392,49 @@ class TestWfConsoleHelp(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Output tool version with long option. Only the version must be
-        ##        printed and nothing else.
+        ##        printed and nothing else. From Python 3.4 and onwards, the version
+        ##        is printed to stdout. Before this, the version is printed to stderr.
         snippy = Snippy()
         cause = Cause.ALL_OK
         try:
             sys.argv = ['snippy', '--version']  ## workflow
             real_stdout = sys.stdout
+            real_stderr = sys.stderr
             sys.stdout = StringIO()
+            sys.stderr = StringIO()
             snippy = Snippy()
             cause = snippy.run_cli()
         except SystemExit:
-            result = sys.stdout.getvalue().strip()
+            result_stdout = sys.stdout.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
             sys.stdout = real_stdout
+            sys.stderr = real_stderr
             assert cause == Cause.ALL_OK
-            assert result == __version__
+            self.assertTrue(result_stdout == __version__ or result_stderr == __version__)
             snippy.release()
             snippy = None
             Database.delete_storage()
 
         ## Brief: Output tool version with short option. Only the version must be
-        ##        printed and nothing else.
+        ##        printed and nothing else. From Python 3.4 and onwards, the version
+        ##        is printed to stdout. Before this, the version is printed to stderr.
         snippy = Snippy()
         cause = Cause.ALL_OK
         try:
             sys.argv = ['snippy', '-v']  ## workflow
             real_stdout = sys.stdout
+            real_stderr = sys.stderr
             sys.stdout = StringIO()
+            sys.stderr = StringIO()
             snippy = Snippy()
             cause = snippy.run_cli()
         except SystemExit:
-            result = sys.stdout.getvalue().strip()
+            result_stdout = sys.stdout.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
             sys.stdout = real_stdout
+            sys.stderr = real_stderr
             assert cause == Cause.ALL_OK
-            assert result == __version__
+            self.assertTrue(result_stdout == __version__ or result_stderr == __version__)
             snippy.release()
             snippy = None
             Database.delete_storage()

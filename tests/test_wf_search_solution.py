@@ -25,8 +25,8 @@ class TestWfSearchSnippet(unittest.TestCase):
     def test_search_solution_with_sall(self, mock_isfile, mock_get_db_location):
         """Search solution from all fields."""
 
-        mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Search solutions from all fields. The match is made from one solution
         ##        content data.

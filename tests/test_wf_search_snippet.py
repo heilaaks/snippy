@@ -13,9 +13,9 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 if not Const.PYTHON2:
-    from io import StringIO # pylint: disable=import-error
+    from io import StringIO  # pylint: disable=import-error
 else:
-    from StringIO import StringIO # pylint: disable=import-error
+    from StringIO import StringIO  # pylint: disable=import-error
 
 
 class TestWfSearchSnippet(unittest.TestCase):

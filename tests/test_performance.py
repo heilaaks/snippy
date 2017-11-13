@@ -6,6 +6,7 @@ import sys
 import time
 import unittest
 import mock
+import pytest
 from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
@@ -23,6 +24,10 @@ else:
 class TestPerformance(unittest.TestCase):
     """Test tool performance."""
 
+    # The Travis CI problem may be related to memory since the Python2
+    # test suite is working in Travis but is uses disk for Sqlite. The
+    # Python3 which fails is using memory database.
+    @pytest.mark.skip(reason="Causes core with Python3 in Travis CI.")
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')

@@ -144,7 +144,7 @@ class Sqlite3Db(object):
                 query = ('SELECT * FROM contents WHERE data=?')
                 qargs = [Const.DELIMITER_DATA.join(map(str, data))]
             else:
-                Cause.set_text('internal error where search query could not be defined')
+                Cause.set_text('please define keyword, digest or content data as search criteria')
 
                 return rows
 

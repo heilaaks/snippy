@@ -727,6 +727,48 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_search_snippet_special_cases(self, mock_isfile, mock_get_db_location):
+        """Search snippets with special failures."""
+
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_isfile.return_value = True
+
+        ## Brief: Try to search snippets without defining any search criteria.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = 'NOK: please define keyword, digest or content data as search criteria'
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: please define keyword, digest or content data as search criteria'
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == output
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to search snippets defining filter but not any search criteria.
+        ##        In this case the filter cannot be applied because no search criteria
+        ##        is applied.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = 'NOK: please define keyword, digest or content data as search criteria'
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--filter', '.*(\\$\\s.*)']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: please define keyword, digest or content data as search criteria'
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == output
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     # pylint: disable=duplicate-code
     def tearDown(self):
         """Teardown each test."""

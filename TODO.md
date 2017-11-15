@@ -1,10 +1,11 @@
 ## TODO
    - [ ] Update documents.
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
-   - [ ] Fix 'snippy', 'search', '--filter', '.*(\$\s.*)' that produces internal error.
    - [ ] Fix it is not possible to use command line options in keywords? 'snippy', 'search', '--sall', '--all,--quiet', '--no-ansi'
    - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
-   - [ ] Fix 'snippy search' missing the keywords. This causes internal error cause that is not nice.
+   - [ ] How to use double hyphen with tool in search queries like 'search --sall '--all'?
+   - [ ] Add run flag in database. This could allow snippy run -d 1234
+   - [ ] Document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
    - [ ] Test manually the exception cases for example with file with Python3 and 2.7. Some exceptions may not be in Python2.7.
    - [ ] Add search baed on content data to work like digest so that search --content 'git log' works. The --sall 'git log' results two keywords, not string 'git log'
    - [ ] Migrate operation can combine same kind of search than in update. Do Config.is_search_context to T for digest,content,KW and run search always for second option.
@@ -28,6 +29,9 @@
    - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed 'snippy search' that was missing the search criteria
+ . - [x] Fixed 'snippy search --filter .*(\$\s.*)' that produced internal error.
+   - [x] Changed error text in case no search criteria was added. The whole criteria may be also missing.
    - [x] Added --no-ansi option support to test case document output.
    - [x] Added tests to use search keywords like --stag or  --sall for delete operations.
    - [x] Changed the Config().reset() to not to create new object when calling and returning from reset().

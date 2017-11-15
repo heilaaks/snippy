@@ -133,8 +133,15 @@ content:
   - '## references'
   - '################################################################################'
   - ''
+  - '    # Versions'
+  - '    # nginx version: nginx/1.13.5'
+  - ''
   - '    # Official nginx debugging'
   - '    > https://www.nginx.com/resources/admin-guide/debug/'
+  - ''
+  - '    # Dynamic upstreams'
+  - '    > https://www.nginx.com/blog/dns-service-discovery-nginx-plus/'
+  - '    > https://tenzer.dk/nginx-with-dynamic-upstreams/'
   - ''
   - '################################################################################'
   - '## commands'
@@ -159,7 +166,11 @@ content:
   - '## configurations'
   - '################################################################################'
   - ''
-  - '    # Configuring nginx default.conf'
+  - '    # Configuring nginx default.conf. The upstream blocks are resolved only'
+  - '    # once when the nginx starts. The variable trick allows resolving the'
+  - '    # IP address. This allows recovery from situations where for example'
+  - '    # a docker container restart changes the IP address. See ''Dynamic'
+  - '    # upstreams'' for more information.'
   - '    $ vi conf.d/default.conf'
   - '      upstream kibana_servers {'
   - '          server kibana:5601;'
@@ -167,7 +178,7 @@ content:
   - '      upstream elasticsearch_servers {'
   - '          server elasticsearch:9200;'
   - '      }'
-  - ''
+  - '      #resolver 127.0.0.11 valid=1s ipv6=off; # Resolver for docker container.'
   - '      server {'
   - '          listen 9200;'
   - '          add_header X-Frame-Options "SAMEORIGIN";'
@@ -177,7 +188,9 @@ content:
   - '          proxy_set_header        X-Forwarded-Proto $scheme;'
   - '          proxy_set_header        X-Forwarded-Host $http_host;'
   - '          location / {'
-  - '                  proxy_pass              http://kibana_servers;'
+  - '                  set $kibana_servers     kibana;'
+  - '                  proxy_pass              http://$kibana_test:5601;'
+  - '                  #proxy_pass             http://kibana_servers;'
   - '          }'
   - '          location /kibana {'
   - '                  proxy_pass              http://kibana_servers/app/kibana;'
@@ -271,17 +284,19 @@ content:
   - '      }'
   - '      '' | tee /etc/nginx/conf.d/default.conf && nginx -s reload'
   - ''
-  digest: 115a2bd73c6e262922a9ae6de9a8ab4b18f7aa5c1fc5dbdd12721429ac949996
+  digest: c9c40cdf10afbe6efd20615f71cc33e03cb028676dbd0690a320373cfd520825
   filename: howto-debug-nginx.txt
   group: nginx
   links:
+  - https://tenzer.dk/nginx-with-dynamic-upstreams/
+  - https://www.nginx.com/blog/dns-service-discovery-nginx-plus/
   - https://www.nginx.com/resources/admin-guide/debug/
   tags:
   - debug
   - howto
   - logging
   - nginx
-  utc: '2017-10-30 08:21:19'
+  utc: '2017-11-15 08:48:50'
 - brief: Debugging Elastic Beats
   category: solution
   data:
@@ -410,3 +425,98 @@ content:
   - filebeat
   - howto
   utc: '2017-10-30 08:21:40'
+- brief: Debugging Docker
+  category: solution
+  data:
+  - '################################################################################'
+  - '## BRIEF : Debugging Docker '
+  - '##'
+  - '## DATE  : 2017-11-14 10:36:39'
+  - '## GROUP : docker'
+  - '## TAGS  : docker,debug,howto,swarm'
+  - '## FILE  : howto-debug-docker.txt'
+  - '################################################################################'
+  - ''
+  - ''
+  - '################################################################################'
+  - '## description'
+  - '################################################################################'
+  - ''
+  - '    # Instructions how to debug Docker.'
+  - ''
+  - '################################################################################'
+  - '## references'
+  - '################################################################################'
+  - ''
+  - '    # Versions'
+  - '    # Docker version 17.09.0-ce, build afdb6d4'
+  - '    # docker-compose version 1.16.1, build 6d1ac21'
+  - ''
+  - '    # Docker CE release notes'
+  - '    > https://docs.docker.com/release-notes/docker-ce/'
+  - ''
+  - '    # Docker-compose release notes'
+  - '    > https://github.com/docker/compose/releases/'
+  - ''
+  - '    # Name server lookup'
+  - '    > https://www.computerhope.com/unix/unslooku.htm'
+  - ''
+  - '    # Resolving host names from containers'
+  - '    > https://github.com/docker/libnetwork/pull/1855'
+  - '    > https://github.com/docker/swarmkit/issues/1242'
+  - ''
+  - '################################################################################'
+  - '## commands'
+  - '################################################################################'
+  - ''
+  - '    # Login to remote registry'
+  - '    $ docker login -u admin -p registry 10.133.200.67:5000'
+  - ''
+  - '    # Creating and updating services in docker swarm'
+  - '    $ docker service ls'
+  - '    $ docker service rm elk_elasticsearch'
+  - '    $ docker service create --network elk_default --name elk_elasticsearch --hostname={{.Service.Name}}-{{.Task.Slot}}
+    elk/elasticsearch:latest'
+  - '    $ docker service create --network elk_default --name elk_nginx --host elk_kibana:10.0.0.15
+    --host elk_elasticsearch:10.0.0.20 elk/nginx:latest'
+  - '    $ docker service update --force 2cp9rhiul9ss'
+  - ''
+  - '    # Inspecting swarm default overlay network'
+  - '    $ docker network inspect elk_default'
+  - ''
+  - '    # Name server lookup'
+  - '    $ nslookup -type=a elasticsearch'
+  - ''
+  - '################################################################################'
+  - '## solutions'
+  - '################################################################################'
+  - ''
+  - '################################################################################'
+  - '## configurations'
+  - '################################################################################'
+  - ''
+  - '################################################################################'
+  - '## whiteboard'
+  - '################################################################################'
+  - ''
+  - '    # Host names are not DNS resolvable from docker swarm internal DNS.'
+  - '    > https://github.com/docker/libnetwork/pull/1855'
+  - '    > https://github.com/docker/swarmkit/issues/1242'
+  - ''
+  digest: e2d4df9eb68749cb6eafcc488e873cdb35d128b2ad76ec90b12e6ed7062a9b4e
+  filename: howto-debug-docker.txt
+  group: docker
+  links:
+  - https://docs.docker.com/release-notes/docker-ce/
+  - https://github.com/docker/compose/releases/
+  - https://github.com/docker/libnetwork/pull/1855
+  - https://github.com/docker/libnetwork/pull/1855
+  - https://github.com/docker/swarmkit/issues/1242
+  - https://github.com/docker/swarmkit/issues/1242
+  - https://www.computerhope.com/unix/unslooku.htm
+  tags:
+  - debug
+  - docker
+  - howto
+  - swarm
+  utc: '2017-11-14 10:36:39'

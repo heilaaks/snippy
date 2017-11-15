@@ -421,24 +421,27 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 
     # Release PyPI
     > https://pypi.org/project/snippy/
-    $ git tag -a v0.5.0 -m "Experimental beta release"
-    $ git push -u origin v0.5.0
+    $ git tag -a v0.6.0 -m "Bug fixes and testing"
+    $ git push -u origin v0.6.0
     $ python setup.py sdist # Build source distribution
-    $ twine register dist/snippy-0.5.0.tar.gz
+    $ twine register dist/snippy-0.6.0.tar.gz
     $ twine upload dist/*
 
     # Push docker hub with Fedora
+    $ su
+    $ docker rm $(docker ps --all -q -f status=exited)
+    $ docker rmi 0b4881af2b2d
     $ sudo docker login docker.io
     $ docker tag <image-hash> docker.io/<docker-hub-user-id>/<name>
     $ docker push docker.io/<docker-hub-user-id>/<name>
-    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:v0.5.0
+    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:v0.6.0
     $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:latest
-    $ sudo docker push docker.io/heilaaks/snippy:v0.5.0
+    $ sudo docker push docker.io/heilaaks/snippy:v0.6.0
     $ sudo docker push docker.io/heilaaks/snippy:latest
     
     # Pull
-    $ docker pull heilaaks/snippy:v0.1.0
-
+    $ docker pull heilaaks/snippy:v0.6.0
+    $ docker pull heilaaks/snippy:latest
 
 #######################################
 ## PyPI

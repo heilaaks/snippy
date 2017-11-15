@@ -8,6 +8,7 @@ import pkg_resources
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
+from snippy.migrate.migrate import Migrate
 
 
 class Reference(object):
@@ -81,8 +82,8 @@ class Reference(object):
         """Print test document to console."""
 
         if text:
-            print('test case reference list:\n')
-            print(text)
+            text = 'test case reference list:\n\n' + text
+            Migrate.print_stdout(text)
 
     @staticmethod
     def _terminal_command(ansi=False):

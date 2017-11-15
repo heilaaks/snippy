@@ -6,6 +6,7 @@ from __future__ import print_function
 import cProfile
 import pstats
 import sys
+from signal import signal, getsignal, SIGPIPE, SIG_DFL
 from snippy.config.constants import Constants as Const
 if not Const.PYTHON2:
     from io import StringIO  # pylint: disable=import-error
@@ -39,4 +40,7 @@ class Profiler(object):
             cls.profiler = pstats.Stats(cls.profiler, stream=output_string).sort_stats('cumulative')
             cls.profiler.print_stats()
             cls.is_enabled = False
-            print(output_string.getvalue())
+            signal_sigpipe = getsignal(SIGPIPE)
+            signal(SIGPIPE, SIG_DFL)
+            print(output_string.getvalue(), flush=True)
+            signal(SIGPIPE, signal_sigpipe)

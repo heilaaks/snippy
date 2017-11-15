@@ -52,8 +52,6 @@ class Logger(object):
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             Logger(__name__).get().info('exiting with cause %s', cause.lower())
         elif '-q' not in sys.argv:
-            # This is a copy of Migrate.print_stdout() because the Migrate
-            # depenceny was not wanted into Logger.
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
             print(cause, flush=True)

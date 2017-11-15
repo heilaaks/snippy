@@ -29,18 +29,31 @@ class Migrate(object):
             text = Migrate.get_terminal_text(contents, ansi=False)
             match = re.findall(regexp, text)
             if match:
-                print(Const.NEWLINE.join(match))
-                print()
+                text = Const.NEWLINE.join(match) + Const.NEWLINE
+                Migrate.print_stdout(text)
         else:
             text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi(), debug=Config.is_debug())
-            if text:
-                # The signal handler below prevents 'broker pipe' errors with
-                # grep. For example incorrect parameter usage in grep may cause
-                # this. See https://stackoverflow.com/a/16865106.
-                signal_sigpipe = getsignal(SIGPIPE)
-                signal(SIGPIPE, SIG_DFL)
-                print(text)
-                signal(SIGPIPE, signal_sigpipe)
+            Migrate.print_stdout(text)
+
+    @staticmethod
+    def print_stdout(text):
+        """Print tool output to stdout."""
+
+        # The signal handler manipulation and flush setting below prevents 'broker
+        # pipe' errors with grep. For example incorrect parameter usage in grep may
+        # cause this. See below listed references /1,2/ and examples that fail
+        # without this correction.
+        #
+        # /1/ https://stackoverflow.com/a/16865106
+        # /2/ https://stackoverflow.com/a/26738736
+        #
+        # $ snippy search --sall '--all' --filter crap | grep --all
+        # $ snippy search --sall 'test' --filter test -vv | grep --all
+        if text:
+            signal_sigpipe = getsignal(SIGPIPE)
+            signal(SIGPIPE, SIG_DFL)
+            print(text, flush=True)
+            signal(SIGPIPE, signal_sigpipe)
 
     @staticmethod
     def get_terminal_text(contents, ansi=False, debug=False):

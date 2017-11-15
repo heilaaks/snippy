@@ -5,6 +5,7 @@
 from __future__ import print_function
 import sys
 import logging
+from signal import signal, getsignal, SIGPIPE, SIG_DFL
 
 
 class Logger(object):
@@ -51,7 +52,12 @@ class Logger(object):
         if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
             Logger(__name__).get().info('exiting with cause %s', cause.lower())
         elif '-q' not in sys.argv:
-            print(cause)
+            # This is a copy of Migrate.print_stdout() because the Migrate
+            # depenceny was not wanted into Logger.
+            signal_sigpipe = getsignal(SIGPIPE)
+            signal(SIGPIPE, SIG_DFL)
+            print(cause, flush=True)
+            signal(SIGPIPE, signal_sigpipe)
 
 
 class CustomFormatter(logging.Formatter):

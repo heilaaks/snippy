@@ -1,36 +1,37 @@
 ## TODO
-   - [ ] Update documents.
+   - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately. https://www.youtube.com/watch?v=D7wSMnapDp4
+   - [ ] Change migrate operation into same kind of logic than search/update. Do Config.is_search_context to T for digest,content,KW and run search always for second option.
+   - [ ] Add search based on content data to work like search with digest. Example search --content 'git log' would result *git log*.
+   - [ ] Add run flag into database. This could allow snippy run -d 1234. There should be snippy enable/cancel run -d 1234. Is run feasible/possible?
+   - [ ] Add version list to database that can hold snippet or solution specific versions. This is intended to reflect e.g. Elasticsearch version that is relevant for commands.
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
-   - [ ] Fix it is not possible to use command line options in keywords? 'snippy', 'search', '--sall', '--all,--quiet', '--no-ansi'
-   - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately.
-   - [ ] How to use double hyphen with tool in search queries like 'search --sall '--all'?
-   - [ ] Add run flag in database. This could allow snippy run -d 1234
-   - [ ] Document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
+   - [ ] Fix some logs going into stderr and some stdout? See the test_console_very_verbose_option. This required the Python2.7.
+   - [ ] Fix storage.init() in snippy that is called multiple times in tests since they run_cli multiple times. This leaks cursor and conn?
+   - [ ] Add of experimental REST API to try it out.
+   - [ ] Update documents.
+   - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
+   - [ ] Add to document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
    - [ ] Test manually the exception cases for example with file with Python3 and 2.7. Some exceptions may not be in Python2.7.
-   - [ ] Add search baed on content data to work like digest so that search --content 'git log' works. The --sall 'git log' results two keywords, not string 'git log'
-   - [ ] Migrate operation can combine same kind of search than in update. Do Config.is_search_context to T for digest,content,KW and run search always for second option.
-   - [ ] Refactor importing of text template since it is bit messy at the moment.
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
+
+## BUBBLING UNDER
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
-   - [ ] Fix the Makefile 'python -m pytest ./tests/test_*.py --cov snippy -vv' and Logging. The -vv option forces to logs on because snippy uses -vv option too.
-   - [ ] Why some logs go to stderr and some stdout? See the test_console_very_verbose_option. This also slows down all tests again?
-   - [ ] Add version field to metadata that can hold snippet or solution specific version. This is intended to reflect e.g. Elasticsearch version that is relevant for commands.
-   - [ ] The storage.init() in snippy is called multiple times in tests since they run_cli multiple times. This leaks cursor and conn?
-   - [ ] Add upgrade procedure. How? Is this needed? What happens when there is content and pip upgrade is made?
-   - [ ] Fix upgrading snippy does not update new defaults? Tried with make install to install new version.
-   - [ ] If snippy.release() does not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
-   - [ ] Check signing commits (https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
+   - [ ] How to use -vv option with pylint without affecting Snippy tool? The -vv option is read directly from sys.argv by Snippy.
+   - [ ] How to add upgrade procedure? Is this needed? What happens when there is content stored and pip upgrade is made?
+   - [ ] Why if snippy.release() do not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
+   - [ ] How to sign git commits. /1/ https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
+   - [ ] How to sign PyPI code? Is this feasible?
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
    - [ ] Fix case described in 'git log 11448a2e90dab3a' and somehow and make test_wf a bit nicer?
-   - [ ] Test BytePackager/packagecore.
+   - [ ] How to use BytePackager/packagecore?
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
-   - [ ] It seems that in Python2 when database test fails, it leaves hanging resources and DB clean does not work?
-   - [ ] Is there better way to prevent commits to snippy.db than git hooks or git --assume-unchanged?
+   - [ ] Why when in Python2 a database test fails, it leaves hanging resources and DB clean does not work? Was this fixed into sqlite3_helper already?
+   - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
    - [x] Fixed 'snippy search' that was missing the search criteria
- . - [x] Fixed 'snippy search --filter .*(\$\s.*)' that produced internal error.
+   - [x] Fixed 'snippy search --filter .*(\$\s.*)' that produced internal error.
    - [x] Changed error text in case no search criteria was added. The whole criteria may be also missing.
    - [x] Added --no-ansi option support to test case document output.
    - [x] Added tests to use search keywords like --stag or  --sall for delete operations.

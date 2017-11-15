@@ -5,6 +5,7 @@
 from __future__ import print_function
 import re
 import os.path
+from signal import signal, getsignal, SIGPIPE, SIG_DFL
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
@@ -33,7 +34,13 @@ class Migrate(object):
         else:
             text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi(), debug=Config.is_debug())
             if text:
+                # The signal handler below prevents 'broker pipe' errors with
+                # grep. For example incorrect parameter usage in grep may cause
+                # this. See https://stackoverflow.com/a/16865106.
+                signal_sigpipe = getsignal(SIGPIPE)
+                signal(SIGPIPE, SIG_DFL)
                 print(text)
+                signal(SIGPIPE, signal_sigpipe)
 
     @staticmethod
     def get_terminal_text(contents, ansi=False, debug=False):

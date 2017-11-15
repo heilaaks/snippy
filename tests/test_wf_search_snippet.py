@@ -637,8 +637,6 @@ class TestWfSearchSnippet(unittest.TestCase):
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
-            print(result)
-            print(Const.NEWLINE.join(output))
             assert result == Const.NEWLINE.join(output)
             snippy.release()
             snippy = None

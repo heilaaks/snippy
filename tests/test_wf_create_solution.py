@@ -57,7 +57,6 @@ class TestWfCreateSolution(unittest.TestCase):
                                '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
             sys.argv = ['snippy', 'create', '--solution']  ## workflow
             cause = snippy.run_cli()
-            #Database.print_contents()
             assert cause == 'NOK: content data already exist with digest a96accc25dd23ac0'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, compare_content)
@@ -73,7 +72,6 @@ class TestWfCreateSolution(unittest.TestCase):
             sys.argv = ['snippy', 'create', '--solution']  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli()
-            Database.print_contents()
             assert cause == 'NOK: no content was stored because the solution data is matching to empty template'
             assert not Database.get_solutions()
             snippy.release()
@@ -88,7 +86,6 @@ class TestWfCreateSolution(unittest.TestCase):
             sys.argv = ['snippy', 'create', '--solution']  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli()
-            Database.print_contents()
             assert cause == 'NOK: could not identify edited content category - please keep tags in place'
             assert not Database.get_solutions()
             snippy.release()
@@ -120,7 +117,6 @@ class TestWfCreateSolution(unittest.TestCase):
             sys.argv = ['snippy', 'create', '--solution']  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli()
-            Database.print_contents()
             assert cause == 'NOK: could not identify edited content category - please keep tags in place'
             assert not Database.get_solutions()
             snippy.release()

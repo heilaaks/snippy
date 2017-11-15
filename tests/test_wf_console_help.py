@@ -264,9 +264,6 @@ class TestWfConsoleHelp(unittest.TestCase):
             except SystemExit:
                 result = sys.stdout.getvalue().strip()
                 sys.stdout = real_stdout
-                print(result)
-                print("===")
-                print(Const.NEWLINE.join(output))
                 assert cause == Cause.ALL_OK
                 assert result == Const.NEWLINE.join(output)
                 snippy.release()

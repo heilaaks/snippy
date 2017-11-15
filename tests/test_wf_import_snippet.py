@@ -266,7 +266,6 @@ class TestWfImportSnippet(unittest.TestCase):
             cause = snippy.run_cli()
             assert cause == 'NOK: cannot find snippet to be imported with digest 123456789abcdef0'
             assert len(Database.get_snippets()) == 1
-            Database.print_contents()
             mock_file.assert_not_called()
             Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': import_dict['content'][0]})
             snippy.release()
@@ -363,9 +362,6 @@ class TestWfImportSnippet(unittest.TestCase):
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
             assert len(Database.get_contents()) == 3
-            print(Database.get_snippets()[0])
-            print(Database.get_snippets()[1])
-            print(Database.get_snippets()[2])
             Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
                                                      '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED],
                                                      'f3fd167c64b6f97e': Snippet.DEFAULTS[Snippet.NETCAT]})

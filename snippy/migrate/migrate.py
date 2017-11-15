@@ -4,6 +4,7 @@
 
 from __future__ import print_function
 import re
+import sys
 import os.path
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
 from snippy.config.constants import Constants as Const
@@ -52,7 +53,8 @@ class Migrate(object):
         if text:
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
-            print(text, flush=True)
+            print(text)
+            sys.stdout.flush()
             signal(SIGPIPE, signal_sigpipe)
 
     @staticmethod

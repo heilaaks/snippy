@@ -54,7 +54,8 @@ class Logger(object):
         elif '-q' not in sys.argv:
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
-            print(cause, flush=True)
+            print(cause)
+            sys.stdout.flush()
             signal(SIGPIPE, signal_sigpipe)
 
 

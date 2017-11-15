@@ -42,5 +42,6 @@ class Profiler(object):
             cls.is_enabled = False
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
-            print(output_string.getvalue(), flush=True)
+            print(output_string.getvalue())
+            sys.stdout.flush()
             signal(SIGPIPE, signal_sigpipe)

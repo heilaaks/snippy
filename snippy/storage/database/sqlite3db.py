@@ -140,8 +140,8 @@ class Sqlite3Db(object):
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
                 qargs = [digest+'%']
             elif Config.is_content_data():
-                query = ('SELECT * FROM contents WHERE data=?')
-                qargs = [Const.DELIMITER_DATA.join(map(str, data))]
+                query = ('SELECT * FROM contents WHERE data LIKE ?')
+                qargs = ['%'+Const.DELIMITER_DATA.join(map(str, data))+'%']
             else:
                 Cause.set_text('please define keyword, digest or content data as search criteria')
 

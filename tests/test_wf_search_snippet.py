@@ -611,6 +611,51 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Search snippets based on content data that matches to beginnging of the content.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--content', 'docker rm --volumes', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Search snippets based on content data that matches to a string in the middle
+        ##        of a content.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--content', 'volumes', '--no-ansi']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     def test_searching_snippet_with_digest(self, mock_isfile, mock_get_db_location):

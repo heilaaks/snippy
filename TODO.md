@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Add search based on content data to work like search with digest. Example search --content 'git log' would result *git log*.
    - [ ] Add run flag into database. This could allow snippy run -d 1234. There should be snippy enable/cancel run -d 1234. Is run feasible/possible?
    - [ ] Add version list to database that can hold snippet or solution specific versions. This is intended to reflect e.g. Elasticsearch version that is relevant for commands.
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
@@ -29,6 +28,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added support to search content with partial strings.
    - [x] Changed export to support all search criteria and be able to export multiple matching content.
    - [x] Changed sqlite3 cursor usage. Now to cursor is immediately released after operation.
    - [x] Fixed 'snippy search' that was missing the search criteria

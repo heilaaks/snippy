@@ -130,9 +130,9 @@ class TestWfDeleteSnippet(unittest.TestCase):
         ##        content data is not truncated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--content', 'docker rm --volumes']  ## workflow
+            sys.argv = ['snippy', 'delete', '--content', 'not found content']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: cannot find content with content data \'docker rm --volumes\''
+            assert cause == 'NOK: cannot find content with content data \'not found content\''
             assert len(Database.get_snippets()) == 2
             snippy.release()
             snippy = None

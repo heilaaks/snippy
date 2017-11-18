@@ -10,8 +10,10 @@ from snippy.snip import Snippy
 from snippy.snip import main
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
+from snippy.config.config import Config
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+from tests.testlib.snippet_helper import SnippetHelper as Snippet
 if not Const.PYTHON2:
     from io import StringIO  # pylint: disable=import-error
 else:
@@ -330,27 +332,64 @@ class TestWfConsoleHelp(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+    @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_console_debug_option(self, mock_get_db_location):
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_console_debug_option(self, mock_isfile, mock_get_db_location, mock_get_utc_time):
         """Test printing logs with debug option."""
 
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Enable long logging with --debug option. Test checks that there is more
         ##        than randomly picked largish number of logs in order to avoid matching
         ##        logs explicitly. This just verifies that the very verbose option prints
-        ##        more logs.
+        ##        more logs. In this case the debug option must print all fields from
+        ##        stored snippets.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '   ! category : snippet',
+                      '   ! filename : ',
+                      '   ! utc      : 2017-10-14 19:56:31',
+                      '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
+                      '   ! metadata : None',
+                      '   ! key      : 1',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      '   ! category : snippet',
+                      '   ! filename : ',
+                      '   ! utc      : 2017-10-14 19:56:31',
+                      '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
+                      '   ! metadata : None',
+                      '   ! key      : 2')
+            sys.argv = ['snippy', '--debug']  # Debug must be enabled from the creation to get the logs.
+            snippy = Snippet.add_defaults(Snippy())
             cause = Cause.ALL_OK
-            sys.argv = ['snippy', 'search', '--sall', '.', '--debug']  ## workflow
-            snippy = Snippy()
+            sys.argv = ['snippy', 'search', '--sall', '.', '--debug', '--no-ansi']  ## workflow
             real_stderr = sys.stderr
+            real_stdout = sys.stdout
             sys.stderr = StringIO()
+            sys.stdout = StringIO()
             cause = snippy.run_cli()
-            result = sys.stderr.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
+            result_stdout = sys.stdout.getvalue().strip()
             sys.stderr = real_stderr
+            sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
-            assert len(result.split(Const.NEWLINE)) > 25
+            assert len(result_stderr.split(Const.NEWLINE)) > 25
+            assert result_stdout == Const.NEWLINE.join(output)
             snippy.release()
             snippy = None
             Database.delete_storage()

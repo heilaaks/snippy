@@ -101,8 +101,8 @@ class TestWfExportSnippet(unittest.TestCase):
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_defined_snippet(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
-        """Export defined snippet."""
+    def test_export_snippet_digest(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+        """Export defined snippet with digest."""
 
         mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
@@ -125,7 +125,7 @@ class TestWfExportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on message digest. File name is  defined in command
+        ## Brief: Export defined snippet based on message digest. File name is defined in command
         ##        line as yaml file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
@@ -139,7 +139,7 @@ class TestWfExportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on message digest. File name is  defined in command
+        ## Brief: Export defined snippet based on message digest. File name is defined in command
         ##        line as json file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
@@ -153,7 +153,7 @@ class TestWfExportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on message digest. File name is  defined in command
+        ## Brief: Export defined snippet based on message digest. File name is defined in command
         ##        line. This should result file and format defined by command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
@@ -173,8 +173,167 @@ class TestWfExportSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'export', '-d', '123456789abcdef0', '-f', 'defined-snippet.txt']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: cannot find snippet to be exported with digest 123456789abcdef0'
+            assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
             mock_file.assert_not_called()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(json, 'dump')
+    @mock.patch.object(yaml, 'safe_dump')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_export_snippet_keyword(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+        """Export defined snippet with search keyword."""
+
+        mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = Snippet.UTC
+        export_dict = {'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
+
+        ## Brief: Export defined snippet based on search keyword. File name is not defined in
+        ##        command line -f|--file option. This should result usage of default file name
+        #         and format snippet.text.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--sall', 'force']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('snippet.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
+                                                mock.call(Const.NEWLINE)])
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined snippet based on search keyword. File name is defined in
+        ##        command line as yaml file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
+            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined snippet based on search keyword. File name is defined in
+        ##        command line as json file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.json', 'w')
+            mock_json_dump.assert_called_with(export_dict, mock.ANY)
+            mock_json_dump.reset_mock()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined snippet based on search keyword. File name is defined in
+        ##        command line as text file with *.txt file extension.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
+                                                mock.call(Const.NEWLINE)])
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined snippet based on search keyword. File name is defined in
+        ##        command line as text file with *.text file extension.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
+                                                mock.call(Const.NEWLINE)])
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(json, 'dump')
+    @mock.patch.object(yaml, 'safe_dump')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_export_snippet_data(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+        """Export defined snippet with content data."""
+
+        mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
+        mock_get_utc_time.return_value = Snippet.UTC
+        export_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE]]}
+
+        ## Brief: Export defined snippet based on content data. File name is not defined in
+        ##        command line -f|--file option. This should result usage of default file name
+        #         and format snippet.text.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--content', 'docker rm --volumes $(docker ps --all --quiet)']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('snippet.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])),
+                                                mock.call(Const.NEWLINE)])
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined snippet based on content data. File name is defined in
+        ##        command line as yaml file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
+            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined snippet based on content data. File name is defined in
+        ##        command line as json file.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.json', 'w')
+            mock_json_dump.assert_called_with(export_dict, mock.ANY)
+            mock_json_dump.reset_mock()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined snippet based on content data. File name is defined in
+        ##        command line as text file with *.txt file extension.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])),
+                                                mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
             Database.delete_storage()

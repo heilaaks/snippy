@@ -43,10 +43,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['options']['migrate_template'] = Config.source.is_template()
         cls.config['options']['debug'] = Config.source.is_debug()
         cls.config['digest'] = cls._parse_digest()
-        cls.config['operation'] = {}
-        cls.config['operation']['task'] = Config.source.get_operation()
-        cls.config['operation']['file'] = {}
-        cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
         cls.config['search'] = {}
         cls.config['search']['field'], cls.config['search']['keywords'] = cls._parse_search()
         cls.config['search']['filter'] = cls._parse_search_filter()
@@ -54,6 +50,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['input']['editor'] = Config.source.is_editor()
         cls.config['input']['digest'] = Config.source.is_content_digest()
         cls.config['input']['data'] = Config.source.is_content_data()
+        cls.config['operation'] = {}
+        cls.config['operation']['task'] = Config.source.get_operation()
+        cls.config['operation']['file'] = {}
+        cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
         cls.config['storage'] = {}
         cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
         cls.config['storage']['file'] = 'snippy.db'
@@ -382,6 +382,16 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['input']['digest']
 
     @classmethod
+    def is_search_criteria(cls):
+        """Test if any of the search criterias were used."""
+
+        criteria = False
+        if cls.is_search_keywords() or cls.is_content_digest() or cls.is_content_data():
+            criteria = True
+
+        return criteria
+
+    @classmethod
     def get_operation_file(cls, content_filename=Const.EMPTY):
         """Return file for operation."""
 
@@ -620,7 +630,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         # Run export operation with specified content without specifying
         # the operation file.
-        if cls.is_operation_export() and cls.get_content_digest():
+        if cls.is_operation_export() and cls.is_search_criteria():
             if Config.is_category_snippet() and not filename:
                 filename = 'snippet.' + Const.FILE_TYPE_TEXT
             elif Config.is_category_solution() and not filename:

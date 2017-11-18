@@ -125,8 +125,8 @@ class TestWfExportSolution(unittest.TestCase):
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_defined_solution(self, mock_isfile, mock_get_db_location, mock_yaml_dump, mock_json_dump):
-        """Export defined solution."""
+    def test_export_solution_digest(self, mock_isfile, mock_get_db_location, mock_yaml_dump, mock_json_dump):
+        """Export defined solution with digest."""
 
         mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
@@ -384,10 +384,83 @@ class TestWfExportSolution(unittest.TestCase):
             snippy = Solution.add_defaults(Snippy())
             sys.argv = ['snippy', 'export', '--solution', '-d', '123456789abcdef0', '-f' './defined-solution.text']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: cannot find solution to be exported with digest 123456789abcdef0'
+            assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+    @mock.patch.object(json, 'dump')
+    @mock.patch.object(yaml, 'safe_dump')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_export_solution_keyword(self, mock_isfile, mock_get_db_location, mock_yaml_dump, mock_json_dump):
+        """Export defined solution with search keyword."""
+
+        mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
+        export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS]]}
+
+        ## Brief: Export defined solution based on search keyword. File name is defined in solution
+        ##        metadata but not by command line -f|--file option.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--solution', '--sall', 'beats']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined solution based on search keyword. File name is defined in solution
+        ##        metadata and in command line -f|--file option. This should result the file name
+        ##        and yaml format defined by the command line option.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.yaml']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./defined-solution.yaml', 'w')
+            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
+            mock_yaml_dump.reset_mock()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined solution based on search keyword. File name is defined in solution
+        ##        metadata and in command line -f|--file option. This should result the file name
+        ##        and json format defined by the command line option.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.json']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./defined-solution.json', 'w')
+            mock_json_dump.assert_called_with(export_dict, mock.ANY)
+            mock_json_dump.reset_mock()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined solution based on message digest. File name is defined in solution
+        ##        metadata and in command line -f|--file option. This should result the file name
+        ##        and format defined by the command line option. In this case the text format file
+        ##        extension is 'txt'.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--solution', '--sall', 'beats', '-f' './defined-solution.txt']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./defined-solution.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
             snippy.release()
             snippy = None
             Database.delete_storage()

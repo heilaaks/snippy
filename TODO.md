@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Fix sqlite3 cursor usage. It is not needed always and it is better to release immediately. https://www.youtube.com/watch?v=D7wSMnapDp4
    - [ ] Change migrate operation into same kind of logic than search/update. Do Config.is_search_context to T for digest,content,KW and run search always for second option.
    - [ ] Add search based on content data to work like search with digest. Example search --content 'git log' would result *git log*.
    - [ ] Add run flag into database. This could allow snippy run -d 1234. There should be snippy enable/cancel run -d 1234. Is run feasible/possible?
@@ -31,6 +30,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Changed sqlite3 cursor usage. Now to cursor is immediately released after operation.
    - [x] Fixed 'snippy search' that was missing the search criteria
    - [x] Fixed 'snippy search --filter .*(\$\s.*)' that produced internal error.
    - [x] Changed error text in case no search criteria was added. The whole criteria may be also missing.

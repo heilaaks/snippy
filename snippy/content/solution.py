@@ -72,20 +72,23 @@ class Solution(object):
         """Export solutions."""
 
         filename = Config.get_operation_file()
-        content_digest = Config.get_content_valid_digest()
         if Config.is_migrate_template():
             self.logger.debug('exporting solution template %s', Config.get_operation_file())
             Migrate.dump_template(Content())
-        elif content_digest:
-            self.logger.debug('exporting solution with digest %.16s', content_digest)
-            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
+        elif Config.is_search_criteria():
+            self.logger.debug('exporting solutions based on search criteria')
+            solutions = self.storage.search(Const.SOLUTION,
+                                            keywords=Config.get_search_keywords(),
+                                            digest=Config.get_content_digest(),
+                                            data=Config.get_content_data())
             if len(solutions) == 1:
                 filename = Config.get_operation_file(content_filename=solutions[0].get_filename())
             elif not solutions:
-                Cause.set_text('cannot find solution to be exported with digest {:.16}'.format(content_digest))
+                text = Config.validate_search_context(solutions, 'export')
+                Cause.set_text(text)
             Migrate.dump(solutions, filename)
         else:
-            self.logger.debug('exporting solutions %s', Config.get_operation_file())
+            self.logger.debug('exporting all solutions %s', filename)
             solutions = self.storage.export_content(Const.SOLUTION)
             Migrate.dump(solutions, filename)
 

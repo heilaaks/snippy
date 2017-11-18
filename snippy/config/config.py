@@ -313,7 +313,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
             else:
                 text = 'cannot use empty content data to %s content' % operation
         elif cls.is_search_keywords():
-            if len(contents) > 1:
+            if not contents:
+                text = 'cannot find content with given search criteria'
+            elif len(contents) > 1:
                 text = ('given search keyword matches (%d) more than once preventing ' +
                         'the operation') % len(contents)
         else:

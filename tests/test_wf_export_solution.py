@@ -448,7 +448,7 @@ class TestWfExportSolution(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest. File name is defined in solution
+        ## Brief: Export defined solution based on search keyword. File name is defined in solution
         ##        metadata and in command line -f|--file option. This should result the file name
         ##        and format defined by the command line option. In this case the text format file
         ##        extension is 'txt'.
@@ -461,6 +461,34 @@ class TestWfExportSolution(unittest.TestCase):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
                                                 mock.call(Const.NEWLINE)])
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Export defined solution based on search keyword. In this case the search keyword
+        ##        matchies to two solutions that must be exported to file defined in command line.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--solution', '--sall', 'howto', '-f' './defined-solutions.txt']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./defined-solutions.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE),
+                                                mock.call(Solution.get_template(Solution.DEFAULTS[Solution.NGINX])),
+                                                mock.call(Const.NEWLINE)])
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to export snippet based on search keyword that cannot befound.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--solution', '--sall', 'notfound', '-f', './defined-solution.yaml']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find content with given search criteria'
+            mock_file.assert_not_called()
             snippy.release()
             snippy = None
             Database.delete_storage()

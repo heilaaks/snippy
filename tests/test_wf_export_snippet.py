@@ -266,6 +266,34 @@ class TestWfExportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Export defined snippet based on search keyword. In this case the search keyword
+        ##        matchies to two snippets that must be exported to file defined in command line.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('defined-snippet.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])),
+                                                mock.call(Const.NEWLINE),
+                                                mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
+                                                mock.call(Const.NEWLINE)])
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to export snippet based on search keyword that cannot befound.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--sall', 'notfound', '-f', 'defined-snippet.yaml']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find content with given search criteria'
+            mock_file.assert_not_called()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')

@@ -337,13 +337,13 @@ class TestWfSearchSnippet(unittest.TestCase):
         ## Brief: Try to search snippets when there are no content stored. The used search
         ##        keyword matches to 'match any' that tries to list all the content.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ('OK')
+            output = ('NOK: cannot find content with given search criteria')
             snippy = Snippy()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             sys.argv = ['snippy', 'search', '--sall', '.', '--no-ansi']  ## workflow
             cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
+            assert cause == 'NOK: cannot find content with given search criteria'
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert result == output
@@ -351,9 +351,9 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to search snippets with keyword that does not exist.
+        ## Brief: Try to search snippets with keyword that cannot be found.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ('OK')
+            output = ('NOK: cannot find content with given search criteria')
             snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'search', '--sall', 'not-found', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
@@ -361,7 +361,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             cause = snippy.run_cli()
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
-            assert cause == Cause.ALL_OK
+            assert cause == 'NOK: cannot find content with given search criteria'
             assert result == output
             snippy.release()
             snippy = None
@@ -401,16 +401,16 @@ class TestWfSearchSnippet(unittest.TestCase):
 
         ## Brief: Search snippets from tag field. No matches are made.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ('OK')
+            output = ('NOK: cannot find content with given search criteria')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
-            sys.argv = ['snippy', 'search', '--stag', 'not-found', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
+            sys.argv = ['snippy', 'search', '--stag', 'not-found', '--no-ansi']  ## workflow
             cause = snippy.run_cli()
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
-            assert cause == Cause.ALL_OK
+            assert cause == 'NOK: cannot find content with given search criteria'
             assert result == output
             snippy.release()
             snippy = None
@@ -451,16 +451,16 @@ class TestWfSearchSnippet(unittest.TestCase):
 
         ## Brief: Search snippets from group field. No matches are made.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ('OK')
+            output = ('NOK: cannot find content with given search criteria')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             sys.argv = ['snippy', 'search', '--sgrp', 'not-found', '--no-ansi']  ## workflow
             cause = snippy.run_cli()
-            assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
+            assert cause == 'NOK: cannot find content with given search criteria'
             assert result == output
             snippy.release()
             snippy = None
@@ -550,7 +550,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to search all solution with filter that is not syntactically correct
+        ## Brief: Try to search all snippets with filter that is not syntactically correct
         ##        regular expression.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',

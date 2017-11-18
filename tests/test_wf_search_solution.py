@@ -93,6 +93,22 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Try to search solutions with keyword that cannot be found.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = 'NOK: cannot find content with given search criteria'
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'search', '--solution', '--sall', 'notfound', '--no-ansi']  ## workflow
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            cause = snippy.run_cli()
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert cause == 'NOK: cannot find content with given search criteria'
+            assert result == output
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     def test_search_solution_with_regxp(self, mock_isfile, mock_get_db_location):

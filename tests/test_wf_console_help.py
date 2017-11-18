@@ -318,7 +318,6 @@ class TestWfConsoleHelp(unittest.TestCase):
         ##        explicitly. This just verifies that the very verbose option prints more
         ##        logs.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
-            cause = Cause.ALL_OK
             sys.argv = ['snippy', 'search', '--sall', '.', '-vv']  ## workflow
             snippy = Snippy()
             real_stderr = sys.stderr
@@ -326,7 +325,7 @@ class TestWfConsoleHelp(unittest.TestCase):
             cause = snippy.run_cli()
             result = sys.stderr.getvalue().strip()
             sys.stderr = real_stderr
-            assert cause == Cause.ALL_OK
+            assert cause == 'NOK: cannot find content with given search criteria'
             assert len(result.split(Const.NEWLINE)) > 25
             snippy.release()
             snippy = None
@@ -376,7 +375,6 @@ class TestWfConsoleHelp(unittest.TestCase):
                       '   ! key      : 2')
             sys.argv = ['snippy', '--debug']  # Debug must be enabled from the creation to get the logs.
             snippy = Snippet.add_defaults(Snippy())
-            cause = Cause.ALL_OK
             sys.argv = ['snippy', 'search', '--sall', '.', '--debug', '--no-ansi']  ## workflow
             real_stderr = sys.stderr
             real_stdout = sys.stdout
@@ -402,7 +400,6 @@ class TestWfConsoleHelp(unittest.TestCase):
 
         ## Brief: Disable all logging and output to terminal.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
-            cause = Cause.ALL_OK
             sys.argv = ['snippy', 'search', '--sall', '.', '-q']  ## workflow
             real_stderr = sys.stderr
             real_stdout = sys.stdout
@@ -416,7 +413,7 @@ class TestWfConsoleHelp(unittest.TestCase):
             result_stdout = sys.stdout.getvalue().strip()
             sys.stderr = real_stderr
             sys.stdout = real_stdout
-            assert cause == Cause.ALL_OK
+            assert cause == 'NOK: cannot find content with given search criteria'
             assert not result_stderr
             assert not result_stdout
             Database.delete_storage()
@@ -485,15 +482,12 @@ class TestWfConsoleHelp(unittest.TestCase):
         ##        than randomly picked largish number of rows. This just verifies that
         ##        the profile option prints lots for data.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
-            cause = Cause.ALL_OK
             sys.argv = ['snippy', 'search', '--sall', '.', '--profile']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             main()
             result = sys.stdout.getvalue().strip()
-            print(result)
             sys.stderr = real_stdout
-            assert cause == Cause.ALL_OK
             assert len(result.split(Const.NEWLINE)) > 100
             Database.delete_storage()
 

@@ -22,6 +22,9 @@ class Migrate(object):
     def print_terminal(cls, contents):
         """Print content into terminal."""
 
+        if not contents:
+            Cause.set_text('cannot find content with given search criteria')
+
         cls.logger.debug('printing content to terminal')
         regexp = Config.get_search_filter()
         if regexp:

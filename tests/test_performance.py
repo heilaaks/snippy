@@ -42,7 +42,7 @@ class TestPerformance(unittest.TestCase):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC: 1 loop : 0.0309 / 55 loop : 0.9461 / 100 loop : 1.7419
+        ##        Reference PC: 1 loop : 0.0300 / 55 loop : 0.9461 / 100 loop : 1.7419
         ##
         ##        The reference is with sqlite database in memory as with all tests.
         ##        There is naturally jitter in results and the values are as of now
@@ -55,7 +55,9 @@ class TestPerformance(unittest.TestCase):
         ##        seconds. The runtime is intentionally to 10 times higher value
         ##        than with reference PC.
         real_stderr = sys.stderr
+        real_stdout = sys.stdout
         sys.stderr = StringIO()
+        sys.stdout = StringIO()
         start = time.time()
         for _ in range(55):
             snippy = Snippet.add_defaults(Snippy())
@@ -91,8 +93,13 @@ class TestPerformance(unittest.TestCase):
             snippy = None
         runtime = time.time() - start
         result_stderr = sys.stderr.getvalue().strip()
+        result_stdout = sys.stdout.getvalue().strip()
         sys.stderr = real_stderr
-        print("runtime %.4f" % runtime)
+        sys.stdout = real_stdout
+        print("====================================")
+        print("  Runtime %.4f" % runtime)
+        print("  There are %d rows in stdout" % len(result_stdout))
+        print("====================================")
 
         assert not result_stderr
         assert runtime < 10

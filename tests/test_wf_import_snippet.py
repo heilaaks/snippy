@@ -130,13 +130,17 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        is one of supported formats..
         mocked_open = mock.mock_open(read_data=Snippet.get_template(import_dict['content'][0]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            mock_isfile.return_value = False
+            # The last call for mock_isfile is unnecessary. It is here because of Python2 way of
+            # iteration that seems to require one element after the last call. This is not the
+            # case with Python3.
+            mock_isfile.side_effect = [True, False, None]
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './foo.yaml']  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: cannot read file ./foo.yaml'
             assert not Database.get_contents()
             mock_file.assert_not_called()
+            mock_isfile.side_effect = None
             mock_isfile.return_value = True
             snippy.release()
             snippy = None

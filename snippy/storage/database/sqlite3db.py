@@ -2,9 +2,10 @@
 
 """sqlite3db.py: Database management."""
 
-import os
 import re
+import os.path
 import sqlite3
+from contextlib import closing
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
@@ -16,25 +17,22 @@ class Sqlite3Db(object):
 
     def __init__(self):
         self.logger = Logger(__name__).get()
-        self.conn = None
-        self.cursor = None
+        self.connection = None
 
     def init(self):
         """Initialize database."""
 
-        self.conn, self.cursor = self._create_db()
+        self.connection = self._create_db()
 
         return self
 
     def disconnect(self):
         """Close database connection."""
 
-        if self.conn:
+        if self.connection:
             try:
-                self.cursor.close()
-                self.cursor = None
-                self.conn.close()
-                self.conn = None
+                self.connection.close()
+                self.connection = None
                 self.logger.debug('closed sqlite3 database')
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
@@ -42,22 +40,23 @@ class Sqlite3Db(object):
     def insert_content(self, content, digest, utc, metadata=None):
         """Insert content into database."""
 
-        if self.conn:
+        if self.connection:
             query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, utc, ' +
                      'digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?)')
             self.logger.debug('insert "%s" with digest %.16s', content.get_brief(), digest)
             try:
-                self.cursor.execute(query, (content.get_data(Const.STRING_CONTENT),
-                                            content.get_brief(Const.STRING_CONTENT),
-                                            content.get_group(Const.STRING_CONTENT),
-                                            content.get_tags(Const.STRING_CONTENT),
-                                            content.get_links(Const.STRING_CONTENT),
-                                            content.get_category(Const.STRING_CONTENT),
-                                            content.get_filename(Const.STRING_CONTENT),
-                                            utc,
-                                            digest,
-                                            metadata))
-                self.conn.commit()
+                with closing(self.connection.cursor()) as cursor:
+                    cursor.execute(query, (content.get_data(Const.STRING_CONTENT),
+                                           content.get_brief(Const.STRING_CONTENT),
+                                           content.get_group(Const.STRING_CONTENT),
+                                           content.get_tags(Const.STRING_CONTENT),
+                                           content.get_links(Const.STRING_CONTENT),
+                                           content.get_category(Const.STRING_CONTENT),
+                                           content.get_filename(Const.STRING_CONTENT),
+                                           utc,
+                                           digest,
+                                           metadata))
+                    self.connection.commit()
             except sqlite3.IntegrityError as exception:
                 Cause.set_text('content data already exist with digest {:.16}'.format(self._get_db_digest(content)))
             except sqlite3.Error as exception:
@@ -111,7 +110,7 @@ class Sqlite3Db(object):
         """Select content."""
 
         rows = ()
-        if self.conn:
+        if self.connection:
             # The regex based queries contain the same amount of regex queries than there are
             # keywords. The reason is that each keyword (one keyword) must be searched from all
             # the colums where the search is made. The query argumes are generated so that each
@@ -150,8 +149,9 @@ class Sqlite3Db(object):
 
             self.logger.debug('running select query "%s"', query)
             try:
-                self.cursor.execute(query, qargs)
-                rows = self.cursor.fetchall()
+                with closing(self.connection.cursor()) as cursor:
+                    cursor.execute(query, qargs)
+                    rows = cursor.fetchall()
             except sqlite3.Error as exception:
                 Cause.set_text('selecting from database failed with exception {}'.format(exception))
         else:
@@ -165,13 +165,14 @@ class Sqlite3Db(object):
         """Select content based on data."""
 
         rows = ()
-        if self.conn:
+        if self.connection:
             query = ('SELECT * FROM contents WHERE data=?')
             qargs = [Const.DELIMITER_DATA.join(map(str, data))]
             self.logger.debug('running select query "%s"', query)
             try:
-                self.cursor.execute(query, qargs)
-                rows = self.cursor.fetchall()
+                with closing(self.connection.cursor()) as cursor:
+                    cursor.execute(query, qargs)
+                    rows = cursor.fetchall()
             except sqlite3.Error as exception:
                 Cause.set_text('selecting data from database failed with exception {}'.format(exception))
         else:
@@ -185,14 +186,14 @@ class Sqlite3Db(object):
         """Select all content."""
 
         rows = ()
-        if self.conn:
+        if self.connection:
             self.logger.debug('select all contents from category %s', category)
             query = ('SELECT * FROM contents WHERE category=?')
             qargs = [category]
             try:
-                self.cursor.execute(query, qargs)
-
-                rows = self.cursor.fetchall()
+                with closing(self.connection.cursor()) as cursor:
+                    cursor.execute(query, qargs)
+                    rows = cursor.fetchall()
             except sqlite3.Error as exception:
                 Cause.set_text('selecting all from database failed with exception {}'.format(exception))
         else:
@@ -203,24 +204,25 @@ class Sqlite3Db(object):
     def update_content(self, content, digest, utc, metadata=None):
         """Update existing content."""
 
-        if self.conn:
+        if self.connection:
             query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, utc=?, '
                      'digest=?, metadata=? WHERE digest LIKE ?')
             self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', content.get_digest(), digest,
                               content.get_brief())
             try:
-                self.cursor.execute(query, (content.get_data(Const.STRING_CONTENT),
-                                            content.get_brief(Const.STRING_CONTENT),
-                                            content.get_group(Const.STRING_CONTENT),
-                                            content.get_tags(Const.STRING_CONTENT),
-                                            content.get_links(Const.STRING_CONTENT),
-                                            content.get_category(Const.STRING_CONTENT),
-                                            content.get_filename(Const.STRING_CONTENT),
-                                            utc,
-                                            digest,
-                                            metadata,
-                                            content.get_digest(Const.STRING_CONTENT)))
-                self.conn.commit()
+                with closing(self.connection.cursor()) as cursor:
+                    cursor.execute(query, (content.get_data(Const.STRING_CONTENT),
+                                           content.get_brief(Const.STRING_CONTENT),
+                                           content.get_group(Const.STRING_CONTENT),
+                                           content.get_tags(Const.STRING_CONTENT),
+                                           content.get_links(Const.STRING_CONTENT),
+                                           content.get_category(Const.STRING_CONTENT),
+                                           content.get_filename(Const.STRING_CONTENT),
+                                           utc,
+                                           digest,
+                                           metadata,
+                                           content.get_digest(Const.STRING_CONTENT)))
+                    self.connection.commit()
             except sqlite3.Error as exception:
                 Cause.set_text('updating database failed with exception {}'.format(exception))
         else:
@@ -229,17 +231,18 @@ class Sqlite3Db(object):
     def delete_content(self, digest):
         """Delete single content based on given digest."""
 
-        if self.conn:
+        if self.connection:
             query = ('DELETE FROM contents WHERE digest LIKE ?')
             self.logger.debug('delete content with digest %s', digest)
             try:
-                self.cursor.execute(query, (digest+'%',))
-                if self.cursor.rowcount == 1:
-                    self.conn.commit()
-                elif self.cursor.rowcount == 0:
-                    Cause.set_text('cannot find content to be deleted with digest {:.16}'.format(digest))
-                else:
-                    self.logger.info('unexpected row count %d while deleting with digest %s', self.cursor.rowcount, digest)
+                with closing(self.connection.cursor()) as cursor:
+                    cursor.execute(query, (digest+'%',))
+                    if cursor.rowcount == 1:
+                        self.connection.commit()
+                    elif cursor.rowcount == 0:
+                        Cause.set_text('cannot find content to be deleted with digest {:.16}'.format(digest))
+                    else:
+                        self.logger.info('unexpected row count %d while deleting with digest %s', cursor.rowcount, digest)
             except sqlite3.Error as exception:
                 Cause.set_text('deleting from database failed with exception {}'.format(exception))
         else:
@@ -248,32 +251,39 @@ class Sqlite3Db(object):
     def debug(self):
         """Dump the whole database."""
 
-        if self.conn:
+        if self.connection:
             try:
-                self.cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-                self.logger.debug('sqlite3 dump %s', self.cursor.fetchall())
+                with closing(self.connection.cursor()) as cursor:
+                    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
+                    self.logger.debug('sqlite3 dump %s', cursor.fetchall())
             except sqlite3.Error as exception:
                 Cause.set_text('dumping database failed with exception {}'.format(exception))
 
     def _create_db(self):
         """Create the database."""
 
+        schema = Const.EMPTY
         location = Sqlite3Db._get_db_location()
+        storage_schema = Config.get_storage_schema()
+        if os.path.isfile(storage_schema):
+            with open(storage_schema, 'rt') as schema_file:
+                try:
+                    schema = schema_file.read()
+                except IOError as exception:
+                    Cause.set_text('reading database schema failed with exception {}'.format(exception))
         try:
             if not Const.PYTHON2:
-                conn = sqlite3.connect(location, check_same_thread=False, uri=True)
+                connection = sqlite3.connect(location, check_same_thread=False, uri=True)
             else:
-                conn = sqlite3.connect(location, check_same_thread=False)
-            conn.create_function('REGEXP', 2, Sqlite3Db._regexp)
-            cursor = conn.cursor()
-            with open(Config.get_storage_schema(), 'rt') as schema_file:
-                schema = schema_file.read()
-                conn.executescript(schema)
+                connection = sqlite3.connect(location, check_same_thread=False)
+            connection.create_function('REGEXP', 2, Sqlite3Db._regexp)
+            with closing(connection.cursor()) as cursor:
+                cursor.execute(schema)
             self.logger.debug('sqlite3 database persisted in %s', location)
         except sqlite3.Error as exception:
             Cause.set_text('creating database failed with exception {}'.format(exception))
 
-        return (conn, cursor)
+        return connection
 
     @staticmethod
     def _get_db_location():

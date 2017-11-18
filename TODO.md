@@ -16,6 +16,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect'.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
    - [ ] How to use -vv option with pylint without affecting Snippy tool? The -vv option is read directly from sys.argv by Snippy.
    - [ ] How to add upgrade procedure? Is this needed? What happens when there is content stored and pip upgrade is made?

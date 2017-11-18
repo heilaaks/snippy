@@ -4,6 +4,7 @@
 
 import sqlite3
 import os.path
+from contextlib import closing
 import pkg_resources
 from snippy.config.constants import Constants as Const
 from snippy.storage.storage import Storage
@@ -12,28 +13,16 @@ from snippy.storage.storage import Storage
 class Sqlite3DbHelper(object):
     """Helper methods for Sqlite3 database testing."""
 
-
-    @staticmethod
-    def select_all_snippets():
-        """Select all snippets."""
-
-        conn, cursor = Sqlite3DbHelper._connect_db()
-        cursor.execute('SELECT * FROM contents')
-        rows = cursor.fetchall()
-        cursor.close()
-        conn.close()
-
-        return rows
-
     @staticmethod
     def get_contents():
         """Return database as content tuple."""
 
-        conn, cursor = Sqlite3DbHelper._connect_db()
-        cursor.execute('SELECT * FROM contents')
-        rows = cursor.fetchall()
-        cursor.close()
-        conn.close()
+        rows = ()
+        connection = Sqlite3DbHelper._connect()
+        with closing(connection.cursor()) as cursor:
+            cursor.execute('SELECT * FROM contents')
+            rows = cursor.fetchall()
+        connection.close()
 
         return Storage()._get_contents(rows)  # pylint: disable=protected-access
 
@@ -41,11 +30,12 @@ class Sqlite3DbHelper(object):
     def print_contents():
         """Print database content."""
 
-        conn, cursor = Sqlite3DbHelper._connect_db()
-        cursor.execute('SELECT * FROM contents')
-        rows = cursor.fetchall()
-        cursor.close()
-        conn.close()
+        rows = ()
+        connection = Sqlite3DbHelper._connect()
+        with closing(connection.cursor()) as cursor:
+            cursor.execute('SELECT * FROM contents')
+            rows = cursor.fetchall()
+        connection.close()
 
         for content in Storage()._get_contents(rows):  # pylint: disable=protected-access
             print(content)
@@ -55,16 +45,16 @@ class Sqlite3DbHelper(object):
         """Return content based on digest."""
 
         rows = ()
-        conn, cursor = Sqlite3DbHelper._connect_db()
-        query = ('SELECT * FROM contents WHERE digest LIKE ?')
-        qargs = [digest+'%']
         try:
-            cursor.execute(query, qargs)
-            rows = cursor.fetchall()
+            query = ('SELECT * FROM contents WHERE digest LIKE ?')
+            qargs = [digest+'%']
+            connection = Sqlite3DbHelper._connect()
+            with closing(connection.cursor()) as cursor:
+                cursor.execute(query, qargs)
+                rows = cursor.fetchall()
+            connection.close()
         except sqlite3.Error as exception:
             print(exception)
-        cursor.close()
-        conn.close()
 
         return Storage()._get_contents(rows)  # pylint: disable=protected-access
 
@@ -73,16 +63,16 @@ class Sqlite3DbHelper(object):
         """Return content based on category."""
 
         rows = ()
-        conn, cursor = Sqlite3DbHelper._connect_db()
-        query = ('SELECT * FROM contents WHERE category=?')
-        qargs = [category]
         try:
-            cursor.execute(query, qargs)
-            rows = cursor.fetchall()
+            query = ('SELECT * FROM contents WHERE category=?')
+            qargs = [category]
+            connection = Sqlite3DbHelper._connect()
+            with closing(connection.cursor()) as cursor:
+                cursor.execute(query, qargs)
+                rows = cursor.fetchall()
+            connection.close()
         except sqlite3.Error as exception:
             print(exception)
-        cursor.close()
-        conn.close()
 
         return Storage()._get_contents(rows)  # pylint: disable=protected-access
 
@@ -103,30 +93,30 @@ class Sqlite3DbHelper(object):
         """Delete all content from database."""
 
         # In successful case the database table does not exist anymore
-        conn, cursor = Sqlite3DbHelper._connect_db()
         try:
-            cursor.execute('DELETE FROM contents')
-            conn.commit()
+            connection = Sqlite3DbHelper._connect()
+            with closing(connection.cursor()) as cursor:
+                cursor.execute('DELETE FROM contents')
+                connection.commit()
+            connection.close()
         except sqlite3.OperationalError:
             pass
-        cursor.close()
-        conn.close()
 
     @staticmethod
     def delete_solutions():
         """Delete all solutions from database."""
 
         # In successful case the database table does not exist anymore
-        conn, cursor = Sqlite3DbHelper._connect_db()
-        query = ('DELETE FROM contents WHERE category=?')
-        qargs = ['solution']
         try:
-            cursor.execute(query, qargs)
-            conn.commit()
+            query = ('DELETE FROM contents WHERE category=?')
+            qargs = ['solution']
+            connection = Sqlite3DbHelper._connect()
+            with closing(connection.cursor()) as cursor:
+                cursor.execute(query, qargs)
+                connection.commit()
+            connection.close()
         except sqlite3.OperationalError:
             pass
-        cursor.close()
-        conn.close()
 
     @staticmethod
     def get_schema():
@@ -160,13 +150,25 @@ class Sqlite3DbHelper(object):
                 os.remove(filename)
 
     @staticmethod
-    def _connect_db():
-        """Connect to shared memory database."""
+    def select_all_snippets():
+        """Select all rows from database. DEPRECATED."""
+
+        rows = ()
+        connection = Sqlite3DbHelper._connect()
+        with closing(connection.cursor()) as cursor:
+            cursor.execute('SELECT * FROM contents')
+            rows = cursor.fetchall()
+        connection.close()
+
+        return rows
+
+    @staticmethod
+    def _connect():
+        """Connect to database."""
 
         if not Const.PYTHON2:
-            conn = sqlite3.connect(Sqlite3DbHelper.get_storage(), check_same_thread=False, uri=True)
+            connection = sqlite3.connect(Sqlite3DbHelper.get_storage(), check_same_thread=False, uri=True)
         else:
-            conn = sqlite3.connect(Sqlite3DbHelper.get_storage(), check_same_thread=False)
-        cursor = conn.cursor()
+            connection = sqlite3.connect(Sqlite3DbHelper.get_storage(), check_same_thread=False)
 
-        return (conn, cursor)
+        return connection

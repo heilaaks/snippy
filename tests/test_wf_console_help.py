@@ -2,6 +2,7 @@
 
 """test_wf_console_help.py: Test workflows for getting help from console."""
 
+import re
 import sys
 import unittest
 import mock
@@ -528,6 +529,70 @@ class TestWfConsoleHelp(unittest.TestCase):
             sys.stderr = real_stderr
             assert len(result_stdout.split(Const.NEWLINE)) > 100
             assert not result_stderr
+            Database.delete_storage()
+
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_debug_print_content(self, mock_isfile, mock_get_db_location, mock_get_utc_time, ):
+        """Test printing the content."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Test printing content with print. This is a development test
+        ##        which must directly print the snippet.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '   ! category : snippet',
+                      '   ! filename : ',
+                      '   ! runalias : ',
+                      '   ! versions : ',
+                      '   ! utc      : 2017-10-14 19:56:31',
+                      '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
+                      '   ! metadata : None',
+                      '   ! key      : 1',
+                      '',
+                      '1. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      '   ! category : snippet',
+                      '   ! filename : ',
+                      '   ! runalias : ',
+                      '   ! versions : ',
+                      '   ! utc      : 2017-10-14 19:56:31',
+                      '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
+                      '   ! metadata : None',
+                      '   ! key      : 2')
+            real_stdout = sys.stdout
+            real_stderr = sys.stderr
+            sys.stdout = StringIO()
+            sys.stderr = StringIO()
+            snippy = Snippet.add_defaults(Snippy())
+            print(Database.get_snippets()[0])  # Part of the test.
+            print(Database.get_snippets()[1])  # Part of the test.
+            result_stdout = sys.stdout.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
+            sys.stdout = real_stdout
+            sys.stderr = real_stderr
+            sys.argv = ['snippy', 'search']  ## workflow
+            snippy.run_cli()
+            ansi_escape = re.compile(r'\x1b[^m]*m')  # Remove all color codes from output.
+            result_stdout = ansi_escape.sub('', result_stdout)
+            assert Const.NEWLINE.join(output) in result_stdout
+            assert not result_stderr
+            snippy.release()
+            snippy = None
             Database.delete_storage()
 
     # pylint: disable=duplicate-code

@@ -8,7 +8,6 @@ from snippy.snip import Snippy
 from snippy.version import __version__
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
-from snippy.config.config import Config
 from snippy.config.editor import Editor
 from snippy.content.content import Content
 from snippy.migrate.migrate import Migrate

@@ -124,6 +124,21 @@ class TestWfExportSolution(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: Try to export all content by defining the content category to --all. This is not
+        ##        supported with export operation and error cause is returned.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'export', '--all']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: content category \'all\' is supported only with search operation'
+            mock_file.assert_not_called()
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_not_called()
+            mock_yaml_dump.reset_mock()
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')

@@ -131,4 +131,4 @@ class Solution(object):
         elif Config.is_operation_import():
             self.import_all()
         else:
-            self.logger.error('unknown operation for solution')
+            Cause.set_text('unknown operation for solution')

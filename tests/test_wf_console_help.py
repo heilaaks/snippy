@@ -80,37 +80,45 @@ class TestWfConsoleHelp(unittest.TestCase):
                   'Homepage https://github.com/heilaaks/snippy')
 
         ## Brief: Print tool help with long option.
-        cause = Cause.ALL_OK
-        snippy = Snippy()
         try:
-            sys.argv = ['snippy', '--help']  ## workflow
+            cause = Cause.ALL_OK
             real_stdout = sys.stdout
+            real_stderr = sys.stderr
             sys.stdout = StringIO()
+            sys.stderr = StringIO()
+            sys.argv = ['snippy', '--help']  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli()
         except SystemExit:
-            result = sys.stdout.getvalue().strip()
+            result_stdout = sys.stdout.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
             sys.stdout = real_stdout
+            sys.stderr = real_stderr
             assert cause == Cause.ALL_OK
-            assert result == Const.NEWLINE.join(output)
+            assert result_stdout == Const.NEWLINE.join(output)
+            assert not result_stderr
             snippy.release()
             snippy = None
             Database.delete_storage()
 
         ## Brief: Print tool help with short option.
-        cause = Cause.ALL_OK
-        snippy = Snippy()
         try:
-            sys.argv = ['snippy', '-h']  ## workflow
+            cause = Cause.ALL_OK
             real_stdout = sys.stdout
+            real_stderr = sys.stderr
             sys.stdout = StringIO()
+            sys.stderr = StringIO()
+            sys.argv = ['snippy', '-h']  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli()
         except SystemExit:
-            result = sys.stdout.getvalue().strip()
+            result_stdout = sys.stdout.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
             sys.stdout = real_stdout
+            sys.stderr = real_stderr
             assert cause == Cause.ALL_OK
-            assert result == Const.NEWLINE.join(output)
+            assert result_stdout == Const.NEWLINE.join(output)
+            assert not result_stderr
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -119,8 +127,6 @@ class TestWfConsoleHelp(unittest.TestCase):
         """Test printing examples from consoler."""
 
         ## Brief: Print tool examples.
-        cause = Cause.ALL_OK
-        snippy = Snippy()
         try:
             output = ('examples:',
                       '    Creating new content:',
@@ -168,15 +174,22 @@ class TestWfConsoleHelp(unittest.TestCase):
                       'Snippy version ' + __version__ + ' - license Apache 2.0',
                       'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                       'Homepage https://github.com/heilaaks/snippy')
-            sys.argv = ['snippy', '--help', 'examples']  ## workflow
+            cause = Cause.ALL_OK
             real_stdout = sys.stdout
+            real_stderr = sys.stderr
             sys.stdout = StringIO()
+            sys.stderr = StringIO()
+            sys.argv = ['snippy', '--help', 'examples']  ## workflow
+            snippy = Snippy()
             cause = snippy.run_cli()
         except SystemExit:
-            result = sys.stdout.getvalue().strip()
+            result_stdout = sys.stdout.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
             sys.stdout = real_stdout
+            sys.stderr = real_stderr
             assert cause == Cause.ALL_OK
-            assert result == Const.NEWLINE.join(output)
+            assert result_stdout == Const.NEWLINE.join(output)
+            assert not result_stderr
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -245,9 +258,8 @@ class TestWfConsoleHelp(unittest.TestCase):
                     '            Database.delete_storage()')
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(testcase))
         with mock.patch('snippy.devel.reference.open', mocked_open, create=True):
-            cause = Cause.ALL_OK
-            snippy = Snippy()
             try:
+                cause = Cause.ALL_OK
                 output = ('test case reference list:',
                           '',
                           '   $ snippy import --filter .*(\\$\\s.*)',
@@ -259,15 +271,22 @@ class TestWfConsoleHelp(unittest.TestCase):
                           '   # Import all snippets. File name is not defined in commmand line.',
                           '   # This should result tool internal default file name',
                           '   # ./snippets.yaml being used by default.')
-                sys.argv = ['snippy', '--help', 'tests', '--no-ansi']  ## workflow
+                cause = Cause.ALL_OK
                 real_stdout = sys.stdout
+                real_stderr = sys.stderr
                 sys.stdout = StringIO()
+                sys.stderr = StringIO()
+                sys.argv = ['snippy', '--help', 'tests', '--no-ansi']  ## workflow
+                snippy = Snippy()
                 cause = snippy.run_cli()
             except SystemExit:
-                result = sys.stdout.getvalue().strip()
+                result_stdout = sys.stdout.getvalue().strip()
+                result_stderr = sys.stderr.getvalue().strip()
                 sys.stdout = real_stdout
+                sys.stderr = real_stderr
                 assert cause == Cause.ALL_OK
-                assert result == Const.NEWLINE.join(output)
+                assert result_stdout == Const.NEWLINE.join(output)
+                assert not result_stderr
                 snippy.release()
                 snippy = None
                 Database.delete_storage()
@@ -290,19 +309,24 @@ class TestWfConsoleHelp(unittest.TestCase):
         testcase = ('')
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(testcase))
         with mock.patch('snippy.devel.reference.open', mocked_open, create=True):
-            cause = Cause.ALL_OK
-            snippy = Snippy()
             try:
                 output = ('')
-                sys.argv = ['snippy', '--help', 'tests']  ## workflow
+                cause = Cause.ALL_OK
                 real_stdout = sys.stdout
+                real_stderr = sys.stderr
                 sys.stdout = StringIO()
+                sys.stderr = StringIO()
+                sys.argv = ['snippy', '--help', 'tests']  ## workflow
+                snippy = Snippy()
                 cause = snippy.run_cli()
             except SystemExit:
-                result = sys.stdout.getvalue().strip()
+                result_stdout = sys.stdout.getvalue().strip()
+                result_stderr = sys.stderr.getvalue().strip()
                 sys.stdout = real_stdout
+                sys.stderr = real_stderr
                 assert cause == Cause.ALL_OK  # Cause is not updated because the SystemExit exception is thrown from argparse.
-                assert result == Const.NEWLINE.join(output)
+                assert result_stdout == Const.NEWLINE.join(output)
+                assert not result_stderr
                 snippy.release()
                 snippy = None
                 Database.delete_storage()
@@ -318,15 +342,20 @@ class TestWfConsoleHelp(unittest.TestCase):
         ##        explicitly. This just verifies that the very verbose option prints more
         ##        logs.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
+            real_stdout = sys.stdout
+            real_stderr = sys.stderr
+            sys.stdout = StringIO()
+            sys.stderr = StringIO()
             sys.argv = ['snippy', 'search', '--sall', '.', '-vv']  ## workflow
             snippy = Snippy()
-            real_stderr = sys.stderr
-            sys.stderr = StringIO()
             cause = snippy.run_cli()
-            result = sys.stderr.getvalue().strip()
+            result_stdout = sys.stdout.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
+            sys.stdout = real_stdout
             sys.stderr = real_stderr
             assert cause == 'NOK: cannot find content with given search criteria'
-            assert len(result.split(Const.NEWLINE)) > 25
+            assert len(result_stdout.split(Const.NEWLINE)) > 25
+            assert not result_stderr
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -390,8 +419,9 @@ class TestWfConsoleHelp(unittest.TestCase):
             sys.stderr = real_stderr
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
-            assert len(result_stderr.split(Const.NEWLINE)) > 25
-            assert result_stdout == Const.NEWLINE.join(output)
+            assert len(result_stdout.split(Const.NEWLINE)) > 25
+            assert Const.NEWLINE.join(output) in result_stdout
+            assert not result_stderr
             snippy.release()
             snippy = None
             Database.delete_storage()
@@ -488,11 +518,16 @@ class TestWfConsoleHelp(unittest.TestCase):
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
             sys.argv = ['snippy', 'search', '--sall', '.', '--profile']  ## workflow
             real_stdout = sys.stdout
+            real_stderr = sys.stderr
             sys.stdout = StringIO()
+            sys.stderr = StringIO()
             main()
-            result = sys.stdout.getvalue().strip()
-            sys.stderr = real_stdout
-            assert len(result.split(Const.NEWLINE)) > 100
+            result_stdout = sys.stdout.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
+            sys.stdout = real_stdout
+            sys.stderr = real_stderr
+            assert len(result_stdout.split(Const.NEWLINE)) > 100
+            assert not result_stderr
             Database.delete_storage()
 
     # pylint: disable=duplicate-code

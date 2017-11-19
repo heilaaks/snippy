@@ -41,8 +41,8 @@ class Sqlite3Db(object):
         """Insert content into database."""
 
         if self.connection:
-            query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, utc, ' +
-                     'digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?)')
+            query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, ' +
+                     'runalias, versions, utc, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
             self.logger.debug('insert "%s" with digest %.16s', content.get_brief(), digest)
             try:
                 with closing(self.connection.cursor()) as cursor:
@@ -53,6 +53,8 @@ class Sqlite3Db(object):
                                            content.get_links(Const.STRING_CONTENT),
                                            content.get_category(Const.STRING_CONTENT),
                                            content.get_filename(Const.STRING_CONTENT),
+                                           content.get_runalias(Const.STRING_CONTENT),
+                                           content.get_versions(Const.STRING_CONTENT),
                                            utc,
                                            digest,
                                            metadata))
@@ -205,8 +207,8 @@ class Sqlite3Db(object):
         """Update existing content."""
 
         if self.connection:
-            query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, utc=?, '
-                     'digest=?, metadata=? WHERE digest LIKE ?')
+            query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, '
+                     'runalias=?, versions=?, utc=?, digest=?, metadata=? WHERE digest LIKE ?')
             self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', content.get_digest(), digest,
                               content.get_brief())
             try:
@@ -218,6 +220,8 @@ class Sqlite3Db(object):
                                            content.get_links(Const.STRING_CONTENT),
                                            content.get_category(Const.STRING_CONTENT),
                                            content.get_filename(Const.STRING_CONTENT),
+                                           content.get_runalias(Const.STRING_CONTENT),
+                                           content.get_versions(Const.STRING_CONTENT),
                                            utc,
                                            digest,
                                            metadata,
@@ -341,6 +345,6 @@ class Sqlite3Db(object):
         if len(contents) == 1:
             digest = contents[0][Const.DIGEST]
         else:
-            self.logger.error('unexpected number %d of %s received while searching', len(contents), category)
+            self.logger.debug('unexpected number %d of %s received while searching', len(contents), category)
 
         return digest

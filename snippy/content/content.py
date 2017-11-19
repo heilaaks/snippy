@@ -22,6 +22,8 @@ class Content(object):
                             Config.get_content_links(),
                             Config.get_category(),
                             Config.get_filename(),
+                            Const.EMPTY,  # runalias
+                            Const.EMPTY,  # versions
                             None,  # utc
                             None,  # digest
                             None,  # metadata
@@ -126,6 +128,16 @@ class Content(object):
 
         return self.content[Const.FILENAME]
 
+    def get_runalias(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
+        """Return content runalias."""
+
+        return self.content[Const.RUNALIAS]
+
+    def get_versions(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
+        """Return content version list."""
+
+        return self.content[Const.VERSIONS]
+
     def get_utc(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
         """Return content UTC."""
 
@@ -166,6 +178,8 @@ class Content(object):
                         content[Const.LINKS],
                         content[Const.CATEGORY],
                         content[Const.FILENAME],
+                        content[Const.RUNALIAS],
+                        content[Const.VERSIONS],
                         content[Const.UTC],
                         content[Const.DIGEST],
                         content[Const.METADATA],
@@ -183,6 +197,8 @@ class Content(object):
                         content[Const.LINKS],
                         content[Const.CATEGORY],
                         content[Const.FILENAME],
+                        content[Const.RUNALIAS],
+                        content[Const.VERSIONS],
                         content[Const.UTC],
                         content[Const.DIGEST],
                         content[Const.METADATA],
@@ -198,6 +214,8 @@ class Content(object):
         content_str = content_str + self.get_links(Const.STRING_CONTENT)
         content_str = content_str + self.get_category(Const.STRING_CONTENT)
         content_str = content_str + self.get_filename(Const.STRING_CONTENT)
+        content_str = content_str + self.get_runalias(Const.STRING_CONTENT)
+        content_str = content_str + self.get_versions(Const.STRING_CONTENT)
 
         return content_str
 
@@ -211,6 +229,8 @@ class Content(object):
                    self.get_links(),
                    self.get_category(),
                    self.get_filename(),
+                   self.get_runalias(),
+                   self.get_versions(),
                    self.get_utc(),
                    self.get_digest(),
                    self.get_metadata(),
@@ -231,6 +251,8 @@ class Content(object):
             content[Const.TAGS] = migrated.get_tags()
             content[Const.LINKS] = migrated.get_links()
             content[Const.FILENAME] = migrated.get_filename()
+            content[Const.RUNALIAS] = migrated.get_runalias()
+            content[Const.VERSIONS] = migrated.get_versions()
             content[Const.UTC] = migrated.get_utc()
             self.content = (content[Const.DATA],
                             content[Const.BRIEF],
@@ -239,6 +261,8 @@ class Content(object):
                             content[Const.LINKS],
                             content[Const.CATEGORY],
                             content[Const.FILENAME],
+                            content[Const.RUNALIAS],
+                            content[Const.VERSIONS],
                             content[Const.UTC],
                             content[Const.DIGEST],
                             content[Const.METADATA],
@@ -265,6 +289,8 @@ class Content(object):
                    Const.EMPTY_TUPLE,
                    Const.EMPTY_TUPLE,
                    category,
+                   Const.EMPTY,
+                   Const.EMPTY,
                    Const.EMPTY,
                    None,  # utc
                    None,  # digest
@@ -294,6 +320,8 @@ class Content(object):
                            dictionary['links'],
                            dictionary['category'],
                            dictionary['filename'],
+                           dictionary['runalias'],
+                           dictionary['versions'],
                            dictionary['utc'],
                            dictionary['digest'],
                            None,   # metadata

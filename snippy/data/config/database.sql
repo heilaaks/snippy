@@ -11,6 +11,8 @@ create table if not exists contents (
     links       text default '',
     category    text default 'snippet',
     filename    text default '',
+    runalias    text default '',
+    versions    text default '',
     utc         datetime default current_timestamp,
     digest      blob(64),
     metadata    text default '',

@@ -74,6 +74,8 @@ class Migrate(object):
             if debug:
                 text = text + Migrate._terminal_category(ansi) % content.get_category()
                 text = text + Migrate._terminal_filename(ansi) % content.get_filename()
+                text = text + Migrate._terminal_runalias(ansi) % content.get_runalias()
+                text = text + Migrate._terminal_versions(ansi) % content.get_versions()
                 text = text + Migrate._terminal_utc(ansi) % content.get_utc()
                 text = text + Migrate._terminal_digest(ansi) % (content.get_digest(),
                                                                 content.get_digest() == content.compute_digest())
@@ -262,6 +264,18 @@ class Migrate(object):
         return '   \x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m : %s\n' if ansi else '   ! filename : %s\n'
 
     @staticmethod
+    def _terminal_runalias(ansi=False):
+        """Format content runalias."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mrunalias\x1b[0m : %s\n' if ansi else '   ! runalias : %s\n'
+
+    @staticmethod
+    def _terminal_versions(ansi=False):
+        """Format content version list."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m : %s\n' if ansi else '   ! versions : %s\n'
+
+    @staticmethod
     def _terminal_utc(ansi=False):
         """Format content utc."""
 
@@ -306,6 +320,8 @@ class Migrate(object):
                       'links': content.get_links(),
                       'category': content.get_category(),
                       'filename': content.get_filename(),
+                      'runalias': content.get_runalias(),
+                      'versions': content.get_versions(),
                       'utc': content.get_utc(),
                       'digest': content.get_digest()}
 

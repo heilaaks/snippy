@@ -42,11 +42,13 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     LINKS = 4
     CATEGORY = 5
     FILENAME = 6
-    UTC = 7
-    DIGEST = 8
-    METADATA = 9
-    KEY = 10
-    TESTING = 11
+    RUNALIAS = 7
+    VERSIONS = 8
+    UTC = 9
+    DIGEST = 10
+    METADATA = 11
+    KEY = 12
+    TESTING = 13
 
     # Content formats
     NATIVE_CONTENT = 0  # Native format from content.

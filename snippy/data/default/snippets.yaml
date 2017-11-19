@@ -8,6 +8,7 @@ content:
   group: docker
   links:
   - https://docs.docker.com/engine/reference/commandline/rm/
+  runalias: ''
   tags:
   - cleanup
   - container
@@ -15,6 +16,7 @@ content:
   - docker-ce
   - moby
   utc: '2017-10-12 11:52:11'
+  versions: ''
 - brief: Find pattern from files
   category: snippet
   data:
@@ -27,10 +29,12 @@ content:
   links:
   - http://www.skrenta.com/rt/man/grep.1.html
   - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux/
+  runalias: ''
   tags:
   - linux
   - search
   utc: '2017-10-16 12:09:34'
+  versions: ''
 - brief: Remove all exited containers and dangling images
   category: snippet
   data:
@@ -43,6 +47,7 @@ content:
   - https://docs.docker.com/engine/reference/commandline/images/
   - https://docs.docker.com/engine/reference/commandline/rm/
   - https://docs.docker.com/engine/reference/commandline/rmi/
+  runalias: ''
   tags:
   - cleanup
   - container
@@ -52,6 +57,7 @@ content:
   - moby
   - prune
   utc: '2017-10-24 07:07:05'
+  versions: ''
 - brief: Stop and delete all running containers and images
   category: snippet
   data:
@@ -65,6 +71,7 @@ content:
   - https://docs.docker.com/engine/reference/commandline/rm/
   - https://docs.docker.com/engine/reference/commandline/rmi/
   - https://docs.docker.com/engine/reference/commandline/stop/
+  runalias: ''
   tags:
   - cleanup
   - container
@@ -74,6 +81,7 @@ content:
   - moby
   - stop
   utc: '2017-10-16 12:06:07'
+  versions: ''
 - brief: Build docker containers
   category: snippet
   data:
@@ -86,6 +94,7 @@ content:
   group: docker
   links:
   - https://docs.docker.com/engine/reference/commandline/build/
+  runalias: ''
   tags:
   - build
   - container
@@ -93,6 +102,7 @@ content:
   - docker-ce
   - moby
   utc: '2017-10-16 19:42:19'
+  versions: ''
 - brief: Run containers and connect to them
   category: snippet
   data:
@@ -105,6 +115,7 @@ content:
   links:
   - https://docs.docker.com/engine/reference/commandline/exec/
   - https://docs.docker.com/engine/reference/commandline/run/
+  runalias: ''
   tags:
   - container
   - docker
@@ -114,6 +125,7 @@ content:
   - moby
   - run
   utc: '2017-10-16 12:43:15'
+  versions: ''
 - brief: Compile with screen window manager
   category: snippet
   data:
@@ -129,11 +141,13 @@ content:
   group: linux
   links:
   - http://www.skrenta.com/rt/man/screen.1.html
+  runalias: ''
   tags:
   - linux
   - screen
   - terminal
   utc: '2017-10-16 19:10:55'
+  versions: ''
 - brief: Install docker compose
   category: snippet
   data:
@@ -147,6 +161,7 @@ content:
   links:
   - https://docs.docker.com/compose/install/
   - https://github.com/docker/compose/releases/
+  runalias: ''
   tags:
   - compose
   - container
@@ -155,6 +170,7 @@ content:
   - install
   - moby
   utc: '2017-10-19 10:25:26'
+  versions: ''
 - brief: Install docker-ce
   category: snippet
   data:
@@ -173,6 +189,7 @@ content:
   - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/
   - https://docs.docker.com/release-notes/docker-ce/
   - https://github.com/docker/for-linux/issues/20#issuecomment-316930840
+  runalias: ''
   tags:
   - container
   - docker
@@ -182,6 +199,7 @@ content:
   - rhel
   - rpm
   utc: '2017-11-07 08:07:16'
+  versions: ''
 - brief: Initialize, deploy and remove docker swarm
   category: snippet
   data:
@@ -201,6 +219,7 @@ content:
   - https://docs.docker.com/engine/reference/commandline/stack/
   - https://docs.docker.com/engine/reference/commandline/swarm_init/
   - https://docs.docker.com/engine/swarm/
+  runalias: ''
   tags:
   - compose
   - container
@@ -210,6 +229,7 @@ content:
   - moby
   - swarm
   utc: '2017-10-19 10:55:01'
+  versions: ''
 - brief: Solve docker networking 'has active endpoints' problem
   category: snippet
   data:
@@ -222,6 +242,7 @@ content:
   group: docker
   links:
   - https://github.com/moby/moby/issues/23302
+  runalias: ''
   tags:
   - container
   - docker
@@ -232,6 +253,7 @@ content:
   - solution
   - swarm
   utc: '2017-10-19 11:02:06'
+  versions: ''
 - brief: Print Elasticsearch basic information
   category: snippet
   data:
@@ -244,6 +266,7 @@ content:
   group: elasticsearch
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/cat.html
+  runalias: ''
   tags:
   - api
   - cat
@@ -254,6 +277,7 @@ content:
   - rest
   - security
   utc: '2017-10-20 07:09:19'
+  versions: ''
 - brief: Print logs from Kubernetes pods
   category: snippet
   data:
@@ -264,6 +288,7 @@ content:
   group: kubernetes
   links:
   - https://kubernetes.io/docs/user-guide/kubectl-cheatsheet/
+  runalias: ''
   tags:
   - container
   - docker
@@ -272,6 +297,7 @@ content:
   - logginig
   - moby
   utc: '2017-10-19 11:17:37'
+  versions: ''
 - brief: List, dump and delete Elasticsearch indices
   category: snippet
   data:
@@ -283,6 +309,7 @@ content:
   group: elasticsearch
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html
+  runalias: ''
   tags:
   - api
   - cat
@@ -297,6 +324,7 @@ content:
   - rest
   - security
   utc: '2017-10-20 05:42:53'
+  versions: ''
 - brief: Debug TLS/SSL connection
   category: snippet
   data:
@@ -308,6 +336,7 @@ content:
   group: security
   links:
   - https://wiki.openssl.org/index.php/Command_Line_Utilities
+  runalias: ''
   tags:
   - debug
   - openssl
@@ -315,6 +344,7 @@ content:
   - ssl
   - tls
   utc: '2017-10-20 05:42:26'
+  versions: ''
 - brief: Test if specific port is open
   category: snippet
   data:
@@ -325,12 +355,14 @@ content:
   group: linux
   links:
   - https://www.commandlinux.com/man-page/man1/nc.1.html
+  runalias: ''
   tags:
   - linux
   - netcat
   - networking
   - port
   utc: '2017-10-20 07:08:45'
+  versions: ''
 - brief: Manage Elasticsearch templates
   category: snippet
   data:
@@ -347,6 +379,7 @@ content:
   group: elasticsearch
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html
+  runalias: ''
   tags:
   - api
   - create
@@ -363,6 +396,7 @@ content:
   - template
   - update
   utc: '2017-10-24 07:14:04'
+  versions: ''
 - brief: Perform recursive git pull on subdirectories
   category: snippet
   data:
@@ -373,10 +407,12 @@ content:
   links:
   - http://snipplr.com/view/62314/perform-git-pull-on-subdirectory-recursive/
   - https://stackoverflow.com/questions/3497123/run-git-pull-over-all-subdirectories
+  runalias: ''
   tags:
   - git
   - pull
   utc: '2017-11-07 07:58:46'
+  versions: ''
 - brief: List git commit log headers
   category: snippet
   data:
@@ -388,7 +424,24 @@ content:
   - https://git-scm.com/book/id/v2/Git-Basics-Viewing-the-Commit-History
   - https://github.com/k88hudson/git-flight-rules
   - https://stackoverflow.com/questions/4479225/how-to-output-git-log-with-the-first-line-only
+  runalias: ''
   tags:
   - git
   - log
   utc: '2017-11-12 09:54:23'
+  versions: ''
+- brief: list containers
+  category: snippet
+  data:
+  - docker ps
+  digest: 44afdd0c59e171592ee448fa2a9e79d3f3fb26f1325cc8a5b54e6a43a6b932d0
+  filename: ''
+  group: default
+  links:
+  - ''
+  runalias: ''
+  tags:
+  - docker
+  - moby
+  utc: '2017-11-19 11:15:50'
+  versions: ''

@@ -29,6 +29,8 @@ class SnippetHelper(object):
                  'links': ('https://docs.docker.com/engine/reference/commandline/rm/', ),
                  'category': 'snippet',
                  'filename': '',
+                 'runalias': '',
+                 'versions': '',
                  'utc': '2017-10-14 19:56:31',
                  'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'},
                 {'data': ('docker rm --force redis', ),
@@ -40,6 +42,8 @@ class SnippetHelper(object):
                            'images-containers-and-volumes'),
                  'category': 'snippet',
                  'filename': '',
+                 'runalias': '',
+                 'versions': '',
                  'utc': '2017-10-14 19:56:31',
                  'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'},
                 {'data': ('docker rm $(docker ps --all -q -f status=exited)',
@@ -52,6 +56,8 @@ class SnippetHelper(object):
                            'https://docs.docker.com/engine/reference/commandline/rmi/'),
                  'category': 'snippet',
                  'filename': '',
+                 'runalias': '',
+                 'versions': '',
                  'utc': '2017-10-20 07:08:45',
                  'digest': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73'},
                 {'data': ('nc -v 10.183.19.189 443',
@@ -62,6 +68,8 @@ class SnippetHelper(object):
                  'links': ('https://www.commandlinux.com/man-page/man1/nc.1.html',),
                  'category': 'snippet',
                  'filename': '',
+                 'runalias': '',
+                 'versions': '',
                  'utc': '2017-10-20 07:08:45',
                  'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'})
 
@@ -88,8 +96,8 @@ class SnippetHelper(object):
         """Transform text template to content."""
 
         if text:
-            content = Content(content=(Const.EMPTY,)*11, category=Const.SNIPPET)
-            editor = Editor(Content(content=(Const.EMPTY,)*11, category=Const.SNIPPET), SnippetHelper.UTC, text)
+            content = Content(content=(Const.EMPTY,)*13, category=Const.SNIPPET)
+            editor = Editor(Content(content=(Const.EMPTY,)*13, category=Const.SNIPPET), SnippetHelper.UTC, text)
             content.set((editor.get_edited_data(),
                          editor.get_edited_brief(),
                          editor.get_edited_group(),
@@ -97,6 +105,8 @@ class SnippetHelper(object):
                          editor.get_edited_links(),
                          editor.get_edited_category(),
                          editor.get_edited_filename(),
+                         content.get_runalias(),
+                         content.get_versions(),
                          editor.get_edited_date(),
                          content.get_digest(),
                          content.get_metadata(),
@@ -191,6 +201,8 @@ class SnippetHelper(object):
         six.assertCountEqual(testcase, snippet[Const.LINKS], reference.get_links(Const.STRING_CONTENT))
         testcase.assertEqual(snippet[Const.CATEGORY], reference.get_category(Const.STRING_CONTENT))
         testcase.assertEqual(snippet[Const.FILENAME], reference.get_filename(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.RUNALIAS], reference.get_runalias(Const.STRING_CONTENT))
+        testcase.assertEqual(snippet[Const.VERSIONS], reference.get_versions(Const.STRING_CONTENT))
         testcase.assertEqual(snippet[Const.DIGEST], reference.get_digest(Const.STRING_CONTENT))
         testcase.assertEqual(snippet[Const.METADATA], reference.get_metadata(Const.STRING_CONTENT))
 
@@ -202,4 +214,6 @@ class SnippetHelper(object):
         assert isinstance(snippet[Const.LINKS], six.string_types)
         assert isinstance(snippet[Const.CATEGORY], six.string_types)
         assert isinstance(snippet[Const.FILENAME], six.string_types)
+        assert isinstance(snippet[Const.RUNALIAS], six.string_types)
+        assert isinstance(snippet[Const.VERSIONS], six.string_types)
         assert isinstance(snippet[Const.DIGEST], six.string_types)

@@ -68,6 +68,8 @@ class SolutionHelper(object):
                  'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
                  'category' :'solution',
                  'filename' :'howto-debug-elastic-beats.txt',
+                 'runalias': '',
+                 'versions': '',
                  'utc' :'2017-10-20 11:11:19',
                  'digest':'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
                 {'data':('################################################################################',
@@ -138,6 +140,8 @@ class SolutionHelper(object):
                  'links': ('https://www.nginx.com/resources/admin-guide/debug/', ),
                  'category': 'solution',
                  'filename': 'howto-debug-nginx.txt',
+                 'runalias': '',
+                 'versions': '',
                  'utc': '2017-10-20 06:16:27',
                  'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'},
                 {'data':('################################################################################',
@@ -238,6 +242,8 @@ class SolutionHelper(object):
                            'https://github.com/garo/logs2kafka'),
                  'category': 'solution',
                  'filename': 'kubernetes-docker-log-driver-kafka.txt',
+                 'runalias': '',
+                 'versions': '',
                  'utc': '2017-10-20 06:16:27',
                  'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'})
 
@@ -282,8 +288,8 @@ class SolutionHelper(object):
         """Transform text template to content."""
 
         if text:
-            content = Content(content=(Const.EMPTY,)*11, category=Const.SOLUTION)
-            editor = Editor(Content(content=(Const.EMPTY,)*11, category=Const.SOLUTION), SolutionHelper.UTC, text)
+            content = Content(content=(Const.EMPTY,)*13, category=Const.SOLUTION)
+            editor = Editor(Content(content=(Const.EMPTY,)*13, category=Const.SOLUTION), SolutionHelper.UTC, text)
             content.set((editor.get_edited_data(),
                          editor.get_edited_brief(),
                          editor.get_edited_group(),
@@ -291,6 +297,8 @@ class SolutionHelper(object):
                          editor.get_edited_links(),
                          editor.get_edited_category(),
                          editor.get_edited_filename(),
+                         content.get_runalias(),
+                         content.get_versions(),
                          editor.get_edited_date(),
                          content.get_digest(),
                          content.get_metadata(),

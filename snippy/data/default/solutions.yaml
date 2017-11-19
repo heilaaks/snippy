@@ -100,6 +100,7 @@ content:
   - https://github.com/MickayG/moby-kafka-logdriver
   - https://github.com/garo/logs2kafka
   - https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ
+  runalias: ''
   tags:
   - docker
   - driver
@@ -110,6 +111,7 @@ content:
   - moby
   - plugin
   utc: '2017-10-30 08:24:28'
+  versions: ''
 - brief: Debugging nginx
   category: solution
   data:
@@ -291,12 +293,14 @@ content:
   - https://tenzer.dk/nginx-with-dynamic-upstreams/
   - https://www.nginx.com/blog/dns-service-discovery-nginx-plus/
   - https://www.nginx.com/resources/admin-guide/debug/
+  runalias: ''
   tags:
   - debug
   - howto
   - logging
   - nginx
   utc: '2017-11-15 08:48:50'
+  versions: ''
 - brief: Debugging Elastic Beats
   category: solution
   data:
@@ -418,6 +422,7 @@ content:
   links:
   - https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-configuration-details.html
   - https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html
+  runalias: ''
   tags:
   - Elastic
   - beats
@@ -425,6 +430,7 @@ content:
   - filebeat
   - howto
   utc: '2017-10-30 08:21:40'
+  versions: ''
 - brief: Debugging Docker
   category: solution
   data:
@@ -514,9 +520,11 @@ content:
   - https://github.com/docker/swarmkit/issues/1242
   - https://github.com/docker/swarmkit/issues/1242
   - https://www.computerhope.com/unix/unslooku.htm
+  runalias: ''
   tags:
   - debug
   - docker
   - howto
   - swarm
   utc: '2017-11-14 10:36:39'
+  versions: ''

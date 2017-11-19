@@ -94,6 +94,8 @@ class Storage(object):
                            tuple(row[Const.LINKS].split(Const.DELIMITER_LINKS)),
                            row[Const.CATEGORY],
                            row[Const.FILENAME],
+                           row[Const.RUNALIAS],
+                           row[Const.VERSIONS],
                            row[Const.UTC],
                            row[Const.DIGEST],
                            row[Const.METADATA],

@@ -201,8 +201,8 @@ file and importing it again.
 
 .. code-block:: none
 
-   snippy export --digest 4b7ef784a57fcc72
-   snippy import --digest 4b7ef784a57fcc72 --file howto-debug-elastic-beats.txt
+   snippy export --digest 76a1a02951f6bcb4
+   snippy import --digest 76a1a02951f6bcb4 --file howto-debug-elastic-beats.txt
 
 Migrating content
 -----------------

@@ -1,6 +1,6 @@
 ## TODO
-   - [ ] Add run flag into database. This could allow snippy run -d 1234. There should be snippy enable/cancel run -d 1234. Is run feasible/possible?
-   - [ ] Add version list to database that can hold snippet or solution specific versions. This is intended to reflect e.g. Elasticsearch version that is relevant for commands.
+   - [ ] Add support to run with runalias.
+   - [ ] Add support to add versions to version list.
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
    - [ ] Fix some logs going into stderr and some stdout? See the test_console_very_verbose_option. This required the Python2.7.
    - [ ] Fix storage.init() in snippy that is called multiple times in tests since they run_cli multiple times. This leaks cursor and conn?
@@ -28,6 +28,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added version list and run alias into database schema.
    - [x] Added support to search content with partial strings.
    - [x] Changed export to support all search criteria and be able to export multiple matching content.
    - [x] Changed sqlite3 cursor usage. Now to cursor is immediately released after operation.

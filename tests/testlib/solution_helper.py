@@ -299,8 +299,8 @@ class SolutionHelper(object):
         """Transform text template to content."""
 
         if text:
-            content = Content(content=(Const.EMPTY,)*13, category=Const.SOLUTION)
-            editor = Editor(Content(content=(Const.EMPTY,)*13, category=Const.SOLUTION), SolutionHelper.UTC, text)
+            content = Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SOLUTION)
+            editor = Editor(Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SOLUTION), SolutionHelper.UTC, text)
             content.set((editor.get_edited_data(),
                          editor.get_edited_brief(),
                          editor.get_edited_group(),

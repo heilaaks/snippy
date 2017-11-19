@@ -573,6 +573,40 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     8. Content() is designed to be used by Snippet() and Solution(). It is not designed to abstract
        or hide Snippet() or Solution() classes.
 
+#######################################
+## Design decisions
+#######################################
+
+    1. There are no logs printed to user
+    
+       There is only the tool exit cause that must produce OK or NOK with a cause
+       text in case of failure. In case more information is needed from the failure,
+       the debug logs can be enabled with -vv or --debug option.
+       
+       This rule tries to reduce glutter printed for the end user.
+
+    2. There are no exceptions printed to user
+
+       Exceptions are not printed as is to the user. See reasoning from rule 'There
+       are no logs printed to user'.
+
+       This rule tries to reduce glutter printed for the end user.
+
+    3. Git commit logs tries to follow 'keep a changelog' rules
+    
+       The rule must be applied to commit log header which must contain 'Types of
+       changes' and the specified keywords as a first word in the commit log.
+       
+       The rule must be applied so that the logs are written for humans. This means
+       that the commit log must tell the reasons and design decisions behind the
+       change.
+       
+       See the commit log rules from /1/.
+    
+       This rule tries to force common look and feel for the commit logs.
+
+       /1/ http://keepachangelog.com/en/1.0.0/
+
 
 #######################################
 ## Command line design

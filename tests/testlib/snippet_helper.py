@@ -107,8 +107,8 @@ class SnippetHelper(object):
         """Transform text template to content."""
 
         if text:
-            content = Content(content=(Const.EMPTY,)*13, category=Const.SNIPPET)
-            editor = Editor(Content(content=(Const.EMPTY,)*13, category=Const.SNIPPET), SnippetHelper.UTC, text)
+            content = Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SNIPPET)
+            editor = Editor(Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SNIPPET), SnippetHelper.UTC, text)
             content.set((editor.get_edited_data(),
                          editor.get_edited_brief(),
                          editor.get_edited_group(),

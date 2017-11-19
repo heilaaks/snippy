@@ -577,6 +577,8 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 ## Design decisions
 #######################################
 
+    LOGGING
+
     1. There are no logs printed to user
     
        There is only the tool exit cause that must produce OK or NOK with a cause
@@ -592,7 +594,16 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        This rule tries to reduce glutter printed for the end user.
 
-    3. Git commit logs tries to follow 'keep a changelog' rules
+    3. All logs are printed to stdout
+    
+       Because of rules 'There are no logs printed to user' and 'There are no
+       exceptions printed to user', it is more suitable to use always the stdout.
+       This is also considered more predictable for the end user who is debugging.
+       the logs.
+
+    COMMITS
+
+    1. Git commit logs tries to follow 'keep a changelog' rules
     
        The rule must be applied to commit log header which must contain 'Types of
        changes' and the specified keywords as a first word in the commit log.

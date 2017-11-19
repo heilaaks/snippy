@@ -150,7 +150,7 @@ class Arguments(object):
         # support options
         support = parser.add_argument_group(title='support options')
         support.add_argument('-h', '--help', nargs=0, action=MyHelpAction, help=argparse.SUPPRESS)
-        support.add_argument('-v', '--version', action='version', version=__version__, help=argparse.SUPPRESS)
+        support.add_argument('-v', '--version', nargs=0, action=MyVersionAction, help=argparse.SUPPRESS)
         support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
@@ -372,5 +372,20 @@ class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
                 test.print_tests(ansi)
             else:
                 parser.print_help()
+
+        parser.exit()
+
+
+class MyVersionAction(argparse.Action):  # pylint: disable=too-few-public-methods
+    """Customised argparse action class to print version always to stdout."""
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        """Customised printing"""
+
+        # Argparse and Python versions below 3.4 print to stderr. In order
+        # to have consistent functionality between supported Python versions,
+        # the version must be explicitly printed to stdout.
+        if option_string == '-v' or option_string == '--version':
+            print(__version__)
 
         parser.exit()

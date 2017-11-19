@@ -460,8 +460,7 @@ class TestWfConsoleHelp(unittest.TestCase):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Output tool version with long option. Only the version must be
-        ##        printed and nothing else. From Python 3.4 and onwards, the version
-        ##        is printed to stdout. Before this, the version is printed to stderr.
+        ##        printed and nothing else. The print must be send to stdout.
         snippy = Snippy()
         cause = Cause.ALL_OK
         try:
@@ -478,14 +477,14 @@ class TestWfConsoleHelp(unittest.TestCase):
             sys.stdout = real_stdout
             sys.stderr = real_stderr
             assert cause == Cause.ALL_OK
-            self.assertTrue(result_stdout == __version__ or result_stderr == __version__)
+            assert result_stdout == __version__
+            assert not result_stderr
             snippy.release()
             snippy = None
             Database.delete_storage()
 
         ## Brief: Output tool version with short option. Only the version must be
-        ##        printed and nothing else. From Python 3.4 and onwards, the version
-        ##        is printed to stdout. Before this, the version is printed to stderr.
+        ##        printed and nothing else. The print must be send to stdout.
         snippy = Snippy()
         cause = Cause.ALL_OK
         try:
@@ -502,7 +501,8 @@ class TestWfConsoleHelp(unittest.TestCase):
             sys.stdout = real_stdout
             sys.stderr = real_stderr
             assert cause == Cause.ALL_OK
-            self.assertTrue(result_stdout == __version__ or result_stderr == __version__)
+            assert result_stdout == __version__
+            assert not result_stderr
             snippy.release()
             snippy = None
             Database.delete_storage()

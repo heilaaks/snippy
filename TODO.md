@@ -2,8 +2,6 @@
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
    - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
-   - [ ] Fix Python2.7 printing the version to stderr. This is a Python problem and own print method for the version must be made.
-   - [ ] Fix storage.init() in snippy that is called multiple times in tests since they run_cli multiple times. This leaks cursor and conn?
    - [ ] Add of experimental REST API to try it out.
    - [ ] Update documents.
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
@@ -28,7 +26,8 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
-   - [x] All logs are printed now to stdout.
+   - [x] Fixed tool version to always print to stdout.
+   - [x] Fixed that all logs printed to stdout.
    - [x] Added version list and run alias into database schema.
    - [x] Added support to search content with partial strings.
    - [x] Changed export to support all search criteria and be able to export multiple matching content.

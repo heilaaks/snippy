@@ -42,7 +42,8 @@ class TestPerformance(unittest.TestCase):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC: 1 loop : 0.0300 / 55 loop : 0.9461 / 100 loop : 1.7419
+        ##        Reference PC: 1 loop : 0.0288 / 55 loop : 0.8958 / 100 loop : 1.6508
+        ##        Reference PC: 880 loop : 31.5324 / 1000 loop : 38.7177
         ##
         ##        The reference is with sqlite database in memory as with all tests.
         ##        There is naturally jitter in results and the values are as of now
@@ -97,8 +98,8 @@ class TestPerformance(unittest.TestCase):
         sys.stderr = real_stderr
         sys.stdout = real_stdout
         print("====================================")
-        print("  Runtime %.4f" % runtime)
-        print("  There are %d rows in stdout" % len(result_stdout))
+        print("Runtime %.4f" % runtime)
+        print("There are %d rows in stdout" % len(result_stdout))
         print("====================================")
 
         assert not result_stderr

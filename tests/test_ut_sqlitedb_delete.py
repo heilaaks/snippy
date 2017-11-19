@@ -62,7 +62,8 @@ class TestUtSqlite3dbDelete(unittest.TestCase):
         mock_get_storage_schema.return_value = Database.get_schema()
         mock__get_db_location.return_value = Database.get_storage()
 
-        self.sqlite = Sqlite3Db().init()
+        self.sqlite = Sqlite3Db()
+        self.sqlite.init()
 
     def tearDown(self):
         """Teardown each test."""

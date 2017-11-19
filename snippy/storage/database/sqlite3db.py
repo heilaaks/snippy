@@ -22,9 +22,8 @@ class Sqlite3Db(object):
     def init(self):
         """Initialize database."""
 
-        self.connection = self._create_db()
-
-        return self
+        if not self.connection:
+            self.connection = self._create_db()
 
     def disconnect(self):
         """Close database connection."""

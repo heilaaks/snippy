@@ -7,6 +7,7 @@ import re
 import sys
 import os.path
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
+from snippy.version import __version__
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
@@ -149,7 +150,10 @@ class Migrate(object):
         cls.logger.debug('exporting contents %s', filename)
         with open(filename, 'w') as outfile:
             try:
-                dictionary = {'content': Migrate.get_dictionary_list(contents)}
+                dictionary = {'metadata': {'utc': Config.get_utc_time(),
+                                           'version': __version__,
+                                           'homepage': 'https://github.com/heilaaks/snippy'},
+                              'content': Migrate.get_dictionary_list(contents)}
                 if Config.is_file_type_yaml():
                     import yaml
 

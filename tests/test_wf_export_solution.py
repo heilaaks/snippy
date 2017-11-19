@@ -22,14 +22,17 @@ class TestWfExportSolution(unittest.TestCase):
 
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
+    @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_all_solutions(self, mock_isfile, mock_get_db_location, mock_yaml_dump, mock_json_dump):
+    def test_export_all_solutions(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export all solutions."""
 
-        mock_get_db_location.return_value = Database.get_storage()
         mock_isfile.return_value = True
-        export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
+        mock_get_utc_time.return_value = Solution.UTC
+        mock_get_db_location.return_value = Database.get_storage()
+        export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
+                       'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
         ## Brief: Export all solutions into file. File name or format are not defined in command
         ##        line which should result tool default file and format.
@@ -123,14 +126,17 @@ class TestWfExportSolution(unittest.TestCase):
 
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
+    @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_solution_digest(self, mock_isfile, mock_get_db_location, mock_yaml_dump, mock_json_dump):
+    def test_export_solution_digest(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export defined solution with digest."""
 
         mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Solution.UTC
         mock_get_db_location.return_value = Database.get_storage()
-        export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS]]}
+        export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
+                       'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
         ## Brief: Export defined solution based on message digest. File name is defined in solution
         ##        metadata but not by command line -f|--file option.
@@ -394,14 +400,17 @@ class TestWfExportSolution(unittest.TestCase):
 
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
+    @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_solution_keyword(self, mock_isfile, mock_get_db_location, mock_yaml_dump, mock_json_dump):
+    def test_export_solution_keyword(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export defined solution with search keyword."""
 
         mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Solution.UTC
         mock_get_db_location.return_value = Database.get_storage()
-        export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS]]}
+        export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
+                       'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
         ## Brief: Export defined solution based on search keyword. File name is defined in solution
         ##        metadata but not by command line -f|--file option.
@@ -517,14 +526,17 @@ class TestWfExportSolution(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(yaml, 'safe_dump')
+    @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_solution_defaults(self, mock_isfile, mock_get_db_location, mock_yaml_dump):
+    def test_export_solution_defaults(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump):
         """Export solution defaults."""
 
         mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Solution.UTC
         mock_get_db_location.return_value = Database.get_storage()
-        export_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
+        export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
+                       'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
         ## Brief: Export solution defaults. All solutions should be exported into predefined file
         ##        location under tool data folder in yaml format.
@@ -562,9 +574,9 @@ class TestWfExportSolution(unittest.TestCase):
     def test_export_solution_incomplete_header(self, mock_isfile, mock_get_db_location, mock_get_utc_time):
         """Export solution without date field."""
 
+        mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
-        mock_isfile.return_value = True
 
         ## Brief: Export solution that has been updated with empty date field in the content
         ##        data. The export operation must fill the date in text content from solution

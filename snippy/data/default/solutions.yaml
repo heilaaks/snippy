@@ -528,3 +528,7 @@ content:
   - swarm
   utc: '2017-11-14 10:36:39'
   versions: ''
+metadata:
+  homepage: https://github.com/heilaaks/snippy
+  utc: '2017-11-19 14:44:57'
+  version: 0.7.0

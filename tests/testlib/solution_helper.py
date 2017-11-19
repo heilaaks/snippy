@@ -5,8 +5,10 @@
 import sys
 import mock
 from snippy.snip import Snippy
+from snippy.version import __version__
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
+from snippy.config.config import Config
 from snippy.config.editor import Editor
 from snippy.content.content import Content
 from snippy.migrate.migrate import Migrate
@@ -282,6 +284,16 @@ class SolutionHelper(object):
                 '## whiteboard',
                 '################################################################################',
                 '')
+
+    @staticmethod
+    def get_metadata(utc):
+        """Return the default metadata for exported data."""
+
+        metadata = {'utc': utc,
+                    'version': __version__,
+                    'homepage': 'https://github.com/heilaaks/snippy'}
+
+        return metadata
 
     @staticmethod
     def get_content(text=None, solution=None):

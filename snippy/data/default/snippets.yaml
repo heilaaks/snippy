@@ -445,3 +445,7 @@ content:
   - moby
   utc: '2017-11-19 11:15:50'
   versions: ''
+metadata:
+  homepage: https://github.com/heilaaks/snippy
+  utc: '2017-11-19 14:44:55'
+  version: 0.7.0

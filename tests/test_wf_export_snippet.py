@@ -28,9 +28,10 @@ class TestWfExportSnippet(unittest.TestCase):
         """Export all snippets."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC
-        export_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
+        mock_get_db_location.return_value = Database.get_storage()
+        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC),
+                       'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export all snippets without defining target file name from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -107,7 +108,8 @@ class TestWfExportSnippet(unittest.TestCase):
         mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC
-        export_dict = {'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
+        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC),
+                       'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export defined snippet based on message digest. File name is not defined in command
         ##        line -f|--file option. This should result usage of default file name and format
@@ -190,7 +192,8 @@ class TestWfExportSnippet(unittest.TestCase):
         mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC
-        export_dict = {'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
+        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC),
+                       'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export defined snippet based on search keyword. File name is not defined in
         ##        command line -f|--file option. This should result usage of default file name
@@ -305,7 +308,8 @@ class TestWfExportSnippet(unittest.TestCase):
         mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC
-        export_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE]]}
+        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC),
+                       'content': [Snippet.DEFAULTS[Snippet.REMOVE]]}
 
         ## Brief: Export defined snippet based on content data. File name is not defined in
         ##        command line -f|--file option. This should result usage of default file name
@@ -410,10 +414,11 @@ class TestWfExportSnippet(unittest.TestCase):
     def test_export_snippet_defaults(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump):
         """Export snippet defaults."""
 
+        mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC
-        mock_isfile.return_value = True
-        export_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
+        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC),
+                       'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export snippet defaults. All snippets should be exported into predefined file
         ##        location under tool data folder in yaml format.

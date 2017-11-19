@@ -1,4 +1,6 @@
+************* Module tests.testlib.solution_helper
+W: 11, 0: Unused Config imported from snippy.config.config (unused-import)
 
 --------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
+Your code has been rated at 10.00/10 (previous run: 10.00/10, -0.00)
 

@@ -6,6 +6,7 @@ import sys
 import six
 import mock
 from snippy.snip import Snippy
+from snippy.version import __version__
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.config.editor import Editor
@@ -90,6 +91,16 @@ class SnippetHelper(object):
                 '# Add optional links below one link per line.',
                 '',
                 '')
+
+    @staticmethod
+    def get_metadata(utc):
+        """Return the default metadata for exported data."""
+
+        metadata = {'utc': utc,
+                    'version': __version__,
+                    'homepage': 'https://github.com/heilaaks/snippy'}
+
+        return metadata
 
     @staticmethod
     def get_content(text=None, snippet=None):

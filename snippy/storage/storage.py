@@ -65,13 +65,7 @@ class Storage(object):
         """Disconnect storage."""
 
         self.database.disconnect()
-        self.debug()
         self.database = None
-
-    def debug(self):
-        """Debug the storage."""
-
-        self.database.debug()
 
     @staticmethod
     def _get_contents(rows):

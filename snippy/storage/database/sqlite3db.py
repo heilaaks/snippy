@@ -252,17 +252,6 @@ class Sqlite3Db(object):
         else:
             Cause.set_text('internal error prevented deleting content from database')
 
-    def debug(self):
-        """Dump the whole database."""
-
-        if self.connection:
-            try:
-                with closing(self.connection.cursor()) as cursor:
-                    cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-                    self.logger.debug('sqlite3 dump %s', cursor.fetchall())
-            except sqlite3.Error as exception:
-                Cause.set_text('dumping database failed with exception {}'.format(exception))
-
     def _create_db(self):
         """Create the database."""
 

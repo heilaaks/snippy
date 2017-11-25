@@ -5,11 +5,8 @@
 import sys
 import unittest
 import pytest
+from falcon import testing
 from snippy.snip import Snippy
-try:
-    from falcon import testing
-except ImportError:
-    pass
 
 
 class FalconHelper(unittest.TestCase):

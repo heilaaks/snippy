@@ -39,7 +39,7 @@ setup(
             'snippy = snippy.snip:main'
         ],
     },
-    install_requires=['pyyaml'],
+    install_requires=['pyyaml', 'falcon'],
     extras_require={
         'dev': tests_require + docs_require,
         'test': tests_require,

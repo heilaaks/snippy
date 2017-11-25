@@ -5,8 +5,8 @@
 import unittest
 import json
 import mock
-import falcon
 import pytest
+import falcon
 from snippy.version import __version__
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database

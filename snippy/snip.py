@@ -29,7 +29,7 @@ class Snippy(object):
         """Run Snippy."""
 
         if Config.is_server():
-            self.run_api()
+            self.run_server()
         else:
             self.run_cli()
 
@@ -53,7 +53,7 @@ class Snippy(object):
 
         return self.cause.reset()
 
-    def run_api(self):
+    def run_server(self):
         """Run API server."""
 
         from snippy.server.server import Server

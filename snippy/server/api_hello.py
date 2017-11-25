@@ -2,16 +2,18 @@
 
 """api_hello.py - JSON REST API for hello health check."""
 
+import json
+import falcon
 from snippy.version import __version__
 
 
-class HelloApi(object):  # pylint: disable=too-few-public-methods
+class ApiHello(object):  # pylint: disable=too-few-public-methods
     """Hello API."""
 
     @staticmethod
     def on_get(_, response):
         """Handle GET reguest."""
 
-        hello = __version__
-
-        response.media = hello
+        hello = {'snippy': __version__}
+        response.body = json.dumps(hello, ensure_ascii=False)
+        response.status = falcon.HTTP_200

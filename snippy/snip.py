@@ -9,7 +9,6 @@ from snippy.config.arguments import Arguments
 from snippy.storage.storage import Storage
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
-from snippy.server.server import Server
 from snippy.devel.profiler import Profiler
 
 
@@ -24,7 +23,7 @@ class Snippy(object):
         self.storage = Storage()
         self.snippet = Snippet(self.storage)
         self.solution = Solution(self.storage)
-        self.server = Server()
+        self.server = None
 
     def run(self):
         """Run Snippy."""
@@ -57,6 +56,9 @@ class Snippy(object):
     def run_api(self):
         """Run API server."""
 
+        from snippy.server.server import Server
+
+        self.server = Server()
         self.server.run()
 
     def release(self):

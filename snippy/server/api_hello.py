@@ -15,5 +15,5 @@ class ApiHello(object):  # pylint: disable=too-few-public-methods
         """Handle GET reguest."""
 
         hello = {'snippy': __version__}
-        response.body = json.dumps(hello, ensure_ascii=False)
+        response.media = json.dumps(hello, ensure_ascii=False)
         response.status = falcon.HTTP_200

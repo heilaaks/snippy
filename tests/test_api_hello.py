@@ -3,6 +3,7 @@
 """test_api_hello.py: Test hello API."""
 
 import unittest
+import json
 import mock
 import pytest
 from snippy.version import __version__
@@ -26,4 +27,4 @@ class TestApiHello(unittest.TestCase):
 
         response = {'snippy': __version__}
         result = Api.client().simulate_get('/api/hello')
-        assert result.json == response
+        assert result.json == json.dumps(response)

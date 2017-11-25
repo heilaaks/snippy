@@ -3,6 +3,7 @@
 """config.py: Configuration management."""
 
 import re
+import sys
 import copy
 import os.path
 import datetime
@@ -63,6 +64,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['storage']['schema']['path'] = pkg_resources.resource_filename('snippy', 'data/config')
         cls.config['storage']['schema']['file'] = 'database.sql'
         cls.config['storage']['in_memory'] = False
+        cls.config['server'] = Config.source.is_server()
 
         cls.print_config()
 
@@ -487,6 +489,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if storage is defined to be run in memory."""
 
         return cls.config['storage']['in_memory']
+
+    @classmethod
+    def is_server(cls):
+        """Test if service is run as a server."""
+
+        return True if '--server' in sys.argv else False
 
     @staticmethod
     def get_utc_time():

@@ -9,6 +9,7 @@ from snippy.config.arguments import Arguments
 from snippy.storage.storage import Storage
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
+from snippy.server.server import Server
 from snippy.devel.profiler import Profiler
 
 
@@ -23,6 +24,15 @@ class Snippy(object):
         self.storage = Storage()
         self.snippet = Snippet(self.storage)
         self.solution = Solution(self.storage)
+        self.server = Server()
+
+    def run(self):
+        """Run Snippy."""
+
+        if Config.is_server():
+            self.run_api()
+        else:
+            self.run_cli()
 
     def run_cli(self):
         """Run command line session."""
@@ -44,6 +54,11 @@ class Snippy(object):
 
         return self.cause.reset()
 
+    def run_api(self):
+        """Run API server."""
+
+        self.server.run()
+
     def release(self):
         """Release session."""
 
@@ -57,7 +72,7 @@ def main():
 
     Profiler.enable()
     snippy = Snippy()
-    snippy.run_cli()
+    snippy.run()
     snippy.release()
     Profiler.disable()
 

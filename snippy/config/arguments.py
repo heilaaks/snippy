@@ -156,6 +156,11 @@ class Arguments(object):
         support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--no-ansi', dest='no_ansi', action='store_true', default=False, help=argparse.SUPPRESS)
+
+        # server options
+        server = parser.add_argument_group(title='server options')
+        server.add_argument('--server', action='store_true', default=False, help=argparse.SUPPRESS)
+
         Arguments.args = parser.parse_args()
 
     @classmethod
@@ -354,6 +359,14 @@ class Arguments(object):
         cls.logger.info('parsed argument --debug with value %s', cls.args.debug)
 
         return cls.args.debug
+
+    @classmethod
+    def is_server(cls):
+        """Test if the service is run as a server."""
+
+        cls.logger.info('parsed argument --server with value "%s"', cls.args.server)
+
+        return cls.args.server
 
 
 class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

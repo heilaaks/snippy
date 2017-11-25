@@ -5,6 +5,7 @@
 import unittest
 import json
 import mock
+import falcon
 import pytest
 from snippy.version import __version__
 from snippy.storage.database.sqlite3db import Sqlite3Db
@@ -25,6 +26,9 @@ class TestApiHello(unittest.TestCase):
         mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
 
-        response = {'snippy': __version__}
+        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '25'}
+        body = {'snippy': __version__}
         result = Api.client().simulate_get('/api/hello')
-        assert result.json == json.dumps(response)
+        assert result.headers == header
+        assert result.json == json.dumps(body)
+        assert result.status == falcon.HTTP_OK

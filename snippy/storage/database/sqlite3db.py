@@ -107,16 +107,16 @@ class Sqlite3Db(object):
         if not inserted and cause:
             Cause.set_text(cause)
 
-    def select_content(self, category, keywords=None, digest=None, data=None):
+    def select_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Select content."""
 
         rows = ()
         if self.connection:
             # The regex based queries contain the same amount of regex queries than there are
             # keywords. The reason is that each keyword (one keyword) must be searched from all
-            # the colums where the search is made. The query argumes are generated so that each
+            # colums where the search is made. The query arguments are generated so that each
             # query is made with the same keyword for all the colums thus also the query arguments
-            # can be counted by multiplying the query keywords (e.g 3)and the searched colums.
+            # can be countend by multiplying the query keywords (e.g 3) and the searched colums.
             #
             # Example queries:
             # 1) SELECT * FROM contents WHERE (data REGEXP ? or brief REGEXP ? or groups REGEXP ?
@@ -128,15 +128,15 @@ class Sqlite3Db(object):
             #    ORDER BY id ASC
             query = ()
             qargs = []
-            if keywords and Config.is_search_all():
+            if sall and Config.is_search_all():
                 columns = ['data', 'brief', 'groups', 'tags', 'links', 'digest']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
-            elif keywords and Config.is_search_grp():
-                columns = ['groups']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
-            elif keywords and Config.is_search_tag():
+                query, qargs = Sqlite3Db._make_regexp_query(sall, columns, sgrp, category)
+            elif stag and Config.is_search_tag():
                 columns = ['tags']
-                query, qargs = Sqlite3Db._make_regexp_query(keywords, columns, category)
+                query, qargs = Sqlite3Db._make_regexp_query(stag, columns, sgrp, category)
+            elif sgrp and Config.is_search_grp():
+                columns = ['groups']
+                query, qargs = Sqlite3Db._make_regexp_query(sgrp, columns, sgrp, category)
             elif Config.is_content_digest():
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
                 qargs = [digest+'%']
@@ -300,25 +300,38 @@ class Sqlite3Db(object):
         return re.search(expr, item, re.IGNORECASE) is not None
 
     @staticmethod
-    def _make_regexp_query(keywords, columns, category):
+    def _make_regexp_query(keywords, columns, groups, category):
         """Generate SQL query parameters for specific fields and keywords."""
 
         query_args = []
         query = ('SELECT * FROM contents WHERE ')
 
         # Generate regexp search like:
-        #   1. '(data REGEXP ? or brief REGEXP ? or groups REGEXP ? or tags REGEXP ? or links REGEXP ?) AND (category=?) '
-        #   2. '(tags REGEXP ?) AND (category=?) '
+        #   1. '(data REGEXP ? OR brief REGEXP ? OR groups REGEXP ? OR tags REGEXP ? OR links REGEXP ?) AND (category=?) '
+        #   2. '(data REGEXP ? OR brief REGEXP ? OR groups REGEXP ? OR tags REGEXP ? OR links REGEXP ?) AND
+        #       (groups=? OR groups=?) AND (category=?) '
+        #   3. '(tags REGEXP ?) AND (category=?) '
         search = '('
         for column in columns:
             search = search + column + ' REGEXP ? OR '
         search = search[:-4]  # Remove last ' OR ' added by the loop.
-        search = search + ') AND (category=?) '
+        search = search + ') '
+
+        # Add optional group search filter.
+        if groups:
+            search = search + 'AND ('
+            for _ in groups:
+                search = search + 'groups=? OR '
+            search = search[:-4]  # Remove last ' OR ' added by the loop.
+            search = search + ') '
+
+        # Add mandatory categery.
+        search = search + 'AND (category=?) '
 
         # Generate token for each searched column like
         for token in keywords:
             query = query + search + 'OR '
-            query_args = query_args + [token] * len(columns) + [category]  # Token for each search colum in the row.
+            query_args = query_args + [token] * len(columns) + list(groups) + [category]  # Tokens for each search keyword.
         query = query[:-3]  # Remove last 'OR ' added by the loop.
         query = query + 'ORDER BY id ASC'
 

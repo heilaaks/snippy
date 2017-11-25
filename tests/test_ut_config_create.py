@@ -29,7 +29,9 @@ class TestUtConfigCreate(unittest.TestCase):
         assert isinstance(obj.get_content_links(), tuple)
         assert isinstance(obj.get_content_digest(), str)
         assert isinstance(obj.get_filename(), str)
-        assert isinstance(obj.get_search_keywords(), tuple)
+        assert isinstance(obj.get_search_all(), tuple)
+        assert isinstance(obj.get_search_tag(), tuple)
+        assert isinstance(obj.get_search_grp(), tuple)
         assert isinstance(obj.get_search_filter(), str)
         assert isinstance(obj.get_operation_file(), str)
         assert obj.get_content(Content()).get() == snippet
@@ -48,7 +50,9 @@ class TestUtConfigCreate(unittest.TestCase):
         assert obj.get_content_group() == Const.DEFAULT_GROUP
         assert not obj.get_content_tags()
         assert not obj.get_content_links()
-        assert not obj.get_search_keywords()
+        assert not obj.get_search_all()
+        assert not obj.get_search_tag()
+        assert not obj.get_search_grp()
         assert not obj.get_content_digest()
         assert not obj.get_search_filter()
         assert not obj.get_filename()

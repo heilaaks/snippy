@@ -19,8 +19,8 @@ class TestUtConfigSearch(unittest.TestCase):
         search_kw = ('docker',)
         sys.argv = ['snippy', 'search', '--sall', 'docker']
         obj = Config(Arguments())
-        assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
+        assert isinstance(obj.get_search_all(), tuple)
+        self.assertTupleEqual(obj.get_search_all(), search_kw)
 
     def test_search_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that search keywords can be added inside quotes separated by
@@ -29,8 +29,8 @@ class TestUtConfigSearch(unittest.TestCase):
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
         obj = Config(Arguments())
-        assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
+        assert isinstance(obj.get_search_all(), tuple)
+        self.assertTupleEqual(obj.get_search_all(), search_kw)
 
     def test_search_with_quotes_and_separated_by_comma_and_space(self):
         """Test that search keywords can be added inside quotes separated by
@@ -39,8 +39,8 @@ class TestUtConfigSearch(unittest.TestCase):
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
         obj = Config(Arguments())
-        assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
+        assert isinstance(obj.get_search_all(), tuple)
+        self.assertTupleEqual(obj.get_search_all(), search_kw)
 
     def test_search_with_quotes_and_separated_by_only_space(self):
         """Test that search keywords can be added so that they are separated
@@ -49,8 +49,8 @@ class TestUtConfigSearch(unittest.TestCase):
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
         obj = Config(Arguments())
-        assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
+        assert isinstance(obj.get_search_all(), tuple)
+        self.assertTupleEqual(obj.get_search_all(), search_kw)
 
     def test_search_separated_by_space(self):
         """Test that search keywords can be added so that they are separated
@@ -60,8 +60,8 @@ class TestUtConfigSearch(unittest.TestCase):
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
         obj = Config(Arguments())
-        assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
+        assert isinstance(obj.get_search_all(), tuple)
+        self.assertTupleEqual(obj.get_search_all(), search_kw)
 
     def test_search_separated_by_space_and_comma(self):
         """Test that search keywords can be added so that they are separated
@@ -70,8 +70,8 @@ class TestUtConfigSearch(unittest.TestCase):
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
         obj = Config(Arguments())
-        assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
+        assert isinstance(obj.get_search_all(), tuple)
+        self.assertTupleEqual(obj.get_search_all(), search_kw)
 
     def test_search_with_special_characters(self):
         """Test that search keywords are accepted if they contain special
@@ -80,9 +80,9 @@ class TestUtConfigSearch(unittest.TestCase):
         search_kw = ('cleanup_testing', 'container-managemenet', 'dockertesting')
         sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Config(Arguments())
-        assert isinstance(obj.get_search_keywords(), tuple)
-        self.assertTupleEqual(obj.get_search_keywords(), search_kw)
-        assert len(obj.get_search_keywords()) == 3
+        assert isinstance(obj.get_search_all(), tuple)
+        self.assertTupleEqual(obj.get_search_all(), search_kw)
+        assert len(obj.get_search_all()) == 3
 
     # pylint: disable=duplicate-code
     @classmethod

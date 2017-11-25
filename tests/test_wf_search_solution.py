@@ -215,6 +215,80 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_search_solution_with_sall_sgrp(self, mock_isfile, mock_get_db_location):
+        """Search solution from all field sand limit the search within specific group."""
+
+        mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Search solutions from all fields and limit the search to specific group.
+        ##        The match must not be made from other than defined group. In this case
+        ##        the list all must print the content of defined group.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Debugging Elastic Beats @beats [a96accc25dd23ac0]',
+                      '',
+                      '   # Elastic,beats,debug,filebeat,howto',
+                      '   > https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',
+                      '',
+                      '   : ################################################################################',
+                      '   : ## BRIEF : Debugging Elastic Beats',
+                      '   : ##',
+                      '   : ## DATE  : 2017-10-20 11:11:19',
+                      '   : ## GROUP : beats',
+                      '   : ## TAGS  : Elastic,beats,filebeat,debug,howto',
+                      '   : ## FILE  : howto-debug-elastic-beats.txt',
+                      '   : ################################################################################',
+                      '   : ',
+                      '   : ',
+                      '   : ################################################################################',
+                      '   : ## description',
+                      '   : ################################################################################',
+                      '   : ',
+                      '   :     # Debug Elastic Beats',
+                      '   : ',
+                      '   : ################################################################################',
+                      '   : ## references',
+                      '   : ################################################################################',
+                      '   : ',
+                      '   :     # Enable logs from Filebeat',
+                      '   :     > https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',
+                      '   : ',
+                      '   : ################################################################################',
+                      '   : ## commands',
+                      '   : ################################################################################',
+                      '   : ',
+                      '   :     # Run Filebeat with full log level',
+                      '   :     $ ./filebeat -e -c config/filebeat.yml -d "*"',
+                      '   : ',
+                      '   : ################################################################################',
+                      '   : ## solutions',
+                      '   : ################################################################################',
+                      '   : ',
+                      '   : ################################################################################',
+                      '   : ## configurations',
+                      '   : ################################################################################',
+                      '   : ',
+                      '   : ################################################################################',
+                      '   : ## whiteboard',
+                      '   : ################################################################################',
+                      '   :',
+                      '',
+                      'OK')
+            snippy = Solution.add_defaults(Snippy())
+            sys.argv = ['snippy', 'search', '--solution', '--sall', '.', '--sgrp', 'beats', '--no-ansi']  ## workflow
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            cause = snippy.run_cli()
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert cause == Cause.ALL_OK
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     # pylint: disable=duplicate-code
     def tearDown(self):
         """Teardown each test."""

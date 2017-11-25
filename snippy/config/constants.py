@@ -62,9 +62,3 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     FILE_TYPE_YAML = 'yaml'
     FILE_TYPE_JSON = 'json'
     FILE_TYPE_TEXT = 'text'
-
-    # Search types
-    NO_SEARCH = 'none'
-    SEARCH_ALL = 'all'
-    SEARCH_TAG = 'tag'
-    SEARCH_GRP = 'grp'

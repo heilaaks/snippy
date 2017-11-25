@@ -34,7 +34,9 @@ class Solution(object):
 
         self.logger.info('searching solutions')
         solutions = self.storage.search(Const.SOLUTION,
-                                        keywords=Config.get_search_keywords(),
+                                        sall=Config.get_search_all(),
+                                        stag=Config.get_search_tag(),
+                                        sgrp=Config.get_search_grp(),
                                         digest=Config.get_content_digest(),
                                         data=Config.get_content_data())
         Migrate.print_terminal(solutions)
@@ -43,7 +45,9 @@ class Solution(object):
         """Update existing solution."""
 
         solutions = self.storage.search(Const.SOLUTION,
-                                        keywords=Config.get_search_keywords(),
+                                        sall=Config.get_search_all(),
+                                        stag=Config.get_search_tag(),
+                                        sgrp=Config.get_search_grp(),
                                         digest=Config.get_content_digest(),
                                         data=Config.get_content_data())
         if len(solutions) == 1:
@@ -58,7 +62,9 @@ class Solution(object):
         """Delete solutions."""
 
         solutions = self.storage.search(Const.SOLUTION,
-                                        keywords=Config.get_search_keywords(),
+                                        sall=Config.get_search_all(),
+                                        stag=Config.get_search_tag(),
+                                        sgrp=Config.get_search_grp(),
                                         digest=Config.get_content_digest(),
                                         data=Config.get_content_data())
         if len(solutions) == 1:
@@ -78,7 +84,9 @@ class Solution(object):
         elif Config.is_search_criteria():
             self.logger.debug('exporting solutions based on search criteria')
             solutions = self.storage.search(Const.SOLUTION,
-                                            keywords=Config.get_search_keywords(),
+                                            sall=Config.get_search_all(),
+                                            stag=Config.get_search_tag(),
+                                            sgrp=Config.get_search_grp(),
                                             digest=Config.get_content_digest(),
                                             data=Config.get_content_data())
             if len(solutions) == 1:

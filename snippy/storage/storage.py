@@ -28,10 +28,10 @@ class Storage(object):
         digest = content.compute_digest()
         self.database.insert_content(content, digest, utc)
 
-    def search(self, category, keywords=None, digest=None, data=None):
+    def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content."""
 
-        rows = self.database.select_content(category, keywords, digest, data)
+        rows = self.database.select_content(category, sall, stag, sgrp, digest, data)
         contents = Storage._get_contents(rows)
 
         return contents

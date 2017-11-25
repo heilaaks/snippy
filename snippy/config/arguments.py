@@ -137,7 +137,7 @@ class Arguments(object):
         search_meg = search.add_mutually_exclusive_group()
         search_meg.add_argument('--sall', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search_meg.add_argument('--stag', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        search_meg.add_argument('--sgrp', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        search.add_argument('--sgrp', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--filter', type=str, dest='regexp', default='', help=argparse.SUPPRESS)
 
         # migration options

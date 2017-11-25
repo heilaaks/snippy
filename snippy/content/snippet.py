@@ -32,7 +32,9 @@ class Snippet(object):
 
         self.logger.info('searching snippets')
         snippets = self.storage.search(Const.SNIPPET,
-                                       keywords=Config.get_search_keywords(),
+                                       sall=Config.get_search_all(),
+                                       stag=Config.get_search_tag(),
+                                       sgrp=Config.get_search_grp(),
                                        digest=Config.get_content_digest(),
                                        data=Config.get_content_data())
         Migrate.print_terminal(snippets)
@@ -41,7 +43,9 @@ class Snippet(object):
         """Update snippet."""
 
         snippets = self.storage.search(Const.SNIPPET,
-                                       keywords=Config.get_search_keywords(),
+                                       sall=Config.get_search_all(),
+                                       stag=Config.get_search_tag(),
+                                       sgrp=Config.get_search_grp(),
                                        digest=Config.get_content_digest(),
                                        data=Config.get_content_data())
         if len(snippets) == 1:
@@ -56,7 +60,9 @@ class Snippet(object):
         """Delete snippet."""
 
         snippets = self.storage.search(Const.SNIPPET,
-                                       keywords=Config.get_search_keywords(),
+                                       sall=Config.get_search_all(),
+                                       stag=Config.get_search_tag(),
+                                       sgrp=Config.get_search_grp(),
                                        digest=Config.get_content_digest(),
                                        data=Config.get_content_data())
         if len(snippets) == 1:
@@ -76,7 +82,9 @@ class Snippet(object):
         elif Config.is_search_criteria():
             self.logger.debug('exporting snippets based on search criteria')
             snippets = self.storage.search(Const.SNIPPET,
-                                           keywords=Config.get_search_keywords(),
+                                           sall=Config.get_search_all(),
+                                           stag=Config.get_search_tag(),
+                                           sgrp=Config.get_search_grp(),
                                            digest=Config.get_content_digest(),
                                            data=Config.get_content_data())
             if len(snippets) == 1:

@@ -1,7 +1,6 @@
 ## TODO
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
-   - [ ] Add possibility to limit sall to group. For example --sall exec --sgrp docker.
    - [ ] Add of experimental REST API to try it out.
    - [ ] Update documents.
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
@@ -26,6 +25,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added possibility to limit search all and tag fields to defined list of groups.
    - [x] Fixed tool version to always print to stdout.
    - [x] Fixed that all logs printed to stdout.
    - [x] Added version list and run alias into database schema.

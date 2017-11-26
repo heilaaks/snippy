@@ -100,7 +100,7 @@ class Editor(object):
         if self.is_snippet:
             match = re.search('%s(.*)%s' % (Editor.DATA_HEAD, Editor.DATA_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
-                data = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
+                data = tuple([s.strip() for s in match.group(1).rstrip().split(Const.NEWLINE)])
         else:
             # Remove unnecessary newlines at the end and make sure there is one at the end.
             data = tuple(self.edited.rstrip().split(Const.NEWLINE) + [Const.EMPTY])
@@ -115,7 +115,7 @@ class Editor(object):
         if self.is_snippet:
             match = re.search('%s(.*)%s' % (Editor.BRIEF_HEAD, Editor.BRIEF_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
-                lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
+                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_SPACE)])
                 brief = Const.DELIMITER_SPACE.join(lines)
         else:
             match = re.search(r'## BRIEF :\s*?(.*|$)', self.edited, re.MULTILINE)
@@ -155,9 +155,8 @@ class Editor(object):
         if self.is_snippet:
             match = re.search('%s(.*)%s' % (Editor.GROUP_HEAD, Editor.GROUP_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
-                lines = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_SPACE)))
+                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_SPACE)])
                 group = Const.DELIMITER_SPACE.join(lines)
-
         else:
             match = re.search(r'## GROUP :\s*?(\S+|$)', self.edited, re.MULTILINE)
             if match:
@@ -177,7 +176,7 @@ class Editor(object):
         else:
             match = re.search(r'## TAGS  :\s*?(.*|$)', self.edited, re.MULTILINE)
             if match:
-                tags = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.DELIMITER_TAGS)))
+                tags = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_TAGS)])
         self.logger.debug('parsed content tags from editor "%s"', tags)
 
         return tags
@@ -190,7 +189,7 @@ class Editor(object):
         if self.is_snippet:
             match = re.search('%s(.*)%s' % (Editor.LINKS_HEAD, Editor.LINKS_TAIL), self.edited, re.DOTALL)
             if match and not match.group(1).isspace():
-                links = tuple(map(lambda s: s.strip(), match.group(1).rstrip().split(Const.NEWLINE)))
+                links = tuple([s.strip() for s in match.group(1).rstrip().split(Const.NEWLINE)])
         else:
             links = tuple(re.findall('> (http.*)', self.edited))
         self.logger.debug('parsed content links from editor "%s"', links)

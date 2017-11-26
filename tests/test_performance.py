@@ -2,6 +2,7 @@
 
 """test_performance.py: Verify that there are no major impacts to performance."""
 
+from __future__ import print_function
 import sys
 import time
 import unittest

@@ -2,6 +2,7 @@
 
 """sqlite3db_helper.py: Helper methods for Sqlite3 database testing."""
 
+from __future__ import print_function
 import sqlite3
 import os.path
 from contextlib import closing

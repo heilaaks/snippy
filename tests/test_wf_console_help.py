@@ -2,6 +2,7 @@
 
 """test_wf_console_help.py: Test workflows for getting help from console."""
 
+from __future__ import print_function
 import re
 import sys
 import unittest

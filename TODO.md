@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Add limiting fields that are returned from API and possibility to sort. //http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
    - [ ] Add of experimental REST API to try it out.

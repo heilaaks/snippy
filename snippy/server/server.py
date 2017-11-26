@@ -5,6 +5,8 @@
 import falcon
 from snippy.server.api_hello import ApiHello
 from snippy.server.api_snippets import ApiSnippets
+from snippy.server.api_snippets import ApiSnippetsDigest
+from snippy.server.api_snippets import ApiSnippetsDigestData
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
 
 
@@ -25,5 +27,6 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route('/', ApiHello())
         self.api.add_route('/api/hello', ApiHello())
         self.api.add_route('/api/snippets', ApiSnippets())
-
+        self.api.add_route('/api/snippets/{digest}', ApiSnippetsDigest())
+        self.api.add_route('/api/snippets/{digest}/data', ApiSnippetsDigestData())
         SnippyServer(self.api, options).run()

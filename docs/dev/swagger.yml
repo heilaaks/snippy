@@ -22,6 +22,8 @@ basePath: "/api"
 paths:
   /snippets:
     post:
+      tags:
+      - "snippet"
       summary: "Add new snippet"
       description: ""
       consumes:
@@ -36,53 +38,107 @@ paths:
         schema:
           $ref: "#/definitions/Content"
       responses:
+        201:
+          description: "Snippet created"
         405:
           description: "Invalid input"
-    put:
+    get:
       tags:
-      - "pet"
-      summary: "Update an existing snippet"
+      - "snippet"
+      summary: "Search snippets"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      - "application/text"
+      - "application/yaml"
+      parameters:
+        - name: sall
+          type: array
+          items:
+            type: string
+          in: query
+          required: false
+          description: Search keywords from all fields.
+        - name: stag
+          type: array
+          items:
+            type: string
+          in: query
+          required: false
+          description: Search keywords only from tag field.
+        - name: sgrp
+          type: array
+          items:
+            type: string
+          in: query
+          required: false
+          description: Search keywords only from group field.
+        - name: digest
+          type: string
+          in: query
+          required: false
+          description: Search only based on message digest.
+        - name: data
+          type: string
+          in: query
+          required: false
+          description: Search only from content data.
+        - name: filter
+          type: string
+          in: query
+          required: false
+          description: Filter search result with regexp.
+        - name: limit
+          type: integer
+          default: 20
+          in: query
+          required: false
+          description: Limit query results.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Content"
+        400:
+          description: "Search request not correct"
+        404:
+          description: "Solution not found"
+    delete:
+      tags:
+      - "snippet"
+      summary: "Delete existing snippet"
       description: ""
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Content"
+        - name: digest
+          type: string
+          in: query
+          required: false
+          description: Search only based on message digest.
+        - name: data
+          type: string
+          in: query
+          required: false
+          description: Search only from content data.
       responses:
         400:
-          description: "Invalid digest supplied"
+          description: "Invalid search parameters"
         404:
           description: "Snippet not found"
         405:
-          description: "Validation exception"
+          description: "More than one snippet found"
 
-  /solutions:
-    post:
-      summary: "Add new solution"
-      description: ""
-      consumes:
-      - "application/json"
-      produces:
-      - "application/json"
-      parameters:
-      - in: "body"
-        name: "body"
-        description: "New solution object that is stored"
-        required: true
-        schema:
-          $ref: "#/definitions/Content"
-      responses:
-        405:
-          description: "Invalid input"
+  /snippets/{digest}:
     put:
       tags:
-      - "pet"
+      - "snippet"
       summary: "Update an existing snippet"
       description: ""
       consumes:
@@ -90,19 +146,94 @@ paths:
       produces:
       - "application/json"
       parameters:
-      - in: "body"
-        name: "body"
-        description: "Pet object that needs to be added to the store"
-        required: true
-        schema:
-          $ref: "#/definitions/Content"
+        - name: digest
+          in: path
+          type: string
+          required: true
+          description: Unique snippet identified by message digest.
+        - name: body
+          in: body
+          description: "Existing snippet that is updated"
+          required: true
+          schema:
+            $ref: "#/definitions/Content"
       responses:
+        201:
+          description: "Snippet updated"
         400:
           description: "Invalid digest supplied"
         404:
           description: "Snippet not found"
         405:
           description: "Validation exception"
+    get:
+      tags:
+      - "snippet"
+      summary: "Search snippets"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      - "application/text"
+      - "application/yaml"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              type: string
+        400:
+          description: "Search request not correct"
+        404:
+          description: "Solution not found"
+    delete:
+      tags:
+      - "snippet"
+      summary: "Delete an existing snippet"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      responses:
+        201:
+          description: "Snippet deleted"
+        404:
+          description: "Snippet not found"
+        405:
+          description: "More than one snippet found"
+
+  /snippets/{digest}/data:
+    get:
+      tags:
+      - "snippet"
+      summary: "Search snippets"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      - "application/text"
+      - "application/yaml"
+      parameters:
+        - name: digest
+          in: path
+          type: string
+          required: true
+          description: Unique snippet identified by message digest.
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Content"
+        400:
+          description: "Search request not correct"
+        404:
+          description: "Solution not found"
 
 ################################################################################
 #                                 Definitions                                  #
@@ -121,13 +252,18 @@ definitions:
         type: string
         description: A single group where the snippet belongs.
       tags:
-        type: string
+        type: array
+        items:
+          type: string
         description: Comma separated list of tags.
       links:
-        type: string
+        type: array
+        items:
+          type: string
         description: Comma separated list of links for reference.
       category:
         type: string
+        enum: [snippet, solution]
         description: Category of the content that is automatically assigned as 'snippet'.
       filename:
         type: string
@@ -150,5 +286,31 @@ definitions:
       key:
         type: string
         description: Automatically assigned key for the snippet.
+  Search:
+    type: object
+    properties:
+      sall:
+        type: array
+        items:
+          type: string
+        description: Search keywords from all fields.
+      stag:
+        type: array
+        items:
+          type: string
+        description: Search keywords only from tag field.
+      sgrp:
+        type: array
+        items:
+          type: string
+        description: Search keywords only from group field.
+      digest:
+        type: string
+        description: Search only based on message digest.
+      data:
+        type: string
+        description: Search only from content data.
+      filter:
+        type: string
+        description: Filter search result with regexp.
 
-        

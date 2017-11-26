@@ -7,6 +7,9 @@ upgrade:
 uninstall:
 	pip uninstall --yes snippy
 
+server:
+	pip install -e .[server]
+
 dev:
 	pip install -e .[dev]
 
@@ -57,4 +60,4 @@ clean:
 clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall dev test coverage docs lint docker security-scan clean clean-db
+.PHONY: install upgrade uninstall server dev test coverage docs lint docker security-scan clean clean-db

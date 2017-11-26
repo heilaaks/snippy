@@ -5,7 +5,6 @@
 import unittest
 import json
 import mock
-import pytest
 import falcon
 from snippy.version import __version__
 from snippy.storage.database.sqlite3db import Sqlite3Db
@@ -16,7 +15,6 @@ from tests.testlib.falcon_helper import FalconHelper as Api
 class TestApiHello(unittest.TestCase):
     """Test hello API."""
 
-    @pytest.mark.skip(reason='Experimental testing with Falcon')
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Sqlite3Db, '_get_db_location')

@@ -56,6 +56,7 @@ class Snippy(object):
     def run_server(self):
         """Run API server."""
 
+        # Requires Snippy installed with server dependencies.
         from snippy.server.server import Server
 
         self.server = Server()

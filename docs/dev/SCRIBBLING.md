@@ -213,7 +213,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ pip install gunicorn
     $ pip install falcon
     $ python runner --server
-    $ curl 127.0.0.1:8080/hello
+    $ curl 127.0.0.1:8080/api/hello
 
 #######################################
 ## Devel

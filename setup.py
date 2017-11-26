@@ -2,6 +2,7 @@ from setuptools import setup, find_packages
 
 tests_require = ('pytest', 'pytest-cov', 'tox', 'codecov', 'mock', 'six', 'flake8')
 docs_require = ('sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme')
+server_require = ('falcon==1.3.0', 'gunicorn')
 exec(open('snippy/version.py').read())
 
 setup(
@@ -39,10 +40,11 @@ setup(
             'snippy = snippy.snip:main'
         ],
     },
-    install_requires=['pyyaml', 'falcon'],
+    install_requires=['pyyaml'],
     extras_require={
-        'dev': tests_require + docs_require,
-        'test': tests_require,
+        'dev': tests_require + docs_require + server_require,
+        'server': server_require,
+        'test': tests_require + server_require,
     },
     tests_require=tests_require,
     test_suite='tests'

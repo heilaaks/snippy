@@ -1,0 +1,154 @@
+swagger: "2.0"
+
+################################################################################
+#                              API Information                                 #
+################################################################################
+info:
+  description: "Snippy REST API"
+  version: "1.0.0"
+  title: "Snippy REST API"
+  termsOfService: "https://github.com/heilaaks/snippy"
+  contact:
+    email: "laaksonen.heikki.j@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "https://github.com/heilaaks/snippy/blob/master/LICENSE"
+host: "snippettips.com"
+basePath: "/api"
+
+################################################################################
+#                                           Paths                              #
+################################################################################
+paths:
+  /snippets:
+    post:
+      summary: "Add new snippet"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New snippet that is stored"
+        required: true
+        schema:
+          $ref: "#/definitions/Content"
+      responses:
+        405:
+          description: "Invalid input"
+    put:
+      tags:
+      - "pet"
+      summary: "Update an existing snippet"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Content"
+      responses:
+        400:
+          description: "Invalid digest supplied"
+        404:
+          description: "Snippet not found"
+        405:
+          description: "Validation exception"
+
+  /solutions:
+    post:
+      summary: "Add new solution"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "New solution object that is stored"
+        required: true
+        schema:
+          $ref: "#/definitions/Content"
+      responses:
+        405:
+          description: "Invalid input"
+    put:
+      tags:
+      - "pet"
+      summary: "Update an existing snippet"
+      description: ""
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Pet object that needs to be added to the store"
+        required: true
+        schema:
+          $ref: "#/definitions/Content"
+      responses:
+        400:
+          description: "Invalid digest supplied"
+        404:
+          description: "Snippet not found"
+        405:
+          description: "Validation exception"
+
+################################################################################
+#                                 Definitions                                  #
+################################################################################
+definitions:
+  Content:
+    type: object
+    properties:
+      data:
+        type: string
+        description: The content data for the snippet.
+      brief:
+        type: string
+        description: A brief description of the snippet.
+      group:
+        type: string
+        description: A single group where the snippet belongs.
+      tags:
+        type: string
+        description: Comma separated list of tags.
+      links:
+        type: string
+        description: Comma separated list of links for reference.
+      category:
+        type: string
+        description: Category of the content that is automatically assigned as 'snippet'.
+      filename:
+        type: string
+        description: Optional filename that is automatically used if the snippet is exported.
+      runalias:
+        type: string
+        description: Optional alias to run the snippet.
+      versions:
+        type: string
+        description: Optional list of services and versions related to the snippet.
+      utc:
+        type: string
+        description: Optional UTC timestamp that is automatically assigned if left out.
+      digest:
+        type: string
+        description: Automatically assigned message digest that uniquely identifies the snippet.
+      metadata:
+        type: string
+        description: Automatically assigned internal metadata.
+      key:
+        type: string
+        description: Automatically assigned key for the snippet.
+
+        

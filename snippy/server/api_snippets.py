@@ -2,6 +2,7 @@
 
 """api_snippets.py - JSON REST API for Snippets."""
 
+from __future__ import print_function
 from snippy.version import __version__
 from snippy.logger.logger import Logger
 from snippy.config.source.api import Api

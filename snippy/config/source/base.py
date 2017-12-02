@@ -10,6 +10,14 @@ from snippy.config.constants import Constants as Const
 class ConfigSourceBase(object):
     """Base class for configuration sources."""
 
+    CREATE = 'create'
+    SEARCH = 'search'
+    UPDATE = 'update'
+    DELETE = 'delete'
+    EXPORT = 'export'
+    IMPORT = 'import'
+    OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
+
     def __init__(self):
         self.logger = Logger(__name__).get()
         self.represents = Const.EMPTY
@@ -41,9 +49,24 @@ class ConfigSourceBase(object):
         self._set_self()
         self._set_repr()
 
-    def __repr__(self):
+    def _set_conf(self, parameters):
+        """Set API configuration parameters."""
 
-        return self.represents
+        self.parameters.update(parameters)
+
+        # These are special cases where the code logic needs to know
+        # if some parameter was provided at all.
+        if 'data' not in parameters:
+            self.parameters.pop('data')
+        if 'digest' not in parameters:
+            self.parameters.pop('digest')
+        if 'sall' not in parameters:
+            self.parameters.pop('sall')
+        if 'stag' not in parameters:
+            self.parameters.pop('stag')
+        if 'sgrp' not in parameters:
+            self.parameters.pop('sgrp')
+        self._set_repr()
 
     def _set_self(self):
         """Set instance variables."""
@@ -60,12 +83,6 @@ class ConfigSourceBase(object):
             namespace.append('%s=%r' % (parameter, self.parameters[parameter]))
 
         self.represents = '%s(%s)' % (class_name, ', '.join(namespace))
-
-    def delete_parameter(self, parameter):
-        """Delete parameter."""
-
-        self.parameters.pop(parameter)
-        self._set_repr()
 
     def get_operation(self):
         """Return the requested operation for the content."""

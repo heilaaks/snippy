@@ -7,14 +7,11 @@ import sys
 import argparse
 from snippy.version import __version__
 from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
+from snippy.config.source.base import ConfigSourceBase
 
 
-class Cli(object):
+class Cli(ConfigSourceBase):
     """Command line argument management."""
-
-    args = {}
-    logger = {}
 
     ARGS_COPYRIGHT = ('Snippy version ' + __version__ + ' - license Apache 2.0',
                       'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
@@ -102,7 +99,14 @@ class Cli(object):
                      '') + ARGS_COPYRIGHT
 
     def __init__(self):
-        Cli.logger = Logger(__name__).get()
+        super(Cli, self).__init__()
+        parameters = Cli._parse_args()
+        self._set_conf(parameters)
+        self._set_self()
+
+    @staticmethod
+    def _parse_args():
+        """Parse command line arguments."""
 
         parser = argparse.ArgumentParser(prog='snippy',
                                          add_help=False,
@@ -161,212 +165,7 @@ class Cli(object):
         server = parser.add_argument_group(title='server options')
         server.add_argument('--server', action='store_true', default=False, help=argparse.SUPPRESS)
 
-        Cli.args = parser.parse_args()
-
-    @classmethod
-    def get_operation(cls):
-        """Return the requested operation for the content."""
-
-        cls.logger.info('parsed positional argument with value "%s"', cls.args.operation)
-
-        return cls.args.operation
-
-    @classmethod
-    def get_content_category(cls):
-        """Return content category."""
-
-        cls.logger.info('parsed content category with value "%s"', cls.args.cat)
-
-        return cls.args.cat
-
-    @classmethod
-    def is_content_data(cls):
-        """Test if content data option was used."""
-
-        return True if hasattr(cls.args, 'data') else False
-
-    @classmethod
-    def get_content_data(cls):
-        """Return content data."""
-
-        data = None
-        if cls.is_content_data():
-            data = cls.args.data
-            cls.logger.info('parsed argument --content with value %s', cls.args.data)
-        else:
-            cls.logger.info('argument --content was not used')
-
-        return data
-
-    @classmethod
-    def get_content_brief(cls):
-        """Return content brief description."""
-
-        cls.logger.info('parsed argument --brief with value "%s"', cls.args.brief)
-
-        return cls.args.brief
-
-    @classmethod
-    def get_content_group(cls):
-        """Return content group."""
-
-        cls.logger.info('parsed argument --group with value "%s"', cls.args.group)
-
-        return cls.args.group
-
-    @classmethod
-    def get_content_tags(cls):
-        """Return content tags."""
-
-        cls.logger.info('parsed argument --tags with value %s', cls.args.tags)
-
-        return cls.args.tags
-
-    @classmethod
-    def get_content_links(cls):
-        """Return content reference links."""
-
-        cls.logger.info('parsed argument --links with value "%s"', cls.args.links)
-
-        return cls.args.links
-
-    @classmethod
-    def is_content_digest(cls):
-        """Test if content digest option was used."""
-
-        return True if hasattr(cls.args, 'digest') else False
-
-    @classmethod
-    def get_content_digest(cls):
-        """Return digest identifying the content."""
-
-        digest = None
-        if cls.is_content_digest():
-            digest = cls.args.digest
-            cls.logger.info('parsed argument --digest with value %s', cls.args.digest)
-        else:
-            cls.logger.info('argument --digest was not used')
-
-        return digest
-
-    @classmethod
-    def is_search_all(cls):
-        """Test if search all option was used."""
-
-        return True if hasattr(cls.args, 'sall') else False
-
-    @classmethod
-    def get_search_all(cls):
-        """Return keywords to search from all fields."""
-
-        sall = None
-        if cls.is_search_all():
-            sall = cls.args.sall
-            cls.logger.info('parsed argument --sall with value %s', cls.args.sall)
-        else:
-            cls.logger.info('argument --sall was not used')
-
-        return sall
-
-    @classmethod
-    def is_search_tag(cls):
-        """Test if search tag option was used."""
-
-        return True if hasattr(cls.args, 'stag') else False
-
-    @classmethod
-    def get_search_tag(cls):
-        """Return keywords to search only from tags."""
-
-        stag = None
-        if cls.is_search_tag():
-            stag = cls.args.stag
-            cls.logger.info('parsed argument --stag with value %s', cls.args.stag)
-        else:
-            cls.logger.info('argument --stag was not used')
-
-        return stag
-
-    @classmethod
-    def is_search_grp(cls):
-        """Test if search grp option was used."""
-
-        return True if hasattr(cls.args, 'sgrp') else False
-
-    @classmethod
-    def get_search_grp(cls):
-        """Return keywords to search only from groups."""
-
-        sgrp = None
-        if cls.is_search_grp():
-            sgrp = cls.args.sgrp
-            cls.logger.info('parsed argument --sgrp with value %s', cls.args.sgrp)
-        else:
-            cls.logger.info('argument --sgrp was not used')
-
-        return sgrp
-
-    @classmethod
-    def get_search_filter(cls):
-        """Return regexp filter for search output."""
-
-        cls.logger.info('parsed argument --filter with value %s', cls.args.regexp)
-
-        return cls.args.regexp
-
-    @classmethod
-    def is_editor(cls):
-        """Test usage of editor for the operation."""
-
-        return cls.args.editor
-
-    @classmethod
-    def get_operation_file(cls):
-        """Return file for operation."""
-
-        cls.logger.info('parsed argument --file with value "%s"', cls.args.filename)
-
-        return cls.args.filename
-
-    @classmethod
-    def is_no_ansi(cls):
-        """Return usage of ANSI characters like color codes in terminal output."""
-
-        cls.logger.info('parsed argument --no-ansi with value "%s"', cls.args.no_ansi)
-
-        return cls.args.no_ansi
-
-    @classmethod
-    def is_defaults(cls):
-        """Return the usage of defaults in migration operation."""
-
-        cls.logger.info('parsed argument --defaults with value %s', cls.args.defaults)
-
-        return cls.args.defaults
-
-    @classmethod
-    def is_template(cls):
-        """Return the usage of template in migration operation."""
-
-        cls.logger.info('parsed argument --template with value %s', cls.args.template)
-
-        return cls.args.template
-
-    @classmethod
-    def is_debug(cls):
-        """Return the usage of debug option."""
-
-        cls.logger.info('parsed argument --debug with value %s', cls.args.debug)
-
-        return cls.args.debug
-
-    @classmethod
-    def is_server(cls):
-        """Test if the service is run as a server."""
-
-        cls.logger.info('parsed argument --server with value "%s"', cls.args.server)
-
-        return cls.args.server
+        return vars(parser.parse_args())
 
 
 class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

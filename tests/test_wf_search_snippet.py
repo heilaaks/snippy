@@ -275,8 +275,8 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: List all snippets by leaving search criteria of search all oout completely.
-        ##        This is translated to 'match any'.
+        ## Brief: List all snippets by leaving search criteria for 'search all fields' out
+        ##        completely. This is translated to 'match any'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
                       '   $ docker rm --volumes $(docker ps --all --quiet)',
@@ -417,6 +417,36 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+        ## Brief: List all snippets by leaving search criteria for 'search tags' out
+        ##        completely. This is translated to 'match any'.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'search', '--stag', '--no-ansi']  ## workflow
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            cause = snippy.run_cli()
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert cause == Cause.ALL_OK
+            assert result == Const.NEWLINE.join(output)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     def test_search_snippet_with_sgrp(self, mock_isfile, mock_get_db_location):
@@ -449,7 +479,6 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-
         ## Brief: Search snippets from group field. No matches are made.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('NOK: cannot find content with given search criteria')
@@ -463,6 +492,37 @@ class TestWfSearchSnippet(unittest.TestCase):
             sys.stdout = real_stdout
             assert cause == 'NOK: cannot find content with given search criteria'
             assert result == output
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: List all snippets by leaving search criteria for 'search groups' out
+        ##        completely. This is translated to 'match any'.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            #output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            #          '   $ docker rm --volumes $(docker ps --all --quiet)',
+            #          '',
+            #          '   # cleanup,container,docker,docker-ce,moby',
+            #          '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            #          '',
+            #          '2. Remove docker image with force @docker [53908d68425c61dc]',
+            #          '   $ docker rm --force redis',
+            #          '',
+            #          '   # cleanup,container,docker,docker-ce,moby',
+            #          '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            #          '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+            #          '',
+            #          'OK')
+            output = ('NOK: cannot find content with given search criteria',)
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'search', '--sgrp', '', '--no-ansi']  ## workflow
+            real_stdout = sys.stdout
+            sys.stdout = StringIO()
+            cause = snippy.run_cli()
+            result = sys.stdout.getvalue().strip()
+            sys.stdout = real_stdout
+            assert cause == 'NOK: cannot find content with given search criteria'
+            assert result == Const.NEWLINE.join(output)
             snippy.release()
             snippy = None
             Database.delete_storage()

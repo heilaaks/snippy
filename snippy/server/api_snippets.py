@@ -5,15 +5,15 @@
 from snippy.version import __version__
 from snippy.logger.logger import Logger
 from snippy.config.source.api import Api
+from snippy.config.config import Config
 from snippy.content.snippet import Snippet
 
 
 class ApiSnippets(object):  # pylint: disable=too-few-public-methods
     """Snippets API."""
 
-    def __init__(self, config, storage):
+    def __init__(self, storage):
         self.logger = Logger(__name__).get()
-        self.config = config
         self.storage = storage
 
     def on_get(self, request, response):
@@ -28,7 +28,7 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
         print("accept bool %s" % request.client_accepts_json)
 
         api = Api(request.params, Api.SEARCH)
-        self.config.read_source(api)
+        Config.read_source(api)
         snippet = Snippet(self.storage)
         snippet.run()
 

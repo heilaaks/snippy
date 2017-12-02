@@ -38,7 +38,7 @@ class Snippy(object):
         """Run command line session."""
 
         self.logger.info('running command line interface')
-        self.config.read_source(Cli())
+        Config.read_source(Cli())
         if Config.is_category_snippet():
             self.snippet.run()
         elif Config.is_category_solution():
@@ -59,7 +59,7 @@ class Snippy(object):
         # Requires Snippy installed with server dependencies.
         from snippy.server.server import Server
 
-        self.server = Server(self.config, self.storage)
+        self.server = Server(self.storage)
         self.server.run()
 
     def release(self):

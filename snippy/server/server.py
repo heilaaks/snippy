@@ -13,9 +13,8 @@ from snippy.server.gunicorn_server import GunicornServer as SnippyServer
 class Server(object):  # pylint: disable=too-few-public-methods
     """REST API Server."""
 
-    def __init__(self, config, storage):
+    def __init__(self, storage):
         self.api = None
-        self.config = config
         self.storage = storage
 
     def run(self):
@@ -28,7 +27,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api = falcon.API()
         self.api.add_route('/', ApiHello())
         self.api.add_route('/api/hello', ApiHello())
-        self.api.add_route('/api/snippets', ApiSnippets(self.config, self.storage))
+        self.api.add_route('/api/snippets', ApiSnippets(self.storage))
         self.api.add_route('/api/snippets/{digest}', ApiSnippetsDigest())
         self.api.add_route('/api/snippets/{digest}/data', ApiSnippetsDigestData())
         SnippyServer(self.api, options).run()

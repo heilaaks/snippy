@@ -59,7 +59,7 @@ class Snippy(object):
         # Requires Snippy installed with server dependencies.
         from snippy.server.server import Server
 
-        self.server = Server(self.storage)
+        self.server = Server(self.config, self.storage)
         self.server.run()
 
     def release(self):

@@ -13,8 +13,10 @@ from snippy.server.gunicorn_server import GunicornServer as SnippyServer
 class Server(object):  # pylint: disable=too-few-public-methods
     """REST API Server."""
 
-    def __init__(self):
+    def __init__(self, storage):
         self.api = None
+        self.config = None
+        self.storage = storage
 
     def run(self):
         """Run Snippy API server."""

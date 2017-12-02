@@ -4,8 +4,8 @@
 
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
-from snippy.config.config import Config
 from snippy.config.source.cli import Cli
+from snippy.config.config import Config
 from snippy.storage.storage import Storage
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
@@ -19,11 +19,12 @@ class Snippy(object):
         Logger.set_level()
         self.logger = Logger(__name__).get()
         self.cause = Cause()
-        self.config = None
+        self.config = Config()
         self.storage = Storage()
         self.snippet = Snippet(self.storage)
         self.solution = Solution(self.storage)
         self.server = None
+        self.storage.init()
 
     def run(self):
         """Run Snippy."""
@@ -37,8 +38,7 @@ class Snippy(object):
         """Run command line session."""
 
         self.logger.info('running command line interface')
-        self.config = Config(Cli())
-        self.storage.init()
+        self.config.read_source(Cli())
         if Config.is_category_snippet():
             self.snippet.run()
         elif Config.is_category_solution():
@@ -59,7 +59,7 @@ class Snippy(object):
         # Requires Snippy installed with server dependencies.
         from snippy.server.server import Server
 
-        self.server = Server()
+        self.server = Server(self.storage)
         self.server.run()
 
     def release(self):

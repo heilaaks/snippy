@@ -18,7 +18,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('docker',)
         sys.argv = ['snippy', 'search', '--sall', 'docker']
-        obj = Config(Cli())
+        obj = Config()
+        obj.read_source(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -28,7 +29,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
-        obj = Config(Cli())
+        obj = Config()
+        obj.read_source(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -38,7 +40,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
-        obj = Config(Cli())
+        obj = Config()
+        obj.read_source(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -48,7 +51,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
-        obj = Config(Cli())
+        obj = Config()
+        obj.read_source(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -59,7 +63,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
-        obj = Config(Cli())
+        obj = Config()
+        obj.read_source(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -69,7 +74,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
-        obj = Config(Cli())
+        obj = Config()
+        obj.read_source(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -79,7 +85,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup_testing', 'container-managemenet', 'dockertesting')
         sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
-        obj = Config(Cli())
+        obj = Config()
+        obj.read_source(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
         assert len(obj.get_search_all()) == 3

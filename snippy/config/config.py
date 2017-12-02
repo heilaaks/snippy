@@ -21,15 +21,30 @@ class Config(object):  # pylint: disable=too-many-public-methods
     logger = None
     config = {}
 
-    def __init__(self, source=None):
+    def __init__(self):
         Config.logger = Logger(__name__).get()
-        Config.source = source
-        Config._set_config()
+        Config.source = None
+        Config._set_init_config()
 
     @classmethod
-    def _set_config(cls):
+    def _set_init_config(cls):
+        """Set initial configuration."""
+
         Config.logger.info('initiating configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
+        cls.config['storage'] = {}
+        cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
+        cls.config['storage']['file'] = 'snippy.db'
+        cls.config['storage']['schema'] = {}
+        cls.config['storage']['schema']['path'] = pkg_resources.resource_filename('snippy', 'data/config')
+        cls.config['storage']['schema']['file'] = 'database.sql'
+        cls.config['storage']['in_memory'] = False
+
+    @classmethod
+    def read_source(cls, source):
+        """Read configuration source."""
+
+        Config.source = source
         cls.config['content'] = {}
         cls.config['content']['category'] = Config.source.get_content_category()
         cls.config['content']['data'] = cls._parse_content_data()
@@ -57,13 +72,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['operation']['task'] = Config.source.get_operation()
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
-        cls.config['storage'] = {}
-        cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
-        cls.config['storage']['file'] = 'snippy.db'
-        cls.config['storage']['schema'] = {}
-        cls.config['storage']['schema']['path'] = pkg_resources.resource_filename('snippy', 'data/config')
-        cls.config['storage']['schema']['file'] = 'database.sql'
-        cls.config['storage']['in_memory'] = False
         cls.config['server'] = Config.source.is_server()
 
         cls.print_config()

@@ -3,12 +3,12 @@
 """api.py: Api parameter management."""
 
 from __future__ import print_function
-from snippy.version import __version__
 from snippy.logger.logger import Logger
 from snippy.config.constants import Constants as Const
+from snippy.config.source.base import ConfigSourceBase
 
 
-class Api(object):  # pylint: disable=too-few-public-methods
+class Api(ConfigSourceBase):
     """Api parameter management."""
 
     args = {}
@@ -24,41 +24,13 @@ class Api(object):  # pylint: disable=too-few-public-methods
 
     def __init__(self, parameters, operation):
         Api.logger = Logger(__name__).get()
-
-        self.represents = Const.EMPTY
-        self.parameters = {'operation': operation,
-                           'cat': Const.SNIPPET,
-                           'editor': False,
-                           'data': Const.EMPTY,
-                           'brief': Const.EMPTY,
-                           'group': Const.DEFAULT_GROUP,
-                           'tags': [],
-                           'links': Const.EMPTY,
-                           'digest': Const.EMPTY,
-                           'sall': [],
-                           'stag': [],
-                           'sgrp': [],
-                           'regexp': Const.EMPTY,
-                           'filename': Const.EMPTY,
-                           'defaults': False,
-                           'template': False,
-                           'help': False,
-                           'version': __version__,
-                           'very_verbose': False,
-                           'quiet': False,
-                           'debug': False,
-                           'profile': False,
-                           'no_ansi': False,
-                           'limit': 20}
+        super(Api, self).__init__()
+        self.parameters['operation'] = operation
+        self.parameters['cat'] = Const.SNIPPET
 
         Api._validate(parameters)
         self._set_conf(parameters)
         self._set_self()
-        self._set_repr()
-
-    def __repr__(self):
-
-        return self.represents
 
     @staticmethod
     def _validate(parameters):
@@ -75,6 +47,7 @@ class Api(object):  # pylint: disable=too-few-public-methods
         """Set API configuration parameters."""
 
         self.parameters.update(parameters)
+        print(self.parameters)
 
         # Remove suppressed parameters if they are not provided. These are special
         # cases inherit from command line usage where the code logic needs to know
@@ -89,6 +62,7 @@ class Api(object):  # pylint: disable=too-few-public-methods
             self.parameters.pop('stag')
         if 'sgrp' not in parameters:
             self.parameters.pop('sgrp')
+        self._set_repr()
 
     def _set_self(self):
         """Set self variables dynamically."""

@@ -149,6 +149,7 @@ class Sqlite3Db(object):
                 return rows
 
             self.logger.debug('running select query "%s"', query)
+            self.logger.debug('running select query with arguments "%s"', qargs)
             try:
                 with closing(self.connection.cursor()) as cursor:
                     cursor.execute(query, qargs)

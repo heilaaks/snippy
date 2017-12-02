@@ -5,18 +5,18 @@
 from __future__ import print_function
 import sys
 from snippy.config.constants import Constants as Const
-from snippy.config.arguments import Arguments
-from tests.testlib.arguments_helper import ArgumentsHelper
+from snippy.config.source.cli import Cli
+from tests.testlib.cli_helper import CliHelper
 
 
-class TestUtArgumentsCreate(object):
+class TestUtCliCreate(object):
     """Testing command line arguments for creating snippets."""
 
     def test_no_arguments(self):
         """Test default values when only mandatory arguments are used."""
 
         sys.argv = ['snippy', 'create']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_operation() == 'create'
         assert obj.get_content_category() == Const.SNIPPET
         assert obj.get_content_data() is None
@@ -39,7 +39,7 @@ class TestUtArgumentsCreate(object):
 
         content = 'docker rm $(docker ps -a -q)'
         sys.argv = ['snippy', 'create', '-c', content]
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == []
@@ -51,7 +51,7 @@ class TestUtArgumentsCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief]
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == brief
         assert obj.get_content_tags() == []
@@ -62,7 +62,7 @@ class TestUtArgumentsCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         tags = ['docker']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
@@ -74,7 +74,7 @@ class TestUtArgumentsCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         tags = ['docker,container,cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
@@ -89,7 +89,7 @@ class TestUtArgumentsCreate(object):
         tags = ['docker, container, cleanup']
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', 'docker, container, cleanup', '-l', links]
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == brief
         assert obj.get_content_group() == group
@@ -103,7 +103,7 @@ class TestUtArgumentsCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         tags = ['docker container cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker container cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
@@ -115,7 +115,7 @@ class TestUtArgumentsCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         tags = ['docker ', 'container ', 'cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
@@ -127,7 +127,7 @@ class TestUtArgumentsCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         tags = ['docker,', 'container,', 'cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
@@ -138,7 +138,7 @@ class TestUtArgumentsCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         tags = ['dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
@@ -151,7 +151,7 @@ class TestUtArgumentsCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         tags = ['docker', 'container', 'cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
@@ -166,7 +166,7 @@ class TestUtArgumentsCreate(object):
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container \
                  https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', links]
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == brief
         assert obj.get_content_tags() == tags
@@ -178,11 +178,11 @@ class TestUtArgumentsCreate(object):
         """Test class setup before any of the tests are run."""
 
         print('setup_class()')
-        ArgumentsHelper().reset()
+        CliHelper().reset()
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
         print('teardown_class()')
-        ArgumentsHelper().reset()
+        CliHelper().reset()

@@ -5,7 +5,7 @@
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from snippy.config.arguments import Arguments
+from snippy.config.source.cli import Cli
 from snippy.storage.storage import Storage
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
@@ -37,7 +37,7 @@ class Snippy(object):
         """Run command line session."""
 
         self.logger.info('running command line interface')
-        self.config = Config(Arguments())
+        self.config = Config(Cli())
         self.storage.init()
         if Config.is_category_snippet():
             self.snippet.run()

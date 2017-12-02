@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""arguments.py: Command line argument management."""
+"""cli.py: Command line argument management."""
 
 from __future__ import print_function
 import sys
@@ -10,7 +10,7 @@ from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 
 
-class Arguments(object):
+class Cli(object):
     """Command line argument management."""
 
     args = {}
@@ -102,12 +102,12 @@ class Arguments(object):
                      '') + ARGS_COPYRIGHT
 
     def __init__(self):
-        Arguments.logger = Logger(__name__).get()
+        Cli.logger = Logger(__name__).get()
 
         parser = argparse.ArgumentParser(prog='snippy',
                                          add_help=False,
-                                         usage=Arguments.ARGS_USAGE,
-                                         epilog=Const.NEWLINE.join(Arguments.ARGS_EPILOG),
+                                         usage=Cli.ARGS_USAGE,
+                                         epilog=Const.NEWLINE.join(Cli.ARGS_EPILOG),
                                          formatter_class=argparse.RawTextHelpFormatter)
 
         # positional arguments
@@ -115,7 +115,7 @@ class Arguments(object):
         parser.add_argument('operation', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
         # content options
-        content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Arguments.ARGS_CATEGO))
+        content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGO))
         content_meg = content.add_mutually_exclusive_group()
         content_meg.add_argument('--snippet', action='store_const', dest='cat', const='snippet', help=argparse.SUPPRESS)
         content_meg.add_argument('--solution', action='store_const', dest='cat', const='solution', help=argparse.SUPPRESS)
@@ -123,7 +123,7 @@ class Arguments(object):
         content_meg.set_defaults(cat='snippet')
 
         # editing options
-        options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Arguments.ARGS_EDITOR))
+        options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Cli.ARGS_EDITOR))
         options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
         options.add_argument('-c', '--content', type=str, dest='data', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('-b', '--brief', type=str, default='', help=argparse.SUPPRESS)
@@ -133,7 +133,7 @@ class Arguments(object):
         options.add_argument('-d', '--digest', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
         # search options
-        search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Arguments.ARGS_SEARCH))
+        search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Cli.ARGS_SEARCH))
         search_meg = search.add_mutually_exclusive_group()
         search_meg.add_argument('--sall', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search_meg.add_argument('--stag', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
@@ -141,7 +141,7 @@ class Arguments(object):
         search.add_argument('--filter', type=str, dest='regexp', default='', help=argparse.SUPPRESS)
 
         # migration options
-        migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Arguments.ARGS_MIGRAT))
+        migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Cli.ARGS_MIGRAT))
         migrat_meg = migrat.add_mutually_exclusive_group()
         migrat_meg.add_argument('-f', '--file', type=str, dest='filename', default='', help=argparse.SUPPRESS)
         migrat_meg.add_argument('--defaults', action='store_true', default=False, help=argparse.SUPPRESS)
@@ -161,7 +161,7 @@ class Arguments(object):
         server = parser.add_argument_group(title='server options')
         server.add_argument('--server', action='store_true', default=False, help=argparse.SUPPRESS)
 
-        Arguments.args = parser.parse_args()
+        Cli.args = parser.parse_args()
 
     @classmethod
     def get_operation(cls):
@@ -377,7 +377,7 @@ class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
 
         if option_string == '-h' or option_string == '--help':
             if 'examples' in sys.argv:
-                print(Const.NEWLINE.join(Arguments.ARGS_EXAMPLES))
+                print(Const.NEWLINE.join(Cli.ARGS_EXAMPLES))
             elif 'tests' in sys.argv:
                 from snippy.devel.reference import Reference
                 ansi = True if '--no-ansi' not in sys.argv else False

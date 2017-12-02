@@ -576,7 +576,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     4. Migrate() should be kept in state where anyone can import it.
     
     5. Only the Config() can import and imported classes must not import outside config sub-package.
-        A) Arguments()
+        A) Cli()
         B) Editor()
 
     6. Only Storage(), Snippet() and Solution() can import Content()

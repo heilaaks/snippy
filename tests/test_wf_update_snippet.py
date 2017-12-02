@@ -6,7 +6,7 @@ import sys
 import unittest
 import mock
 from snippy.snip import Snippy
-from snippy.config.editor import Editor
+from snippy.config.source.editor import Editor
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database

@@ -11,7 +11,7 @@ import pytest
 from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
-from snippy.config.editor import Editor
+from snippy.config.source.editor import Editor
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution

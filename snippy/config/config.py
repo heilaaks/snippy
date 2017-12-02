@@ -11,7 +11,7 @@ import pkg_resources
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
-from snippy.config.editor import Editor
+from snippy.config.source.editor import Editor
 
 
 class Config(object):  # pylint: disable=too-many-public-methods

@@ -4,11 +4,11 @@
 
 from __future__ import print_function
 import sys
-from snippy.config.arguments import Arguments
-from tests.testlib.arguments_helper import ArgumentsHelper
+from snippy.config.source.cli import Cli
+from tests.testlib.cli_helper import CliHelper
 
 
-class TestUtArgumentsSearch(object):
+class TestUtCliSearch(object):
     """Testing command line argument for search snippets with keywords."""
 
     def test_search_with_one_kw(self):
@@ -16,7 +16,7 @@ class TestUtArgumentsSearch(object):
 
         search_kw = ['docker']
         sys.argv = ['snippy', 'search', '--sall', 'docker']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_search_all() == search_kw
 
     def test_search_with_quotes_and_separated_by_comma_and_no_space(self):
@@ -25,7 +25,7 @@ class TestUtArgumentsSearch(object):
 
         search_kw = ['docker,container,cleanup']
         sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_search_all() == search_kw
 
     def test_search_with_quotes_and_separated_by_comma_and_space(self):
@@ -34,7 +34,7 @@ class TestUtArgumentsSearch(object):
 
         search_kw = ['docker, container, cleanup']
         sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_search_all() == search_kw
 
     def test_search_with_quotes_and_separated_by_only_space(self):
@@ -43,7 +43,7 @@ class TestUtArgumentsSearch(object):
 
         search_kw = ['docker container cleanup']
         sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_search_all() == search_kw
 
     def test_search_separated_by_space(self):
@@ -53,7 +53,7 @@ class TestUtArgumentsSearch(object):
 
         search_kw = ['docker ', 'container ', 'cleanup']
         sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_search_all() == search_kw
 
     def test_search_separated_by_space_and_comma(self):
@@ -62,7 +62,7 @@ class TestUtArgumentsSearch(object):
 
         search_kw = ['docker,', 'container,', 'cleanup']
         sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_search_all() == search_kw
 
     def test_search_with_special_characters(self):
@@ -71,7 +71,7 @@ class TestUtArgumentsSearch(object):
 
         search_kw = ['dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
-        obj = Arguments()
+        obj = Cli()
         assert obj.get_search_all() == search_kw
 
     # pylint: disable=duplicate-code
@@ -80,11 +80,11 @@ class TestUtArgumentsSearch(object):
         """Test class setup before any of the tests are run."""
 
         print('setup_class()')
-        ArgumentsHelper().reset()
+        CliHelper().reset()
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
         print('teardown_class()')
-        ArgumentsHelper().reset()
+        CliHelper().reset()

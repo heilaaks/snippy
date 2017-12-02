@@ -6,8 +6,8 @@ from __future__ import print_function
 import sys
 import unittest
 from snippy.config.config import Config
-from snippy.config.arguments import Arguments
-from tests.testlib.arguments_helper import ArgumentsHelper
+from snippy.config.source.cli import Cli
+from tests.testlib.cli_helper import CliHelper
 
 
 class TestUtConfigSearch(unittest.TestCase):
@@ -18,7 +18,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('docker',)
         sys.argv = ['snippy', 'search', '--sall', 'docker']
-        obj = Config(Arguments())
+        obj = Config(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -28,7 +28,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
-        obj = Config(Arguments())
+        obj = Config(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -38,7 +38,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
-        obj = Config(Arguments())
+        obj = Config(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -48,7 +48,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
-        obj = Config(Arguments())
+        obj = Config(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -59,7 +59,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
-        obj = Config(Arguments())
+        obj = Config(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -69,7 +69,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
-        obj = Config(Arguments())
+        obj = Config(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
 
@@ -79,7 +79,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup_testing', 'container-managemenet', 'dockertesting')
         sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
-        obj = Config(Arguments())
+        obj = Config(Cli())
         assert isinstance(obj.get_search_all(), tuple)
         self.assertTupleEqual(obj.get_search_all(), search_kw)
         assert len(obj.get_search_all()) == 3
@@ -90,11 +90,11 @@ class TestUtConfigSearch(unittest.TestCase):
         """Test class setup before any of the tests are run."""
 
         print('setup_class()')
-        ArgumentsHelper().reset()
+        CliHelper().reset()
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
         print('teardown_class()')
-        ArgumentsHelper().reset()
+        CliHelper().reset()

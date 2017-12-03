@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Why REST server writes two logs from Snippet management?
    - [ ] Fix --sgrp with any search criteria like leaving keywords out, using dot or empty. This should match all but no: test_search_snippet_with_sgrp
    - [ ] Add limiting fields that are returned from API and possibility to sort. //http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add support to run with runalias.

@@ -21,8 +21,6 @@ class Snippy(object):
         self.cause = Cause()
         self.config = Config()
         self.storage = Storage()
-        self.snippet = Snippet(self.storage)
-        self.solution = Solution(self.storage)
         self.server = None
         self.storage.init()
 
@@ -41,12 +39,12 @@ class Snippy(object):
         cli = Cli()  # Exist e.g. in case only a support option like --help is used.
         Config.read_source(cli)
         if Config.is_category_snippet():
-            self.snippet.run()
+            Snippet(self.storage).run()
         elif Config.is_category_solution():
-            self.solution.run()
+            Solution(self.storage).run()
         elif Config.is_category_all() and Config.is_operation_search():
-            self.snippet.run()
-            self.solution.run()
+            Snippet(self.storage).run()
+            Solution(self.storage).run()
         else:
             Cause.set_text('content category \'all\' is supported only with search operation')
 

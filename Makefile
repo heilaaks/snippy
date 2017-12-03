@@ -14,11 +14,11 @@ dev:
 	pip install -e .[dev]
 
 test:
-	python -m pytest ./tests/test_*.py --cov snippy
+	python -m pytest -p no:logging ./tests/test_*.py --cov snippy
 
 coverage:
-	pytest --cov=snippy --cov-report html tests/
-	pytest --cov=snippy tests/
+	pytest -p no:logging --cov=snippy --cov-report html tests/
+	pytest -p no:logging --cov=snippy tests/
 
 docs:
 	make -C docs html

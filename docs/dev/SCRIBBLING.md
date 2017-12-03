@@ -297,6 +297,11 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     # List tests
     $ cat tests/test_wf_* | grep -E '[[:space:]]{12}\$' | grep -Ev SnippetHelp
     
+    # There is a new feature in pytest 3.3 that somehow enables logs even though they
+    # are disabled. This is probably incorrect usage of root logger in Snippy.
+    # https://github.com/pytest-dev/pytest/issues/2982
+    $ pytest -p no:logging tests/test_wf_console_help.py -k test_console_help_examples
+    
     # Travis core debugging
     > http://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
     > https://wiki.python.org/moin/DebuggingWithGdb

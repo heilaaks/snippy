@@ -1,3 +1,5 @@
+************* Module tests.test_api_hello
+W:  9, 0: Unused import pytest (unused-import)
 
 --------------------------------------------------------------------
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)

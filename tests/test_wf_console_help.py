@@ -126,9 +126,9 @@ class TestWfConsoleHelp(unittest.TestCase):
             Database.delete_storage()
 
     def test_console_help_examples(self):
-        """Test printing examples from consoler."""
+        """Test printing examples from console."""
 
-        ## Brief: Print tool examples.
+        ## Brief: Print tool command examples from help.
         try:
             output = ('examples:',
                       '    Creating new content:',

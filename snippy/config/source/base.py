@@ -10,6 +10,7 @@ from snippy.config.constants import Constants as Const
 class ConfigSourceBase(object):
     """Base class for configuration sources."""
 
+    # Operations
     CREATE = 'create'
     SEARCH = 'search'
     UPDATE = 'update'
@@ -17,6 +18,25 @@ class ConfigSourceBase(object):
     EXPORT = 'export'
     IMPORT = 'import'
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
+
+    # Columns
+    DATA = 'data'
+    BRIEF = 'brief'
+    GROUP = 'group'
+    TAGS = 'tags'
+    LINKS = 'links'
+    CATEGORY = 'category'
+    FILENAME = 'filename'
+    RUNALIAS = 'runalias'
+    VERSIONS = 'versions'
+    UTC = 'utc'
+    DIGEST = 'digest'
+    KEY = 'key'
+    COLUMNS = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
+               'runalias', 'versions', 'utc', 'digest', 'key')
+
+    # Defaults
+    LIMIT_DEFAULT = 20
 
     def __init__(self):
         self.logger = Logger(__name__).get()
@@ -45,7 +65,9 @@ class ConfigSourceBase(object):
                            'profile': False,
                            'no_ansi': False,
                            'server': False,
-                           'limit': 20}
+                           'limit': ConfigSourceBase.LIMIT_DEFAULT,
+                           'sort': ConfigSourceBase.BRIEF,
+                           'columns': ConfigSourceBase.COLUMNS}
         self._set_self()
         self._set_repr()
 

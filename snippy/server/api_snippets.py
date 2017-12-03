@@ -26,10 +26,9 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
         """Request snippets based on search parameters."""
 
         self.logger.debug('run route /api/snippets')
-        api = Api(request.params, Api.SEARCH)
+        api = Api(Const.SNIPPET, Api.SEARCH, request.params)
         Config.read_source(api)
-        snippet = Snippet(self.storage, content_type=Const.CONTENT_TYPE_JSON)
-        contents = snippet.run()
+        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         response.content_type = falcon.MEDIA_JSON
         response.body = contents
         response.status = falcon.HTTP_200

@@ -96,6 +96,13 @@ paths:
           in: query
           required: false
           description: Limit query results.
+        - name: sort
+          type: string
+          default: brief
+          enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest, key]
+          in: query
+          required: false
+          description: Sort based on defined column.
       responses:
         200:
           description: OK

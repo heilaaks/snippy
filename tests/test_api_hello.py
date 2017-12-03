@@ -29,4 +29,4 @@ class TestApiHello(unittest.TestCase):
         result = Api.client().simulate_get('/api/hello')
         assert result.headers == header
         assert result.json == json.dumps(body)
-        assert result.status == falcon.HTTP_OK
+        assert result.status == falcon.HTTP_200

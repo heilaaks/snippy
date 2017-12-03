@@ -3,17 +3,16 @@
 """api.py: Api parameter management."""
 
 from __future__ import print_function
-from snippy.config.constants import Constants as Const
 from snippy.config.source.base import ConfigSourceBase
 
 
 class Api(ConfigSourceBase):
     """Api parameter management."""
 
-    def __init__(self, parameters, operation):
+    def __init__(self, category, operation, parameters):
         super(Api, self).__init__()
-        self.parameters['operation'] = operation
-        self.parameters['cat'] = Const.SNIPPET
+        parameters['cat'] = category
+        parameters['operation'] = operation
 
         Api._validate(parameters)
         self._set_conf(parameters)

@@ -43,8 +43,8 @@ class TestPerformance(unittest.TestCase):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC: 1 loop : 0.0288 / 55 loop : 0.8652 / 100 loop : 1.6162
-        ##        Reference PC: 880 loop : 27.5458/ 1000 loop : 34.9521
+        ##        Reference PC: 1 loop : 0.0288 / 55 loop : 0.8833 / 100 loop : 1.6306
+        ##        Reference PC: 880 loop : 27.6441 / 1000 loop : 36.6366
         ##
         ##        The reference is with sqlite database in memory as with all tests.
         ##        There is naturally jitter in results and the values are as of now
@@ -61,7 +61,7 @@ class TestPerformance(unittest.TestCase):
         sys.stderr = StringIO()
         sys.stdout = StringIO()
         start = time.time()
-        for _ in range(55):
+        for _ in range(1000):
             snippy = Snippet.add_defaults(Snippy())
             snippy = Solution.add_defaults(snippy)
 
@@ -105,6 +105,7 @@ class TestPerformance(unittest.TestCase):
 
         assert not result_stderr
         assert runtime < 10
+        assert 0
 
     # pylint: disable=duplicate-code
     def tearDown(self):

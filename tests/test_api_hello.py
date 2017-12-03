@@ -16,7 +16,7 @@ from tests.testlib.falcon_helper import FalconHelper as Api
 class TestApiHello(unittest.TestCase):
     """Test hello API."""
 
-    @pytest.mark.skip(reason='Causes core with Python3 in Travis CI.')
+    #@pytest.mark.skip(reason='Causes core with Python3 in Travis CI.')
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Sqlite3Db, '_get_db_location')

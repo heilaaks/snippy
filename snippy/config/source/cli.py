@@ -165,7 +165,11 @@ class Cli(ConfigSourceBase):
         server = parser.add_argument_group(title='server options')
         server.add_argument('--server', action='store_true', default=False, help=argparse.SUPPRESS)
 
-        return vars(parser.parse_args())
+        # Argparse will exit in case of support options like --help or --version.
+        # Also in case of argument parse failures the SystemExit is made.
+        parameters = vars(parser.parse_args())
+
+        return parameters
 
 
 class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

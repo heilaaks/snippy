@@ -22,7 +22,7 @@ class ConfigSourceBase(object):
         self.logger = Logger(__name__).get()
         self.represents = Const.EMPTY
         self.parameters = {'operation': Const.EMPTY,
-                           'cat': Const.EMPTY,
+                           'cat': Const.UNKNOWN_CONTENT,
                            'editor': False,
                            'data': Const.EMPTY,
                            'brief': Const.EMPTY,

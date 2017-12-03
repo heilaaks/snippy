@@ -13,9 +13,10 @@ from snippy.content.content import Content
 class Snippet(object):
     """Snippet management."""
 
-    def __init__(self, storage):
+    def __init__(self, storage, content_type=Const.CONTENT_TYPE_TEXT):
         self.logger = Logger(__name__).get()
         self.storage = storage
+        self.content_type = content_type
 
     def create(self):
         """Create new snippet."""
@@ -37,7 +38,9 @@ class Snippet(object):
                                        sgrp=Config.get_search_grp(),
                                        digest=Config.get_content_digest(),
                                        data=Config.get_content_data())
-        Migrate.print_terminal(snippets)
+        snippets = Migrate.content(snippets, self.content_type)
+
+        return snippets
 
     def update(self):
         """Update snippet."""
@@ -122,12 +125,14 @@ class Snippet(object):
     def run(self):
         """Run the snippet management operation."""
 
+        snippets = Const.EMPTY
+
         self.logger.info('managing snippet')
         Config.set_category(Const.SNIPPET)
         if Config.is_operation_create():
             self.create()
         elif Config.is_operation_search():
-            self.search()
+            snippets = self.search()
         elif Config.is_operation_update():
             self.update()
         elif Config.is_operation_delete():
@@ -138,3 +143,5 @@ class Snippet(object):
             self.import_all()
         else:
             Cause.set_text('unknown operation for snippet')
+
+        return snippets

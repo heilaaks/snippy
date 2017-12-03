@@ -13,9 +13,10 @@ from snippy.content.content import Content
 class Solution(object):
     """Solution management."""
 
-    def __init__(self, storage):
+    def __init__(self, storage, content_type=Const.CONTENT_TYPE_TEXT):
         self.logger = Logger(__name__).get()
         self.storage = storage
+        self.content_type = content_type
 
     def create(self):
         """Create new solution."""
@@ -39,7 +40,9 @@ class Solution(object):
                                         sgrp=Config.get_search_grp(),
                                         digest=Config.get_content_digest(),
                                         data=Config.get_content_data())
-        Migrate.print_terminal(solutions)
+        solutions = Migrate.content(solutions, self.content_type)
+
+        return solutions
 
     def update(self):
         """Update existing solution."""
@@ -124,12 +127,14 @@ class Solution(object):
     def run(self):
         """Run the solution management operation."""
 
+        solutions = Const.EMPTY
+
         self.logger.info('managing solution')
         Config.set_category(Const.SOLUTION)
         if Config.is_operation_create():
             self.create()
         elif Config.is_operation_search():
-            self.search()
+            solutions = self.search()
         elif Config.is_operation_update():
             self.update()
         elif Config.is_operation_delete():
@@ -140,3 +145,5 @@ class Solution(object):
             self.import_all()
         else:
             Cause.set_text('unknown operation for solution')
+
+        return solutions

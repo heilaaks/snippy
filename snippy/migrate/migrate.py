@@ -20,13 +20,33 @@ class Migrate(object):
     logger = Logger(__name__).get()
 
     @classmethod
-    def print_terminal(cls, contents):
+    def content(cls, contents, content_type):
+        """Migrate content into requested format."""
+
+        migrated = Const.EMPTY
+        if content_type == Const.CONTENT_TYPE_TEXT:
+            migrated = Migrate.terminal(contents)
+        elif content_type == Const.CONTENT_TYPE_JSON:
+            import json
+
+            dictionary = Migrate.get_dictionary_list(contents)
+            migrated = json.dumps(dictionary)
+        elif content_type == Const.CONTENT_TYPE_YAML:
+            import yaml
+
+            dictionary = Migrate.get_dictionary_list(contents)
+            migrated = yaml.safe_dump(dictionary, default_flow_style=False)
+
+        return migrated
+
+    @classmethod
+    def terminal(cls, contents):
         """Print content into terminal."""
 
+        text = Const.EMPTY
         if not contents:
             Cause.set_text('cannot find content with given search criteria')
 
-        cls.logger.debug('printing content to terminal')
         regexp = Config.get_search_filter()
         if regexp:
             # In case user provided regexp filter, the ANSI control characters for
@@ -40,8 +60,10 @@ class Migrate(object):
             text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi(), debug=Config.is_debug())
             Migrate.print_stdout(text)
 
-    @staticmethod
-    def print_stdout(text):
+        return text
+
+    @classmethod
+    def print_stdout(cls, text):
         """Print tool output to stdout."""
 
         # The signal handler manipulation and flush setting below prevents 'broker
@@ -54,7 +76,8 @@ class Migrate(object):
         #
         # $ snippy search --sall '--all' --filter crap | grep --all
         # $ snippy search --sall 'test' --filter test -vv | grep --all
-        if text:
+        if text and Config.is_print():
+            cls.logger.debug('printing content to terminal stdout')
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
             print(text)
@@ -154,20 +177,20 @@ class Migrate(object):
                                            'version': __version__,
                                            'homepage': 'https://github.com/heilaaks/snippy'},
                               'content': Migrate.get_dictionary_list(contents)}
-                if Config.is_file_type_yaml():
-                    import yaml
-
-                    yaml.safe_dump(dictionary, outfile, default_flow_style=False)
+                if Config.is_file_type_text():
+                    for content in contents:
+                        template = Config.get_content_template(content)
+                        outfile.write(template)
+                        outfile.write(Const.NEWLINE)
                 elif Config.is_file_type_json():
                     import json
 
                     json.dump(dictionary, outfile)
                     outfile.write(Const.NEWLINE)
-                elif Config.is_file_type_text():
-                    for content in contents:
-                        template = Config.get_content_template(content)
-                        outfile.write(template)
-                        outfile.write(Const.NEWLINE)
+                elif Config.is_file_type_yaml():
+                    import yaml
+
+                    yaml.safe_dump(dictionary, outfile, default_flow_style=False)
                 else:
                     cls.logger.info('unknown export file format')
             except (IOError, TypeError, ValueError, yaml.YAMLError) as exception:
@@ -202,17 +225,17 @@ class Migrate(object):
         if os.path.isfile(filename):
             with open(filename, 'r') as infile:
                 try:
-                    if Config.is_file_type_yaml():
-                        import yaml
-
-                        dictionary = yaml.safe_load(infile)
+                    if Config.is_file_type_text():
+                        contents = Config.get_text_contents(content, infile.read())
+                        dictionary = {'content': Migrate.get_dictionary_list(contents)}
                     elif Config.is_file_type_json():
                         import json
 
                         dictionary = json.load(infile)
-                    elif Config.is_file_type_text():
-                        contents = Config.get_text_contents(content, infile.read())
-                        dictionary = {'content': Migrate.get_dictionary_list(contents)}
+                    elif Config.is_file_type_yaml():
+                        import yaml
+
+                        dictionary = yaml.safe_load(infile)
                     else:
                         cls.logger.info('unknown import file format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:

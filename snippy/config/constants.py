@@ -57,8 +57,8 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     # Default values for content fields.
     DEFAULT_GROUP = 'default'
 
-    # Export formats
-    FILE_TYPE_NONE = 'none'
-    FILE_TYPE_YAML = 'yaml'
-    FILE_TYPE_JSON = 'json'
-    FILE_TYPE_TEXT = 'text'
+    # Content formats
+    CONTENT_TYPE_NONE = 'none'
+    CONTENT_TYPE_YAML = 'yaml'
+    CONTENT_TYPE_JSON = 'json'
+    CONTENT_TYPE_TEXT = 'text'

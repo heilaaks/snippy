@@ -68,6 +68,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['input']['editor'] = Config.source.is_editor()
         cls.config['input']['digest'] = Config.source.is_content_digest()
         cls.config['input']['data'] = Config.source.is_content_data()
+        cls.config['output'] = {}
+        cls.config['output']['print'] = True
         cls.config['operation'] = {}
         cls.config['operation']['task'] = Config.source.get_operation()
         cls.config['operation']['file'] = {}
@@ -417,6 +419,18 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['input']['digest']
 
     @classmethod
+    def set_print(cls, output):
+        """Set flag that defines if the content is printed to terminal."""
+
+        cls.config['output']['print'] = output
+
+    @classmethod
+    def is_print(cls):
+        """Test if output is printed to terminal."""
+
+        return True if cls.config['output']['print'] else False
+
+    @classmethod
     def is_search_criteria(cls):
         """Test if any of the search criterias were used."""
 
@@ -442,19 +456,19 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def is_file_type_yaml(cls):
         """Test if file format is yaml."""
 
-        return True if cls.config['operation']['file']['type'] == Const.FILE_TYPE_YAML else False
+        return True if cls.config['operation']['file']['type'] == Const.CONTENT_TYPE_YAML else False
 
     @classmethod
     def is_file_type_json(cls):
         """Test if file format is json."""
 
-        return True if cls.config['operation']['file']['type'] == Const.FILE_TYPE_JSON else False
+        return True if cls.config['operation']['file']['type'] == Const.CONTENT_TYPE_JSON else False
 
     @classmethod
     def is_file_type_text(cls):
         """Test if file format is text."""
 
-        return True if cls.config['operation']['file']['type'] == Const.FILE_TYPE_TEXT else False
+        return True if cls.config['operation']['file']['type'] == Const.CONTENT_TYPE_TEXT else False
 
     @classmethod
     def is_supported_file_format(cls):
@@ -676,7 +690,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Return the filename and the format of the file."""
 
         filename = Config.source.get_operation_file()
-        filetype = Const.FILE_TYPE_NONE
+        filetype = Const.CONTENT_TYPE_NONE
 
         defaults = 'snippets.yaml'
         template = 'snippet-template.txt'
@@ -696,9 +710,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # the operation file.
         if cls.is_operation_export() and cls.is_search_criteria():
             if Config.is_category_snippet() and not filename:
-                filename = 'snippet.' + Const.FILE_TYPE_TEXT
+                filename = 'snippet.' + Const.CONTENT_TYPE_TEXT
             elif Config.is_category_solution() and not filename:
-                filename = 'solution.' + Const.FILE_TYPE_TEXT
+                filename = 'solution.' + Const.CONTENT_TYPE_TEXT
 
         # In case user did not provide filename, set defaults. For example
         # if user defined export or import operation without the file, the
@@ -709,11 +723,11 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # User defined content to/from user specified file.
         name, extension = os.path.splitext(filename)
         if name and ('yaml' in extension or 'yml' in extension):
-            filetype = Const.FILE_TYPE_YAML
+            filetype = Const.CONTENT_TYPE_YAML
         elif name and 'json' in extension:
-            filetype = Const.FILE_TYPE_JSON
+            filetype = Const.CONTENT_TYPE_JSON
         elif name and ('txt' in extension or 'text' in extension):
-            filetype = Const.FILE_TYPE_TEXT
+            filetype = Const.CONTENT_TYPE_TEXT
         else:
             Cause.set_text('cannot identify file format for file {}'.format(filename))
 

@@ -36,7 +36,7 @@ class Snippy(object):
         """Run command line session."""
 
         self.logger.debug('running command line interface')
-        cli = Cli()  # Exist e.g. in case only a support option like --help is used.
+        cli = Cli()  # Exits e.g. in case only a support option like --help is used.
         Config.read_source(cli)
         if Config.is_category_snippet():
             Snippet(self.storage).run()

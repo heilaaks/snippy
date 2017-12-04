@@ -138,6 +138,9 @@ content:
   - '    # Versions'
   - '    # nginx version: nginx/1.13.5'
   - ''
+  - '    # Release notes'
+  - '    > http://nginx.org/en/CHANGES'
+  - ''
   - '    # Official nginx debugging'
   - '    > https://www.nginx.com/resources/admin-guide/debug/'
   - ''
@@ -286,10 +289,11 @@ content:
   - '      }'
   - '      '' | tee /etc/nginx/conf.d/default.conf && nginx -s reload'
   - ''
-  digest: c9c40cdf10afbe6efd20615f71cc33e03cb028676dbd0690a320373cfd520825
+  digest: 11ada3d6b60309b7359bf7bca118324ebe67efbf2f32fd5fc8cb4dbf4cd07780
   filename: howto-debug-nginx.txt
   group: nginx
   links:
+  - http://nginx.org/en/CHANGES
   - https://tenzer.dk/nginx-with-dynamic-upstreams/
   - https://www.nginx.com/blog/dns-service-discovery-nginx-plus/
   - https://www.nginx.com/resources/admin-guide/debug/
@@ -299,7 +303,7 @@ content:
   - howto
   - logging
   - nginx
-  utc: '2017-11-15 08:48:50'
+  utc: '2017-12-04 14:32:02'
   versions: ''
 - brief: Debugging Elastic Beats
   category: solution
@@ -471,6 +475,9 @@ content:
   - '    > https://github.com/docker/libnetwork/pull/1855'
   - '    > https://github.com/docker/swarmkit/issues/1242'
   - ''
+  - '    # Docker swarm DNS update problem'
+  - '    > https://github.com/moby/moby/issues/30487'
+  - ''
   - '################################################################################'
   - '## commands'
   - '################################################################################'
@@ -487,15 +494,67 @@ content:
     --host elk_elasticsearch:10.0.0.20 elk/nginx:latest'
   - '    $ docker service update --force 2cp9rhiul9ss'
   - ''
+  - '    # Inspecting swarm'
+  - '    $ docker node ls'
+  - ''
   - '    # Inspecting swarm default overlay network'
+  - '    $ docker network ls'
   - '    $ docker network inspect elk_default'
+  - ''
+  - '    # Inspecting swarm networking'
+  - '    $ docker service ls'
+  - '    $ docker service inspect --pretty elk_elasticsearch'
+  - '    $ docker network ls'
+  - '    $ docker inspect elk_default'
   - ''
   - '    # Name server lookup'
   - '    $ nslookup -type=a elasticsearch'
   - ''
+  - '    # Docker host networking'
+  - '    $ iptables -t nat --list'
+  - ''
   - '################################################################################'
   - '## solutions'
   - '################################################################################'
+  - ''
+  - '    # Problem "error creating vxlan interface: file exists" in swarm. The'
+  - '    # symptom is that no services can be started in swarm mode. The solution'
+  - '    # was tried with ''Docker version 17.09.0-ce, build afdb6d4'' on RHEL7.4'
+  - '    # with Kernel 3.10.0-693.el7.x86_64.'
+  - '    > https://github.com/docker/libnetwork/issues/1765'
+  - '    $ journalctl -f | grep ''error creating vxlan'''
+  - '    $ docker swarm leave --force'
+  - '    $ systemctl restart docker.service'
+  - '    $ docker swarm init'
+  - ''
+  - '    # Proxy settings for Docker'
+  - '    $ env | grep http'
+  - '    $ mkdir /etc/systemd/system/docker.service.d'
+  - '    $ vi /etc/systemd/system/docker.service.d/http-proxy.conf'
+  - ''
+  - '      [Service]'
+  - '      Environment="HTTP_PROXY=http://10.158.100.1:8080/"'
+  - ''
+  - '    # Move Docker device mapper to ephemeral to gain more disk space'
+  - '    $ df -h'
+  - '    $ df -i'
+  - '    $ docker rm $(docker ps -a -q)'
+  - '    $ docker rmi $(docker images -q)'
+  - '    $ sudo systemctl stop docker'
+  - '    $ ls -al /var/lib/docker'
+  - '    $ rm -rdf /var/lib/docker'
+  - '    $ mkdir -p /ephemeral/docker/devicemapper/devicemapper'
+  - '    $ dd if=/dev/zero of=/ephemeral/docker/devicemapper/devicemapper/data bs=1G
+    count=0 seek=250'
+  - '    $ sudo systemctl cat docker'
+  - '    $ vi /usr/lib/systemd/system/docker.service'
+  - '         ExecStart=/usr/bin/dockerd -g /ephemeral/docker'
+  - '    $ sudo systemctl daemon-reload'
+  - '    $ sudo systemctl enable docker.service'
+  - '    $ sudo systemctl start docker'
+  - '    $ docker info | grep "Data Space Available"'
+  - '         Data Space Available: 268.4 GB'
+  - '    $ docker run --rm hello-world'
   - ''
   - '################################################################################'
   - '## configurations'
@@ -505,20 +564,16 @@ content:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  - '    # Host names are not DNS resolvable from docker swarm internal DNS.'
-  - '    > https://github.com/docker/libnetwork/pull/1855'
-  - '    > https://github.com/docker/swarmkit/issues/1242'
-  - ''
-  digest: e2d4df9eb68749cb6eafcc488e873cdb35d128b2ad76ec90b12e6ed7062a9b4e
+  digest: 763a463d6fd3dc08fe480e8ed67c26186a290d3f56554108e41df8242f89f6c8
   filename: howto-debug-docker.txt
   group: docker
   links:
   - https://docs.docker.com/release-notes/docker-ce/
   - https://github.com/docker/compose/releases/
-  - https://github.com/docker/libnetwork/pull/1855
+  - https://github.com/docker/libnetwork/issues/1765
   - https://github.com/docker/libnetwork/pull/1855
   - https://github.com/docker/swarmkit/issues/1242
-  - https://github.com/docker/swarmkit/issues/1242
+  - https://github.com/moby/moby/issues/30487
   - https://www.computerhope.com/unix/unslooku.htm
   runalias: ''
   tags:
@@ -526,9 +581,9 @@ content:
   - docker
   - howto
   - swarm
-  utc: '2017-11-14 10:36:39'
+  utc: '2017-12-04 14:31:33'
   versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy
-  utc: '2017-11-19 14:44:57'
+  utc: '2017-12-04 14:33:50'
   version: 0.7.0

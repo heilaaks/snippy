@@ -171,7 +171,7 @@ content:
   - moby
   utc: '2017-10-19 10:25:26'
   versions: ''
-- brief: Install docker-ce
+- brief: Install docker-ce on RHEL
   category: snippet
   data:
   - yum remove docker-engine
@@ -180,8 +180,10 @@ content:
   - yum install -y ftp://ftp.pbone.net/mirror/ftp.centos.org/7.4.1708/extras/x86_64/Packages/container-selinux-2.21-2.gitba103ac.el7.noarch.rpm
   - yum -y install docker-ce
   - systemctl daemon-reload
-  - systemctl restart docker
-  digest: 27b35baafc86eddd7cc33475066dc1d6f327f1312bf956005e3cc26636c9c54d
+  - systemctl enable docker.service
+  - systemctl start docker
+  - docker run --rm hello-world
+  digest: 90db2db20b7b64e8918d854751fa9221ce754d91aca59a54f69280e2e6af8abf
   filename: ''
   group: docker
   links:
@@ -198,7 +200,7 @@ content:
   - moby
   - rhel
   - rpm
-  utc: '2017-11-07 08:07:16'
+  utc: '2017-12-04 11:30:21'
   versions: ''
 - brief: Initialize, deploy and remove docker swarm
   category: snippet
@@ -257,11 +259,11 @@ content:
 - brief: Print Elasticsearch basic information
   category: snippet
   data:
-  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/health?v"
-  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
-  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/nodes?v"
-  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
-  digest: 72f8be195888c70a43fdd3487b348810df1a05f36ee3cbfaad84ada8c3fb8091
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/health?v"
+  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
+  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/nodes?v"
+  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
+  digest: c53542c173a51f60fe850354a199e6d529ea88ff487c88310541f5e3d632217e
   filename: ''
   group: elasticsearch
   links:
@@ -276,7 +278,7 @@ content:
   - elasticsearch
   - rest
   - security
-  utc: '2017-10-20 07:09:19'
+  utc: '2017-12-04 11:44:14'
   versions: ''
 - brief: Print logs from Kubernetes pods
   category: snippet
@@ -301,10 +303,10 @@ content:
 - brief: List, dump and delete Elasticsearch indices
   category: snippet
   data:
-  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
-  - curl -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
-  - curl -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
-  digest: 6f2c4a38fcf8b3af38b72199ca501e9f7bab33dd92536a3433e74a87ee24a79f
+  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
+  - curl -xGET -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
+  - curl -xGET -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
+  digest: 4a2c4a1ada9cc3c76c666383faf5c188456597694a156e04e7bf310ce317085f
   filename: ''
   group: elasticsearch
   links:
@@ -323,7 +325,7 @@ content:
   - list
   - rest
   - security
-  utc: '2017-10-20 05:42:53'
+  utc: '2017-12-04 11:44:32'
   versions: ''
 - brief: Debug TLS/SSL connection
   category: snippet
@@ -366,15 +368,16 @@ content:
 - brief: Manage Elasticsearch templates
   category: snippet
   data:
-  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_template/*" | python -m json.tool
-  - curl -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk*" | python
+  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/*" | python
+    -m json.tool
+  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk*" | python
     -m json.tool
   - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters"
     -d '{}'
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters*"
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk.counters-2017.10.24"
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk*"
-  digest: e09b9ca4ff48177df0fdfa84835fa49dd6c400a10187f203d0844f812022e46d
+  digest: 066ad21399885d6e95b334542699172a1cb4fc211631762072533adecb7d8994
   filename: ''
   group: elasticsearch
   links:
@@ -395,7 +398,7 @@ content:
   - security
   - template
   - update
-  utc: '2017-10-24 07:14:04'
+  utc: '2017-12-04 11:44:49'
   versions: ''
 - brief: Perform recursive git pull on subdirectories
   category: snippet
@@ -430,22 +433,37 @@ content:
   - log
   utc: '2017-11-12 09:54:23'
   versions: ''
-- brief: list containers
+- brief: Install docker-ce on Fedora
   category: snippet
   data:
-  - docker ps
-  digest: 44afdd0c59e171592ee448fa2a9e79d3f3fb26f1325cc8a5b54e6a43a6b932d0
+  - dnf remove docker docker-common docker-selinux docker-engine-selinux docker-engine
+  - dnf -y install dnf-plugins-core
+  - dnf config-manager --add-repo https://download.docker.com/linux/fedora/docker-ce.repo
+  - dnf config-manager --set-enabled docker-ce-edge
+  - dnf install docker-ce
+  - dnf config-manager --disable docker-ce-edge
+  - systemctl daemon-reload
+  - systemctl enable docker.service
+  - systemctl start docker
+  - docker run --rm hello-world
+  digest: f02ac5e5d50a9532528b491d2919c1d3e5dad25bf48cde98be89f0e0be89b8c5
   filename: ''
-  group: default
+  group: docker
   links:
-  - ''
+  - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/#install-using-the-repository
+  - https://docs.docker.com/release-notes/docker-ce/
   runalias: ''
   tags:
+  - container
   - docker
+  - docker-ce
+  - fedora
+  - install
   - moby
-  utc: '2017-11-19 11:15:50'
+  - rpm
+  utc: '2017-12-04 11:28:11'
   versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy
-  utc: '2017-11-19 14:44:55'
+  utc: '2017-12-04 14:33:44'
   version: 0.7.0

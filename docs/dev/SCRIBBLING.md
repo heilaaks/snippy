@@ -32,7 +32,21 @@ Random notes and scribling during development.
    ```
 
    ```
-   # Install Python3.4 virtual environment.
+   # Installing for Python 3.4
+   # http://docs.aws.amazon.com/elasticbeanstalk/latest/dg/eb-cli3-install-linux.html
+   $ sudo dnf install python34
+   $ curl -O https://bootstrap.pypa.io/get-pip.py
+   $ sudo python3.4 get-pip.py --user
+   $ pip3 install virtualenvwrapper
+   $ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python34    # Add to ~/.bashrc
+   $ mkvirtualenv snippy-python34
+   $ workon snippy-python34
+   $ pip install -e .[dev]
+   $ sudo dnf install redhat-rpm-config
+   ```
+
+   ```
+   # Install Python3.4 virtual environment (does not work)
    $ cd /opt
    $ sudo curl -O https://www.python.org/ftp/python/3.4.7/Python-3.4.7.tgz
    $ sudo tar xzvf Python-3.4.7.tgz
@@ -42,6 +56,14 @@ Random notes and scribling during development.
    $ python3.4 -m venv myvirtualenv
    $ . myvirtualenv/bin/activate
    $ python --version
+   ```
+
+   ```
+   # Running container tests. These containers try to mimic
+   # Travis CI test environment.
+   $ sudo docker build -f tests/docker/Dockerfile-Python34-jessie -t snippy/python34 .
+   $ sudo docker run snippy/python34
+   $ sudo docker exec -it $(sudo docker ps | egrep -m 1 'snippy/python34' | awk '{print $1}') /bin/bash
    ```
 
    ```

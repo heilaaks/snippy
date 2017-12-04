@@ -61,9 +61,11 @@ Random notes and scribling during development.
    ```
    # Running container tests. These containers try to mimic
    # Travis CI test environment.
-   $ sudo docker build -f tests/docker/Dockerfile-Python34-jessie -t snippy/python34 .
+   $ sudo docker build -f tests/docker/Dockerfile-Python34-jessie -t snippy/python34-jessie .
+   $ sudo docker build -f tests/docker/Dockerfile-Python34-trusty -t snippy/python34-trusty .
    $ sudo docker run snippy/python34
-   $ sudo docker exec -it $(sudo docker ps | egrep -m 1 'snippy/python34' | awk '{print $1}') /bin/bash
+   $ sudo docker exec -it $(sudo docker ps | egrep -m 1 'snippy/python34-jessie' | awk '{print $1}') /bin/bash
+   $ sudo docker exec -it $(sudo docker ps | egrep -m 1 'snippy/python34-trusty' | awk '{print $1}') /bin/bash
    ```
 
    ```
@@ -1189,3 +1191,23 @@ python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker
 python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker containers' -g 'docker' -t docker,container,cleanup -l 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container' --profile
 
 7. Suppress ANSI characters with --no-ansi (DONE)
+
+
+########################
+## Make container with
+########################
+
+Build language: python
+Build group: stable
+Build dist: trusty
+Build id: 311339532
+Job id: 311339534
+Runtime kernel version: 4.4.0-93-generic
+travis-build version: 97c4a12f8
+Build image provisioning date and time
+Tue Aug 29 02:48:34 UTC 2017
+Operating System Details
+Distributor ID:	Ubuntu
+Description:	Ubuntu 14.04.5 LTS
+Release:	14.04
+Codename:	trusty

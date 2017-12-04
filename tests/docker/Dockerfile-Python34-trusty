@@ -1,4 +1,4 @@
-FROM python:3.4.6-jessie
+FROM ubuntu:14.04
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -27,11 +27,11 @@ RUN apt-get update \
     && apt-get clean
 
 ADD https://raw.githubusercontent.com/pypa/pip/5d927de5cdc7c05b1afbdd78ae0d1b127c04d9d0/contrib/get-pip.py /root/get-pip.py
-RUN python /root/get-pip.py
+RUN python3.4 /root/get-pip.py
 RUN pip install pytest==3.0.7 py==1.4.33 pluggy==0.4.0 && \
     apt-get install -y gdb python-dbg && \
     pip install -e .[test] && \
     pip install -r requirements.txt
-#RUN python -m pytest -p no:logging ./tests/test_*.py --cov snippy  # Few tests seem to fail if this is run.
+#RUN python3.4 -m pytest -p no:logging ./tests/test_*.py --cov snippy  # Few tests seem to fail if this is run.
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]

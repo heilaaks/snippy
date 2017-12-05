@@ -63,7 +63,8 @@ Random notes and scribling during development.
    # Travis CI test environment.
    $ sudo docker build -f tests/docker/Dockerfile-Python34-jessie -t snippy/python34-jessie .
    $ sudo docker build -f tests/docker/Dockerfile-Python34-trusty -t snippy/python34-trusty .
-   $ sudo docker run snippy/python34
+   $ sudo docker run -d snippy/python34-jessie
+   $ sudo docker run -d snippy/python34-trusty
    $ sudo docker exec -it $(sudo docker ps | egrep -m 1 'snippy/python34-jessie' | awk '{print $1}') /bin/bash
    $ sudo docker exec -it $(sudo docker ps | egrep -m 1 'snippy/python34-trusty' | awk '{print $1}') /bin/bash
    ```

@@ -64,8 +64,9 @@ class Storage(object):
     def disconnect(self):
         """Disconnect storage."""
 
-        self.database.disconnect()
-        self.database = None
+        if self.database:
+            self.database.disconnect()
+            self.database = None
 
     @staticmethod
     def _get_contents(rows):

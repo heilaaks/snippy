@@ -32,6 +32,6 @@ RUN pip install pytest==3.0.7 py==1.4.33 pluggy==0.4.0 && \
     apt-get install -y gdb python-dbg && \
     pip install -e .[test] && \
     pip install -r requirements.txt
-#RUN python3.4 -m pytest -p no:logging ./tests/test_*.py --cov snippy  # Few tests seem to fail if this is run.
+RUN python3.4 -m pytest -p no:logging ./tests/test_*.py --cov snippy
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]

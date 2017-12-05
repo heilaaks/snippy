@@ -20,5 +20,11 @@ class FalconHelper(unittest.TestCase):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
+        # def snippy_teardown():
+        #     """Release database."""
+        #     snippy.release()
+        #     snippy = None
+        #     Database.delete_storage()
+        # request.addfinalizer(snippy_teardown)
 
         return testing.TestClient(snippy.server.api)

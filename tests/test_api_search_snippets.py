@@ -2,17 +2,18 @@
 
 """test_api_search_snippets.py: Test get /snippets API."""
 
+import sys
 import unittest
 import json
 import mock
-import falcon
 import pytest
+import falcon
+from falcon import testing
 from snippy.snip import Snippy
 from snippy.config.config import Config
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
-from tests.testlib.falcon_helper import FalconHelper as Api
 
 
 class TestApiSearchSnippet(unittest.TestCase):
@@ -35,9 +36,12 @@ class TestApiSearchSnippet(unittest.TestCase):
         snippy = Snippet.add_defaults(Snippy())
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
         body = json.dumps([Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]])
-        result = Api.client().simulate_get(path='/api/snippets',  ## apiflow
-                                           headers={'accept': 'application/json'},
-                                           query_string='sall=docker%2Cswarm&limit=20&sort=brief')
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == headers
         assert json.dumps(result.json) == body
         assert result.status == falcon.HTTP_200

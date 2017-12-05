@@ -2,14 +2,16 @@
 
 """test_api_hello.py: Test hello API."""
 
+import sys
 import unittest
 import json
 import mock
 import falcon
+from falcon import testing
+from snippy.snip import Snippy
 from snippy.version import __version__
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
-from tests.testlib.falcon_helper import FalconHelper as Api
 
 
 class TestApiHello(unittest.TestCase):
@@ -26,7 +28,20 @@ class TestApiHello(unittest.TestCase):
 
         header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '25'}
         body = {'snippy': __version__}
-        result = Api.client().simulate_get('/api/hello')
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get('/api/hello')
         assert result.headers == header
         assert result.json == json.dumps(body)
         assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    # pylint: disable=duplicate-code
+    def tearDown(self):
+        """Teardown each test."""
+
+        Database.delete_all_contents()
+        Database.delete_storage()

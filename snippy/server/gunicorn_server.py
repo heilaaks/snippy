@@ -2,11 +2,8 @@
 
 """api_hello.py - JSON REST API for hello route."""
 
-try:
-    import gunicorn.app.base
-    from gunicorn.six import iteritems
-except ImportError:
-    pass
+import gunicorn.app.base
+from gunicorn.six import iteritems
 
 
 class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abstract-method

@@ -3,16 +3,13 @@
 """api_snippets.py - JSON REST API for Snippets."""
 
 from __future__ import print_function
+import falcon
 from snippy.version import __version__
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.config.source.api import Api
 from snippy.config.config import Config
 from snippy.content.snippet import Snippet
-try:
-    import falcon
-except ImportError:
-    pass
 
 
 class ApiSnippets(object):  # pylint: disable=too-few-public-methods

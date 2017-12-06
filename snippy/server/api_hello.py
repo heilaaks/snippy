@@ -3,11 +3,8 @@
 """api_hello.py - JSON REST API for hello health check."""
 
 import json
+import falcon
 from snippy.version import __version__
-try:
-    import falcon
-except ImportError:
-    pass
 
 
 class ApiHello(object):  # pylint: disable=too-few-public-methods

@@ -57,11 +57,14 @@ class Snippy(object):
     def run_server(self):
         """Run API server."""
 
-        # Requires Snippy installed with server dependencies.
-        from snippy.server.server import Server
+        try:
+            from snippy.server.server import Server
 
-        self.server = Server(self.storage)
-        self.server.run()
+            self.server = Server(self.storage)
+            self.server.run()
+        except ImportError:
+            Cause.set_text('install snippy as server in order to run api server')
+            Logger.print_cause(Cause.get_text())
 
     def release(self):
         """Release session."""

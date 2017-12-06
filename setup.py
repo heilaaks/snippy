@@ -1,5 +1,6 @@
 from setuptools import setup, find_packages
 
+dev_require = ('logging_tree')
 tests_require = ('pytest', 'pytest-cov', 'tox', 'codecov', 'mock', 'six', 'flake8')
 docs_require = ('sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme')
 server_require = ('falcon==1.3.0', 'gunicorn')
@@ -42,7 +43,7 @@ setup(
     },
     install_requires=['pyyaml'],
     extras_require={
-        'dev': tests_require + docs_require + server_require,
+        'dev': dev_require + tests_require + docs_require + server_require,
         'server': server_require,
         'test': tests_require + server_require,
     },

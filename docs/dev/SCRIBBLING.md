@@ -51,7 +51,7 @@ Random notes and scribling during development.
    $ sudo curl -O https://www.python.org/ftp/python/3.4.7/Python-3.4.7.tgz
    $ sudo tar xzvf Python-3.4.7.tgz
    $ cd Python-3.4.7
-   $ sudo ./configure --enable-shared --prefix=/usr/local LDFLAGS="-Wl,--rpath=/usr/local/lib" 
+   $ sudo ./configure --enable-shared --prefix=/usr/local LDFLAGS="-Wl,--rpath=/usr/local/lib"
    $ sudo make altinstall
    $ python3.4 -m venv myvirtualenv
    $ . myvirtualenv/bin/activate
@@ -130,7 +130,7 @@ Random notes and scribling during development.
 
    ```
    $ make docker
-   $ 
+   $
    $ sudo docker run heilaaks/snippy search --sall .
    $ vi ~/.bashrc
      alias snippy-d='sudo docker run heilaaks/snippy'
@@ -153,17 +153,17 @@ Random notes and scribling during development.
    import pytest
    from snippy.snip import Snippy
    from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
-   
-   
+
+
    class TestApiFramework(unittest.TestCase):
        """Test Snippy API framework."""
-   
+
        #@pytest.mark.skip(reason="mocking sys.exit in here stalls all tests with pytest with high cpu load. Why?")
        #@mock.patch('sys.exit')
        #def test_resets(self, mock_exit):
        def test_resets(self):
            """Test Snippy reset."""
-   
+
            #with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
            #with self.assertRaises(SystemExit): ## Blocks all logging?
            with mock.patch('snippy.config.arguments.sys.exit'):
@@ -181,13 +181,13 @@ Random notes and scribling during development.
                snippy.release()
                snippy = None
                Database.delete_storage()
-   
+
            #assert 0
-   
+
        # pylint: disable=duplicate-code
        def tearDown(self):
            """Teardown each test."""
-   
+
            Database.delete_all_contents()
            Database.delete_storage()
    ```
@@ -202,7 +202,7 @@ http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-
     $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
     $ /home/linuxbrew/.linuxbrew/bin/brew install asciinema
     $ export PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
-    
+
     asciinema rec snippy.json
     snippy --help
     snippy search --sall .
@@ -239,7 +239,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ pip install falcon
     $ python runner --server
     $ curl 127.0.0.1:8080/api/hello
-    
+
     # Swagger API
     $ curl -X GET "http://127.0.0.1:8080/api/snippets?sall=docker&limit=20" -H "accept: application/json"
     $ curl -X GET "http://127.0.0.1:8080/api/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
@@ -315,18 +315,18 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 
     # Pytest
     > https://media.readthedocs.org/pdf/pytest/3.0.2/pytest.pdf
-    
+
     # Mocking cookbook
     > http://chase-seibert.github.io/blog/2015/06/25/python-mocking-cookbook.html
-    
+
     # List tests
     $ cat tests/test_wf_* | grep -E '[[:space:]]{12}\$' | grep -Ev SnippetHelp
-    
+
     # There is a new feature in pytest 3.3 that somehow enables logs even though they
     # are disabled. This is probably incorrect usage of root logger in Snippy.
     # https://github.com/pytest-dev/pytest/issues/2982
     $ pytest -p no:logging tests/test_wf_console_help.py -k test_console_help_examples
-    
+
     # Travis core debugging
     > http://jsteemann.github.io/blog/2014/10/30/getting-core-dumps-of-failed-travisci-builds/
     > https://wiki.python.org/moin/DebuggingWithGdb
@@ -364,47 +364,47 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
        #4  0x00007ffff1883a75 in ?? () from /usr/lib/x86_64-linux-gnu/libsqlite3.so.0
        #5  0x00007ffff188bf87 in sqlite3_step ()
           from /usr/lib/x86_64-linux-gnu/libsqlite3.so.0
-       #6  0x00007ffff1addb6e in pysqlite_step (statement=0xfa2268, 
+       #6  0x00007ffff1addb6e in pysqlite_step (statement=0xfa2268,
            connection=<optimized out>)
            at /tmp/python-build.20170626083852.6823/Python-3.5.3/Modules/_sqlite/util.c:37
-       #7  0x00007ffff1adb879 in _pysqlite_query_execute (self=0x7ffff0eded50, 
+       #7  0x00007ffff1adb879 in _pysqlite_query_execute (self=0x7ffff0eded50,
            multiple=0, args=<optimized out>)
            at /tmp/python-build.20170626083852.6823/Python-3.5.3/Modules/_sqlite/cursor---Type <return> to continue, or q <return> to quit---
 
     # Gdb - if there is no stack trace, the bt command fails in .travis.gdb
       [Inferior 1 (process 4590) exited normally]
-      
+
       .travis.gdb:1: Error in sourced command file:
-      
+
       No stack.
-      
-      (gdb) 
+
+      (gdb)
 
     # no interaction to promtp
     $ gdb --batch --quiet -ex "thread apply all bt full" -ex "quit" ${exe} ${corefile}
-    
+
     # https://www.stev.org/post/usinggdbtodebugacorefile
     cat ./core |strings |grep -E '^_='
 
     $ python -c 'import sqlite3; print(sqlite3.sqlite_version)'
     3.8.2
-    
+
     $ cat ./core |strings |grep -E '^_='
     _=/home/travis/virtualenv/python3.6.3/bin/python
-    
+
     $ gdb --c ./core -ex "set pagination 0" -batch
     [New LWP 4577]
     Core was generated by `python -m pytest ./tests/test_performance.py ./tests/test_ut_arguments_create.p'.
     Program terminated with signal SIGSEGV, Segmentation fault.
     #0  0x00007f23fefd26b0 in ?? ()
-    
+
     $ gdb -c ./core -ex "thread info" -ex "set pagination 0" -batch
     [New LWP 4577]
     Core was generated by `python -m pytest ./tests/test_performance.py ./tests/test_ut_arguments_create.p'.
     Program terminated with signal SIGSEGV, Segmentation fault.
     #0  0x00007f23fefd26b0 in ?? ()
     No symbol table is loaded.  Use the "file" command.
-    
+
     $ gdb -c ./core example -ex "bt" -ex "set pagination 0" -batch
     example: No such file or directory.
     [New LWP 4577]
@@ -482,7 +482,7 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:latest
     $ sudo docker push docker.io/heilaaks/snippy:v0.6.0
     $ sudo docker push docker.io/heilaaks/snippy:latest
-    
+
     # Pull
     $ docker pull heilaaks/snippy:v0.6.0
     $ docker pull heilaaks/snippy:latest
@@ -564,7 +564,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     # Ordered dictionary also in Python 2.7
     https://stackoverflow.com/questions/31605131/dumping-a-dictionary-to-a-yaml-file-while-preserving-order
-    
+
     # Ansicolor
     https://github.com/shiena/ansicolor/blob/master/README.md
 
@@ -580,7 +580,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:latest
     $ docker push docker.io/heilaaks/snippy:v0.5.0
     $ docker push docker.io/heilaaks/snippy:latest
-    
+
     # Pull
     $ docker pull heilaaks/snippy:v0.1.0
 
@@ -591,29 +591,29 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     # Use absolute imports
     > https://stackoverflow.com/questions/4209641/absolute-vs-explicit-relative-import-of-python-module
-    
+
     # How to include
     > https://www.reddit.com/r/Python/comments/1bbbwk/whats_your_opinion_on_what_to_include_in_init_py/
 
 
     # Class hierarchy design notes
-    
+
     1. Any class can import Constants()
-    
+
     2. Any class can import Logger()
-    
+
     3. Any class can import Cause()
-    
+
     4. Migrate() should be kept in state where anyone can import it.
-    
+
     5. Only the Config() can import and imported classes must not import outside config sub-package.
         A) Cli()
         B) Editor()
 
     6. Only Storage(), Snippet() and Solution() can import Content()
-    
+
     7. Only Storage() can import Sqlite3db()
-    
+
     8. Content() is designed to be used by Snippet() and Solution(). It is not designed to abstract
        or hide Snippet() or Solution() classes.
 
@@ -621,14 +621,70 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 ## Design decisions
 #######################################
 
+    CONFIGURATION
+
+    1. The tool configuration is global and shared with all instances of Snippy()
+
+       If the Snippy() instance is created into the same process multiple times,
+       the configuration is shared between all instances. This is a result of the
+       Config() class being implemented with static class variables that hold the
+       configuration /1/.
+
+       Each module in the tool is accessing the data from Config class with class
+       methods. This avoids passing the configuration into every instance.
+
+       This is an accident and result of not realizing this behaviour before.
+
+       The code could be changed to pass the Config() instance everywhere and
+       re-design the Config() not to use class level static variables. This was
+       tried but the decision was not to change this. The main reason is that test
+       case helpers  are using few methods from Content(). This would have required
+       creating and passing the Config() for each helper method in every test and
+       subtest. Also the passing of 'self.config' everywhere was not so nice to
+       authors eye.
+
+       The confgiration is always updated with new source like CLI command or API
+       request. But the pattern cannot be creating two instances from Snippy()
+       into the same process like below and expect different configuration:
+
+         from snippy.snip import Snippy
+
+         snippy1 = Snippy()
+         snippy2 = Snippy()
+         print(snippy1.config.is_storage_in_memory()) # Results False
+         snippy2.config.set_storage_in_memory(True)
+         print(snippy1.config.is_storage_in_memory()) # Results True
+
+       The proper pattern is to create one instance and release it when it is
+       not needed anymore.
+
+         # Example results: NOK: cannot find content with given search criteria
+         import sys
+         from snippy.snip import Snippy
+
+         sys.argv = ['snippy', 'search', '--sall', '.']
+         snippy = Snippy()
+         snippy.run()
+         snippy.release()
+
+       /1/ https://stackoverflow.com/questions/68645/static-class-variables-in-python
+
+    CAUSE CODE
+    
+    1. The tool cause code is global and shared with all instances of Snippy()
+    
+       The same explanation applies for the tool exist cause from Cause() class
+       than for the 'The tool configuration is global and shared with all instances
+       of Snippy()'.
+
     LOGGING
 
     1. There are no logs printed to user
-    
+
        There is only the tool exit cause that must produce OK or NOK with a cause
        text in case of failure. In case more information is needed from the failure,
        the debug logs can be enabled with -vv or --debug option.
-       
+
        This rule tries to reduce glutter printed for the end user.
 
     2. There are no exceptions printed to user
@@ -639,7 +695,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        This rule tries to reduce glutter printed for the end user.
 
     3. All logs are printed to stdout
-    
+
        Because of rules 'There are no logs printed to user' and 'There are no
        exceptions printed to user', it is more suitable to use always the stdout.
        This is also considered more predictable for the end user who is debugging.
@@ -648,16 +704,16 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     COMMITS
 
     1. Git commit logs tries to follow 'keep a changelog' rules
-    
+
        The rule must be applied to commit log header which must contain 'Types of
        changes' and the specified keywords as a first word in the commit log.
-       
+
        The rule must be applied so that the logs are written for humans. This means
        that the commit log must tell the reasons and design decisions behind the
        change.
-       
+
        See the commit log rules from /1/.
-    
+
        This rule tries to force common look and feel for the commit logs.
 
        /1/ http://keepachangelog.com/en/1.0.0/
@@ -1045,10 +1101,10 @@ snippet export --solution -d a96accc25dd23ac0
 7. Export solution template to default file. (DONE)
 snippy export --solution --template
 
-snippy export --solution                                      # All solutions in default file solutions.yaml. (TESTED) 
-snippy export --solution -f ./file-s.txt                      # All solutions in file defined file in text format. (TESTED) 
-snippy export --solution -f ./file-s.text                     # All solutions in file defined file in text format. (TESTED) 
-snippy export --solution -f ./file-s.yaml                     # All solutions in file defined file in yaml format. (TESTED) 
+snippy export --solution                                      # All solutions in default file solutions.yaml. (TESTED)
+snippy export --solution -f ./file-s.txt                      # All solutions in file defined file in text format. (TESTED)
+snippy export --solution -f ./file-s.text                     # All solutions in file defined file in text format. (TESTED)
+snippy export --solution -f ./file-s.yaml                     # All solutions in file defined file in yaml format. (TESTED)
 snippy export --solution -f ./file-s.json                     # All solutions in file defined file in json format. (TESTED)
 snippy export --solution -f ./file-s.foo                      # Unknown file format results error and no export is made. (TESTED)
 
@@ -1162,9 +1218,9 @@ snippy import --solution -f ./solution-template.text -d 12345 # Import (update) 
 snippy import --solution -f ./solution-template.text -d 00000 # Import (update) one content with digest not found
 
 snippy import --solution -f ./solution-template.txt   # Import solution template without any changes (TESTED)
-  
+
 snippy import --solution --defaults                   # Import solution defaults (TESTED)
-  
+
 snippy import --solution --template                   # Must produce error (TESTED)
 
 ########################

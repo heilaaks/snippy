@@ -16,7 +16,6 @@
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
    - [ ] How to use -vv option with pylint without affecting Snippy tool? The -vv option is read directly from sys.argv by Snippy.
    - [ ] How to add upgrade procedure? Is this needed? What happens when there is content stored and pip upgrade is made?
-   - [ ] Why if snippy.release() do not have cause reset, last test failure (NOK) leaves the cause hanging? Why?
    - [ ] How to sign git commits. /1/ https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
    - [ ] How to sign PyPI code? Is this feasible?
    - [ ] Add statistics print that shows the amout of snippets and unique categories.
@@ -27,6 +26,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Documented global data (like Config() or Cause()) being shared with all instances of Snippy().
    - [x] Added possibility to limit search all and tag fields to defined list of groups.
    - [x] Fixed tool version to always print to stdout.
    - [x] Fixed that all logs printed to stdout.

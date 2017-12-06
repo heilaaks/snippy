@@ -66,6 +66,7 @@ class Snippy(object):
 
         self.storage.disconnect()
         self.cause.reset()
+        self.config.reset()
         Logger.reset()
 
 

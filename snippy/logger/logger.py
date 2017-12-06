@@ -14,12 +14,13 @@ class Logger(object):
     def __init__(self, module):
         attributes = {'appName': 'snippy'}
         self.logger = logging.getLogger('snippy.' + module)
-        handler = logging.StreamHandler(sys.stdout)
-        log_format = '%(asctime)s %(process)d[%(lineno)04d] <%(levelno)s>: %(threadName)s@%(filename)-13s : %(message)s'
-        formatter = CustomFormatter(log_format)
-        handler.setFormatter(formatter)
-        self.logger.addHandler(handler)
-        self.logger = logging.LoggerAdapter(self.logger, attributes)
+        if not self.logger.handlers:
+            handler = logging.StreamHandler(sys.stdout)
+            log_format = '%(asctime)s %(process)d[%(lineno)04d] <%(levelno)s>: %(threadName)s@%(filename)-13s : %(message)s'
+            formatter = CustomFormatter(log_format)
+            handler.setFormatter(formatter)
+            self.logger.addHandler(handler)
+            self.logger = logging.LoggerAdapter(self.logger, attributes)
 
     def get(self):
         """Return logger object."""

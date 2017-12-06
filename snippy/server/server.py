@@ -3,6 +3,7 @@
 """server.py - JSON REST API server."""
 
 import falcon
+from snippy.logger.logger import Logger
 from snippy.server.api_hello import ApiHello
 from snippy.server.api_snippets import ApiSnippets
 from snippy.server.api_snippets import ApiSnippetsDigest
@@ -14,6 +15,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
     """REST API Server."""
 
     def __init__(self, storage):
+        self.logger = Logger(__name__).get()
         self.api = None
         self.storage = storage
 

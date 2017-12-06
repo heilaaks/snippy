@@ -22,16 +22,17 @@ class Config(object):  # pylint: disable=too-many-public-methods
     config = {}
 
     def __init__(self):
-        Config.logger = Logger(__name__).get()
+        if not Config.logger:
+            Config.logger = Logger(__name__).get()
         Config.source = None
         Config.config = {}
-        Config._set_init_config()
+        Config._set_base_config()
 
     @classmethod
-    def _set_init_config(cls):
+    def _set_base_config(cls):
         """Set initial configuration."""
 
-        cls.logger.info('initiating configuration')
+        cls.logger.info('initialize global configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
         cls.config['output'] = {}
         cls.config['output']['print'] = True
@@ -42,7 +43,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['storage']['schema']['path'] = pkg_resources.resource_filename('snippy', 'data/config')
         cls.config['storage']['schema']['file'] = 'database.sql'
         cls.config['storage']['in_memory'] = False
-        cls.logger.info('done')
 
     def reset(self):
         """Reset configuration."""

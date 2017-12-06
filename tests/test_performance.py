@@ -41,8 +41,8 @@ class TestPerformance(unittest.TestCase):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC: 1 loop : 0.0288 / 55 loop : 0.8833 / 100 loop : 1.6306
-        ##        Reference PC: 880 loop : 27.6441 / 1000 loop : 36.6366
+        ##        Reference PC: 1 loop : 0.0238 / 55 loop : 0.7852 / 100 loop : 1.4785
+        ##        Reference PC: 880 loop : 12.5803 / 1000 loop : 14.3819
         ##
         ##        The reference is with sqlite database in memory as with all tests.
         ##        There is naturally jitter in results and the values are as of now

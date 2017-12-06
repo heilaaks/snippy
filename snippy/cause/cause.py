@@ -11,8 +11,12 @@ class Cause(object):
 
     ALL_OK = 'OK'
 
+    logger = None
     cause_text = ALL_OK
-    logger = Logger(__name__).get()
+
+    def __init__(self):
+        if not Cause.logger:
+            Cause.logger = Logger(__name__).get()
 
     @classmethod
     def reset(cls):

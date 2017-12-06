@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Fix console tests and test_console_very_verbose_option. There is something likely in Logger.
    - [ ] Fix --sgrp with any search criteria like leaving keywords out, using dot or empty. This should match all but no: test_search_snippet_with_sgrp
    - [ ] Add limiting fields that are returned from API and possibility to sort. //http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add support to run with runalias.
@@ -14,7 +15,6 @@
 ## BUBBLING UNDER
    - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect'.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
-   - [ ] How to use -vv option with pylint without affecting Snippy tool? The -vv option is read directly from sys.argv by Snippy.
    - [ ] How to add upgrade procedure? Is this needed? What happens when there is content stored and pip upgrade is made?
    - [ ] How to sign git commits. /1/ https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
    - [ ] How to sign PyPI code? Is this feasible?
@@ -26,6 +26,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed Snippy() to use 'snippy' instead of root logger. This also fixed the -vv usage in Pylint.
    - [x] Documented global data (like Config() or Cause()) being shared with all instances of Snippy().
    - [x] Added possibility to limit search all and tag fields to defined list of groups.
    - [x] Fixed tool version to always print to stdout.

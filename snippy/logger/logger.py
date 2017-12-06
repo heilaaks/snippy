@@ -33,23 +33,23 @@ class Logger(object):
         which causes module level logger to rely only higher level logger
         in the logging hierarchy."""
 
-        logging.getLogger().disabled = True
+        logging.getLogger('snippy').disabled = True
         if '--debug' in sys.argv or '-vv' in sys.argv:
-            logging.getLogger().disabled = False
-            logging.getLogger().setLevel(logging.DEBUG)
+            logging.getLogger('snippy').disabled = False
+            logging.getLogger('snippy').setLevel(logging.DEBUG)
 
     @staticmethod
     def reset():
         """Reset log level to default."""
 
-        logging.getLogger().disabled = True
-        logging.getLogger().setLevel(logging.WARNING)
+        logging.getLogger('snippy').disabled = True
+        logging.getLogger('snippy').setLevel(logging.WARNING)
 
     @staticmethod
     def print_cause(cause):
         """Print exit cause for the tool."""
 
-        if logging.getLogger().getEffectiveLevel() == logging.DEBUG:
+        if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
             Logger(__name__).get().info('exiting with cause %s', cause.lower())
         elif '-q' not in sys.argv:
             signal_sigpipe = getsignal(SIGPIPE)

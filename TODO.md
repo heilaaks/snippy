@@ -1,10 +1,9 @@
 ## TODO
-   - [ ] Fix console tests and test_console_very_verbose_option. There is something likely in Logger.
    - [ ] Fix --sgrp with any search criteria like leaving keywords out, using dot or empty. This should match all but no: test_search_snippet_with_sgrp
    - [ ] Add limiting fields that are returned from API and possibility to sort. //http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
-   - [ ] Add of experimental REST API to try it out.
+   - [ ] Add full support of existing features for REST API.
    - [ ] Update documents.
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
    - [ ] Add to document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
@@ -13,6 +12,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] Is there a way to get logs from Python logger from stdout? Mocking stdout to StringIO does not even though the logger stream is stdout.
    - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect'.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
    - [ ] How to add upgrade procedure? Is this needed? What happens when there is content stored and pip upgrade is made?
@@ -26,6 +26,8 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added experimental REST API with two tests to try it out.
+   - [x] Fixed console tests and the test_console_very_verbose_option.
    - [x] Fixed Snippy() to use 'snippy' instead of root logger. This also fixed the -vv usage in Pylint.
    - [x] Documented global data (like Config() or Cause()) being shared with all instances of Snippy().
    - [x] Added possibility to limit search all and tag fields to defined list of groups.

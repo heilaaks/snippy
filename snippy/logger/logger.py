@@ -14,14 +14,14 @@ class Logger(object):
     def __init__(self, module):
         log_format = '%(asctime)s %(process)d[%(lineno)04d] <%(levelno)s>: %(threadName)s@%(filename)-13s : %(message)s'
         self.logger = logging.getLogger(module)
-        # print("received handler (%s) (%s)" % (module, self.logger.handlers))
         if not self.logger.handlers:
             formatter = CustomFormatter(log_format)
-            handler = logging.StreamHandler(sys.stdout)
+            handler = logging.StreamHandler(stream=sys.stdout)
             handler.setFormatter(formatter)
             self.logger.addHandler(handler)
+            # Logger adapter has extended API over logger. The adapter
+            # overriding the logger is intended behaviour here.
             self.logger = logging.LoggerAdapter(self.logger, {'appName': 'snippy'})
-            # print("module (%s) handler (%s) adapter (%s)" % (module, self.logger.handlers, self.adapter))
 
     def get(self):
         """Return logger."""

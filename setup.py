@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 dev_require = ('logging_tree',)
-tests_require = ('pytest', 'pytest-cov', 'tox', 'codecov', 'mock', 'six', 'flake8')
+tests_require = ('pytest==3.3.1', 'pytest-cov', 'tox', 'codecov', 'mock', 'six', 'flake8')
 docs_require = ('sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme')
 server_require = ('falcon==1.3.0', 'gunicorn')
 exec(open('snippy/version.py').read())

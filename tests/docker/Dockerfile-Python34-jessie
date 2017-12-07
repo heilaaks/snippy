@@ -33,6 +33,6 @@ RUN pip install pytest==3.0.7 py==1.4.33 pluggy==0.4.0 && \
     apt-get install -y gdb python-dbg && \
     pip install -e .[test] && \
     pip install -r requirements.txt
-RUN python -m pytest -p no:logging ./tests/test_*.py --cov snippy
+RUN python -m pytest ./tests/test_*.py --cov snippy
 
 ENTRYPOINT ["tail", "-f", "/dev/null"]

@@ -75,6 +75,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['search']['filter'] = cls._parse_search_filter()
         cls.config['search']['limit'] = cls._parse_search_limit()
         cls.config['search']['sorting'] = cls._parse_search_sorting()
+        cls.config['search']['removed_columns'] = cls._parse_search_removed_columns()
         cls.config['input'] = {}
         cls.config['input']['editor'] = Config.source.is_editor()
         cls.config['input']['digest'] = Config.source.is_content_digest()
@@ -109,6 +110,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured value from --filter as %s', cls.config['search']['filter'])
         cls.logger.debug('configured value from limit as %d', cls.config['search']['limit'])
         cls.logger.debug('configured value from sorting as %s', cls.config['search']['sorting'])
+        cls.logger.debug('configured value from removed columns as %s', cls.config['search']['removed_columns'])
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
@@ -426,6 +428,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['search']['sorting']
 
     @classmethod
+    def get_search_removed_columns(cls):
+        """Return columns removed from search response."""
+
+        return cls.config['search']['removed_columns']
+
+    @classmethod
     def is_editor(cls):
         """Test if editor is used to input content."""
 
@@ -691,9 +699,13 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_search_sorting(cls):
         """Process the user given sort options."""
 
-        sorted_dict = Config.source.get_search_sorted_columns()
+        return Config.source.get_search_sorted_columns()
 
-        return sorted_dict
+    @classmethod
+    def _parse_search_removed_columns(cls):
+        """Process the user given search response column list."""
+
+        return Config.source.get_search_removed_columns()
 
     @classmethod
     def _get_edited_content(cls, content):

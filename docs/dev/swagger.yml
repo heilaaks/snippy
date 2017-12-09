@@ -103,6 +103,14 @@ paths:
           in: query
           required: false
           description: Sort based on defined column.
+        - name: fields
+          type: array
+          items:
+            type: string
+            enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest, key]
+          in: query
+          required: false
+          description: Limit fields that are returned.
       responses:
         200:
           description: OK
@@ -113,7 +121,7 @@ paths:
         400:
           description: "Search request not correct"
         404:
-          description: "Solution not found"
+          description: "Snippet not found"
     delete:
       tags:
       - "snippet"

@@ -3,9 +3,9 @@
 """migrate.py: Import and export management."""
 
 from __future__ import print_function
+import os.path
 import re
 import sys
-import os.path
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
 from snippy.version import __version__
 from snippy.config.constants import Constants as Const
@@ -52,11 +52,10 @@ class Migrate(object):
         limit = Config.get_search_limit()
         sorting = Config.get_search_sorting()
 
-        # The order below matters. The design is that the first regexp query
-        # is applied to reduce the content based on the search parameters and
-        # only then the limit. In the second phase sorting is applied to all
-        # the remaining results. Only in the last phase the final filtered
-        # content count is limited.
+        # The design is that the first regexp query is applied to reduce the
+        # content list. Then the remaining contents are first sorted and then
+        # limited. That is, all the content reduction parameters are applied
+        # first, then sort and the limit is always the last.
         if regexp and contents:
             cls.logger.debug('apply search regexp filter to search query')
         if sorting and contents:
@@ -381,5 +380,9 @@ class Migrate(object):
                       'versions': content.get_versions(),
                       'utc': content.get_utc(),
                       'digest': content.get_digest()}
+
+        columns = Config.get_search_removed_columns()
+        for column in columns:
+            dictionary.pop(column)
 
         return dictionary

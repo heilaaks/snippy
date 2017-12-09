@@ -67,7 +67,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
                            'server': False,
                            'limit': ConfigSourceBase.LIMIT_DEFAULT,
                            'sort': ConfigSourceBase.BRIEF,
-                           'columns': ConfigSourceBase.COLUMNS}
+                           'fields': ConfigSourceBase.COLUMNS}
         self._set_self()
         self._set_repr()
 
@@ -327,3 +327,28 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
         self.logger.debug('converted sort parameters to internal format "%s"', sorted_dict)
 
         return sorted_dict
+
+    def get_search_removed_columns(self):
+        """Return columns that used in search result."""
+
+        used_columns = ConfigSourceBase.COLUMNS
+        try:
+            if isinstance(self.fields, str):
+                used_columns = (self.fields,)
+            elif isinstance(self.fields, (list, tuple)):
+                used_columns = tuple(self.fields)
+            else:
+                self.logger.info('search result column list attributes ignore because of unknown type')
+        except ValueError:
+            self.logger.info('search result column list option validation failed and thus all columns are used')
+        self.logger.debug('parsed search result column list option with value "%s"', used_columns)
+
+        # To optimize internal logic, list columns that are moved. Column 'key'
+        # is never added to content.
+        removed_columns = list(set(ConfigSourceBase.COLUMNS) - set(used_columns))
+        try:
+            removed_columns.remove(ConfigSourceBase.KEY)
+        except ValueError:
+            pass
+
+        return tuple(removed_columns)

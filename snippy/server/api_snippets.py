@@ -23,6 +23,7 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
         """Request snippets based on search parameters."""
 
         self.logger.debug('run route /api/snippets')
+        print("query params %s" % request.params)
         api = Api(Const.SNIPPET, Api.SEARCH, request.params)
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()

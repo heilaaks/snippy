@@ -76,6 +76,27 @@ class TestApiSearchSnippet(unittest.TestCase):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
+        ## Brief: Get /api/snippets and search keywords from all columns. The search query
+        ##        matches to two snippets but only one of them is returned because the limit
+        ##        parameter was set to one. In this case the sort is descending and the last
+        ##        match must be returned. The resulting fields are limited only to brief and
+        ##        category.
+        snippy = Snippet.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '68'}
+        body = [{column: Snippet.DEFAULTS[Snippet.FORCED][column] for column in ['brief','category']}]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sall=docker&limit=1&sort=-brief&fields=brief,category')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
     # pylint: disable=duplicate-code
     def tearDown(self):
         """Teardown each test."""

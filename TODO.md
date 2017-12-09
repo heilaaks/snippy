@@ -1,11 +1,12 @@
 ## TODO
-   - [ ] Add limiting fields that are returned from API and possibility to sort. //http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add full support of existing features for REST API.
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
+   - [ ] Fix API that does only /api/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
    - [ ] Update documents.
    - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
+   - [ ] Add remove field support for text content. This is bit hard to generalize since layout e.g. contains header with three fields.
    - [ ] Hide internal class level variables with _ or __ prefix. The intention is not to allow access to these.
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
    - [ ] Add to document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
@@ -17,6 +18,7 @@
    - [ ] Is there a way to get logs from Python logger from stdout? Mocking stdout to StringIO does not even though the logger stream is stdout.
    - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect' in import snippet.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
+   - [ ] Add support for REST API YAML responses.
    - [ ] How to add upgrade procedure? Is this needed? What happens when there is content stored and pip upgrade is made?
    - [ ] How to sign git commits. /1/ https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
    - [ ] How to sign PyPI code? Is this feasible?
@@ -28,6 +30,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added field limits that can be applied to REST API JSON responses.
    - [x] Fixed --sgrp with any search criteria to behave like leaving keywords out, using dot or empty.
    - [x] Added experimental REST API with two tests to try it out.
    - [x] Fixed console tests and the test_console_very_verbose_option.

@@ -18,7 +18,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class SnippetHelper(object):
     """Helper methods for snippet testing."""
 
-    UTC = '2017-10-14 19:56:31'
+    UTC1 = '2017-10-14 19:56:31'
+    UTC2 = '2017-10-20 07:08:45'
     REMOVE = 0
     FORCED = 1
     EXITED = 2
@@ -108,7 +109,7 @@ class SnippetHelper(object):
 
         if text:
             content = Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SNIPPET)
-            editor = Editor(Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SNIPPET), SnippetHelper.UTC, text)
+            editor = Editor(Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SNIPPET), SnippetHelper.UTC1, text)
             content.set((editor.get_edited_data(),
                          editor.get_edited_brief(),
                          editor.get_edited_group(),
@@ -142,7 +143,7 @@ class SnippetHelper(object):
         """Transform dictionary to text template."""
 
         contents = Content.load({'content': [dictionary]})
-        editor = Editor(contents[0], SnippetHelper.UTC)
+        editor = Editor(contents[0], SnippetHelper.UTC1)
 
         return editor.get_template()
 
@@ -185,6 +186,27 @@ class SnippetHelper(object):
             assert len(Database.get_snippets()) == contents + 1
 
         return snippy
+
+    @staticmethod
+    def sorted_json_list(json_list):
+        """Sort list of JSONs but keep the oder of main level list containing JSONs."""
+
+        jsons = []
+        for json in json_list:
+            jsons.append(SnippetHelper.sorted_json(json))
+
+        return tuple(jsons)
+
+    @staticmethod
+    def sorted_json(json):
+        """Sort nested JSON to allow comparison."""
+
+        if isinstance(json, dict):
+            return sorted((k, SnippetHelper.sorted_json(v)) for k, v in json.items())
+        if isinstance(json, (list, tuple)):
+            return sorted(SnippetHelper.sorted_json(x) for x in json)
+
+        return json
 
     @staticmethod
     def test_content(snippy, mock_file, dictionary):

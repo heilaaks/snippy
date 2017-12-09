@@ -7,7 +7,7 @@ from snippy.logger.logger import Logger
 from snippy.config.constants import Constants as Const
 
 
-class ConfigSourceBase(object):
+class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
     """Base class for configuration sources."""
 
     # Operations
@@ -286,3 +286,44 @@ class ConfigSourceBase(object):
         self.logger.info('parsed argument --server with value "%s"', self.server)
 
         return self.server
+
+    def get_search_limit(self):
+        """Return content count limit."""
+
+        limit = ConfigSourceBase.LIMIT_DEFAULT
+        try:
+            limit = int(self.limit)
+        except ValueError:
+            self.logger.debug('search limit is not a number and thus the limit is set to default %d', limit)
+
+        self.logger.info('parsed content limit option with value "%s"', limit)
+
+        return limit
+
+    def get_search_sorted_columns(self):
+        """Return content sort options."""
+
+        sorted_dict = {}
+        sorted_columns = []
+        try:
+            if isinstance(self.sort, str):
+                sorted_columns.append(self.sort)
+            elif isinstance(self.sort, (list, tuple)):
+                sorted_columns.extend(self.sort)
+            else:
+                self.logger.info('search sorting attributes ignore because of unknown type')
+        except ValueError:
+            self.logger.info('search sort option validation failed and thus no sorting is applied')
+        self.logger.debug('parsed content sort option with value "%s"', sorted_columns)
+
+        # Convert the column names to internal column index.
+        for column in sorted_columns:
+            if column[0].startswith('-'):
+                column_index = ConfigSourceBase.COLUMNS.index(column[1:])
+                sorted_dict[column_index] = True
+            else:
+                column_index = ConfigSourceBase.COLUMNS.index(column)
+                sorted_dict[column_index] = False
+        self.logger.debug('converted sort parameters to internal format "%s"', sorted_dict)
+
+        return sorted_dict

@@ -73,6 +73,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['search']['stag'] = cls._parse_search_stag()
         cls.config['search']['sgrp'] = cls._parse_search_sgrp()
         cls.config['search']['filter'] = cls._parse_search_filter()
+        cls.config['search']['limit'] = cls._parse_search_limit()
+        cls.config['search']['sorting'] = cls._parse_search_sorting()
         cls.config['input'] = {}
         cls.config['input']['editor'] = Config.source.is_editor()
         cls.config['input']['digest'] = Config.source.is_content_digest()
@@ -105,6 +107,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured value from --stag as %s', cls.config['search']['stag'])
         cls.logger.debug('configured value from --sgrp as %s', cls.config['search']['sgrp'])
         cls.logger.debug('configured value from --filter as %s', cls.config['search']['filter'])
+        cls.logger.debug('configured value from limit as %d', cls.config['search']['limit'])
+        cls.logger.debug('configured value from sorting as %s', cls.config['search']['sorting'])
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
@@ -410,6 +414,18 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['search']['filter']
 
     @classmethod
+    def get_search_limit(cls):
+        """Return search limit."""
+
+        return cls.config['search']['limit']
+
+    @classmethod
+    def get_search_sorting(cls):
+        """Return search sorting."""
+
+        return cls.config['search']['sorting']
+
+    @classmethod
     def is_editor(cls):
         """Test if editor is used to input content."""
 
@@ -662,6 +678,22 @@ class Config(object):  # pylint: disable=too-many-public-methods
             regexp = Const.EMPTY
 
         return regexp
+
+    @classmethod
+    def _parse_search_limit(cls):
+        """Process the user given search limit."""
+
+        limit = Config.source.get_search_limit()
+
+        return limit
+
+    @classmethod
+    def _parse_search_sorting(cls):
+        """Process the user given sort options."""
+
+        sorted_dict = Config.source.get_search_sorted_columns()
+
+        return sorted_dict
 
     @classmethod
     def _get_edited_content(cls, content):

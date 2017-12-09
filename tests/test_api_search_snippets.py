@@ -4,9 +4,7 @@
 
 import sys
 import unittest
-import json
 import mock
-import pytest
 import falcon
 from falcon import testing
 from snippy.snip import Snippy
@@ -19,7 +17,6 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiSearchSnippet(unittest.TestCase):
     """Test get /snippets API."""
 
-    @pytest.mark.skip(reason='Sorting and comparing JSON does not yet work')
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Config, 'get_utc_time')
@@ -28,14 +25,16 @@ class TestApiSearchSnippet(unittest.TestCase):
         """Search snippet from all fields."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC
+        mock_get_utc_time.return_value = Snippet.UTC1
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Get /api/snippets and search keywords from all columns. The search query
-        ##        matches to two snippets and both of them are returned.
+        ##        matches to two snippets and both of them are returned. The search is
+        ##        sorted based on one field. The limit defined in the search query is not
+        ##        exceeded.
         snippy = Snippet.add_defaults(Snippy())
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
-        body = json.dumps([Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]])
+        body = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -43,11 +42,39 @@ class TestApiSearchSnippet(unittest.TestCase):
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == headers
-        assert json.dumps(result.json) == body
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
         snippy.release()
         snippy = None
         Database.delete_storage()
+
+        ## Brief: Get /api/snippets and search keywords from all columns. The search query
+        ##        matches to four snippets but limit defined in search query results only
+        ##        two of them sorted by the brief column. The sorting must be applied before
+        ##        limit is applied.
+
+        # Each content generates 4 calls to get UTC time. There are 4 contents that are
+        # inserted into database and 2 first contain the UTC1 timestamp and the last two
+        # the UTC2 timestamp.
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)
+        snippy = Snippet.add_defaults(Snippy())
+        Snippet.add_one(snippy, Snippet.EXITED)
+        Snippet.add_one(snippy, Snippet.NETCAT)
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1105'}
+        body = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.EXITED]]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=brief')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+        mock_get_utc_time.side_effect = None
 
     # pylint: disable=duplicate-code
     def tearDown(self):

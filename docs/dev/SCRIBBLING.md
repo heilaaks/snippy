@@ -245,6 +245,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -X GET "http://127.0.0.1:8080/api/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
     $ curl -X GET "http://127.0.0.1:8080/api/snippets/53908d68425c61dc" -H "accept: application/json"
     $ curl -s -X GET "http://127.0.0.1:8080/api/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/api/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-utc" -H "accept: application/json" | python -m json.tool
 
 #######################################
 ## Devel

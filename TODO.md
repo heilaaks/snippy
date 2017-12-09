@@ -1,9 +1,12 @@
 ## TODO
    - [ ] Add limiting fields that are returned from API and possibility to sort. //http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
+   - [ ] Add full support of existing features for REST API.
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
-   - [ ] Add full support of existing features for REST API.
    - [ ] Update documents.
+   - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
+   - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
+   - [ ] Hide internal class level variables with _ or __ prefix. The intention is not to allow access to these.
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
    - [ ] Add to document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
    - [ ] Test manually the exception cases for example with file with Python3 and 2.7. Some exceptions may not be in Python2.7.
@@ -12,7 +15,7 @@
 
 ## BUBBLING UNDER
    - [ ] Is there a way to get logs from Python logger from stdout? Mocking stdout to StringIO does not even though the logger stream is stdout.
-   - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect'.
+   - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect' in import snippet.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
    - [ ] How to add upgrade procedure? Is this needed? What happens when there is content stored and pip upgrade is made?
    - [ ] How to sign git commits. /1/ https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)

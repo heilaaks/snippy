@@ -9,7 +9,7 @@ from snippy.logger.logger import Logger
 from snippy.config.config import Config
 
 
-class Content(object):
+class Content(object):  # pylint: disable=too-many-public-methods
     """Manage content."""
 
     def __init__(self, content=None, category=None):
@@ -267,6 +267,14 @@ class Content(object):
                             content[Const.DIGEST],
                             content[Const.METADATA],
                             content[Const.KEY])
+
+    @classmethod
+    def sort_contents(cls, contents, column, reversed_sort):
+        """Sort all contents by defined column."""
+
+        sorted_contents = sorted(contents, key=lambda x: x.content[column], reverse=reversed_sort)
+
+        return sorted_contents
 
     @classmethod
     def load(cls, dictionary):

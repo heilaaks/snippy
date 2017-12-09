@@ -28,20 +28,46 @@ class Migrate(object):
         """Migrate content into requested format."""
 
         migrated = Const.EMPTY
+        filtered = Migrate.apply_filters(contents)
         if content_type == Const.CONTENT_TYPE_TEXT:
-            migrated = Migrate.terminal(contents)
+            migrated = Migrate.terminal(filtered)
         elif content_type == Const.CONTENT_TYPE_JSON:
             import json
 
-            dictionary = Migrate.get_dictionary_list(contents)
+            dictionary = Migrate.get_dictionary_list(filtered)
             migrated = json.dumps(dictionary)
         elif content_type == Const.CONTENT_TYPE_YAML:
             import yaml
 
-            dictionary = Migrate.get_dictionary_list(contents)
+            dictionary = Migrate.get_dictionary_list(filtered)
             migrated = yaml.safe_dump(dictionary, default_flow_style=False)
 
         return migrated
+
+    @classmethod
+    def apply_filters(cls, contents):
+        """Apply filter, limit and sorting parameters to content."""
+
+        regexp = Config.get_search_filter()
+        limit = Config.get_search_limit()
+        sorting = Config.get_search_sorting()
+
+        # The order below matters. The design is that the first regexp query
+        # is applied to reduce the content based on the search parameters and
+        # only then the limit. In the second phase sorting is applied to all
+        # the remaining results. Only in the last phase the final filtered
+        # content count is limited.
+        if regexp and contents:
+            cls.logger.debug('apply search regexp filter to search query')
+        if sorting and contents:
+            cls.logger.debug('apply search sorting filters to search query')
+            for sort_column in sorting:
+                contents = contents[0].sort_contents(contents, sort_column, sorting[sort_column])
+        if limit and contents:
+            cls.logger.debug('apply search limit %d filter to search query', limit)
+            contents = contents[:limit]
+
+        return contents
 
     @classmethod
     def terminal(cls, contents):

@@ -21,7 +21,7 @@ else:
     from StringIO import StringIO  # pylint: disable=import-error
 
 
-class TestWfConsoleHelp():
+class TestWfConsoleHelp(object):
     """Test getting help from console."""
 
     def test_console_help(self):
@@ -364,7 +364,7 @@ class TestWfConsoleHelp():
         """Test printing logs with debug option."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC
+        mock_get_utc_time.return_value = Snippet.UTC1
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Enable long logging with --debug option. Test checks that there is more
@@ -530,7 +530,7 @@ class TestWfConsoleHelp():
         """Test printing the content."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC
+        mock_get_utc_time.return_value = Snippet.UTC1
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Test printing content with print. This is a development test

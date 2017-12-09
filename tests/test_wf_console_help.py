@@ -343,7 +343,7 @@ class TestWfConsoleHelp():
         ##        explicitly. This just verifies that the very verbose option prints more
         ##        logs.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
-            sys.argv = ['snippy', 'search', '--sall', '.a', '-vv'] ## workflow
+            sys.argv = ['snippy', 'search', '--sall', '.', '-vv'] ## workflow
             real_stderr = sys.stderr
             sys.stderr = StringIO()
             snippy = Snippy()

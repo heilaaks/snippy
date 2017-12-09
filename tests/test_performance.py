@@ -51,9 +51,9 @@ class TestPerformance(unittest.TestCase):
         ##        Note that when run on Python2, will use sqlite database in disk
         ##        that is naturally slower than memory database.
         ##
-        ##        No errors shoould be printed and the runtime should be below 10
-        ##        seconds. The runtime is intentionally to 10 times higher value
-        ##        than with reference PC.
+        ##        No errors should be printed and the runtime should be below 10
+        ##        seconds. The runtime is intentionally set 10 times higher value
+        ##        than with the reference PC.
         real_stderr = sys.stderr
         real_stdout = sys.stdout
         sys.stderr = StringIO()

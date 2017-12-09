@@ -70,7 +70,7 @@ class Migrate(object):
     def print_stdout(cls, text):
         """Print tool output to stdout."""
 
-        # The signal handler manipulation and flush setting below prevents 'broker
+        # The signal handler manipulation and flush setting below prevents 'broken
         # pipe' errors with grep. For example incorrect parameter usage in grep may
         # cause this. See below listed references /1,2/ and examples that fail
         # without this correction.

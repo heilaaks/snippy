@@ -1,7 +1,3 @@
-************* Module tests.test_api_search_snippets
-C: 86, 0: Exactly one space required after comma
-        body = [{column: Snippet.DEFAULTS[Snippet.FORCED][column] for column in ['brief','category']}]
-                                                                                        ^ (bad-whitespace)
 
 --------------------------------------------------------------------
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)

@@ -83,7 +83,7 @@ class TestApiSearchSnippet(unittest.TestCase):
         ##        category.
         snippy = Snippet.add_defaults(Snippy())
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '68'}
-        body = [{column: Snippet.DEFAULTS[Snippet.FORCED][column] for column in ['brief','category']}]
+        body = [{column: Snippet.DEFAULTS[Snippet.FORCED][column] for column in ['brief', 'category']}]
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()

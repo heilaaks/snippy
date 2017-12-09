@@ -499,21 +499,20 @@ class TestWfSearchSnippet(unittest.TestCase):
         ## Brief: List all snippets by leaving search criteria for 'search groups' out
         ##        completely. This is translated to 'match any'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            #output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
-            #          '   $ docker rm --volumes $(docker ps --all --quiet)',
-            #          '',
-            #          '   # cleanup,container,docker,docker-ce,moby',
-            #          '   > https://docs.docker.com/engine/reference/commandline/rm/',
-            #          '',
-            #          '2. Remove docker image with force @docker [53908d68425c61dc]',
-            #          '   $ docker rm --force redis',
-            #          '',
-            #          '   # cleanup,container,docker,docker-ce,moby',
-            #          '   > https://docs.docker.com/engine/reference/commandline/rm/',
-            #          '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
-            #          '',
-            #          'OK')
-            output = ('NOK: cannot find content with given search criteria',)
+            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                      '   $ docker rm --volumes $(docker ps --all --quiet)',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '',
+                      '2. Remove docker image with force @docker [53908d68425c61dc]',
+                      '   $ docker rm --force redis',
+                      '',
+                      '   # cleanup,container,docker,docker-ce,moby',
+                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                      '',
+                      'OK')
             snippy = Snippet.add_defaults(Snippy())
             sys.argv = ['snippy', 'search', '--sgrp', '', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
@@ -521,7 +520,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             cause = snippy.run_cli()
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
-            assert cause == 'NOK: cannot find content with given search criteria'
+            assert cause == Cause.ALL_OK
             assert result == Const.NEWLINE.join(output)
             snippy.release()
             snippy = None

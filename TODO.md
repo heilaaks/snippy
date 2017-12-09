@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Fix --sgrp with any search criteria like leaving keywords out, using dot or empty. This should match all but no: test_search_snippet_with_sgrp
    - [ ] Add limiting fields that are returned from API and possibility to sort. //http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
@@ -26,6 +25,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed --sgrp with any search criteria to behave like leaving keywords out, using dot or empty.
    - [x] Added experimental REST API with two tests to try it out.
    - [x] Fixed console tests and the test_console_very_verbose_option.
    - [x] Fixed Snippy() to use 'snippy' instead of root logger. This also fixed the -vv usage in Pylint.

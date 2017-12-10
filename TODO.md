@@ -4,8 +4,12 @@
    - [ ] Add support to add versions to version list.
    - [ ] Fix API that does only /api/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
-   - [ ] Add more tests to make sure that multilevel sort actually works.
+   - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
+   - [ ] Make proper JSON response error that helps to find the problem.
+   - [ ] Add HTTP response code handling for GET and DELETE.
+   - [ ] Add more tests to make sure that multi level sort actually works. Maybe limit to two columns?
    - [ ] Check if log 'too short digest 0, minimum length is 16' is valid. Seems misleading now.
+   - [ ] Move the Falcon logging to snippy logger. It seems that Falcon blocks the logs during tests?
    - [ ] Update documents.
    - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.

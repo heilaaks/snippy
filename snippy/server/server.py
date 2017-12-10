@@ -30,6 +30,6 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route('/', ApiHello())
         self.api.add_route('/api/hello', ApiHello())
         self.api.add_route('/api/snippets', ApiSnippets(self.storage))
-        self.api.add_route('/api/snippets/{digest}', ApiSnippetsDigest())
+        self.api.add_route('/api/snippets/{digest}', ApiSnippetsDigest(self.storage))
         self.api.add_route('/api/snippets/{digest}/data', ApiSnippetsDigestData())
         SnippyServer(self.api, options).run()

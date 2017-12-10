@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_api_search_snippets.py: Test get /snippets API."""
+"""test_api_search_snippets.py: Test GET /snippets API."""
 
 import sys
 import unittest
@@ -15,7 +15,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestApiSearchSnippet(unittest.TestCase):
-    """Test get /snippets API."""
+    """Test GET /snippets API."""
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -28,10 +28,10 @@ class TestApiSearchSnippet(unittest.TestCase):
         mock_get_utc_time.return_value = Snippet.UTC1
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Get /api/snippets and search keywords from all columns. The search query
-        ##        matches to two snippets and both of them are returned. The search is
-        ##        sorted based on one field. The limit defined in the search query is not
-        ##        exceeded.
+        ## Brief: Call GET /api/snippets and search keywords from all columns. The search
+        ##        query matches to two snippets and both of them are returned. The search
+        ##        is sorted based on one field. The limit defined in the search query is
+        ##        not exceeded.
         snippy = Snippet.add_defaults(Snippy())
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
         body = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
@@ -49,10 +49,10 @@ class TestApiSearchSnippet(unittest.TestCase):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Get /api/snippets and search keywords from all columns. The search query
-        ##        matches to four snippets but limit defined in search query results only
-        ##        two of them sorted by the brief column. The sorting must be applied before
-        ##        limit is applied.
+        ## Brief: Call GET /api/snippets and search keywords from all columns. The search
+        ##        query matches to four snippets but limit defined in search query results
+        ##        only two of them sorted by the brief column. The sorting must be applied
+        ##        before limit is applied.
 
         # [REF_UTC]: Each content generates 4 calls to get UTC time. There are 4 contents
         #            that are inserted into database and 2 first contain the UTC1 timestamp
@@ -79,11 +79,11 @@ class TestApiSearchSnippet(unittest.TestCase):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
-        ## Brief: Get /api/snippets and search keywords from all columns. The search query
-        ##        matches to two snippets but only one of them is returned because the limit
-        ##        parameter was set to one. In this case the sort is descending and the last
-        ##        match must be returned. The resulting fields are limited only to brief and
-        ##        category.
+        ## Brief: Call GET /api/snippets and search keywords from all columns. The search
+        ##        query matches to two snippets but only one of them is returned because the
+        ##        limit parameter was set to one. In this case the sort is descending and the
+        ##        last match must be returned. The resulting fields are limited only to brief
+        ##        and category.
         snippy = Snippet.add_defaults(Snippy())
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '68'}
         body = [{column: Snippet.DEFAULTS[Snippet.FORCED][column] for column in ['brief', 'category']}]
@@ -100,9 +100,9 @@ class TestApiSearchSnippet(unittest.TestCase):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Get /api/snippets and search keywords from all columns. The search query
-        ##        matches to four snippets but limit defined in search query results only
-        ##        two of them sorted by the utc column in descending order.
+        ## Brief: Call GET /api/snippets and search keywords from all columns. The search
+        ##        query matches to four snippets but limit defined in search query results
+        ##        only two of them sorted by the utc column in descending order.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
         snippy = Snippet.add_defaults(Snippy())
         Snippet.add_one(snippy, Snippet.EXITED)
@@ -116,7 +116,6 @@ class TestApiSearchSnippet(unittest.TestCase):
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cnmap&limit=2&sort=-utc,-brief')
         assert result.headers == headers
-        print(result.json)
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
         snippy.release()
@@ -124,8 +123,8 @@ class TestApiSearchSnippet(unittest.TestCase):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
-        ## Brief: Try to get /api/snippets with sort parameter set the column name that is
-        ##        not existing. The sort must fall to default sorting.
+        ## Brief: Try to call GEET /api/snippets with sort parameter set the column name
+        ##        that is not existing. The sort must fall to default sorting.
         snippy = Snippet.add_defaults(Snippy())
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
         body = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
@@ -136,7 +135,6 @@ class TestApiSearchSnippet(unittest.TestCase):
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
         assert result.headers == headers
-        print(result.json)
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
         snippy.release()

@@ -56,12 +56,19 @@ class Migrate(object):
         # content list. Then the remaining contents are first sorted and then
         # limited. That is, all the content reduction parameters are applied
         # first, then sort and the limit is always the last.
+        #
+        # Sorting with multiple parameters is complicated and not fully understood.
+        # Based on /1/ the logic is to reverse the order of parameters given by
+        # user and then run the sort for each column in reversed order. This seems
+        # to work but currently cannot be quaranteed to be 100% correct.
+        #
+        # /1/ https://stackoverflow.com/a/4233482
         if regexp and contents:
             cls.logger.debug('apply search regexp filter to search query')
         if sorting and contents:
             cls.logger.debug('apply search sorting filters to search query')
-            for sort_column in sorting:
-                contents = contents[0].sort_contents(contents, sort_column, sorting[sort_column])
+            for sort_column in reversed(sorting['order']):
+                contents = contents[0].sort_contents(contents, sort_column, sorting['value'][sort_column])
         if limit and contents:
             cls.logger.debug('apply search limit %d filter to search query', limit)
             contents = contents[:limit]

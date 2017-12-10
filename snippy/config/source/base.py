@@ -304,26 +304,30 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
         """Return content sort options."""
 
         sorted_dict = {}
-        sorted_columns = []
+        column_names = []
         try:
             if isinstance(self.sort, str):
-                sorted_columns.append(self.sort)
+                column_names.append(self.sort)
             elif isinstance(self.sort, (list, tuple)):
-                sorted_columns.extend(self.sort)
+                column_names.extend(self.sort)
             else:
                 self.logger.info('search sorting attributes ignore because of unknown type')
         except ValueError:
             self.logger.info('search sort option validation failed and thus no sorting is applied')
-        self.logger.debug('parsed content sort option with value "%s"', sorted_columns)
+        self.logger.debug('parsed content sort option with value "%s"', column_names)
 
         # Convert the column names to internal column index.
-        for column in sorted_columns:
+        sorted_dict['order'] = []
+        sorted_dict['value'] = {}
+        for column in column_names:
             if column[0].startswith('-'):
                 column_index = ConfigSourceBase.COLUMNS.index(column[1:])
-                sorted_dict[column_index] = True
+                sorted_dict['order'].append(column_index)
+                sorted_dict['value'][column_index] = True
             else:
                 column_index = ConfigSourceBase.COLUMNS.index(column)
-                sorted_dict[column_index] = False
+                sorted_dict['order'].append(column_index)
+                sorted_dict['value'][column_index] = False
         self.logger.debug('converted sort parameters to internal format "%s"', sorted_dict)
 
         return sorted_dict

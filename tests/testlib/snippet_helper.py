@@ -73,7 +73,7 @@ class SnippetHelper(object):
                  'runalias': '',
                  'versions': '',
                  'utc': '2017-10-20 07:08:45',
-                 'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'})
+                 'digest': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'})
 
     TEMPLATE = ('# Commented lines will be ignored.',
                 '#',

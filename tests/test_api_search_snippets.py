@@ -42,6 +42,7 @@ class TestApiSearchSnippet(unittest.TestCase):
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == headers
+        print(result.json)
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
         snippy.release()
@@ -53,9 +54,11 @@ class TestApiSearchSnippet(unittest.TestCase):
         ##        two of them sorted by the brief column. The sorting must be applied before
         ##        limit is applied.
 
-        # Each content generates 4 calls to get UTC time. There are 4 contents that are
-        # inserted into database and 2 first contain the UTC1 timestamp and the last two
-        # the UTC2 timestamp.
+        # [REF_UTC]: Each content generates 4 calls to get UTC time. There are 4 contents
+        #            that are inserted into database and 2 first contain the UTC1 timestamp
+        #            and the last two the UTC2 timestamp. The None is required in Python 2.7
+        #            which behaves differently than Python 3 which does not require additional
+        #            parameter after the last one.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)
         snippy = Snippet.add_defaults(Snippy())
         Snippet.add_one(snippy, Snippet.EXITED)
@@ -96,6 +99,31 @@ class TestApiSearchSnippet(unittest.TestCase):
         snippy.release()
         snippy = None
         Database.delete_storage()
+
+        ## Brief: Get /api/snippets and search keywords from all columns. The search query
+        ##        matches to four snippets but limit defined in search query results only
+        ##        two of them sorted by the utc column in descending order.
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
+        snippy = Snippet.add_defaults(Snippy())
+        Snippet.add_one(snippy, Snippet.EXITED)
+        Snippet.add_one(snippy, Snippet.NETCAT)
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1073'}
+        body = [Snippet.DEFAULTS[Snippet.NETCAT], Snippet.DEFAULTS[Snippet.EXITED]]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-utc,-brief')
+        assert result.headers == headers
+        print(result.json)
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+        mock_get_utc_time.side_effect = None
+
 
     # pylint: disable=duplicate-code
     def tearDown(self):

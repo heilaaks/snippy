@@ -3,6 +3,9 @@
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
    - [ ] Fix API that does only /api/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
+   - [ ] Fix onfigSourceBase.COLUMNS.index causing ValueError if not in list.
+   - [ ] Add more tests to make sure that multilevel sort actually works.
+   - [ ] Check if log 'too short digest 0, minimum length is 16' is valid. Seems misleading now.
    - [ ] Update documents.
    - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.

@@ -125,13 +125,34 @@ paths:
     delete:
       tags:
       - "snippet"
-      summary: "Delete existing snippet"
+      summary: "Delete one existing snippet"
       description: ""
       consumes:
       - "application/json"
       produces:
       - "application/json"
       parameters:
+        - name: sall
+          type: array
+          items:
+            type: string
+          in: query
+          required: false
+          description: Search keywords from all fields.
+        - name: stag
+          type: array
+          items:
+            type: string
+          in: query
+          required: false
+          description: Search keywords only from tag field.
+        - name: sgrp
+          type: array
+          items:
+            type: string
+          in: query
+          required: false
+          description: Search keywords only from group field.
         - name: digest
           type: string
           in: query

@@ -124,6 +124,24 @@ class TestApiSearchSnippet(unittest.TestCase):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
+        ## Brief: Try to get /api/snippets with sort parameter set the column name that is
+        ##        not existing. The sort must fall to default sorting.
+        snippy = Snippet.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
+        body = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
+        assert result.headers == headers
+        print(result.json)
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
 
     # pylint: disable=duplicate-code
     def tearDown(self):

@@ -320,14 +320,17 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
         sorted_dict['order'] = []
         sorted_dict['value'] = {}
         for column in column_names:
-            if column[0].startswith('-'):
-                column_index = ConfigSourceBase.COLUMNS.index(column[1:])
-                sorted_dict['order'].append(column_index)
-                sorted_dict['value'][column_index] = True
-            else:
-                column_index = ConfigSourceBase.COLUMNS.index(column)
-                sorted_dict['order'].append(column_index)
-                sorted_dict['value'][column_index] = False
+            try:
+                if column[0].startswith('-'):
+                    column_index = ConfigSourceBase.COLUMNS.index(column[1:])
+                    sorted_dict['order'].append(column_index)
+                    sorted_dict['value'][column_index] = True
+                else:
+                    column_index = ConfigSourceBase.COLUMNS.index(column)
+                    sorted_dict['order'].append(column_index)
+                    sorted_dict['value'][column_index] = False
+            except ValueError:
+                self.logger.info('search sort option validation failed for column %s', column)
         self.logger.debug('converted sort parameters to internal format "%s"', sorted_dict)
 
         return sorted_dict

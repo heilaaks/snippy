@@ -5,7 +5,8 @@
 from __future__ import print_function
 import sys
 import argparse
-from snippy.version import __version__
+from snippy.metadata import __version__
+from snippy.metadata import __homepage__
 from snippy.config.constants import Constants as Const
 from snippy.config.source.base import ConfigSourceBase
 
@@ -15,7 +16,7 @@ class Cli(ConfigSourceBase):
 
     ARGS_COPYRIGHT = ('Snippy version ' + __version__ + ' - license Apache 2.0',
                       'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
-                      'Homepage https://github.com/heilaaks/snippy')
+                      'Homepage ' + __homepage__)
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')
     ARGS_CATEGO = ('  --snippet                     operate snippets (default)',
                    '  --solution                    operate solutions',

@@ -2,9 +2,10 @@
 
 """base.py: Base class for configuration sources."""
 
-from snippy.version import __version__
-from snippy.logger.logger import Logger
+from snippy.metadata import __version__
 from snippy.config.constants import Constants as Const
+from snippy.logger.logger import Logger
+from snippy.cause.cause import Cause
 
 
 class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
@@ -330,7 +331,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
                     sorted_dict['order'].append(column_index)
                     sorted_dict['value'][column_index] = False
             except ValueError:
-                self.logger.info('search sort option validation failed for column %s', column)
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existing field={}'.format(column))
         self.logger.debug('converted sort parameters to internal format "%s"', sorted_dict)
 
         return sorted_dict

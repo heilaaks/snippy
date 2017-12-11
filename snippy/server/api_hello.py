@@ -4,7 +4,7 @@
 
 import json
 import falcon
-from snippy.version import __version__
+from snippy.metadata import __version__
 
 
 class ApiHello(object):  # pylint: disable=too-few-public-methods

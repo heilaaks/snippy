@@ -6,7 +6,8 @@ from __future__ import print_function
 import re
 import sys
 import mock
-from snippy.version import __version__
+from snippy.metadata import __version__
+from snippy.metadata import __homepage__
 from snippy.snip import Snippy
 from snippy.snip import main
 from snippy.config.constants import Constants as Const
@@ -78,7 +79,7 @@ class TestWfConsoleHelp(object):
                   '',
                   'Snippy version ' + __version__ + ' - license Apache 2.0',
                   'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
-                  'Homepage https://github.com/heilaaks/snippy')
+                  'Homepage ' + __homepage__)
 
         ## Brief: Print tool help with long option.
         try:
@@ -174,7 +175,7 @@ class TestWfConsoleHelp(object):
                       '',
                       'Snippy version ' + __version__ + ' - license Apache 2.0',
                       'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
-                      'Homepage https://github.com/heilaaks/snippy')
+                      'Homepage ' + __homepage__)
             cause = Cause.ALL_OK
             real_stdout = sys.stdout
             real_stderr = sys.stderr

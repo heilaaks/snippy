@@ -6,7 +6,8 @@ import sys
 import six
 import mock
 from snippy.snip import Snippy
-from snippy.version import __version__
+from snippy.metadata import __version__
+from snippy.metadata import __homepage__
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.config.source.editor import Editor
@@ -99,7 +100,16 @@ class SnippetHelper(object):
 
         metadata = {'utc': utc,
                     'version': __version__,
-                    'homepage': 'https://github.com/heilaaks/snippy'}
+                    'homepage': __homepage__}
+
+        return metadata
+
+    @staticmethod
+    def get_http_metadata():
+        """Return the default HTTP metadata for failures."""
+
+        metadata = {'version': __version__,
+                    'homepage': __homepage__}
 
         return metadata
 

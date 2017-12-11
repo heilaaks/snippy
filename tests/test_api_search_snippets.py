@@ -7,6 +7,8 @@ import unittest
 import mock
 import falcon
 from falcon import testing
+from snippy.metadata import __version__
+from snippy.metadata import __homepage__
 from snippy.snip import Snippy
 from snippy.config.config import Config
 from snippy.storage.database.sqlite3db import Sqlite3Db
@@ -123,11 +125,13 @@ class TestApiSearchSnippet(unittest.TestCase):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
-        ## Brief: Try to call GEET /api/snippets with sort parameter set the column name
+        ## Brief: Try to call GET /api/snippets with sort parameter set the column name
         ##        that is not existing. The sort must fall to default sorting.
         snippy = Snippet.add_defaults(Snippy())
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
-        body = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '262'}
+        body = {'metadata': Snippet.get_http_metadata(),
+                'errors': [{'code': 400, 'status': '400 Bad Request', 'module': 'snippy.config.source.base:334',
+                            'message': 'sort option validation failed for non existing field=notexisting'}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -135,8 +139,8 @@ class TestApiSearchSnippet(unittest.TestCase):
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
         assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
+        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        assert result.status == falcon.HTTP_400
         snippy.release()
         snippy = None
         Database.delete_storage()

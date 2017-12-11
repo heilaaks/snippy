@@ -9,7 +9,7 @@ import mock
 import falcon
 from falcon import testing
 from snippy.snip import Snippy
-from snippy.version import __version__
+from snippy.metadata import __version__
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 

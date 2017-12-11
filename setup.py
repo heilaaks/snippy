@@ -4,14 +4,14 @@ dev_require = ('logging_tree',)
 tests_require = ('pytest==3.3.1', 'pytest-cov', 'tox', 'codecov', 'mock', 'six', 'flake8')
 docs_require = ('sphinx', 'sphinx-autobuild', 'sphinx_rtd_theme')
 server_require = ('falcon==1.3.0', 'gunicorn')
-exec(open('snippy/version.py').read())
+exec(open('snippy/metadata.py').read())
 
 setup(
     name='snippy',
     version=__version__,
     author='Heikki J. Laaksonen',
     author_email='laaksonen.heikki.j@gmail.com',
-    url='https://github.com/heilaaks/snippy',
+    url=__homepage__,
     description='Command and solution management from console.',
     long_description='Manage command examples and solutions directly from command line.' +
                      'Snippy tool is intended to support software development and troubleshooting ' +

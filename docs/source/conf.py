@@ -55,7 +55,7 @@ author = 'Heikki Laaksonen'
 # built documents.
 #
 # The short X.Y version.
-exec(open('../../snippy/version.py').read())
+exec(open('../../snippy/metadata.py').read())
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__

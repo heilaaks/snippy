@@ -4,9 +4,10 @@
 
 from __future__ import print_function
 import falcon
-from snippy.version import __version__
+from snippy.metadata import __version__
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
+from snippy.cause.cause import Cause
 from snippy.config.source.api import Api
 from snippy.config.config import Config
 from snippy.content.snippet import Snippet
@@ -26,9 +27,14 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
         api = Api(Const.SNIPPET, Api.SEARCH, request.params)
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        response.content_type = falcon.MEDIA_JSON
-        response.body = contents
-        response.status = falcon.HTTP_200
+        if Cause.is_ok():
+            response.content_type = falcon.MEDIA_JSON
+            response.body = contents
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = Cause.json_message()
+            response.status = Cause.http_status()
 
     def on_delete(self, request, response):
         """Request snippet to be deleted based on search criteria."""

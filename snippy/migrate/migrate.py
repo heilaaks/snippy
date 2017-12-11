@@ -7,7 +7,8 @@ import os.path
 import re
 import sys
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
-from snippy.version import __version__
+from snippy.metadata import __version__
+from snippy.metadata import __homepage__
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
@@ -211,7 +212,7 @@ class Migrate(object):
             try:
                 dictionary = {'metadata': {'utc': Config.get_utc_time(),
                                            'version': __version__,
-                                           'homepage': 'https://github.com/heilaaks/snippy'},
+                                           'homepage': __homepage__},
                               'content': Migrate.get_dictionary_list(contents)}
                 if Config.is_file_type_text():
                     for content in contents:

@@ -1,16 +1,17 @@
 ## TODO
    - [ ] Add full support of existing features for REST API.
-   - [ ] Add support to run with runalias.
-   - [ ] Add support to add versions to version list.
    - [ ] Fix API that does only /api/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
    - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
-   - [ ] Make proper JSON response error that helps to find the problem.
    - [ ] Add HTTP response code handling for GET and DELETE.
    - [ ] Add more tests to make sure that multi level sort actually works. Maybe limit to two columns?
    - [ ] Check if log 'too short digest 0, minimum length is 16' is valid. Seems misleading now.
+   - [ ] Why test coverage does not show coverage for -v|--version?
+   - [ ] Add classifiers Programming Language :: Python :: 3 and Programming Language :: Python :: 2
    - [ ] Move the Falcon logging to snippy logger. It seems that Falcon blocks the logs during tests?
    - [ ] Update documents.
+   - [ ] Add support to run with runalias.
+   - [ ] Add support to add versions to version list.
    - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
    - [ ] Add remove field support for text content. This is bit hard to generalize since layout e.g. contains header with three fields.
@@ -37,6 +38,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added new cause code framework that operates with JSON data structures and HTTP status codes.
    - [x] Added field limits that can be applied to REST API JSON responses.
    - [x] Fixed --sgrp with any search criteria to behave like leaving keywords out, using dot or empty.
    - [x] Added experimental REST API with two tests to try it out.

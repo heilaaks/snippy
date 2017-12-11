@@ -303,10 +303,10 @@ content:
 - brief: List, dump and delete Elasticsearch indices
   category: snippet
   data:
-  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
-  - curl -xGET -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
-  - curl -xGET -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
-  digest: 4a2c4a1ada9cc3c76c666383faf5c188456597694a156e04e7bf310ce317085f
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
+  - curl -XGET -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
+  - curl -XGET -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
+  digest: c2ead9de4b955cc67bc14f99e72b7766c6a270a343dd7285e76f3dc13e1ebeec
   filename: ''
   group: elasticsearch
   links:
@@ -325,7 +325,7 @@ content:
   - list
   - rest
   - security
-  utc: '2017-12-04 11:44:32'
+  utc: '2017-12-11 17:34:40'
   versions: ''
 - brief: Debug TLS/SSL connection
   category: snippet
@@ -368,16 +368,16 @@ content:
 - brief: Manage Elasticsearch templates
   category: snippet
   data:
-  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/*" | python
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/*" | python
     -m json.tool
-  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk*" | python
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk*" | python
     -m json.tool
   - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters"
     -d '{}'
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters*"
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk.counters-2017.10.24"
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk*"
-  digest: 066ad21399885d6e95b334542699172a1cb4fc211631762072533adecb7d8994
+  digest: 39ec99b4176b9bb7a58919fac5b1efb1ed91dcfdb9b72bd060e418d918812b6d
   filename: ''
   group: elasticsearch
   links:
@@ -398,7 +398,7 @@ content:
   - security
   - template
   - update
-  utc: '2017-12-04 11:44:49'
+  utc: '2017-12-11 17:34:23'
   versions: ''
 - brief: Perform recursive git pull on subdirectories
   category: snippet
@@ -539,5 +539,5 @@ content:
   versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy
-  utc: '2017-12-07 12:38:39'
+  utc: '2017-12-11 17:34:58'
   version: 0.7.0

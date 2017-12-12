@@ -260,10 +260,10 @@ content:
   category: snippet
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/health?v"
-  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
-  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/nodes?v"
-  - curl -xGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
-  digest: c53542c173a51f60fe850354a199e6d529ea88ff487c88310541f5e3d632217e
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/nodes?v"
+  - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
+  digest: afe4207ef77585206a4e7814fbc8c2abbe2fe071a58bfc78455ffaa4521fdb52
   filename: ''
   group: elasticsearch
   links:
@@ -278,7 +278,7 @@ content:
   - elasticsearch
   - rest
   - security
-  utc: '2017-12-04 11:44:14'
+  utc: '2017-12-12 18:17:26'
   versions: ''
 - brief: Print logs from Kubernetes pods
   category: snippet
@@ -539,5 +539,5 @@ content:
   versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy
-  utc: '2017-12-11 17:34:58'
+  utc: '2017-12-12 18:17:32'
   version: 0.7.0

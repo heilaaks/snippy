@@ -14,17 +14,26 @@ class Cause(object):
 
     ALL_OK = 'OK'
 
-    HTTP_OK = '200 OK'
-    HTTP_CREATED = '201 Created'
-    HTTP_NO_CONTENT = '204 No Content'
-    HTTP_BAD_REQUEST = '400 Bad Request'
-    HTTP_NOT_FOUND = '404 Not Found'
-    HTTP_METHOD_NOT_ALLOWED = '405 Method Not Allowed'
-    HTTP_INTERNAL_SERVER_ERROR = '500 Internal Server Error'
+    HTTP_200 = '200 OK'
+    HTTP_201 = '201 Created'
+    HTTP_204 = '204 No Content'
+    HTTP_400 = '400 Bad Request'
+    HTTP_404 = '404 Not Found'
+    HTTP_405 = '405 Method Not Allowed'
+    HTTP_409 = '409 Conflict'
+    HTTP_500 = '500 Internal Server Error'
+
+    HTTP_OK = HTTP_200
+    HTTP_CREATED = HTTP_201
+    HTTP_NO_CONTENT = HTTP_204
+    HTTP_BAD_REQUEST = HTTP_400
+    HTTP_NOT_FOUND = HTTP_404
+    HTTP_METHOD_NOT_ALLOWED = HTTP_405
+    HTTP_CONFLICT = HTTP_409
+    HTTP_INTERNAL_SERVER_ERROR = HTTP_500
     OK_STATUS = (HTTP_OK, HTTP_CREATED, HTTP_NO_CONTENT)
 
     _logger = None
-    _text = ALL_OK
     _list = {'errors': []}
 
     def __init__(self):
@@ -35,8 +44,8 @@ class Cause(object):
     def reset(cls):
         """Reset cause to initial value."""
 
-        cause = cls._text
-        cls._text = Cause.ALL_OK
+        cause = cls.get_message()
+        cls._list = {'errors': []}
 
         return cause
 
@@ -49,17 +58,6 @@ class Cause(object):
                                     'status': status,
                                     'module': cls._caller(),
                                     'message': message})
-
-    @classmethod
-    def shift(cls):
-        """Return the first cause in the list."""
-
-        if cls._list['errors']:
-            cause = cls._list['errors'][0]['message']
-        else:
-            cause = Cause.ALL_OK
-
-        return cause
 
     @classmethod
     def is_ok(cls):
@@ -94,23 +92,19 @@ class Cause(object):
         return json.dumps(response)
 
     @classmethod
-    def set_text(cls, cause_text):
-        """Set cause text."""
+    def get_message(cls):
+        """Return cause message."""
 
-        cls._logger.info('%s from module %s', cause_text, cls._caller())
+        cause = Cause.ALL_OK
+        if not cls.is_ok():
+            cause = 'NOK: ' + cls._list['errors'][0]['message']
 
-        # Only allow one update to get the original cause.
-        if cls._text == Cause.ALL_OK:
-            cls._text = 'NOK: ' + cause_text
-
-    @classmethod
-    def get_text(cls):
-        """Return cause text."""
-
-        return cls._text
+        return cause
 
     @staticmethod
     def _caller():
+        """Get caller module and code line."""
+
         caller = inspect.stack()[2]
         info = inspect.getframeinfo(caller[0])
         module = inspect.getmodule(caller[0])

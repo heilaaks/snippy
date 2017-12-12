@@ -134,7 +134,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         elif editor.get_edited_category() == Const.SOLUTION:
             data = Config.split_text_content(edited, '## BRIEF :', 1)
         else:
-            Cause.set_text('could not identify text template content category')
+            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text template content category')
 
         editor = None
         for item in data:
@@ -155,7 +155,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
                               content_copy.get_key()))
             content_copy.update_digest()
             if content_copy.is_data_template(edited=item):
-                Cause.set_text('no content was stored because the content data is matching to empty template')
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'content was stored because it matched to empty template')
 
             contents.append(content_copy)
 
@@ -328,38 +328,38 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # and 3) search keywords. Search keywords are already validated and invalid
         # keywords are interpreted as 'list all' which is always correct at this
         # point.
-        text = Const.EMPTY
         cls.logger.info('validating search context with %d results', len(contents))
         if cls.is_content_digest():
             if cls.get_content_digest():
                 if not contents:
-                    text = 'cannot find content with message digest %s' % cls.get_content_digest()
+                    Cause.push(Cause.HTTP_NOT_FOUND,
+                               'cannot find content with message digest %s' % cls.get_content_digest())
                 elif len(contents) > 1:
-                    text = ('given digest %.16s matches (%d) more than once preventing ' +
-                            'the operation') % (cls.get_content_digest(), len(contents))
+                    Cause.push(Cause.HTTP_CONFLICT,
+                               'given digest %.16s matches (%d) more than once preventing the operation' %
+                               (cls.get_content_digest(), len(contents)))
             else:
-                text = 'cannot use empty message digest to %s content' % operation
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest to %s content' % operation)
         elif cls.is_content_data():
             if cls.get_content_data():
                 data = Const.EMPTY.join(cls.get_content_data())
                 data = data[:30] + (data[30:] and '...')
                 if not contents:
-                    text = 'cannot find content with content data \'%s\'' % data
+                    Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with content data \'%s\'' % data)
                 elif len(contents) > 1:
-                    text = ('given content data %s matches (%d) more than once preventing the ' +
-                            'operation') % (data, len(contents))
+                    Cause.push(Cause.HTTP_CONFLICT,
+                               'given content data %s matches (%d) more than once preventing the operation' %
+                               (data, len(contents)))
             else:
-                text = 'cannot use empty content data to %s content' % operation
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content data to %s content' % operation)
         elif cls.is_search_keywords():
             if not contents:
-                text = 'cannot find content with given search criteria'
+                Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
             elif len(contents) > 1:
-                text = ('given search keyword matches (%d) more than once preventing ' +
-                        'the operation') % len(contents)
+                Cause.push(Cause.HTTP_CONFLICT,
+                           'given search keyword matches (%d) more than once preventing the operation' % len(contents))
         else:
-            text = 'no message digest, content data or search keywords were provided'
-
-        return text
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'no message digest, content data or search keywords were provided')
 
     @classmethod
     def get_filename(cls):
@@ -681,8 +681,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         try:
             re.compile(regexp)
         except re.error:
-            Cause.set_text('listed matching content without filter because it was not syntactically ' +
-                           'correct regular expression')
+            Cause.push(Cause.HTTP_BAD_REQUEST,
+                       'listed matching content without filter because it was not syntactically correct regular expression')
             regexp = Const.EMPTY
 
         return regexp
@@ -734,7 +734,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
                          content.get_metadata(),
                          content.get_key()))
         else:
-            Cause.set_text('could not identify edited content category - please keep tags in place')
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
 
         return content
 
@@ -782,6 +782,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         elif name and ('txt' in extension or 'text' in extension):
             filetype = Const.CONTENT_TYPE_TEXT
         else:
-            Cause.set_text('cannot identify file format for file {}'.format(filename))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file {}'.format(filename))
 
         return (filename, filetype)

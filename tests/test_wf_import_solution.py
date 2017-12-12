@@ -200,7 +200,7 @@ class TestWfImportSolution(unittest.TestCase):
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '-f', './solution-template.txt']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: no content was stored because the content data is matching to empty template'
+            assert cause == 'NOK: content was stored because it matched to empty template'
             assert not Database.get_contents()
             snippy.release()
             snippy = None
@@ -344,7 +344,7 @@ class TestWfImportSolution(unittest.TestCase):
             snippy = Solution.add_one(Snippy(), Solution.NGINX)
             sys.argv = ['snippy', 'import', '--solution', '-d', '123456789abcdef0', '-f', 'one-solution.text']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: cannot find solution to be imported with digest 123456789abcdef0'
+            assert cause == 'NOK: cannot find solution identified with digest 123456789abcdef0'
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_not_called()
@@ -515,7 +515,7 @@ class TestWfImportSolution(unittest.TestCase):
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--solution', '--template']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: no content was stored because the content data is matching to empty template'
+            assert cause == 'NOK: content was stored because it matched to empty template'
             assert not Database.get_solutions()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
             snippy.release()

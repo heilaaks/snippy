@@ -48,9 +48,9 @@ class Snippy(object):
             Snippet(self.storage).run()
             Solution(self.storage).run()
         else:
-            Cause.set_text('content category \'all\' is supported only with search operation')
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'content category \'all\' is supported only with search operation')
 
-        Logger.print_cause(Cause.get_text())
+        Logger.print_cause(Cause.get_message())
 
         return self.cause.reset()
 
@@ -63,8 +63,8 @@ class Snippy(object):
             self.server = Server(self.storage)
             self.server.run()
         except ImportError:
-            Cause.set_text('install snippy as server in order to run api server')
-            Logger.print_cause(Cause.get_text())
+            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'install snippy as server in order to run api server')
+            Logger.print_cause(Cause.get_message())
 
     def release(self):
         """Release session."""

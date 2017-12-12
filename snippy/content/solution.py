@@ -24,9 +24,9 @@ class Solution(object):
         self.logger.debug('creating new solution')
         solution = Config.get_content(Content(), use_editor=True)
         if not solution.has_data():
-            Cause.set_text('mandatory solution data not defined')
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory solution data not defined')
         elif solution.is_data_template():
-            Cause.set_text('no content was stored because the solution data is matching to empty template')
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because the solution data is matching to empty template')
         else:
             self.storage.create(solution)
 
@@ -58,8 +58,7 @@ class Solution(object):
             solution = Config.get_content(content=solutions[0], use_editor=True)
             self.storage.update(solution)
         else:
-            text = Config.validate_search_context(solutions, 'update')
-            Cause.set_text(text)
+            Config.validate_search_context(solutions, 'update')
 
     def delete(self):
         """Delete solutions."""
@@ -74,8 +73,7 @@ class Solution(object):
             self.logger.debug('deleting solution with digest %.16s', solutions[0].get_digest())
             self.storage.delete(solutions[0].get_digest())
         else:
-            text = Config.validate_search_context(solutions, 'delete')
-            Cause.set_text(text)
+            Config.validate_search_context(solutions, 'delete')
 
     def export_all(self):
         """Export solutions."""
@@ -95,8 +93,7 @@ class Solution(object):
             if len(solutions) == 1:
                 filename = Config.get_operation_file(content_filename=solutions[0].get_filename())
             elif not solutions:
-                text = Config.validate_search_context(solutions, 'export')
-                Cause.set_text(text)
+                Config.validate_search_context(solutions, 'export')
             Migrate.dump(solutions, filename)
         else:
             self.logger.debug('exporting all solutions %s', filename)
@@ -115,9 +112,9 @@ class Solution(object):
                 solutions[0].migrate_edited(contents)
                 self.storage.update(solutions[0])
             elif not solutions:
-                Cause.set_text('cannot find solution to be imported with digest {:.16}'.format(content_digest))
+                Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find solution identified with digest {:.16}'.format(content_digest))
             else:
-                Cause.set_text('cannot import multiple solutions with same digest {:.16}'.format(content_digest))
+                Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple solutions with same digest {:.16}'.format(content_digest))
         else:
             self.logger.debug('importing solutions %s', Config.get_operation_file())
             dictionary = Migrate.load(Config.get_operation_file(), Content())
@@ -144,6 +141,6 @@ class Solution(object):
         elif Config.is_operation_import():
             self.import_all()
         else:
-            Cause.set_text('unknown operation for solution')
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for solution')
 
         return solutions

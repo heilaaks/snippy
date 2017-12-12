@@ -3,7 +3,6 @@
 """test_wf_create_snippet.py: Test workflows for creating snippets."""
 
 import sys
-import unittest
 import mock
 from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
@@ -14,7 +13,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfCreateSnippet(unittest.TestCase):
+class TestWfCreateSnippet(object):
     """Test workflows for creating snippets."""
 
     @mock.patch.object(Editor, 'call_editor')
@@ -44,7 +43,7 @@ class TestWfCreateSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to create new snippet without defining the mandatory content data.
+        ## Brief: Try to create new snippet without defining mandatory content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
             group = Snippet.DEFAULTS[Snippet.REMOVE]['group']
@@ -107,7 +106,7 @@ class TestWfCreateSnippet(unittest.TestCase):
             Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

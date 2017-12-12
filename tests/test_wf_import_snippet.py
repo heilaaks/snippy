@@ -137,6 +137,7 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './foo.yaml']  ## workflow
             cause = snippy.run_cli()
+            print("cause %s" % cause)
             assert cause == 'NOK: cannot read file ./foo.yaml'
             assert not Database.get_contents()
             mock_file.assert_not_called()
@@ -268,7 +269,7 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
             sys.argv = ['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: cannot find snippet to be imported with digest 123456789abcdef0'
+            assert cause == 'NOK: cannot find snippet identified with digest 123456789abcdef0'
             assert len(Database.get_snippets()) == 1
             mock_file.assert_not_called()
             Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': import_dict['content'][0]})
@@ -337,7 +338,7 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--template']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: no content was stored because the content data is matching to empty template'
+            assert cause == 'NOK: content was stored because it matched to empty template'
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
             snippy.release()

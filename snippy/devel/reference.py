@@ -35,7 +35,7 @@ class Reference(object):
         try:
             pkg_resources.resource_isdir('tests', '')
         except ImportError as exception:
-            Cause.set_text('test cases are not packaged with release {}'.format(exception))
+            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'test cases are not packaged with release {}'.format(exception))
 
             return
 

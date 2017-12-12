@@ -59,11 +59,12 @@ class Sqlite3Db(object):
                                            metadata))
                     self.connection.commit()
             except sqlite3.IntegrityError as exception:
-                Cause.set_text('content data already exist with digest {:.16}'.format(self._get_db_digest(content)))
+                Cause.push(Cause.HTTP_CONFLICT,
+                           'content data already exist with digest {:.16}'.format(self._get_db_digest(content)))
             except sqlite3.Error as exception:
-                Cause.set_text('inserting into database failed with exception {}'.format(exception))
+                Cause.push(Cause.HTTP_500, 'inserting into database failed with exception {}'.format(exception))
         else:
-            Cause.set_text('internal error prevented inserting into database')
+            Cause.push(Cause.HTTP_500, 'internal error prevented inserting into database')
 
     def bulk_insert_content(self, contents):
         """Insert multiple contents into database."""
@@ -72,17 +73,17 @@ class Sqlite3Db(object):
         # 1. User imports default content again. In this case there is a list of contents.
         # 2. User imports content from template. In this case there is a single failing content.
 
-        cause = Const.EMPTY
         inserted = 0
+        cause = (Cause.HTTP_OK, Const.EMPTY)
         for content in contents:
             if not content.has_data():
-                cause = 'no content was inserted due to missing mandatory content data'
-                self.logger.info(cause)
+                cause = (Cause.HTTP_BAD_REQUEST, 'no content was inserted due to missing mandatory content data')
+                self.logger.info(cause[1])
 
                 continue
             if content.is_data_template():
-                cause = 'no content was stored because the content data is matching to empty template'
-                self.logger.info(cause)
+                cause = (Cause.HTTP_BAD_REQUEST, 'no content was stored because the content data is matching to empty template')
+                self.logger.info(cause[1])
 
                 continue
 
@@ -96,16 +97,16 @@ class Sqlite3Db(object):
                 inserted = inserted + 1
                 self.insert_content(content, digest, utc)
             else:
-                cause = 'no content was inserted because content data already existed'
-                self.logger.info(cause)
+                cause = (Cause.HTTP_CONFLICT, 'no content was inserted because content data already existed')
+                self.logger.info(cause[1])
 
         self.logger.debug('inserted %d out of %d content', inserted, len(contents))
 
         if not contents:
-            cause = 'no content found to be stored'
+            cause = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
 
-        if not inserted and cause:
-            Cause.set_text(cause)
+        if not inserted and cause[1]:
+            Cause.push(cause[0], cause[1])
 
     def select_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Select content."""
@@ -144,7 +145,7 @@ class Sqlite3Db(object):
                 query = ('SELECT * FROM contents WHERE data LIKE ?')
                 qargs = ['%'+Const.DELIMITER_DATA.join(map(str, data))+'%']
             else:
-                Cause.set_text('please define keyword, digest or content data as search criteria')
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'please define keyword, digest or content data as search criteria')
 
                 return rows
 
@@ -155,9 +156,9 @@ class Sqlite3Db(object):
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
             except sqlite3.Error as exception:
-                Cause.set_text('selecting from database failed with exception {}'.format(exception))
+                Cause.push(Cause.HTTP_500, 'selecting from database failed with exception {}'.format(exception))
         else:
-            Cause.set_text('internal error prevented searching from database')
+            Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
 
         self.logger.debug('selected %d rows %s', len(rows), rows)
 
@@ -176,9 +177,9 @@ class Sqlite3Db(object):
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
             except sqlite3.Error as exception:
-                Cause.set_text('selecting data from database failed with exception {}'.format(exception))
+                Cause.push(Cause.HTTP_500, 'selecting data from database failed with exception {}'.format(exception))
         else:
-            Cause.set_text('internal error prevented searching from database')
+            Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
 
         self.logger.debug('selected rows %s', rows)
 
@@ -197,9 +198,9 @@ class Sqlite3Db(object):
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
             except sqlite3.Error as exception:
-                Cause.set_text('selecting all from database failed with exception {}'.format(exception))
+                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(exception))
         else:
-            Cause.set_text('internal error prevented selecting all content from database')
+            Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
 
         return rows
 
@@ -228,9 +229,9 @@ class Sqlite3Db(object):
                                            content.get_digest(Const.STRING_CONTENT)))
                     self.connection.commit()
             except sqlite3.Error as exception:
-                Cause.set_text('updating database failed with exception {}'.format(exception))
+                Cause.push(Cause.HTTP_500, 'updating database failed with exception {}'.format(exception))
         else:
-            Cause.set_text('internal error prevented updaring content in database')
+            Cause.push(Cause.HTTP_500, 'internal error prevented updating content in database')
 
     def delete_content(self, digest):
         """Delete single content based on given digest."""
@@ -244,13 +245,13 @@ class Sqlite3Db(object):
                     if cursor.rowcount == 1:
                         self.connection.commit()
                     elif cursor.rowcount == 0:
-                        Cause.set_text('cannot find content to be deleted with digest {:.16}'.format(digest))
+                        Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content to be deleted with digest {:.16}'.format(digest))
                     else:
                         self.logger.info('unexpected row count %d while deleting with digest %s', cursor.rowcount, digest)
             except sqlite3.Error as exception:
-                Cause.set_text('deleting from database failed with exception {}'.format(exception))
+                Cause.push(Cause.HTTP_500, 'deleting from database failed with exception {}'.format(exception))
         else:
-            Cause.set_text('internal error prevented deleting content from database')
+            Cause.push(Cause.HTTP_500, 'internal error prevented deleting content in database')
 
     def _create_db(self):
         """Create the database."""
@@ -263,7 +264,7 @@ class Sqlite3Db(object):
                 try:
                     schema = schema_file.read()
                 except IOError as exception:
-                    Cause.set_text('reading database schema failed with exception {}'.format(exception))
+                    Cause.push(Cause.HTTP_500, 'reading database schema failed with exception {}'.format(exception))
         try:
             if not Const.PYTHON2:
                 connection = sqlite3.connect(location, check_same_thread=False, uri=True)
@@ -274,7 +275,7 @@ class Sqlite3Db(object):
                 cursor.execute(schema)
             self.logger.debug('sqlite3 database persisted in %s', location)
         except sqlite3.Error as exception:
-            Cause.set_text('creating database failed with exception {}'.format(exception))
+            Cause.push(Cause.HTTP_500, 'creating database failed with exception {}'.format(exception))
 
         return connection
 
@@ -290,7 +291,8 @@ class Sqlite3Db(object):
             if os.path.exists(Config.get_storage_path()) and os.access(Config.get_storage_path(), os.W_OK):
                 location = Config.get_storage_file()
             else:
-                Cause.set_text('storage path does not exist or is not accessible: {}'.format(Config.get_storage_path()))
+                Cause.push(Cause.HTTP_NOT_FOUND,
+                           'storage path does not exist or is not accessible: {}'.format(Config.get_storage_path()))
 
         return location
 

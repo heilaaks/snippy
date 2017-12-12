@@ -23,6 +23,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] Inherit the tests from object and remove unittest and change to teardown_class from pylint. This explains the case domino failures?
    - [ ] Is there a way to get logs from Python logger from stdout? Mocking stdout to StringIO does not even though the logger stream is stdout.
    - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect' in import snippet.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.

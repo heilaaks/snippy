@@ -89,7 +89,7 @@ class Editor(object):
                 message = outfile.read()
                 message = message.decode('UTF-8')
             except OSError as exception:
-                Cause.set_text('required editor %s not installed %s' % (editor, exception))
+                Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'required editor %s not installed %s' % (editor, exception))
 
         return message
 

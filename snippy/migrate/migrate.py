@@ -82,7 +82,7 @@ class Migrate(object):
 
         text = Const.EMPTY
         if not contents:
-            Cause.set_text('cannot find content with given search criteria')
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
 
         regexp = Config.get_search_filter()
         if regexp:
@@ -232,7 +232,7 @@ class Migrate(object):
                     cls.logger.info('unknown export file format')
             except (IOError, TypeError, ValueError, yaml.YAMLError) as exception:
                 cls.logger.exception('fatal failure to generate formatted export file "%s"', exception)
-                Cause.set_text('fatal failure while exporting content to file')
+                Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting content to file')
 
     @classmethod
     def dump_template(cls, content):
@@ -246,7 +246,7 @@ class Migrate(object):
                 outfile.write(template)
             except IOError as exception:
                 cls.logger.exception('fatal failure in creating snippet template file "%s"', exception)
-                Cause.set_text('fatal failure while exporting template {}'.format(filename))
+                Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting template {}'.format(filename))
 
     @classmethod
     def load(cls, filename, content):
@@ -277,10 +277,10 @@ class Migrate(object):
                         cls.logger.info('unknown import file format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:
                     cls.logger.exception('fatal exception while loading file "%s"', exception)
-                    Cause.set_text('fatal failure while importing content from file')
+                    Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while importing content from file')
 
         else:
-            Cause.set_text('cannot read file {}'.format(filename))
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot read file {}'.format(filename))
 
         return dictionary
 

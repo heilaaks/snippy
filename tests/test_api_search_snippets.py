@@ -3,31 +3,33 @@
 """test_api_search_snippets.py: Test GET /snippets API."""
 
 import sys
-import unittest
-import mock
 import falcon
 from falcon import testing
+import mock
+from snippy.cause.cause import Cause
+from snippy.config.config import Config
 from snippy.metadata import __version__
 from snippy.metadata import __homepage__
 from snippy.snip import Snippy
-from snippy.config.config import Config
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestApiSearchSnippet(unittest.TestCase):
+class TestApiSearchSnippet(object):
     """Test GET /snippets API."""
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_api_search_snippets_with_sall(self, mock_get_db_location, mock_get_utc_time, mock_isfile, _):
+    def test_api_search_snippets_with_sall(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Search snippet from all fields."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Snippet.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call GET /api/snippets and search keywords from all columns. The search
@@ -44,7 +46,6 @@ class TestApiSearchSnippet(unittest.TestCase):
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == headers
-        print(result.json)
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
         snippy.release()
@@ -128,9 +129,9 @@ class TestApiSearchSnippet(unittest.TestCase):
         ## Brief: Try to call GET /api/snippets with sort parameter set the column name
         ##        that is not existing. The sort must fall to default sorting.
         snippy = Snippet.add_defaults(Snippy())
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '262'}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '259'}
         body = {'metadata': Snippet.get_http_metadata(),
-                'errors': [{'code': 400, 'status': '400 Bad Request', 'module': 'snippy.config.source.base:334',
+                'errors': [{'code': 400, 'status': '400 Bad Request', 'module': 'snippy.testing.testing:123',
                             'message': 'sort option validation failed for non existing field=notexisting'}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
@@ -146,7 +147,7 @@ class TestApiSearchSnippet(unittest.TestCase):
         Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

@@ -63,10 +63,12 @@ class Cause(object):
     def is_ok(cls):
         """Test if errors were detected."""
 
-        is_ok = True
-        if cls._list['errors']:
-            is_ok = False
-        elif len(cls._list['errors']) == 1 and cls._list['errors'][0]['status'] not in Cause.OK_STATUS:
+        is_ok = False
+        if len(cls._list['errors']) == 1 and cls._list['errors'][0]['status'] in Cause.OK_STATUS:
+            is_ok = True
+        elif not cls._list['errors']:
+            is_ok = True
+        else:
             is_ok = False
 
         return is_ok

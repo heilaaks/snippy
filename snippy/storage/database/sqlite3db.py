@@ -244,6 +244,7 @@ class Sqlite3Db(object):
                     cursor.execute(query, (digest+'%',))
                     if cursor.rowcount == 1:
                         self.connection.commit()
+                        Cause.push(Cause.HTTP_NO_CONTENT, 'content deleted successfully')
                     elif cursor.rowcount == 0:
                         Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content to be deleted with digest {:.16}'.format(digest))
                     else:

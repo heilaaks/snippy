@@ -43,7 +43,12 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
         api = Api(Const.SNIPPET, Api.DELETE, request.params)
         Config.read_source(api)
         Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        response.status = falcon.HTTP_204
+        if Cause.is_ok():
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = Cause.json_message()
+            response.status = Cause.http_status()
 
 
 class ApiSnippetsDigest(object):  # pylint: disable=too-few-public-methods
@@ -77,7 +82,12 @@ class ApiSnippetsDigest(object):  # pylint: disable=too-few-public-methods
         api = Api(Const.SNIPPET, Api.DELETE, local_params)
         Config.read_source(api)
         Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        response.status = falcon.HTTP_204
+        if Cause.is_ok():
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = Cause.json_message()
+            response.status = Cause.http_status()
 
 
 class ApiSnippetsDigestData(object):  # pylint: disable=too-few-public-methods

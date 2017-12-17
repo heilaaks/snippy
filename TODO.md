@@ -2,9 +2,7 @@
    - [ ] Add full support of existing features for REST API.
    - [ ] Fix API that does only /api/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
-   - [ ] Check why performance had degrated from 0.78 reference to 1.15.
    - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
-   - [ ] Add HTTP response code handling for GET and DELETE.
    - [ ] Add more tests to make sure that multi level sort actually works. Maybe limit to two columns?
    - [ ] Check if log 'too short digest 0, minimum length is 16' is valid. Seems misleading now.
    - [ ] Why test coverage does not show coverage for -v|--version?
@@ -24,6 +22,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] It was noted that sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
    - [ ] Inherit the tests from object and remove unittest and change to teardown_class from pylint. This explains the case domino failures?
    - [ ] Is there a way to get logs from Python logger from stdout? Mocking stdout to StringIO does not even though the logger stream is stdout.
    - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect' in import snippet.
@@ -40,6 +39,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Optimized the called module and line number fetching that was causing large performance penalty.
    - [x] Added new cause code framework that operates with JSON data structures and HTTP status codes.
    - [x] Added field limits that can be applied to REST API JSON responses.
    - [x] Fixed --sgrp with any search criteria to behave like leaving keywords out, using dot or empty.

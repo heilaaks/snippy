@@ -2,6 +2,7 @@
 
 """cause.py: Cause code management."""
 
+import sys
 import inspect
 import json
 from snippy.metadata import __version__
@@ -53,10 +54,11 @@ class Cause(object):
     def push(cls, status, message):
         """Append cause to list."""
 
-        cls._logger.info('status %s with message %s from %s', status, message, cls._caller())
+        caller = cls._caller()
+        cls._logger.info('status %s with message %s from %s', status, message, caller)
         cls._list['errors'].append({'code': int(status.split()[0]),
                                     'status': status,
-                                    'module': cls._caller(),
+                                    'module': caller,
                                     'message': message})
 
     @classmethod
@@ -64,12 +66,10 @@ class Cause(object):
         """Test if errors were detected."""
 
         is_ok = False
-        if len(cls._list['errors']) == 1 and cls._list['errors'][0]['status'] in Cause.OK_STATUS:
+        if not cls._list['errors']:
             is_ok = True
-        elif not cls._list['errors']:
+        elif len(cls._list['errors']) == 1 and cls._list['errors'][0]['status'] in Cause.OK_STATUS:
             is_ok = True
-        else:
-            is_ok = False
 
         return is_ok
 
@@ -107,9 +107,19 @@ class Cause(object):
     def _caller():
         """Get caller module and code line."""
 
-        caller = inspect.stack()[2]
-        info = inspect.getframeinfo(caller[0])
-        module = inspect.getmodule(caller[0])
+        # This is optimized: Inspect.stack reads source code file that generates
+        # expensive file access. The contenxt loading can be switched off with
+        # stack(0) setting /1/. A bit more efficient way is to use sys._getframe
+        # that is according to /2/ four times faster the stack(0). Testing shows
+        # that there is a noticeable difference but not that much.
+        #
+        # Try to avoid calling this method for performance reasons.
+        #
+        # /1/ https://stackoverflow.com/a/17407257
+        # /2/ https://stackoverflow.com/a/45196608
+        frame = sys._getframe(2)  # pylint: disable=protected-access
+        info = inspect.getframeinfo(frame)
+        module = inspect.getmodule(frame)
         location = module.__name__ + ':' + str(info.lineno)
 
         return location

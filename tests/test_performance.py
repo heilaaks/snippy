@@ -37,8 +37,8 @@ class TestPerformance(object):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC: 1 loop : 0.0238 / 55 loop : 0.7852 / 100 loop : 1.4785
-        ##        Reference PC: 880 loop : 12.5803 / 1000 loop : 14.3819
+        ##        Reference PC: 1 loop : 0.0365 / 55 loop : 0.8126 / 100 loop : 1.4551
+        ##        Reference PC: 880 loop : 12.8007 / 1000 loop : 14.5423
         ##
         ##        The reference is with sqlite database in memory as with all tests.
         ##        There is naturally jitter in results and the values are as of now

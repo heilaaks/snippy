@@ -5,7 +5,6 @@
 from __future__ import print_function
 import sys
 import time
-import unittest
 import mock
 from snippy.snip import Snippy
 from snippy.config.constants import Constants as Const
@@ -21,7 +20,7 @@ else:
     from StringIO import StringIO  # pylint: disable=import-error
 
 
-class TestPerformance(unittest.TestCase):
+class TestPerformance(object):
     """Test tool performance."""
 
     @mock.patch.object(Editor, 'call_editor')
@@ -102,7 +101,7 @@ class TestPerformance(unittest.TestCase):
         assert runtime < 10
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

@@ -155,9 +155,24 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
     def get_content_tags(self):
         """Return content tags."""
 
-        self.logger.info('parsed argument --tags with value %s', self.tags)
+        tag_list = []
+        try:
+            # In Python2 there is str and unicode. In Python3 the strings
+            # are always unicode strings.
+            tags = self.tags
+            if Const.PYTHON2 and isinstance(tags, unicode):  # noqa: F821 # pylint: disable=undefined-variable
+                tags = tags.encode('utf-8')
+            if isinstance(tags, str):
+                tag_list.append(tags)
+            elif isinstance(tags, (list, tuple)):
+                tag_list = list(tags)
+            else:
+                self.logger.info('content tags ignored because of unknown type')
+        except ValueError:
+            self.logger.info('content tags option validation failed and thus no tags are usd')
+        self.logger.debug('parsed content tags with value "%s"', tag_list)
 
-        return self.tags
+        return tag_list
 
     def get_content_links(self):
         """Return content reference links."""
@@ -312,7 +327,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
             elif isinstance(self.sort, (list, tuple)):
                 column_names.extend(self.sort)
             else:
-                self.logger.info('search sorting attributes ignore because of unknown type')
+                self.logger.info('search sorting attributes ignored because of unknown type')
         except ValueError:
             self.logger.info('search sort option validation failed and thus no sorting is applied')
         self.logger.debug('parsed content sort option with value "%s"', column_names)
@@ -346,7 +361,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
             elif isinstance(self.fields, (list, tuple)):
                 used_columns = tuple(self.fields)
             else:
-                self.logger.info('search result column list attributes ignore because of unknown type')
+                self.logger.info('search result column list attributes ignored because of unknown type')
         except ValueError:
             self.logger.info('search result column list option validation failed and thus all columns are used')
         self.logger.debug('parsed search result column list option with value "%s"', used_columns)

@@ -2,6 +2,7 @@
    - [ ] Add full support of existing features for REST API.
    - [ ] Fix API that does only /api/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
+   - [ ] Check why performance had degrated from 0.78 reference to 1.15.
    - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
    - [ ] Add HTTP response code handling for GET and DELETE.
    - [ ] Add more tests to make sure that multi level sort actually works. Maybe limit to two columns?

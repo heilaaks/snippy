@@ -20,10 +20,26 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
         self.logger = Logger(__name__).get()
         self.storage = storage
 
+    def on_post(self, request, response):
+        """Request snippets to be created."""
+
+        self.logger.debug('run post /api/snippets')
+        api = Api(Const.SNIPPET, Api.CREATE, request.media)
+        Config.read_source(api)
+        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if Cause.is_ok():
+            response.content_type = falcon.MEDIA_JSON
+            response.body = contents
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = Cause.json_message()
+            response.status = Cause.http_status()
+
     def on_get(self, request, response):
         """Request snippets based on search parameters."""
 
-        self.logger.debug('run route /api/snippets')
+        self.logger.debug('run get /api/snippets')
         api = Api(Const.SNIPPET, Api.SEARCH, request.params)
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
@@ -39,7 +55,7 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
     def on_delete(self, request, response):
         """Request snippet to be deleted based on search criteria."""
 
-        self.logger.debug('run route /api/snippets')
+        self.logger.debug('run delete /api/snippets')
         api = Api(Const.SNIPPET, Api.DELETE, request.params)
         Config.read_source(api)
         Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
@@ -88,26 +104,3 @@ class ApiSnippetsDigest(object):  # pylint: disable=too-few-public-methods
             response.content_type = falcon.MEDIA_JSON
             response.body = Cause.json_message()
             response.status = Cause.http_status()
-
-
-class ApiSnippetsDigestData(object):  # pylint: disable=too-few-public-methods
-    """Request snnippet content data based on mdigest"""
-
-    def __init__(self):
-        self.logger = Logger(__name__).get()
-
-    @staticmethod
-    def on_get(request, response, digest):
-        """Handle GET reguest."""
-
-        print("ApiSnippetsDigestData")
-        print(request)
-        print("path %s" % request.path)
-        print("query %s" % request.query_string)
-        print("query params %s" % request.params)
-        print("accept %s" % request.accept)
-        print("accept bool %s" % request.client_accepts_json)
-        print("digest %s" % digest)
-
-        hello = __version__
-        response.media = hello

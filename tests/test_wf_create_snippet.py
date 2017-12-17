@@ -4,10 +4,10 @@
 
 import sys
 import mock
-from snippy.snip import Snippy
-from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
+from snippy.config.constants import Constants as Const
 from snippy.config.source.editor import Editor
+from snippy.snip import Snippy
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -19,8 +19,8 @@ class TestWfCreateSnippet(object):
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_create_snippet_from_console(self, mock_isfile, mock__get_db_location, mock_call_editor):
-        """Create snippet from console."""
+    def test_create_snippet_from_cli(self, mock_isfile, mock__get_db_location, mock_call_editor):
+        """Create snippet from CLI."""
 
         mock_isfile.return_value = True
         mock__get_db_location.return_value = Database.get_storage()
@@ -33,6 +33,26 @@ class TestWfCreateSnippet(object):
             tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
             links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
             compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
+            sys.argv = ['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
+            snippy = Snippy()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
+            Snippet.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Create new snippet with all content parameters but only one tag.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            data = Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
+            brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
+            group = Snippet.DEFAULTS[Snippet.REMOVE]['group']
+            tags = Snippet.DEFAULTS[Snippet.REMOVE]['tags'][0]
+            links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+            snippet_remove = Snippet.DEFAULTS[Snippet.REMOVE].copy()
+            snippet_remove['tags'] = [Snippet.DEFAULTS[Snippet.REMOVE]['tags'][0]]
+            compare_content = {'f94cf88b1546a8fd': snippet_remove}
             sys.argv = ['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli()

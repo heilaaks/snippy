@@ -233,6 +233,22 @@ class SnippetHelper(object):
                                                 mock.call(Const.NEWLINE)])
 
     @staticmethod
+    def test_content2(dictionary):
+        """Compare given dictionary against content stored in database based on message digest."""
+
+        snippy = Snippy()
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            for digest in dictionary:
+                mock_file.reset_mock()
+                sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
+                cause = snippy.run_cli()
+                assert cause == Cause.ALL_OK
+                mock_file.assert_called_once_with('defined-content.txt', 'w')
+                file_handle = mock_file.return_value.__enter__.return_value
+                file_handle.write.assert_has_calls([mock.call(SnippetHelper.get_template(dictionary[digest])),
+                                                    mock.call(Const.NEWLINE)])
+
+    @staticmethod
     def compare_db(testcase, snippet, reference):
         """Compare snippes when they are in database format."""
 

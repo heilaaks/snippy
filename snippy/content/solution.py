@@ -103,7 +103,7 @@ class Solution(object):
     def import_all(self):
         """Import solutions."""
 
-        content_digest = Config.get_content_valid_digest()
+        content_digest = Config.get_content_digest()
         if content_digest:
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
             if len(solutions) == 1:

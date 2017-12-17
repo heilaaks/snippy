@@ -22,11 +22,16 @@ class Snippet(object):
         """Create new snippet."""
 
         self.logger.debug('creating new snippet')
+        snippets = []
         snippet = Config.get_content(Content())
         if not snippet.has_data():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory snippet data not defined')
         else:
-            self.storage.create(snippet)
+            content_digest = self.storage.create(snippet)
+            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
+            snippets = Migrate.content(snippets, self.content_type)
+
+        return snippets
 
     def search(self):
         """Search snippets."""
@@ -101,7 +106,7 @@ class Snippet(object):
     def import_all(self):
         """Import snippets."""
 
-        content_digest = Config.get_content_valid_digest()
+        content_digest = Config.get_content_digest()
         if content_digest:
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
             if len(snippets) == 1:
@@ -127,7 +132,7 @@ class Snippet(object):
         self.logger.info('managing snippet')
         Config.set_category(Const.SNIPPET)
         if Config.is_operation_create():
-            self.create()
+            snippets = self.create()
         elif Config.is_operation_search():
             snippets = self.search()
         elif Config.is_operation_update():

@@ -34,7 +34,7 @@ class TestApiUpdateSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call PUT /api/snippets to update existing snippet.
+        ## Brief: Call PUT /api/v1/snippets to update existing snippet.
         snippy = Snippet.add_one(Snippy(), Snippet.FORCED)
         snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
@@ -47,7 +47,7 @@ class TestApiUpdateSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_put(path='/api/snippets/53908d68425c61dc',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_put(path='/api/v1/snippets/53908d68425c61dc',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     body=json.dumps(snippet))
         assert result.headers == headers
@@ -59,7 +59,7 @@ class TestApiUpdateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to call PUT /api/snippets to update snippet with digest that cannot be found.
+        ## Brief: Try to call PUT /api/v1/snippets to update snippet with digest that cannot be found.
         snippy = Snippet.add_one(Snippy(), Snippet.FORCED)
         snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
@@ -73,7 +73,7 @@ class TestApiUpdateSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_put(path='/api/snippets/101010101010101',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_put(path='/api/v1/snippets/101010101010101',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     body=json.dumps(snippet))
         assert result.headers == headers

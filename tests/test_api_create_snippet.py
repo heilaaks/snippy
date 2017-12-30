@@ -34,7 +34,7 @@ class TestApiCreateSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call POST /api/snippets to create new snippet.
+        ## Brief: Call POST /api/v1/snippets to create new snippet.
         snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
@@ -46,7 +46,7 @@ class TestApiCreateSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
         assert result.headers == headers

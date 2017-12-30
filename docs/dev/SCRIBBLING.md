@@ -239,6 +239,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ pip install falcon
     $ python runner --server
     $ curl 127.0.0.1:8080/api/hello
+    $ curl 127.0.0.1:8080/api/v1/hello
     
     # Swagger
     > https://app.swaggerhub.com/apis/heilaaks1/snippy-rest_api/1.0.0
@@ -252,7 +253,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
     
     # Fix multiple fields
-    $ curl -X GET "https://app.swaggerhub.com/api/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"
+    $ curl -X GET "https://app.swaggerhub.com/api/v1/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"
 
     # Testing with Dredd
     > http://dredd.org/en/latest/quickstart.html

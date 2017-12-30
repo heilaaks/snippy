@@ -32,7 +32,7 @@ class TestApiSearchSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call GET /api/snippets and search keywords from all columns. The search
+        ## Brief: Call GET /api/v1/snippets and search keywords from all columns. The search
         ##        query matches to two snippets and both of them are returned. The search
         ##        is sorted based on one field. The limit defined in the search query is
         ##        not exceeded.
@@ -42,7 +42,7 @@ class TestApiSearchSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == headers
@@ -52,7 +52,7 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /api/snippets and search keywords from all columns. The search
+        ## Brief: Call GET /api/v1/snippets and search keywords from all columns. The search
         ##        query matches to four snippets but limit defined in search query results
         ##        only two of them sorted by the brief column. The sorting must be applied
         ##        before limit is applied.
@@ -71,7 +71,7 @@ class TestApiSearchSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cnmap&limit=2&sort=brief')
         assert result.headers == headers
@@ -82,7 +82,7 @@ class TestApiSearchSnippet(object):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
-        ## Brief: Call GET /api/snippets and search keywords from all columns. The search
+        ## Brief: Call GET /api/v1/snippets and search keywords from all columns. The search
         ##        query matches to two snippets but only one of them is returned because the
         ##        limit parameter was set to one. In this case the sort is descending and the
         ##        last match must be returned. The resulting fields are limited only to brief
@@ -93,7 +93,7 @@ class TestApiSearchSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker&limit=1&sort=-brief&fields=brief,category')
         assert result.headers == headers
@@ -103,7 +103,7 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /api/snippets and search keywords from all columns. The search
+        ## Brief: Call GET /api/v1/snippets and search keywords from all columns. The search
         ##        query matches to four snippets but limit defined in search query results
         ##        only two of them sorted by the utc column in descending order.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
@@ -115,7 +115,7 @@ class TestApiSearchSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cnmap&limit=2&sort=-utc,-brief')
         assert result.headers == headers
@@ -126,7 +126,7 @@ class TestApiSearchSnippet(object):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
-        ## Brief: Try to call GET /api/snippets with sort parameter set the column name
+        ## Brief: Try to call GET /api/v1/snippets with sort parameter set the column name
         ##        that is not existing. The sort must fall to default sorting.
         snippy = Snippet.add_defaults(Snippy())
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '259'}
@@ -136,7 +136,7 @@ class TestApiSearchSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
         assert result.headers == headers
@@ -159,7 +159,7 @@ class TestApiSearchSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call GET /api/snippets/{digest} to get explicit snippet based on digest.
+        ## Brief: Call GET /api/v1/snippets/{digest} to get explicit snippet based on digest.
         ##        In this case the snippet is found.
         snippy = Snippet.add_defaults(Snippy())
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '450'}
@@ -167,7 +167,7 @@ class TestApiSearchSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets/54e41e9b52a02b6',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets/54e41e9b52a02b6',  ## apiflow
                                                                     headers={'accept': 'application/json'})
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
@@ -176,14 +176,14 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to call GET /api/snippets/{digest} with digest that cannot be found.
+        ## Brief: Try to call GET /api/v1/snippets/{digest} with digest that cannot be found.
         snippy = Snippet.add_defaults(Snippy())
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2'}
         body = []
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/snippets/101010101010101',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets/101010101010101',  ## apiflow
                                                                     headers={'accept': 'application/json'})
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)

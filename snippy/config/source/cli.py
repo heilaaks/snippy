@@ -172,6 +172,19 @@ class Cli(ConfigSourceBase):
 
         return parameters
 
+    def is_editor(self):
+        """Test usage of editor for the operation."""
+
+        is_editor = self.editor
+        # For ease of use, some operations always enforce editor.
+        if self.cat == Const.SNIPPET and self.operation == Cli.UPDATE:
+            is_editor = True
+
+        if self.cat == Const.SOLUTION and (self.operation == Cli.CREATE or self.operation == Cli.UPDATE):
+            is_editor = True
+
+        return is_editor
+
 
 class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """Customised argparse help to print examples."""

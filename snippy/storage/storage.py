@@ -45,6 +45,8 @@ class Storage(object):
         digest = content.compute_digest()
         self.database.update_content(content, digest, utc)
 
+        return digest
+
     def delete(self, digest):
         """Delete content."""
 

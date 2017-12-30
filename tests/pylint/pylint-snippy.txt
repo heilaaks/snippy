@@ -1,6 +1,4 @@
-************* Module snippy.server.api_snippets
-W: 93,21: Unused argument 'request' (unused-argument)
 
 --------------------------------------------------------------------
-Your code has been rated at 10.00/10 (previous run: 10.00/10, -0.00)
+Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)
 

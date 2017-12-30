@@ -198,12 +198,19 @@ class SnippetHelper(object):
         return snippy
 
     @staticmethod
-    def sorted_json_list(json_list):
+    def sorted_json_list(json_data):
         """Sort list of JSONs but keep the oder of main level list containing JSONs."""
 
+
+        json_list = []
+        if isinstance(json_data, list):
+            json_list = (json_data)
+        else:
+            json_list.append(json_data)
+
         jsons = []
-        for json in json_list:
-            jsons.append(SnippetHelper.sorted_json(json))
+        for json_item in json_list:
+            jsons.append(SnippetHelper.sorted_json(json_item))
 
         return tuple(jsons)
 

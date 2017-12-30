@@ -137,7 +137,6 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './foo.yaml']  ## workflow
             cause = snippy.run_cli()
-            print("cause %s" % cause)
             assert cause == 'NOK: cannot read file ./foo.yaml'
             assert not Database.get_contents()
             mock_file.assert_not_called()

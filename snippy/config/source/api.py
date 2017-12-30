@@ -38,3 +38,8 @@ class Api(ConfigSourceBase):
             is_valid = True
 
         return is_valid
+
+    def is_editor(self):
+        """Api configuration source must never use text editor."""
+
+        return False

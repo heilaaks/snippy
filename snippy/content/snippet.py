@@ -58,10 +58,15 @@ class Snippet(object):
                                        data=Config.get_content_data())
         if len(snippets) == 1:
             self.logger.debug('updating snippet with digest %.16s', snippets[0].get_digest())
-            snippet = Config.get_content(content=snippets[0], use_editor=True)
-            self.storage.update(snippet)
+            snippet = Config.get_content(content=snippets[0])
+            content_digest = self.storage.update(snippet)
+            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
         else:
             Config.validate_search_context(snippets, 'update')
+
+        snippets = Migrate.content(snippets, self.content_type)
+
+        return snippets
 
     def delete(self):
         """Delete snippet."""
@@ -136,7 +141,7 @@ class Snippet(object):
         elif Config.is_operation_search():
             snippets = self.search()
         elif Config.is_operation_update():
-            self.update()
+            snippets = self.update()
         elif Config.is_operation_delete():
             self.delete()
         elif Config.is_operation_export():

@@ -8,7 +8,7 @@ from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 
 
-class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
+class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-many-instance-attributes
     """Base class for configuration sources."""
 
     # Operations
@@ -40,6 +40,34 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods
     LIMIT_DEFAULT = 20
 
     def __init__(self):
+        # Parameters are assigned dynamically from self.parameters.
+        self.operation = None
+        self.cat = None
+        self.editor = None
+        self.data = None
+        self.brief = None
+        self.group = None
+        self.tags = None
+        self.links = None
+        self.digest = None
+        self.sall = None
+        self.stag = None
+        self.sgrp = None
+        self.regexp = None
+        self.filename = None
+        self.defaults = None
+        self.template = None
+        self.help = None
+        self.version = None
+        self.very_verbose = None
+        self.quiet = None
+        self.debug = None
+        self.profile = None
+        self.no_ansi = None
+        self.server = None
+        self.limit = None
+        self.sort = None
+        self.fields = None
         self.logger = Logger(__name__).get()
         self.represents = Const.EMPTY
         self.parameters = {'operation': Const.EMPTY,

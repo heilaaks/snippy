@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_api_create_snippet.py: Test GET /snippets API."""
+"""test_api_create_snippet.py: Test POST /snippets API."""
 
 import json
 import sys
@@ -18,8 +18,8 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestApiSearchSnippet(object):
-    """Test GET /snippets API."""
+class TestApiCreateSnippet(object):
+    """Test POST /snippets API."""
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')

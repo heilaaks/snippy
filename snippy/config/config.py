@@ -114,11 +114,13 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
-    def get_content(cls, content, use_editor=False):
+    def get_content(cls, content):
         """Return content after it has been optionally edited."""
 
-        if cls.is_editor() or use_editor:
+        if cls.is_editor():
             content = Config._get_edited_content(content)
+        else:
+            content = Config._get_config_content(content)
 
         return content
 
@@ -735,6 +737,26 @@ class Config(object):  # pylint: disable=too-many-public-methods
                          content.get_key()))
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
+
+        return content
+
+    @classmethod
+    def _get_config_content(cls, content):
+        """Read and set the user provided values from configuration."""
+
+        content.set((cls.get_content_data(),
+                     cls.get_content_brief(),
+                     cls.get_content_group(),
+                     cls.get_content_tags(),
+                     cls.get_content_links(),
+                     content.get_category(),
+                     cls.get_filename(),
+                     content.get_runalias(),
+                     content.get_versions(),
+                     content.get_utc(),
+                     content.get_digest(),
+                     content.get_metadata(),
+                     content.get_key()))
 
         return content
 

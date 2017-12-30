@@ -22,7 +22,7 @@ class Solution(object):
         """Create new solution."""
 
         self.logger.debug('creating new solution')
-        solution = Config.get_content(Content(), use_editor=True)
+        solution = Config.get_content(Content())
         if not solution.has_data():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory solution data not defined')
         elif solution.is_data_template():
@@ -55,7 +55,7 @@ class Solution(object):
                                         data=Config.get_content_data())
         if len(solutions) == 1:
             self.logger.debug('updating solution with digest %.16s', solutions[0].get_digest())
-            solution = Config.get_content(content=solutions[0], use_editor=True)
+            solution = Config.get_content(content=solutions[0])
             self.storage.update(solution)
         else:
             Config.validate_search_context(solutions, 'update')

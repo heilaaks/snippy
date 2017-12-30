@@ -8,10 +8,12 @@
    - [ ] Check if log 'too short digest 0, minimum length is 16' is valid. Seems misleading now.
    - [ ] Why test coverage does not show coverage for -v|--version?
    - [ ] Add classifiers Programming Language :: Python :: 3 and Programming Language :: Python :: 2
+   - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Move the Falcon logging to snippy logger. It seems that Falcon blocks the logs during tests?
    - [ ] Update documents.
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
+   - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
    - [ ] Add remove field support for text content. This is bit hard to generalize since layout e.g. contains header with three fields.
@@ -23,6 +25,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] Now --editor always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
    - [ ] It was noted that sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
    - [ ] Inherit the tests from object and remove unittest and change to teardown_class from pylint. This explains the case domino failures?
    - [ ] Is there a way to get logs from Python logger from stdout? Mocking stdout to StringIO does not even though the logger stream is stdout.

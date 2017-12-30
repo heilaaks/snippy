@@ -60,49 +60,49 @@ paths:
             type: string
           in: query
           required: false
-          description: Search keywords from all fields.
+          description: "Search keywords from all fields."
         - name: stag
           type: array
           items:
             type: string
           in: query
           required: false
-          description: Search keywords only from tag field.
+          description: "Search keywords only from tag field."
         - name: sgrp
           type: array
           items:
             type: string
           in: query
           required: false
-          description: Search keywords only from group field.
+          description: "Search keywords only from group field."
         - name: digest
           type: string
           in: query
           required: false
-          description: Search only based on message digest field.
+          description: "Search only based on message digest field."
         - name: data
           type: string
           in: query
           required: false
-          description: Search only from content data.
+          description: "Search only from content data."
         - name: filter
           type: string
           in: query
           required: false
-          description: Filter search result with provided regexp.
+          description: "Filter search result with provided regexp."
         - name: limit
           type: integer
           default: 20
           in: query
           required: false
-          description: Limit query result list.
+          description: "Limit query result list."
         - name: sort
           type: string
           default: brief
           enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest, key]
           in: query
           required: false
-          description: Sort based on defined field.
+          description: "Sort based on defined field."
         - name: fields
           type: array
           items:
@@ -110,7 +110,7 @@ paths:
             enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest, key]
           in: query
           required: false
-          description: Limit fields that are returned in result list.
+          description: "Limit fields that are returned in result list."
       responses:
         200:
           description: OK
@@ -138,31 +138,31 @@ paths:
             type: string
           in: query
           required: false
-          description: Search keywords from all fields.
+          description: "Search keywords from all fields."
         - name: stag
           type: array
           items:
             type: string
           in: query
           required: false
-          description: Search keywords only from tag field.
+          description: "Search keywords only from tag field."
         - name: sgrp
           type: array
           items:
             type: string
           in: query
           required: false
-          description: Search keywords only from group field.
+          description: "Search keywords only from group field."
         - name: digest
           type: string
           in: query
           required: false
-          description: Search only based on message digest.
+          description: "Search only based on message digest."
         - name: data
           type: string
           in: query
           required: false
-          description: Search only from content data.
+          description: "Search only from content data."
       responses:
         204:
           description: "Snippet deleted"
@@ -188,7 +188,7 @@ paths:
           in: path
           type: string
           required: true
-          description: Unique snippet identified by message digest.
+          description: "Unique snippet identified by message digest."
         - name: body
           in: body
           description: "Existing snippet that is updated"
@@ -213,6 +213,12 @@ paths:
       - "application/json"
       produces:
       - "application/json"
+      parameters:
+        - name: digest
+          in: path
+          type: string
+          required: true
+          description: "Unique snippet identified by message digest."
       responses:
         200:
           description: OK
@@ -233,6 +239,12 @@ paths:
       - "application/json"
       produces:
       - "application/json"
+      parameters:
+        - name: digest
+          in: path
+          type: string
+          required: true
+          description: "Unique snippet identified by message digest."
       responses:
         204:
           description: "Snippet deleted"
@@ -250,48 +262,48 @@ definitions:
     properties:
       data:
         type: string
-        description: Mandatory content data.
+        description: "Mandatory content data."
       brief:
         type: string
-        description: Brief description of the content.
+        description: "Brief description of the content."
       group:
         type: string
-        description: Single group to which the content belongs.
+        description: "Single group to which the content belongs."
       tags:
         type: array
         items:
           type: string
-        description: Comma separated list of tags.
+        description: "Comma separated list of tags."
       links:
         type: array
         items:
           type: string
-        description: Comma separated list of refrence links.
+        description: "Comma separated list of refrence links."
       category:
         type: string
         enum: [snippet, solution]
-        description: Automatically defined content category.
+        description: "Automatically defined content category."
       filename:
         type: string
-        description: Optional filename that that defines automatically used filename when content is exported.
+        description: "Optional filename that that defines automatically used filename when content is exported."
       runalias:
         type: string
-        description: Optional alias to run the content.
+        description: "Optional alias to run the content."
       versions:
         type: string
-        description: Optional list of services and versions related to the snippet.
+        description: "Optional list of services and versions related to the snippet."
       utc:
         type: string
-        description: Optional UTC timestamp that is automatically assigned if left out.
+        description: "Optional UTC timestamp that is automatically assigned if left out."
       digest:
         type: string
-        description: Automatically assigned message digest that uniquely identifies the content.
+        description: "Automatically assigned message digest that uniquely identifies the content."
       metadata:
         type: string
-        description: Automatically assigned internal metadata.
+        description: "Automatically assigned internal metadata."
       key:
         type: string
-        description: Automatically assigned internal contentn key.
+        description: "Automatically assigned internal contentn key."
   Search:
     type: object
     properties:
@@ -299,23 +311,23 @@ definitions:
         type: array
         items:
           type: string
-        description: Search keywords from all fields.
+        description: "Search keywords from all fields."
       stag:
         type: array
         items:
           type: string
-        description: Search keywords only from tag field.
+        description: "Search keywords only from tag field."
       sgrp:
         type: array
         items:
           type: string
-        description: Search keywords only from group field.
+        description: "Search keywords only from group field."
       digest:
         type: string
-        description: Search only based on message digest.
+        description: "Search only based on message digest."
       data:
         type: string
-        description: Search only from content data.
+        description: "Search only from content data."
       filter:
         type: string
-        description: Filter search result with regexp.
+        description: "Filter search result with regexp."

@@ -15,6 +15,7 @@
    - [ ] Add support to add versions to version list.
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
+   - [ ] Test and fix multiple fields like: ?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
    - [ ] Add remove field support for text content. This is bit hard to generalize since layout e.g. contains header with three fields.
    - [ ] Hide internal class level variables with _ or __ prefix. The intention is not to allow access to these.

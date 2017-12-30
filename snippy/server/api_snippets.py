@@ -14,14 +14,14 @@ from snippy.content.snippet import Snippet
 
 
 class ApiSnippets(object):  # pylint: disable=too-few-public-methods
-    """Snippets API."""
+    """Process snippet collections"""
 
     def __init__(self, storage):
         self.logger = Logger(__name__).get()
         self.storage = storage
 
     def on_post(self, request, response):
-        """Request snippets to be created."""
+        """Create new snippet."""
 
         self.logger.debug('run post /api/snippets')
         api = Api(Const.SNIPPET, Api.CREATE, request.media)
@@ -37,7 +37,7 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
             response.status = Cause.http_status()
 
     def on_get(self, request, response):
-        """Request snippets based on search parameters."""
+        """Search snippets based on query parameters."""
 
         self.logger.debug('run get /api/snippets')
         api = Api(Const.SNIPPET, Api.SEARCH, request.params)
@@ -53,7 +53,7 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
             response.status = Cause.http_status()
 
     def on_delete(self, request, response):
-        """Request snippet to be deleted based on search criteria."""
+        """Delete snippet based on query parameters."""
 
         self.logger.debug('run delete /api/snippets')
         api = Api(Const.SNIPPET, Api.DELETE, request.params)
@@ -68,15 +68,15 @@ class ApiSnippets(object):  # pylint: disable=too-few-public-methods
 
 
 class ApiSnippetsDigest(object):  # pylint: disable=too-few-public-methods
-    """Request snippet based on digest."""
+    """Process snippet based on digest resource ID."""
 
     def __init__(self, storage):
         self.logger = Logger(__name__).get()
         self.storage = storage
 
     @staticmethod
-    def on_get(request, response, digest):
-        """Handle GET reguest."""
+    def on_put(request, response, digest):
+        """Handle PUT reguest."""
 
         print("ApiSnippetsDigest")
         print(request)
@@ -90,10 +90,28 @@ class ApiSnippetsDigest(object):  # pylint: disable=too-few-public-methods
         hello = __version__
         response.media = hello
 
-    def on_delete(self, _, response, digest):
-        """Request snippet to be deleted based on explicit digest in route"""
+    def on_get(self, request, response, digest):
+        """Search snippet based on digest."""
 
-        self.logger.debug('run route /api/snippets/{digest} = %s', digest)
+        self.logger.debug('run get /api/snippets/{digest} = %s', digest)
+        local_params = {'digest': digest}
+        api = Api(Const.SNIPPET, Api.SEARCH, local_params)
+        Config.read_source(api)
+        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
+        print(contents)
+        if Cause.is_ok():
+            response.content_type = falcon.MEDIA_JSON
+            response.body = contents
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = Cause.json_message()
+            response.status = Cause.http_status()
+
+    def on_delete(self, _, response, digest):
+        """Delete snippet based on digest."""
+
+        self.logger.debug('run delete /api/snippets/{digest} = %s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SNIPPET, Api.DELETE, local_params)
         Config.read_source(api)

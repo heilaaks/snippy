@@ -1,9 +1,9 @@
 openapi: 3.0.0
 servers:
-  - url: /api
+  - url: /api/v1
 info:
   description: Snippy REST API
-  version: "1.0.0"
+  version: "1.0.0-oas3"
   title: Snippy REST API
   termsOfService: 'https://github.com/heilaaks/snippy'
   contact:
@@ -211,6 +211,7 @@ paths:
           in: path
           required: true
           description: Unique snippet identified by message digest.
+          x-example: 44afdd0c59e17159
           schema:
             type: string
       responses:
@@ -239,6 +240,7 @@ paths:
           in: path
           required: true
           description: Unique snippet identified by message digest.
+          x-example: 44afdd0c59e17159
           schema:
             type: string
       responses:
@@ -264,6 +266,7 @@ paths:
           in: path
           required: true
           description: Unique snippet identified by message digest.
+          x-example: 44afdd0c59e17159
           schema:
             type: string
       responses:
@@ -328,6 +331,8 @@ components:
         key:
           type: string
           description: Automatically assigned internal contentn key.
+      required:
+        - data
     Search:
       type: object
       properties:

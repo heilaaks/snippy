@@ -26,6 +26,7 @@ class ApiSnippets(object):
         api = Api(Const.SNIPPET, Api.CREATE, request.media)
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
+        print("DAA %s" % contents)
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
             response.body = contents

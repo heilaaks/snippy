@@ -244,15 +244,26 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     > https://app.swaggerhub.com/apis/heilaaks1/snippy-rest_api/1.0.0
 
     # Swagger API
-    $ curl -X GET "http://127.0.0.1:8080/api/snippets?sall=docker&limit=20" -H "accept: application/json"
-    $ curl -X GET "http://127.0.0.1:8080/api/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
-    $ curl -X GET "http://127.0.0.1:8080/api/snippets/53908d68425c61dc" -H "accept: application/json"
-    $ curl -s -X GET "http://127.0.0.1:8080/api/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
-    $ curl -s -X GET "http://127.0.0.1:8080/api/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-utc" -H "accept: application/json" | python -m json.tool
-    $ curl -s -X GET "http://127.0.0.1:8080/api/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
+    $ curl -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker&limit=20" -H "accept: application/json"
+    $ curl -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
+    $ curl -X GET "http://127.0.0.1:8080/api/v1/snippets/53908d68425c61dc" -H "accept: application/json"
+    $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-utc" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
     
     # Fix multiple fields
     $ curl -X GET "https://app.swaggerhub.com/api/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"
+
+    # Testing with Dredd
+    > http://dredd.org/en/latest/quickstart.html
+    $ sudo yum install nodejs
+    $ sudo npm install -g dredd
+    $ dredd ./docs/dev/swagger-2.0.yml http://127.0.0.1:8080
+    $ dredd ./docs/dev/swagger-2.0.yml http://127.0.0.1:8080 --dry-run
+    $ dredd ./docs/dev/swagger.yml http://127.0.0.1:8080 --dry-run
+    
+    $ curl -X POST "http://127.0.0.1:8080/api/v1/snippets" -H "Content-Type: application/json" -d '{}'
+    $ curl -X POST "http://127.0.0.1:8080/api/v1/snippets" -H "Content-Type: application/json" -d '{}' | python -m json.tool
 
 #######################################
 ## Devel

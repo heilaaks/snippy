@@ -722,6 +722,20 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        This is also considered more predictable for the end user who is debugging.
        the logs.
 
+    THREADING
+    
+    1. The tool is single threaded
+    
+       The tool was originally built for command line usage and it end up being
+       single threaded. For example the configuration and cause code related
+       objects are global and shared. To change this, would require largish
+       refactoring effort which likely does not make sense. The performance is
+       pretty ok based on reference performance tests.
+       
+       If there is a need to scale the performance up, it can be done by spawning
+       multiple services from the same implementation which are sharing database
+       that can scale.
+       
     COMMITS
 
     1. Git commit logs tries to follow 'keep a changelog' rules
@@ -736,8 +750,17 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        See the commit log rules from /1/.
 
        This rule tries to force common look and feel for the commit logs.
+       
+       It has been realized later on that perhaps better way would be to follow
+       rules defined in /2/. The main different between these two sources is that
+       the source /2/ recommends using imperative mood in the subject line. For
+       example using 'Fix OpenAPI definitions' instead of 'Fixed OpenAPI definitions'.
+       The reasonings are good in /2/ and the usage of imperatives in commit log
+       headers sounds and feels better. How ever, for this project, the chosen
+       rules /1/ must be followed.
 
        /1/ http://keepachangelog.com/en/1.0.0/
+       /2/ https://chris.beams.io/posts/git-commit/
 
 
 #######################################

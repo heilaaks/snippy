@@ -35,6 +35,8 @@ class ApiSnippets(object):
             response.body = Cause.json_message()
             response.status = Cause.http_status()
 
+        Cause.reset()
+
     def on_get(self, request, response):
         """Search snippets based on query parameters."""
 
@@ -51,6 +53,8 @@ class ApiSnippets(object):
             response.body = Cause.json_message()
             response.status = Cause.http_status()
 
+        Cause.reset()
+
     def on_delete(self, request, response):
         """Delete snippet based on query parameters."""
 
@@ -64,6 +68,8 @@ class ApiSnippets(object):
             response.content_type = falcon.MEDIA_JSON
             response.body = Cause.json_message()
             response.status = Cause.http_status()
+
+        Cause.reset()
 
 
 class ApiSnippetsDigest(object):
@@ -91,6 +97,8 @@ class ApiSnippetsDigest(object):
             response.body = Cause.json_message()
             response.status = Cause.http_status()
 
+        Cause.reset()
+
     def on_get(self, _, response, digest):
         """Search snippet based on digest."""
 
@@ -109,6 +117,8 @@ class ApiSnippetsDigest(object):
             response.body = Cause.json_message()
             response.status = Cause.http_status()
 
+        Cause.reset()
+
     def on_delete(self, _, response, digest):
         """Delete snippet based on digest."""
 
@@ -123,3 +133,5 @@ class ApiSnippetsDigest(object):
             response.content_type = falcon.MEDIA_JSON
             response.body = Cause.json_message()
             response.status = Cause.http_status()
+
+        Cause.reset()

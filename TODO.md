@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] REST API input should eat list of content data. It returns the content data in list. Now it reads the data as string.
    - [ ] Add full support of existing features for REST API.
    - [ ] Fix API that does only /api/v1/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
@@ -52,6 +51,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed REST API content data to work in string context lines separted by newlines and in list context
    - [x] Tested using same URL parameter multiple times. Common behaviour is coming from Falcon framework.
    - [x] Fixed list of links to allow only space and bar "|" characters to separate links.
    - [x] Optimized the called module and line number fetching that was causing large performance penalty.

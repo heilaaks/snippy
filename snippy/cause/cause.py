@@ -70,6 +70,10 @@ class Cause(object):
             is_ok = True
         elif len(cls._list['errors']) == 1 and cls._list['errors'][0]['status'] in Cause.OK_STATUS:
             is_ok = True
+        elif all(error['status'] in Cause.OK_STATUS for error in cls._list['errors']):
+            is_ok = True
+
+        # all(item[2] == 0 for item in items)
 
         return is_ok
 

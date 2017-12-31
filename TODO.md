@@ -11,6 +11,8 @@
    - [ ] Add classifiers Programming Language :: Python :: 3 and Programming Language :: Python :: 2
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Move the Falcon logging to snippy logger. It seems that Falcon blocks the logs during tests?
+   - [ ] Check allowed characters in link list separation. Comma seems to be allowed.
+   - [ ] Fix tags and links after parse with no tags or links. The value has empty string (one element in a list) when the list prolly should be empty.
    - [ ] Update documents.
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.

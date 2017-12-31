@@ -51,7 +51,7 @@ class TestApiCreateSnippet(object):
                                                                      body=json.dumps(snippet))
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
+        assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
         Snippet.test_content2(compare_content)
         snippy.release()

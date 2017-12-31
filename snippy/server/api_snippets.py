@@ -107,7 +107,6 @@ class ApiSnippetsDigest(object):
         api = Api(Const.SNIPPET, Api.SEARCH, local_params)
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        print(contents)
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
             response.body = contents

@@ -164,6 +164,86 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
+        ## Brief: Call GET /api/v1/snippets with search keywords that do not result any
+        ##        matches.
+        snippy = Snippet.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2'}
+        body = []
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_api_search_snippets_with_stag(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Search snippet from tag fields."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call GET /api/v1/snippets with search tag keywords that do not result
+        ##        any matches.
+        snippy = Snippet.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2'}
+        body = []
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_api_search_snippets_with_sgrp(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Search snippet from group fields."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call GET /api/v1/snippets with search group keywords that do not result
+        ##        any matches.
+        snippy = Snippet.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2'}
+        body = []
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Cause, '_caller')

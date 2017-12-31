@@ -223,8 +223,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         sall = None
         if self.is_search_all():
-            sall = self.sall
-            self.logger.info('parsed argument --sall with value %s', self.sall)
+            sall = self._to_list(self.sall)
+            self.logger.info('parsed argument --sall with value %s', sall)
         else:
             self.logger.info('argument --sall was not used')
 
@@ -240,8 +240,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         stag = None
         if self.is_search_tag():
-            stag = self.stag
-            self.logger.info('parsed argument --stag with value %s', self.stag)
+            stag = self._to_list(self.stag)
+            self.logger.info('parsed argument --stag with value %s', stag)
         else:
             self.logger.info('argument --stag was not used')
 
@@ -257,8 +257,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         sgrp = None
         if self.is_search_grp():
-            sgrp = self.sgrp
-            self.logger.info('parsed argument --sgrp with value %s', self.sgrp)
+            sgrp = self._to_list(self.sgrp)
+            self.logger.info('parsed argument --sgrp with value %s', sgrp)
         else:
             self.logger.info('argument --sgrp was not used')
 

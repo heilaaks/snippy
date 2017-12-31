@@ -58,6 +58,33 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
+        ## Brief: Call POST /api/v1/snippets to create new snippet. In this case the
+        ##        links and list are defined as list in the JSON message. Note that
+        ##        the default input for tags and links from Snippet.REMOVE maps to a
+        ##        string but the syntax in this case maps to lists with multiple items.
+        snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                   'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                   'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                   'tags': ['cleanup', 'container', 'docker', 'docker-ce', 'moby'],
+                   'links': ['https://docs.docker.com/engine/reference/commandline/rm/']}
+        compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '450'}
+        body = [Snippet.DEFAULTS[Snippet.REMOVE]]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+                                                                     headers={'accept': 'application/json'},
+                                                                     body=json.dumps(snippet))
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_201
+        assert len(Database.get_snippets()) == 1
+        Snippet.test_content2(compare_content)
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
     # pylint: disable=duplicate-code
     def teardown_class(self):
         """Teardown each test."""

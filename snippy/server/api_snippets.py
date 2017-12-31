@@ -22,14 +22,6 @@ class ApiSnippets(object):
     def on_post(self, request, response):
         """Create new snippet."""
 
-        print("ApiSolutions")
-        print(request)
-        print("path %s" % request.path)
-        print("query %s" % request.query_string)
-        print("query params %s" % request.params)
-        print("request media %s" % request.media)
-        print("accept %s" % request.accept)
-        print("accept bool %s" % request.client_accepts_json)
         self.logger.debug('run post /api/v1/snippets')
         api = Api(Const.SNIPPET, Api.CREATE, request.media)
         Config.read_source(api)

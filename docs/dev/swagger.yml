@@ -25,7 +25,7 @@ paths:
           description: Invalid input
       requestBody:
         content:
-          application/json:
+          application/json; charset=UTF-8:
             schema:
               $ref: '#/components/schemas/Content'
         description: New snippet that is stored
@@ -130,17 +130,7 @@ paths:
         '200':
           description: OK
           content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Content'
-            application/text:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Content'
-            application/yaml:
+            application/json; charset=UTF-8:
               schema:
                 type: array
                 items:
@@ -225,7 +215,7 @@ paths:
           description: Validation exception
       requestBody:
         content:
-          application/json:
+          application/json; charset=UTF-8:
             schema:
               $ref: '#/components/schemas/Content'
         description: Existing snippet that is updated
@@ -247,7 +237,7 @@ paths:
         '200':
           description: OK
           content:
-            application/json:
+            application/json; charset=UTF-8:
               schema:
                 type: array
                 items:

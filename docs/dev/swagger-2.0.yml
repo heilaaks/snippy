@@ -27,9 +27,9 @@ paths:
       summary: "Add new snippet"
       description: ""
       consumes:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       produces:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       parameters:
       - name: snippet
         in: body
@@ -48,11 +48,9 @@ paths:
       summary: "Search snippets"
       description: ""
       consumes:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       produces:
-      - "application/json"
-      - "application/text"
-      - "application/yaml"
+      - "application/json; charset=UTF-8"
       parameters:
         - name: sall
           type: array
@@ -128,9 +126,9 @@ paths:
       summary: "Delete one snippet"
       description: ""
       consumes:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       produces:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       parameters:
         - name: sall
           type: array
@@ -180,9 +178,9 @@ paths:
       summary: "Update defined snippet"
       description: ""
       consumes:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       produces:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       parameters:
         - name: digest
           in: path
@@ -211,9 +209,9 @@ paths:
       summary: "Get snippet with digest"
       description: ""
       consumes:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       produces:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       parameters:
         - name: digest
           in: path
@@ -238,9 +236,9 @@ paths:
       summary: "Delete snippet with digest"
       description: ""
       consumes:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       produces:
-      - "application/json"
+      - "application/json; charset=UTF-8"
       parameters:
         - name: digest
           in: path

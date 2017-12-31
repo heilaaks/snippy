@@ -22,7 +22,7 @@ class TestUtCliCreate(object):
         assert obj.get_content_data() is None
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == []
-        assert obj.get_content_links() == ''
+        assert obj.get_content_links() == []
         assert obj.get_content_digest() is None
         assert obj.get_search_all() is None
         assert obj.get_search_tag() is None
@@ -86,15 +86,15 @@ class TestUtCliCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
         group = 'docker'
-        tags = ['docker, container, cleanup']
+        tags = 'docker, container, cleanup'
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', 'docker, container, cleanup', '-l', links]
+        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', tags, '-l', links]
         obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == brief
         assert obj.get_content_group() == group
-        assert obj.get_content_tags() == tags
-        assert obj.get_content_links() == links
+        assert obj.get_content_tags() == [tags]
+        assert obj.get_content_links() == [links]
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -162,15 +162,15 @@ class TestUtCliCreate(object):
 
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
-        tags = ['docker, container, cleanup']
+        tags = 'docker, container, cleanup'
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container \
                  https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', links]
+        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', tags, '-l', links]
         obj = Cli()
         assert obj.get_content_data() == content
         assert obj.get_content_brief() == brief
-        assert obj.get_content_tags() == tags
-        assert obj.get_content_links() == links
+        assert obj.get_content_tags() == [tags]
+        assert obj.get_content_links() == [links]
 
     # pylint: disable=duplicate-code
     @classmethod

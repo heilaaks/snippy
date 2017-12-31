@@ -134,7 +134,7 @@ class Cli(ConfigSourceBase):
         options.add_argument('-b', '--brief', type=str, default=Const.EMPTY, help=argparse.SUPPRESS)
         options.add_argument('-g', '--group', type=str, default=Const.DEFAULT_GROUP, help=argparse.SUPPRESS)
         options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
-        options.add_argument('-l', '--links', type=str, default=Const.EMPTY, help=argparse.SUPPRESS)
+        options.add_argument('-l', '--links', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-d', '--digest', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
 
         # search options

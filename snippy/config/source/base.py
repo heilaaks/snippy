@@ -183,31 +183,18 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     def get_content_tags(self):
         """Return content tags."""
 
-        tag_list = []
-        try:
-            # In Python2 there is str and unicode. In Python3 the strings
-            # are always unicode strings.
-            tags = self.tags
-            if Const.PYTHON2 and isinstance(tags, unicode):  # noqa: F821 # pylint: disable=undefined-variable
-                tags = tags.encode('utf-8')
-            if isinstance(tags, str):
-                tag_list.append(tags)
-            elif isinstance(tags, (list, tuple)):
-                tag_list = list(tags)
-            else:
-                self.logger.info('content tags ignored because of unknown type')
-        except ValueError:
-            self.logger.info('content tags option validation failed and thus no tags are usd')
-        self.logger.debug('parsed content tags with value "%s"', tag_list)
+        tags = self._to_list(self.tags)
+        self.logger.debug('parsed content tags "%s"', tags)
 
-        return tag_list
+        return tags
 
     def get_content_links(self):
-        """Return content reference links."""
+        """Return content links."""
 
-        self.logger.info('parsed argument --links with value "%s"', self.links)
+        links = self._to_list(self.links)
+        self.logger.debug('parsed content links "%s"', links)
 
-        return self.links
+        return links
 
     def is_content_digest(self):
         """Test if content digest option was used."""
@@ -403,3 +390,23 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
             pass
 
         return tuple(removed_columns)
+
+    def _to_list(self, option):
+        """Return option as a list if items."""
+
+        item_list = []
+        try:
+            # In Python2 a string can be str or unicode but in Python3 strings
+            # are always unicode strings.
+            if Const.PYTHON2 and isinstance(option, unicode):  # noqa: F821 # pylint: disable=undefined-variable
+                option = option.encode('utf-8')
+            if isinstance(option, str):
+                item_list.append(option)
+            elif isinstance(option, (list, tuple)):
+                item_list = list(option)
+            else:
+                self.logger.info('content ignored because of unknown type %s', option)
+        except ValueError:
+            self.logger.info('content validation failed and option ignored %s', option)
+
+        return item_list

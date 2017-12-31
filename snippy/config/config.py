@@ -603,21 +603,17 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_content_tags(cls):
         """Process content tags."""
 
-        arg = Config.source.get_content_tags()
+        tags = Config.source.get_content_tags()
 
-        return Editor.get_keywords(arg)
+        return Editor.get_keywords(tags)
 
     @classmethod
     def _parse_content_links(cls):
         """Process content reference links."""
 
         links = Config.source.get_content_links()
-        # Examples: Support processing of:
-        #           1. -l docker container cleanup # Space separated string of links
-        link_list = links.split()
-        link_list = sorted(link_list)
 
-        return tuple(link_list)
+        return Editor.get_links(links)
 
     @classmethod
     def _parse_digest(cls):

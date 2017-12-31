@@ -5,6 +5,7 @@
    - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
    - [ ] Add more tests to make sure that multi level sort actually works. Maybe limit to two columns?
    - [ ] Fix get with digest when snippet is not found. This is currently set to return OK with empty list but should perhaps should result 404.
+   - [ ] Create new module to split the config a bit. For example also get_keywords does not belong to Editor().
    - [ ] Check if log 'too short digest 0, minimum length is 16' is valid. Seems misleading now.
    - [ ] Why test coverage does not show coverage for -v|--version?
    - [ ] Add classifiers Programming Language :: Python :: 3 and Programming Language :: Python :: 2

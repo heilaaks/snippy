@@ -264,7 +264,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ dredd ./docs/dev/swagger.yml http://127.0.0.1:8080 --dry-run
     
     $ curl -X POST "http://127.0.0.1:8080/api/v1/snippets" -H "Content-Type: application/json" -d '{}'
-    $ curl -X POST "http://127.0.0.1:8080/api/v1/snippets" -H "Content-Type: application/json" -d '{}' | python -m json.tool
+    $ curl -X POST "http://127.0.0.1:8080/api/v1/snippets" -H "Content-Type: application/json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
 
 #######################################
 ## Devel

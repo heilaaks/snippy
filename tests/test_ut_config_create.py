@@ -246,6 +246,27 @@ class TestUtConfigCreate(unittest.TestCase):
         self.assertTupleEqual(obj.get_content_tags(), tags)
         self.assertTupleEqual(obj.get_content_links(), links)
 
+    def test_links_separated_by_bar(self):
+        """Test that multiple links can be added by separating them with
+        bar."""
+
+        content = 'docker rm $(docker ps -a -q)'
+        brief = 'Remove all docker containers'
+        tags = ('cleanup', 'container', 'docker')
+        links = ('https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
+                 'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
+        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', '|'.join(links)]
+        obj = Config()
+        obj.read_source(Cli())
+        assert isinstance(obj.get_content_data(), tuple)
+        assert isinstance(obj.get_content_brief(), str)
+        assert isinstance(obj.get_content_tags(), tuple)
+        assert isinstance(obj.get_content_links(), tuple)
+        assert obj.get_content_data() == tuple([content])
+        assert obj.get_content_brief() == brief
+        self.assertTupleEqual(obj.get_content_tags(), tags)
+        self.assertTupleEqual(obj.get_content_links(), links)
+
     # pylint: disable=duplicate-code
     @classmethod
     def setup_class(cls):

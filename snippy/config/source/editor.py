@@ -317,17 +317,22 @@ class Editor(object):
     def get_links(links):
         """Parse user provided link list. Because URL and keyword have different
         forbidden characters, the methods to parse keywords are simular but still
-        they are separated."""
+        they are separated. URLs can be separated only with space and bar. These
+        are defined 'unsafe characters' in URL character set /1/.
+
+        /1/ https://perishablepress.com/stop-using-unsafe-characters-in-urls/"""
 
         # Examples: Support processing of:
         #           1. -l link1 link2
-        #           2. -l link1, link2, link3
-        #           3. -l 'link1 link2 link3'
-        #           4. -l 'link1, link2, link3'
-        #           6. -l '.'
+        #           2. -l link1| link2| link3
+        #           3. -l link1|link2|link3
+        #           4. -l 'link1 link2 link3'
+        #           5. -l 'link1| link2| link3'
+        #           6. -l 'link1|link2|link3'
+        #           7. -l '.'
         link_list = []
         for link in links:
-            link_list = link_list + re.split(r"[\s+,]", link)
+            link_list = link_list + re.split(r"[\s+|+]", link)
 
         sorted_list = sorted(link_list)
 

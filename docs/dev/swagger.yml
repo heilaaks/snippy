@@ -21,8 +21,20 @@ paths:
       responses:
         '201':
           description: Snippet created
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
         '405':
           description: Invalid input
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: Internal server error
       requestBody:
         content:
           application/json; charset=UTF-8:
@@ -137,8 +149,18 @@ paths:
                   $ref: '#/components/schemas/Content'
         '400':
           description: Request not syntactically correct
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/Errors'
         '404':
           description: Snippet not found
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: Internal server error
     delete:
       tags:
         - snippet
@@ -186,10 +208,24 @@ paths:
           description: Snippet deleted
         '400':
           description: Request not syntactically correct
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Errors'
         '404':
           description: Snippet not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Errors'
         '405':
           description: More than one snippet found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: Internal server error
   '/snippets/{digest}':
     put:
       tags:
@@ -201,18 +237,38 @@ paths:
           in: path
           required: true
           description: Unique snippet identified by message digest.
-          x-example: 44afdd0c59e17159
+          x-example: 6dc4b06991780012
           schema:
             type: string
       responses:
         '201':
           description: Snippet updated
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Content'
         '400':
           description: Request not syntactically correct
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/Errors'
         '404':
           description: Snippet not found
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/Errors'
         '405':
           description: Validation exception
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: Internal server error
       requestBody:
         content:
           application/json; charset=UTF-8:
@@ -244,8 +300,18 @@ paths:
                   $ref: '#/components/schemas/Content'
         '400':
           description: Request not syntactically correct
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/Errors'
         '404':
           description: Snippet not found
+          content:
+            application/json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: Internal server error
     delete:
       tags:
         - snippet
@@ -256,7 +322,7 @@ paths:
           in: path
           required: true
           description: Unique snippet identified by message digest.
-          x-example: 44afdd0c59e17159
+          x-example: a516e2d6f8aa5c6f
           schema:
             type: string
       responses:
@@ -264,15 +330,27 @@ paths:
           description: Snippet deleted
         '404':
           description: Snippet not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Errors'
         '405':
           description: More than one snippet found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Errors'
+        '500':
+          description: Internal server error
 components:
   schemas:
     Content:
       type: object
       properties:
         data:
-          type: string
+          type: array
+          items:
+            type: string
           description: Mandatory content data.
         brief:
           type: string
@@ -323,6 +401,50 @@ components:
           description: Automatically assigned internal contentn key.
       required:
         - data
+    Errors:
+      type: object
+      properties:
+        metadata:
+          $ref: '#/components/schemas/Metadata'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      required:
+        - metadata
+        - errors
+    Metadata:
+      type: object
+      properties:
+        version:
+          type: string
+          description: Server version
+        homepage:
+          type: string
+          description: Server homepage URL
+      required:
+        - version
+        - homepage
+    Error:
+      type: object
+      properties:
+        code:
+          type: integer
+          description: HTTP status code
+        status:
+          type: string
+          description: HTTP status code with text
+        module:
+          type: string
+          description: Location of error
+        message:
+          type: string
+          description: Message describing the error.
+      required:
+        - code
+        - status
+        - module
+        - message
     Search:
       type: object
       properties:

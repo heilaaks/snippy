@@ -40,15 +40,21 @@ paths:
       responses:
         201:
           description: "Snippet created"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Content"
         405:
           description: "Invalid input"
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: "Internal server error"
     get:
       tags:
       - "snippet"
       summary: "Search snippets"
       description: ""
-      consumes:
-      - "application/json; charset=UTF-8"
       produces:
       - "application/json; charset=UTF-8"
       parameters:
@@ -118,17 +124,19 @@ paths:
               $ref: "#/definitions/Content"
         400:
           description: "Request not syntactically correct"
+          schema:
+            $ref: '#/definitions/Errors'
         404:
           description: "Snippet not found"
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: "Internal server error"
     delete:
       tags:
       - "snippet"
       summary: "Delete one snippet"
       description: ""
-      consumes:
-      - "application/json; charset=UTF-8"
-      produces:
-      - "application/json; charset=UTF-8"
       parameters:
         - name: sall
           type: array
@@ -166,10 +174,18 @@ paths:
           description: "Snippet deleted"
         400:
           description: "Request not syntactically correct"
+          schema:
+            $ref: '#/definitions/Errors'
         404:
           description: "Snippet not found"
+          schema:
+            $ref: '#/definitions/Errors'
         405:
           description: "More than one snippet found"
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: "Internal server error"
 
   /snippets/{digest}:
     put:
@@ -187,7 +203,7 @@ paths:
           type: string
           required: true
           description: "Unique snippet identified by message digest."
-          x-example: 44afdd0c59e17159
+          x-example: 6dc4b06991780012
         - name: snippet
           in: body
           description: "Existing snippet that is updated"
@@ -197,19 +213,29 @@ paths:
       responses:
         201:
           description: "Snippet updated"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/Content"
         400:
           description: "Request not syntactically correct"
+          schema:
+            $ref: '#/definitions/Errors'
         404:
           description: "Snippet not found"
+          schema:
+            $ref: '#/definitions/Errors'
         405:
           description: "Validation exception"
+          schema:
+            $ref: '#/definitions/Errors'    
+        500:
+          description: "Internal server error"
     get:
       tags:
       - "snippet"
       summary: "Get snippet with digest"
       description: ""
-      consumes:
-      - "application/json; charset=UTF-8"
       produces:
       - "application/json; charset=UTF-8"
       parameters:
@@ -228,31 +254,39 @@ paths:
               $ref: "#/definitions/Content"
         400:
           description: "Request not syntactically correct"
+          schema:
+            $ref: '#/definitions/Errors'
         404:
           description: "Snippet not found"
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: "Internal server error"
     delete:
       tags:
       - "snippet"
       summary: "Delete snippet with digest"
       description: ""
-      consumes:
-      - "application/json; charset=UTF-8"
-      produces:
-      - "application/json; charset=UTF-8"
       parameters:
         - name: digest
           in: path
           type: string
           required: true
           description: "Unique snippet identified by message digest."
-          x-example: 44afdd0c59e17159
+          x-example: a516e2d6f8aa5c6f
       responses:
         204:
           description: "Snippet deleted"
         404:
           description: "Snippet not found"
+          schema:
+            $ref: '#/definitions/Errors'
         405:
           description: "More than one snippet found"
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: "Internal server error"
 
 ################################################################################
 #                                 Definitions                                  #
@@ -262,7 +296,9 @@ definitions:
     type: object
     properties:
       data:
-        type: string
+        type: array
+        items:
+          type: string
         description: "Mandatory content data."
       brief:
         type: string
@@ -307,6 +343,50 @@ definitions:
         description: "Automatically assigned internal contentn key."
     required:
       - data
+  Errors:
+    type: object
+    properties:
+      metadata:
+        $ref: '#/definitions/Metadata'
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/Error'
+    required:
+      - metadata
+      - errors
+  Metadata:
+    type: object
+    properties:
+      version:
+        type: string
+        description: "Server version"
+      homepage:
+        type: string
+        description: "Server homepage URL"
+    required:
+      - version
+      - homepage
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        description: "HTTP status code"
+      status:
+        type: string
+        description: "HTTP status code with text"
+      module:
+        type: string
+        description: "Location of error"
+      message:
+        type: string
+        description: "Message describing the error."
+    required:
+      - code
+      - status
+      - module
+      - message
   Search:
     type: object
     properties:

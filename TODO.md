@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] REST API input should eat list of content data. It returns the content data in list. Now it reads the data as string.
    - [ ] Add full support of existing features for REST API.
    - [ ] Fix API that does only /api/v1/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
@@ -9,6 +10,7 @@
    - [ ] Check if log 'too short digest 0, minimum length is 16' is valid. Seems misleading now.
    - [ ] Why test coverage does not show coverage for -v|--version?
    - [ ] Add classifiers Programming Language :: Python :: 3 and Programming Language :: Python :: 2
+   - [ ] Is it possible to customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Move the Falcon logging to snippy logger. It seems that Falcon blocks the logs during tests?
    - [ ] Fix tags and links after parse with no tags or links. The value has empty string (one element in a list) when the list prolly should be empty.

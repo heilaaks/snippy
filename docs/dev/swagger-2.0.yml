@@ -36,7 +36,9 @@ paths:
         description: "New snippet that is stored"
         required: true
         schema:
-          $ref: "#/definitions/Content"
+          type: array
+          items:
+            $ref: "#/definitions/Content"
       responses:
         201:
           description: "Snippet created"
@@ -209,7 +211,9 @@ paths:
           description: "Existing snippet that is updated"
           required: true
           schema:
-            $ref: "#/definitions/Content"
+            type: array
+            items:
+              $ref: "#/definitions/Content"
       responses:
         201:
           description: "Snippet updated"

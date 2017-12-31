@@ -243,6 +243,9 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     
     # Swagger
     > https://app.swaggerhub.com/apis/heilaaks1/snippy-rest_api/1.0.0
+    
+    # REST API design
+    > http://www.kennethlange.com/posts/The-Ultimate-Checklist-for-REST-APIs.html
 
     # Swagger API
     $ curl -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker&limit=20" -H "accept: application/json"

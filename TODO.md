@@ -11,9 +11,13 @@
    - [ ] Why test coverage does not show coverage for -v|--version?
    - [ ] Add classifiers Programming Language :: Python :: 3 and Programming Language :: Python :: 2
    - [ ] Is it possible to customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
+   - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Move the Falcon logging to snippy logger. It seems that Falcon blocks the logs during tests?
    - [ ] Fix tags and links after parse with no tags or links. The value has empty string (one element in a list) when the list prolly should be empty.
+   - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
+   - [ ] Fix "If you want partial updates, use PATCH instead."
+   - [ ] Is it good idea to have Content always in body to list? Like the post and put would require usage of list as well?
    - [ ] Update documents.
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.

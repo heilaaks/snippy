@@ -211,9 +211,7 @@ paths:
           description: "Existing snippet that is updated"
           required: true
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Content"
+            $ref: "#/definitions/Content"
       responses:
         201:
           description: "Snippet updated"

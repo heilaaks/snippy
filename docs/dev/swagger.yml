@@ -3,7 +3,7 @@ servers:
   - url: /api/v1
 info:
   description: Snippy REST API
-  version: "1.0.0"
+  version: "1.0.0-oas3"
   title: Snippy REST API
   termsOfService: 'https://github.com/heilaaks/snippy'
   contact:
@@ -275,9 +275,7 @@ paths:
         content:
           application/json; charset=UTF-8:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Content'
+              $ref: '#/components/schemas/Content'
         description: Existing snippet that is updated
         required: true
     get:

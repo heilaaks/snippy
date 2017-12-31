@@ -16,8 +16,8 @@
    - [ ] Fix tags and links after parse with no tags or links. The value has empty string (one element in a list) when the list prolly should be empty.
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
    - [ ] Fix "If you want partial updates, use PATCH instead."
-   - [ ] Is it good idea to have Content always in body to list? Like the post and put would require usage of list as well?
    - [ ] Optimize the cause and skipping of setting the line number in case of OK causes? There is slight increase from 55 perf to 0.81/2 to 0.82/3 due to this?
+   - [ ] Test and add support to post and put multiple contents in a list. Now at least the cause OK is not there because there will be multile 201 that do not match to len(error) == 1.
    - [ ] Update documents.
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
@@ -51,7 +51,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
-   - [x] Fixed REST API content data to work in string context lines separted by newlines and in list context
+   - [x] Fixed REST API content data to work in string context lines separted by newlines and in list context.
    - [x] Tested using same URL parameter multiple times. Common behaviour is coming from Falcon framework.
    - [x] Fixed list of links to allow only space and bar "|" characters to separate links.
    - [x] Optimized the called module and line number fetching that was causing large performance penalty.

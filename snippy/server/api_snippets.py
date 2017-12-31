@@ -3,6 +3,7 @@
 """api_snippets.py - JSON REST API for Snippets."""
 
 from __future__ import print_function
+import json
 import falcon
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
@@ -10,25 +11,30 @@ from snippy.cause.cause import Cause
 from snippy.config.source.api import Api
 from snippy.config.config import Config
 from snippy.content.snippet import Snippet
+from snippy.server.validate import Validate
 
 
 class ApiSnippets(object):
-    """Process snippet collections"""
+    """Process snippet collections."""
 
     def __init__(self, storage):
         self.logger = Logger(__name__).get()
         self.storage = storage
+        self.validate = Validate()
 
     def on_post(self, request, response):
-        """Create new snippet."""
+        """Create new snippets."""
 
+        contents = []
         self.logger.debug('run post /api/v1/snippets')
-        api = Api(Const.SNIPPET, Api.CREATE, request.media)
-        Config.read_source(api)
-        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
+        collection = Validate.collection(request.media)
+        for member in collection:
+            api = Api(Const.SNIPPET, Api.CREATE, member)
+            Config.read_source(api)
+            contents = contents + json.loads(Snippet(self.storage, Const.CONTENT_TYPE_JSON).run())
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = contents
+            response.body = json.dumps(contents)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON

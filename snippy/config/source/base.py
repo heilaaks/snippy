@@ -159,8 +159,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         data = None
         if self.is_content_data():
-            data = self.data
-            self.logger.info('parsed argument --content with value %s', self.data)
+            data = self._to_string(self.data)
+            self.logger.info('parsed argument --content with value %s', data)
         else:
             self.logger.info('argument --content was not used')
 
@@ -392,7 +392,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         return tuple(removed_columns)
 
     def _to_list(self, option):
-        """Return option as a list if items."""
+        """Return option as list of items."""
 
         item_list = []
         try:
@@ -410,3 +410,23 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
             self.logger.info('content validation failed and option ignored %s', option)
 
         return item_list
+
+    def _to_string(self, option):
+        """Return option as string by joining list items with newlines."""
+
+        item_string = Const.EMPTY
+        try:
+            # In Python2 a string can be str or unicode but in Python3 strings
+            # are always unicode strings.
+            if Const.PYTHON2 and isinstance(option, unicode):  # noqa: F821 # pylint: disable=undefined-variable
+                item_string = option.encode('utf-8')
+            if isinstance(option, str):
+                item_string = option
+            elif isinstance(option, (list, tuple)):
+                item_string = Const.NEWLINE.join([x.strip() for x in option])  # Enforce only one newline at the end.
+            else:
+                self.logger.info('content ignored because of unknown type %s', option)
+        except ValueError:
+            self.logger.info('content validation failed and option ignored %s', option)
+
+        return item_string

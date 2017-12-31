@@ -85,6 +85,63 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
+        ## Brief: Call POST /api/v1/snippets to create new snippet. In this case the
+        ##        content data is defined in string context where each line is separated
+        ##        with a newlin.
+        mock_get_utc_time.return_value = Snippet.UTC2
+        snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.EXITED]['data']),
+                   'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
+                   'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
+                   'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
+                   'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}
+        compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '655'}
+        body = [Snippet.DEFAULTS[Snippet.EXITED]]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+                                                                     headers={'accept': 'application/json'},
+                                                                     body=json.dumps(snippet))
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_201
+        assert len(Database.get_snippets()) == 1
+        Snippet.test_content2(compare_content)
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+        mock_get_utc_time.return_value = Snippet.UTC1
+
+        ## Brief: Call POST /api/v1/snippets to create new snippet. In this case the
+        ##        content data is defined in list context where each line is an item
+        ##        in a list.
+        mock_get_utc_time.return_value = Snippet.UTC2
+        snippet = {'data': ['docker rm $(docker ps --all -q -f status=exited)\n\n\n\n',
+                            'docker images -q --filter dangling=true | xargs docker rmi'],
+                   'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
+                   'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
+                   'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
+                   'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}
+        compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '655'}
+        body = [Snippet.DEFAULTS[Snippet.EXITED]]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+                                                                     headers={'accept': 'application/json'},
+                                                                     body=json.dumps(snippet))
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_201
+        assert len(Database.get_snippets()) == 1
+        Snippet.test_content2(compare_content)
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+        mock_get_utc_time.return_value = Snippet.UTC1
+
     # pylint: disable=duplicate-code
     def teardown_class(self):
         """Teardown each test."""

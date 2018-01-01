@@ -335,33 +335,35 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Return fields that are used to sort content."""
 
         sorted_dict = {}
-        column_names = []
+        field_names = []
         try:
-            if isinstance(self.sort, str):
-                column_names.append(self.sort)
-            elif isinstance(self.sort, (list, tuple)):
-                column_names.extend(self.sort)
+            fields = ConfigSourceBase._six_string(self.sort)
+            if isinstance(fields, str):
+                field_names.append(fields)
+            elif isinstance(fields, (list, tuple)):
+                field_names.extend(fields)
             else:
                 self._logger.debug('search result sorting parameter ignored because of unknown type')
         except ValueError:
             self._logger.info('search result sort validation failed and thus no sorting is applied')
-        self._logger.debug('config source sorted fields: %s', column_names)
+        self._logger.debug('config source sorted fields: %s', field_names)
 
-        # Convert the column names to internal column index.
+        # Convert the field names to internal field index that match
+        # to database column index.
         sorted_dict['order'] = []
         sorted_dict['value'] = {}
-        for column in column_names:
+        for field in field_names:
             try:
-                if column[0].startswith('-'):
-                    column_index = ConfigSourceBase.FIELDS.index(column[1:])
-                    sorted_dict['order'].append(column_index)
-                    sorted_dict['value'][column_index] = True
+                if field[0].startswith('-'):
+                    index_ = ConfigSourceBase.FIELDS.index(field[1:])
+                    sorted_dict['order'].append(index_)
+                    sorted_dict['value'][index_] = True
                 else:
-                    column_index = ConfigSourceBase.FIELDS.index(column)
-                    sorted_dict['order'].append(column_index)
-                    sorted_dict['value'][column_index] = False
+                    index_ = ConfigSourceBase.FIELDS.index(field)
+                    sorted_dict['order'].append(index_)
+                    sorted_dict['value'][index_] = False
             except ValueError:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existing field={}'.format(column))
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existing field={}'.format(field))
         self._logger.debug('config source internal format for sorted fields: %s', sorted_dict)
 
         return sorted_dict
@@ -371,10 +373,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         requested_fields = ConfigSourceBase.FIELDS
         try:
-            if isinstance(self.fields, str):
-                requested_fields = (self.fields,)
-            elif isinstance(self.fields, (list, tuple)):
-                requested_fields = tuple(self.fields)
+            fields = ConfigSourceBase._six_string(self.fields)
+            if isinstance(fields, str):
+                requested_fields = (fields,)
+            elif isinstance(fields, (list, tuple)):
+                requested_fields = tuple(fields)
             else:
                 self._logger.debug('search result selected fields parameter ignored because of unknown type')
         except ValueError:
@@ -389,39 +392,45 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     def _to_list(self, option):
         """Return option as list of items."""
 
-        item_list = []
+        list_ = []
         try:
-            # In Python 2 a string can be str or unicode but in Python 3 strings
-            # are always unicode strings.
-            if Const.PYTHON2 and isinstance(option, unicode):  # noqa: F821 # pylint: disable=undefined-variable
-                option = option.encode('utf-8')
+            option = ConfigSourceBase._six_string(option)
             if isinstance(option, str):
-                item_list.append(option)
+                list_.append(option)
             elif isinstance(option, (list, tuple)):
-                item_list = list(option)
+                list_ = list(option)
             else:
                 self._logger.debug('config source list parameter ignored because of unknown type %s', option)
         except ValueError:
             self._logger.info('config source list parameter validation failed and option ignored %s', option)
 
-        return item_list
+        return list_
 
     def _to_string(self, option):
         """Return option as string by joining list items with newlines."""
 
-        item_string = Const.EMPTY
+        string_ = Const.EMPTY
         try:
-            # In Python 2 a string can be str or unicode but in Python 3 strings
-            # are always unicode strings.
-            if Const.PYTHON2 and isinstance(option, unicode):  # noqa: F821 # pylint: disable=undefined-variable
-                item_string = option.encode('utf-8')
+            option = ConfigSourceBase._six_string(option)
             if isinstance(option, str):
-                item_string = option
+                string_ = option
             elif isinstance(option, (list, tuple)):
-                item_string = Const.NEWLINE.join([x.strip() for x in option])  # Enforce only one newline at the end.
+                string_ = Const.NEWLINE.join([x.strip() for x in option])  # Enforce only one newline at the end.
             else:
                 self._logger.debug('config source string parameter ignored because of unknown type %s', option)
         except ValueError:
             self._logger.info('config source string parameter validation failed and option ignored %s', option)
 
-        return item_string
+        return string_
+
+    @staticmethod
+    def _six_string(parameter):
+        """Take care of converting Python 2 unicode string to str."""
+
+        # In Python 2 a string can be str or unicode but in Python 3 strings
+        # are always unicode strings. This makes sure that a string is always
+        # str for Python 2 and python 3.
+        if Const.PYTHON2 and isinstance(parameter, unicode):  # noqa: F821 # pylint: disable=undefined-variable
+            parameter = parameter.encode('utf-8')
+
+        return parameter

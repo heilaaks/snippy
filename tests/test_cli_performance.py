@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""test_performance.py: Verify that there are no major impacts to performance."""
+"""test_cli_performance.py: Verify that there are no major impacts to performance in console usage."""
 
 from __future__ import print_function
 import sys
@@ -20,14 +20,14 @@ else:
     from StringIO import StringIO  # pylint: disable=import-error
 
 
-class TestPerformance(object):
+class TestCliPerformance(object):
     """Test tool performance."""
 
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Sqlite3Db, '_get_db_location')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_performance(self, mock_isfile, mock_get_db_location, mock_call_editor):
-        """Test tool performance."""
+    def test_cli_performance(self, mock_isfile, mock_get_db_location, mock_call_editor):
+        """Test console performance."""
 
         mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
@@ -37,7 +37,7 @@ class TestPerformance(object):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC: 1 loop : 0.0237 / 55 loop : 0.7971 / 100 loop : 1.4365
+        ##        Reference PC:   1 loop :  0.0237 /   55 loop : 0.7971 / 100 loop : 1.4365
         ##        Reference PC: 880 loop : 12.7213 / 1000 loop : 14.3598
         ##
         ##        The reference is with sqlite database in memory as with all tests.
@@ -95,6 +95,7 @@ class TestPerformance(object):
         print("====================================")
         print("Runtime %.4f" % runtime)
         print("There are %d rows in stdout" % len(result_stdout))
+        print("There are %d rows in stderr" % len(result_stderr))
         print("====================================")
 
         assert not result_stderr

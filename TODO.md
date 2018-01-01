@@ -15,6 +15,8 @@
    - [ ] Fix tags and links after parse with no tags or links. The value has empty string (one element in a list) when the list prolly should be empty.
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
    - [ ] Fix "If you want partial updates, use PATCH instead."
+   - [ ] Why API performance test is so slow? Because of requests? The slownes is linear tough.
+   - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Test and add support to post and put multiple contents in a list.
    - [ ] Update documents.
    - [ ] Why one failing API test fails all the WF cases? The cleanup does not work?

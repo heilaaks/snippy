@@ -34,6 +34,10 @@ class Cause(object):
     HTTP_INTERNAL_SERVER_ERROR = HTTP_500
     OK_STATUS = (HTTP_OK, HTTP_CREATED, HTTP_NO_CONTENT)
 
+    HTTP_200_OK = 200
+    HTTP_201_CREATED = 201
+    HTTP_204_NO_CONTENT = 204
+
     _logger = None
     _list = {'errors': []}
 

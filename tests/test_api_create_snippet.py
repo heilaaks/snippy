@@ -35,14 +35,10 @@ class TestApiCreateSnippet(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call POST /api/v1/snippets to create new snippet.
-        snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                   'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                   'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                   'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                   'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}
+        snippet = Snippet.DEFAULTS[Snippet.REMOVE]
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '450'}
-        body = [Snippet.DEFAULTS[Snippet.REMOVE]]
+        body = [snippet]
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -141,6 +137,40 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_api_create_snippets_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Create snippets from API."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call POST /api/v1/snippets in list context to create new snippets.
+        snippets = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
+        compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
+        body = snippets
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+                                                                     headers={'accept': 'application/json'},
+                                                                     body=json.dumps(snippets))
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_201
+        assert len(Database.get_snippets()) == 2
+        Snippet.test_content2(compare_content)
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
 
     # pylint: disable=duplicate-code
     def teardown_class(self):

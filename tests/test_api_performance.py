@@ -7,6 +7,7 @@ from subprocess import call
 from subprocess import Popen
 import sys
 import time
+import http.client
 import json
 import requests
 from snippy.config.constants import Constants as Const
@@ -59,6 +60,7 @@ class TestApiPerformance(object):
         ##        No errors should be printed and the runtime should be below 10
         ##        seconds. The runtime is intentionally set 10 times higher value
         ##        than with the reference PC.
+        session = requests.Session()
         real_stderr = sys.stderr
         real_stdout = sys.stdout
         sys.stderr = StringIO()
@@ -67,38 +69,38 @@ class TestApiPerformance(object):
         for _ in range(10):
 
             # POST four snippets in list context.
-            resp = requests.post(url='http://127.0.0.1:8080/api/v1/snippets',
-                                 headers={'content-type':'application/json; charset=UTF-8'},
-                                 data=json.dumps(snippets))
+            resp = session.post(url='http://127.0.0.1:8080/api/v1/snippets',
+                                headers={'content-type':'application/json; charset=UTF-8'},
+                                data=json.dumps(snippets))
             assert resp.status_code == Cause.HTTP_201_CREATED
             assert len(json.loads(resp.text)) == 4
 
             # GET maximum of two snippets from whole snippet collection.
-            resp = requests.get(url='http://127.0.0.1:8080/api/v1/snippets?limit=2&sort=-brief',
-                                headers={'content-type':'application/json; charset=UTF-8'})
+            resp = session.get(url='http://127.0.0.1:8080/api/v1/snippets?limit=2&sort=-brief',
+                               headers={'content-type':'application/json; charset=UTF-8'})
             assert resp.status_code == Cause.HTTP_200_OK
             assert len(json.loads(resp.text)) == 2
 
             # GET maximum of four snippets from whole snippet collection with sall search.
-            resp = requests.get(url='http://127.0.0.1:8080/api/v1/snippets?sall=docker,swarm&limit=4&sort=brief',
-                                headers={'content-type':'application/json; charset=UTF-8'})
+            resp = session.get(url='http://127.0.0.1:8080/api/v1/snippets?sall=docker,swarm&limit=4&sort=brief',
+                               headers={'content-type':'application/json; charset=UTF-8'})
             assert resp.status_code == Cause.HTTP_200_OK
             assert len(json.loads(resp.text)) == 3
 
             # DELETE all snippets one by one by first requesting only digests.
-            resp = requests.get(url='http://127.0.0.1:8080/api/v1/snippets?limit=100&fields=digest',
-                                headers={'content-type':'application/json; charset=UTF-8'})
+            resp = session.get(url='http://127.0.0.1:8080/api/v1/snippets?limit=100&fields=digest',
+                               headers={'content-type':'application/json; charset=UTF-8'})
             assert resp.status_code == Cause.HTTP_200_OK
             assert len(json.loads(resp.text)) == 4
             for member in json.loads(resp.text):
                 print(member['digest'])
-                resp = requests.delete(url='http://127.0.0.1:8080/api/v1/snippets/' + member['digest'],
-                                       headers={'content-type':'application/json; charset=UTF-8'})
+                resp = session.delete(url='http://127.0.0.1:8080/api/v1/snippets/' + member['digest'],
+                                      headers={'content-type':'application/json; charset=UTF-8'})
                 assert resp.status_code == Cause.HTTP_204_NO_CONTENT
 
             # GET all snippets to make sure that all are deleted
-            resp = requests.get(url='http://127.0.0.1:8080/api/v1/snippets?limit=100',
-                                headers={'content-type':'application/json; charset=UTF-8'})
+            resp = session.get(url='http://127.0.0.1:8080/api/v1/snippets?limit=100',
+                               headers={'content-type':'application/json; charset=UTF-8'})
             assert resp.status_code == Cause.HTTP_200_OK
             assert not json.loads(resp.text)
 

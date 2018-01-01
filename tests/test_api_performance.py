@@ -7,16 +7,16 @@ from subprocess import call
 from subprocess import Popen
 import sys
 import time
-import http.client
 import json
-import requests
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 if not Const.PYTHON2:
+    import http.client as httplib # pylint: disable=import-error
     from io import StringIO  # pylint: disable=import-error
 else:
+    import httplib  # pylint: disable=import-error
     from StringIO import StringIO  # pylint: disable=import-error
 
 
@@ -43,12 +43,15 @@ class TestApiPerformance(object):
         ##              There seems to be variation of 5-20%. With short runs the
         ##              variation percentage is larger.
         ##
-        ##        Reference PC:   1 loop :   0.1256 /   55 loop : 6.1329 / 100 loop : 10.9246
-        ##        Reference PC: 880 loop : 100.9132 / 1000 loop : 115.9591
-        ##        Reference PC:  10 loop : 1.0813
+        ##        Reference PC:   1 loop :  0.0843 /   55 loop :  4.3813 / 100 loop : 7.8849
+        ##        Reference PC: 880 loop : 69.4168 / 1000 loop : 79.0004
+        ##        Reference PC:  10 loop : 0.7955
         ##
         ##        NOTE! Vere slow. Is the reason how requests opens the connection
         ##              for every requests?
+        ##
+        ##        NOTE! Using http.client gives 20-30% performance boost over Python
+        ##              requests. Also the latencies are more constant with this.
         ##
         ##        The reference is with sqlite database in memory as with all tests.
         ##        There is naturally jitter in results and the values are as of now
@@ -60,7 +63,7 @@ class TestApiPerformance(object):
         ##        No errors should be printed and the runtime should be below 10
         ##        seconds. The runtime is intentionally set 10 times higher value
         ##        than with the reference PC.
-        session = requests.Session()
+        conn = httplib.HTTPConnection('localhost', port=8080)
         real_stderr = sys.stderr
         real_stdout = sys.stdout
         sys.stderr = StringIO()
@@ -69,40 +72,48 @@ class TestApiPerformance(object):
         for _ in range(10):
 
             # POST four snippets in list context.
-            resp = session.post(url='http://127.0.0.1:8080/api/v1/snippets',
-                                headers={'content-type':'application/json; charset=UTF-8'},
-                                data=json.dumps(snippets))
-            assert resp.status_code == Cause.HTTP_201_CREATED
-            assert len(json.loads(resp.text)) == 4
+            conn.request('POST',
+                         '/api/v1/snippets',
+                         json.dumps(snippets),
+                         {'content-type':'application/json; charset=UTF-8'})
+            resp = conn.getresponse()
+            assert resp.status == Cause.HTTP_201_CREATED
+            assert len(json.loads(resp.read().decode())) == 4
 
             # GET maximum of two snippets from whole snippet collection.
-            resp = session.get(url='http://127.0.0.1:8080/api/v1/snippets?limit=2&sort=-brief',
-                               headers={'content-type':'application/json; charset=UTF-8'})
-            assert resp.status_code == Cause.HTTP_200_OK
-            assert len(json.loads(resp.text)) == 2
+            conn.request('GET',
+                         '/api/v1/snippets?limit=2&sort=-brief')
+            resp = conn.getresponse()
+            assert resp.status == Cause.HTTP_200_OK
+            assert len(json.loads(resp.read().decode())) == 2
 
-            # GET maximum of four snippets from whole snippet collection with sall search.
-            resp = session.get(url='http://127.0.0.1:8080/api/v1/snippets?sall=docker,swarm&limit=4&sort=brief',
-                               headers={'content-type':'application/json; charset=UTF-8'})
-            assert resp.status_code == Cause.HTTP_200_OK
-            assert len(json.loads(resp.text)) == 3
+            ## GET maximum of four snippets from whole snippet collection with sall search.
+            conn.request('GET',
+                         '/api/v1/snippets?sall=docker,swarm&limit=4&sort=brief')
+            resp = conn.getresponse()
+            assert resp.status == Cause.HTTP_200_OK
+            assert len(json.loads(resp.read().decode())) == 3
 
-            # DELETE all snippets one by one by first requesting only digests.
-            resp = session.get(url='http://127.0.0.1:8080/api/v1/snippets?limit=100&fields=digest',
-                               headers={'content-type':'application/json; charset=UTF-8'})
-            assert resp.status_code == Cause.HTTP_200_OK
-            assert len(json.loads(resp.text)) == 4
-            for member in json.loads(resp.text):
+            ## DELETE all snippets one by one by first requesting only digests.
+            conn.request('GET',
+                         '/api/v1/snippets?limit=100&fields=digest')
+            resp = conn.getresponse()
+            body = json.loads(resp.read().decode())
+            assert resp.status == Cause.HTTP_200_OK
+            assert len(body) == 4
+            for member in body:
                 print(member['digest'])
-                resp = session.delete(url='http://127.0.0.1:8080/api/v1/snippets/' + member['digest'],
-                                      headers={'content-type':'application/json; charset=UTF-8'})
-                assert resp.status_code == Cause.HTTP_204_NO_CONTENT
+                conn.request('DELETE',
+                             'http://localhost:8080/api/v1/snippets/' + member['digest'])
+                resp = conn.getresponse()
+                assert resp.status == Cause.HTTP_204_NO_CONTENT
 
             # GET all snippets to make sure that all are deleted
-            resp = session.get(url='http://127.0.0.1:8080/api/v1/snippets?limit=100',
-                               headers={'content-type':'application/json; charset=UTF-8'})
-            assert resp.status_code == Cause.HTTP_200_OK
-            assert not json.loads(resp.text)
+            conn.request('GET',
+                         '/api/v1/snippets?limit=100')
+            resp = conn.getresponse()
+            assert resp.status == Cause.HTTP_200_OK
+            assert not json.loads(resp.read().decode())
 
         runtime = time.time() - start
         server.terminate()

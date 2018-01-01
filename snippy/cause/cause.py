@@ -61,7 +61,7 @@ class Cause(object):
         # Optimization: Prevent setting the caller module and line number in case
         # of success causes. Reading of the line number requires file access that
         # is expensive and avoided in successful cases.
-        caller = 'snippy.cause.cause:optimize'
+        caller = 'snippy.cause.cause.optimize:1'
         if status not in Cause.OK_STATUS:
             caller = cls._caller()
         cls._logger.info('status %s with message %s from %s', status, message, caller)
@@ -118,11 +118,12 @@ class Cause(object):
     def _caller():
         """Get caller module and code line."""
 
-        # This is optimized: Inspect.stack reads source code file that generates
-        # expensive file access. The contenxt loading can be switched off with
-        # stack(0) setting /1/. A bit more efficient way is to use sys._getframe
-        # that is according to /2/ four times faster the stack(0). Testing shows
-        # that there is a noticeable difference but not that much.
+        # Optimization: Inspect.stack reads source code file that generates
+        # expensive file access. The contenxt loading can be switched off
+        # with stack(0) setting /1/. A bit more efficient way is to use
+        # sys._getframe that is according to /2/ four times faster the
+        # stack(0). Testing shows that there is a noticeable difference
+        # but not that much.
         #
         # Try to avoid calling this method for performance reasons.
         #

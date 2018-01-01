@@ -17,6 +17,7 @@
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix "If you want partial updates, use PATCH instead."
+   - [ ] Fix ConfigSourceBase and if data in parameters before pop could be handled like self._parameters.pop('data', None).
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.
@@ -51,6 +52,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added repr into ConfigSourceBase to be used like: print(repr(self.config.source)).
    - [x] Fixed incorrect default value for list parameter in configuration source.
    - [x] Added a test to verify creating multiple snippets in list context.
    - [x] Added programming language classifiers for Python 3 and Python 2 main releases.

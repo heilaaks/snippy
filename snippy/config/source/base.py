@@ -69,7 +69,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.sort = None
         self.fields = None
         self._logger = Logger(__name__).get()
-        self._represents = Const.EMPTY
+        self._repr = Const.EMPTY
         self._parameters = {'operation': Const.EMPTY,
                             'cat': Const.UNKNOWN_CONTENT,
                             'editor': False,
@@ -99,6 +99,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
                             'fields': ConfigSourceBase.FIELDS}
         self._set_self()
         self._set_repr()
+
+    def __repr__(self):
+
+        return self._repr
 
     def _set_conf(self, parameters):
         """Set API configuration parameters."""
@@ -133,7 +137,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         for parameter in sorted(self._parameters):
             namespace.append('%s=%r' % (parameter, self._parameters[parameter]))
 
-        self._represents = '%s(%s)' % (class_name, ', '.join(namespace))
+        self._repr = '%s(%s)' % (class_name, ', '.join(namespace))
 
     def get_operation(self):
         """Return the requested operation for the content."""

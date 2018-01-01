@@ -1,30 +1,29 @@
 ## TODO
-   - [ ] Add full support of existing features for REST API.
+   - [ ] Add the Falcon logging to only from snippy logger. It also seems that Falcon blocks the logs during tests? All logs from Snippy logger - somehow?
+   - [ ] Add more tests /api/v1/snippets.
+   - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
-   - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
-   - [ ] Add more tests to make sure that multi level sort actually works. Maybe limit to two columns?
-   - [ ] Fix get with digest when snippet is not found. This is currently set to return OK with empty list but should perhaps should result 404.
-   - [ ] Create new module to split the config a bit. For example also get_keywords does not belong to Editor().
-   - [ ] Why test coverage does not show coverage for -v|--version?
-   - [ ] Add classifiers Programming Language :: Python :: 3 and Programming Language :: Python :: 2
-   - [ ] Is it possible to customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
-   - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
-   - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
-   - [ ] Move the Falcon logging to snippy logger. It seems that Falcon blocks the logs during tests?
-   - [ ] Fix tags and links after parse with no tags or links. The value has empty string (one element in a list) when the list prolly should be empty.
+   - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
+   - [ ] Fix tags and links after parse with no tags or links. The values have empty string (one element in a list) when the list prolly should be empty.
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
+   - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
+   - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
+   - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
+   - [ ] Add support for /api/v1/solutions.
+   - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
+   - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
+   - [ ] Add new module to split the config a bit. For example also get_keywords does not belong to Editor().
+   - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
+   - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
+   - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix "If you want partial updates, use PATCH instead."
-   - [ ] Why API performance test is so slow? Because of requests? The slownes is linear tough.
+   - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
-   - [ ] Test and add support to post and put multiple contents in a list.
    - [ ] Update documents.
-   - [ ] Why one failing API test fails all the WF cases? The cleanup does not work?
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
-   - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
-   - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
-   - [ ] Add remove field support for text content. This is bit hard to generalize since layout e.g. contains header with three fields.
+   - [ ] Add support to print only selected fields, like brief and digest for text output. Hard to generalize since layout e.g. contains header with three fields.
    - [ ] Hide internal class level variables with _ or __ prefix. The intention is not to allow access to these.
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
    - [ ] Add to document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
@@ -33,6 +32,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
    - [ ] Now --editor always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
    - [ ] It was noted that sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
    - [ ] Inherit the tests from object and remove unittest and change to teardown_class from pylint. This explains the case domino failures?
@@ -51,6 +51,8 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Added a test to verify creating multiple snippets in list context.
+   - [x] Added programming language classifiers for Python 3 and Python 2 main releases.
    - [x] Optimized the cause setting in case of successful cause. In this case the module is not set.
    - [x] Fixed GET /api/v1/snippets to result all snippets if no search criterias are defined.
    - [x] Fixed OAS definition for PUT return status. The PUT returns 200 OK with body that contains updated content.

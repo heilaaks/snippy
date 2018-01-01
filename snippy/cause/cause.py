@@ -54,7 +54,12 @@ class Cause(object):
     def push(cls, status, message):
         """Append cause to list."""
 
-        caller = cls._caller()
+        # Optimization: Prevent setting the caller module and line number in case
+        # of success causes. Reading of the line number requires file access that
+        # is expensive and avoided in successful cases.
+        caller = 'snippy.cause.cause:optimize'
+        if status not in Cause.OK_STATUS:
+            caller = cls._caller()
         cls._logger.info('status %s with message %s from %s', status, message, caller)
         cls._list['errors'].append({'code': int(status.split()[0]),
                                     'status': status,
@@ -72,8 +77,6 @@ class Cause(object):
             is_ok = True
         elif all(error['status'] in Cause.OK_STATUS for error in cls._list['errors']):
             is_ok = True
-
-        # all(item[2] == 0 for item in items)
 
         return is_ok
 

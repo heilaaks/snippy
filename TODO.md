@@ -15,7 +15,6 @@
    - [ ] Fix tags and links after parse with no tags or links. The value has empty string (one element in a list) when the list prolly should be empty.
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
    - [ ] Fix "If you want partial updates, use PATCH instead."
-   - [ ] Optimize the cause and skipping of setting the line number in case of OK causes? There is slight increase from 55 perf to 0.81/2 to 0.82/3 due to this?
    - [ ] Test and add support to post and put multiple contents in a list.
    - [ ] Update documents.
    - [ ] Why one failing API test fails all the WF cases? The cleanup does not work?
@@ -51,6 +50,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [ ] Optimized the cause setting in case of successful cause. In this case the module is not set.
    - [x] Fixed GET /api/v1/snippets to result all snippets if no search criterias are defined.
    - [x] Fixed OAS definition for PUT return status. The PUT returns 200 OK with body that contains updated content.
    - [x] Fixed REST API response status code setting in case multiple snippets are added at once.

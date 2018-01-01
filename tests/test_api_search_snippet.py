@@ -290,6 +290,57 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    def test_api_search_snippets_without_parameters(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Search snippet without search parameters."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call GET /api/v1/snippets without defining search parameters. In this case
+        ##        all content should be returned based on filtering parameters.
+        snippy = Snippet.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
+        body = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='limit=20&sort=brief')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+
+        ## Brief: Call GET /api/v1/snippets without defining search parameters. In this case
+        ##        only one snippet must be returned because the limit is set to one. Also the
+        ##        sorting based on brief field causes the last snippet to be returned.
+        snippy = Snippet.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '519'}
+        body = [Snippet.DEFAULTS[Snippet.FORCED]]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='limit=1&sort=-brief')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
     # pylint: disable=duplicate-code
     def teardown_class(self):
         """Teardown each test."""

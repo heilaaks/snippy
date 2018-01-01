@@ -15,8 +15,21 @@ class Api(ConfigSourceBase):
         parameters['operation'] = operation
 
         Api._validate(parameters)
+        self._set_sall(parameters)
         self._set_conf(parameters)
         self._set_self()
+
+    @staticmethod
+    def _set_sall(parameters):
+        """Set match all if search is made without any search criterias."""
+
+        if parameters['operation'] == Api.SEARCH:
+            if 'sall' not in parameters and \
+               'stag' not in parameters and \
+               'sgrp' not in parameters and \
+               'data' not in parameters and \
+               'digest' not in parameters:
+                parameters['sall'] = ('.')
 
     @staticmethod
     def _validate(parameters):

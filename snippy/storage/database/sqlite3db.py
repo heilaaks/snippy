@@ -143,7 +143,7 @@ class Sqlite3Db(object):
             elif sgrp and Config.is_search_grp():
                 columns = ['groups']
                 query, qargs = Sqlite3Db._make_regexp_query(sgrp, columns, (), category)
-            elif Config.is_content_digest() or digest:  # The later is for tool internal search based on digest.
+            elif Config.is_content_digest() or digest:  # The later condition is for tool internal search based on digest.
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
                 qargs = [digest+'%']
             elif Config.is_content_data():

@@ -1,6 +1,5 @@
 ## TODO
    - [ ] Add full support of existing features for REST API.
-   - [ ] Fix API that does only /api/v1/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
    - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
    - [ ] Add more tests to make sure that multi level sort actually works. Maybe limit to two columns?
@@ -19,6 +18,7 @@
    - [ ] Optimize the cause and skipping of setting the line number in case of OK causes? There is slight increase from 55 perf to 0.81/2 to 0.82/3 due to this?
    - [ ] Test and add support to post and put multiple contents in a list.
    - [ ] Update documents.
+   - [ ] Why one failing API test fails all the WF cases? The cleanup does not work?
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
@@ -51,6 +51,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed GET /api/v1/snippets to result all snippets if no search criterias are defined.
    - [x] Fixed OAS definition for PUT return status. The PUT returns 200 OK with body that contains updated content.
    - [x] Fixed REST API response status code setting in case multiple snippets are added at once.
    - [x] Fixed REST API content data to work in string context lines separted by newlines and in list context.

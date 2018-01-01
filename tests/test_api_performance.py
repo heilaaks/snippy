@@ -38,11 +38,6 @@ class TestApiPerformance(object):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        NOTE! There seems to be quite much variation in results that shows
-        ##              in shorter runs. E.g. 1 iteration can be 0.0584 - 0.1304.
-        ##              There seems to be variation of 5-20%. With short runs the
-        ##              variation percentage is larger.
-        ##
         ##        Reference PC:   1 loop :  0.0843 /   55 loop :  4.3813 / 100 loop : 7.8849
         ##        Reference PC: 880 loop : 69.4168 / 1000 loop : 79.0004
         ##        Reference PC:  10 loop : 0.7955

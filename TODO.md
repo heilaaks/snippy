@@ -5,7 +5,6 @@
    - [ ] Add more tests to make sure that multi level sort actually works. Maybe limit to two columns?
    - [ ] Fix get with digest when snippet is not found. This is currently set to return OK with empty list but should perhaps should result 404.
    - [ ] Create new module to split the config a bit. For example also get_keywords does not belong to Editor().
-   - [ ] Check if log 'too short digest 0, minimum length is 16' is valid. Seems misleading now.
    - [ ] Why test coverage does not show coverage for -v|--version?
    - [ ] Add classifiers Programming Language :: Python :: 3 and Programming Language :: Python :: 2
    - [ ] Is it possible to customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
@@ -52,7 +51,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
-   - [ ] Optimized the cause setting in case of successful cause. In this case the module is not set.
+   - [x] Optimized the cause setting in case of successful cause. In this case the module is not set.
    - [x] Fixed GET /api/v1/snippets to result all snippets if no search criterias are defined.
    - [x] Fixed OAS definition for PUT return status. The PUT returns 200 OK with body that contains updated content.
    - [x] Fixed REST API response status code setting in case multiple snippets are added at once.

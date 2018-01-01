@@ -311,18 +311,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['digest']
 
     @classmethod
-    def get_content_valid_digest(cls):
-        """Return digest identifying the content."""
-
-        digest = Const.EMPTY
-        if len(cls.config['digest']) >= Const.DIGEST_MIN_LENGTH:
-            digest = cls.config['digest']
-        else:
-            cls.logger.info('too short digest %d, minimum length is %d', len(cls.config['digest']), Const.DIGEST_MIN_LENGTH)
-
-        return digest
-
-    @classmethod
     def validate_search_context(cls, contents, operation):  # pylint: disable=too-many-branches
         """Validate content search context."""
 

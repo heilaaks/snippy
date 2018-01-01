@@ -18,9 +18,6 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     # Python2
     PYTHON2 = sys.version_info.major == 2
 
-    # Digest
-    DIGEST_MIN_LENGTH = 16
-
     # Content categories.
     SNIPPET = 'snippet'
     SOLUTION = 'solution'

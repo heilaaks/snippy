@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Fix PUT should return 201 and not 200?
    - [ ] Add full support of existing features for REST API.
    - [ ] Fix API that does only /api/v1/snippets?limit=20&sort=brief&fields=brief,group. Should result all.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
@@ -52,6 +51,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed OAS definition for PUT return status. The PUT returns 200 OK with body that contains updated content.
    - [x] Fixed REST API response status code setting in case multiple snippets are added at once.
    - [x] Fixed REST API content data to work in string context lines separted by newlines and in list context.
    - [x] Tested using same URL parameter multiple times. Common behaviour is coming from Falcon framework.

@@ -240,10 +240,10 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ python runner --server
     $ curl 127.0.0.1:8080/api/hello
     $ curl 127.0.0.1:8080/api/v1/hello
-    
+
     # Swagger
     > https://app.swaggerhub.com/apis/heilaaks1/snippy-rest_api/1.0.0
-    
+
     # REST API design
     > http://www.kennethlange.com/posts/The-Ultimate-Checklist-for-REST-APIs.html
     > https://raw.githubusercontent.com/for-GET/http-decision-diagram/master/httpdd.png
@@ -255,7 +255,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-utc" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
-    
+
     # Fix multiple fields
     $ curl -X GET "https://app.swaggerhub.com/api/v1/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"
 
@@ -266,7 +266,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ dredd ./docs/dev/swagger-2.0.yml http://127.0.0.1:8080
     $ dredd ./docs/dev/swagger-2.0.yml http://127.0.0.1:8080 --dry-run
     $ dredd ./docs/dev/swagger.yml http://127.0.0.1:8080 --dry-run
-    
+
     $ curl -X POST "http://127.0.0.1:8080/api/v1/snippets" -H "Content-Type: application/json" -d '{}'
     $ curl -X POST "http://127.0.0.1:8080/api/v1/snippets" -H "Content-Type: application/json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
 
@@ -349,7 +349,7 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     # With the latest patches the pytest -p no:logging is not needed
     # and it must not be used. There is one case the relies caplog which
     # is a pytest fixture to capture logs from Python logger. There was
-    # no other way figured out this could be done. 
+    # no other way figured out this could be done.
     $ pytest tests/test_wf_console_help.py -k test_console_help_examples
 
     # Travis core debugging
@@ -695,9 +695,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        /1/ https://stackoverflow.com/questions/68645/static-class-variables-in-python
 
     CAUSE CODE
-    
+
     1. The tool cause code is global and shared with all instances of Snippy()
-    
+
        The same explanation applies for the tool exist cause from Cause() class
        than for the 'The tool configuration is global and shared with all instances
        of Snippy()'.
@@ -726,20 +726,32 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        This is also considered more predictable for the end user who is debugging.
        the logs.
 
+    4. Logs from exceptions are printed in INFO level all other logs in DEBUG
+
+       Controlled logs from exception must be printed with INFO level. All other
+       logs must be printed in DEBUG level.
+
+    5. Variables printed in logs are seprated with colon
+    
+       When variables are printed in logs, they must be separated with colon
+       like in the example output below:
+       
+         > ... config source category: snippet
+
     THREADING
-    
+
     1. The tool is single threaded
-    
+
        The tool was originally built for command line usage and it end up being
        single threaded. For example the configuration and cause code related
        objects are global and shared. To change this, would require largish
        refactoring effort which likely does not make sense. The performance is
        pretty ok based on reference performance tests.
-       
+
        If there is a need to scale the performance up, it can be done by spawning
        multiple services from the same implementation which are sharing database
        that can scale.
-       
+
     COMMITS
 
     1. Git commit logs tries to follow 'keep a changelog' rules
@@ -754,7 +766,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        See the commit log rules from /1/.
 
        This rule tries to force common look and feel for the commit logs.
-       
+
        It has been realized later on that perhaps better way would be to follow
        rules defined in /2/. The main different between these two sources is that
        the source /2/ recommends using imperative mood in the subject line. For

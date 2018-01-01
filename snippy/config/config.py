@@ -32,7 +32,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _set_base_config(cls):
         """Set initial configuration."""
 
-        cls.logger.info('initialize global configuration')
+        cls.logger.debug('initialize global configuration')
         cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
         cls.config['output'] = {}
         cls.config['output']['print'] = True
@@ -74,8 +74,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['search']['sgrp'] = cls._parse_search_sgrp()
         cls.config['search']['filter'] = cls._parse_search_filter()
         cls.config['search']['limit'] = cls._parse_search_limit()
-        cls.config['search']['sorting'] = cls._parse_search_sorting()
-        cls.config['search']['removed_columns'] = cls._parse_search_removed_columns()
+        cls.config['search']['sorted_fields'] = cls._parse_sorted_fields()
+        cls.config['search']['removed_fields'] = cls._parse_removed_fields()
         cls.config['input'] = {}
         cls.config['input']['editor'] = Config.source.is_editor()
         cls.config['input']['digest'] = Config.source.is_content_digest()
@@ -109,8 +109,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured value from --sgrp as %s', cls.config['search']['sgrp'])
         cls.logger.debug('configured value from --filter as %s', cls.config['search']['filter'])
         cls.logger.debug('configured value from limit as %d', cls.config['search']['limit'])
-        cls.logger.debug('configured value from sorting as %s', cls.config['search']['sorting'])
-        cls.logger.debug('configured value from removed columns as %s', cls.config['search']['removed_columns'])
+        cls.logger.debug('configured value from sorted fields as %s', cls.config['search']['sorted_fields'])
+        cls.logger.debug('configured value from removed fields as %s', cls.config['search']['removed_fields'])
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
@@ -412,16 +412,16 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['search']['limit']
 
     @classmethod
-    def get_search_sorting(cls):
-        """Return search sorting."""
+    def get_sorted_fields(cls):
+        """Return fields that are used to sort content."""
 
-        return cls.config['search']['sorting']
+        return cls.config['search']['sorted_fields']
 
     @classmethod
-    def get_search_removed_columns(cls):
-        """Return columns removed from search response."""
+    def get_removed_fields(cls):
+        """Return fields that are removed from content."""
 
-        return cls.config['search']['removed_columns']
+        return cls.config['search']['removed_fields']
 
     @classmethod
     def is_editor(cls):
@@ -682,16 +682,16 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return limit
 
     @classmethod
-    def _parse_search_sorting(cls):
-        """Process the user given sort options."""
+    def _parse_sorted_fields(cls):
+        """Process the fields that are used to sort content."""
 
-        return Config.source.get_search_sorted_columns()
+        return Config.source.get_sorted_fields()
 
     @classmethod
-    def _parse_search_removed_columns(cls):
-        """Process the user given search response column list."""
+    def _parse_removed_fields(cls):
+        """Process the fields that are removed from content."""
 
-        return Config.source.get_search_removed_columns()
+        return Config.source.get_removed_fields()
 
     @classmethod
     def _get_edited_content(cls, content):

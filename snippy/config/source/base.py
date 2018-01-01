@@ -33,14 +33,14 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     UTC = 'utc'
     DIGEST = 'digest'
     KEY = 'key'
-    COLUMNS = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
-               'runalias', 'versions', 'utc', 'digest', 'key')
+    FIELDS = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
+              'runalias', 'versions', 'utc', 'digest', 'key')
 
     # Defaults
     LIMIT_DEFAULT = 20
 
     def __init__(self):
-        # Parameters are assigned dynamically from self.parameters.
+        # Parameters are assigned dynamically from self._parameters.
         self.operation = None
         self.cat = None
         self.editor = None
@@ -68,91 +68,91 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.limit = None
         self.sort = None
         self.fields = None
-        self.logger = Logger(__name__).get()
-        self.represents = Const.EMPTY
-        self.parameters = {'operation': Const.EMPTY,
-                           'cat': Const.UNKNOWN_CONTENT,
-                           'editor': False,
-                           'data': Const.EMPTY,
-                           'brief': Const.EMPTY,
-                           'group': Const.DEFAULT_GROUP,
-                           'tags': [],
-                           'links': Const.EMPTY,
-                           'digest': Const.EMPTY,
-                           'sall': [],
-                           'stag': [],
-                           'sgrp': [],
-                           'regexp': Const.EMPTY,
-                           'filename': Const.EMPTY,
-                           'defaults': False,
-                           'template': False,
-                           'help': False,
-                           'version': __version__,
-                           'very_verbose': False,
-                           'quiet': False,
-                           'debug': False,
-                           'profile': False,
-                           'no_ansi': False,
-                           'server': False,
-                           'limit': ConfigSourceBase.LIMIT_DEFAULT,
-                           'sort': ConfigSourceBase.BRIEF,
-                           'fields': ConfigSourceBase.COLUMNS}
+        self._logger = Logger(__name__).get()
+        self._represents = Const.EMPTY
+        self._parameters = {'operation': Const.EMPTY,
+                            'cat': Const.UNKNOWN_CONTENT,
+                            'editor': False,
+                            'data': Const.EMPTY,
+                            'brief': Const.EMPTY,
+                            'group': Const.DEFAULT_GROUP,
+                            'tags': [],
+                            'links': [],
+                            'digest': Const.EMPTY,
+                            'sall': [],
+                            'stag': [],
+                            'sgrp': [],
+                            'regexp': Const.EMPTY,
+                            'filename': Const.EMPTY,
+                            'defaults': False,
+                            'template': False,
+                            'help': False,
+                            'version': __version__,
+                            'very_verbose': False,
+                            'quiet': False,
+                            'debug': False,
+                            'profile': False,
+                            'no_ansi': False,
+                            'server': False,
+                            'limit': ConfigSourceBase.LIMIT_DEFAULT,
+                            'sort': ConfigSourceBase.BRIEF,
+                            'fields': ConfigSourceBase.FIELDS}
         self._set_self()
         self._set_repr()
 
     def _set_conf(self, parameters):
         """Set API configuration parameters."""
 
-        self.parameters.update(parameters)
+        self._parameters.update(parameters)
 
         # These are special cases where the code logic needs to know
         # if some parameter was provided at all.
         if 'data' not in parameters:
-            self.parameters.pop('data')
+            self._parameters.pop('data')
         if 'digest' not in parameters:
-            self.parameters.pop('digest')
+            self._parameters.pop('digest')
         if 'sall' not in parameters:
-            self.parameters.pop('sall')
+            self._parameters.pop('sall')
         if 'stag' not in parameters:
-            self.parameters.pop('stag')
+            self._parameters.pop('stag')
         if 'sgrp' not in parameters:
-            self.parameters.pop('sgrp')
+            self._parameters.pop('sgrp')
         self._set_repr()
 
     def _set_self(self):
         """Set instance variables."""
 
-        for parameter in self.parameters:
-            setattr(self, parameter, self.parameters[parameter])
+        for parameter in self._parameters:
+            setattr(self, parameter, self._parameters[parameter])
 
     def _set_repr(self):
         """Set object representation."""
 
         namespace = []
         class_name = type(self).__name__
-        for parameter in sorted(self.parameters):
-            namespace.append('%s=%r' % (parameter, self.parameters[parameter]))
+        for parameter in sorted(self._parameters):
+            namespace.append('%s=%r' % (parameter, self._parameters[parameter]))
 
-        self.represents = '%s(%s)' % (class_name, ', '.join(namespace))
+        self._represents = '%s(%s)' % (class_name, ', '.join(namespace))
 
     def get_operation(self):
         """Return the requested operation for the content."""
 
-        self.logger.info('parsed positional argument with value "%s"', self.operation)
+        self._logger.debug('config source operation: %s', self.operation)
 
         return self.operation
 
     def get_content_category(self):
         """Return content category."""
 
-        self.logger.info('parsed content category with value "%s"', self.cat)
+        self._logger.debug('config source category: %s', self.cat)
 
         return self.cat
 
     def is_content_data(self):
         """Test if content data option was used."""
 
-        return True if 'data' in self.parameters else False
+        return True if 'data' in self._parameters else False
 
     def get_content_data(self):
         """Return content data."""
@@ -160,23 +160,23 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         data = None
         if self.is_content_data():
             data = self._to_string(self.data)
-            self.logger.info('parsed argument --content with value %s', data)
+            self._logger.debug('config source data: %s', data)
         else:
-            self.logger.info('argument --content was not used')
+            self._logger.debug('config source data was not used')
 
         return data
 
     def get_content_brief(self):
         """Return content brief description."""
 
-        self.logger.info('parsed argument --brief with value "%s"', self.brief)
+        self._logger.debug('config source brief: %s', self.brief)
 
         return self.brief
 
     def get_content_group(self):
         """Return content group."""
 
-        self.logger.info('parsed argument --group with value "%s"', self.group)
+        self._logger.debug('config source group: %s', self.group)
 
         return self.group
 
@@ -184,7 +184,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Return content tags."""
 
         tags = self._to_list(self.tags)
-        self.logger.debug('parsed content tags "%s"', tags)
+        self._logger.debug('config source tags: %s', tags)
 
         return tags
 
@@ -192,14 +192,14 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Return content links."""
 
         links = self._to_list(self.links)
-        self.logger.debug('parsed content links "%s"', links)
+        self._logger.debug('config source links: %s', links)
 
         return links
 
     def is_content_digest(self):
         """Test if content digest option was used."""
 
-        return True if 'digest' in self.parameters else False
+        return True if 'digest' in self._parameters else False
 
     def get_content_digest(self):
         """Return digest identifying the content."""
@@ -207,16 +207,16 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         digest = None
         if self.is_content_digest():
             digest = self.digest
-            self.logger.info('parsed argument --digest with value %s', self.digest)
+            self._logger.debug('config source digest: %s', self.digest)
         else:
-            self.logger.info('argument --digest was not used')
+            self._logger.debug('config source digest was not used')
 
         return digest
 
     def is_search_all(self):
         """Test if search all option was used."""
 
-        return True if 'sall' in self.parameters else False
+        return True if 'sall' in self._parameters else False
 
     def get_search_all(self):
         """Return keywords to search from all fields."""
@@ -224,16 +224,16 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         sall = None
         if self.is_search_all():
             sall = self._to_list(self.sall)
-            self.logger.info('parsed argument --sall with value %s', sall)
+            self._logger.debug('config source sall: %s', sall)
         else:
-            self.logger.info('argument --sall was not used')
+            self._logger.debug('config source sall was not used')
 
         return sall
 
     def is_search_tag(self):
         """Test if search tag option was used."""
 
-        return True if 'stag' in self.parameters else False
+        return True if 'stag' in self._parameters else False
 
     def get_search_tag(self):
         """Return keywords to search only from tags."""
@@ -241,16 +241,16 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         stag = None
         if self.is_search_tag():
             stag = self._to_list(self.stag)
-            self.logger.info('parsed argument --stag with value %s', stag)
+            self._logger.debug('config source stag: %s', stag)
         else:
-            self.logger.info('argument --stag was not used')
+            self._logger.debug('config source stag was not used')
 
         return stag
 
     def is_search_grp(self):
         """Test if search grp option was used."""
 
-        return True if 'sgrp' in self.parameters else False
+        return True if 'sgrp' in self._parameters else False
 
     def get_search_grp(self):
         """Return keywords to search only from groups."""
@@ -258,16 +258,16 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         sgrp = None
         if self.is_search_grp():
             sgrp = self._to_list(self.sgrp)
-            self.logger.info('parsed argument --sgrp with value %s', sgrp)
+            self._logger.debug('config source sgrp: %s', sgrp)
         else:
-            self.logger.info('argument --sgrp was not used')
+            self._logger.debug('config source sgrp was not used')
 
         return sgrp
 
     def get_search_filter(self):
         """Return regexp filter for search output."""
 
-        self.logger.info('parsed argument --filter with value %s', self.regexp)
+        self._logger.debug('config source filter: %s', self.regexp)
 
         return self.regexp
 
@@ -279,42 +279,42 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     def get_operation_file(self):
         """Return file for operation."""
 
-        self.logger.info('parsed argument --file with value "%s"', self.filename)
+        self._logger.debug('config source filename: %s', self.filename)
 
         return self.filename
 
     def is_no_ansi(self):
         """Return usage of ANSI characters like color codes in terminal output."""
 
-        self.logger.info('parsed argument --no-ansi with value "%s"', self.no_ansi)
+        self._logger.debug('config source no-ansi: %s', self.no_ansi)
 
         return self.no_ansi
 
     def is_defaults(self):
         """Return the usage of defaults in migration operation."""
 
-        self.logger.info('parsed argument --defaults with value %s', self.defaults)
+        self._logger.debug('config source defaults: %s', self.defaults)
 
         return self.defaults
 
     def is_template(self):
         """Return the usage of template in migration operation."""
 
-        self.logger.info('parsed argument --template with value %s', self.template)
+        self._logger.debug('config source template: %s', self.template)
 
         return self.template
 
     def is_debug(self):
         """Return the usage of debug option."""
 
-        self.logger.info('parsed argument --debug with value %s', self.debug)
+        self._logger.debug('config source debug: %s', self.debug)
 
         return self.debug
 
     def is_server(self):
         """Test if the service is run as a server."""
 
-        self.logger.info('parsed argument --server with value "%s"', self.server)
+        self._logger.debug('config source server: %s', self.server)
 
         return self.server
 
@@ -325,14 +325,14 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         try:
             limit = int(self.limit)
         except ValueError:
-            self.logger.debug('search limit is not a number and thus the limit is set to default %d', limit)
+            self._logger.info('search result limit is not a number and thus default use: %d', limit)
 
-        self.logger.info('parsed content limit option with value "%s"', limit)
+        self._logger.debug('config source limit: %s', limit)
 
         return limit
 
-    def get_search_sorted_columns(self):
-        """Return content sort options."""
+    def get_sorted_fields(self):
+        """Return fields that are used to sort content."""
 
         sorted_dict = {}
         column_names = []
@@ -342,10 +342,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
             elif isinstance(self.sort, (list, tuple)):
                 column_names.extend(self.sort)
             else:
-                self.logger.info('search sorting attributes ignored because of unknown type')
+                self._logger.debug('search result sorting parameter ignored because of unknown type')
         except ValueError:
-            self.logger.info('search sort option validation failed and thus no sorting is applied')
-        self.logger.debug('parsed content sort option with value "%s"', column_names)
+            self._logger.info('search result sort validation failed and thus no sorting is applied')
+        self._logger.debug('config source sorted fields: %s', column_names)
 
         # Convert the column names to internal column index.
         sorted_dict['order'] = []
@@ -353,50 +353,45 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         for column in column_names:
             try:
                 if column[0].startswith('-'):
-                    column_index = ConfigSourceBase.COLUMNS.index(column[1:])
+                    column_index = ConfigSourceBase.FIELDS.index(column[1:])
                     sorted_dict['order'].append(column_index)
                     sorted_dict['value'][column_index] = True
                 else:
-                    column_index = ConfigSourceBase.COLUMNS.index(column)
+                    column_index = ConfigSourceBase.FIELDS.index(column)
                     sorted_dict['order'].append(column_index)
                     sorted_dict['value'][column_index] = False
             except ValueError:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existing field={}'.format(column))
-        self.logger.debug('converted sort parameters to internal format "%s"', sorted_dict)
+        self._logger.debug('config source internal format for sorted fields: %s', sorted_dict)
 
         return sorted_dict
 
-    def get_search_removed_columns(self):
-        """Return columns that used in search result."""
+    def get_removed_fields(self):
+        """Return content fields that not used in the search result."""
 
-        used_columns = ConfigSourceBase.COLUMNS
+        requested_fields = ConfigSourceBase.FIELDS
         try:
             if isinstance(self.fields, str):
-                used_columns = (self.fields,)
+                requested_fields = (self.fields,)
             elif isinstance(self.fields, (list, tuple)):
-                used_columns = tuple(self.fields)
+                requested_fields = tuple(self.fields)
             else:
-                self.logger.info('search result column list attributes ignored because of unknown type')
+                self._logger.debug('search result selected fields parameter ignored because of unknown type')
         except ValueError:
-            self.logger.info('search result column list option validation failed and thus all columns are used')
-        self.logger.debug('parsed search result column list option with value "%s"', used_columns)
+            self._logger.info('search result selected fields parameter validation failed and thus all fields are used')
+        self._logger.debug('config source used fields in search result: %s', requested_fields)
 
-        # To optimize internal logic, list columns that are moved. Column 'key'
-        # is never added to content.
-        removed_columns = list(set(ConfigSourceBase.COLUMNS) - set(used_columns))
-        try:
-            removed_columns.remove(ConfigSourceBase.KEY)
-        except ValueError:
-            pass
+        removed_fields = tuple(set(ConfigSourceBase.FIELDS) - set(requested_fields))
+        self._logger.debug('config source removed fields from search response: %s', removed_fields)
 
-        return tuple(removed_columns)
+        return removed_fields
 
     def _to_list(self, option):
         """Return option as list of items."""
 
         item_list = []
         try:
-            # In Python2 a string can be str or unicode but in Python3 strings
+            # In Python 2 a string can be str or unicode but in Python 3 strings
             # are always unicode strings.
             if Const.PYTHON2 and isinstance(option, unicode):  # noqa: F821 # pylint: disable=undefined-variable
                 option = option.encode('utf-8')
@@ -405,9 +400,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
             elif isinstance(option, (list, tuple)):
                 item_list = list(option)
             else:
-                self.logger.info('content ignored because of unknown type %s', option)
+                self._logger.debug('config source list parameter ignored because of unknown type %s', option)
         except ValueError:
-            self.logger.info('content validation failed and option ignored %s', option)
+            self._logger.info('config source list parameter validation failed and option ignored %s', option)
 
         return item_list
 
@@ -416,7 +411,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         item_string = Const.EMPTY
         try:
-            # In Python2 a string can be str or unicode but in Python3 strings
+            # In Python 2 a string can be str or unicode but in Python 3 strings
             # are always unicode strings.
             if Const.PYTHON2 and isinstance(option, unicode):  # noqa: F821 # pylint: disable=undefined-variable
                 item_string = option.encode('utf-8')
@@ -425,8 +420,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
             elif isinstance(option, (list, tuple)):
                 item_string = Const.NEWLINE.join([x.strip() for x in option])  # Enforce only one newline at the end.
             else:
-                self.logger.info('content ignored because of unknown type %s', option)
+                self._logger.debug('config source string parameter ignored because of unknown type %s', option)
         except ValueError:
-            self.logger.info('content validation failed and option ignored %s', option)
+            self._logger.info('config source string parameter validation failed and option ignored %s', option)
 
         return item_string

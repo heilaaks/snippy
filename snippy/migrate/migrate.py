@@ -51,7 +51,7 @@ class Migrate(object):
 
         regexp = Config.get_search_filter()
         limit = Config.get_search_limit()
-        sorting = Config.get_search_sorting()
+        sorting = Config.get_sorted_fields()
 
         # The design is that the first regexp query is applied to reduce the
         # content list. Then the remaining contents are first sorted and then
@@ -389,8 +389,8 @@ class Migrate(object):
                       'utc': content.get_utc(),
                       'digest': content.get_digest()}
 
-        columns = Config.get_search_removed_columns()
-        for column in columns:
-            dictionary.pop(column)
+        fields = Config.get_removed_fields()
+        for field in fields:
+            dictionary.pop(field, None)
 
         return dictionary

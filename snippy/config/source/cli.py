@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-"""cli.py: Command line argument management."""
+"""cli.py: CLI parameter management."""
 
 from __future__ import print_function
 import sys
@@ -12,7 +12,7 @@ from snippy.config.source.base import ConfigSourceBase
 
 
 class Cli(ConfigSourceBase):
-    """Command line argument management."""
+    """CLI argument management."""
 
     ARGS_COPYRIGHT = ('Snippy version ' + __version__ + ' - license Apache 2.0',
                       'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
@@ -103,7 +103,6 @@ class Cli(ConfigSourceBase):
         super(Cli, self).__init__()
         parameters = Cli._parse_args()
         self._set_conf(parameters)
-        self._set_self()
 
     @staticmethod
     def _parse_args():
@@ -167,7 +166,7 @@ class Cli(ConfigSourceBase):
         server.add_argument('--server', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # Argparse will exit in case of support options like --help or --version.
-        # Also in case of argument parse failures the SystemExit is made.
+        # Also in case of argument parse failures the SystemExit is made here.
         parameters = vars(parser.parse_args())
 
         return parameters

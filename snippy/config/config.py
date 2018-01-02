@@ -621,7 +621,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         if Config.source.is_search_all():
             keywords = Editor.get_keywords(Config.source.get_search_all())
             # The keyword list may be empty or it can contain empty string. Both cases
-            # must be evaluated to 'match all'.
+            # must be evaluated to 'match any'.
             if not any(keywords):
                 cls.logger.info('listing all content because keywords were not provided for search all')
                 keywords = ('.')
@@ -636,7 +636,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         if Config.source.is_search_tag():
             keywords = Editor.get_keywords(Config.source.get_search_tag())
             # The keyword list may be empty or it can contain empty string. Both cases
-            # must be evaluated to 'match all'.
+            # must be evaluated to 'match any'.
             if not any(keywords):
                 cls.logger.info('listing all content because keywords were not provided for search tags')
                 keywords = ('.')
@@ -651,7 +651,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         if Config.source.is_search_grp():
             keywords = Editor.get_keywords(Config.source.get_search_grp())
             # The keyword list may be empty or it can contain empty string. Both cases
-            # must be evaluated to 'match all'.
+            # must be evaluated to 'match any'.
             if not any(keywords):
                 cls.logger.info('listing all content because keywords were not provided for search groups')
                 keywords = ('.')

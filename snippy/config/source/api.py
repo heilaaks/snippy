@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
-"""api.py: Api parameter management."""
+"""api.py: API parameter management."""
 
 from __future__ import print_function
 from snippy.config.source.base import ConfigSourceBase
 
 
 class Api(ConfigSourceBase):
-    """Api parameter management."""
+    """API parameter management."""
 
     def __init__(self, category, operation, parameters):
         super(Api, self).__init__()
@@ -17,11 +17,10 @@ class Api(ConfigSourceBase):
         Api._validate(parameters)
         self._set_sall(parameters)
         self._set_conf(parameters)
-        self._set_self()
 
     @staticmethod
     def _set_sall(parameters):
-        """Set match all if search is made without any search criterias."""
+        """Set 'match any' if search is made without any search criterias."""
 
         if parameters['operation'] == Api.SEARCH:
             if 'sall' not in parameters and \
@@ -53,6 +52,6 @@ class Api(ConfigSourceBase):
         return is_valid
 
     def is_editor(self):
-        """Api configuration source must never use text editor."""
+        """Api configuration source never uses text editor."""
 
         return False

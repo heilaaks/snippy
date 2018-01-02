@@ -32,7 +32,7 @@ class Cause(object):
     HTTP_METHOD_NOT_ALLOWED = HTTP_405
     HTTP_CONFLICT = HTTP_409
     HTTP_INTERNAL_SERVER_ERROR = HTTP_500
-    OK_STATUS = (HTTP_OK, HTTP_CREATED, HTTP_NO_CONTENT)
+    OK_STATUS_LIST = (HTTP_OK, HTTP_CREATED, HTTP_NO_CONTENT)
 
     HTTP_200_OK = 200
     HTTP_201_CREATED = 201
@@ -62,7 +62,7 @@ class Cause(object):
         # of success causes. Reading of the line number requires file access that
         # is expensive and avoided in successful cases.
         caller = 'snippy.cause.cause.optimize:1'
-        if status not in Cause.OK_STATUS:
+        if status not in Cause.OK_STATUS_LIST:
             caller = cls._caller()
         cls._logger.info('status %s with message %s from %s', status, message, caller)
         cls._list['errors'].append({'code': int(status.split()[0]),
@@ -77,9 +77,9 @@ class Cause(object):
         is_ok = False
         if not cls._list['errors']:
             is_ok = True
-        elif len(cls._list['errors']) == 1 and cls._list['errors'][0]['status'] in Cause.OK_STATUS:
+        elif len(cls._list['errors']) == 1 and cls._list['errors'][0]['status'] in Cause.OK_STATUS_LIST:
             is_ok = True
-        elif all(error['status'] in Cause.OK_STATUS for error in cls._list['errors']):
+        elif all(error['status'] in Cause.OK_STATUS_LIST for error in cls._list['errors']):
             is_ok = True
 
         return is_ok

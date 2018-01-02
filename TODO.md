@@ -18,6 +18,8 @@
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.
+   - [ ] Fix api performance test failure which leaves the server running and hanging.
+   - [ ] Test and Fix? Many field names in string context (how to send as string?) The code currently just appends the string to list? Validate parameters?
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.

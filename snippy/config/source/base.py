@@ -20,7 +20,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     IMPORT = 'import'
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
-    # Columns
+    # Fields
     DATA = 'data'
     BRIEF = 'brief'
     GROUP = 'group'
@@ -40,7 +40,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     LIMIT_DEFAULT = 20
 
     def __init__(self):
-        # Parameters are assigned dynamically from self._parameters.
+        # Parameters are assigned after initializatio from self._parameters.
         self.operation = None
         self.cat = None
         self.editor = None
@@ -69,7 +69,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.sort = None
         self.fields = None
         self._logger = Logger(__name__).get()
-        self._repr = Const.EMPTY
+        self._repr = None
         self._parameters = {'operation': Const.EMPTY,
                             'cat': Const.UNKNOWN_CONTENT,
                             'editor': False,
@@ -104,6 +104,22 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         return self._repr
 
+    def _set_self(self):
+        """Set instance variables."""
+
+        for parameter in self._parameters:
+            setattr(self, parameter, self._parameters[parameter])
+
+    def _set_repr(self):
+        """Set object representation."""
+
+        namespace = []
+        class_name = type(self).__name__
+        for parameter in sorted(self._parameters):
+            namespace.append('%s=%r' % (parameter, self._parameters[parameter]))
+
+        self._repr = '%s(%s)' % (class_name, ', '.join(namespace))
+
     def _set_conf(self, parameters):
         """Set API configuration parameters."""
 
@@ -121,23 +137,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
             self._parameters.pop('stag')
         if 'sgrp' not in parameters:
             self._parameters.pop('sgrp')
+        self._set_self()
         self._set_repr()
-
-    def _set_self(self):
-        """Set instance variables."""
-
-        for parameter in self._parameters:
-            setattr(self, parameter, self._parameters[parameter])
-
-    def _set_repr(self):
-        """Set object representation."""
-
-        namespace = []
-        class_name = type(self).__name__
-        for parameter in sorted(self._parameters):
-            namespace.append('%s=%r' % (parameter, self._parameters[parameter]))
-
-        self._repr = '%s(%s)' % (class_name, ', '.join(namespace))
 
     def get_operation(self):
         """Return the requested operation for the content."""
@@ -340,16 +341,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         sorted_dict = {}
         field_names = []
-        try:
-            fields = ConfigSourceBase._six_string(self.sort)
-            if isinstance(fields, str):
-                field_names.append(fields)
-            elif isinstance(fields, (list, tuple)):
-                field_names.extend(fields)
-            else:
-                self._logger.debug('search result sorting parameter ignored because of unknown type')
-        except ValueError:
-            self._logger.info('search result sort validation failed and thus no sorting is applied')
+        fields = ConfigSourceBase._six_string(self.sort)
+        if isinstance(fields, str):
+            field_names.append(fields)
+        elif isinstance(fields, (list, tuple)):
+            field_names.extend(fields)
+        else:
+            self._logger.debug('search result sorting parameter ignored because of unknown type')
         self._logger.debug('config source sorted fields: %s', field_names)
 
         # Convert the field names to internal field index that match
@@ -376,16 +374,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Return content fields that not used in the search result."""
 
         requested_fields = ConfigSourceBase.FIELDS
-        try:
-            fields = ConfigSourceBase._six_string(self.fields)
-            if isinstance(fields, str):
-                requested_fields = (fields,)
-            elif isinstance(fields, (list, tuple)):
-                requested_fields = tuple(fields)
-            else:
-                self._logger.debug('search result selected fields parameter ignored because of unknown type')
-        except ValueError:
-            self._logger.info('search result selected fields parameter validation failed and thus all fields are used')
+        fields = ConfigSourceBase._six_string(self.fields)
+        if isinstance(fields, str):
+            requested_fields = (fields,)
+        elif isinstance(fields, (list, tuple)):
+            requested_fields = tuple(fields)
+        else:
+            self._logger.debug('search result selected fields parameter ignored because of unknown type')
         self._logger.debug('config source used fields in search result: %s', requested_fields)
 
         removed_fields = tuple(set(ConfigSourceBase.FIELDS) - set(requested_fields))
@@ -397,16 +392,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Return option as list of items."""
 
         list_ = []
-        try:
-            option = ConfigSourceBase._six_string(option)
-            if isinstance(option, str):
-                list_.append(option)
-            elif isinstance(option, (list, tuple)):
-                list_ = list(option)
-            else:
-                self._logger.debug('config source list parameter ignored because of unknown type %s', option)
-        except ValueError:
-            self._logger.info('config source list parameter validation failed and option ignored %s', option)
+        option = ConfigSourceBase._six_string(option)
+        if isinstance(option, str):
+            list_.append(option)
+        elif isinstance(option, (list, tuple)):
+            list_ = list(option)
+        else:
+            self._logger.debug('config source list parameter ignored because of unknown type: %s', type(option))
 
         return list_
 
@@ -414,16 +406,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Return option as string by joining list items with newlines."""
 
         string_ = Const.EMPTY
-        try:
-            option = ConfigSourceBase._six_string(option)
-            if isinstance(option, str):
-                string_ = option
-            elif isinstance(option, (list, tuple)):
-                string_ = Const.NEWLINE.join([x.strip() for x in option])  # Enforce only one newline at the end.
-            else:
-                self._logger.debug('config source string parameter ignored because of unknown type %s', option)
-        except ValueError:
-            self._logger.info('config source string parameter validation failed and option ignored %s', option)
+        option = ConfigSourceBase._six_string(option)
+        if isinstance(option, str):
+            string_ = option
+        elif isinstance(option, (list, tuple)):
+            string_ = Const.NEWLINE.join([x.strip() for x in option])  # Enforce only one newline at the end.
+        else:
+            self._logger.debug('config source string parameter ignored because of unknown type %s', option)
 
         return string_
 

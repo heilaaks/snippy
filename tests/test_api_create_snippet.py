@@ -203,7 +203,6 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-
     # pylint: disable=duplicate-code
     def teardown_class(self):
         """Teardown each test."""

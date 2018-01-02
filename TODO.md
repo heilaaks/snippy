@@ -30,6 +30,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] See setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
    - [ ] Add setup.py longdescription from readme.rst. // https://github.com/pypa/sampleproject/blob/master/setup.py
    - [ ] Check security implications from using setup.py (runs code) // https://stackoverflow.com/questions/44878600/is-setup-cfg-deprecated
    - [ ] Add very strict validation for REST API? Even a light failure in params generate error?

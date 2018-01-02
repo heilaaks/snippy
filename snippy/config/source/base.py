@@ -5,6 +5,7 @@
 from snippy.metadata import __version__
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
+from snippy.config.source.parser import Parser
 from snippy.logger.logger import Logger
 
 
@@ -344,6 +345,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         fields = ConfigSourceBase._six_string(self.sort)
         if isinstance(fields, str):
             field_names.append(fields)
+            field_names = Parser.keywords(field_names, sort_=False)
         elif isinstance(fields, (list, tuple)):
             field_names.extend(fields)
         else:
@@ -365,7 +367,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
                     sorted_dict['order'].append(index_)
                     sorted_dict['value'][index_] = False
             except ValueError:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existing field={}'.format(field))
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
         self._logger.debug('config source internal format for sorted fields: %s', sorted_dict)
 
         return sorted_dict
@@ -377,6 +379,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         fields = ConfigSourceBase._six_string(self.fields)
         if isinstance(fields, str):
             requested_fields = (fields,)
+            requested_fields = Parser.keywords(requested_fields)
         elif isinstance(fields, (list, tuple)):
             requested_fields = tuple(fields)
         else:

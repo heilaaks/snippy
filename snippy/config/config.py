@@ -12,6 +12,7 @@ from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.source.editor import Editor
+from snippy.config.source.parser import Parser
 
 
 class Config(object):  # pylint: disable=too-many-public-methods
@@ -593,7 +594,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         tags = Config.source.get_content_tags()
 
-        return Editor.get_keywords(tags)
+        return Parser.keywords(tags)
 
     @classmethod
     def _parse_content_links(cls):
@@ -601,7 +602,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         links = Config.source.get_content_links()
 
-        return Editor.get_links(links)
+        return Parser.links(links)
 
     @classmethod
     def _parse_digest(cls):
@@ -619,7 +620,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         keywords = ()
         if Config.source.is_search_all():
-            keywords = Editor.get_keywords(Config.source.get_search_all())
+            keywords = Parser.keywords(Config.source.get_search_all())
             # The keyword list may be empty or it can contain empty string. Both cases
             # must be evaluated to 'match any'.
             if not any(keywords):
@@ -634,7 +635,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         keywords = ()
         if Config.source.is_search_tag():
-            keywords = Editor.get_keywords(Config.source.get_search_tag())
+            keywords = Parser.keywords(Config.source.get_search_tag())
             # The keyword list may be empty or it can contain empty string. Both cases
             # must be evaluated to 'match any'.
             if not any(keywords):
@@ -649,7 +650,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         keywords = ()
         if Config.source.is_search_grp():
-            keywords = Editor.get_keywords(Config.source.get_search_grp())
+            keywords = Parser.keywords(Config.source.get_search_grp())
             # The keyword list may be empty or it can contain empty string. Both cases
             # must be evaluated to 'match any'.
             if not any(keywords):

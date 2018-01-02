@@ -19,7 +19,7 @@
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.
    - [ ] Fix api performance test failure which leaves the server running and hanging.
-   - [ ] Test and Fix? Many field names in string context (how to send as string?) The code currently just appends the string to list? Validate parameters?
+   - [ ] Test URL encoded REST API queries. The same problem that was with %2C may be with other formats.
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
@@ -54,6 +54,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed REST API parameters separated with %2C like in 'fields=brief%2Ccategory'.
    - [x] Fixed setup.cnf referring to non existent file. Added universal for bdist_wheel.
    - [x] Fixed empty tag and link list containing empty string in REST API response JSON.
    - [x] Added repr into ConfigSourceBase to be used like: print(repr(self.config.source)).

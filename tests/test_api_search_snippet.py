@@ -103,6 +103,26 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
+        ## Brief: Call GET /api/v1/snippets and search keywords from all fields but return
+        ##        only two fields. This syntax that separates the sorted fields causes the
+        ##        parameter to be processed in string context which must handle multiple
+        ##        fields.
+        snippy = Snippet.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '68'}
+        body = [{column: Snippet.DEFAULTS[Snippet.FORCED][column] for column in ['brief', 'category']}]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sall=docker&limit=1&sort=-brief&fields=brief%2Ccategory')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
         ## Brief: Call GET /api/v1/snippets and search keywords from all columns. The search
         ##        query matches to four snippets but limit defined in search query results
         ##        only two of them sorted by the utc column in descending order.
@@ -126,28 +146,28 @@ class TestApiSearchSnippet(object):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
-#        ## Brief: Call GET /api/v1/snippets and search keywords from all columns sorted with
-#        ##        two fields. This syntax that separates the sorted fields causes the parameter
-#        ##        to be processed in string context which must handle multiple fields.
-#        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
-#        snippy = Snippet.add_defaults(Snippy())
-#        Snippet.add_one(snippy, Snippet.EXITED)
-#        Snippet.add_one(snippy, Snippet.NETCAT)
-#        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1073'}
-#        body = [Snippet.DEFAULTS[Snippet.NETCAT], Snippet.DEFAULTS[Snippet.EXITED]]
-#        sys.argv = ['snippy', '--server', '-vv']
-#        snippy = Snippy()
-#        snippy.run()
-#        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
-#                                                                    headers={'accept': 'application/json'},
-#                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-utc%2C-brief')
-#        assert result.headers == headers
-#        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-#        assert result.status == falcon.HTTP_200
-#        snippy.release()
-#        snippy = None
-#        Database.delete_storage()
-#        mock_get_utc_time.side_effect = None
+        ## Brief: Call GET /api/v1/snippets and search keywords from all columns sorted with
+        ##        two fields. This syntax that separates the sorted fields causes the parameter
+        ##        to be processed in string context which must handle multiple fields.
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
+        snippy = Snippet.add_defaults(Snippy())
+        Snippet.add_one(snippy, Snippet.EXITED)
+        Snippet.add_one(snippy, Snippet.NETCAT)
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1073'}
+        body = [Snippet.DEFAULTS[Snippet.NETCAT], Snippet.DEFAULTS[Snippet.EXITED]]
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/api/v1/snippets',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-utc%2C-brief')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+        mock_get_utc_time.side_effect = None
 
         ## Brief: Try to call GET /api/v1/snippets with sort parameter set the column name
         ##        that is not existing. The sort must fall to default sorting.
@@ -155,7 +175,7 @@ class TestApiSearchSnippet(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '259'}
         body = {'metadata': Snippet.get_http_metadata(),
                 'errors': [{'code': 400, 'status': '400 Bad Request', 'module': 'snippy.testing.testing:123',
-                            'message': 'sort option validation failed for non existing field=notexisting'}]}
+                            'message': 'sort option validation failed for non existent field=notexisting'}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()

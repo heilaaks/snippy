@@ -4,7 +4,6 @@
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
-   - [ ] Fix tags and links in REST API response json seem to contain list with empty string when they should be empty?
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
    - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
@@ -52,6 +51,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed empty tag and link list containing empty string in REST API response JSON.
    - [x] Added repr into ConfigSourceBase to be used like: print(repr(self.config.source)).
    - [x] Fixed incorrect default value for list parameter in configuration source.
    - [x] Added a test to verify creating multiple snippets in list context.

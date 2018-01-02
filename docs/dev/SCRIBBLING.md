@@ -488,7 +488,14 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 ## Releasing
 #######################################
 
-    # Release PyPI
+    # Release Wheels instead of Egg next time. Try the below:
+    > https://packaging.python.org/discussions/wheel-vs-egg/
+    > https://packaging.python.org/tutorials/distributing-packages/
+    $ python setup.py sdist
+    $ python setup.py bdist_wheel --universal
+    $ twine upload dist/*
+
+    # Release PyPI (deprecated use universal wheel)
     > https://pypi.org/project/snippy/
     $ git tag -a v0.6.0 -m "Bug fixes and testing"
     $ git push -u origin v0.6.0

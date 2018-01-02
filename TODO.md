@@ -9,14 +9,12 @@
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add support for /api/v1/solutions.
-   - [ ] Fix setup.cfg referring to non existed README.md. To where this setting file affects?
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Add new module to split the config a bit. For example also get_keywords does not belong to Editor().
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix "If you want partial updates, use PATCH instead."
-   - [ ] Fix ConfigSourceBase and if data in parameters before pop could be handled like self._parameters.pop('data', None).
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.
@@ -32,6 +30,8 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] Add setup.py longdescription from readme.rst. // https://github.com/pypa/sampleproject/blob/master/setup.py
+   - [ ] Check security implications from using setup.py (runs code) // https://stackoverflow.com/questions/44878600/is-setup-cfg-deprecated
    - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
    - [ ] Now --editor always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
    - [ ] It was noted that sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
@@ -51,6 +51,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## DONE
+   - [x] Fixed setup.cnf referring to non existent file. Added universal for bdist_wheel.
    - [x] Fixed empty tag and link list containing empty string in REST API response JSON.
    - [x] Added repr into ConfigSourceBase to be used like: print(repr(self.config.source)).
    - [x] Fixed incorrect default value for list parameter in configuration source.

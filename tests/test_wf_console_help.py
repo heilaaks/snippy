@@ -78,7 +78,7 @@ class TestWfConsoleHelp(object):
                   '      $ snippy --help examples',
                   '',
                   'Snippy version ' + __version__ + ' - license Apache 2.0',
-                  'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+                  'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                   'Homepage ' + __homepage__)
 
         ## Brief: Print tool help with long option.
@@ -174,7 +174,7 @@ class TestWfConsoleHelp(object):
                       '      $ snippy import --solution -f solutions.yaml',
                       '',
                       'Snippy version ' + __version__ + ' - license Apache 2.0',
-                      'Copyright 2017 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+                      'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                       'Homepage ' + __homepage__)
             cause = Cause.ALL_OK
             real_stdout = sys.stdout

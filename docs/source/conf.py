@@ -47,7 +47,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'snippy'
-copyright = '2017, Heikki Laaksonen'
+copyright = '2017-2018, Heikki Laaksonen'
 author = 'Heikki Laaksonen'
 
 # The version info for the project you're documenting, acts as replacement for

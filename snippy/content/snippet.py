@@ -36,7 +36,7 @@ class Snippet(object):
     def search(self):
         """Search snippets."""
 
-        self.logger.info('searching snippets')
+        self.logger.debug('searching snippets')
         snippets = self.storage.search(Const.SNIPPET,
                                        sall=Config.get_search_all(),
                                        stag=Config.get_search_tag(),
@@ -134,7 +134,7 @@ class Snippet(object):
 
         snippets = Const.EMPTY
 
-        self.logger.info('managing snippet')
+        self.logger.debug('managing snippet')
         Config.set_category(Const.SNIPPET)
         if Config.is_operation_create():
             snippets = self.create()

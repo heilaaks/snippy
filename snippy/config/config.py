@@ -54,9 +54,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def read_source(cls, source):
         """Read configuration source."""
 
+        cls.logger.debug('config source: %s', source)
         Config.source = source
+        cls.category = Config.source.category
+        cls.operation = Config.source.operation
+
         cls.config['content'] = {}
-        cls.config['content']['category'] = Config.source.get_content_category()
         cls.config['content']['data'] = cls._parse_content_data()
         cls.config['content']['brief'] = cls._parse_content_brief()
         cls.config['content']['group'] = cls._parse_content_group()
@@ -84,7 +87,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['output'] = {}
         cls.config['output']['print'] = True
         cls.config['operation'] = {}
-        cls.config['operation']['task'] = Config.source.get_operation()
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
         cls.config['server'] = Config.source.is_server()
@@ -95,8 +97,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def print_config(cls):
         """Print configuration."""
 
-        cls.logger.debug('configured value from positional argument as "%s"', cls.config['operation']['task'])
-        cls.logger.debug('configured value from content category as "%s"', cls.config['content']['category'])
+        cls.logger.debug('configured operation: %s', cls.operation)
+        cls.logger.debug('configured category: %s', cls.category)
         cls.logger.debug('configured value from --content as %s', cls.config['content']['data'])
         cls.logger.debug('configured value from --brief as "%s"', cls.config['content']['brief'])
         cls.logger.debug('configured value from --group as "%s"', cls.config['content']['group'])
@@ -198,37 +200,37 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def is_operation_create(cls):
         """Test if operation was create."""
 
-        return True if cls.config['operation']['task'] == 'create' else False
+        return True if cls.operation == 'create' else False
 
     @classmethod
     def is_operation_search(cls):
         """Test if operation was search."""
 
-        return True if cls.config['operation']['task'] == 'search' else False
+        return True if cls.operation == 'search' else False
 
     @classmethod
     def is_operation_update(cls):
         """Test if operation was update."""
 
-        return True if cls.config['operation']['task'] == 'update' else False
+        return True if cls.operation == 'update' else False
 
     @classmethod
     def is_operation_delete(cls):
         """Test if operation was delete."""
 
-        return True if cls.config['operation']['task'] == 'delete' else False
+        return True if cls.operation == 'delete' else False
 
     @classmethod
     def is_operation_export(cls):
         """Test if operation was export."""
 
-        return True if cls.config['operation']['task'] == 'export' else False
+        return True if cls.operation == 'export' else False
 
     @classmethod
     def is_operation_import(cls):
         """Test if operation was import."""
 
-        return True if cls.config['operation']['task'] == 'import' else False
+        return True if cls.operation == 'import' else False
 
     @classmethod
     def is_migrate_defaults(cls):
@@ -246,34 +248,28 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def is_category_snippet(cls):
         """Test if operation is applied to snippet category."""
 
-        return True if cls.config['content']['category'] == Const.SNIPPET else False
+        return True if cls.category == Const.SNIPPET else False
 
     @classmethod
     def is_category_solution(cls):
         """Test if operation is applied to solution category."""
 
-        return True if cls.config['content']['category'] == Const.SOLUTION else False
+        return True if cls.category == Const.SOLUTION else False
 
     @classmethod
     def is_category_all(cls):
         """Test if operation is applied to all content categories."""
 
-        return True if cls.config['content']['category'] == 'all' else False
-
-    @classmethod
-    def get_category(cls):
-        """Return content category."""
-
-        return cls.config['content']['category']
+        return True if cls.category == 'all' else False
 
     @classmethod
     def set_category(cls, category):
         """Set content category."""
 
         if category == Const.SOLUTION:
-            cls.config['content']['category'] = Const.SOLUTION
+            cls.category = Const.SOLUTION
         else:
-            cls.config['content']['category'] = Const.SNIPPET
+            cls.category = Const.SNIPPET
 
     @classmethod
     def get_content_data(cls):
@@ -319,7 +315,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # and 3) search keywords. Search keywords are already validated and invalid
         # keywords are interpreted as 'list all' which is always correct at this
         # point.
-        cls.logger.info('validating search context with %d results', len(contents))
+        cls.logger.debug('validating search context with %d results', len(contents))
         if cls.is_content_digest():
             if cls.get_content_digest():
                 if not contents:
@@ -624,7 +620,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
             # The keyword list may be empty or it can contain empty string. Both cases
             # must be evaluated to 'match any'.
             if not any(keywords):
-                cls.logger.info('listing all content because keywords were not provided for search all')
+                cls.logger.debug('listing all content because keywords were not provided for search all')
                 keywords = ('.')
 
         return keywords
@@ -639,7 +635,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
             # The keyword list may be empty or it can contain empty string. Both cases
             # must be evaluated to 'match any'.
             if not any(keywords):
-                cls.logger.info('listing all content because keywords were not provided for search tags')
+                cls.logger.debug('listing all content because keywords were not provided for search tags')
                 keywords = ('.')
 
         return keywords
@@ -654,7 +650,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
             # The keyword list may be empty or it can contain empty string. Both cases
             # must be evaluated to 'match any'.
             if not any(keywords):
-                cls.logger.info('listing all content because keywords were not provided for search groups')
+                cls.logger.debug('listing all content because keywords were not provided for search groups')
                 keywords = ('.')
 
         return keywords

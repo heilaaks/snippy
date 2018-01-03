@@ -20,7 +20,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                             Config.get_content_group(),
                             Config.get_content_tags(),
                             Config.get_content_links(),
-                            Config.get_category(),
+                            Config.category,
                             Config.get_filename(),
                             Const.EMPTY,  # runalias
                             Const.EMPTY,  # versions

@@ -22,7 +22,7 @@ class TestUtConfigCreate(unittest.TestCase):
         snippet = ((), '', Const.DEFAULT_GROUP, (), (), Const.SNIPPET, '', '', '', None, None, None, None)
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_category(), str)
+        assert isinstance(obj.category, str)
         assert isinstance(obj.get_content_data(), tuple)
         assert isinstance(obj.get_content_brief(), str)
         assert isinstance(obj.get_content_group(), str)
@@ -45,7 +45,7 @@ class TestUtConfigCreate(unittest.TestCase):
         assert obj.is_category_snippet()
         assert not obj.is_category_solution()
         assert not obj.is_category_all()
-        assert obj.get_category() == Const.SNIPPET
+        assert obj.category == Const.SNIPPET
         assert not obj.get_content_data()
         assert not obj.get_content_brief()
         assert obj.get_content_group() == Const.DEFAULT_GROUP

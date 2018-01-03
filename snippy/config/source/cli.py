@@ -121,10 +121,10 @@ class Cli(ConfigSourceBase):
         # content options
         content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGO))
         content_meg = content.add_mutually_exclusive_group()
-        content_meg.add_argument('--snippet', action='store_const', dest='cat', const='snippet', help=argparse.SUPPRESS)
-        content_meg.add_argument('--solution', action='store_const', dest='cat', const='solution', help=argparse.SUPPRESS)
-        content_meg.add_argument('--all', action='store_const', dest='cat', const='all', help=argparse.SUPPRESS)
-        content_meg.set_defaults(cat='snippet')
+        content_meg.add_argument('--snippet', action='store_const', dest='category', const='snippet', help=argparse.SUPPRESS)
+        content_meg.add_argument('--solution', action='store_const', dest='category', const='solution', help=argparse.SUPPRESS)
+        content_meg.add_argument('--all', action='store_const', dest='category', const='all', help=argparse.SUPPRESS)
+        content_meg.set_defaults(category='snippet')
 
         # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Cli.ARGS_EDITOR))
@@ -176,10 +176,10 @@ class Cli(ConfigSourceBase):
 
         is_editor = self.editor
         # For ease of use, some operations always enforce editor.
-        if self.cat == Const.SNIPPET and self.operation == Cli.UPDATE:
+        if self.category == Const.SNIPPET and self.operation == Cli.UPDATE:
             is_editor = True
 
-        if self.cat == Const.SOLUTION and (self.operation == Cli.CREATE or self.operation == Cli.UPDATE):
+        if self.category == Const.SOLUTION and (self.operation == Cli.CREATE or self.operation == Cli.UPDATE):
             is_editor = True
 
         return is_editor

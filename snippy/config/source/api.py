@@ -11,7 +11,7 @@ class Api(ConfigSourceBase):
 
     def __init__(self, category, operation, parameters):
         super(Api, self).__init__()
-        parameters['cat'] = category
+        parameters['category'] = category
         parameters['operation'] = operation
 
         Api._validate(parameters)

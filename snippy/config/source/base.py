@@ -41,9 +41,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     LIMIT_DEFAULT = 20
 
     def __init__(self):
-        # Parameters are assigned after initializatio from self._parameters.
-        self.operation = None
-        self.cat = None
+        self.operation = Const.EMPTY
+        self.category = Const.UNKNOWN_CONTENT
         self.editor = None
         self.data = None
         self.brief = None
@@ -71,9 +70,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.fields = None
         self._logger = Logger(__name__).get()
         self._repr = None
-        self._parameters = {'operation': Const.EMPTY,
-                            'cat': Const.UNKNOWN_CONTENT,
-                            'editor': False,
+        self._parameters = {'editor': False,
                             'data': Const.EMPTY,
                             'brief': Const.EMPTY,
                             'group': Const.DEFAULT_GROUP,
@@ -140,20 +137,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
             self._parameters.pop('sgrp')
         self._set_self()
         self._set_repr()
-
-    def get_operation(self):
-        """Return the requested operation for the content."""
-
-        self._logger.debug('config source operation: %s', self.operation)
-
-        return self.operation
-
-    def get_content_category(self):
-        """Return content category."""
-
-        self._logger.debug('config source category: %s', self.cat)
-
-        return self.cat
 
     def is_content_data(self):
         """Test if content data option was used."""

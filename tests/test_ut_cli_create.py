@@ -17,8 +17,8 @@ class TestUtCliCreate(object):
 
         sys.argv = ['snippy', 'create']
         obj = Cli()
-        assert obj.get_operation() == 'create'
-        assert obj.get_content_category() == Const.SNIPPET
+        assert obj.operation == 'create'
+        assert obj.category == Const.SNIPPET
         assert obj.get_content_data() is None
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == []

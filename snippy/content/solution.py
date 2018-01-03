@@ -33,7 +33,7 @@ class Solution(object):
     def search(self):
         """Search solutions."""
 
-        self.logger.info('searching solutions')
+        self.logger.debug('searching solutions')
         solutions = self.storage.search(Const.SOLUTION,
                                         sall=Config.get_search_all(),
                                         stag=Config.get_search_tag(),
@@ -126,7 +126,7 @@ class Solution(object):
 
         solutions = Const.EMPTY
 
-        self.logger.info('managing solution')
+        self.logger.debug('managing solution')
         Config.set_category(Const.SOLUTION)
         if Config.is_operation_create():
             self.create()

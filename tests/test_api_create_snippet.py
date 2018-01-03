@@ -160,7 +160,6 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
-        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_201

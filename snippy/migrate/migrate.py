@@ -229,7 +229,7 @@ class Migrate(object):
 
                     yaml.safe_dump(dictionary, outfile, default_flow_style=False)
                 else:
-                    cls.logger.info('unknown export file format')
+                    cls.logger.debug('unknown export file format')
             except (IOError, TypeError, ValueError, yaml.YAMLError) as exception:
                 cls.logger.exception('fatal failure to generate formatted export file "%s"', exception)
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting content to file')
@@ -274,7 +274,7 @@ class Migrate(object):
 
                         dictionary = yaml.safe_load(infile)
                     else:
-                        cls.logger.info('unknown import file format')
+                        cls.logger.debug('unknown import file format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:
                     cls.logger.exception('fatal exception while loading file "%s"', exception)
                     Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while importing content from file')

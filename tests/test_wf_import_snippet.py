@@ -10,10 +10,10 @@ import json
 import yaml
 import mock
 import pkg_resources
-from snippy.snip import Snippy
-from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -23,13 +23,13 @@ class TestWfImportSnippet(unittest.TestCase):
 
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_all_snippets(self, mock_isfile, mock_get_db_location, mock_yaml_load, mock_json_load):
+    def test_import_all_snippets(self, mock_isfile, mock_storage_file, mock_yaml_load, mock_json_load):
         """Import all snippets."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict
@@ -161,12 +161,12 @@ class TestWfImportSnippet(unittest.TestCase):
 
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_defined_snippet(self, mock_isfile, mock_get_db_location, mock_yaml_load, mock_json_load):
+    def test_import_defined_snippet(self, mock_isfile, mock_storage_file, mock_yaml_load, mock_json_load):
         """Import defined snippet."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
         import_dict = {'content': [copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])]}
         import_dict_orig = copy.deepcopy(import_dict)
@@ -277,12 +277,12 @@ class TestWfImportSnippet(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_snippet_defaults(self, mock_isfile, mock_get_db_location, mock_yaml_load):
+    def test_import_snippet_defaults(self, mock_isfile, mock_storage_file, mock_yaml_load):
         """Import snippet defaults."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
         import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
         mock_yaml_load.return_value = import_dict
@@ -320,12 +320,12 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_snippet_template(self, mock_isfile, mock_get_db_location):
+    def test_import_snippet_template(self, mock_isfile, mock_storage_file):
         """Import snippets from text template."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
         template = Const.NEWLINE.join(Snippet.TEMPLATE)
 
@@ -345,13 +345,13 @@ class TestWfImportSnippet(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_existing_snippets(self, mock_isfile, mock_get_db_location, mock_yaml_load):
+    def test_import_existing_snippets(self, mock_isfile, mock_storage_file, mock_yaml_load):
         """Import snippets already existing."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}
         mock_yaml_load.return_value = import_dict
 

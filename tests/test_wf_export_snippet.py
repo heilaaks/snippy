@@ -8,11 +8,11 @@ import json
 import yaml
 import mock
 import pkg_resources
-from snippy.snip import Snippy
-from snippy.config.constants import Constants as Const
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.config.constants import Constants as Const
+from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -22,14 +22,14 @@ class TestWfExportSnippet(unittest.TestCase):
 
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_all_snippets(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_safe_dump):
+    def test_export_all_snippets(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_safe_dump):
         """Export all snippets."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Snippet.UTC1
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 
@@ -100,13 +100,13 @@ class TestWfExportSnippet(unittest.TestCase):
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_snippet_digest(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    def test_export_snippet_digest(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export defined snippet with digest."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
         export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
@@ -184,13 +184,13 @@ class TestWfExportSnippet(unittest.TestCase):
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_snippet_keyword(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    def test_export_snippet_keyword(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export defined snippet with search keyword."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
         export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
@@ -300,13 +300,13 @@ class TestWfExportSnippet(unittest.TestCase):
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_snippet_data(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    def test_export_snippet_data(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export defined snippet with content data."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
         export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE]]}
@@ -371,11 +371,11 @@ class TestWfExportSnippet(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_export_snippet_template(self, mock_get_db_location, mock_get_utc_time):
+    @mock.patch.object(Config, '_storage_file')
+    def test_export_snippet_template(self, mock_storage_file, mock_get_utc_time):
         """Export snippet template."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
         template = Snippet.TEMPLATE
 
@@ -409,13 +409,13 @@ class TestWfExportSnippet(unittest.TestCase):
 
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_snippet_defaults(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump):
+    def test_export_snippet_defaults(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump):
         """Export snippet defaults."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
         export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}

@@ -5,9 +5,9 @@
 import sys
 import unittest
 import mock
-from snippy.snip import Snippy
+from snippy.config.config import Config
 from snippy.config.source.editor import Editor
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.snip import Snippy
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -16,12 +16,12 @@ class TestWfUpdateSolution(unittest.TestCase):
     """Test workflows for updating solutions."""
 
     @mock.patch.object(Editor, 'call_editor')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_update_solution_with_digest(self, mock_isfile, mock_get_db_location, mock_call_editor):
+    def test_update_solution_with_digest(self, mock_isfile, mock_storage_file, mock_call_editor):
         """Update solution with digest."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Update solution based on short message digest. Only the content data is updated.
@@ -146,12 +146,12 @@ class TestWfUpdateSolution(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(Editor, 'call_editor')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_update_solution_with_data(self, mock_isfile, mock_get_db_location, mock_call_editor):
+    def test_update_solution_with_data(self, mock_isfile, mock_storage_file, mock_call_editor):
         """Update solution with data."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Update solution based on content data.

@@ -5,10 +5,10 @@
 import sys
 import mock
 from snippy.cause.cause import Cause
+from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
-from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -17,13 +17,13 @@ class TestWfCreateSnippet(object):
     """Test workflows for creating snippets."""
 
     @mock.patch.object(Editor, 'call_editor')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_create_snippet_from_cli(self, mock_isfile, mock__get_db_location, mock_call_editor):
+    def test_create_snippet_from_cli(self, mock_isfile, mock_storage_file, mock_call_editor):
         """Create snippet from CLI."""
 
         mock_isfile.return_value = True
-        mock__get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Create new snippet by defining all content parameters from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:

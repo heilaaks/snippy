@@ -5,8 +5,8 @@
 import sys
 import unittest
 import mock
+from snippy.config.config import Config
 from snippy.snip import Snippy
-from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -14,12 +14,12 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestWfDeleteSolution(unittest.TestCase):
     """Test workflows for deleting solutions."""
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_delete_solution_with_digest(self, mock_isfile, mock_get_db_location):
+    def test_delete_solution_with_digest(self, mock_isfile, mock_storage_file):
         """Delete solution with digest."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Delete solution with short 16 byte version of message digest.
@@ -113,12 +113,12 @@ class TestWfDeleteSolution(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_delete_solution_with_data(self, mock_isfile, mock_get_db_location):
+    def test_delete_solution_with_data(self, mock_isfile, mock_storage_file):
         """Delete solution with data."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Delete solution based on content data.

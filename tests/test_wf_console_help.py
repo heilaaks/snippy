@@ -13,7 +13,6 @@ from snippy.snip import main
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 if not Const.PYTHON2:
@@ -220,9 +219,9 @@ class TestWfConsoleHelp(object):
                     'import mock',
                     'import pkg_resources',
                     'from snippy.snip import Snippy',
+                    'from snippy.config.config import Config',
                     'from snippy.config.constants import Constants as Const',
                     'from snippy.cause.cause import Cause',
-                    'from snippy.storage.database.sqlite3db import Sqlite3Db',
                     'from tests.testlib.snippet_helper import SnippetHelper as Snippet',
                     'from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database',
                     '',
@@ -232,13 +231,13 @@ class TestWfConsoleHelp(object):
                     '',
                     '    @mock.patch.object(json, \'load\')',
                     '    @mock.patch.object(yaml, \'safe_load\')',
-                    '    @mock.patch.object(Sqlite3Db, \'_get_db_location\')',
+                    '    @mock.patch.object(Config, \'_storage_file\')',
                     '    @mock.patch(\'snippy.migrate.migrate.os.path.isfile\')',
-                    '    def test_import_all_snippets(self, mock_isfile, mock_get_db_location, mock_yaml_load, mock_json_load):',
+                    '    def test_import_all_snippets(self, mock_isfile, mock_storage_file, mock_yaml_load, mock_json_load):',
                     '        """Import all snippets."""',
                     '',
                     '        mock_isfile.return_value = True',
-                    '        mock_get_db_location.return_value = Database.get_storage()',
+                    '        mock_storage_file.return_value = Database.get_storage()',
                     '        import_dict = {\'content\': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}',
                     '        mock_yaml_load.return_value = import_dict',
                     '        mock_json_load.return_value = import_dict',
@@ -333,11 +332,11 @@ class TestWfConsoleHelp(object):
                 snippy = None
                 Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_console_very_verbose_option(self, mock_get_db_location, caplog):
+    @mock.patch.object(Config, '_storage_file')
+    def test_console_very_verbose_option(self, mock_storage_file, caplog):
         """Test printing logs with the very verbose option."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Enable short logging with -vv option. Test checks that there is more than
         ##        randomly picked largish number of logs in order to avoid matching logs
@@ -359,14 +358,14 @@ class TestWfConsoleHelp(object):
             assert not result_stderr
 
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_console_debug_option(self, mock_isfile, mock_get_db_location, mock_get_utc_time):
+    def test_console_debug_option(self, mock_isfile, mock_storage_file, mock_get_utc_time):
         """Test printing logs with debug option."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Snippet.UTC1
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Enable long logging with --debug option. Test checks that there is more
         ##        than randomly picked largish number of logs in order to avoid matching
@@ -424,11 +423,11 @@ class TestWfConsoleHelp(object):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_console_quiet_option(self, mock_get_db_location):
+    @mock.patch.object(Config, '_storage_file')
+    def test_console_quiet_option(self, mock_storage_file):
         """Test disabling all output to console."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Disable all logging and output to terminal.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
@@ -450,11 +449,11 @@ class TestWfConsoleHelp(object):
             assert not result_stdout
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_console_version_option(self, mock_get_db_location):
+    @mock.patch.object(Config, '_storage_file')
+    def test_console_version_option(self, mock_storage_file):
         """Test printing tool version."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Output tool version with long option. Only the version must be
         ##        printed and nothing else. The print must be send to stdout.
@@ -500,11 +499,11 @@ class TestWfConsoleHelp(object):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_snippy_main(self, mock_get_db_location):
+    @mock.patch.object(Config, '_storage_file')
+    def test_snippy_main(self, mock_storage_file):
         """Test running program main with profile option."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Run program main with profile option. Test checks that there is more
         ##        than randomly picked largish number of rows. This just verifies that
@@ -525,14 +524,14 @@ class TestWfConsoleHelp(object):
             Database.delete_storage()
 
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_debug_print_content(self, mock_isfile, mock_get_db_location, mock_get_utc_time, ):
+    def test_debug_print_content(self, mock_isfile, mock_storage_file, mock_get_utc_time, ):
         """Test printing the content."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Snippet.UTC1
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Test printing content with print. This is a development test
         ##        which must directly print the snippet.

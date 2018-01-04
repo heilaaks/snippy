@@ -7,10 +7,10 @@ import sys
 import time
 import mock
 from snippy.snip import Snippy
+from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.config.source.editor import Editor
-from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -24,13 +24,13 @@ class TestCliPerformance(object):
     """Test tool performance."""
 
     @mock.patch.object(Editor, 'call_editor')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_cli_performance(self, mock_isfile, mock_get_db_location, mock_call_editor):
+    def test_cli_performance(self, mock_isfile, mock_storage_file, mock_call_editor):
         """Test console performance."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Verify performance of the tool on a rough scale. The intention
         ##        is to keep a reference test that is just iterated few times and

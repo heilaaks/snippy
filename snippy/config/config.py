@@ -22,6 +22,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
     logger = None
     config = {}
 
+    storage_file = None
+    db_schema_file = None
+
     def __init__(self):
         if not Config.logger:
             Config.logger = Logger(__name__).get()
@@ -34,10 +37,34 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Set initial configuration."""
 
         cls.logger.debug('initialize storage config')
-        cls.storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
-        cls.storage_file = os.path.join(cls.storage_path, 'snippy.db')
-        cls.db_schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
-        cls.db_in_memory = True
+        cls.storage_file = Config._storage_file()
+        cls.db_schema_file = Config._storage_schema()
+
+    @classmethod
+    def _storage_file(cls):
+        """Test and set full path to storage file or exit."""
+
+        storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
+        if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
+            storage_file = os.path.join(storage_path, 'snippy.db')
+        else:
+            cls.logger.error('NOK: storage path does not exist or is not accessible: %s', storage_path)
+            sys.exit(1)
+
+        return storage_file
+
+    @classmethod
+    def _storage_schema(cls):
+        """Test and set full path to storage file or exit."""
+
+        schema_path = pkg_resources.resource_filename('snippy', 'data/config')
+        if os.path.exists(schema_path) and os.access(schema_path, os.W_OK):
+            schema_file = os.path.join(schema_path, 'database.sql')
+        else:
+            cls.logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_path)
+            sys.exit(1)
+
+        return schema_file
 
     def reset(self):
         """Reset configuration."""
@@ -481,12 +508,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if ANSI characters like colors are disabled in the command output."""
 
         return False if cls.config['options']['no_ansi'] else True
-
-    @classmethod
-    def get_storage_schema(cls):
-        """Return storage schema."""
-
-        return Config.db_schema_file
 
     @classmethod
     def is_server(cls):

@@ -5,9 +5,9 @@
 import sys
 import unittest
 import mock
-from snippy.snip import Snippy
+from snippy.config.config import Config
 from snippy.config.source.editor import Editor
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -16,13 +16,13 @@ class TestWfUpdateSnippet(unittest.TestCase):
     """Test workflows for updating snippets."""
 
     @mock.patch.object(Editor, 'call_editor')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_update_snippet_with_digest(self, mock_isfile, mock_get_db_location, mock_call_editor):
+    def test_update_snippet_with_digest(self, mock_isfile, mock_storage_file, mock_call_editor):
         """Update snippet based on digest."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Update snippet based on short message digest. Only the content data is updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -162,13 +162,13 @@ class TestWfUpdateSnippet(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(Editor, 'call_editor')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_update_snippet_with_data(self, mock_isfile, mock_get_db_location, mock_call_editor):
+    def test_update_snippet_with_data(self, mock_isfile, mock_storage_file, mock_call_editor):
         """Update snippet based on content data."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Update snippet based on content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:

@@ -5,10 +5,10 @@
 import sys
 import unittest
 import mock
-from snippy.snip import Snippy
-from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -21,13 +21,13 @@ else:
 class TestWfSearchSnippet(unittest.TestCase):
     """Test workflows for searching snippets."""
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_search_snippet_with_sall(self, mock_isfile, mock_get_db_location):
+    def test_search_snippet_with_sall(self, mock_isfile, mock_storage_file):
         """Search snippet from all fields."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Search snippets from all fields. The match is made from one snippet
         ##        content data.
@@ -368,12 +368,12 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_search_snippet_with_stag(self, mock_isfile, mock_get_db_location):
+    def test_search_snippet_with_stag(self, mock_isfile, mock_storage_file):
         """Search snippet from tag field."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Search snippets from tag field. The match is made from one snippet.
@@ -447,12 +447,12 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_search_snippet_with_sgrp(self, mock_isfile, mock_get_db_location):
+    def test_search_snippet_with_sgrp(self, mock_isfile, mock_storage_file):
         """Search snippet from group field."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Search snippets from group field. The match is made from one snippet.
@@ -526,12 +526,12 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_search_snippet_with_regxp(self, mock_isfile, mock_get_db_location):
+    def test_search_snippet_with_regxp(self, mock_isfile, mock_storage_file):
         """Search snippet with regexp."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Search all content with regexp filter. The ansi characters must be
@@ -641,12 +641,12 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_search_snippet_with_data(self, mock_isfile, mock_get_db_location):
+    def test_search_snippet_with_data(self, mock_isfile, mock_storage_file):
         """Search snippets with --content option."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Search snippets based on content data.
@@ -716,12 +716,12 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_searching_snippet_with_digest(self, mock_isfile, mock_get_db_location):
+    def test_searching_snippet_with_digest(self, mock_isfile, mock_storage_file):
         """Search snippet with --digest option."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Search snippet by explicitly defining short message digest.
@@ -830,13 +830,13 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_search_snippet_with_sall_sgrp(self, mock_isfile, mock_get_db_location):
+    def test_search_snippet_with_sall_sgrp(self, mock_isfile, mock_storage_file):
         """Search snippet from all fields and limit the search within specific group."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Search snippets from all fields of specific group. The match must
         ##        not be made from other than defined group. In this case the list
@@ -907,13 +907,13 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_search_snippet_with_stag_sgrp(self, mock_isfile, mock_get_db_location):
+    def test_search_snippet_with_stag_sgrp(self, mock_isfile, mock_storage_file):
         """Search snippet from tag fields and limit the search within specific group."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Search snippets from tag fields of specific group. The match must
         ##        not be made from other than defined group. In this case the list
@@ -965,12 +965,12 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_search_snippet_special_cases(self, mock_isfile, mock_get_db_location):
+    def test_search_snippet_special_cases(self, mock_isfile, mock_storage_file):
         """Search snippets with special failures."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Try to search snippets without defining any search criteria.

@@ -263,8 +263,8 @@ class Sqlite3Db(object):
         """Create the database."""
 
         schema = Const.EMPTY
-        location = Sqlite3Db._get_db_location()
-        storage_schema = Config.get_storage_schema()
+        location = Config.storage_file
+        storage_schema = Config.db_schema_file
         if os.path.isfile(storage_schema):
             with open(storage_schema, 'rt') as schema_file:
                 try:
@@ -284,23 +284,6 @@ class Sqlite3Db(object):
             Cause.push(Cause.HTTP_500, 'creating database failed with exception {}'.format(exception))
 
         return connection
-
-    @staticmethod
-    def _get_db_location():
-        """Get the location where there the database is going to be stored."""
-
-        location = Const.EMPTY
-
-        if Config.db_in_memory:
-            location = "file::memory:?cache=shared"
-        else:
-            if os.path.exists(Config.storage_path) and os.access(Config.storage_path, os.W_OK):
-                location = Config.storage_file
-            else:
-                Cause.push(Cause.HTTP_NOT_FOUND,
-                           'storage path does not exist or is not accessible: {}'.format(Config.storage_path))
-
-        return location
 
     @staticmethod
     def _regexp(expr, item):

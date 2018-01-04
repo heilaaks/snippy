@@ -5,9 +5,9 @@
 import sys
 import unittest
 import mock
-from snippy.snip import Snippy
+from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 if not Const.PYTHON2:
@@ -19,12 +19,12 @@ else:
 class TestWfDeleteSnippet(unittest.TestCase):
     """Test workflows for deleting snippets."""
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_delete_snippet_with_digest(self, mock_isfile, mock_get_db_location):
+    def test_delete_snippet_with_digest(self, mock_isfile, mock_storage_file):
         """Delete snippet with digest."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
 
         ## Brief: Delete snippet with short 16 byte version of message digest.
@@ -107,13 +107,13 @@ class TestWfDeleteSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_delete_snippet_with_data(self, mock_isfile, mock_get_db_location):
+    def test_delete_snippet_with_data(self, mock_isfile, mock_storage_file):
         """Delete snippet with data."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Delete snippet based on content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
@@ -162,13 +162,13 @@ class TestWfDeleteSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_delete_snippet_with_search_keyword(self, mock_isfile, mock_get_db_location):
+    def test_delete_snippet_with_search_keyword(self, mock_isfile, mock_storage_file):
         """Delete snippet with search."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Delete snippet based on search keyword that results one hit. In this
         ##        case the content is deleted.
@@ -194,13 +194,13 @@ class TestWfDeleteSnippet(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_delete_snippet_failure_stdout(self, mock_isfile, mock_get_db_location):
+    def test_delete_snippet_failure_stdout(self, mock_isfile, mock_storage_file):
         """Delete snippet with data."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Delete snippet based on search keyword that results more than one hit.
         ##        In this case the error text is read from stdout and it must contain

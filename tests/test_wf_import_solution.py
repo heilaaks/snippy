@@ -8,10 +8,10 @@ import json
 import yaml
 import mock
 import pkg_resources
-from snippy.snip import Snippy
-from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -22,12 +22,12 @@ class TestWfImportSolution(unittest.TestCase):
 
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_all_solutions(self, mock_isfile, mock_get_db_location, mock_yaml_load, mock_json_load):
+    def test_import_all_solutions(self, mock_isfile, mock_storage_file, mock_yaml_load, mock_json_load):
         """Import all solutions."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
         import_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.KAFKA]]}
         mock_yaml_load.return_value = import_dict
@@ -222,12 +222,12 @@ class TestWfImportSolution(unittest.TestCase):
 
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_defined_solution(self, mock_isfile, mock_get_db_location, mock_yaml_load, mock_json_load):
+    def test_import_defined_solution(self, mock_isfile, mock_storage_file, mock_yaml_load, mock_json_load):
         """Import defined solution."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
         updated_solution = Solution.get_template(Solution.DEFAULTS[Solution.NGINX])
         updated_solution = updated_solution.replace('# Instructions how to debug nginx', '# Changed instruction set')
@@ -355,12 +355,12 @@ class TestWfImportSolution(unittest.TestCase):
 
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_solution(self, mock_isfile, mock_get_db_location, mock_yaml_load, mock_json_load):
+    def test_import_solution(self, mock_isfile, mock_storage_file, mock_yaml_load, mock_json_load):
         """Import solution."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
         import_dict = {'content': [Solution.DEFAULTS[Solution.NGINX]]}
         mock_yaml_load.return_value = import_dict
@@ -437,12 +437,12 @@ class TestWfImportSolution(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_solution_defaults(self, mock_isfile, mock_get_db_location, mock_yaml_load):
+    def test_import_solution_defaults(self, mock_isfile, mock_storage_file, mock_yaml_load):
         """Import solutions defaults."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
         import_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
         mock_yaml_load.return_value = import_dict
@@ -480,12 +480,12 @@ class TestWfImportSolution(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_solution_template(self, mock_isfile, mock_get_db_location):
+    def test_import_solution_template(self, mock_isfile, mock_storage_file):
         """Import solutions from text template."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
         template = Const.NEWLINE.join(Solution.TEMPLATE)
 

@@ -13,7 +13,6 @@ from snippy.config.constants import Constants as Const
 from snippy.metadata import __version__
 from snippy.metadata import __homepage__
 from snippy.snip import Snippy
-from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -25,7 +24,7 @@ class TestApiCreateSnippet(object):
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     def test_api_create_snippet_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Create snippet from API."""
 
@@ -173,7 +172,7 @@ class TestApiCreateSnippet(object):
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     def test_api_create_snippets_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Create snippets from API."""
 

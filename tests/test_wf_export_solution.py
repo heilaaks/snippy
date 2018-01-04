@@ -8,11 +8,10 @@ import json
 import yaml
 import mock
 import pkg_resources
-from snippy.snip import Snippy
-from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.config.constants import Constants as Const
+from snippy.snip import Snippy
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -23,14 +22,14 @@ class TestWfExportSolution(unittest.TestCase):
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_all_solutions(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    def test_export_all_solutions(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export all solutions."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Solution.UTC
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
                        'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
@@ -142,14 +141,14 @@ class TestWfExportSolution(unittest.TestCase):
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_solution_digest(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    def test_export_solution_digest(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export defined solution with digest."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Solution.UTC
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
                        'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
@@ -416,14 +415,14 @@ class TestWfExportSolution(unittest.TestCase):
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_solution_keyword(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    def test_export_solution_keyword(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
         """Export defined solution with search keyword."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Solution.UTC
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
                        'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
@@ -518,11 +517,11 @@ class TestWfExportSolution(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
-    def test_export_solution_template(self, mock_get_db_location, mock_get_utc_time):
+    @mock.patch.object(Config, '_storage_file')
+    def test_export_solution_template(self, mock_storage_file, mock_get_utc_time):
         """Export solution template."""
 
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Solution.TEMPLATE_UTC
         template = Solution.TEMPLATE
 
@@ -542,14 +541,14 @@ class TestWfExportSolution(unittest.TestCase):
 
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_solution_defaults(self, mock_isfile, mock_get_db_location, mock_get_utc_time, mock_yaml_dump):
+    def test_export_solution_defaults(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump):
         """Export solution defaults."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Solution.UTC
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
                        'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
@@ -584,13 +583,13 @@ class TestWfExportSolution(unittest.TestCase):
             Database.delete_storage()
 
     @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Sqlite3Db, '_get_db_location')
+    @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_solution_incomplete_header(self, mock_isfile, mock_get_db_location, mock_get_utc_time):
+    def test_export_solution_incomplete_header(self, mock_isfile, mock_storage_file, mock_get_utc_time):
         """Export solution without date field."""
 
         mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
+        mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
 
         ## Brief: Export solution that has been updated with empty date field in the content

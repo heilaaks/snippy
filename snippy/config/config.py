@@ -33,10 +33,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _set_base_config(cls):
         """Set initial configuration."""
 
-        cls.logger.debug('initialize global configuration')
-        cls.config['root'] = os.path.realpath(os.path.join(os.getcwd()))
-        cls.config['output'] = {}
-        cls.config['output']['print'] = True
+        cls.logger.debug('initialize storage config')
+
         cls.config['storage'] = {}
         cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
         cls.config['storage']['file'] = 'snippy.db'
@@ -84,8 +82,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['input']['editor'] = Config.source.is_editor()
         cls.config['input']['digest'] = Config.source.is_content_digest()
         cls.config['input']['data'] = Config.source.is_content_data()
-        cls.config['output'] = {}
-        cls.config['output']['print'] = True
         cls.config['operation'] = {}
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
@@ -437,18 +433,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if content digest was defined from command line."""
 
         return cls.config['input']['digest']
-
-    @classmethod
-    def set_print(cls, output):
-        """Set flag that defines if the content is printed to terminal."""
-
-        cls.config['output']['print'] = output
-
-    @classmethod
-    def is_print(cls):
-        """Test if output is printed to terminal."""
-
-        return True if cls.config['output']['print'] else False
 
     @classmethod
     def is_search_criteria(cls):

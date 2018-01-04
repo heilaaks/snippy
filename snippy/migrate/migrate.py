@@ -113,7 +113,7 @@ class Migrate(object):
         #
         # $ snippy search --sall '--all' --filter crap | grep --all
         # $ snippy search --sall 'test' --filter test -vv | grep --all
-        if text and Config.is_print():
+        if text:
             cls.logger.debug('printing content to terminal stdout')
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)

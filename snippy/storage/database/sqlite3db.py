@@ -291,14 +291,14 @@ class Sqlite3Db(object):
 
         location = Const.EMPTY
 
-        if Config.is_storage_in_memory():
+        if Config.db_in_memory:
             location = "file::memory:?cache=shared"
         else:
-            if os.path.exists(Config.get_storage_path()) and os.access(Config.get_storage_path(), os.W_OK):
-                location = Config.get_storage_file()
+            if os.path.exists(Config.storage_path) and os.access(Config.storage_path, os.W_OK):
+                location = Config.storage_file
             else:
                 Cause.push(Cause.HTTP_NOT_FOUND,
-                           'storage path does not exist or is not accessible: {}'.format(Config.get_storage_path()))
+                           'storage path does not exist or is not accessible: {}'.format(Config.storage_path))
 
         return location
 

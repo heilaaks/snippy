@@ -34,14 +34,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Set initial configuration."""
 
         cls.logger.debug('initialize storage config')
-
-        cls.config['storage'] = {}
-        cls.config['storage']['path'] = pkg_resources.resource_filename('snippy', 'data/storage')
-        cls.config['storage']['file'] = 'snippy.db'
-        cls.config['storage']['schema'] = {}
-        cls.config['storage']['schema']['path'] = pkg_resources.resource_filename('snippy', 'data/config')
-        cls.config['storage']['schema']['file'] = 'database.sql'
-        cls.config['storage']['in_memory'] = False
+        cls.storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
+        cls.storage_file = os.path.join(cls.storage_path, 'snippy.db')
+        cls.db_schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
+        cls.db_in_memory = True
 
     def reset(self):
         """Reset configuration."""
@@ -487,34 +483,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return False if cls.config['options']['no_ansi'] else True
 
     @classmethod
-    def get_storage_path(cls):
-        """Return path of the persistent storage."""
-
-        return cls.config['storage']['path']
-
-    @classmethod
-    def get_storage_file(cls):
-        """Return path and file of the persistent storage."""
-
-        return os.path.join(cls.config['storage']['path'], cls.config['storage']['file'])
-
-    @classmethod
     def get_storage_schema(cls):
         """Return storage schema."""
 
-        return os.path.join(cls.config['storage']['schema']['path'], cls.config['storage']['schema']['file'])
-
-    @classmethod
-    def set_storage_in_memory(cls, in_memory):
-        """Set the storage to be in memory."""
-
-        cls.config['storage']['in_memory'] = in_memory
-
-    @classmethod
-    def is_storage_in_memory(cls):
-        """Test if storage is defined to be run in memory."""
-
-        return cls.config['storage']['in_memory']
+        return Config.db_schema_file
 
     @classmethod
     def is_server(cls):

@@ -683,9 +683,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
          snippy1 = Snippy()
          snippy2 = Snippy()
-         print(snippy1.config.is_storage_in_memory()) # Results False
-         snippy2.config.set_storage_in_memory(True)
-         print(snippy1.config.is_storage_in_memory()) # Results True
+         print(snippy1.config.storage_in_memory) # Results False
+         snippy2.config.storage_in_memory = True
+         print(snippy1.config.storage_in_memory) # Results True
 
        The proper pattern is to create one instance and release it when it is
        not needed anymore.

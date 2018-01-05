@@ -127,13 +127,13 @@ class TestWfImportSnippet(unittest.TestCase):
             Database.delete_storage()
 
         ## Brief: Try to import snippet from file that is not existing. The file extension
-        ##        is one of supported formats..
+        ##        is one of supported formats.
         mocked_open = mock.mock_open(read_data=Snippet.get_template(import_dict['content'][0]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             # The last call for mock_isfile is unnecessary. It is here because of Python2 way of
             # iteration that seems to require one element after the last call. This is not the
             # case with Python3.
-            mock_isfile.side_effect = [True, False, None]
+            mock_isfile.side_effect = [True, True, False, None]
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './foo.yaml']  ## workflow
             cause = snippy.run_cli()

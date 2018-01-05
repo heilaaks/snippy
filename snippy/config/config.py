@@ -55,14 +55,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
     @classmethod
     def _storage_schema(cls):
-        """Test and set full path to storage file or exit."""
+        """Test that database schema exist."""
 
-        # The database schema is installed and must always exist.
-        schema_path = pkg_resources.resource_filename('snippy', 'data/config')
-        if os.path.exists(schema_path) and os.access(schema_path, os.W_OK):
-            schema_file = os.path.join(schema_path, 'database.sql')
-        else:
-            cls.logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_path)
+        # The database schema is installed with the tool and it must always exist.
+        schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
+        if not os.path.isfile(schema_file):
+            cls.logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_file)
             sys.exit(1)
 
         return schema_file

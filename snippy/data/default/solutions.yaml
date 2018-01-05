@@ -167,6 +167,39 @@ content:
   - '## solutions'
   - '################################################################################'
   - ''
+  - '    # Pass query parameters from nginx location by adding $is_args$args:'
+  - '    location ~ /elastic(/|$)(.*) {'
+  - '        set $elasticsearch_servers elasticsearch;'
+  - '        proxy_pass                 http://$elasticsearch_servers:9200/$2$is_args$args;'
+  - '    }'
+  - ''
+  - '    # Configure Kibana behind specific base path.'
+  - '    #'
+  - '    # It may be that the Kibana does not working correctly with base'
+  - '    # path. Because of this /1/, a rewrite is currently needed. It'
+  - '    # may be because of reroute below, the forwarding with 302 does'
+  - '    # not work. It is left as an example here.'
+  - '    # /1/ https://github.com/elastic/kibana/issues/5230#issuecomment-288737969'
+  - '    $ vi kibana.yaml'
+  - '      server.basePath: "/kibana"'
+  - '      xpack.reporting.kibanaApp: "/kibana/app/kibana"'
+  - ''
+  - '    $ vi default.conf'
+  - '      server {'
+  - '          location /kibana/ {'
+  - '              proxy_pass http://kibana:5601;'
+  - '              proxy_http_version 1.1;'
+  - '              proxy_set_header Upgrade $http_upgrade;'
+  - '              proxy_set_header Connection "upgrade";'
+  - '              proxy_set_header Host $host;'
+  - '              rewrite /kibana/(.*)$ /$1 break;'
+  - '          }'
+  - '          # Handle landing url without trailing slash.'
+  - '          location = /kibana {'
+  - '             return 302 /kibana/;'
+  - '          }'
+  - '      }'
+  - ''
   - '################################################################################'
   - '## configurations'
   - '################################################################################'
@@ -201,7 +234,7 @@ content:
   - '                  proxy_pass              http://kibana_servers/app/kibana;'
   - '          }'
   - '          location ~ /elastic(/|$)(.*) {'
-  - '                  proxy_pass              http://elasticsearch_servers/$2;'
+  - '                  proxy_pass              http://elasticsearch_servers/$2$is_args$args;'
   - '          }'
   - '      }'
   - ''
@@ -215,7 +248,6 @@ content:
   - '      events {'
   - '          worker_connections  1024;'
   - '      }'
-  - ''
   - ''
   - '      http {'
   - '          include       /etc/nginx/mime.types;'
@@ -270,14 +302,14 @@ content:
   - '          proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;'
   - '          proxy_set_header        X-Forwarded-Proto $scheme;'
   - '          proxy_set_header        X-Forwarded-Host $http_host;'
-  - '          location /kibana {'
-  - '              proxy_pass          http://kibana_servers/app/kibana;'
-  - '          }'
   - '          location / {'
   - '              proxy_pass          http://kibana_servers;'
   - '          }'
+  - '          location /kibana {'
+  - '              proxy_pass          http://kibana_servers/app/kibana;'
+  - '          }'
   - '          location ~ /elastic(/|$)(.*) {'
-  - '              proxy_pass          http://elasticsearch_servers/$2;'
+  - '              proxy_pass          http://elasticsearch_servers/$2$is_args$args;'
   - '          }'
   - '          location /v2 {'
   - '              proxy_pass          http://registry:5000;'
@@ -289,7 +321,7 @@ content:
   - '      }'
   - '      '' | tee /etc/nginx/conf.d/default.conf && nginx -s reload'
   - ''
-  digest: 11ada3d6b60309b7359bf7bca118324ebe67efbf2f32fd5fc8cb4dbf4cd07780
+  digest: f380cf7874810f4d2712e27697f697956959ed4bf18a5b40d4d3a01285dd2482
   filename: howto-debug-nginx.txt
   group: nginx
   links:
@@ -303,7 +335,7 @@ content:
   - howto
   - logging
   - nginx
-  utc: '2017-12-04 14:32:02'
+  utc: '2018-01-05 13:02:56'
   versions: ''
 - brief: Debugging Elastic Beats
   category: solution
@@ -585,5 +617,5 @@ content:
   versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy
-  utc: '2017-12-04 14:33:50'
+  utc: '2018-01-05 13:03:25'
   version: 0.7.0

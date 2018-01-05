@@ -1,54 +1,56 @@
 #!/usr/bin/env python3
 
-"""test_ut_sqlite3db_insert.py: Test inserting snippet into the sqlite3 database."""
+"""test_ut_sqlite3db_insert.py: Test inserting content into sqlite."""
 
-import unittest
-import pytest
 import mock
+from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.storage.database.sqlite3db import Sqlite3Db
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestUtSqlite3dbInsert(unittest.TestCase):
-    """Testing inserting new snippets with basic tests."""
+class TestUtSqlite3dbInsert(object):
+    """Testing inserting content into sqlite."""
 
-    @pytest.mark.skip(reason='does not work')
-    def test_insert_with_all_parameters(self):
-        """Test that snippet with tags, brief or links is stored."""
+    @mock.patch.object(Cause, 'push')
+    @mock.patch.object(Config, 'storage_file', Database.get_storage())
+    @mock.patch.object(Config, 'db_schema_file', Database.get_schema())
+    def test_insert_with_all_parameters(self, mock_cause_push):
+        """Insert content into database."""
 
+        sqlite = Sqlite3Db()
+        sqlite.init()
+
+        ## Brief: Insert content into database with all parameters.
         content = Snippet.get_content(snippet=Snippet.REMOVE)
-        self.sqlite.insert_content(content, content.get_digest(), content.get_metadata())
-        Snippet.compare_db(self, (Database.select_all_snippets())[0], content)
+        sqlite.insert_content(content, content.get_digest(), content.get_metadata())
+        mock_cause_push.assert_called_once_with('201 Created', 'content created')
+        mock_cause_push.reset_mock()
+        Snippet.compare_db((Database.select_all_snippets())[0], content)
         assert len(Database.select_all_snippets()) == 1
-        self.sqlite.disconnect()
+        sqlite.disconnect()
 
-    @pytest.mark.skip(reason='does not work')
-    def test_insert_multiple_links(self):
-        """Test that snippet can be added with multiple links."""
+    @mock.patch.object(Cause, 'push')
+    @mock.patch.object(Config, 'storage_file', Database.get_storage())
+    @mock.patch.object(Config, 'db_schema_file', Database.get_schema())
+    def test_insert_multiple_links(self, mock_cause_push):
+        """Insert content with multiple links."""
 
+        sqlite = Sqlite3Db()
+        sqlite.init()
+
+        ## Brief: Insert content with multiple links.
         content = Snippet.get_content(snippet=Snippet.FORCED)
-        self.sqlite.insert_content(content, content.get_digest(), content.get_metadata())
-        Snippet.compare_db(self, (Database.select_all_snippets())[0], content)
+        sqlite.insert_content(content, content.get_digest(), content.get_metadata())
+        mock_cause_push.assert_called_once_with('201 Created', 'content created')
+        mock_cause_push.reset_mock()
+        Snippet.compare_db((Database.select_all_snippets())[0], content)
         assert len(Database.select_all_snippets()) == 1
-        self.sqlite.disconnect()
+        sqlite.disconnect()
 
-    # pylint: disable=duplicate-code
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch.object(Config, 'get_storage_schema')
-    def setUp(self, mock_get_storage_schema, mock_storage_file): # pylint: disable=arguments-differ
-        """Setup each test."""
-
-        mock_get_storage_schema.return_value = Database.get_schema()
-        mock_storage_file.return_value = Database.get_storage()
-
-        self.sqlite = Sqlite3Db()
-        self.sqlite.init()
-
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()
-        self.sqlite.disconnect()
         Database.delete_storage()

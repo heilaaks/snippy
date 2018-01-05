@@ -24,6 +24,7 @@ class Snippy(object):
         self.storage = Storage()
         self.migrate = Migrate()
         self.server = None
+        Config.init()
         self.storage.init()
 
     def run(self):

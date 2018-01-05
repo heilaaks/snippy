@@ -256,21 +256,23 @@ class SnippetHelper(object):
                                                     mock.call(Const.NEWLINE)])
 
     @staticmethod
-    def compare_db(testcase, snippet, reference):
-        """Compare snippes when they are in database format."""
+    def compare_db(snippet, content):
+        """Compare snippets in database format to content format."""
 
         # Test that all fields excluding id and onwards are equal.
-        testcase.assertEqual(snippet[Const.DATA], reference.get_data(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[Const.BRIEF], reference.get_brief(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[Const.GROUP], reference.get_group(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[Const.TAGS], reference.get_tags(Const.STRING_CONTENT))
-        six.assertCountEqual(testcase, snippet[Const.LINKS], reference.get_links(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[Const.CATEGORY], reference.get_category(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[Const.FILENAME], reference.get_filename(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[Const.RUNALIAS], reference.get_runalias(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[Const.VERSIONS], reference.get_versions(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[Const.DIGEST], reference.get_digest(Const.STRING_CONTENT))
-        testcase.assertEqual(snippet[Const.METADATA], reference.get_metadata(Const.STRING_CONTENT))
+        print(snippet[Const.DATA])
+        print(content.get_data(Const.STRING_CONTENT))
+        assert snippet[Const.DATA] == content.get_data(Const.STRING_CONTENT)
+        assert snippet[Const.BRIEF] == content.get_brief(Const.STRING_CONTENT)
+        assert snippet[Const.GROUP] == content.get_group(Const.STRING_CONTENT)
+        assert snippet[Const.TAGS] == content.get_tags(Const.STRING_CONTENT)
+        assert snippet[Const.LINKS] == content.get_links(Const.STRING_CONTENT)
+        assert snippet[Const.CATEGORY] == content.get_category(Const.STRING_CONTENT)
+        assert snippet[Const.FILENAME] == content.get_filename(Const.STRING_CONTENT)
+        assert snippet[Const.RUNALIAS] == content.get_runalias(Const.STRING_CONTENT)
+        assert snippet[Const.VERSIONS] == content.get_versions(Const.STRING_CONTENT)
+        assert snippet[Const.DIGEST] == content.get_digest(Const.STRING_CONTENT)
+        assert snippet[Const.METADATA] == content.get_metadata(Const.STRING_CONTENT)
 
         # Test that tags and links are lists and rest of the fields strings.
         assert isinstance(snippet[Const.DATA], six.string_types)

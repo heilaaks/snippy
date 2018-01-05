@@ -30,12 +30,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
             Config.logger = Logger(__name__).get()
         Config.source = None
         Config.config = {}
-        Config._set_base_config()
 
     @classmethod
-    def _set_base_config(cls):
-        """Set initial configuration."""
+    def init(cls):
+        """Initialize configuration."""
 
+        # Separated from __init__ to ease mocking in tests.
         cls.logger.debug('initialize storage config')
         cls.storage_file = Config._storage_file()
         cls.db_schema_file = Config._storage_schema()
@@ -57,6 +57,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _storage_schema(cls):
         """Test and set full path to storage file or exit."""
 
+        # The database schema is installed and must always exist.
         schema_path = pkg_resources.resource_filename('snippy', 'data/config')
         if os.path.exists(schema_path) and os.access(schema_path, os.W_OK):
             schema_file = os.path.join(schema_path, 'database.sql')
@@ -70,6 +71,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Reset configuration."""
 
         self.__init__()
+        self.init()
 
     @classmethod
     def read_source(cls, source):

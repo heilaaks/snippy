@@ -19,7 +19,7 @@ class TestUtCliCreate(object):
         obj = Cli()
         assert obj.operation == 'create'
         assert obj.category == Const.SNIPPET
-        assert obj.get_content_data() is None
+        assert obj.data == ()
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == []
         assert obj.get_content_links() == []
@@ -40,7 +40,7 @@ class TestUtCliCreate(object):
         content = 'docker rm $(docker ps -a -q)'
         sys.argv = ['snippy', 'create', '-c', content]
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == []
 
@@ -52,7 +52,7 @@ class TestUtCliCreate(object):
         brief = 'Remove all docker containers'
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief]
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == brief
         assert obj.get_content_tags() == []
 
@@ -63,7 +63,7 @@ class TestUtCliCreate(object):
         tags = ['docker']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker']
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
 
@@ -75,7 +75,7 @@ class TestUtCliCreate(object):
         tags = ['docker,container,cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup']
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
 
@@ -90,7 +90,7 @@ class TestUtCliCreate(object):
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', tags, '-l', links]
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == brief
         assert obj.get_content_group() == group
         assert obj.get_content_tags() == [tags]
@@ -104,7 +104,7 @@ class TestUtCliCreate(object):
         tags = ['docker container cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker container cleanup']
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
 
@@ -116,7 +116,7 @@ class TestUtCliCreate(object):
         tags = ['docker ', 'container ', 'cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup']
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
 
@@ -128,7 +128,7 @@ class TestUtCliCreate(object):
         tags = ['docker,', 'container,', 'cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup']
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
 
@@ -139,7 +139,7 @@ class TestUtCliCreate(object):
         tags = ['dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
 
@@ -152,7 +152,7 @@ class TestUtCliCreate(object):
         tags = ['docker', 'container', 'cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup']
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == ''
         assert obj.get_content_tags() == tags
 
@@ -167,7 +167,7 @@ class TestUtCliCreate(object):
                  https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', tags, '-l', links]
         obj = Cli()
-        assert obj.get_content_data() == content
+        assert obj.data == (content,)
         assert obj.get_content_brief() == brief
         assert obj.get_content_tags() == [tags]
         assert obj.get_content_links() == [links]

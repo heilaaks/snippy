@@ -785,6 +785,28 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        /1/ http://keepachangelog.com/en/1.0.0/
        /2/ https://chris.beams.io/posts/git-commit/
 
+    CONTENT
+    
+    1. Testing content data (Note to self while refactoring TODO)
+    
+       If content data was not provided from configuration source, the data
+       is an empty tuple.
+       
+       If content was provided as empty string, the content data is tuple
+       with one element that is empty string. This can be checked with
+       
+       # Test if not provided
+       if not Config.get_content_data():
+           # Not given from configuration source.
+       
+       # Test if empty string
+       if any(Config.get_content_data()):
+           # Has content data.
+       else:
+           # All elements in tuple are empty (if not element:)
+       
+       
+       
 
 #######################################
 ## Command line design

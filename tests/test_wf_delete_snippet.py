@@ -115,40 +115,40 @@ class TestWfDeleteSnippet(unittest.TestCase):
         mock_isfile.return_value = True
         mock_storage_file.return_value = Database.get_storage()
 
-        ## Brief: Delete snippet based on content data.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all --quiet)']  ## workflow
-            cause = snippy.run_cli()
-            assert cause == 'OK'
-            assert len(Database.get_snippets()) == 1
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Try to delete snippet with content data that does not exist. In this case the
-        ##        content data is not truncated.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--content', 'not found content']  ## workflow
-            cause = snippy.run_cli()
-            assert cause == 'NOK: cannot find content with content data \'not found content\''
-            assert len(Database.get_snippets()) == 2
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Try to delete snippet with content data that does not exist. In this case the
-        ##        content data is truncated.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all)']  ## workflow
-            cause = snippy.run_cli()
-            assert cause == 'NOK: cannot find content with content data \'docker rm --volumes $(docker p...\''
-            assert len(Database.get_snippets()) == 2
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+#        ## Brief: Delete snippet based on content data.
+#        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+#            snippy = Snippet.add_defaults(Snippy())
+#            sys.argv = ['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all --quiet)']  ## workflow
+#            cause = snippy.run_cli()
+#            assert cause == 'OK'
+#            assert len(Database.get_snippets()) == 1
+#            snippy.release()
+#            snippy = None
+#            Database.delete_storage()
+#
+#        ## Brief: Try to delete snippet with content data that does not exist. In this case the
+#        ##        content data is not truncated.
+#        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+#            snippy = Snippet.add_defaults(Snippy())
+#            sys.argv = ['snippy', 'delete', '--content', 'not found content']  ## workflow
+#            cause = snippy.run_cli()
+#            assert cause == 'NOK: cannot find content with content data \'not found content\''
+#            assert len(Database.get_snippets()) == 2
+#            snippy.release()
+#            snippy = None
+#            Database.delete_storage()
+#
+#        ## Brief: Try to delete snippet with content data that does not exist. In this case the
+#        ##        content data is truncated.
+#        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+#            snippy = Snippet.add_defaults(Snippy())
+#            sys.argv = ['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all)']  ## workflow
+#            cause = snippy.run_cli()
+#            assert cause == 'NOK: cannot find content with content data \'docker rm --volumes $(docker p...\''
+#            assert len(Database.get_snippets()) == 2
+#            snippy.release()
+#            snippy = None
+#            Database.delete_storage()
 
         ## Brief: Try to delete snippet with empty content data. Nothing should be deleted
         ##        in this case because there is more than one content left.

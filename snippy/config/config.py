@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """config.py: Configuration management."""
 
@@ -22,9 +39,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
     logger = None
     config = {}
 
-    storage_file = None
-    db_schema_file = None
-
     def __init__(self):
         if not Config.logger:
             Config.logger = Logger(__name__).get()
@@ -40,9 +54,15 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.storage_file = Config._storage_file()
         cls.db_schema_file = Config._storage_schema()
 
+    def reset(self):
+        """Reset configuration."""
+
+        self.__init__()
+        self.init()
+
     @classmethod
     def _storage_file(cls):
-        """Test and set full path to storage file or exit."""
+        """Test that storage path exist."""
 
         storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
         if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
@@ -55,7 +75,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
     @classmethod
     def _storage_schema(cls):
-        """Test that database schema exist."""
+        """Test that database schema file exist."""
 
         # The database schema is installed with the tool and it must always exist.
         schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
@@ -65,12 +85,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         return schema_file
 
-    def reset(self):
-        """Reset configuration."""
-
-        self.__init__()
-        self.init()
-
     @classmethod
     def read_source(cls, source):
         """Read configuration source."""
@@ -79,9 +93,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Config.source = source
         cls.category = Config.source.category
         cls.operation = Config.source.operation
+        cls.content = {'data': None, 'brief': None, 'group': None, 'tags': None, 'links': None, 'filename': None}
+        cls.content['data'] = Config.source.data
 
         cls.config['content'] = {}
-        cls.config['content']['data'] = cls._parse_content_data()
         cls.config['content']['brief'] = cls._parse_content_brief()
         cls.config['content']['group'] = cls._parse_content_group()
         cls.config['content']['tags'] = cls._parse_content_tags()
@@ -104,7 +119,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['input'] = {}
         cls.config['input']['editor'] = Config.source.is_editor()
         cls.config['input']['digest'] = Config.source.is_content_digest()
-        cls.config['input']['data'] = Config.source.is_content_data()
         cls.config['operation'] = {}
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
@@ -116,9 +130,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def print_config(cls):
         """Print configuration."""
 
-        cls.logger.debug('configured operation: %s', cls.operation)
-        cls.logger.debug('configured category: %s', cls.category)
-        cls.logger.debug('configured value from --content as %s', cls.config['content']['data'])
+        cls.logger.debug('configured content operation: %s', cls.operation)
+        cls.logger.debug('configured content category: %s', cls.category)
+        cls.logger.debug('configured content data: %s', cls.content['data'])
         cls.logger.debug('configured value from --brief as "%s"', cls.config['content']['brief'])
         cls.logger.debug('configured value from --group as "%s"', cls.config['content']['group'])
         cls.logger.debug('configured value from --tags as %s', cls.config['content']['tags'])
@@ -294,7 +308,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_content_data(cls):
         """Return content data."""
 
-        return cls.config['content']['data']
+        return cls.content['data']
 
     @classmethod
     def get_content_brief(cls):
@@ -346,8 +360,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
                                (cls.get_content_digest(), len(contents)))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest to %s content' % operation)
-        elif cls.is_content_data():
-            if cls.get_content_data():
+        elif cls.get_content_data():
+            if any(cls.get_content_data()):
                 data = Const.EMPTY.join(cls.get_content_data())
                 data = data[:30] + (data[30:] and '...')
                 if not contents:
@@ -446,12 +460,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return cls.config['input']['editor']
 
     @classmethod
-    def is_content_data(cls):
-        """Test if content data was defined from command line."""
-
-        return cls.config['input']['data']
-
-    @classmethod
     def is_content_digest(cls):
         """Test if content digest was defined from command line."""
 
@@ -462,7 +470,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if any of the search criterias were used."""
 
         criteria = False
-        if cls.is_search_keywords() or cls.is_content_digest() or cls.is_content_data():
+        if cls.is_search_keywords() or cls.is_content_digest() or cls.get_content_data():
             criteria = True
 
         return criteria
@@ -528,18 +536,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if debug option was used."""
 
         return True if cls.config['options']['debug'] else False
-
-    @classmethod
-    def _parse_content_data(cls):
-        """Process content data."""
-
-        arg = Config.source.get_content_data()
-        if arg:
-            content = arg.split(Const.DELIMITER_DATA)
-
-            return tuple(content)
-
-        return Const.EMPTY_TUPLE
 
     @classmethod
     def _parse_content_brief(cls):
@@ -674,7 +670,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         editor = Editor(content, Config.get_utc_time())
         editor.read_content()
         if editor.is_content_identified():
-            cls.config['content']['data'] = editor.get_edited_data()
+            cls.content['data'] = editor.get_edited_data()
             cls.config['content']['brief'] = editor.get_edited_brief()
             cls.config['content']['group'] = editor.get_edited_group()
             cls.config['content']['tags'] = editor.get_edited_tags()

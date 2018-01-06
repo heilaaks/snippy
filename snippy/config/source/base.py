@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """base.py: Base class for configuration sources."""
 
@@ -44,7 +61,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.operation = Const.EMPTY
         self.category = Const.UNKNOWN_CONTENT
         self.editor = None
-        self.data = None
+        self._data = None
         self.brief = None
         self.group = None
         self.tags = None
@@ -71,7 +88,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._logger = Logger(__name__).get()
         self._repr = None
         self._parameters = {'editor': False,
-                            'data': Const.EMPTY,
                             'brief': Const.EMPTY,
                             'group': Const.DEFAULT_GROUP,
                             'tags': [],
@@ -122,11 +138,12 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Set API configuration parameters."""
 
         self._parameters.update(parameters)
+        self.operation = parameters.get('operation')
+        self.category = parameters.get('category')
+        self.data = parameters.get('data')
 
         # These are special cases where the code logic needs to know
         # if some parameter was provided at all.
-        if 'data' not in parameters:
-            self._parameters.pop('data')
         if 'digest' not in parameters:
             self._parameters.pop('digest')
         if 'sall' not in parameters:
@@ -138,22 +155,25 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._set_self()
         self._set_repr()
 
-    def is_content_data(self):
-        """Test if content data option was used."""
+    @property
+    def data(self):
+        """Get content data."""
 
-        return True if 'data' in self._parameters else False
+        return self._data
 
-    def get_content_data(self):
-        """Return content data."""
+    @data.setter
+    def data(self, value):
+        """Content data stored as a tuple with one line per element.
+        There is a quarantee that each line contains only one newline
+        at the end of string in the tuple.
 
-        data = None
-        if self.is_content_data():
-            data = self._to_string(self.data)
-            self._logger.debug('config source data: %s', data)
+        Any value including empty string is considered valid data."""
+
+        if value is not None:
+            string_ = self._standard_string(value)
+            self._data = tuple(string_.split(Const.DELIMITER_DATA))
         else:
-            self._logger.debug('config source data was not used')
-
-        return data
+            self._data = ()
 
     def get_content_brief(self):
         """Return content brief description."""
@@ -388,17 +408,17 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         return list_
 
-    def _to_string(self, option):
-        """Return option as string by joining list items with newlines."""
+    def _standard_string(self, value):
+        """Return value as string by joining list items with newlines."""
 
         string_ = Const.EMPTY
-        option = ConfigSourceBase._six_string(option)
-        if isinstance(option, str):
-            string_ = option
-        elif isinstance(option, (list, tuple)):
-            string_ = Const.NEWLINE.join([x.strip() for x in option])  # Enforce only one newline at the end.
+        value = ConfigSourceBase._six_string(value)
+        if isinstance(value, str):
+            string_ = value
+        elif isinstance(value, (list, tuple)):
+            string_ = Const.NEWLINE.join([x.strip() for x in value])  # Enforce only one newline at the end.
         else:
-            self._logger.debug('config source string parameter ignored because of unknown type %s', option)
+            self._logger.debug('config source string parameter ignored because of unknown type %s', value)
 
         return string_
 

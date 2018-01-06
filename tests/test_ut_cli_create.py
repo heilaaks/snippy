@@ -20,16 +20,16 @@ class TestUtCliCreate(object):
         assert obj.operation == 'create'
         assert obj.category == Const.SNIPPET
         assert obj.data == ()
-        assert obj.get_content_brief() == ''
-        assert obj.get_content_tags() == []
-        assert obj.get_content_links() == []
+        assert obj.brief == ''
+        assert obj.tags == ()
+        assert obj.links == ()
         assert obj.get_content_digest() is None
         assert obj.get_search_all() is None
         assert obj.get_search_tag() is None
         assert obj.get_search_grp() is None
         assert obj.get_search_filter() == ''
         assert not obj.is_editor()
-        assert obj.get_operation_file() == ''
+        assert obj.filename == ''
         assert not obj.is_no_ansi()
         assert not obj.is_defaults()
         assert not obj.is_template()
@@ -41,8 +41,8 @@ class TestUtCliCreate(object):
         sys.argv = ['snippy', 'create', '-c', content]
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == ''
-        assert obj.get_content_tags() == []
+        assert obj.brief == ''
+        assert obj.tags == ()
 
     def test_create_snippet_with_brief_but_no_tags(self):
         """Test that new snippet can be created with brief description but
@@ -53,8 +53,8 @@ class TestUtCliCreate(object):
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief]
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == brief
-        assert obj.get_content_tags() == []
+        assert obj.brief == brief
+        assert obj.tags == ()
 
     def test_create_snippet_with_one_tag(self):
         """Test that new snippet can be created with a single tag."""
@@ -64,20 +64,19 @@ class TestUtCliCreate(object):
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker']
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == ''
-        assert obj.get_content_tags() == tags
+        assert obj.brief == ''
+        assert obj.tags == tuple(tags,)
 
     def test_tags_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that tags can be added inside quotes separated by comma and
         without spaces."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['docker,container,cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup']
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == ''
-        assert obj.get_content_tags() == tags
+        assert obj.brief == ''
+        assert obj.tags == ('cleanup', 'container', 'docker')
 
     def test_tags_with_quotes_and_separated_by_comma_and_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -91,57 +90,53 @@ class TestUtCliCreate(object):
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', tags, '-l', links]
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == brief
-        assert obj.get_content_group() == group
-        assert obj.get_content_tags() == [tags]
-        assert obj.get_content_links() == [links]
+        assert obj.brief == brief
+        assert obj.group == group
+        assert obj.tags == ('cleanup', 'container', 'docker')
+        assert obj.links == (links,)
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
         """Test that tags can be added so that they are separated by spaces
         before and after the words."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['docker container cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker container cleanup']
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == ''
-        assert obj.get_content_tags() == tags
+        assert obj.brief == ''
+        assert obj.tags == ('cleanup', 'container', 'docker')
 
     def test_tags_separated_by_space(self):
         """Test that tags can be added so that they are separated by spaces
         before and after the words like in '-t docker container cleanup'."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['docker ', 'container ', 'cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup']
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == ''
-        assert obj.get_content_tags() == tags
+        assert obj.brief == ''
+        assert obj.tags == ('cleanup', 'container', 'docker')
 
     def test_tags_separated_by_space_and_comma(self):
         """Test that tags can be added so that they are separated by comma
         after the words like in '-t docker, container, cleanup'."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['docker,', 'container,', 'cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup']
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == ''
-        assert obj.get_content_tags() == tags
+        assert obj.brief == ''
+        assert obj.tags == ('cleanup', 'container', 'docker')
 
     def test_tags_with_special_characters(self):
         """Test that tags are accepted if they contain special characters."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == ''
-        assert obj.get_content_tags() == tags
+        assert obj.brief == ''
+        assert obj.tags == ('cleanup_testing', 'container-managemenet', 'dockertesting')
 
     def test_tags_provided_in_list(self):
         """Test that tags are accepted if the tags are elements in a list.
@@ -149,12 +144,11 @@ class TestUtCliCreate(object):
         reproduce this?"""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ['docker', 'container', 'cleanup']
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup']
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == ''
-        assert obj.get_content_tags() == tags
+        assert obj.brief == ''
+        assert obj.tags == ('cleanup', 'container', 'docker')
 
     def test_links_separated_by_space(self):
         """Test that multiple links can be added by separating them with
@@ -168,9 +162,10 @@ class TestUtCliCreate(object):
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', tags, '-l', links]
         obj = Cli()
         assert obj.data == (content,)
-        assert obj.get_content_brief() == brief
-        assert obj.get_content_tags() == [tags]
-        assert obj.get_content_links() == [links]
+        assert obj.brief == brief
+        assert obj.tags == ('cleanup', 'container', 'docker')
+        print(obj.links)
+        assert obj.links == tuple(links.split())
 
     # pylint: disable=duplicate-code
     @classmethod

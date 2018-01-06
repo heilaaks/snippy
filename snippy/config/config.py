@@ -95,13 +95,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.operation = Config.source.operation
         cls.content = {'data': None, 'brief': None, 'group': None, 'tags': None, 'links': None, 'filename': None}
         cls.content['data'] = Config.source.data
+        cls.content['brief'] = Config.source.brief
+        cls.content['group'] = Config.source.group
+        cls.content['tags'] = Config.source.tags
+        cls.content['links'] = Config.source.links
+        cls.content['filename'] = Config.source.filename
 
-        cls.config['content'] = {}
-        cls.config['content']['brief'] = cls._parse_content_brief()
-        cls.config['content']['group'] = cls._parse_content_group()
-        cls.config['content']['tags'] = cls._parse_content_tags()
-        cls.config['content']['links'] = cls._parse_content_links()
-        cls.config['content']['filename'] = Const.EMPTY
         cls.config['options'] = {}
         cls.config['options']['no_ansi'] = Config.source.is_no_ansi()
         cls.config['options']['migrate_defaults'] = Config.source.is_defaults()
@@ -133,10 +132,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured content operation: %s', cls.operation)
         cls.logger.debug('configured content category: %s', cls.category)
         cls.logger.debug('configured content data: %s', cls.content['data'])
-        cls.logger.debug('configured value from --brief as "%s"', cls.config['content']['brief'])
-        cls.logger.debug('configured value from --group as "%s"', cls.config['content']['group'])
-        cls.logger.debug('configured value from --tags as %s', cls.config['content']['tags'])
-        cls.logger.debug('configured value from --links as %s', cls.config['content']['links'])
+        cls.logger.debug('configured content brief: %s', cls.content['brief'])
+        cls.logger.debug('configured content group: %s', cls.content['group'])
+        cls.logger.debug('configured content tags: %s', cls.content['tags'])
+        cls.logger.debug('configured content links: %s', cls.content['links'])
         cls.logger.debug('configured value from --digest as "%s"', cls.config['digest'])
         cls.logger.debug('configured value from --editor as %s', cls.config['input']['editor'])
         cls.logger.debug('configured value from --file as "%s"', cls.config['operation']['file']['name'])
@@ -314,25 +313,25 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_content_brief(cls):
         """Return content brief description."""
 
-        return cls.config['content']['brief']
+        return cls.content['brief']
 
     @classmethod
     def get_content_group(cls):
         """Return content group."""
 
-        return cls.config['content']['group']
+        return cls.content['group']
 
     @classmethod
     def get_content_tags(cls):
         """Return content tags."""
 
-        return cls.config['content']['tags']
+        return cls.content['tags']
 
     @classmethod
     def get_content_links(cls):
         """Return content reference links."""
 
-        return cls.config['content']['links']
+        return cls.content['links']
 
     @classmethod
     def get_content_digest(cls):
@@ -385,7 +384,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_filename(cls):
         """Return content filename."""
 
-        return cls.config['content']['filename']
+        return cls.content['filename']
 
     @classmethod
     def is_search_all(cls):
@@ -482,7 +481,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # Use the content filename only in case of export operation and
         # when the user did not define the target file from command line.
         filename = cls.config['operation']['file']['name']
-        if cls.is_operation_export() and content_filename and not Config.source.get_operation_file():
+        if cls.is_operation_export() and content_filename and not Config.source.filename:
             filename = content_filename
 
         return filename
@@ -536,42 +535,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if debug option was used."""
 
         return True if cls.config['options']['debug'] else False
-
-    @classmethod
-    def _parse_content_brief(cls):
-        """Process content brief description."""
-
-        arg = Config.source.get_content_brief()
-        if arg:
-            return arg
-
-        return Const.EMPTY
-
-    @classmethod
-    def _parse_content_group(cls):
-        """Process content group."""
-
-        arg = Config.source.get_content_group()
-        if arg:
-            return arg
-
-        return Const.EMPTY
-
-    @classmethod
-    def _parse_content_tags(cls):
-        """Process content tags."""
-
-        tags = Config.source.get_content_tags()
-
-        return Parser.keywords(tags)
-
-    @classmethod
-    def _parse_content_links(cls):
-        """Process content reference links."""
-
-        links = Config.source.get_content_links()
-
-        return Parser.links(links)
 
     @classmethod
     def _parse_digest(cls):
@@ -671,11 +634,11 @@ class Config(object):  # pylint: disable=too-many-public-methods
         editor.read_content()
         if editor.is_content_identified():
             cls.content['data'] = editor.get_edited_data()
-            cls.config['content']['brief'] = editor.get_edited_brief()
-            cls.config['content']['group'] = editor.get_edited_group()
-            cls.config['content']['tags'] = editor.get_edited_tags()
-            cls.config['content']['links'] = editor.get_edited_links()
-            cls.config['content']['filename'] = editor.get_edited_filename()
+            cls.content['brief'] = editor.get_edited_brief()
+            cls.content['group'] = editor.get_edited_group()
+            cls.content['tags'] = editor.get_edited_tags()
+            cls.content['links'] = editor.get_edited_links()
+            cls.content['filename'] = editor.get_edited_filename()
             content.set((cls.get_content_data(),
                          cls.get_content_brief(),
                          cls.get_content_group(),
@@ -718,7 +681,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _parse_operation_file(cls):
         """Return the filename and the format of the file."""
 
-        filename = Config.source.get_operation_file()
+        filename = Config.source.filename
         filetype = Const.CONTENT_TYPE_NONE
 
         defaults = 'snippets.yaml'

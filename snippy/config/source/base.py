@@ -61,17 +61,17 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.operation = Const.EMPTY
         self.category = Const.UNKNOWN_CONTENT
         self.editor = None
-        self._data = None
-        self.brief = None
-        self.group = None
-        self.tags = None
-        self.links = None
+        self._data = ()
+        self.brief = Const.EMPTY,
+        self.group = Const.DEFAULT_GROUP
+        self._tags = ()
+        self._links = ()
         self.digest = None
         self.sall = None
         self.stag = None
         self.sgrp = None
         self.regexp = None
-        self.filename = None
+        self.filename = Const.EMPTY
         self.defaults = None
         self.template = None
         self.help = None
@@ -88,16 +88,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._logger = Logger(__name__).get()
         self._repr = None
         self._parameters = {'editor': False,
-                            'brief': Const.EMPTY,
-                            'group': Const.DEFAULT_GROUP,
-                            'tags': [],
-                            'links': [],
                             'digest': Const.EMPTY,
                             'sall': [],
                             'stag': [],
                             'sgrp': [],
                             'regexp': Const.EMPTY,
-                            'filename': Const.EMPTY,
                             'defaults': False,
                             'template': False,
                             'help': False,
@@ -140,7 +135,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._parameters.update(parameters)
         self.operation = parameters.get('operation')
         self.category = parameters.get('category')
-        self.data = parameters.get('data')
+        self._data = parameters.get('data', ())
+        self.brief = parameters.get('brief', Const.EMPTY)
+        self.group = parameters.get('group', Const.DEFAULT_GROUP)
+        self._tags = parameters.get('tags', ())
+        self._links = parameters.get('links', ())
 
         # These are special cases where the code logic needs to know
         # if some parameter was provided at all.
@@ -163,47 +162,41 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
     @data.setter
     def data(self, value):
-        """Content data stored as a tuple with one line per element.
+        """Content data is stored as a tuple with one line per element.
         There is a quarantee that each line contains only one newline
         at the end of string in the tuple.
 
         Any value including empty string is considered valid data."""
 
         if value is not None:
-            string_ = self._standard_string(value)
+            string_ = self._to_string(value)
             self._data = tuple(string_.split(Const.DELIMITER_DATA))
         else:
             self._data = ()
 
-    def get_content_brief(self):
-        """Return content brief description."""
+    @property
+    def tags(self):
+        """Get content tags."""
 
-        self._logger.debug('config source brief: %s', self.brief)
+        return self._tags
 
-        return self.brief
+    @tags.setter
+    def tags(self, value):
+        """Content tags are stored as a tuple with one tag per element."""
 
-    def get_content_group(self):
-        """Return content group."""
+        self._tags = Parser.keywords(self._to_list(value))
 
-        self._logger.debug('config source group: %s', self.group)
+    @property
+    def links(self):
+        """Get content links."""
 
-        return self.group
+        return self._links
 
-    def get_content_tags(self):
-        """Return content tags."""
+    @links.setter
+    def links(self, value):
+        """Content links are stored as a tuple with one link per element."""
 
-        tags = self._to_list(self.tags)
-        self._logger.debug('config source tags: %s', tags)
-
-        return tags
-
-    def get_content_links(self):
-        """Return content links."""
-
-        links = self._to_list(self.links)
-        self._logger.debug('config source links: %s', links)
-
-        return links
+        self._links = Parser.links(self._to_list(value))
 
     def is_content_digest(self):
         """Test if content digest option was used."""
@@ -284,13 +277,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Test usage of editor for the operation."""
 
         return self.editor
-
-    def get_operation_file(self):
-        """Return file for operation."""
-
-        self._logger.debug('config source filename: %s', self.filename)
-
-        return self.filename
 
     def is_no_ansi(self):
         """Return usage of ANSI characters like color codes in terminal output."""
@@ -408,7 +394,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         return list_
 
-    def _standard_string(self, value):
+    def _to_string(self, value):
         """Return value as string by joining list items with newlines."""
 
         string_ = Const.EMPTY

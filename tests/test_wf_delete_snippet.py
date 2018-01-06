@@ -26,50 +26,50 @@ class TestWfDeleteSnippet(unittest.TestCase):
 
         mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
-#
-#        ## Brief: Delete snippet with short 16 byte version of message digest.
-#        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-#            snippy = Snippet.add_defaults(Snippy())
-#            sys.argv = ['snippy', 'delete', '-d', '53908d68425c61dc']  ## workflow
-#            cause = snippy.run_cli()
-#            assert cause == 'OK'
-#            assert len(Database.get_snippets()) == 1
-#            snippy.release()
-#            snippy = None
-#            Database.delete_storage()
-#
-#        ## Brief: Delete snippet with very short version of digest that matches to one snippet.
-#        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-#            snippy = Snippet.add_defaults(Snippy())
-#            sys.argv = ['snippy', 'delete', '-d', '54e41']  ## workflow
-#            cause = snippy.run_cli()
-#            assert cause == 'OK'
-#            assert len(Database.get_snippets()) == 1
-#            snippy.release()
-#            snippy = None
-#            Database.delete_storage()
-#
-#        ## Brief: Delete snippet with long 16 byte version of message digest.
-#        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-#            snippy = Snippet.add_defaults(Snippy())
-#            sys.argv = ['snippy', 'delete', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319']  ## workflow
-#            cause = snippy.run_cli()
-#            assert cause == 'OK'
-#            assert len(Database.get_snippets()) == 1
-#            snippy.release()
-#            snippy = None
-#            Database.delete_storage()
-#
-#        ## Brief: Try to delete snippet with message digest that cannot be found.
-#        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-#            snippy = Snippet.add_defaults(Snippy())
-#            sys.argv = ['snippy', 'delete', '-d', '123456789abcdef0']  ## workflow
-#            cause = snippy.run_cli()
-#            assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
-#            assert len(Database.get_snippets()) == 2
-#            snippy.release()
-#            snippy = None
-#            Database.delete_storage()
+
+        ## Brief: Delete snippet with short 16 byte version of message digest.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'delete', '-d', '53908d68425c61dc']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 1
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Delete snippet with very short version of digest that matches to one snippet.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'delete', '-d', '54e41']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 1
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Delete snippet with long 16 byte version of message digest.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'delete', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'OK'
+            assert len(Database.get_snippets()) == 1
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
+        ## Brief: Try to delete snippet with message digest that cannot be found.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
+            snippy = Snippet.add_defaults(Snippy())
+            sys.argv = ['snippy', 'delete', '-d', '123456789abcdef0']  ## workflow
+            cause = snippy.run_cli()
+            assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
+            assert len(Database.get_snippets()) == 2
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
 
         ## Brief: Try to delete snippet with empty message digest. Nothing should be deleted
         ##        in this case because there is more than one content stored.

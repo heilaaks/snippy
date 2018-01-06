@@ -34,6 +34,8 @@ class TestUtSqlite3dbSelect(object):
         assert len(sqlite.select_content(Const.SNIPPET, keywords)) == 1
         mock_cause_push.assert_not_called()
         sqlite.disconnect()
+        Database.delete_all_contents()
+        Database.delete_storage()
 
     def teardown_class(self):
         """Teardown each test."""

@@ -43,6 +43,8 @@ class TestUtSqlite3dbDelete(object):
         Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
         assert len(Database.select_all_snippets()) == 1
         sqlite.disconnect()
+        Database.delete_all_contents()
+        Database.delete_storage()
 
     @mock.patch.object(Cause, 'push')
     @mock.patch.object(Config, 'storage_file', Database.get_storage())
@@ -73,6 +75,8 @@ class TestUtSqlite3dbDelete(object):
         Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
         assert len(Database.select_all_snippets()) == 1
         sqlite.disconnect()
+        Database.delete_all_contents()
+        Database.delete_storage()
 
     def teardown_class(self):
         """Teardown each test."""

@@ -201,11 +201,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         self._sall = self._to_keywords(value)
 
-    def is_search_grp(self):
-        """Test if search grp option was used."""
-
-        return True if 'sgrp' in self._parameters else False
-
     @property
     def stag(self):
         """Get 'search tag' keywords."""

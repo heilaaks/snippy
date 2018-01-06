@@ -29,7 +29,6 @@ from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.source.editor import Editor
-from snippy.config.source.parser import Parser
 
 
 class Config(object):  # pylint: disable=too-many-public-methods
@@ -93,7 +92,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Config.source = source
         cls.category = Config.source.category
         cls.operation = Config.source.operation
-        cls.content = {'data': None, 'brief': None, 'group': None, 'tags': None, 'links': None, 'filename': None}
+        cls.content = {}
         cls.content['data'] = Config.source.data
         cls.content['brief'] = Config.source.brief
         cls.content['group'] = Config.source.group
@@ -101,6 +100,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.content['links'] = Config.source.links
         cls.content['filename'] = Config.source.filename
         cls.digest = Config.source.digest
+        cls.search = {}
+        cls.search['sall'] = Config.source.sall
+        cls.search['stag'] = Config.source.stag
+        cls.search['sgrp'] = Config.source.sgrp
 
         cls.config['options'] = {}
         cls.config['options']['no_ansi'] = Config.source.is_no_ansi()
@@ -108,9 +111,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['options']['migrate_template'] = Config.source.is_template()
         cls.config['options']['debug'] = Config.source.is_debug()
         cls.config['search'] = {}
-        cls.config['search']['sall'] = cls._parse_search_sall()
-        cls.config['search']['stag'] = cls._parse_search_stag()
-        cls.config['search']['sgrp'] = cls._parse_search_sgrp()
         cls.config['search']['filter'] = cls._parse_search_filter()
         cls.config['search']['limit'] = cls._parse_search_limit()
         cls.config['search']['sorted_fields'] = cls._parse_sorted_fields()
@@ -138,9 +138,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured digest: %s', cls.digest)
         cls.logger.debug('configured value from --editor as %s', cls.config['input']['editor'])
         cls.logger.debug('configured value from --file as "%s"', cls.config['operation']['file']['name'])
-        cls.logger.debug('configured value from --sall as %s', cls.config['search']['sall'])
-        cls.logger.debug('configured value from --stag as %s', cls.config['search']['stag'])
-        cls.logger.debug('configured value from --sgrp as %s', cls.config['search']['sgrp'])
+        cls.logger.debug('configured search all keywords: %s', cls.search['sall'])
+        cls.logger.debug('configured search tag keywords: %s', cls.search['stag'])
+        cls.logger.debug('configured search group keywords: %s', cls.search['sgrp'])
         cls.logger.debug('configured value from --filter as %s', cls.config['search']['filter'])
         cls.logger.debug('configured value from limit as %d', cls.config['search']['limit'])
         cls.logger.debug('configured value from sorted fields as %s', cls.config['search']['sorted_fields'])
@@ -389,19 +389,19 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def is_search_all(cls):
         """Test if all fields are searched."""
 
-        return True if cls.config['search']['sall'] else False
+        return True if cls.search['sall'] else False
 
     @classmethod
     def is_search_tag(cls):
         """Test if search is made from tags."""
 
-        return True if cls.config['search']['stag'] else False
+        return True if cls.search['stag'] else False
 
     @classmethod
     def is_search_grp(cls):
         """Test if search is made from groups."""
 
-        return True if cls.config['search']['sgrp'] else False
+        return True if cls.search['sgrp'] else False
 
     @classmethod
     def is_search_keywords(cls):
@@ -413,19 +413,19 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_search_all(cls):
         """Return list of search keywords for search all."""
 
-        return cls.config['search']['sall']
+        return cls.search['sall']
 
     @classmethod
     def get_search_tag(cls):
         """Return list of search keywords for search tags."""
 
-        return cls.config['search']['stag']
+        return cls.search['stag']
 
     @classmethod
     def get_search_grp(cls):
         """Return list of search keywords for search groups."""
 
-        return cls.config['search']['sgrp']
+        return cls.search['sgrp']
 
     @classmethod
     def get_search_filter(cls):
@@ -534,51 +534,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if debug option was used."""
 
         return True if cls.config['options']['debug'] else False
-
-    @classmethod
-    def _parse_search_sall(cls):
-        """Process the user given search all keyword list."""
-
-        keywords = ()
-        if Config.source.is_search_all():
-            keywords = Parser.keywords(Config.source.get_search_all())
-            # The keyword list may be empty or it can contain empty string. Both cases
-            # must be evaluated to 'match any'.
-            if not any(keywords):
-                cls.logger.debug('listing all content because keywords were not provided for search all')
-                keywords = ('.')
-
-        return keywords
-
-    @classmethod
-    def _parse_search_stag(cls):
-        """Process the user given search tag keyword list."""
-
-        keywords = ()
-        if Config.source.is_search_tag():
-            keywords = Parser.keywords(Config.source.get_search_tag())
-            # The keyword list may be empty or it can contain empty string. Both cases
-            # must be evaluated to 'match any'.
-            if not any(keywords):
-                cls.logger.debug('listing all content because keywords were not provided for search tags')
-                keywords = ('.')
-
-        return keywords
-
-    @classmethod
-    def _parse_search_sgrp(cls):
-        """Process the user given search group keyword list."""
-
-        keywords = ()
-        if Config.source.is_search_grp():
-            keywords = Parser.keywords(Config.source.get_search_grp())
-            # The keyword list may be empty or it can contain empty string. Both cases
-            # must be evaluated to 'match any'.
-            if not any(keywords):
-                cls.logger.debug('listing all content because keywords were not provided for search groups')
-                keywords = ('.')
-
-        return keywords
 
     @classmethod
     def _parse_search_filter(cls):

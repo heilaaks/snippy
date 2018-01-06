@@ -67,9 +67,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._tags = ()
         self._links = ()
         self.digest = Const.EMPTY
-        self.sall = None
-        self.stag = None
-        self.sgrp = None
+        self._sall = None
+        self._stag = None
+        self._sgrp = None
         self.regexp = None
         self.filename = Const.EMPTY
         self.defaults = None
@@ -88,9 +88,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._logger = Logger(__name__).get()
         self._repr = None
         self._parameters = {'editor': False,
-                            'sall': [],
-                            'stag': [],
-                            'sgrp': [],
                             'regexp': Const.EMPTY,
                             'defaults': False,
                             'template': False,
@@ -140,15 +137,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._tags = parameters.get('tags', ())
         self._links = parameters.get('links', ())
         self.digest = parameters.get('digest', None)
+        self._sall = parameters.get('sall', ())
+        self._stag = parameters.get('stag', ())
+        self._sgrp = parameters.get('sgrp', ())
 
-        # These are special cases where the code logic needs to know
-        # if some parameter was provided at all.
-        if 'sall' not in parameters:
-            self._parameters.pop('sall')
-        if 'stag' not in parameters:
-            self._parameters.pop('stag')
-        if 'sgrp' not in parameters:
-            self._parameters.pop('sgrp')
         self._set_self()
         self._set_repr()
 
@@ -196,56 +188,49 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         self._links = Parser.links(self._to_list(value))
 
-    def is_search_all(self):
-        """Test if search all option was used."""
+    @property
+    def sall(self):
+        """Get 'search all' keywords."""
 
-        return True if 'sall' in self._parameters else False
+        return self._sall
 
-    def get_search_all(self):
-        """Return keywords to search from all fields."""
+    @sall.setter
+    def sall(self, value):
+        """Search all keywords stored as a tuple with one keywords per
+        element."""
 
-        sall = None
-        if self.is_search_all():
-            sall = self._to_list(self.sall)
-            self._logger.debug('config source sall: %s', sall)
-        else:
-            self._logger.debug('config source sall was not used')
-
-        return sall
-
-    def is_search_tag(self):
-        """Test if search tag option was used."""
-
-        return True if 'stag' in self._parameters else False
-
-    def get_search_tag(self):
-        """Return keywords to search only from tags."""
-
-        stag = None
-        if self.is_search_tag():
-            stag = self._to_list(self.stag)
-            self._logger.debug('config source stag: %s', stag)
-        else:
-            self._logger.debug('config source stag was not used')
-
-        return stag
+        self._sall = self._to_keywords(value)
 
     def is_search_grp(self):
         """Test if search grp option was used."""
 
         return True if 'sgrp' in self._parameters else False
 
-    def get_search_grp(self):
-        """Return keywords to search only from groups."""
+    @property
+    def stag(self):
+        """Get 'search tag' keywords."""
 
-        sgrp = None
-        if self.is_search_grp():
-            sgrp = self._to_list(self.sgrp)
-            self._logger.debug('config source sgrp: %s', sgrp)
-        else:
-            self._logger.debug('config source sgrp was not used')
+        return self._stag
 
-        return sgrp
+    @stag.setter
+    def stag(self, value):
+        """Search tag keywords stored as a tuple with one keywords per
+        element."""
+
+        self._stag = self._to_keywords(value)
+
+    @property
+    def sgrp(self):
+        """Get 'search group' keywords."""
+
+        return self._sgrp
+
+    @sgrp.setter
+    def sgrp(self, value):
+        """Search group keywords stored as a tuple with one keywords per
+        element."""
+
+        self._sgrp = self._to_keywords(value)
 
     def get_search_filter(self):
         """Return regexp filter for search output."""
@@ -361,6 +346,20 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         return removed_fields
 
+    def _to_string(self, value):
+        """Return value as string by joining list items with newlines."""
+
+        string_ = Const.EMPTY
+        value = ConfigSourceBase._six_string(value)
+        if isinstance(value, str):
+            string_ = value
+        elif isinstance(value, (list, tuple)):
+            string_ = Const.NEWLINE.join([x.strip() for x in value])  # Enforce only one newline at the end.
+        else:
+            self._logger.debug('config source string parameter ignored because of unknown type %s', value)
+
+        return string_
+
     def _to_list(self, option):
         """Return option as list of items."""
 
@@ -375,19 +374,21 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         return list_
 
-    def _to_string(self, value):
-        """Return value as string by joining list items with newlines."""
+    def _to_keywords(self, value):
+        """Convert value to list of search keywrods."""
 
-        string_ = Const.EMPTY
-        value = ConfigSourceBase._six_string(value)
-        if isinstance(value, str):
-            string_ = value
-        elif isinstance(value, (list, tuple)):
-            string_ = Const.NEWLINE.join([x.strip() for x in value])  # Enforce only one newline at the end.
+        # The keyword list may be empty or it can contain empty string.
+        # Both cases must be evaluated to 'match any'.
+        keywords = ()
+        if value is not None:
+            keywords = Parser.keywords(self._to_list(value))
+            if not any(keywords):
+                self._logger.debug('all content listed because keywords were not provided')
+                keywords = ('.')
         else:
-            self._logger.debug('config source string parameter ignored because of unknown type %s', value)
+            keywords = ()
 
-        return string_
+        return keywords
 
     @staticmethod
     def _six_string(parameter):

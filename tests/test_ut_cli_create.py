@@ -23,10 +23,10 @@ class TestUtCliCreate(object):
         assert obj.brief == ''
         assert obj.tags == ()
         assert obj.links == ()
-        assert obj.digest == None
-        assert obj.get_search_all() is None
-        assert obj.get_search_tag() is None
-        assert obj.get_search_grp() is None
+        assert obj.digest is None
+        assert obj.sall == ()
+        assert obj.stag == ()
+        assert obj.sgrp == ()
         assert obj.get_search_filter() == ''
         assert not obj.is_editor()
         assert obj.filename == ''

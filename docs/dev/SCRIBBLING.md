@@ -810,7 +810,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        None == not given to configs source
        
        This is not nice because content data not give is empty tuple. Should
-       be None if not give?
+       be None if not give? Digest is the only parameter that needs None?
        
        
 

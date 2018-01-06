@@ -66,7 +66,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.group = Const.DEFAULT_GROUP
         self._tags = ()
         self._links = ()
-        self.digest = None
+        self.digest = Const.EMPTY
         self.sall = None
         self.stag = None
         self.sgrp = None
@@ -88,7 +88,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._logger = Logger(__name__).get()
         self._repr = None
         self._parameters = {'editor': False,
-                            'digest': Const.EMPTY,
                             'sall': [],
                             'stag': [],
                             'sgrp': [],
@@ -140,11 +139,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
         self._tags = parameters.get('tags', ())
         self._links = parameters.get('links', ())
+        self.digest = parameters.get('digest', None)
 
         # These are special cases where the code logic needs to know
         # if some parameter was provided at all.
-        if 'digest' not in parameters:
-            self._parameters.pop('digest')
         if 'sall' not in parameters:
             self._parameters.pop('sall')
         if 'stag' not in parameters:
@@ -197,23 +195,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Content links are stored as a tuple with one link per element."""
 
         self._links = Parser.links(self._to_list(value))
-
-    def is_content_digest(self):
-        """Test if content digest option was used."""
-
-        return True if 'digest' in self._parameters else False
-
-    def get_content_digest(self):
-        """Return digest identifying the content."""
-
-        digest = None
-        if self.is_content_digest():
-            digest = self.digest
-            self._logger.debug('config source digest: %s', self.digest)
-        else:
-            self._logger.debug('config source digest was not used')
-
-        return digest
 
     def is_search_all(self):
         """Test if search all option was used."""

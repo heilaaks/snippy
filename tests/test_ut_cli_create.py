@@ -23,7 +23,7 @@ class TestUtCliCreate(object):
         assert obj.brief == ''
         assert obj.tags == ()
         assert obj.links == ()
-        assert obj.get_content_digest() is None
+        assert obj.digest == None
         assert obj.get_search_all() is None
         assert obj.get_search_tag() is None
         assert obj.get_search_grp() is None

@@ -28,7 +28,7 @@ class TestUtConfigCreate(unittest.TestCase):
         assert isinstance(obj.get_content_group(), str)
         assert isinstance(obj.get_content_tags(), tuple)
         assert isinstance(obj.get_content_links(), tuple)
-        assert isinstance(obj.get_content_digest(), str)
+        assert isinstance(obj.get_content_digest(), type(None))
         assert isinstance(obj.get_filename(), str)
         assert isinstance(obj.get_search_all(), tuple)
         assert isinstance(obj.get_search_tag(), tuple)
@@ -54,7 +54,7 @@ class TestUtConfigCreate(unittest.TestCase):
         assert not obj.get_search_all()
         assert not obj.get_search_tag()
         assert not obj.get_search_grp()
-        assert not obj.get_content_digest()
+        assert obj.get_content_digest() is None
         assert not obj.get_search_filter()
         assert not obj.get_filename()
         assert not obj.is_editor()

@@ -100,13 +100,13 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.content['tags'] = Config.source.tags
         cls.content['links'] = Config.source.links
         cls.content['filename'] = Config.source.filename
+        cls.digest = Config.source.digest
 
         cls.config['options'] = {}
         cls.config['options']['no_ansi'] = Config.source.is_no_ansi()
         cls.config['options']['migrate_defaults'] = Config.source.is_defaults()
         cls.config['options']['migrate_template'] = Config.source.is_template()
         cls.config['options']['debug'] = Config.source.is_debug()
-        cls.config['digest'] = cls._parse_digest()
         cls.config['search'] = {}
         cls.config['search']['sall'] = cls._parse_search_sall()
         cls.config['search']['stag'] = cls._parse_search_stag()
@@ -117,7 +117,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['search']['removed_fields'] = cls._parse_removed_fields()
         cls.config['input'] = {}
         cls.config['input']['editor'] = Config.source.is_editor()
-        cls.config['input']['digest'] = Config.source.is_content_digest()
         cls.config['operation'] = {}
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
@@ -136,7 +135,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured content group: %s', cls.content['group'])
         cls.logger.debug('configured content tags: %s', cls.content['tags'])
         cls.logger.debug('configured content links: %s', cls.content['links'])
-        cls.logger.debug('configured value from --digest as "%s"', cls.config['digest'])
+        cls.logger.debug('configured digest: %s', cls.digest)
         cls.logger.debug('configured value from --editor as %s', cls.config['input']['editor'])
         cls.logger.debug('configured value from --file as "%s"', cls.config['operation']['file']['name'])
         cls.logger.debug('configured value from --sall as %s', cls.config['search']['sall'])
@@ -337,7 +336,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_content_digest(cls):
         """Return digest identifying the content."""
 
-        return cls.config['digest']
+        return cls.digest
 
     @classmethod
     def validate_search_context(cls, contents, operation):  # pylint: disable=too-many-branches
@@ -462,7 +461,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def is_content_digest(cls):
         """Test if content digest was defined from command line."""
 
-        return cls.config['input']['digest']
+        return False if cls.digest is None else True
 
     @classmethod
     def is_search_criteria(cls):
@@ -535,16 +534,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if debug option was used."""
 
         return True if cls.config['options']['debug'] else False
-
-    @classmethod
-    def _parse_digest(cls):
-        """Process message digest identifying the operation target."""
-
-        arg = Config.source.get_content_digest()
-        if arg:
-            return arg
-
-        return Const.EMPTY
 
     @classmethod
     def _parse_search_sall(cls):

@@ -804,7 +804,13 @@ git update-index --no-assume-unchanged FILE_NAME # change back
            # Has content data.
        else:
            # All elements in tuple are empty (if not element:)
+
+    2. Testing digest
+    
+       None == not given to configs source
        
+       This is not nice because content data not give is empty tuple. Should
+       be None if not give?
        
        
 

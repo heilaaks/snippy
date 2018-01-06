@@ -1,3 +1,5 @@
+************* Module tests.test_ut_cli_create
+C: 26,15: Comparison to None should be 'expr is None' (singleton-comparison)
 
 --------------------------------------------------------------------
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)

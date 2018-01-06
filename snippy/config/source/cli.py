@@ -14,7 +14,7 @@ from snippy.config.source.base import ConfigSourceBase
 class Cli(ConfigSourceBase):
     """CLI argument management."""
 
-    ARGS_COPYRIGHT = ('Snippy version ' + __version__ + ' - license Apache 2.0',
+    ARGS_COPYRIGHT = ('Snippy version ' + __version__ + ' - license GNU AGPLv3',
                       'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                       'Homepage ' + __homepage__)
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')

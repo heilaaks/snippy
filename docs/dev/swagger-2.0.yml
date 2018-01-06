@@ -11,7 +11,7 @@ info:
   contact:
     email: "laaksonen.heikki.j@gmail.com"
   license:
-    name: "Apache 2.0"
+    name: "GNU AGPLv3"
     url: "https://github.com/heilaaks/snippy/blob/master/LICENSE"
 host: "snippettips.com"
 basePath: "/api/v1"

@@ -76,7 +76,7 @@ class TestWfConsoleHelp(object):
                   '    List more examples.',
                   '      $ snippy --help examples',
                   '',
-                  'Snippy version ' + __version__ + ' - license Apache 2.0',
+                  'Snippy version ' + __version__ + ' - license GNU AGPLv3',
                   'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                   'Homepage ' + __homepage__)
 
@@ -172,7 +172,7 @@ class TestWfConsoleHelp(object):
                       '      $ snippy export --solution -f solutions.yaml',
                       '      $ snippy import --solution -f solutions.yaml',
                       '',
-                      'Snippy version ' + __version__ + ' - license Apache 2.0',
+                      'Snippy version ' + __version__ + ' - license GNU AGPLv3',
                       'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
                       'Homepage ' + __homepage__)
             cause = Cause.ALL_OK

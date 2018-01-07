@@ -27,12 +27,12 @@ class TestUtCliCreate(object):
         assert obj.sall == ()
         assert obj.stag == ()
         assert obj.sgrp == ()
-        assert obj.get_search_filter() == ''
+        assert obj.regexp == ''
         assert not obj.is_editor()
         assert obj.filename == ''
-        assert not obj.is_no_ansi()
-        assert not obj.is_defaults()
-        assert not obj.is_template()
+        assert not obj.no_ansi
+        assert not obj.defaults
+        assert not obj.template
 
     def test_create_snippet_without_optional_arguments(self):
         """Test that new snippet can be created without optional arguments."""

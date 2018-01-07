@@ -626,14 +626,14 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
-                      'NOK: listed matching content without filter because it was not syntactically correct regular expression')
+                      'NOK: listing matching content without filter because it was not syntactically correct regular expression')
             snippy = Snippet.add_defaults(Snippy())
             Solution.add_defaults(snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             sys.argv = ['snippy', 'search', '--sall', '.', '--filter', '[invalid(regexp', '--no-ansi']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: listed matching content without filter because it was not syntactically correct regular expression'
+            assert cause == 'NOK: listing matching content without filter because it was not syntactically correct regular expression'
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert result == Const.NEWLINE.join(output)

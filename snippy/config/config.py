@@ -19,7 +19,6 @@
 
 """config.py: Configuration management."""
 
-import re
 import sys
 import copy
 import os.path
@@ -104,14 +103,14 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.search['sall'] = Config.source.sall
         cls.search['stag'] = Config.source.stag
         cls.search['sgrp'] = Config.source.sgrp
+        cls.search['regexp'] = Config.source.regexp
+        cls.no_ansi = Config.source.no_ansi
+        cls.defaults = Config.source.defaults
+        cls.template = Config.source.template
 
         cls.config['options'] = {}
-        cls.config['options']['no_ansi'] = Config.source.is_no_ansi()
-        cls.config['options']['migrate_defaults'] = Config.source.is_defaults()
-        cls.config['options']['migrate_template'] = Config.source.is_template()
         cls.config['options']['debug'] = Config.source.is_debug()
         cls.config['search'] = {}
-        cls.config['search']['filter'] = cls._parse_search_filter()
         cls.config['search']['limit'] = cls._parse_search_limit()
         cls.config['search']['sorted_fields'] = cls._parse_sorted_fields()
         cls.config['search']['removed_fields'] = cls._parse_removed_fields()
@@ -141,7 +140,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured search all keywords: %s', cls.search['sall'])
         cls.logger.debug('configured search tag keywords: %s', cls.search['stag'])
         cls.logger.debug('configured search group keywords: %s', cls.search['sgrp'])
-        cls.logger.debug('configured value from --filter as %s', cls.config['search']['filter'])
+        cls.logger.debug('configured search filter regexp: %s', cls.search['regexp'])
+        cls.logger.debug('configured option no_ansi: %s', cls.no_ansi)
+        cls.logger.debug('configured option defaults: %s', cls.source.defaults)
+        cls.logger.debug('configured option template: %s', cls.source.template)
         cls.logger.debug('configured value from limit as %d', cls.config['search']['limit'])
         cls.logger.debug('configured value from sorted fields as %s', cls.config['search']['sorted_fields'])
         cls.logger.debug('configured value from removed fields as %s', cls.config['search']['removed_fields'])
@@ -267,13 +269,13 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def is_migrate_defaults(cls):
         """Test if migrate operation was related to content defaults."""
 
-        return True if cls.config['options']['migrate_defaults'] else False
+        return cls.source.defaults
 
     @classmethod
     def is_migrate_template(cls):
         """Test if migrate operation was related to content template."""
 
-        return True if cls.config['options']['migrate_template'] else False
+        return cls.source.template
 
     @classmethod
     def is_category_snippet(cls):
@@ -431,7 +433,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_search_filter(cls):
         """Return search filter."""
 
-        return cls.config['search']['filter']
+        return cls.search['regexp']
 
     @classmethod
     def get_search_limit(cls):
@@ -513,7 +515,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def use_ansi(cls):
         """Test if ANSI characters like colors are disabled in the command output."""
 
-        return False if cls.config['options']['no_ansi'] else True
+        return not cls.no_ansi
 
     @classmethod
     def is_server(cls):
@@ -534,21 +536,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if debug option was used."""
 
         return True if cls.config['options']['debug'] else False
-
-    @classmethod
-    def _parse_search_filter(cls):
-        """Process the user given search filter."""
-
-        regexp = Config.source.get_search_filter()
-
-        try:
-            re.compile(regexp)
-        except re.error:
-            Cause.push(Cause.HTTP_BAD_REQUEST,
-                       'listed matching content without filter because it was not syntactically correct regular expression')
-            regexp = Const.EMPTY
-
-        return regexp
 
     @classmethod
     def _parse_search_limit(cls):

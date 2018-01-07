@@ -19,6 +19,7 @@
 
 """base.py: Base class for configuration sources."""
 
+import re
 from snippy.metadata import __version__
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
@@ -66,21 +67,21 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.group = Const.DEFAULT_GROUP
         self._tags = ()
         self._links = ()
-        self.digest = Const.EMPTY
-        self._sall = None
-        self._stag = None
-        self._sgrp = None
-        self.regexp = None
+        self.digest = None
+        self._sall = ()
+        self._stag = ()
+        self._sgrp = ()
+        self._regexp = Const.EMPTY,
         self.filename = Const.EMPTY
-        self.defaults = None
-        self.template = None
+        self.defaults = False
+        self.template = False
         self.help = None
         self.version = None
         self.very_verbose = None
         self.quiet = None
         self.debug = None
         self.profile = None
-        self.no_ansi = None
+        self.no_ansi = False
         self.server = None
         self.limit = None
         self.sort = None
@@ -88,16 +89,12 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._logger = Logger(__name__).get()
         self._repr = None
         self._parameters = {'editor': False,
-                            'regexp': Const.EMPTY,
-                            'defaults': False,
-                            'template': False,
                             'help': False,
                             'version': __version__,
                             'very_verbose': False,
                             'quiet': False,
                             'debug': False,
                             'profile': False,
-                            'no_ansi': False,
                             'server': False,
                             'limit': ConfigSourceBase.LIMIT_DEFAULT,
                             'sort': ConfigSourceBase.BRIEF,
@@ -140,6 +137,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._sall = parameters.get('sall', ())
         self._stag = parameters.get('stag', ())
         self._sgrp = parameters.get('sgrp', ())
+        self._regexp = parameters.get('regexp', Const.EMPTY)
+        self.no_ansi = parameters.get('no_ansi', False)
+        self.defaults = parameters.get('defaults', False)
+        self.template = parameters.get('template', False)
 
         self._set_self()
         self._set_repr()
@@ -227,38 +228,28 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
         self._sgrp = self._to_keywords(value)
 
-    def get_search_filter(self):
-        """Return regexp filter for search output."""
+    @property
+    def regexp(self):
+        """Get search regexp filter."""
 
-        self._logger.debug('config source filter: %s', self.regexp)
+        return self._regexp
 
-        return self.regexp
+    @regexp.setter
+    def regexp(self, value):
+        """Search regexp filter must be Python regexp."""
+
+        try:
+            re.compile(value)
+            self._regexp = value
+        except re.error:
+            self._regexp = Const.EMPTY
+            Cause.push(Cause.HTTP_BAD_REQUEST,
+                       'listing matching content without filter because it was not syntactically correct regular expression')
 
     def is_editor(self):
         """Test usage of editor for the operation."""
 
         return self.editor
-
-    def is_no_ansi(self):
-        """Return usage of ANSI characters like color codes in terminal output."""
-
-        self._logger.debug('config source no-ansi: %s', self.no_ansi)
-
-        return self.no_ansi
-
-    def is_defaults(self):
-        """Return the usage of defaults in migration operation."""
-
-        self._logger.debug('config source defaults: %s', self.defaults)
-
-        return self.defaults
-
-    def is_template(self):
-        """Return the usage of template in migration operation."""
-
-        self._logger.debug('config source template: %s', self.template)
-
-        return self.template
 
     def is_debug(self):
         """Return the usage of debug option."""

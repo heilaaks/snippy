@@ -27,7 +27,7 @@ from snippy.config.source.parser import Parser
 from snippy.logger.logger import Logger
 
 
-class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-many-instance-attributes
+class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     """Base class for configuration sources."""
 
     # Operations
@@ -59,37 +59,38 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     LIMIT_DEFAULT = 20
 
     def __init__(self):
-        self.operation = Const.EMPTY
-        self.category = Const.UNKNOWN_CONTENT
-        self.editor = False
-        self._data = ()
         self.brief = Const.EMPTY,
-        self.group = Const.DEFAULT_GROUP
-        self._tags = ()
-        self._links = ()
-        self.digest = None
-        self._sall = ()
-        self._stag = ()
-        self._sgrp = ()
-        self._regexp = Const.EMPTY,
-        self._limit = ConfigSourceBase.LIMIT_DEFAULT
-        self.filename = Const.EMPTY
+        self.category = Const.UNKNOWN_CONTENT
+        self._data = ()
+        self.debug = False
         self.defaults = False
+        self.digest = None
+        self.editor = False
+        self.filename = Const.EMPTY
+        self.group = Const.DEFAULT_GROUP
+        self._limit = ConfigSourceBase.LIMIT_DEFAULT
+        self._links = ()
+        self._logger = Logger(__name__).get()
+        self.no_ansi = False
+        self.operation = Const.EMPTY
+        self._parameters = {}
+        self.profile = False
+        self.quiet = False
+        self._regexp = Const.EMPTY,
+        self._repr = None
+        self._rfields = ()
+        self._sall = ()
+        self.server = False
+        self._sfields = {}
+        self._sgrp = ()
+        self._stag = ()
+        self._tags = ()
         self.template = False
         self.version = __version__
         self.very_verbose = False
-        self.quiet = False
-        self.debug = False
-        self.profile = False
-        self.no_ansi = False
-        self.server = False
-        self._sfields = {}
-        self._rfields = ()
-        self._logger = Logger(__name__).get()
-        self._repr = None
-        self._parameters = {}
-        self._set_self()
+
         self._set_repr()
+        self._set_self()
 
     def __repr__(self):
 
@@ -115,30 +116,30 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Set API configuration parameters."""
 
         self._parameters.update(parameters)
-        self.operation = parameters.get('operation')
+        self.brief = parameters.get('brief', Const.EMPTY)
         self.category = parameters.get('category')
         self._data = parameters.get('data', ())
-        self.brief = parameters.get('brief', Const.EMPTY)
-        self.group = parameters.get('group', Const.DEFAULT_GROUP)
-        self.tags = parameters.get('tags', ())
-        self.links = parameters.get('links', ())
-        self.digest = parameters.get('digest', None)
-        self._sall = parameters.get('sall', ())
-        self._stag = parameters.get('stag', ())
-        self._sgrp = parameters.get('sgrp', ())
-        self.regexp = parameters.get('regexp', Const.EMPTY)
-        self.limit = parameters.get('limit', ConfigSourceBase.LIMIT_DEFAULT)
-        self.sfields = parameters.get('sort', ('brief'))
-        self.rfields = parameters.get('fields', ConfigSourceBase.ALL_FIELDS)
-        self.no_ansi = parameters.get('no_ansi', False)
-        self.defaults = parameters.get('defaults', False)
-        self.template = parameters.get('template', False)
-        self.editor = parameters.get('editor', False)
-        self.server = parameters.get('server', False)
         self.debug = parameters.get('debug', False)
-        self.very_verbose = parameters.get('very_verbose', False)
-        self.quiet = parameters.get('quiet', False)
+        self.defaults = parameters.get('defaults', False)
+        self.digest = parameters.get('digest', None)
+        self.editor = parameters.get('editor', False)
+        self.group = parameters.get('group', Const.DEFAULT_GROUP)
+        self.limit = parameters.get('limit', ConfigSourceBase.LIMIT_DEFAULT)
+        self.links = parameters.get('links', ())
+        self.no_ansi = parameters.get('no_ansi', False)
+        self.operation = parameters.get('operation')
         self.profile = parameters.get('profile', False)
+        self.quiet = parameters.get('quiet', False)
+        self.regexp = parameters.get('regexp', Const.EMPTY)
+        self.rfields = parameters.get('fields', ConfigSourceBase.ALL_FIELDS)
+        self._sall = parameters.get('sall', ())
+        self.server = parameters.get('server', False)
+        self.sfields = parameters.get('sort', ('brief'))
+        self._sgrp = parameters.get('sgrp', ())
+        self._stag = parameters.get('stag', ())
+        self.tags = parameters.get('tags', ())
+        self.template = parameters.get('template', False)
+        self.very_verbose = parameters.get('very_verbose', False)
 
         self._set_self()
         self._set_repr()
@@ -158,7 +159,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         Any value including empty string is considered valid data."""
 
         if value is not None:
-            string_ = self._to_string(value)
+            string_ = Parser.to_string(value)
             self._data = tuple(string_.split(Const.DELIMITER_DATA))
         else:
             self._data = ()
@@ -173,7 +174,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     def tags(self, value):
         """Content tags are stored as a tuple with one tag per element."""
 
-        self._tags = Parser.keywords(self._to_list(value))
+        self._tags = Parser.keywords(value)
 
     @property
     def links(self):
@@ -185,7 +186,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     def links(self, value):
         """Content links are stored as a tuple with one link per element."""
 
-        self._links = Parser.links(self._to_list(value))
+        self._links = Parser.links(value)
 
     @property
     def sall(self):
@@ -198,7 +199,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Search all keywords stored as a tuple with one keywords per
         element."""
 
-        self._sall = self._to_keywords(value)
+        self._sall = Parser.search_keywords(value)
 
     @property
     def stag(self):
@@ -211,7 +212,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Search tag keywords stored as a tuple with one keywords per
         element."""
 
-        self._stag = self._to_keywords(value)
+        self._stag = Parser.search_keywords(value)
 
     @property
     def sgrp(self):
@@ -224,7 +225,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Search group keywords stored as a tuple with one keywords per
         element."""
 
-        self._sgrp = self._to_keywords(value)
+        self._sgrp = Parser.search_keywords(value)
 
     @property
     def regexp(self):
@@ -277,7 +278,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         sorted_dict = {}
         sorted_dict['order'] = []
         sorted_dict['value'] = {}
-        field_names = Parser.keywords(self._to_list(value), sort_=False)
+        field_names = Parser.keywords(value, sort_=False)
         for field in field_names:
             try:
                 if field[0].startswith('-'):
@@ -301,65 +302,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
     @rfields.setter
     def rfields(self, value):
-        """Removed fields are presented as tuple and they are converted from
-        requested fields."""
+        """Removed fields are presented as tuple and they are converted
+        from requested fields."""
 
-        requested_fields = Parser.keywords(self._to_list(value))
+        requested_fields = Parser.keywords(value)
         self._rfields = tuple(set(ConfigSourceBase.ALL_FIELDS) - set(requested_fields))
         self._logger.debug('config source converted removed fields from requested fields: %s', self._rfields)
-
-    def _to_string(self, value):
-        """Return value as string by joining list items with newlines."""
-
-        string_ = Const.EMPTY
-        value = ConfigSourceBase._six_string(value)
-        if isinstance(value, str):
-            string_ = value
-        elif isinstance(value, (list, tuple)):
-            string_ = Const.NEWLINE.join([x.strip() for x in value])  # Enforce only one newline at the end.
-        else:
-            self._logger.debug('config source string parameter ignored because of unknown type %s', value)
-
-        return string_
-
-    def _to_list(self, option):
-        """Return option as list of items."""
-
-        list_ = []
-        option = ConfigSourceBase._six_string(option)
-        if isinstance(option, str):
-            list_.append(option)
-        elif isinstance(option, (list, tuple)):
-            list_ = list(option)
-        else:
-            self._logger.debug('config source list parameter ignored because of unknown type: %s', type(option))
-
-        return list_
-
-    def _to_keywords(self, value):
-        """Convert value to list of search keywrods."""
-
-        # The keyword list may be empty or it can contain empty string.
-        # Both cases must be evaluated to 'match any'.
-        keywords = ()
-        if value is not None:
-            keywords = Parser.keywords(self._to_list(value))
-            if not any(keywords):
-                self._logger.debug('all content listed because keywords were not provided')
-                keywords = ('.')
-        else:
-            keywords = ()
-
-        return keywords
-
-    @staticmethod
-    def _six_string(parameter):
-        """Take care of converting Python 2 unicode string to str."""
-
-        # In Python 2 a string can be str or unicode but in Python 3 strings
-        # are always unicode strings. This makes sure that a string is always
-        # str for Python 2 and python 3.
-        if Const.PYTHON2 and isinstance(parameter, unicode):  # noqa: F821 # pylint: disable=undefined-variable
-            parameter = parameter.encode('utf-8')
-
-        return parameter

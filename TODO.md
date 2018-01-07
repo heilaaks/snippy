@@ -1,4 +1,5 @@
 ## TODO
+   - [ ] Fix the config base repr and self. The _parameter is not needed anymore. But what fails?
    - [ ] Add the Falcon logging to only from snippy logger. It also seems that Falcon blocks the logs during tests? All logs from Snippy logger - somehow?
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Fix set/get to properties. The configuration and related classes are too bloated with get/set. //https://www.python-course.eu/python3_properties.php

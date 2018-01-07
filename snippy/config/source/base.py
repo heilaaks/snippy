@@ -61,7 +61,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     def __init__(self):
         self.operation = Const.EMPTY
         self.category = Const.UNKNOWN_CONTENT
-        self.editor = None
+        self.editor = False
         self._data = ()
         self.brief = Const.EMPTY,
         self.group = Const.DEFAULT_GROUP
@@ -75,12 +75,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.filename = Const.EMPTY
         self.defaults = False
         self.template = False
-        self.help = None
-        self.version = None
-        self.very_verbose = None
-        self.quiet = None
+        self.version = __version__
+        self.very_verbose = False
+        self.quiet = False
         self.debug = False
-        self.profile = None
+        self.profile = False
         self.no_ansi = False
         self.server = False
         self.limit = None
@@ -88,13 +87,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.fields = None
         self._logger = Logger(__name__).get()
         self._repr = None
-        self._parameters = {'editor': False,
-                            'help': False,
-                            'version': __version__,
-                            'very_verbose': False,
-                            'quiet': False,
-                            'profile': False,
-                            'limit': ConfigSourceBase.LIMIT_DEFAULT,
+        self._parameters = {'limit': ConfigSourceBase.LIMIT_DEFAULT,
                             'sort': ConfigSourceBase.BRIEF,
                             'fields': ConfigSourceBase.FIELDS}
         self._set_self()
@@ -139,6 +132,12 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.no_ansi = parameters.get('no_ansi', False)
         self.defaults = parameters.get('defaults', False)
         self.template = parameters.get('template', False)
+        self.editor = parameters.get('editor', False)
+        self.server = parameters.get('server', False)
+        self.debug = parameters.get('debug', False)
+        self.very_verbose = parameters.get('very_verbose', False)
+        self.quiet = parameters.get('quiet', False)
+        self.profile = parameters.get('profile', False)
 
         self._set_self()
         self._set_repr()
@@ -243,11 +242,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
             self._regexp = Const.EMPTY
             Cause.push(Cause.HTTP_BAD_REQUEST,
                        'listing matching content without filter because it was not syntactically correct regular expression')
-
-    def is_editor(self):
-        """Test usage of editor for the operation."""
-
-        return self.editor
 
     def get_search_limit(self):
         """Return content count limit."""

@@ -119,6 +119,7 @@ class Cli(ConfigSourceBase):
     def __init__(self):
         super(Cli, self).__init__()
         parameters = Cli._parse_args()
+        Cli._set_editor(parameters)
         self._set_conf(parameters)
 
     @staticmethod
@@ -188,18 +189,15 @@ class Cli(ConfigSourceBase):
 
         return parameters
 
-    def is_editor(self):
-        """Test usage of editor for the operation."""
+    @staticmethod
+    def _set_editor(parameters):
+        """Enforce editor usage for some operations for better usability."""
 
-        is_editor = self.editor
-        # For ease of use, some operations always enforce editor.
-        if self.category == Const.SNIPPET and self.operation == Cli.UPDATE:
-            is_editor = True
+        if parameters['category'] == Const.SNIPPET and parameters['operation'] == Cli.UPDATE:
+            parameters['editor'] = True
 
-        if self.category == Const.SOLUTION and (self.operation == Cli.CREATE or self.operation == Cli.UPDATE):
-            is_editor = True
-
-        return is_editor
+        if parameters['category'] == Const.SOLUTION and (Cli.CREATE or Cli.UPDATE in parameters['operation']):
+            parameters['editor'] = True
 
 
 class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods

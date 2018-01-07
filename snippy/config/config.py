@@ -53,6 +53,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.db_schema_file = Config._storage_schema()
         cls.server = Config._server()
         cls.debug = Config._debug()
+        cls.profile = Config._profile()
+        cls.quiet = Config._quiet()
 
     def reset(self):
         """Reset configuration."""
@@ -98,6 +100,18 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if '--debug' in sys.argv or '-vv' in sys.argv else False
 
     @classmethod
+    def _profile(cls):
+        """Test if profiler is run."""
+
+        return True if '--profile' in sys.argv else False
+
+    @classmethod
+    def _quiet(cls):
+        """Test if all output is suppressed."""
+
+        return True if '--quiet' in sys.argv else False
+
+    @classmethod
     def read_source(cls, source):
         """Read configuration source."""
 
@@ -121,13 +135,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.no_ansi = Config.source.no_ansi
         cls.defaults = Config.source.defaults
         cls.template = Config.source.template
+        cls.editor = Config.source.editor
 
         cls.config['search'] = {}
         cls.config['search']['limit'] = cls._parse_search_limit()
         cls.config['search']['sorted_fields'] = cls._parse_sorted_fields()
         cls.config['search']['removed_fields'] = cls._parse_removed_fields()
-        cls.config['input'] = {}
-        cls.config['input']['editor'] = Config.source.is_editor()
         cls.config['operation'] = {}
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
@@ -148,13 +161,13 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured content group: %s', cls.content['group'])
         cls.logger.debug('configured content tags: %s', cls.content['tags'])
         cls.logger.debug('configured content links: %s', cls.content['links'])
-        cls.logger.debug('configured digest: %s', cls.digest)
-        cls.logger.debug('configured value from --editor as %s', cls.config['input']['editor'])
+        cls.logger.debug('configured operation digest: %s', cls.digest)
         cls.logger.debug('configured value from --file as "%s"', cls.config['operation']['file']['name'])
         cls.logger.debug('configured search all keywords: %s', cls.search['sall'])
         cls.logger.debug('configured search tag keywords: %s', cls.search['stag'])
         cls.logger.debug('configured search group keywords: %s', cls.search['sgrp'])
         cls.logger.debug('configured search filter regexp: %s', cls.search['regexp'])
+        cls.logger.debug('configured option editor: %s', cls.editor)
         cls.logger.debug('configured option no_ansi: %s', cls.no_ansi)
         cls.logger.debug('configured option defaults: %s', cls.source.defaults)
         cls.logger.debug('configured option template: %s', cls.source.template)
@@ -471,7 +484,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def is_editor(cls):
         """Test if editor is used to input content."""
 
-        return cls.config['input']['editor']
+        return cls.editor
 
     @classmethod
     def is_content_digest(cls):

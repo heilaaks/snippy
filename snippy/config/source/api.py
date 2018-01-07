@@ -30,6 +30,7 @@ class Api(ConfigSourceBase):
         super(Api, self).__init__()
         parameters['category'] = category
         parameters['operation'] = operation
+        parameters['editor'] = False  # Never use text editor with API server.
 
         Api._validate(parameters)
         self._set_sall(parameters)
@@ -67,8 +68,3 @@ class Api(ConfigSourceBase):
             is_valid = True
 
         return is_valid
-
-    def is_editor(self):
-        """Api configuration source never uses text editor."""
-
-        return False

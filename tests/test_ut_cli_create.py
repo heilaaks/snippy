@@ -28,7 +28,7 @@ class TestUtCliCreate(object):
         assert obj.stag == ()
         assert obj.sgrp == ()
         assert obj.regexp == ''
-        assert not obj.is_editor()
+        assert not obj.editor
         assert obj.filename == ''
         assert not obj.no_ansi
         assert not obj.defaults

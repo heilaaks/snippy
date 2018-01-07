@@ -59,89 +59,81 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     LIMIT_DEFAULT = 20
 
     def __init__(self):
+        self._logger = Logger(__name__).get()
+
         self.brief = Const.EMPTY,
         self.category = Const.UNKNOWN_CONTENT
-        self._data = ()
+        self.data = None
         self.debug = False
         self.defaults = False
         self.digest = None
         self.editor = False
         self.filename = Const.EMPTY
         self.group = Const.DEFAULT_GROUP
-        self._limit = ConfigSourceBase.LIMIT_DEFAULT
-        self._links = ()
-        self._logger = Logger(__name__).get()
+        self.limit = self.LIMIT_DEFAULT
+        self.links = ()
         self.no_ansi = False
         self.operation = Const.EMPTY
-        self._parameters = {}
         self.profile = False
         self.quiet = False
         self._regexp = Const.EMPTY,
-        self._repr = None
-        self._rfields = ()
-        self._sall = ()
+        self.rfields = ()
+        self.sall = None
         self.server = False
-        self._sfields = {}
-        self._sgrp = ()
-        self._stag = ()
-        self._tags = ()
+        self.sfields = {}
+        self.sgrp = None
+        self.stag = None
+        self.tags = ()
         self.template = False
         self.version = __version__
         self.very_verbose = False
 
+        self._repr = None
         self._set_repr()
-        self._set_self()
 
     def __repr__(self):
 
         return self._repr
-
-    def _set_self(self):
-        """Set instance variables."""
-
-        for parameter in self._parameters:
-            setattr(self, parameter, self._parameters[parameter])
 
     def _set_repr(self):
         """Set object representation."""
 
         namespace = []
         class_name = type(self).__name__
-        for parameter in sorted(self._parameters):
-            namespace.append('%s=%r' % (parameter, self._parameters[parameter]))
 
         self._repr = '%s(%s)' % (class_name, ', '.join(namespace))
 
     def _set_conf(self, parameters):
         """Set API configuration parameters."""
 
-        self._parameters.update(parameters)
+        # Parameters that where the tool must be aware if the parameter
+        # was given at all must bed defined to None if no parameter set.
         self.brief = parameters.get('brief', Const.EMPTY)
         self.category = parameters.get('category')
-        self._data = parameters.get('data', ())
+        self.data = parameters.get('data', None)
         self.debug = parameters.get('debug', False)
         self.defaults = parameters.get('defaults', False)
         self.digest = parameters.get('digest', None)
         self.editor = parameters.get('editor', False)
+        self.filename = parameters.get('filename', Const.EMPTY)
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
-        self.limit = parameters.get('limit', ConfigSourceBase.LIMIT_DEFAULT)
+        self.limit = parameters.get('limit', self.LIMIT_DEFAULT)
         self.links = parameters.get('links', ())
         self.no_ansi = parameters.get('no_ansi', False)
         self.operation = parameters.get('operation')
         self.profile = parameters.get('profile', False)
         self.quiet = parameters.get('quiet', False)
         self.regexp = parameters.get('regexp', Const.EMPTY)
-        self.rfields = parameters.get('fields', ConfigSourceBase.ALL_FIELDS)
-        self._sall = parameters.get('sall', ())
+        self.rfields = parameters.get('fields', self.ALL_FIELDS)
+        self.sall = parameters.get('sall', None)
         self.server = parameters.get('server', False)
         self.sfields = parameters.get('sort', ('brief'))
-        self._sgrp = parameters.get('sgrp', ())
-        self._stag = parameters.get('stag', ())
+        self.sgrp = parameters.get('sgrp', None)
+        self.stag = parameters.get('stag', None)
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
         self.very_verbose = parameters.get('very_verbose', False)
 
-        self._set_self()
         self._set_repr()
 
     @property
@@ -160,9 +152,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         if value is not None:
             string_ = Parser.to_string(value)
-            self._data = tuple(string_.split(Const.DELIMITER_DATA))
+            data = tuple(string_.split(Const.DELIMITER_DATA))
         else:
-            self._data = ()
+            data = ()
+
+        self._data = data  # pylint: disable=attribute-defined-outside-init
 
     @property
     def tags(self):
@@ -174,7 +168,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def tags(self, value):
         """Content tags are stored as a tuple with one tag per element."""
 
-        self._tags = Parser.keywords(value)
+        self._tags = Parser.keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def links(self):
@@ -186,7 +180,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def links(self, value):
         """Content links are stored as a tuple with one link per element."""
 
-        self._links = Parser.links(value)
+        self._links = Parser.links(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sall(self):
@@ -199,7 +193,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         """Search all keywords stored as a tuple with one keywords per
         element."""
 
-        self._sall = Parser.search_keywords(value)
+        self._sall = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def stag(self):
@@ -212,7 +206,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         """Search tag keywords stored as a tuple with one keywords per
         element."""
 
-        self._stag = Parser.search_keywords(value)
+        self._stag = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sgrp(self):
@@ -225,7 +219,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         """Search group keywords stored as a tuple with one keywords per
         element."""
 
-        self._sgrp = Parser.search_keywords(value)
+        self._sgrp = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def regexp(self):
@@ -255,9 +249,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def limit(self, value):
         """Search result limit."""
 
-        self._limit = ConfigSourceBase.LIMIT_DEFAULT
+        self._limit = self.LIMIT_DEFAULT  # pylint: disable=attribute-defined-outside-init
         try:
-            self._limit = int(value)
+            self._limit = int(value)  # pylint: disable=attribute-defined-outside-init
         except ValueError:
             self._logger.info('search result limit is not a number and thus default use: %d', self._limit)
 
@@ -282,17 +276,17 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         for field in field_names:
             try:
                 if field[0].startswith('-'):
-                    index_ = ConfigSourceBase.ALL_FIELDS.index(field[1:])
+                    index_ = self.ALL_FIELDS.index(field[1:])
                     sorted_dict['order'].append(index_)
                     sorted_dict['value'][index_] = True
                 else:
-                    index_ = ConfigSourceBase.ALL_FIELDS.index(field)
+                    index_ = self.ALL_FIELDS.index(field)
                     sorted_dict['order'].append(index_)
                     sorted_dict['value'][index_] = False
             except ValueError:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
         self._logger.debug('config source internal format for sorted fields: %s', sorted_dict)
-        self._sfields = sorted_dict
+        self._sfields = sorted_dict  # pylint: disable=attribute-defined-outside-init
 
     @property
     def rfields(self):
@@ -306,5 +300,5 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         from requested fields."""
 
         requested_fields = Parser.keywords(value)
-        self._rfields = tuple(set(ConfigSourceBase.ALL_FIELDS) - set(requested_fields))
+        self._rfields = tuple(set(self.ALL_FIELDS) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
         self._logger.debug('config source converted removed fields from requested fields: %s', self._rfields)

@@ -787,32 +787,20 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     CONTENT
     
-    1. Testing content data (Note to self while refactoring TODO)
+    1. The tool must know if specific parameters were given
     
-       If content data was not provided from configuration source, the data
-       is an empty tuple.
+       The tool must be aware if specific parameters were give at all. These
+       parameters are:
        
-       If content was provided as empty string, the content data is tuple
-       with one element that is empty string. This can be checked with
-       
-       # Test if not provided
-       if not Config.get_content_data():
-           # Not given from configuration source.
-       
-       # Test if empty string
-       if any(Config.get_content_data()):
-           # Has content data.
-       else:
-           # All elements in tuple are empty (if not element:)
-
-    2. Testing digest
+         - data
+         - digest
+         - sall
+         - stag
+         - sgrp
     
-       None == not given to configs source
-       
-       This is not nice because content data not give is empty tuple. Should
-       be None if not give? Digest is the only parameter that needs None?
-       
-       
+       The default value for these parameters must be None or the must not
+       exist in the parameter set that is give for set_conf in class inherited
+       from ConfigSourceBase().
 
 #######################################
 ## Command line design

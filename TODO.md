@@ -1,5 +1,6 @@
 ## TODO
-   - [ ] Fix the config base repr and self. The _parameter is not needed anymore. But what fails?
+   - [ ] Fix the config base repr.
+   - [ ] Fix the regexp default? The default const.empty is not valid regexp. The code misuses this. Should be regexp that matches anything.
    - [ ] Add the Falcon logging to only from snippy logger. It also seems that Falcon blocks the logs during tests? All logs from Snippy logger - somehow?
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Fix set/get to properties. The configuration and related classes are too bloated with get/set. //https://www.python-course.eu/python3_properties.php
@@ -11,6 +12,7 @@
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add support for /api/v1/solutions.
+   - [ ] Fix logger setting with static/class classes like parser.py? this seems to call the logger instance only once?
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Add new module to split the config a bit. For example also get_keywords does not belong to Editor().
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
@@ -36,6 +38,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] There is a pylint bug that it does not see see Python decorators being used with underscore // https://github.com/PyCQA/pylint/issues/409
    - [ ] See setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
    - [ ] Add setup.py longdescription from readme.rst. // https://github.com/pypa/sampleproject/blob/master/setup.py
    - [ ] Check security implications from using setup.py (runs code) // https://stackoverflow.com/questions/44878600/is-setup-cfg-deprecated
@@ -56,6 +59,9 @@
    - [ ] Fix the Python2 test database naming to be random temp file in the same folder to allow parallelism.
    - [ ] Why when in Python2 a database test fails, it leaves hanging resources and DB clean does not work? Was this fixed into sqlite3_helper already?
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
+
+## FOLLOW EXTERNAL BUGS
+   - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
 
 ## DONE
    - [x] Fixed REST API parameters separated with %2C like in 'fields=brief%2Ccategory'.

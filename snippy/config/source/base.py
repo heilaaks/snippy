@@ -72,6 +72,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._stag = ()
         self._sgrp = ()
         self._regexp = Const.EMPTY,
+        self._limit = ConfigSourceBase.LIMIT_DEFAULT
         self.filename = Const.EMPTY
         self.defaults = False
         self.template = False
@@ -82,14 +83,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.profile = False
         self.no_ansi = False
         self.server = False
-        self.limit = None
-        self.sort = None
+        self._sfields = {}
         self.fields = None
         self._logger = Logger(__name__).get()
         self._repr = None
-        self._parameters = {'limit': ConfigSourceBase.LIMIT_DEFAULT,
-                            'sort': ConfigSourceBase.BRIEF,
-                            'fields': ConfigSourceBase.FIELDS}
+        self._parameters = {'fields': ConfigSourceBase.FIELDS}
         self._set_self()
         self._set_repr()
 
@@ -122,13 +120,15 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self._data = parameters.get('data', ())
         self.brief = parameters.get('brief', Const.EMPTY)
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
-        self._tags = parameters.get('tags', ())
-        self._links = parameters.get('links', ())
+        self.tags = parameters.get('tags', ())
+        self.links = parameters.get('links', ())
         self.digest = parameters.get('digest', None)
         self._sall = parameters.get('sall', ())
         self._stag = parameters.get('stag', ())
         self._sgrp = parameters.get('sgrp', ())
-        self._regexp = parameters.get('regexp', Const.EMPTY)
+        self.regexp = parameters.get('regexp', Const.EMPTY)
+        self.limit = parameters.get('limit', ConfigSourceBase.LIMIT_DEFAULT)
+        self.sfields = parameters.get('sort', ('brief'))
         self.no_ansi = parameters.get('no_ansi', False)
         self.defaults = parameters.get('defaults', False)
         self.template = parameters.get('template', False)
@@ -243,25 +243,35 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
             Cause.push(Cause.HTTP_BAD_REQUEST,
                        'listing matching content without filter because it was not syntactically correct regular expression')
 
-    def get_search_limit(self):
-        """Return content count limit."""
+    @property
+    def limit(self):
+        """Get search result limit."""
 
-        limit = ConfigSourceBase.LIMIT_DEFAULT
+        return self._limit
+
+    @limit.setter
+    def limit(self, value):
+        """Search result limit."""
+
+        self._limit = ConfigSourceBase.LIMIT_DEFAULT
         try:
-            limit = int(self.limit)
+            self._limit = int(value)
         except ValueError:
-            self._logger.info('search result limit is not a number and thus default use: %d', limit)
+            self._logger.info('search result limit is not a number and thus default use: %d', self._limit)
 
-        self._logger.debug('config source limit: %s', limit)
+    @property
+    def sfields(self):
+        """Get sorted fields in internal presentation."""
 
-        return limit
+        return self._sfields
 
-    def get_sorted_fields(self):
-        """Return fields that are used to sort content."""
+    @sfields.setter
+    def sfields(self, value):
+        """Set sorted fields."""
 
         sorted_dict = {}
         field_names = []
-        fields = ConfigSourceBase._six_string(self.sort)
+        fields = ConfigSourceBase._six_string(value)
         if isinstance(fields, str):
             field_names.append(fields)
             field_names = Parser.keywords(field_names, sort_=False)
@@ -289,7 +299,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
         self._logger.debug('config source internal format for sorted fields: %s', sorted_dict)
 
-        return sorted_dict
+        self._sfields = sorted_dict
 
     def get_removed_fields(self):
         """Return content fields that not used in the search result."""

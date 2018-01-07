@@ -132,14 +132,14 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.search['stag'] = Config.source.stag
         cls.search['sgrp'] = Config.source.sgrp
         cls.search['regexp'] = Config.source.regexp
+        cls.search['limit'] = Config.source.limit
+        cls.search['sfields'] = Config.source.sfields
         cls.no_ansi = Config.source.no_ansi
         cls.defaults = Config.source.defaults
         cls.template = Config.source.template
         cls.editor = Config.source.editor
 
         cls.config['search'] = {}
-        cls.config['search']['limit'] = cls._parse_search_limit()
-        cls.config['search']['sorted_fields'] = cls._parse_sorted_fields()
         cls.config['search']['removed_fields'] = cls._parse_removed_fields()
         cls.config['operation'] = {}
         cls.config['operation']['file'] = {}
@@ -166,13 +166,13 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured search all keywords: %s', cls.search['sall'])
         cls.logger.debug('configured search tag keywords: %s', cls.search['stag'])
         cls.logger.debug('configured search group keywords: %s', cls.search['sgrp'])
-        cls.logger.debug('configured search filter regexp: %s', cls.search['regexp'])
+        cls.logger.debug('configured search result filter: %s', cls.search['regexp'])
+        cls.logger.debug('configured search result limit: %s', cls.search['limit'])
+        cls.logger.debug('configured search result sort: %s', cls.search['sfields'])
         cls.logger.debug('configured option editor: %s', cls.editor)
         cls.logger.debug('configured option no_ansi: %s', cls.no_ansi)
         cls.logger.debug('configured option defaults: %s', cls.source.defaults)
         cls.logger.debug('configured option template: %s', cls.source.template)
-        cls.logger.debug('configured value from limit as %d', cls.config['search']['limit'])
-        cls.logger.debug('configured value from sorted fields as %s', cls.config['search']['sorted_fields'])
         cls.logger.debug('configured value from removed fields as %s', cls.config['search']['removed_fields'])
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
@@ -466,13 +466,13 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_search_limit(cls):
         """Return search limit."""
 
-        return cls.config['search']['limit']
+        return cls.search['limit']
 
     @classmethod
     def get_sorted_fields(cls):
         """Return fields that are used to sort content."""
 
-        return cls.config['search']['sorted_fields']
+        return cls.search['sfields']
 
     @classmethod
     def get_removed_fields(cls):
@@ -551,20 +551,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         utc = datetime.datetime.utcnow()
 
         return utc.strftime("%Y-%m-%d %H:%M:%S")
-
-    @classmethod
-    def _parse_search_limit(cls):
-        """Process the user given search limit."""
-
-        limit = Config.source.get_search_limit()
-
-        return limit
-
-    @classmethod
-    def _parse_sorted_fields(cls):
-        """Process the fields that are used to sort content."""
-
-        return Config.source.get_sorted_fields()
 
     @classmethod
     def _parse_removed_fields(cls):

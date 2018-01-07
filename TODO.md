@@ -17,6 +17,8 @@
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix "If you want partial updates, use PATCH instead."
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
+   - [ ] Fix config base and settings like self._sall which should be self.sall. There is some problem to set the default in setters.
+   - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.
    - [ ] Fix api performance test failure which leaves the server running and hanging.

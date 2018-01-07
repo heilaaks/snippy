@@ -51,6 +51,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('initialize storage config')
         cls.storage_file = Config._storage_file()
         cls.db_schema_file = Config._storage_schema()
+        cls.server = Config._server()
+        cls.debug = Config._debug()
 
     def reset(self):
         """Reset configuration."""
@@ -84,6 +86,18 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return schema_file
 
     @classmethod
+    def _server(cls):
+        """Test if service is run as a server."""
+
+        return True if '--server' in sys.argv else False
+
+    @classmethod
+    def _debug(cls):
+        """Test if service is run in debug mode."""
+
+        return True if '--debug' in sys.argv or '-vv' in sys.argv else False
+
+    @classmethod
     def read_source(cls, source):
         """Read configuration source."""
 
@@ -108,8 +122,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.defaults = Config.source.defaults
         cls.template = Config.source.template
 
-        cls.config['options'] = {}
-        cls.config['options']['debug'] = Config.source.is_debug()
         cls.config['search'] = {}
         cls.config['search']['limit'] = cls._parse_search_limit()
         cls.config['search']['sorted_fields'] = cls._parse_sorted_fields()
@@ -119,7 +131,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.config['operation'] = {}
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
-        cls.config['server'] = Config.source.is_server()
 
         cls.print_config()
 
@@ -127,6 +138,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def print_config(cls):
         """Print configuration."""
 
+        cls.logger.debug('configured storage file: %s', cls.storage_file)
+        cls.logger.debug('configured db schema file: %s', cls.db_schema_file)
+        cls.logger.debug('configured server: %s', cls.server)
         cls.logger.debug('configured content operation: %s', cls.operation)
         cls.logger.debug('configured content category: %s', cls.category)
         cls.logger.debug('configured content data: %s', cls.content['data'])
@@ -517,12 +531,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         return not cls.no_ansi
 
-    @classmethod
-    def is_server(cls):
-        """Test if service is run as a server."""
-
-        return True if '--server' in sys.argv else False
-
     @staticmethod
     def get_utc_time():
         """Get UTC time."""
@@ -530,12 +538,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         utc = datetime.datetime.utcnow()
 
         return utc.strftime("%Y-%m-%d %H:%M:%S")
-
-    @classmethod
-    def is_debug(cls):
-        """Test if debug option was used."""
-
-        return True if cls.config['options']['debug'] else False
 
     @classmethod
     def _parse_search_limit(cls):

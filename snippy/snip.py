@@ -47,7 +47,7 @@ class Snippy(object):
     def run(self):
         """Run Snippy."""
 
-        if Config.is_server():
+        if Config.server:
             self.run_server()
         else:
             self.run_cli()

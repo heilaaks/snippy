@@ -79,10 +79,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.version = None
         self.very_verbose = None
         self.quiet = None
-        self.debug = None
+        self.debug = False
         self.profile = None
         self.no_ansi = False
-        self.server = None
+        self.server = False
         self.limit = None
         self.sort = None
         self.fields = None
@@ -93,9 +93,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
                             'version': __version__,
                             'very_verbose': False,
                             'quiet': False,
-                            'debug': False,
                             'profile': False,
-                            'server': False,
                             'limit': ConfigSourceBase.LIMIT_DEFAULT,
                             'sort': ConfigSourceBase.BRIEF,
                             'fields': ConfigSourceBase.FIELDS}
@@ -250,20 +248,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         """Test usage of editor for the operation."""
 
         return self.editor
-
-    def is_debug(self):
-        """Return the usage of debug option."""
-
-        self._logger.debug('config source debug: %s', self.debug)
-
-        return self.debug
-
-    def is_server(self):
-        """Test if the service is run as a server."""
-
-        self._logger.debug('config source server: %s', self.server)
-
-        return self.server
 
     def get_search_limit(self):
         """Return content count limit."""

@@ -134,13 +134,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.search['regexp'] = Config.source.regexp
         cls.search['limit'] = Config.source.limit
         cls.search['sfields'] = Config.source.sfields
+        cls.search['rfields'] = Config.source.rfields
         cls.no_ansi = Config.source.no_ansi
         cls.defaults = Config.source.defaults
         cls.template = Config.source.template
         cls.editor = Config.source.editor
 
-        cls.config['search'] = {}
-        cls.config['search']['removed_fields'] = cls._parse_removed_fields()
         cls.config['operation'] = {}
         cls.config['operation']['file'] = {}
         cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
@@ -168,12 +167,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured search group keywords: %s', cls.search['sgrp'])
         cls.logger.debug('configured search result filter: %s', cls.search['regexp'])
         cls.logger.debug('configured search result limit: %s', cls.search['limit'])
-        cls.logger.debug('configured search result sort: %s', cls.search['sfields'])
+        cls.logger.debug('configured search result sorted field: %s', cls.search['sfields'])
+        cls.logger.debug('configured search result removed fields: %s', cls.search['rfields'])
         cls.logger.debug('configured option editor: %s', cls.editor)
         cls.logger.debug('configured option no_ansi: %s', cls.no_ansi)
         cls.logger.debug('configured option defaults: %s', cls.source.defaults)
         cls.logger.debug('configured option template: %s', cls.source.template)
-        cls.logger.debug('configured value from removed fields as %s', cls.config['search']['removed_fields'])
         cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
 
     @classmethod
@@ -478,7 +477,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_removed_fields(cls):
         """Return fields that are removed from content."""
 
-        return cls.config['search']['removed_fields']
+        return cls.search['rfields']
 
     @classmethod
     def is_editor(cls):
@@ -551,12 +550,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         utc = datetime.datetime.utcnow()
 
         return utc.strftime("%Y-%m-%d %H:%M:%S")
-
-    @classmethod
-    def _parse_removed_fields(cls):
-        """Process the fields that are removed from content."""
-
-        return Config.source.get_removed_fields()
 
     @classmethod
     def _get_edited_content(cls, content):

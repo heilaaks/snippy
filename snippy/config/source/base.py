@@ -52,8 +52,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
     UTC = 'utc'
     DIGEST = 'digest'
     KEY = 'key'
-    FIELDS = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
-              'runalias', 'versions', 'utc', 'digest', 'key')
+    ALL_FIELDS = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
+                  'runalias', 'versions', 'utc', 'digest', 'key')
 
     # Defaults
     LIMIT_DEFAULT = 20
@@ -84,10 +84,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.no_ansi = False
         self.server = False
         self._sfields = {}
-        self.fields = None
+        self._rfields = ()
         self._logger = Logger(__name__).get()
         self._repr = None
-        self._parameters = {'fields': ConfigSourceBase.FIELDS}
+        self._parameters = {}
         self._set_self()
         self._set_repr()
 
@@ -129,6 +129,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
         self.regexp = parameters.get('regexp', Const.EMPTY)
         self.limit = parameters.get('limit', ConfigSourceBase.LIMIT_DEFAULT)
         self.sfields = parameters.get('sort', ('brief'))
+        self.rfields = parameters.get('fields', ConfigSourceBase.ALL_FIELDS)
         self.no_ansi = parameters.get('no_ansi', False)
         self.defaults = parameters.get('defaults', False)
         self.template = parameters.get('template', False)
@@ -267,58 +268,45 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-public-methods,too-m
 
     @sfields.setter
     def sfields(self, value):
-        """Set sorted fields."""
+        """Sorted fields are stored in internal presentation from given
+        value. The internal format contains field index that matches to
+        database column index. The order where the sorted column names
+        was received must be persisted. Otherwise the sort does not work
+        correctly."""
 
         sorted_dict = {}
-        field_names = []
-        fields = ConfigSourceBase._six_string(value)
-        if isinstance(fields, str):
-            field_names.append(fields)
-            field_names = Parser.keywords(field_names, sort_=False)
-        elif isinstance(fields, (list, tuple)):
-            field_names.extend(fields)
-        else:
-            self._logger.debug('search result sorting parameter ignored because of unknown type')
-        self._logger.debug('config source sorted fields: %s', field_names)
-
-        # Convert the field names to internal field index that match
-        # to database column index.
         sorted_dict['order'] = []
         sorted_dict['value'] = {}
+        field_names = Parser.keywords(self._to_list(value), sort_=False)
         for field in field_names:
             try:
                 if field[0].startswith('-'):
-                    index_ = ConfigSourceBase.FIELDS.index(field[1:])
+                    index_ = ConfigSourceBase.ALL_FIELDS.index(field[1:])
                     sorted_dict['order'].append(index_)
                     sorted_dict['value'][index_] = True
                 else:
-                    index_ = ConfigSourceBase.FIELDS.index(field)
+                    index_ = ConfigSourceBase.ALL_FIELDS.index(field)
                     sorted_dict['order'].append(index_)
                     sorted_dict['value'][index_] = False
             except ValueError:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
         self._logger.debug('config source internal format for sorted fields: %s', sorted_dict)
-
         self._sfields = sorted_dict
 
-    def get_removed_fields(self):
-        """Return content fields that not used in the search result."""
+    @property
+    def rfields(self):
+        """Get removed fields."""
 
-        requested_fields = ConfigSourceBase.FIELDS
-        fields = ConfigSourceBase._six_string(self.fields)
-        if isinstance(fields, str):
-            requested_fields = (fields,)
-            requested_fields = Parser.keywords(requested_fields)
-        elif isinstance(fields, (list, tuple)):
-            requested_fields = tuple(fields)
-        else:
-            self._logger.debug('search result selected fields parameter ignored because of unknown type')
-        self._logger.debug('config source used fields in search result: %s', requested_fields)
+        return self._rfields
 
-        removed_fields = tuple(set(ConfigSourceBase.FIELDS) - set(requested_fields))
-        self._logger.debug('config source removed fields from search response: %s', removed_fields)
+    @rfields.setter
+    def rfields(self, value):
+        """Removed fields are presented as tuple and they are converted from
+        requested fields."""
 
-        return removed_fields
+        requested_fields = Parser.keywords(self._to_list(value))
+        self._rfields = tuple(set(ConfigSourceBase.ALL_FIELDS) - set(requested_fields))
+        self._logger.debug('config source converted removed fields from requested fields: %s', self._rfields)
 
     def _to_string(self, value):
         """Return value as string by joining list items with newlines."""

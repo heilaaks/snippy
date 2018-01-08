@@ -15,7 +15,7 @@ class TestUtSqlite3dbInsert(object):
 
     @mock.patch.object(Cause, 'push')
     @mock.patch.object(Config, 'storage_file', Database.get_storage())
-    @mock.patch.object(Config, 'db_schema_file', Database.get_schema())
+    @mock.patch.object(Config, 'storage_schema', Database.get_schema())
     def test_insert_with_all_parameters(self, mock_cause_push):
         """Insert content into database."""
 
@@ -35,7 +35,7 @@ class TestUtSqlite3dbInsert(object):
 
     @mock.patch.object(Cause, 'push')
     @mock.patch.object(Config, 'storage_file', Database.get_storage())
-    @mock.patch.object(Config, 'db_schema_file', Database.get_schema())
+    @mock.patch.object(Config, 'storage_schema', Database.get_schema())
     def test_insert_multiple_links(self, mock_cause_push):
         """Insert content with multiple links."""
 

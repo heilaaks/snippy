@@ -58,37 +58,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     # Defaults
     LIMIT_DEFAULT = 20
 
-    def __init__(self):
+    def __init__(self, parameters=None):
         self._logger = Logger(__name__).get()
         self._repr = Const.EMPTY
-
-        self.brief = Const.EMPTY
-        self.category = Const.UNKNOWN_CONTENT
-        self.data = None
-        self.debug = False
-        self.defaults = False
-        self.digest = None
-        self.editor = False
-        self.filename = Const.EMPTY
-        self.group = Const.DEFAULT_GROUP
-        self.limit = self.LIMIT_DEFAULT
-        self.links = ()
-        self.no_ansi = False
-        self.operation = Const.EMPTY
-        self.profile = False
-        self.quiet = False
-        self._regexp = Const.EMPTY
-        self.rfields = (self.ALL_FIELDS)
-        self.sall = None
-        self.server = False
-        self.sfields = {}
-        self.sgrp = None
-        self.stag = None
-        self.tags = ()
-        self.template = False
-        self.version = __version__
-        self.very_verbose = False
-        self._set_repr()
+        self.set_conf(parameters)
 
     def __repr__(self):
 
@@ -102,13 +75,19 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         attributes = list(self.__dict__.keys())
         attributes.remove('_logger')
         attributes.remove('_repr')
-        attributes = [attribute.lstrip('_') for attribute in attributes]
+        # Optimization: For some reason using lstrip below to remove the
+        # underscore that is always left, causes 2-3% performance penalty.
+        # Using strip does not cause same effect.
+        attributes = [attribute.strip('_') for attribute in attributes]
         for attribute in sorted(attributes):
             namespace.append('%s=%r' % (attribute, getattr(self, attribute)))
         self._repr = '%s(%s)' % (class_name, ', '.join(namespace))
 
     def set_conf(self, parameters):
         """Set API configuration parameters."""
+
+        if not parameters:
+            return
 
         # Parameters that where the tool must be aware if the parameter
         # was given at all must bed defined to None if no parameter set.
@@ -136,8 +115,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.stag = parameters.get('stag', None)
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
+        self.version = parameters.get('version', __version__)
         self.very_verbose = parameters.get('very_verbose', False)
-
         self._set_repr()
 
     @property
@@ -237,9 +216,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         try:
             re.compile(value)
-            self._regexp = value
+            self._regexp = value  # pylint: disable=attribute-defined-outside-init
         except re.error:
-            self._regexp = Const.EMPTY
+            self._regexp = Const.EMPTY  # pylint: disable=attribute-defined-outside-init
             Cause.push(Cause.HTTP_BAD_REQUEST,
                        'listing matching content without filter because it was not syntactically correct regular expression')
 

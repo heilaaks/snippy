@@ -50,7 +50,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # Separated from __init__ to ease mocking in tests.
         cls.logger.debug('initialize storage config')
         cls.storage_file = Config._storage_file()
-        cls.db_schema_file = Config._storage_schema()
+        cls.storage_schema = Config._storage_schema()
         cls.server = Config._server()
         cls.debug = Config._debug()
         cls.profile = Config._profile()
@@ -147,9 +147,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _print_config(cls):
         """Print global configuration."""
 
-        cls.logger.debug('configured storage: %s', cls.storage_file)
-        cls.logger.debug('configured db schema: %s', cls.db_schema_file)
-        cls.logger.debug('configured run server: %s', cls.server)
+        cls.logger.debug('configured storage file: %s', cls.storage_file)
+        cls.logger.debug('configured storage schema: %s', cls.storage_schema)
         cls.logger.debug('configured content operation: %s', cls.operation)
         cls.logger.debug('configured content category: %s', cls.category)
         cls.logger.debug('configured content data: %s', cls.content['data'])
@@ -159,7 +158,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured content links: %s', cls.content['links'])
         cls.logger.debug('configured operation digest: %s', cls.digest)
         cls.logger.debug('configured operation filename: "%s"', cls.filename)
-        cls.logger.debug('configured operation filetype: "%s"', cls.filetype)
+        cls.logger.debug('configured operation file type: "%s"', cls.filetype)
         cls.logger.debug('configured search all keywords: %s', cls.search['sall'])
         cls.logger.debug('configured search tag keywords: %s', cls.search['stag'])
         cls.logger.debug('configured search group keywords: %s', cls.search['sgrp'])
@@ -171,6 +170,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured option no_ansi: %s', cls.no_ansi)
         cls.logger.debug('configured option defaults: %s', cls.source.defaults)
         cls.logger.debug('configured option template: %s', cls.source.template)
+        cls.logger.debug('configured option server: %s', cls.server)
 
     @classmethod
     def _filename(cls):

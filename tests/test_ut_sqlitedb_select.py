@@ -16,7 +16,7 @@ class TestUtSqlite3dbSelect(object):
 
     @mock.patch.object(Cause, 'push')
     @mock.patch.object(Config, 'storage_file', Database.get_storage())
-    @mock.patch.object(Config, 'db_schema_file', Database.get_schema())
+    @mock.patch.object(Config, 'storage_schema', Database.get_schema())
     @mock.patch.object(Config, 'is_search_all', return_value=True)
     def test_select_keyword_matching_links_column(self, _, mock_cause_push):
         """Test selecting content."""

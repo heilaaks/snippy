@@ -1,8 +1,9 @@
 ## TODO
-   - [ ] Fix the regexp default? The default const.empty is not valid regexp. The code misuses this. Should be regexp that matches anything.
+   - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
+   - [ ] Fix set/get to properties for Config()
+   - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
    - [ ] Add the Falcon logging to only from snippy logger. It also seems that Falcon blocks the logs during tests? All logs from Snippy logger - somehow?
    - [ ] Add more tests /api/v1/snippets.
-   - [ ] Fix set/get to properties. The configuration and related classes are too bloated with get/set. //https://www.python-course.eu/python3_properties.php
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
@@ -13,14 +14,11 @@
    - [ ] Add support for /api/v1/solutions.
    - [ ] Fix logger setting with static/class classes like parser.py? this seems to call the logger instance only once?
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
-   - [ ] Add new module to split the config a bit. For example also get_keywords does not belong to Editor().
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix "If you want partial updates, use PATCH instead."
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
-   - [ ] Fix config base and settings like self._sall which should be self.sall. There is some problem to set the default in setters.
-   - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.
    - [ ] Fix api performance test failure which leaves the server running and hanging.
@@ -64,6 +62,7 @@
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
 
 ## DONE
+   - [x] Fixed regular expression default. Empty string is valid regexp but accidetal empty tuple is not.
    - [x] Fixed the config base __repr__.
    - [x] Fixed REST API parameters separated with %2C like in 'fields=brief%2Ccategory'.
    - [x] Fixed setup.cnf referring to non existent file. Added universal for bdist_wheel.

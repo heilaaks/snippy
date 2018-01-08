@@ -60,8 +60,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     def __init__(self):
         self._logger = Logger(__name__).get()
+        self._repr = Const.EMPTY
 
-        self.brief = Const.EMPTY,
+        self.brief = Const.EMPTY
         self.category = Const.UNKNOWN_CONTENT
         self.data = None
         self.debug = False
@@ -76,7 +77,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.operation = Const.EMPTY
         self.profile = False
         self.quiet = False
-        self._regexp = Const.EMPTY,
+        self._regexp = Const.EMPTY
         self.rfields = (self.ALL_FIELDS)
         self.sall = None
         self.server = False
@@ -87,8 +88,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.template = False
         self.version = __version__
         self.very_verbose = False
-
-        self._repr = None
         self._set_repr()
 
     def __repr__(self):
@@ -100,10 +99,15 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         namespace = []
         class_name = type(self).__name__
-
+        attributes = list(self.__dict__.keys())
+        attributes.remove('_logger')
+        attributes.remove('_repr')
+        attributes = [attribute.lstrip('_') for attribute in attributes]
+        for attribute in sorted(attributes):
+            namespace.append('%s=%r' % (attribute, getattr(self, attribute)))
         self._repr = '%s(%s)' % (class_name, ', '.join(namespace))
 
-    def _set_conf(self, parameters):
+    def set_conf(self, parameters):
         """Set API configuration parameters."""
 
         # Parameters that where the tool must be aware if the parameter

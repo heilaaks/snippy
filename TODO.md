@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Fix the config base repr.
    - [ ] Fix the regexp default? The default const.empty is not valid regexp. The code misuses this. Should be regexp that matches anything.
    - [ ] Add the Falcon logging to only from snippy logger. It also seems that Falcon blocks the logs during tests? All logs from Snippy logger - somehow?
    - [ ] Add more tests /api/v1/snippets.
@@ -38,6 +37,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] Changing self._data = data to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
    - [ ] There is a pylint bug that it does not see see Python decorators being used with underscore // https://github.com/PyCQA/pylint/issues/409
    - [ ] See setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
    - [ ] Add setup.py longdescription from readme.rst. // https://github.com/pypa/sampleproject/blob/master/setup.py
@@ -64,6 +64,7 @@
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
 
 ## DONE
+   - [x] Fixed the config base __repr__.
    - [x] Fixed REST API parameters separated with %2C like in 'fields=brief%2Ccategory'.
    - [x] Fixed setup.cnf referring to non existent file. Added universal for bdist_wheel.
    - [x] Fixed empty tag and link list containing empty string in REST API response JSON.

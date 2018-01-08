@@ -120,7 +120,7 @@ class Cli(ConfigSourceBase):
         super(Cli, self).__init__()
         parameters = Cli._parse_args()
         Cli._set_editor(parameters)
-        self._set_conf(parameters)
+        self.set_conf(parameters)
 
     @staticmethod
     def _parse_args():

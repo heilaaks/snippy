@@ -77,7 +77,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.profile = False
         self.quiet = False
         self._regexp = Const.EMPTY,
-        self.rfields = ()
+        self.rfields = (self.ALL_FIELDS)
         self.sall = None
         self.server = False
         self.sfields = {}
@@ -301,4 +301,4 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         requested_fields = Parser.keywords(value)
         self._rfields = tuple(set(self.ALL_FIELDS) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
-        self._logger.debug('config source converted removed fields from requested fields: %s', self._rfields)
+        self._logger.debug('content fields that are removed from response: %s', self._rfields)

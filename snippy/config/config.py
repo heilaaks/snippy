@@ -150,9 +150,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def print_config(cls):
         """Print configuration."""
 
-        cls.logger.debug('configured storage file: %s', cls.storage_file)
-        cls.logger.debug('configured db schema file: %s', cls.db_schema_file)
-        cls.logger.debug('configured server: %s', cls.server)
+        cls.logger.debug('configured storage: %s', cls.storage_file)
+        cls.logger.debug('configured db schema: %s', cls.db_schema_file)
+        cls.logger.debug('configured run server: %s', cls.server)
         cls.logger.debug('configured content operation: %s', cls.operation)
         cls.logger.debug('configured content category: %s', cls.category)
         cls.logger.debug('configured content data: %s', cls.content['data'])

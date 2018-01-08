@@ -108,7 +108,7 @@ class Parser(object):
         elif isinstance(value, (list, tuple)):
             string_ = Const.NEWLINE.join([x.strip() for x in value])  # Enforce only one newline at the end.
         else:
-            cls._logger.debug('string parameter ignored because of unknown type %s', type(value))
+            cls._logger.debug('source value conversion to string skipped in normal condition %s : %s', type(value), value)
 
         cls._logger.debug('testing')
 
@@ -125,7 +125,7 @@ class Parser(object):
         elif isinstance(value, (list, tuple)):
             list_ = list(value)
         else:
-            cls._logger.debug('list parameter ignored because of unknown type: %s', type(value))
+            cls._logger.debug('source value conversion to list skipped in normal condition: %s : %s', type(value), value)
 
         return list_
 

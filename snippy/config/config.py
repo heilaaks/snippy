@@ -116,39 +116,36 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Read configuration source."""
 
         cls.logger.debug('config source: %s', source)
-        Config.source = source
-        cls.category = Config.source.category
-        cls.operation = Config.source.operation
+        cls.source = source
+        cls.category = cls.source.category
+        cls.operation = cls.source.operation
         cls.content = {}
-        cls.content['data'] = Config.source.data
-        cls.content['brief'] = Config.source.brief
-        cls.content['group'] = Config.source.group
-        cls.content['tags'] = Config.source.tags
-        cls.content['links'] = Config.source.links
-        cls.content['filename'] = Config.source.filename
-        cls.digest = Config.source.digest
+        cls.content['data'] = cls.source.data
+        cls.content['brief'] = cls.source.brief
+        cls.content['group'] = cls.source.group
+        cls.content['tags'] = cls.source.tags
+        cls.content['links'] = cls.source.links
+        cls.content['filename'] = cls.source.filename
+        cls.digest = cls.source.digest
         cls.search = {}
-        cls.search['sall'] = Config.source.sall
-        cls.search['stag'] = Config.source.stag
-        cls.search['sgrp'] = Config.source.sgrp
-        cls.search['regexp'] = Config.source.regexp
-        cls.search['limit'] = Config.source.limit
-        cls.search['sfields'] = Config.source.sfields
-        cls.search['rfields'] = Config.source.rfields
-        cls.no_ansi = Config.source.no_ansi
-        cls.defaults = Config.source.defaults
-        cls.template = Config.source.template
-        cls.editor = Config.source.editor
-
-        cls.config['operation'] = {}
-        cls.config['operation']['file'] = {}
-        cls.config['operation']['file']['name'], cls.config['operation']['file']['type'] = cls._parse_operation_file()
-
-        cls.print_config()
+        cls.search['sall'] = cls.source.sall
+        cls.search['stag'] = cls.source.stag
+        cls.search['sgrp'] = cls.source.sgrp
+        cls.search['regexp'] = cls.source.regexp
+        cls.search['limit'] = cls.source.limit
+        cls.search['sfields'] = cls.source.sfields
+        cls.search['rfields'] = cls.source.rfields
+        cls.no_ansi = cls.source.no_ansi
+        cls.defaults = cls.source.defaults
+        cls.template = cls.source.template
+        cls.editor = cls.source.editor
+        cls.filename = cls._filename()
+        cls.filetype = cls._filetype()
+        cls._print_config()
 
     @classmethod
-    def print_config(cls):
-        """Print configuration."""
+    def _print_config(cls):
+        """Print global configuration."""
 
         cls.logger.debug('configured storage: %s', cls.storage_file)
         cls.logger.debug('configured db schema: %s', cls.db_schema_file)
@@ -161,7 +158,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured content tags: %s', cls.content['tags'])
         cls.logger.debug('configured content links: %s', cls.content['links'])
         cls.logger.debug('configured operation digest: %s', cls.digest)
-        cls.logger.debug('configured value from --file as "%s"', cls.config['operation']['file']['name'])
+        cls.logger.debug('configured operation filename: "%s"', cls.filename)
+        cls.logger.debug('configured operation filetype: "%s"', cls.filetype)
         cls.logger.debug('configured search all keywords: %s', cls.search['sall'])
         cls.logger.debug('configured search tag keywords: %s', cls.search['stag'])
         cls.logger.debug('configured search group keywords: %s', cls.search['sgrp'])
@@ -173,7 +171,64 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured option no_ansi: %s', cls.no_ansi)
         cls.logger.debug('configured option defaults: %s', cls.source.defaults)
         cls.logger.debug('configured option template: %s', cls.source.template)
-        cls.logger.debug('extracted file format from argument --file "%s"', cls.config['operation']['file']['type'])
+
+    @classmethod
+    def _filename(cls):
+        """Filename is set based user input, operation and content. For some
+        operations line import and export with defaults option, the filename
+        is updated automatically to point into correct location that stores
+        the default conte."""
+
+        filename = Config.source.filename
+
+        defaults = 'snippets.yaml'
+        template = 'snippet-template.txt'
+        if Config.is_category_solution():
+            defaults = 'solutions.yaml'
+            template = 'solution-template.txt'
+
+        # Run migrate operation with default content.
+        if cls.is_migrate_defaults():
+            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/default'), defaults)
+
+        # Run migrate operation with content template.
+        if cls.is_migrate_template():
+            filename = os.path.join('./', template)
+
+        # Run export operation with specified content without specifying
+        # the operation file.
+        if cls.is_operation_export() and cls.is_search_criteria():
+            if Config.is_category_snippet() and not filename:
+                filename = 'snippet.' + Const.CONTENT_TYPE_TEXT
+            elif Config.is_category_solution() and not filename:
+                filename = 'solution.' + Const.CONTENT_TYPE_TEXT
+
+        # In case user did not provide filename, set defaults. For example
+        # if user defined export or import operation without the file, the
+        # default files are used.
+        if not filename:
+            filename = os.path.join('./', defaults)
+
+        return filename
+
+    @classmethod
+    def _filetype(cls):
+        """Filetype makes sure that only supported content can be operated."""
+
+        filetype = Const.CONTENT_TYPE_NONE
+
+        # User defined content to/from user specified file.
+        name, extension = os.path.splitext(cls.filename)
+        if name and ('yaml' in extension or 'yml' in extension):
+            filetype = Const.CONTENT_TYPE_YAML
+        elif name and 'json' in extension:
+            filetype = Const.CONTENT_TYPE_JSON
+        elif name and ('txt' in extension or 'text' in extension):
+            filetype = Const.CONTENT_TYPE_TEXT
+        else:
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file {}'.format(cls.filename))
+
+        return filetype
 
     @classmethod
     def get_content(cls, content):
@@ -507,7 +562,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         # Use the content filename only in case of export operation and
         # when the user did not define the target file from command line.
-        filename = cls.config['operation']['file']['name']
+        filename = cls.filename
         if cls.is_operation_export() and content_filename and not Config.source.filename:
             filename = content_filename
 
@@ -517,19 +572,19 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def is_file_type_yaml(cls):
         """Test if file format is yaml."""
 
-        return True if cls.config['operation']['file']['type'] == Const.CONTENT_TYPE_YAML else False
+        return True if cls.filetype == Const.CONTENT_TYPE_YAML else False
 
     @classmethod
     def is_file_type_json(cls):
         """Test if file format is json."""
 
-        return True if cls.config['operation']['file']['type'] == Const.CONTENT_TYPE_JSON else False
+        return True if cls.filetype == Const.CONTENT_TYPE_JSON else False
 
     @classmethod
     def is_file_type_text(cls):
         """Test if file format is text."""
 
-        return True if cls.config['operation']['file']['type'] == Const.CONTENT_TYPE_TEXT else False
+        return True if cls.filetype == Const.CONTENT_TYPE_TEXT else False
 
     @classmethod
     def is_supported_file_format(cls):
@@ -601,51 +656,3 @@ class Config(object):  # pylint: disable=too-many-public-methods
                      content.get_key()))
 
         return content
-
-    @classmethod
-    def _parse_operation_file(cls):
-        """Return the filename and the format of the file."""
-
-        filename = Config.source.filename
-        filetype = Const.CONTENT_TYPE_NONE
-
-        defaults = 'snippets.yaml'
-        template = 'snippet-template.txt'
-        if Config.is_category_solution():
-            defaults = 'solutions.yaml'
-            template = 'solution-template.txt'
-
-        # Run migrate operation with default content.
-        if cls.is_migrate_defaults():
-            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/default'), defaults)
-
-        # Run migrate operation with content template.
-        if cls.is_migrate_template():
-            filename = os.path.join('./', template)
-
-        # Run export operation with specified content without specifying
-        # the operation file.
-        if cls.is_operation_export() and cls.is_search_criteria():
-            if Config.is_category_snippet() and not filename:
-                filename = 'snippet.' + Const.CONTENT_TYPE_TEXT
-            elif Config.is_category_solution() and not filename:
-                filename = 'solution.' + Const.CONTENT_TYPE_TEXT
-
-        # In case user did not provide filename, set defaults. For example
-        # if user defined export or import operation without the file, the
-        # default files are used.
-        if not filename:
-            filename = os.path.join('./', defaults)
-
-        # User defined content to/from user specified file.
-        name, extension = os.path.splitext(filename)
-        if name and ('yaml' in extension or 'yml' in extension):
-            filetype = Const.CONTENT_TYPE_YAML
-        elif name and 'json' in extension:
-            filetype = Const.CONTENT_TYPE_JSON
-        elif name and ('txt' in extension or 'text' in extension):
-            filetype = Const.CONTENT_TYPE_TEXT
-        else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file {}'.format(filename))
-
-        return (filename, filetype)

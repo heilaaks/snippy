@@ -117,30 +117,29 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         cls.logger.debug('config source: %s', source)
         cls.source = source
+        cls.brief = cls.source.brief
         cls.category = cls.source.category
-        cls.operation = cls.source.operation
-        cls.content = {}
-        cls.content['data'] = cls.source.data
-        cls.content['brief'] = cls.source.brief
-        cls.content['group'] = cls.source.group
-        cls.content['tags'] = cls.source.tags
-        cls.content['links'] = cls.source.links
-        cls.content['filename'] = cls.source.filename
-        cls.digest = cls.source.digest
-        cls.search = {}
-        cls.search['sall'] = cls.source.sall
-        cls.search['stag'] = cls.source.stag
-        cls.search['sgrp'] = cls.source.sgrp
-        cls.search['regexp'] = cls.source.regexp
-        cls.search['limit'] = cls.source.limit
-        cls.search['sfields'] = cls.source.sfields
-        cls.search['rfields'] = cls.source.rfields
-        cls.no_ansi = cls.source.no_ansi
+        cls.data = cls.source.data
         cls.defaults = cls.source.defaults
-        cls.template = cls.source.template
+        cls.digest = cls.source.digest
         cls.editor = cls.source.editor
-        cls.filename = cls._filename()
-        cls.filetype = cls._filetype()
+        cls.filename = cls.source.filename
+        cls.group = cls.source.group
+        cls.limit = cls.source.limit
+        cls.links = cls.source.links
+        cls.no_ansi = cls.source.no_ansi
+        cls.operation = cls.source.operation
+        cls.regexp = cls.source.regexp
+        cls.rfields = cls.source.rfields
+        cls.sall = cls.source.sall
+        cls.sfields = cls.source.sfields
+        cls.sgrp = cls.source.sgrp
+        cls.source = source
+        cls.stag = cls.source.stag
+        cls.tags = cls.source.tags
+        cls.template = cls.source.template
+        cls.operation_filename = cls._operation_filename()
+        cls.operation_filetype = cls._operation_filetype()
         cls._print_config()
 
     @classmethod
@@ -151,21 +150,22 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured storage schema: %s', cls.storage_schema)
         cls.logger.debug('configured content operation: %s', cls.operation)
         cls.logger.debug('configured content category: %s', cls.category)
-        cls.logger.debug('configured content data: %s', cls.content['data'])
-        cls.logger.debug('configured content brief: %s', cls.content['brief'])
-        cls.logger.debug('configured content group: %s', cls.content['group'])
-        cls.logger.debug('configured content tags: %s', cls.content['tags'])
-        cls.logger.debug('configured content links: %s', cls.content['links'])
+        cls.logger.debug('configured content data: %s', cls.data)
+        cls.logger.debug('configured content brief: %s', cls.brief)
+        cls.logger.debug('configured content group: %s', cls.group)
+        cls.logger.debug('configured content tags: %s', cls.tags)
+        cls.logger.debug('configured content links: %s', cls.links)
+        cls.logger.debug('configured content filename: %s', cls.filename)
         cls.logger.debug('configured operation digest: %s', cls.digest)
-        cls.logger.debug('configured operation filename: "%s"', cls.filename)
-        cls.logger.debug('configured operation file type: "%s"', cls.filetype)
-        cls.logger.debug('configured search all keywords: %s', cls.search['sall'])
-        cls.logger.debug('configured search tag keywords: %s', cls.search['stag'])
-        cls.logger.debug('configured search group keywords: %s', cls.search['sgrp'])
-        cls.logger.debug('configured search result filter: %s', cls.search['regexp'])
-        cls.logger.debug('configured search result limit: %s', cls.search['limit'])
-        cls.logger.debug('configured search result sorted field: %s', cls.search['sfields'])
-        cls.logger.debug('configured search result removed fields: %s', cls.search['rfields'])
+        cls.logger.debug('configured operation filename: "%s"', cls.operation_filename)
+        cls.logger.debug('configured operation file type: "%s"', cls.operation_filetype)
+        cls.logger.debug('configured search all keywords: %s', cls.sall)
+        cls.logger.debug('configured search tag keywords: %s', cls.stag)
+        cls.logger.debug('configured search group keywords: %s', cls.sgrp)
+        cls.logger.debug('configured search result filter: %s', cls.regexp)
+        cls.logger.debug('configured search result limit: %s', cls.limit)
+        cls.logger.debug('configured search result sorted field: %s', cls.sfields)
+        cls.logger.debug('configured search result removed fields: %s', cls.rfields)
         cls.logger.debug('configured option editor: %s', cls.editor)
         cls.logger.debug('configured option no_ansi: %s', cls.no_ansi)
         cls.logger.debug('configured option defaults: %s', cls.source.defaults)
@@ -173,11 +173,11 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured option server: %s', cls.server)
 
     @classmethod
-    def _filename(cls):
-        """Filename is set based user input, operation and content. For some
-        operations line import and export with defaults option, the filename
-        is updated automatically to point into correct location that stores
-        the default conte."""
+    def _operation_filename(cls):
+        """Operation filename is set based user input for content filename,
+        operation and content. For some operations like import and export
+        with defaults option cause the filename to be updated automatically
+        to point into correct location that stores e.g. the default content."""
 
         filename = Config.source.filename
 
@@ -212,13 +212,14 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return filename
 
     @classmethod
-    def _filetype(cls):
-        """Filetype makes sure that only supported content can be operated."""
+    def _operation_filetype(cls):
+        """Operation file type is extracted from operation fiel and it makes
+        sure that only supported content types can be operated."""
 
         filetype = Const.CONTENT_TYPE_NONE
 
         # User defined content to/from user specified file.
-        name, extension = os.path.splitext(cls.filename)
+        name, extension = os.path.splitext(cls.operation_filename)
         if name and ('yaml' in extension or 'yml' in extension):
             filetype = Const.CONTENT_TYPE_YAML
         elif name and 'json' in extension:
@@ -226,7 +227,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         elif name and ('txt' in extension or 'text' in extension):
             filetype = Const.CONTENT_TYPE_TEXT
         else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file {}'.format(cls.filename))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file {}'.format(cls.operation_filename))
 
         return filetype
 
@@ -389,31 +390,31 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_content_data(cls):
         """Return content data."""
 
-        return cls.content['data']
+        return cls.data
 
     @classmethod
     def get_content_brief(cls):
         """Return content brief description."""
 
-        return cls.content['brief']
+        return cls.brief
 
     @classmethod
     def get_content_group(cls):
         """Return content group."""
 
-        return cls.content['group']
+        return cls.group
 
     @classmethod
     def get_content_tags(cls):
         """Return content tags."""
 
-        return cls.content['tags']
+        return cls.tags
 
     @classmethod
     def get_content_links(cls):
         """Return content reference links."""
 
-        return cls.content['links']
+        return cls.links
 
     @classmethod
     def get_content_digest(cls):
@@ -466,25 +467,25 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_filename(cls):
         """Return content filename."""
 
-        return cls.content['filename']
+        return cls.filename
 
     @classmethod
     def is_search_all(cls):
         """Test if all fields are searched."""
 
-        return True if cls.search['sall'] else False
+        return True if cls.sall else False
 
     @classmethod
     def is_search_tag(cls):
         """Test if search is made from tags."""
 
-        return True if cls.search['stag'] else False
+        return True if cls.stag else False
 
     @classmethod
     def is_search_grp(cls):
         """Test if search is made from groups."""
 
-        return True if cls.search['sgrp'] else False
+        return True if cls.sgrp else False
 
     @classmethod
     def is_search_keywords(cls):
@@ -496,43 +497,43 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_search_all(cls):
         """Return list of search keywords for search all."""
 
-        return cls.search['sall']
+        return cls.sall
 
     @classmethod
     def get_search_tag(cls):
         """Return list of search keywords for search tags."""
 
-        return cls.search['stag']
+        return cls.stag
 
     @classmethod
     def get_search_grp(cls):
         """Return list of search keywords for search groups."""
 
-        return cls.search['sgrp']
+        return cls.sgrp
 
     @classmethod
     def get_search_filter(cls):
         """Return search filter."""
 
-        return cls.search['regexp']
+        return cls.regexp
 
     @classmethod
     def get_search_limit(cls):
         """Return search limit."""
 
-        return cls.search['limit']
+        return cls.limit
 
     @classmethod
     def get_sorted_fields(cls):
         """Return fields that are used to sort content."""
 
-        return cls.search['sfields']
+        return cls.sfields
 
     @classmethod
     def get_removed_fields(cls):
         """Return fields that are removed from content."""
 
-        return cls.search['rfields']
+        return cls.rfields
 
     @classmethod
     def is_editor(cls):
@@ -562,7 +563,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         # Use the content filename only in case of export operation and
         # when the user did not define the target file from command line.
-        filename = cls.filename
+        filename = cls.operation_filename
         if cls.is_operation_export() and content_filename and not Config.source.filename:
             filename = content_filename
 
@@ -572,19 +573,19 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def is_file_type_yaml(cls):
         """Test if file format is yaml."""
 
-        return True if cls.filetype == Const.CONTENT_TYPE_YAML else False
+        return True if cls.operation_filetype == Const.CONTENT_TYPE_YAML else False
 
     @classmethod
     def is_file_type_json(cls):
         """Test if file format is json."""
 
-        return True if cls.filetype == Const.CONTENT_TYPE_JSON else False
+        return True if cls.operation_filetype == Const.CONTENT_TYPE_JSON else False
 
     @classmethod
     def is_file_type_text(cls):
         """Test if file format is text."""
 
-        return True if cls.filetype == Const.CONTENT_TYPE_TEXT else False
+        return True if cls.operation_filetype == Const.CONTENT_TYPE_TEXT else False
 
     @classmethod
     def is_supported_file_format(cls):
@@ -613,12 +614,12 @@ class Config(object):  # pylint: disable=too-many-public-methods
         editor = Editor(content, Config.get_utc_time())
         editor.read_content()
         if editor.is_content_identified():
-            cls.content['data'] = editor.get_edited_data()
-            cls.content['brief'] = editor.get_edited_brief()
-            cls.content['group'] = editor.get_edited_group()
-            cls.content['tags'] = editor.get_edited_tags()
-            cls.content['links'] = editor.get_edited_links()
-            cls.content['filename'] = editor.get_edited_filename()
+            cls.data = editor.get_edited_data()
+            cls.brief = editor.get_edited_brief()
+            cls.group = editor.get_edited_group()
+            cls.tags = editor.get_edited_tags()
+            cls.links = editor.get_edited_links()
+            cls.filename = editor.get_edited_filename()
             content.set((cls.get_content_data(),
                          cls.get_content_brief(),
                          cls.get_content_group(),

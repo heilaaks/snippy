@@ -60,28 +60,34 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     def __init__(self, parameters=None):
         self._logger = Logger(__name__).get()
-        self._repr = Const.EMPTY
+        self._repr = self._get_repr()
         self.set_conf(parameters)
 
     def __repr__(self):
 
-        return self._repr
+        if hasattr(self, '_repr'):
+            repr_ = self._repr
 
-    def _set_repr(self):
-        """Set object representation."""
+        else:
+            repr_ = self._get_repr()
+
+        return repr_
+
+    def _get_repr(self):
+        """Get object representation."""
 
         namespace = []
         class_name = type(self).__name__
-        attributes = list(self.__dict__.keys())
-        attributes.remove('_logger')
-        attributes.remove('_repr')
+        attributes = tuple(set(self.__dict__.keys()) - set({'_logger', '_repr'}))
         # Optimization: For some reason using lstrip below to remove the
         # underscore that is always left, causes 2-3% performance penalty.
         # Using strip does not cause same effect.
         attributes = [attribute.strip('_') for attribute in attributes]
         for attribute in sorted(attributes):
             namespace.append('%s=%r' % (attribute, getattr(self, attribute)))
-        self._repr = '%s(%s)' % (class_name, ', '.join(namespace))
+        repr_ = '%s(%s)' % (class_name, ', '.join(namespace))
+
+        return repr_
 
     def set_conf(self, parameters):
         """Set API configuration parameters."""
@@ -89,8 +95,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         if not parameters:
             return
 
-        # Parameters that where the tool must be aware if the parameter
-        # was given at all must bed defined to None if no parameter set.
+        # There are few parameters like 'data' and 'digest' where the code
+        # error logic must know if these were given at all. These parameters
+        # must be set to None by default. All other parameters must have
+        # default value like empty list or string that makes sense.
         self.brief = parameters.get('brief', Const.EMPTY)
         self.category = parameters.get('category')
         self.data = parameters.get('data', None)
@@ -117,7 +125,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.template = parameters.get('template', False)
         self.version = parameters.get('version', __version__)
         self.very_verbose = parameters.get('very_verbose', False)
-        self._set_repr()
+        self._repr = self._get_repr()
 
     @property
     def data(self):

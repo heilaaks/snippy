@@ -67,7 +67,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         if hasattr(self, '_repr'):
             repr_ = self._repr
-
         else:
             repr_ = self._get_repr()
 

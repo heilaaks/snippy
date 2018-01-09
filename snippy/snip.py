@@ -58,11 +58,11 @@ class Snippy(object):
         self.logger.debug('running command line interface')
         cli = Cli()  # Exits e.g. in case only a support option like --help is used.
         Config.read_source(cli)
-        if Config.is_category_snippet():
+        if Config.is_category_snippet:
             Snippet(self.storage).run()
-        elif Config.is_category_solution():
+        elif Config.is_category_solution:
             Solution(self.storage).run()
-        elif Config.is_category_all() and Config.is_operation_search():
+        elif Config.is_category_all and Config.is_operation_search:
             Snippet(self.storage).run()
             Solution(self.storage).run()
         else:

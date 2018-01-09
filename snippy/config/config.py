@@ -138,6 +138,17 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.stag = cls.source.stag
         cls.tags = cls.source.tags
         cls.template = cls.source.template
+
+        # Parsed from defined configuration.
+        cls.is_operation_create = True if cls.operation == 'create' else False
+        cls.is_operation_search = True if cls.operation == 'search' else False
+        cls.is_operation_update = True if cls.operation == 'update' else False
+        cls.is_operation_delete = True if cls.operation == 'delete' else False
+        cls.is_operation_export = True if cls.operation == 'export' else False
+        cls.is_operation_import = True if cls.operation == 'import' else False
+        cls.is_category_snippet = True if cls.category == Const.SNIPPET else False
+        cls.is_category_solution = True if cls.category == Const.SOLUTION else False
+        cls.is_category_all = True if cls.category == Const.ALL else False
         cls.operation_filename = cls._operation_filename()
         cls.operation_filetype = cls._operation_filetype()
         cls._print_config()
@@ -168,8 +179,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured search result removed fields: %s', cls.rfields)
         cls.logger.debug('configured option editor: %s', cls.editor)
         cls.logger.debug('configured option no_ansi: %s', cls.no_ansi)
-        cls.logger.debug('configured option defaults: %s', cls.source.defaults)
-        cls.logger.debug('configured option template: %s', cls.source.template)
+        cls.logger.debug('configured option defaults: %s', cls.defaults)
+        cls.logger.debug('configured option template: %s', cls.template)
         cls.logger.debug('configured option server: %s', cls.server)
 
     @classmethod
@@ -183,24 +194,24 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         defaults = 'snippets.yaml'
         template = 'snippet-template.txt'
-        if Config.is_category_solution():
+        if Config.is_category_solution:
             defaults = 'solutions.yaml'
             template = 'solution-template.txt'
 
         # Run migrate operation with default content.
-        if cls.is_migrate_defaults():
+        if cls.defaults:
             filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/default'), defaults)
 
         # Run migrate operation with content template.
-        if cls.is_migrate_template():
+        if cls.template:
             filename = os.path.join('./', template)
 
         # Run export operation with specified content without specifying
         # the operation file.
-        if cls.is_operation_export() and cls.is_search_criteria():
-            if Config.is_category_snippet() and not filename:
+        if cls.is_operation_export and cls.is_search_criteria():
+            if Config.is_category_snippet and not filename:
                 filename = 'snippet.' + Const.CONTENT_TYPE_TEXT
-            elif Config.is_category_solution() and not filename:
+            elif Config.is_category_solution and not filename:
                 filename = 'solution.' + Const.CONTENT_TYPE_TEXT
 
         # In case user did not provide filename, set defaults. For example
@@ -310,72 +321,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         template = editor.get_template()
 
         return template
-
-    @classmethod
-    def is_operation_create(cls):
-        """Test if operation was create."""
-
-        return True if cls.operation == 'create' else False
-
-    @classmethod
-    def is_operation_search(cls):
-        """Test if operation was search."""
-
-        return True if cls.operation == 'search' else False
-
-    @classmethod
-    def is_operation_update(cls):
-        """Test if operation was update."""
-
-        return True if cls.operation == 'update' else False
-
-    @classmethod
-    def is_operation_delete(cls):
-        """Test if operation was delete."""
-
-        return True if cls.operation == 'delete' else False
-
-    @classmethod
-    def is_operation_export(cls):
-        """Test if operation was export."""
-
-        return True if cls.operation == 'export' else False
-
-    @classmethod
-    def is_operation_import(cls):
-        """Test if operation was import."""
-
-        return True if cls.operation == 'import' else False
-
-    @classmethod
-    def is_migrate_defaults(cls):
-        """Test if migrate operation was related to content defaults."""
-
-        return cls.source.defaults
-
-    @classmethod
-    def is_migrate_template(cls):
-        """Test if migrate operation was related to content template."""
-
-        return cls.source.template
-
-    @classmethod
-    def is_category_snippet(cls):
-        """Test if operation is applied to snippet category."""
-
-        return True if cls.category == Const.SNIPPET else False
-
-    @classmethod
-    def is_category_solution(cls):
-        """Test if operation is applied to solution category."""
-
-        return True if cls.category == Const.SOLUTION else False
-
-    @classmethod
-    def is_category_all(cls):
-        """Test if operation is applied to all content categories."""
-
-        return True if cls.category == 'all' else False
 
     @classmethod
     def set_category(cls, category):
@@ -564,7 +509,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # Use the content filename only in case of export operation and
         # when the user did not define the target file from command line.
         filename = cls.operation_filename
-        if cls.is_operation_export() and content_filename and not Config.source.filename:
+        if cls.is_operation_export and content_filename and not Config.source.filename:
             filename = content_filename
 
         return filename

@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """solution.py: Solution management."""
 
@@ -79,7 +96,7 @@ class Solution(object):
         """Export solutions."""
 
         filename = Config.get_operation_file()
-        if Config.is_migrate_template():
+        if Config.template:
             self.logger.debug('exporting solution template %s', Config.get_operation_file())
             Migrate.dump_template(Content())
         elif Config.is_search_criteria():
@@ -128,17 +145,17 @@ class Solution(object):
 
         self.logger.debug('managing solution')
         Config.set_category(Const.SOLUTION)
-        if Config.is_operation_create():
+        if Config.is_operation_create:
             self.create()
-        elif Config.is_operation_search():
+        elif Config.is_operation_search:
             solutions = self.search()
-        elif Config.is_operation_update():
+        elif Config.is_operation_update:
             self.update()
-        elif Config.is_operation_delete():
+        elif Config.is_operation_delete:
             self.delete()
-        elif Config.is_operation_export():
+        elif Config.is_operation_export:
             self.export_all()
-        elif Config.is_operation_import():
+        elif Config.is_operation_import:
             self.import_all()
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for solution')

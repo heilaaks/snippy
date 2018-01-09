@@ -176,7 +176,7 @@ class Cli(ConfigSourceBase):
         support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('--profile', action='store_true', default=False, help=argparse.SUPPRESS)
+        support.add_argument('--profile', dest='profiler', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--no-ansi', dest='no_ansi', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # server options

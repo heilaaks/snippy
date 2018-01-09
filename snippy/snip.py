@@ -36,12 +36,11 @@ class Snippy(object):
     def __init__(self):
         Logger.set_level()
         self.logger = Logger(__name__).get()
-        self.cause = Cause()
         self.config = Config()
+        self.cause = Cause()
         self.storage = Storage()
         self.migrate = Migrate()
         self.server = None
-        Config.init()
         self.storage.init()
 
     def run(self):
@@ -89,7 +88,6 @@ class Snippy(object):
 
         self.storage.disconnect()
         self.cause.reset()
-        self.config.reset()
         Logger.reset()
 
 

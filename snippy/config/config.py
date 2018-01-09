@@ -33,34 +33,18 @@ from snippy.logger.logger import Logger
 class Config(object):  # pylint: disable=too-many-public-methods
     """Global configuration management."""
 
-    source = None
     logger = None
-    config = {}
 
     def __init__(self):
         if not Config.logger:
             Config.logger = Logger(__name__).get()
         Config.source = None
-        Config.config = {}
-
-    @classmethod
-    def init(cls):
-        """Initialize configuration."""
-
-        # Separated from __init__ to ease mocking in tests.
-        cls.logger.debug('initialize storage config')
-        cls.storage_file = Config._storage_file()
-        cls.storage_schema = Config._storage_schema()
-        cls.server = Config._server()
-        cls.debug = Config._debug()
-        cls.profile = Config._profile()
-        cls.quiet = Config._quiet()
-
-    def reset(self):
-        """Reset configuration."""
-
-        self.__init__()
-        self.init()
+        Config.server = Config._server()
+        Config.debug = Config._debug()
+        Config.profiler = Config._profiler()
+        Config.quiet = Config._quiet()
+        Config.storage_file = Config._storage_file()
+        Config.storage_schema = Config._storage_schema()
 
     @classmethod
     def _storage_file(cls):
@@ -100,7 +84,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if '--debug' in sys.argv or '-vv' in sys.argv else False
 
     @classmethod
-    def _profile(cls):
+    def _profiler(cls):
         """Test if profiler is run."""
 
         return True if '--profile' in sys.argv else False

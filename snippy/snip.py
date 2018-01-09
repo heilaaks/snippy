@@ -21,7 +21,6 @@
 
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
-from snippy.migrate.migrate import Migrate
 from snippy.config.source.cli import Cli
 from snippy.config.config import Config
 from snippy.storage.storage import Storage
@@ -39,9 +38,7 @@ class Snippy(object):
         self.config = Config()
         self.cause = Cause()
         self.storage = Storage()
-        self.migrate = Migrate()
         self.server = None
-        self.storage.init()
 
     def run(self):
         """Run Snippy."""

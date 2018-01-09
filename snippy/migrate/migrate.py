@@ -24,22 +24,18 @@ import os.path
 import re
 import sys
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
-from snippy.metadata import __version__
-from snippy.metadata import __homepage__
-from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.logger.logger import Logger
+from snippy.metadata import __homepage__
+from snippy.metadata import __version__
 
 
 class Migrate(object):
     """Import and export management."""
 
-    logger = None
-
-    def __init__(self):
-        if not Migrate.logger:
-            Migrate.logger = Logger(__name__).get()
+    _logger = Logger(__name__).get()
 
     @classmethod
     def content(cls, contents, content_type):
@@ -82,13 +78,13 @@ class Migrate(object):
         #
         # /1/ https://stackoverflow.com/a/4233482
         if regexp and contents:
-            cls.logger.debug('apply search regexp filter to search query')
+            cls._logger.debug('apply search regexp filter to search query')
         if sorting and contents:
-            cls.logger.debug('apply search sorting filters to search query')
+            cls._logger.debug('apply search sorting filters to search query')
             for sort_column in reversed(sorting['order']):
                 contents = contents[0].sort_contents(contents, sort_column, sorting['value'][sort_column])
         if limit and contents:
-            cls.logger.debug('apply search limit %d filter to search query', limit)
+            cls._logger.debug('apply search limit %d filter to search query', limit)
             contents = contents[:limit]
 
         return contents
@@ -131,7 +127,7 @@ class Migrate(object):
         # $ snippy search --sall '--all' --filter crap | grep --all
         # $ snippy search --sall 'test' --filter test -vv | grep --all
         if text:
-            cls.logger.debug('printing content to terminal stdout')
+            cls._logger.debug('printing content to terminal stdout')
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
             print(text)
@@ -215,16 +211,16 @@ class Migrate(object):
         """Dump contents into file."""
 
         if not Config.is_supported_file_format():
-            cls.logger.debug('file format not supported for file %s', filename)
+            cls._logger.debug('file format not supported for file %s', filename)
 
             return
 
         if not contents:
-            cls.logger.debug('no content to be exported')
+            cls._logger.debug('no content to be exported')
 
             return
 
-        cls.logger.debug('exporting contents %s', filename)
+        cls._logger.debug('exporting contents %s', filename)
         with open(filename, 'w') as outfile:
             try:
                 dictionary = {'metadata': {'utc': Config.get_utc_time(),
@@ -246,9 +242,9 @@ class Migrate(object):
 
                     yaml.safe_dump(dictionary, outfile, default_flow_style=False)
                 else:
-                    cls.logger.debug('unknown export file format')
+                    cls._logger.debug('unknown export file format')
             except (IOError, TypeError, ValueError, yaml.YAMLError) as exception:
-                cls.logger.exception('fatal failure to generate formatted export file "%s"', exception)
+                cls._logger.exception('fatal failure to generate formatted export file "%s"', exception)
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting content to file')
 
     @classmethod
@@ -257,12 +253,12 @@ class Migrate(object):
 
         filename = Config.get_operation_file(content_filename=content.get_filename())
         template = Config.get_content_template(content)
-        cls.logger.debug('exporting content template %s', filename)
+        cls._logger.debug('exporting content template %s', filename)
         with open(filename, 'w') as outfile:
             try:
                 outfile.write(template)
             except IOError as exception:
-                cls.logger.exception('fatal failure in creating snippet template file "%s"', exception)
+                cls._logger.exception('fatal failure in creating snippet template file "%s"', exception)
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting template {}'.format(filename))
 
     @classmethod
@@ -271,11 +267,11 @@ class Migrate(object):
 
         dictionary = {}
         if not Config.is_supported_file_format():
-            cls.logger.debug('file format not supported for file %s', filename)
+            cls._logger.debug('file format not supported for file %s', filename)
 
             return dictionary
 
-        cls.logger.debug('importing contents from file %s', filename)
+        cls._logger.debug('importing contents from file %s', filename)
         if os.path.isfile(filename):
             with open(filename, 'r') as infile:
                 try:
@@ -291,9 +287,9 @@ class Migrate(object):
 
                         dictionary = yaml.safe_load(infile)
                     else:
-                        cls.logger.debug('unknown import file format')
+                        cls._logger.debug('unknown import file format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:
-                    cls.logger.exception('fatal exception while loading file "%s"', exception)
+                    cls._logger.exception('fatal exception while loading file "%s"', exception)
                     Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while importing content from file')
 
         else:

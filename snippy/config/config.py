@@ -34,6 +34,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
     """Global configuration management."""
 
     logger = None
+    storage_file = None
+    storage_schema = None
 
     def __init__(self):
         if not Config.logger:

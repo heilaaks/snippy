@@ -262,8 +262,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         sorted_dict = {}
         sorted_dict['order'] = []
         sorted_dict['value'] = {}
-        field_names = Parser.keywords(value, sort_=False)
-        for field in field_names:
+        fields = Parser.keywords(value, sort_=False)
+        for field in fields:
             try:
                 if field[0].startswith('-'):
                     index_ = self.ALL_FIELDS.index(field[1:])
@@ -275,6 +275,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
                     sorted_dict['value'][index_] = False
             except ValueError:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
+        self._logger.debug('config source sorted fields: %s', fields)
         self._logger.debug('config source internal format for sorted fields: %s', sorted_dict)
         self._sfields = sorted_dict  # pylint: disable=attribute-defined-outside-init
 

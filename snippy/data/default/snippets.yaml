@@ -537,7 +537,23 @@ content:
   - x-pack
   utc: '2017-12-05 06:49:47'
   versions: ''
+- brief: Perform recursive git status on subdirectories
+  category: snippet
+  data:
+  - find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e
+    \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
+  digest: 9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3
+  filename: ''
+  group: git
+  links:
+  - https://gist.github.com/tafkey/664266c00387c98631b3
+  runalias: ''
+  tags:
+  - git
+  - status
+  utc: '2018-01-11 07:59:46'
+  versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy
-  utc: '2017-12-21 12:02:06'
+  utc: '2018-01-11 08:00:33'
   version: 0.7.0

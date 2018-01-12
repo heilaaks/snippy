@@ -39,9 +39,72 @@ class Logger(object):
         # root level. The disabled flag will prevent even the critical level logs.
         logging.getLogger('snippy').disabled = True
         logging.getLogger('snippy').setLevel(logging.CRITICAL)
+        #logging.getLogger('snippy').propagate = False
         if '--debug' in sys.argv or '-vv' in sys.argv:
             logging.getLogger('snippy').disabled = False
             logging.getLogger('snippy').setLevel(logging.DEBUG)
+
+        # Prevent gunicorn logs
+        #logging.getLogger('gunicorn.error').disabled = True
+        #logging.getLogger('gunicorn.error').setLevel(logging.CRITICAL)
+        #if '--debug' in sys.argv or '-vv' in sys.argv:
+        #    logging.getLogger('gunicorn.error').disabled = False
+        #    logging.getLogger('gunicorn.error').setLevel(logging.DEBUG)
+
+            # Format Gunicorn logs.
+            #glogs = logging.getLogger('gunicorn.error')
+            #print(glogs)
+            #if glogs.hasHandlers():
+            #    print("DAA")
+            #    glogs.handlers.pop()
+            #print("passed")
+            #glogs.propagate = True
+            #log_format = '%(asctime)s %(process)d[%(lineno)04d] <%(levelno)s>: %(threadName)s@%(filename)-13s : %(message)s'
+            #formatter = CustomFormatter(log_format)
+            #handler = logging.StreamHandler(stream=sys.stdout)
+            #handler.setFormatter(formatter)
+            #glogs.addHandler(handler)
+
+            #Logger.debug()
+            #testing = logging.getLogger('gunicorn')
+            #testing.propagate = False
+            #testing = logging.getLogger('gunicorn.access')
+            #testing.propagate = False
+            
+    @staticmethod
+    def set_gunicorn_logging():
+        """Set gunicorn serever logging."""
+
+        # Format Gunicorn logs.
+        glogs = logging.getLogger('gunicorn.error')
+        print(glogs)
+        if glogs.hasHandlers():
+            print("DAA")
+            print("size %d" % len(glogs.handlers))
+            glogs.handlers.pop()
+            print("size %d" % len(glogs.handlers))
+        print("PASSED")
+        glogs.propagate = False
+        log_format = '%(asctime)s %(process)d[%(lineno)04d] <%(levelno)s>: %(threadName)s@%(filename)-13s : %(message)s'
+        formatter = CustomFormatter(log_format)
+        handler = logging.StreamHandler(stream=sys.stdout)
+        handler.setFormatter(formatter)
+        glogs.addHandler(handler)
+        Logger.debug()
+
+        glogs1 = logging.getLogger('gunicorn')
+        if glogs1.hasHandlers():
+            print("DAA2")
+        print("PASSED2")
+        glogs1.propagate = False
+        #glogs = logging.getLogger('gunicorn.access')
+        #print(glogs)
+        #if glogs.hasHandlers():
+        #    print("DAA")
+        #    print("size %d" % len(glogs.handlers))
+        #    glogs.handlers.pop()
+        #    print("size %d" % len(glogs.handlers))
+        #print("PASSED2")
 
     @staticmethod
     def reset():

@@ -31,4 +31,5 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route('/api/v1/hello', ApiHello())
         self.api.add_route('/api/v1/snippets', ApiSnippets(self.storage))
         self.api.add_route('/api/v1/snippets/{digest}', ApiSnippetsDigest(self.storage))
+        #Logger.set_gunicorn_logging()
         SnippyServer(self.api, options).run()

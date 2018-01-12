@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
-"""api_hello.py - JSON REST API for hello route."""
+"""gunicorn_server.py - Gunicorn server."""
 
 import gunicorn.app.base
 from gunicorn.six import iteritems
-
+from snippy.logger.logger import Logger
 
 class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abstract-method
     """Gunicor WSGI server."""
@@ -13,6 +13,7 @@ class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abst
         self.options = options or {}
         self.application = app
         super(GunicornServer, self).__init__()
+        #Logger.set_gunicorn_logging()
 
     def load_config(self):
         """Load configuration."""

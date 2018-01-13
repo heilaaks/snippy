@@ -24,9 +24,15 @@ import logging
 from random import getrandbits
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
 import sys
+import json
 try:
     from gunicorn.glogging import Logger as GunicornLogger
-except ImportError as exception:
+except ImportError:
+    pass
+
+try:
+    from collections import OrderedDict
+except ImportError:
     pass
 
 
@@ -37,7 +43,7 @@ class Logger(object):
     SERVER_OID = format(getrandbits(32), "08x")
 
     def __init__(self, module):
-        log_format = '%(asctime)s %(appName)s[%(process)04d] [%(oid)s] [%(levelname)-5s]: %(message)s'
+        log_format = '%(asctime)s %(appname)s[%(process)04d] [%(oid)s] [%(levelname)-5s]: %(message)s'
         self.logger = logging.getLogger(module)
         if not self.logger.handlers:
             formatter = CustomFormatter(log_format)
@@ -45,7 +51,7 @@ class Logger(object):
             handler.setFormatter(formatter)
             handler.addFilter(CustomFilter())
             self.logger.addHandler(handler)
-        self.logger = logging.LoggerAdapter(self.logger, {'appName': 'snippy', 'oid': Logger.SERVER_OID})
+        self.logger = logging.LoggerAdapter(self.logger, {'appname': 'snippy', 'oid': Logger.SERVER_OID})
 
     def get(self):
         """Return logger."""
@@ -109,10 +115,10 @@ class Logger(object):
 class CustomFormatter(logging.Formatter):
     """Custom log formatter."""
 
+    MAX_MSG = 150
+
     def format(self, record):
         """Format log string."""
-
-        max_log_string_length = 150
 
         # Note! Debug option prints the logs "as is" in full length. Very
         #       verbose option is intended for quick glance of logs when
@@ -120,14 +126,34 @@ class CustomFormatter(logging.Formatter):
         #
         # Note! The whole log string including log level name is forced to
         #       lower case in case of very verbose option.
-        #
-        record_string = super(CustomFormatter, self).format(record)
+        log_string = super(CustomFormatter, self).format(record)
         if '-vv' in sys.argv:
-            record_string = super(CustomFormatter, self).format(record).lower()
-            record_string = record_string.replace('\n', ' ').replace('\r', '')
-            record_string = record_string[:max_log_string_length] + (record_string[max_log_string_length:] and '...')
+            log_string = super(CustomFormatter, self).format(record).lower()
+            log_string = log_string.replace('\n', ' ').replace('\r', '')
+            log_string = log_string[:CustomFormatter.MAX_MSG] + (log_string[CustomFormatter.MAX_MSG:] and '...')
 
-        return record_string
+        if '--json-logs' in sys.argv:
+            log_string = self._jsonify(record)
+
+        return log_string
+
+    @staticmethod
+    def _jsonify(record):
+        """Create JSON from log record."""
+
+        try:
+            log = OrderedDict()
+        except NameError:
+            log = {}
+
+        fields = ['asctime', 'appname', 'process', 'oid', 'levelno', 'levelname', 'name', 'lineno', 'thread', 'message']
+        for field in fields:
+            log[field] = record.__dict__.get(field)
+
+        if '-vv' in sys.argv:
+            log['message'] = log['message'][:CustomFormatter.MAX_MSG] + (log['message'][CustomFormatter.MAX_MSG:] and '...')
+
+        return json.dumps(log)
 
 
 class CustomFilter(logging.Filter):  # pylint: disable=too-few-public-methods

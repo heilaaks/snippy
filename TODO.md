@@ -1,7 +1,5 @@
 ## TODO
-   - [ ] Fix newlines from gunicorn logs with -vv option that should result one line logs.
-   - [ ] Add JSON log format that contains also the module and line numbers.
-   - [ ] Remove the unused gunicorn loggers somehow.
+   - [ ] Try to get log string with UTC offset and msecs. This was not trivial since Logger did not support this easily. THere are ways. See the logger cookbook.
    - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
    - [ ] Fix set/get to properties for Config()
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
@@ -20,7 +18,6 @@
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix "If you want partial updates, use PATCH instead."
-   - [ ] Try to get log string with UTC offset and msecs. This was not trivial since Logger did not support this easily. THere are ways. See the logger cookbook.
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.
@@ -40,6 +37,7 @@
 
 ## BUBBLING UNDER
    - [ ] Changing self._data = data to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
+   - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json.
    - [ ] There is a pylint bug that it does not see see Python decorators being used with underscore // https://github.com/PyCQA/pylint/issues/409
    - [ ] See setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
    - [ ] Add setup.py longdescription from readme.rst. // https://github.com/pypa/sampleproject/blob/master/setup.py
@@ -66,6 +64,8 @@
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
 
 ## DONE
+   - [x] Added JSON formatted log output to stdout with --json-logs option.
+   - [x] Removed unused logging handlers under gunicorn namespace and quaranteed one line logs with -vv option.
    - [x] Added Gunicorn custom logger that routes the logs via Snippy.Logger.
    - [x] Fixed regular expression default. Empty string is valid regexp but accidetal empty tuple is not.
    - [x] Fixed the config base __repr__.

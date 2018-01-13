@@ -745,6 +745,11 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        
          > ... config source category: snippet
 
+    6. All other than error logs are always lower case
+    
+       All logs other than ERROR and CRITICAL are always printed with lower case
+       characters.
+
     THREADING
 
     1. The tool is single threaded

@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """api_snippets.py - JSON REST API for Snippets."""
 
@@ -42,6 +59,7 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
 
         Cause.reset()
+        Logger.reset_tid()
 
     def on_get(self, request, response):
         """Search snippets based on query parameters."""
@@ -60,6 +78,7 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
 
         Cause.reset()
+        Logger.reset_tid()
 
     def on_delete(self, request, response):
         """Delete snippet based on query parameters."""
@@ -76,6 +95,7 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
 
         Cause.reset()
+        Logger.reset_tid()
 
 
 class ApiSnippetsDigest(object):
@@ -104,6 +124,7 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
+        Logger.reset_tid()
 
     def on_get(self, _, response, digest):
         """Search snippet based on digest."""
@@ -123,6 +144,7 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
+        Logger.reset_tid()
 
     def on_delete(self, _, response, digest):
         """Delete snippet based on digest."""
@@ -140,3 +162,4 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
+        Logger.reset_tid()

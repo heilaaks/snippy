@@ -20,6 +20,7 @@
 """logger.py: Common logger for the tool."""
 
 from __future__ import print_function
+from random import getrandbits
 import sys
 import logging
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
@@ -32,17 +33,21 @@ except ImportError as exception:
 class Logger(object):
     """Logging wrapper."""
 
+    SERVER_TID = SERVER_TID = format(getrandbits(32), "08x")
+
     def __init__(self, module):
-        log_format = '%(asctime)s %(process)d[%(lineno)04d] <%(levelno)s>: %(threadName)s@%(filename)-13s : %(message)s'
+        log_format = '%(asctime)s %(appName)s[%(process)04d] [%(tid)s] [%(levelname)-5s]: %(message)s'
+
         self.logger = logging.getLogger(module)
         if not self.logger.handlers:
             formatter = CustomFormatter(log_format)
             handler = logging.StreamHandler(stream=sys.stdout)
             handler.setFormatter(formatter)
+            handler.addFilter(CustomFilter())
             self.logger.addHandler(handler)
             # Logger adapter has extended API over logger. The adapter
             # overriding the logger is intended behaviour here.
-            self.logger = logging.LoggerAdapter(self.logger, {'appName': 'snippy'})
+        self.logger = logging.LoggerAdapter(self.logger, {'appName': 'snippy', 'tid': Logger.SERVER_TID})
 
     def get(self):
         """Return logger."""
@@ -75,6 +80,12 @@ class Logger(object):
         logging.getLogger('snippy').disabled = True
         logging.getLogger('snippy').setLevel(logging.WARNING)
 
+    @classmethod
+    def reset_tid(cls):
+        """Reset transaction ID."""
+
+        Logger.SERVER_TID = format(getrandbits(32), "08x")
+
     @staticmethod
     def print_cause(cause):
         """Print exit cause for the tool."""
@@ -106,11 +117,22 @@ class CustomFormatter(logging.Formatter):
 
         # Option -vv gets all the logs but they are truncated. The --debug
         # option prints the full length logs.
-        record_string = super(CustomFormatter, self).format(record)
+        record_string = super(CustomFormatter, self).format(record).lower()
         if '--debug' not in sys.argv:
             record_string = record_string[:max_log_string_length] + (record_string[max_log_string_length:] and '...')
 
         return record_string
+
+
+class CustomFilter(logging.Filter):  # pylint: disable=too-few-public-methods
+    """Customer log filter."""
+
+    def filter(self, record):
+        """Filter with dynamic transaction ID setting."""
+
+        record.tid = Logger.SERVER_TID
+
+        return True
 
 
 class CustomGunicornLogger(GunicornLogger):

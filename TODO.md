@@ -3,6 +3,7 @@
    - [ ] Fix set/get to properties for Config()
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
    - [ ] Add more tests /api/v1/snippets.
+   - [ ] Add JSON log format that contains also the module and line numbers.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
@@ -12,11 +13,13 @@
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add support for /api/v1/solutions.
    - [ ] Fix logger setting with static/class classes like parser.py? this seems to call the logger instance only once?
+   - [ ] Fix newlines from gunicorn logs with -vv option that should result one line logs.
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix "If you want partial updates, use PATCH instead."
+   - [ ] Try to get log string with UTC offset and msecs. This was not trivial since Logger did not support this easily. THere are ways. See the logger cookbook.
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.

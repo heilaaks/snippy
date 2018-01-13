@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """logger.py: Common logger for the tool."""
 
@@ -6,6 +23,10 @@ from __future__ import print_function
 import sys
 import logging
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
+try:
+    from gunicorn.glogging import Logger as GunicornLogger
+except ImportError as exception:
+    pass
 
 
 class Logger(object):
@@ -37,74 +58,15 @@ class Logger(object):
         # it remains NOTSET. This causes module level logger to propagete the log
         # to higher levels where it ends up the 'snippy' level that is just below
         # root level. The disabled flag will prevent even the critical level logs.
+        #
+        # Note! The below manages also the Gunicorn server logs. There is a custom
+        #       logger set for the Gunicorn that sets the access and error logs
+        #       under snippy namespace.
         logging.getLogger('snippy').disabled = True
         logging.getLogger('snippy').setLevel(logging.CRITICAL)
-        #logging.getLogger('snippy').propagate = False
         if '--debug' in sys.argv or '-vv' in sys.argv:
             logging.getLogger('snippy').disabled = False
             logging.getLogger('snippy').setLevel(logging.DEBUG)
-
-        # Prevent gunicorn logs
-        #logging.getLogger('gunicorn.error').disabled = True
-        #logging.getLogger('gunicorn.error').setLevel(logging.CRITICAL)
-        #if '--debug' in sys.argv or '-vv' in sys.argv:
-        #    logging.getLogger('gunicorn.error').disabled = False
-        #    logging.getLogger('gunicorn.error').setLevel(logging.DEBUG)
-
-            # Format Gunicorn logs.
-            #glogs = logging.getLogger('gunicorn.error')
-            #print(glogs)
-            #if glogs.hasHandlers():
-            #    print("DAA")
-            #    glogs.handlers.pop()
-            #print("passed")
-            #glogs.propagate = True
-            #log_format = '%(asctime)s %(process)d[%(lineno)04d] <%(levelno)s>: %(threadName)s@%(filename)-13s : %(message)s'
-            #formatter = CustomFormatter(log_format)
-            #handler = logging.StreamHandler(stream=sys.stdout)
-            #handler.setFormatter(formatter)
-            #glogs.addHandler(handler)
-
-            #Logger.debug()
-            #testing = logging.getLogger('gunicorn')
-            #testing.propagate = False
-            #testing = logging.getLogger('gunicorn.access')
-            #testing.propagate = False
-            
-    @staticmethod
-    def set_gunicorn_logging():
-        """Set gunicorn serever logging."""
-
-        # Format Gunicorn logs.
-        glogs = logging.getLogger('gunicorn.error')
-        print(glogs)
-        if glogs.hasHandlers():
-            print("DAA")
-            print("size %d" % len(glogs.handlers))
-            glogs.handlers.pop()
-            print("size %d" % len(glogs.handlers))
-        print("PASSED")
-        glogs.propagate = False
-        log_format = '%(asctime)s %(process)d[%(lineno)04d] <%(levelno)s>: %(threadName)s@%(filename)-13s : %(message)s'
-        formatter = CustomFormatter(log_format)
-        handler = logging.StreamHandler(stream=sys.stdout)
-        handler.setFormatter(formatter)
-        glogs.addHandler(handler)
-        Logger.debug()
-
-        glogs1 = logging.getLogger('gunicorn')
-        if glogs1.hasHandlers():
-            print("DAA2")
-        print("PASSED2")
-        glogs1.propagate = False
-        #glogs = logging.getLogger('gunicorn.access')
-        #print(glogs)
-        #if glogs.hasHandlers():
-        #    print("DAA")
-        #    print("size %d" % len(glogs.handlers))
-        #    glogs.handlers.pop()
-        #    print("size %d" % len(glogs.handlers))
-        #print("PASSED2")
 
     @staticmethod
     def reset():
@@ -149,3 +111,12 @@ class CustomFormatter(logging.Formatter):
             record_string = record_string[:max_log_string_length] + (record_string[max_log_string_length:] and '...')
 
         return record_string
+
+
+class CustomGunicornLogger(GunicornLogger):
+    """Custom logger for Gunicorn WSGI HTTP server."""
+
+    def setup(self, cfg):
+        super(CustomGunicornLogger, self).setup(cfg)
+        self.error_log = Logger('snippy.server.gunicorn.error').get()
+        self.access_log = Logger('snippy.server.gunicorn.access').get()

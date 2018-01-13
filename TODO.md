@@ -2,7 +2,6 @@
    - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
    - [ ] Fix set/get to properties for Config()
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
-   - [ ] Add the Falcon logging to only from snippy logger. It also seems that Falcon blocks the logs during tests? All logs from Snippy logger - somehow?
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
@@ -21,6 +20,7 @@
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.
+   - [ ] Add the Falcon logger and exception handling through snippy logger.
    - [ ] Fix api performance test failure which leaves the server running and hanging.
    - [ ] Test URL encoded REST API queries. The same problem that was with %2C may be with other formats.
    - [ ] Add support to run with runalias.
@@ -62,6 +62,7 @@
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
 
 ## DONE
+   - [x] Added Gunicorn custom logger that routes the logs via Snippy.Logger.
    - [x] Fixed regular expression default. Empty string is valid regexp but accidetal empty tuple is not.
    - [x] Fixed the config base __repr__.
    - [x] Fixed REST API parameters separated with %2C like in 'fields=brief%2Ccategory'.

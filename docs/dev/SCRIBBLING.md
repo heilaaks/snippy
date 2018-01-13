@@ -739,16 +739,27 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        logs must be printed in DEBUG level.
 
     5. Variables printed in logs are seprated with colon
-    
+
        When variables are printed in logs, they must be separated with colon
        like in the example output below:
-       
+
          > ... config source category: snippet
 
-    6. All other than error logs are always lower case
-    
-       All logs other than ERROR and CRITICAL are always printed with lower case
-       characters.
+    6. All other than error logs are always printed in lower case
+
+       All logs strings other than ERROR and CRITICAL are always printed with all
+       lower case characters. This applies also also the log level name that is
+       usually in capital letters.
+
+    7. The debug option prints logs without modifications in full length
+
+       When --debug option is applied, the logs must be printed without any
+       modifications and filterings.
+
+    8. The very verbose option prints logs always in lower case one log per line
+
+       The -vv option prints always all logs one log per line and the whole
+       log string is in lower case.
 
     THREADING
 
@@ -791,18 +802,18 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        /2/ https://chris.beams.io/posts/git-commit/
 
     CONTENT
-    
+
     1. The tool must know if specific parameters were given
-    
+
        The tool must be aware if specific parameters were give at all. These
        parameters are:
-       
+
          - data
          - digest
          - sall
          - stag
          - sgrp
-    
+
        The default value for these parameters must be None or the must not
        exist in the parameter set that is give for set_conf in class inherited
        from ConfigSourceBase().

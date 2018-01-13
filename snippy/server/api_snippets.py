@@ -59,7 +59,7 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.reset_tid()
+        Logger.set_new_oid()
 
     def on_get(self, request, response):
         """Search snippets based on query parameters."""
@@ -78,7 +78,7 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.reset_tid()
+        Logger.set_new_oid()
 
     def on_delete(self, request, response):
         """Delete snippet based on query parameters."""
@@ -95,7 +95,7 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.reset_tid()
+        Logger.set_new_oid()
 
 
 class ApiSnippetsDigest(object):
@@ -124,7 +124,7 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.reset_tid()
+        Logger.set_new_oid()
 
     def on_get(self, _, response, digest):
         """Search snippet based on digest."""
@@ -144,7 +144,7 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.reset_tid()
+        Logger.set_new_oid()
 
     def on_delete(self, _, response, digest):
         """Delete snippet based on digest."""
@@ -162,4 +162,4 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.reset_tid()
+        Logger.set_new_oid()

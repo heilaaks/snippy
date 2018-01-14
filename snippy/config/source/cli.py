@@ -171,8 +171,8 @@ class Cli(ConfigSourceBase):
 
         # support options
         support = parser.add_argument_group(title='support options')
-        support.add_argument('-h', '--help', nargs=0, action=MyHelpAction, help=argparse.SUPPRESS)
-        support.add_argument('-v', '--version', nargs=0, action=MyVersionAction, help=argparse.SUPPRESS)
+        support.add_argument('-h', '--help', nargs=0, action=CustomHelpAction, help=argparse.SUPPRESS)
+        support.add_argument('-v', '--version', nargs=0, action=CustomVersionAction, help=argparse.SUPPRESS)
         support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
@@ -200,7 +200,7 @@ class Cli(ConfigSourceBase):
             parameters['editor'] = True
 
 
-class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
+class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """Customised argparse help to print examples."""
 
     def __call__(self, parser, namespace, values, option_string=None):
@@ -220,7 +220,7 @@ class MyHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
         parser.exit()
 
 
-class MyVersionAction(argparse.Action):  # pylint: disable=too-few-public-methods
+class CustomVersionAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """Customised argparse action class to print version always to stdout."""
 
     def __call__(self, parser, namespace, values, option_string=None):

@@ -36,6 +36,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     logger = None
     storage_file = None
     storage_schema = None
+    search_all_kws = ()
 
     def __init__(self):
         if not Config.logger:
@@ -125,9 +126,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.content_filename = cls.source.filename
 
         # Search
-        cls.sall = cls.source.sall
-        cls.stag = cls.source.stag
-        cls.sgrp = cls.source.sgrp
+        cls.search_all_kws = cls.source.sall
+        cls.search_tag_kws = cls.source.stag
+        cls.search_grp_kws = cls.source.sgrp
         cls.regexp = cls.source.regexp
         cls.limit = cls.source.limit
         cls.rfields = cls.source.rfields
@@ -172,9 +173,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured operation digest: %s', cls.operation_digest)
         cls.logger.debug('configured operation filename: "%s"', cls.operation_filename)
         cls.logger.debug('configured operation file type: "%s"', cls.operation_filetype)
-        cls.logger.debug('configured search all keywords: %s', cls.sall)
-        cls.logger.debug('configured search tag keywords: %s', cls.stag)
-        cls.logger.debug('configured search group keywords: %s', cls.sgrp)
+        cls.logger.debug('configured search all keywords: %s', cls.search_all_kws)
+        cls.logger.debug('configured search tag keywords: %s', cls.search_tag_kws)
+        cls.logger.debug('configured search group keywords: %s', cls.search_grp_kws)
         cls.logger.debug('configured search result filter: %s', cls.regexp)
         cls.logger.debug('configured search result limit: %s', cls.limit)
         cls.logger.debug('configured search result sorted field: %s', cls.sfields)
@@ -375,52 +376,28 @@ class Config(object):  # pylint: disable=too-many-public-methods
             Cause.push(Cause.HTTP_BAD_REQUEST, 'no message digest, content data or search keywords were provided')
 
     @classmethod
-    def get_filename(cls):
-        """Return content filename."""
-
-        return cls.content_filename
-
-    @classmethod
-    def is_search_all(cls):
-        """Test if all fields are searched."""
-
-        return True if cls.sall else False
-
-    @classmethod
-    def is_search_tag(cls):
-        """Test if search is made from tags."""
-
-        return True if cls.stag else False
-
-    @classmethod
-    def is_search_grp(cls):
-        """Test if search is made from groups."""
-
-        return True if cls.sgrp else False
-
-    @classmethod
     def is_search_keywords(cls):
         """Test if search is made with any search option."""
 
-        return True if cls.is_search_all() or cls.is_search_tag() or cls.is_search_grp() else False
+        return True if cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws else False
 
     @classmethod
     def get_search_all(cls):
         """Return list of search keywords for search all."""
 
-        return cls.sall
+        return cls.search_all_kws
 
     @classmethod
     def get_search_tag(cls):
         """Return list of search keywords for search tags."""
 
-        return cls.stag
+        return cls.search_tag_kws
 
     @classmethod
     def get_search_grp(cls):
         """Return list of search keywords for search groups."""
 
-        return cls.sgrp
+        return cls.search_grp_kws
 
     @classmethod
     def get_search_filter(cls):

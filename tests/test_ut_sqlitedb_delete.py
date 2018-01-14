@@ -17,8 +17,8 @@ class TestUtSqlite3dbDelete(object):
     @mock.patch.object(Cause, 'push')
     @mock.patch.object(Config, 'storage_file', Database.get_storage())
     @mock.patch.object(Config, 'storage_schema', Database.get_schema())
-    @mock.patch('snippy.config.config.Config.is_search_all', return_value=True)
-    def test_delete_snippet_short_digest(self, _, mock_cause_push):
+    @mock.patch.object(Config, 'search_all_kws', ('foo', 'engine', 'digitalocean'))
+    def test_delete_snippet_short_digest(self, mock_cause_push):
         """Delete snippet with short digest."""
 
         sqlite = Sqlite3Db()
@@ -49,8 +49,8 @@ class TestUtSqlite3dbDelete(object):
     @mock.patch.object(Cause, 'push')
     @mock.patch.object(Config, 'storage_file', Database.get_storage())
     @mock.patch.object(Config, 'storage_schema', Database.get_schema())
-    @mock.patch('snippy.config.config.Config.is_search_all', return_value=True)
-    def test_delete_snippet_long_digest(self, _, mock_cause_push):
+    @mock.patch.object(Config, 'search_all_kws', ('foo', 'engine', 'digitalocean'))
+    def test_delete_snippet_long_digest(self, mock_cause_push):
         """Delete snippet with long digest."""
 
         sqlite = Sqlite3Db()

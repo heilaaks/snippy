@@ -151,13 +151,13 @@ class Sqlite3Db(object):
             #    ORDER BY id ASC
             query = ()
             qargs = []
-            if sall and Config.is_search_all():
+            if sall and Config.search_all_kws:
                 columns = ['data', 'brief', 'groups', 'tags', 'links', 'digest']
                 query, qargs = Sqlite3Db._make_regexp_query(sall, columns, sgrp, category)
-            elif stag and Config.is_search_tag():
+            elif stag and Config.search_tag_kws:
                 columns = ['tags']
                 query, qargs = Sqlite3Db._make_regexp_query(stag, columns, sgrp, category)
-            elif sgrp and Config.is_search_grp():
+            elif sgrp and Config.search_grp_kws:
                 columns = ['groups']
                 query, qargs = Sqlite3Db._make_regexp_query(sgrp, columns, (), category)
             elif Config.is_content_digest() or digest:  # The later condition is for tool internal search based on digest.

@@ -22,14 +22,14 @@ class TestUtConfigCreate(unittest.TestCase):
         snippet = ((), '', Const.DEFAULT_GROUP, (), (), Const.SNIPPET, '', '', '', None, None, None, None)
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.category, str)
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_group(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert isinstance(obj.get_content_links(), tuple)
-        assert isinstance(obj.get_content_digest(), type(None))
-        assert isinstance(obj.get_filename(), str)
+        assert isinstance(obj.content_category, str)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_group, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert isinstance(obj.content_links, tuple)
+        assert isinstance(obj.content_filename, str)
+        assert isinstance(obj.operation_digest, type(None))
         assert isinstance(obj.get_search_all(), tuple)
         assert isinstance(obj.get_search_tag(), tuple)
         assert isinstance(obj.get_search_grp(), tuple)
@@ -45,18 +45,18 @@ class TestUtConfigCreate(unittest.TestCase):
         assert obj.is_category_snippet
         assert not obj.is_category_solution
         assert not obj.is_category_all
-        assert obj.category == Const.SNIPPET
-        assert not obj.get_content_data()
-        assert not obj.get_content_brief()
-        assert obj.get_content_group() == Const.DEFAULT_GROUP
-        assert not obj.get_content_tags()
-        assert not obj.get_content_links()
+        assert obj.content_category == Const.SNIPPET
+        assert not obj.content_data
+        assert not obj.content_brief
+        assert obj.content_group == Const.DEFAULT_GROUP
+        assert not obj.content_tags
+        assert not obj.content_links
         assert not obj.get_search_all()
         assert not obj.get_search_tag()
         assert not obj.get_search_grp()
-        assert obj.get_content_digest() is None
+        assert obj.operation_digest is None
         assert not obj.get_search_filter()
-        assert not obj.get_filename()
+        assert not obj.content_filename
         assert not obj.is_editor()
         assert obj.get_operation_file() == './snippets.yaml'
         assert obj.is_file_type_yaml()
@@ -71,12 +71,12 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content]
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        assert not obj.get_content_brief()
-        assert not obj.get_content_tags()
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert obj.content_data == tuple([content])
+        assert not obj.content_brief
+        assert not obj.content_tags
 
     def test_create_snippet_with_brief_but_no_tags(self):
         """Test that new snippet can be created with brief description but
@@ -87,12 +87,12 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief]
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        assert obj.get_content_brief() == brief
-        assert not obj.get_content_tags()
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert obj.content_data == tuple([content])
+        assert obj.content_brief == brief
+        assert not obj.content_tags
 
     def test_create_snippet_with_one_tag(self):
         """Test that new snippet can be created with a single tag."""
@@ -102,12 +102,12 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker']
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        assert not obj.get_content_brief()
-        self.assertTupleEqual(obj.get_content_tags(), tags)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert obj.content_data == tuple([content])
+        assert not obj.content_brief
+        self.assertTupleEqual(obj.content_tags, tags)
 
     def test_tags_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -118,12 +118,12 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup']
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        assert not obj.get_content_brief()
-        self.assertTupleEqual(obj.get_content_tags(), tags)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert obj.content_data == tuple([content])
+        assert not obj.content_brief
+        self.assertTupleEqual(obj.content_tags, tags)
 
     def test_tags_with_quotes_and_separated_by_comma_and_space(self):
         """Test that tags can be added inside quotes separated by comma and
@@ -138,16 +138,16 @@ class TestUtConfigCreate(unittest.TestCase):
                     '-l', links[0]]
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_group(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert isinstance(obj.get_content_links(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        assert obj.get_content_brief() == brief
-        assert obj.get_content_group() == group
-        self.assertTupleEqual(obj.get_content_tags(), tags)
-        self.assertTupleEqual(obj.get_content_links(), links)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_group, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert isinstance(obj.content_links, tuple)
+        assert obj.content_data == tuple([content])
+        assert obj.content_brief == brief
+        assert obj.content_group == group
+        self.assertTupleEqual(obj.content_tags, tags)
+        self.assertTupleEqual(obj.content_links, links)
 
     def test_tags_with_quotes_and_separated_by_only_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -158,11 +158,11 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker container cleanup']
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        self.assertTupleEqual(obj.get_content_tags(), tags)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert obj.content_data == tuple([content])
+        self.assertTupleEqual(obj.content_tags, tags)
 
     def test_tags_separated_by_space(self):
         """Test that tags can be added so that they are separated by spaces
@@ -173,11 +173,11 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup']
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        self.assertTupleEqual(obj.get_content_tags(), tags)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert obj.content_data == tuple([content])
+        self.assertTupleEqual(obj.content_tags, tags)
 
     def test_tags_separated_by_space_and_comma(self):
         """Test that tags can be added so that they are separated by comma
@@ -188,11 +188,11 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup']
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        self.assertTupleEqual(obj.get_content_tags(), tags)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert obj.content_data == tuple([content])
+        self.assertTupleEqual(obj.content_tags, tags)
 
     def test_tags_with_special_characters(self):
         """Test that tags are accepted if they contain special characters."""
@@ -202,12 +202,12 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        self.assertTupleEqual(obj.get_content_tags(), tags)
-        assert len(obj.get_content_tags()) == 3
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert obj.content_data == tuple([content])
+        self.assertTupleEqual(obj.content_tags, tags)
+        assert len(obj.content_tags) == 3
 
     def test_tags_provided_in_list(self):
         """Test that tags are accepted if the tags are elements in a list.
@@ -219,11 +219,11 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup']
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        self.assertTupleEqual(obj.get_content_tags(), tags)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert obj.content_data == tuple([content])
+        self.assertTupleEqual(obj.content_tags, tags)
 
     def test_links_separated_by_space(self):
         """Test that multiple links can be added by separating them with
@@ -237,14 +237,14 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', ' '.join(links)]
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert isinstance(obj.get_content_links(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        assert obj.get_content_brief() == brief
-        self.assertTupleEqual(obj.get_content_tags(), tags)
-        self.assertTupleEqual(obj.get_content_links(), links)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert isinstance(obj.content_links, tuple)
+        assert obj.content_data == tuple([content])
+        assert obj.content_brief == brief
+        self.assertTupleEqual(obj.content_tags, tags)
+        self.assertTupleEqual(obj.content_links, links)
 
     def test_links_separated_by_bar(self):
         """Test that multiple links can be added by separating them with
@@ -258,14 +258,14 @@ class TestUtConfigCreate(unittest.TestCase):
         sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', '|'.join(links)]
         obj = Config()
         obj.read_source(Cli())
-        assert isinstance(obj.get_content_data(), tuple)
-        assert isinstance(obj.get_content_brief(), str)
-        assert isinstance(obj.get_content_tags(), tuple)
-        assert isinstance(obj.get_content_links(), tuple)
-        assert obj.get_content_data() == tuple([content])
-        assert obj.get_content_brief() == brief
-        self.assertTupleEqual(obj.get_content_tags(), tags)
-        self.assertTupleEqual(obj.get_content_links(), links)
+        assert isinstance(obj.content_data, tuple)
+        assert isinstance(obj.content_brief, str)
+        assert isinstance(obj.content_tags, tuple)
+        assert isinstance(obj.content_links, tuple)
+        assert obj.content_data == tuple([content])
+        assert obj.content_brief == brief
+        self.assertTupleEqual(obj.content_tags, tags)
+        self.assertTupleEqual(obj.content_links, links)
 
     # pylint: disable=duplicate-code
     @classmethod

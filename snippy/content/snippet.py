@@ -58,8 +58,8 @@ class Snippet(object):
                                        sall=Config.get_search_all(),
                                        stag=Config.get_search_tag(),
                                        sgrp=Config.get_search_grp(),
-                                       digest=Config.get_content_digest(),
-                                       data=Config.get_content_data())
+                                       digest=Config.operation_digest,
+                                       data=Config.content_data)
         snippets = Migrate.content(snippets, self.content_type)
 
         return snippets
@@ -71,8 +71,8 @@ class Snippet(object):
                                        sall=Config.get_search_all(),
                                        stag=Config.get_search_tag(),
                                        sgrp=Config.get_search_grp(),
-                                       digest=Config.get_content_digest(),
-                                       data=Config.get_content_data())
+                                       digest=Config.operation_digest,
+                                       data=Config.content_data)
         if len(snippets) == 1:
             self.logger.debug('updating snippet with digest %.16s', snippets[0].get_digest())
             snippet = Config.get_content(content=snippets[0])
@@ -92,8 +92,8 @@ class Snippet(object):
                                        sall=Config.get_search_all(),
                                        stag=Config.get_search_tag(),
                                        sgrp=Config.get_search_grp(),
-                                       digest=Config.get_content_digest(),
-                                       data=Config.get_content_data())
+                                       digest=Config.operation_digest,
+                                       data=Config.content_data)
         if len(snippets) == 1:
             self.logger.debug('deleting snippet with digest %.16s', snippets[0].get_digest())
             self.storage.delete(snippets[0].get_digest())
@@ -113,8 +113,8 @@ class Snippet(object):
                                            sall=Config.get_search_all(),
                                            stag=Config.get_search_tag(),
                                            sgrp=Config.get_search_grp(),
-                                           digest=Config.get_content_digest(),
-                                           data=Config.get_content_data())
+                                           digest=Config.operation_digest,
+                                           data=Config.content_data)
             if len(snippets) == 1:
                 filename = Config.get_operation_file(content_filename=snippets[0].get_filename())
             elif not snippets:
@@ -128,7 +128,7 @@ class Snippet(object):
     def import_all(self):
         """Import snippets."""
 
-        content_digest = Config.get_content_digest()
+        content_digest = Config.operation_digest
         if content_digest:
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
             if len(snippets) == 1:

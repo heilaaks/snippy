@@ -163,7 +163,7 @@ class Sqlite3Db(object):
             elif Config.is_content_digest() or digest:  # The later condition is for tool internal search based on digest.
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
                 qargs = [digest+'%']
-            elif Config.get_content_data():
+            elif Config.content_data:
                 query = ('SELECT * FROM contents WHERE data LIKE ?')
                 qargs = ['%'+Const.DELIMITER_DATA.join(map(str, data))+'%']
             else:

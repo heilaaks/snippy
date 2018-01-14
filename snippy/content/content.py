@@ -15,13 +15,13 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def __init__(self, content=None, category=None):
         self.logger = Logger(__name__).get()
         if content is None:
-            self.content = (Config.get_content_data(),
-                            Config.get_content_brief(),
-                            Config.get_content_group(),
-                            Config.get_content_tags(),
-                            Config.get_content_links(),
-                            Config.category,
-                            Config.get_filename(),
+            self.content = (Config.content_data,
+                            Config.content_brief,
+                            Config.content_group,
+                            Config.content_tags,
+                            Config.content_links,
+                            Config.content_category,
+                            Config.content_filename,
                             Const.EMPTY,  # runalias
                             Const.EMPTY,  # versions
                             None,  # utc

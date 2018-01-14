@@ -55,8 +55,8 @@ class Solution(object):
                                         sall=Config.get_search_all(),
                                         stag=Config.get_search_tag(),
                                         sgrp=Config.get_search_grp(),
-                                        digest=Config.get_content_digest(),
-                                        data=Config.get_content_data())
+                                        digest=Config.operation_digest,
+                                        data=Config.content_data)
         solutions = Migrate.content(solutions, self.content_type)
 
         return solutions
@@ -68,8 +68,8 @@ class Solution(object):
                                         sall=Config.get_search_all(),
                                         stag=Config.get_search_tag(),
                                         sgrp=Config.get_search_grp(),
-                                        digest=Config.get_content_digest(),
-                                        data=Config.get_content_data())
+                                        digest=Config.operation_digest,
+                                        data=Config.content_data)
         if len(solutions) == 1:
             self.logger.debug('updating solution with digest %.16s', solutions[0].get_digest())
             solution = Config.get_content(content=solutions[0])
@@ -84,8 +84,8 @@ class Solution(object):
                                         sall=Config.get_search_all(),
                                         stag=Config.get_search_tag(),
                                         sgrp=Config.get_search_grp(),
-                                        digest=Config.get_content_digest(),
-                                        data=Config.get_content_data())
+                                        digest=Config.operation_digest,
+                                        data=Config.content_data)
         if len(solutions) == 1:
             self.logger.debug('deleting solution with digest %.16s', solutions[0].get_digest())
             self.storage.delete(solutions[0].get_digest())
@@ -105,8 +105,8 @@ class Solution(object):
                                             sall=Config.get_search_all(),
                                             stag=Config.get_search_tag(),
                                             sgrp=Config.get_search_grp(),
-                                            digest=Config.get_content_digest(),
-                                            data=Config.get_content_data())
+                                            digest=Config.operation_digest,
+                                            data=Config.content_data)
             if len(solutions) == 1:
                 filename = Config.get_operation_file(content_filename=solutions[0].get_filename())
             elif not solutions:
@@ -120,7 +120,7 @@ class Solution(object):
     def import_all(self):
         """Import solutions."""
 
-        content_digest = Config.get_content_digest()
+        content_digest = Config.operation_digest
         if content_digest:
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
             if len(solutions) == 1:

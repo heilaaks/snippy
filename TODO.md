@@ -1,8 +1,6 @@
 ## TODO
-   - [ ] Try to get log string with UTC offset and msecs. This was not trivial since Logger did not support this easily. THere are ways. See the logger cookbook.
    - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
    - [ ] Fix set/get to properties for Config()
-   - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
@@ -13,6 +11,7 @@
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add support for /api/v1/solutions.
    - [ ] Fix logger setting with static/class classes like parser.py? this seems to call the logger instance only once?
+   - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
@@ -21,6 +20,7 @@
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] Update documents.
+   - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
    - [ ] Add the Falcon logger and exception handling through snippy logger.
    - [ ] Fix api performance test failure which leaves the server running and hanging.
    - [ ] Test URL encoded REST API queries. The same problem that was with %2C may be with other formats.
@@ -60,10 +60,12 @@
    - [ ] Why when in Python2 a database test fails, it leaves hanging resources and DB clean does not work? Was this fixed into sqlite3_helper already?
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
-## FOLLOW EXTERNAL BUGS
+## FOLLOW EXTERNAL BUGS/ISSUES
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
+   - [ ] Python logging is not following ISO8601 format and it cannot have timezone.
 
 ## DONE
+   - [x] Added GMT time and ISO8601 format to JSON logs.
    - [x] Added JSON formatted log output to stdout with --json-logs option.
    - [x] Removed unused logging handlers under gunicorn namespace and quaranteed one line logs with -vv option.
    - [x] Added Gunicorn custom logger that routes the logs via Snippy.Logger.

@@ -20,10 +20,11 @@
 """logger.py: Common logging."""
 
 from __future__ import print_function
-import logging
 from random import getrandbits
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
+import logging
 import sys
+import time
 import json
 try:
     from gunicorn.glogging import Logger as GunicornLogger
@@ -37,7 +38,48 @@ except ImportError:
 
 
 class Logger(object):
-    """Common logging."""
+    """Logging methods and rules for Snippy.
+
+    Description
+    ===========
+
+      There are two levels of logging verbosity. All logs are printed without
+      filtering and formatting with --debug option. The -vv (very verbose)
+      option guarantees one log per line with all lower case characters.
+
+      There are two formats for logs. The default is text string. The option
+      --json-logs option logs to be formatted as JSON strings one log per line.
+      The JSON string contains more information fields than the default text
+      log. The --json-logs option must be used with --debug or -vv option.
+      If used with -vv option, the message field is trucated in the same way
+      than with text string.
+
+      Timestamp is in local time with default text log string. In case of JSON
+      logs, the timestamp is in GMT time zone and it follows strictly the
+      ISO8601 format.
+
+      Logs contain operation ID that uniquely identifies logs for specific
+      operation. This must be refreshed by user after operation is completed.
+
+      Gunicorn server logs are formatted to match log format defined in this
+      logger.
+
+      All logs are printed to stdout.
+
+    Logging Rules
+    =============
+
+      1. Only OK or NOK with cause text must be printed with defauls.
+      2. There must be no logs printed to user.
+      3. There must be no exceptions printed to user.
+      4. Logs from exceptions are printed is INFO - all other logs is DEBUG.
+      5. Variables printed in logs must be seprated with colon.
+      6. All other than error logs must be printed in lower case string.
+      7. The --debug option must print logs without modifications in full length.
+      8. The -vv option must print logs in lower case and one log per line.
+      9. All extral libraries must be configured to follow same logging format.
+      10. All logs must be printed to stdout.
+    """
 
     # Unique operation ID that identifies logs for each operation.
     SERVER_OID = format(getrandbits(32), "08x")
@@ -62,16 +104,18 @@ class Logger(object):
     def set_level():
         """Set log level."""
 
-        # Set the log level for all the loggers created under the 'snippy' logger.
-        # namespace. This relies on that the module level logger does not set the
-        # level and it remains as NOTSET. This causes module level logger to
-        # propagete the log to parent where the log record propagates tp the
-        # 'snippy' level that is just below root level. The disabled flag will
-        # prevent even the critical level logs.
+        # Set the effective log level for all the loggers created under
+        # 'snippy' logger namespace. This relies on that the module level
+        # logger does not set the level and it remains as NOTSET. This
+        # causes module level logger to propagete the log record to parent
+        # logger where it eventually reaches the 'snippy' level that is
+        # just below the 'root' level logger.
         #
-        # Note! The below settings manage also the Gunicorn server logs. There
-        #       is a custom logger set for the Gunicorn that causes the Gunicorn
-        #       logs to be formatted by this logger class.
+        # The 'disabled' flag prevents also the critical level logs.
+        #
+        # Note! The below settings manage also the Gunicorn server logs.
+        #       There is a custom logger set that causes the Gunicorn logs
+        #       to be formatted by Snippy logging framework.
         logging.getLogger('snippy').disabled = True
         logging.getLogger('snippy').setLevel(logging.CRITICAL)
         if '--debug' in sys.argv or '-vv' in sys.argv:
@@ -82,12 +126,18 @@ class Logger(object):
     def set_new_oid(cls):
         """Set new operation ID."""
 
-        Logger.SERVER_OID = format(getrandbits(32), "08x")
+        cls.SERVER_OID = format(getrandbits(32), "08x")
 
     @staticmethod
     def print_cause(cause):
         """Print exit cause."""
 
+        # The signal handler manipulation and the flush below prevent the
+        # 'broken pipe' errors with grep. For example incorrect parameter
+        # usage in grep may cause this. /1,2/
+        #
+        # /1/ https://stackoverflow.com/a/16865106
+        # /2/ https://stackoverflow.com/a/26738736
         if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
             Logger(__name__).get().info('exiting with cause %s', cause.lower())
         elif '-q' not in sys.argv:
@@ -113,33 +163,49 @@ class Logger(object):
 
 
 class CustomFormatter(logging.Formatter):
-    """Custom log formatter."""
+    """Custom log formatting."""
 
     MAX_MSG = 150
+    gmttime = True if '--json-logs' in sys.argv else False
+    converter = time.gmtime if gmttime else time.localtime
+    dateformat = '%Y-%m-%dT%H:%M:%S' if gmttime else '%Y-%m-%d %H:%M:%S'
 
     def format(self, record):
         """Format log string."""
 
-        # Note! Debug option prints the logs "as is" in full length. Very
-        #       verbose option is intended for quick glance of logs when
-        #       there is always one log per line.
-        #
-        # Note! The whole log string including log level name is forced to
-        #       lower case in case of very verbose option.
-        log_string = super(CustomFormatter, self).format(record)
-        if '-vv' in sys.argv:
+        # Debug option prints logs "as is" in full length. Very verbose
+        # option truncates logs and quarantees only one log per line
+        # with all lower case characters.
+        if '--json-logs' in sys.argv:
+            log_string = super(CustomFormatter, self).format(record)
+            log_string = self._jsonify(record)
+        elif '-vv' in sys.argv:
             log_string = super(CustomFormatter, self).format(record).lower()
             log_string = log_string.replace('\n', ' ').replace('\r', '')
             log_string = log_string[:CustomFormatter.MAX_MSG] + (log_string[CustomFormatter.MAX_MSG:] and '...')
-
-        if '--json-logs' in sys.argv:
-            log_string = self._jsonify(record)
+        else:
+            log_string = super(CustomFormatter, self).format(record)
 
         return log_string
 
+    def formatTime(self, record, datefmt=None):
+        """Format log timestamp."""
+
+        # JSON logs are printed in ISO8601 format with UTC timestamps. All
+        # other logs are printed in local time with space between date and
+        # time instead of 'T' that is required by ISO8601.
+        created = self.converter(record.created)
+        timstamp = time.strftime(self.dateformat, created)
+        if self.gmttime:
+            time_string = '%s.%03dZ' % (timstamp, record.msecs)
+        else:
+            time_string = '%s.%03d' % (timstamp, record.msecs)
+
+        return time_string
+
     @staticmethod
     def _jsonify(record):
-        """Create JSON from log record."""
+        """Create JSON string from log record."""
 
         try:
             log = OrderedDict()

@@ -144,7 +144,7 @@ class Solution(object):
         solutions = Const.EMPTY
 
         self.logger.debug('managing solution')
-        Config.set_category(Const.SOLUTION)
+        Config.content_category = Const.SOLUTION
         if Config.is_operation_create:
             self.create()
         elif Config.is_operation_search:

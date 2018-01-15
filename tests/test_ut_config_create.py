@@ -59,10 +59,10 @@ class TestUtConfigCreate(unittest.TestCase):
         assert not obj.content_filename
         assert not obj.editor
         assert obj.get_operation_file() == './snippets.yaml'
-        assert obj.is_file_type_yaml()
-        assert not obj.is_file_type_json()
-        assert not obj.is_file_type_text()
-        assert obj.use_ansi()
+        assert obj.is_operation_file_yaml
+        assert not obj.is_operation_file_json
+        assert not obj.is_operation_file_text
+        assert obj.use_ansi
 
     def test_create_snippet_without_optional_arguments(self):
         """Test that new snippet can be created without optional arguments."""

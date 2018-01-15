@@ -152,7 +152,7 @@ class Snippet(object):
         snippets = Const.EMPTY
 
         self.logger.debug('managing snippet')
-        Config.set_category(Const.SNIPPET)
+        Config.content_category = Const.SNIPPET
         if Config.is_operation_create:
             snippets = self.create()
         elif Config.is_operation_search:

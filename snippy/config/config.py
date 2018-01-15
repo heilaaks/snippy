@@ -131,8 +131,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.search_grp_kws = cls.source.sgrp
         cls.search_filter = cls.source.regexp
         cls.search_limit = cls.source.limit
-        cls.rfields = cls.source.rfields
-        cls.sfields = cls.source.sfields
+        cls.remove_fields = cls.source.rfields
+        cls.sorted_fields = cls.source.sfields
 
         # Migrate
         cls.defaults = cls.source.defaults
@@ -140,7 +140,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         # Options
         cls.editor = cls.source.editor
-        cls.no_ansi = cls.source.no_ansi
+        cls.use_ansi = not cls.source.no_ansi
 
         # Parsed from defined configuration.
         cls.is_operation_create = True if cls.operation == 'create' else False
@@ -154,6 +154,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.is_category_all = True if cls.content_category == Const.ALL else False
         cls.operation_filename = cls._operation_filename()
         cls.operation_filetype = cls._operation_filetype()
+        cls.is_operation_file_json = True if cls.operation_filetype == Const.CONTENT_TYPE_JSON else False
+        cls.is_operation_file_text = True if cls.operation_filetype == Const.CONTENT_TYPE_TEXT else False
+        cls.is_operation_file_yaml = True if cls.operation_filetype == Const.CONTENT_TYPE_YAML else False
         cls._print_config()
 
     @classmethod
@@ -178,10 +181,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured search group keywords: %s', cls.search_grp_kws)
         cls.logger.debug('configured search result filter: %s', cls.search_filter)
         cls.logger.debug('configured search result limit: %s', cls.search_limit)
-        cls.logger.debug('configured search result sorted field: %s', cls.sfields)
-        cls.logger.debug('configured search result removed fields: %s', cls.rfields)
+        cls.logger.debug('configured search result sorted field: %s', cls.sorted_fields)
+        cls.logger.debug('configured search result removed fields: %s', cls.remove_fields)
         cls.logger.debug('configured option editor: %s', cls.editor)
-        cls.logger.debug('configured option no_ansi: %s', cls.no_ansi)
+        cls.logger.debug('configured option use_ansi: %s', cls.use_ansi)
         cls.logger.debug('configured option defaults: %s', cls.defaults)
         cls.logger.debug('configured option template: %s', cls.template)
         cls.logger.debug('configured option server: %s', cls.server)
@@ -326,15 +329,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return template
 
     @classmethod
-    def set_category(cls, category):
-        """Set content category."""
-
-        if category == Const.SOLUTION:
-            cls.content_category = Const.SOLUTION
-        else:
-            cls.content_category = Const.SNIPPET
-
-    @classmethod
     def validate_search_context(cls, contents, operation):  # pylint: disable=too-many-branches
         """Validate content search context."""
 
@@ -382,18 +376,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws else False
 
     @classmethod
-    def get_sorted_fields(cls):
-        """Return fields that are used to sort content."""
-
-        return cls.sfields
-
-    @classmethod
-    def get_removed_fields(cls):
-        """Return fields that are removed from content."""
-
-        return cls.rfields
-
-    @classmethod
     def is_content_digest(cls):
         """Test if content digest was defined from command line."""
 
@@ -422,34 +404,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return filename
 
     @classmethod
-    def is_file_type_yaml(cls):
-        """Test if file format is yaml."""
-
-        return True if cls.operation_filetype == Const.CONTENT_TYPE_YAML else False
-
-    @classmethod
-    def is_file_type_json(cls):
-        """Test if file format is json."""
-
-        return True if cls.operation_filetype == Const.CONTENT_TYPE_JSON else False
-
-    @classmethod
-    def is_file_type_text(cls):
-        """Test if file format is text."""
-
-        return True if cls.operation_filetype == Const.CONTENT_TYPE_TEXT else False
-
-    @classmethod
     def is_supported_file_format(cls):
         """Test if file format is supported."""
 
-        return True if cls.is_file_type_yaml() or cls.is_file_type_json() or cls.is_file_type_text() else False
-
-    @classmethod
-    def use_ansi(cls):
-        """Test if ANSI characters like colors are disabled in the command output."""
-
-        return not cls.no_ansi
+        return True if cls.is_operation_file_yaml or cls.is_operation_file_json or cls.is_operation_file_text else False
 
     @staticmethod
     def get_utc_time():

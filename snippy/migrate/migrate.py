@@ -64,7 +64,7 @@ class Migrate(object):
 
         regexp = Config.search_filter
         limit = Config.search_limit
-        sorting = Config.get_sorted_fields()
+        sorting = Config.sorted_fields
 
         # The design is that the first regexp query is applied to reduce the
         # content list. Then the remaining contents are first sorted and then
@@ -107,7 +107,7 @@ class Migrate(object):
                 text = Const.NEWLINE.join(match) + Const.NEWLINE
                 Migrate.print_stdout(text)
         else:
-            text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi(), debug=Config.debug)
+            text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi, debug=Config.debug)
             Migrate.print_stdout(text)
 
         return text
@@ -227,17 +227,17 @@ class Migrate(object):
                                            'version': __version__,
                                            'homepage': __homepage__},
                               'content': Migrate.get_dictionary_list(contents)}
-                if Config.is_file_type_text():
+                if Config.is_operation_file_text:
                     for content in contents:
                         template = Config.get_content_template(content)
                         outfile.write(template)
                         outfile.write(Const.NEWLINE)
-                elif Config.is_file_type_json():
+                elif Config.is_operation_file_json:
                     import json
 
                     json.dump(dictionary, outfile)
                     outfile.write(Const.NEWLINE)
-                elif Config.is_file_type_yaml():
+                elif Config.is_operation_file_yaml:
                     import yaml
 
                     yaml.safe_dump(dictionary, outfile, default_flow_style=False)
@@ -275,14 +275,14 @@ class Migrate(object):
         if os.path.isfile(filename):
             with open(filename, 'r') as infile:
                 try:
-                    if Config.is_file_type_text():
+                    if Config.is_operation_file_text:
                         contents = Config.get_text_contents(content, infile.read())
                         dictionary = {'content': Migrate.get_dictionary_list(contents)}
-                    elif Config.is_file_type_json():
+                    elif Config.is_operation_file_json:
                         import json
 
                         dictionary = json.load(infile)
-                    elif Config.is_file_type_yaml():
+                    elif Config.is_operation_file_yaml:
                         import yaml
 
                         dictionary = yaml.safe_load(infile)
@@ -402,7 +402,7 @@ class Migrate(object):
                       'utc': content.get_utc(),
                       'digest': content.get_digest()}
 
-        fields = Config.get_removed_fields()
+        fields = Config.remove_fields
         for field in fields:
             dictionary.pop(field, None)
 

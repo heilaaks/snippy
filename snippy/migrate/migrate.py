@@ -62,8 +62,8 @@ class Migrate(object):
     def apply_filters(cls, contents):
         """Apply filter, limit and sorting parameters to content."""
 
-        regexp = Config.get_search_filter()
-        limit = Config.get_search_limit()
+        regexp = Config.search_filter
+        limit = Config.search_limit
         sorting = Config.get_sorted_fields()
 
         # The design is that the first regexp query is applied to reduce the
@@ -74,7 +74,7 @@ class Migrate(object):
         # Sorting with multiple parameters is complicated and not fully understood.
         # Based on /1/ the logic is to reverse the order of parameters given by
         # user and then run the sort for each column in reversed order. This seems
-        # to work but currently cannot be quaranteed to be 100% correct.
+        # to work but currently cannot be guaranteed to be 100% correct.
         #
         # /1/ https://stackoverflow.com/a/4233482
         if regexp and contents:
@@ -97,10 +97,10 @@ class Migrate(object):
         if not contents:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
 
-        regexp = Config.get_search_filter()
+        regexp = Config.search_filter
         if regexp:
             # In case user provided regexp filter, the ANSI control characters for
-            # colors are not used in order to make the filter work as exptected.
+            # colors are not used in order to make the filter work as expected.
             text = Migrate.get_terminal_text(contents, ansi=False)
             match = re.findall(regexp, text)
             if match:

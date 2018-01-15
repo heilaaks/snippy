@@ -55,9 +55,9 @@ class Snippet(object):
 
         self.logger.debug('searching snippets')
         snippets = self.storage.search(Const.SNIPPET,
-                                       sall=Config.get_search_all(),
-                                       stag=Config.get_search_tag(),
-                                       sgrp=Config.get_search_grp(),
+                                       sall=Config.search_all_kws,
+                                       stag=Config.search_tag_kws,
+                                       sgrp=Config.search_grp_kws,
                                        digest=Config.operation_digest,
                                        data=Config.content_data)
         snippets = Migrate.content(snippets, self.content_type)
@@ -68,9 +68,9 @@ class Snippet(object):
         """Update snippet."""
 
         snippets = self.storage.search(Const.SNIPPET,
-                                       sall=Config.get_search_all(),
-                                       stag=Config.get_search_tag(),
-                                       sgrp=Config.get_search_grp(),
+                                       sall=Config.search_all_kws,
+                                       stag=Config.search_tag_kws,
+                                       sgrp=Config.search_grp_kws,
                                        digest=Config.operation_digest,
                                        data=Config.content_data)
         if len(snippets) == 1:
@@ -89,9 +89,9 @@ class Snippet(object):
         """Delete snippet."""
 
         snippets = self.storage.search(Const.SNIPPET,
-                                       sall=Config.get_search_all(),
-                                       stag=Config.get_search_tag(),
-                                       sgrp=Config.get_search_grp(),
+                                       sall=Config.search_all_kws,
+                                       stag=Config.search_tag_kws,
+                                       sgrp=Config.search_grp_kws,
                                        digest=Config.operation_digest,
                                        data=Config.content_data)
         if len(snippets) == 1:
@@ -110,9 +110,9 @@ class Snippet(object):
         elif Config.is_search_criteria():
             self.logger.debug('exporting snippets based on search criteria')
             snippets = self.storage.search(Const.SNIPPET,
-                                           sall=Config.get_search_all(),
-                                           stag=Config.get_search_tag(),
-                                           sgrp=Config.get_search_grp(),
+                                           sall=Config.search_all_kws,
+                                           stag=Config.search_tag_kws,
+                                           sgrp=Config.search_grp_kws,
                                            digest=Config.operation_digest,
                                            data=Config.content_data)
             if len(snippets) == 1:

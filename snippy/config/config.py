@@ -129,8 +129,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.search_all_kws = cls.source.sall
         cls.search_tag_kws = cls.source.stag
         cls.search_grp_kws = cls.source.sgrp
-        cls.regexp = cls.source.regexp
-        cls.limit = cls.source.limit
+        cls.search_filter = cls.source.regexp
+        cls.search_limit = cls.source.limit
         cls.rfields = cls.source.rfields
         cls.sfields = cls.source.sfields
 
@@ -176,8 +176,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.logger.debug('configured search all keywords: %s', cls.search_all_kws)
         cls.logger.debug('configured search tag keywords: %s', cls.search_tag_kws)
         cls.logger.debug('configured search group keywords: %s', cls.search_grp_kws)
-        cls.logger.debug('configured search result filter: %s', cls.regexp)
-        cls.logger.debug('configured search result limit: %s', cls.limit)
+        cls.logger.debug('configured search result filter: %s', cls.search_filter)
+        cls.logger.debug('configured search result limit: %s', cls.search_limit)
         cls.logger.debug('configured search result sorted field: %s', cls.sfields)
         cls.logger.debug('configured search result removed fields: %s', cls.rfields)
         cls.logger.debug('configured option editor: %s', cls.editor)
@@ -249,7 +249,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_content(cls, content):
         """Return content after it has been optionally edited."""
 
-        if cls.is_editor():
+        if cls.editor:
             content = Config._get_edited_content(content)
         else:
             content = Config._get_config_content(content)
@@ -382,36 +382,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws else False
 
     @classmethod
-    def get_search_all(cls):
-        """Return list of search keywords for search all."""
-
-        return cls.search_all_kws
-
-    @classmethod
-    def get_search_tag(cls):
-        """Return list of search keywords for search tags."""
-
-        return cls.search_tag_kws
-
-    @classmethod
-    def get_search_grp(cls):
-        """Return list of search keywords for search groups."""
-
-        return cls.search_grp_kws
-
-    @classmethod
-    def get_search_filter(cls):
-        """Return search filter."""
-
-        return cls.regexp
-
-    @classmethod
-    def get_search_limit(cls):
-        """Return search limit."""
-
-        return cls.limit
-
-    @classmethod
     def get_sorted_fields(cls):
         """Return fields that are used to sort content."""
 
@@ -422,12 +392,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Return fields that are removed from content."""
 
         return cls.rfields
-
-    @classmethod
-    def is_editor(cls):
-        """Test if editor is used to input content."""
-
-        return cls.editor
 
     @classmethod
     def is_content_digest(cls):

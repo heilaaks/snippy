@@ -44,8 +44,8 @@ class Logger(object):
     ===========
 
     By default, there are no logs printed to the users. This applies also
-    to error logs. 
-    
+    to error logs.
+
     There are two levels of logging verbosity. All logs are printed in full
     length without filters with the --debug option. The -vv (very verbose)
     option prints limited length log messages in lower case letters.

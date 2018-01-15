@@ -52,9 +52,9 @@ class Solution(object):
 
         self.logger.debug('searching solutions')
         solutions = self.storage.search(Const.SOLUTION,
-                                        sall=Config.get_search_all(),
-                                        stag=Config.get_search_tag(),
-                                        sgrp=Config.get_search_grp(),
+                                        sall=Config.search_all_kws,
+                                        stag=Config.search_tag_kws,
+                                        sgrp=Config.search_grp_kws,
                                         digest=Config.operation_digest,
                                         data=Config.content_data)
         solutions = Migrate.content(solutions, self.content_type)
@@ -65,9 +65,9 @@ class Solution(object):
         """Update existing solution."""
 
         solutions = self.storage.search(Const.SOLUTION,
-                                        sall=Config.get_search_all(),
-                                        stag=Config.get_search_tag(),
-                                        sgrp=Config.get_search_grp(),
+                                        sall=Config.search_all_kws,
+                                        stag=Config.search_tag_kws,
+                                        sgrp=Config.search_grp_kws,
                                         digest=Config.operation_digest,
                                         data=Config.content_data)
         if len(solutions) == 1:
@@ -81,9 +81,9 @@ class Solution(object):
         """Delete solutions."""
 
         solutions = self.storage.search(Const.SOLUTION,
-                                        sall=Config.get_search_all(),
-                                        stag=Config.get_search_tag(),
-                                        sgrp=Config.get_search_grp(),
+                                        sall=Config.search_all_kws,
+                                        stag=Config.search_tag_kws,
+                                        sgrp=Config.search_grp_kws,
                                         digest=Config.operation_digest,
                                         data=Config.content_data)
         if len(solutions) == 1:
@@ -102,9 +102,9 @@ class Solution(object):
         elif Config.is_search_criteria():
             self.logger.debug('exporting solutions based on search criteria')
             solutions = self.storage.search(Const.SOLUTION,
-                                            sall=Config.get_search_all(),
-                                            stag=Config.get_search_tag(),
-                                            sgrp=Config.get_search_grp(),
+                                            sall=Config.search_all_kws,
+                                            stag=Config.search_tag_kws,
+                                            sgrp=Config.search_grp_kws,
                                             digest=Config.operation_digest,
                                             data=Config.content_data)
             if len(solutions) == 1:

@@ -43,42 +43,44 @@ class Logger(object):
     Description
     ===========
 
-      There are two levels of logging verbosity. All logs are printed without
-      filtering and formatting with --debug option. The -vv (very verbose)
-      option guarantees one log per line with all lower case characters.
+    By default, there are no logs printed to the users. This applies also
+    to error logs. 
+    
+    There are two levels of logging verbosity. All logs are printed in full
+    length without filters with the --debug option. The -vv (very verbose)
+    option prints limited length log messages in lower case letters.
 
-      There are two formats for logs. The default is text string. The option
-      --json-logs option logs to be formatted as JSON strings one log per line.
-      The JSON string contains more information fields than the default text
-      log. The --json-logs option must be used with --debug or -vv option.
-      If used with -vv option, the message field is trucated in the same way
-      than with text string.
+    There are two formats for logs: text (default) and JSON. JSON logs can
+    be enabled with --json-logs option. JSON log have more information
+    fields than text formatted logs. When -vv option is used with JSON logs,
+    it truncates log message in the same way as with text logs.
 
-      Timestamp is in local time with default text log string. In case of JSON
-      logs, the timestamp is in GMT time zone and it follows strictly the
-      ISO8601 format.
+    Timestamps are in local time with text formatted logs. In case of JSON
+    logs, the timestamp is in GMT time zone and it follows strictly the
+    ISO8601 format. Both timestamps are in millisecond granularity.
 
-      Logs contain operation ID that uniquely identifies logs for specific
-      operation. This must be refreshed by user after operation is completed.
+    All logs include operation ID that uniquely identifies all logs within
+    specific operation. The operation ID must be refreshed by logger user
+    after each operation is completed.
 
-      Gunicorn server logs are formatted to match log format defined in this
-      logger.
+    All logs including Gunicorn server logs are formatted to match format
+    defined in this logger.
 
-      All logs are printed to stdout.
+    All logs are printed to stdout.
 
     Logging Rules
     =============
 
-      1. Only OK or NOK with cause text must be printed with defauls.
-      2. There must be no logs printed to user.
-      3. There must be no exceptions printed to user.
-      4. Logs from exceptions are printed is INFO - all other logs is DEBUG.
-      5. Variables printed in logs must be seprated with colon.
-      6. All other than error logs must be printed in lower case string.
-      7. The --debug option must print logs without modifications in full length.
-      8. The -vv option must print logs in lower case and one log per line.
-      9. All extral libraries must be configured to follow same logging format.
-      10. All logs must be printed to stdout.
+    1. Only OK or NOK with cause text must be printed with defaults.
+    2. There must be no logs printed to user.
+    3. There must be no exceptions printed to user.
+    4. Exceptions logs are printed is INFO and all other logs is DEBUG.
+    5. Variables printed in logs must be separated with colon.
+    6. All other than error logs must be printed in lower case string.
+    7. The --debug option must print logs without filters in full-length.
+    8. The -vv option must print logs in lower case and one log per line.
+    9. All external libraries must follow same log format.
+    10. All logs must be printed to stdout.
     """
 
     # Unique operation ID that identifies logs for each operation.
@@ -107,7 +109,7 @@ class Logger(object):
         # Set the effective log level for all the loggers created under
         # 'snippy' logger namespace. This relies on that the module level
         # logger does not set the level and it remains as NOTSET. This
-        # causes module level logger to propagete the log record to parent
+        # causes module level logger to propagate the log record to parent
         # logger where it eventually reaches the 'snippy' level that is
         # just below the 'root' level logger.
         #
@@ -173,8 +175,8 @@ class CustomFormatter(logging.Formatter):
     def format(self, record):
         """Format log string."""
 
-        # Debug option prints logs "as is" in full length. Very verbose
-        # option truncates logs and quarantees only one log per line
+        # Debug option prints logs "as is" in full-length. Very verbose
+        # option truncates logs and guarantees only one log per line
         # with all lower case characters.
         if '--json-logs' in sys.argv:
             log_string = super(CustomFormatter, self).format(record)
@@ -226,7 +228,7 @@ class CustomFilter(logging.Filter):  # pylint: disable=too-few-public-methods
     """Customer log filter."""
 
     def filter(self, record):
-        """Filter with dynamic operation ID setting."""
+        """Filtering with dynamic operation ID setting."""
 
         record.oid = Logger.SERVER_OID
 
@@ -234,7 +236,7 @@ class CustomFilter(logging.Filter):  # pylint: disable=too-few-public-methods
 
 
 class CustomGunicornLogger(GunicornLogger):
-    """Custom logger for Gunicorn WSGI HTTP server."""
+    """Custom logger for Gunicorn HTTP server."""
 
     def setup(self, cfg):
         super(CustomGunicornLogger, self).setup(cfg)
@@ -251,7 +253,7 @@ class CustomGunicornLogger(GunicornLogger):
 
     @staticmethod
     def _remove_handlers(logger):
-        """Remove handlers and disable logger."""
+        """Remove handlers."""
 
         handlers = logger.handlers
         for handler in handlers:

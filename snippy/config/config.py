@@ -249,9 +249,13 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return filetype
 
     @classmethod
-    def get_content(cls, content):
-        """Return content after it has been optionally edited."""
+    def get_content(cls, content, text=Const.EMPTY):
+        """Get content from configuration, editor or from a given
+        string that contains newlines."""
 
+        #if any(text):
+        #    content = Parser.get_content(content)
+        #elif cls.editor:
         if cls.editor:
             content = Config._get_edited_content(content)
         else:

@@ -39,13 +39,13 @@ class Solution(object):
         """Create new solution."""
 
         self.logger.debug('creating new solution')
-        solution = Config.get_content(Content(category=Const.SOLUTION))
-        if not solution.has_data():
+        solutions = Config.get_contents(Content(category=Const.SOLUTION))
+        if not solutions[0].has_data():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory solution data not defined')
-        elif solution.is_template():
+        elif solutions[0].is_template():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because solution is an empty template')
         else:
-            self.storage.create(solution)
+            self.storage.create(solutions[0])
 
     def search(self):
         """Search solutions."""
@@ -72,8 +72,8 @@ class Solution(object):
                                         data=Config.content_data)
         if len(solutions) == 1:
             self.logger.debug('updating solution with digest %.16s', solutions[0].get_digest())
-            solution = Config.get_content(content=solutions[0])
-            self.storage.update(solution)
+            solutions = Config.get_contents(content=solutions[0])
+            self.storage.update(solutions[0])
         else:
             Config.validate_search_context(solutions, 'update')
 

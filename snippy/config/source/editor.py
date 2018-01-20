@@ -44,8 +44,9 @@ class Editor(object):
         self.utc = utc
 
     def read_content(self, content):
-        """Read the content from editor."""
+        """Read content from editor."""
 
+        contents = []
         template = content.convert_text()
         source = self.call_editor(template)
         category = Parser.content_category(source)
@@ -66,7 +67,9 @@ class Editor(object):
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
 
-        return content
+        contents.append(content)
+
+        return contents
 
     def call_editor(self, template):
         """Run editor session."""

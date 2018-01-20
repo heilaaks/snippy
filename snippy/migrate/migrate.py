@@ -276,7 +276,7 @@ class Migrate(object):
             with open(filename, 'r') as infile:
                 try:
                     if Config.is_operation_file_text:
-                        contents = Config.get_text_contents(content, infile.read())
+                        contents = Config.get_contents(content, infile.read())
                         dictionary = {'content': Migrate.get_dictionary_list(contents)}
                     elif Config.is_operation_file_json:
                         import json

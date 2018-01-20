@@ -19,8 +19,10 @@
 
 """parser.py: Parse configuration source parameters."""
 
+import copy
 import datetime
 import re
+from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 
@@ -42,6 +44,69 @@ class Parser(object):
     TAGS_TAIL = '# Add optional links below one link per line.\n'
     LINKS_HEAD = '# Add optional links below one link per line.\n'
     LINKS_TAIL = '.'
+
+    @staticmethod
+    def read_content(content, source, timestamp):
+        """Read content from text source."""
+
+        data = []
+        contents = []
+        category = Parser.content_category(source)
+        if category == Const.SNIPPET:
+            data = Parser._split_source(source, '# Add mandatory snippet below', 2)
+        elif category == Const.SOLUTION:
+            data = Parser._split_source(source, '## BRIEF :', 1)
+        else:
+            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text template content category')
+
+        # Read the time from 1) content or 2) time set by caller. These
+        # are always used because it can be that user did not set the date
+        # and time correctly to ISO 8601 format.
+        if content.get_utc():
+            timestamp = content.get_utc()
+        for item in data:
+            content_copy = copy.copy(content)
+            content_copy.set((Parser.content_data(category, item),
+                              Parser.content_brief(category, item),
+                              Parser.content_group(category, item),
+                              Parser.content_tags(category, item),
+                              Parser.content_links(category, item),
+                              category,
+                              Parser.content_filename(category, item),
+                              content_copy.get_runalias(),
+                              content_copy.get_versions(),
+                              Parser.content_date(category, item, timestamp),
+                              content_copy.get_digest(),
+                              content_copy.get_metadata(),
+                              content_copy.get_key()))
+            content_copy.update_digest()
+            if content_copy.is_template(edited=item):
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because it matched to empty template')
+
+            contents.append(content_copy)
+
+        return contents
+
+    @staticmethod
+    def _split_source(source, split, offset):
+        """Split solution content from a text file."""
+
+        # Find line numbers that are identified by split tag and offset. The matching
+        # line numbers are substracted with offset to get the first line of the solution.
+        # The first item from the list is popped and used as a head and following items
+        # are treated as as line numbers where the next solution starts.
+        source_list = source.split(Const.NEWLINE)
+        solutions = []
+        line_numbers = [i for i, line in enumerate(source_list) if line.startswith(split)]
+        line_numbers[:] = [x-offset for x in line_numbers]
+        if line_numbers:
+            head = line_numbers.pop(0)
+            for line in line_numbers:
+                solutions.append(Const.NEWLINE.join(source_list[head:line]))
+                head = line
+            solutions.append(Const.NEWLINE.join(source_list[head:]))
+
+        return solutions
 
     @classmethod
     def content_category(cls, source):
@@ -68,7 +133,7 @@ class Parser(object):
         else:
             # Remove unnecessary newlines at the end and make sure there is one at the end.
             data = tuple(source.rstrip().split(Const.NEWLINE) + [Const.EMPTY])
-        cls._logger.debug('parsed content data from editor "%s"', data)
+        cls._logger.debug('parsed content data from "%s"', data)
 
         return data
 
@@ -86,7 +151,7 @@ class Parser(object):
             match = re.search(r'## BRIEF :\s*?(.*|$)', source, re.MULTILINE)
             if match:
                 brief = match.group(1).strip()
-        cls._logger.debug('parsed content brief from editor "%s"', brief)
+        cls._logger.debug('parsed content brief from "%s"', brief)
 
         return brief
 
@@ -104,7 +169,7 @@ class Parser(object):
                 except ValueError:
                     cls._logger.info('incorrect date and time format "%s"', match.group(1))
 
-        cls._logger.debug('parsed content date from editor "%s"', date)
+        cls._logger.debug('parsed content date from "%s"', date)
 
         return date
 
@@ -122,7 +187,7 @@ class Parser(object):
             match = re.search(r'## GROUP :\s*?(\S+|$)', source, re.MULTILINE)
             if match:
                 group = match.group(1).strip()
-        cls._logger.debug('parsed content group from editor "%s"', group)
+        cls._logger.debug('parsed content group from "%s"', group)
 
         return group
 
@@ -139,7 +204,7 @@ class Parser(object):
             match = re.search(r'## TAGS  :\s*?(.*|$)', source, re.MULTILINE)
             if match:
                 tags = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_TAGS)])
-        cls._logger.debug('parsed content tags from editor "%s"', tags)
+        cls._logger.debug('parsed content tags from "%s"', tags)
 
         return tags
 
@@ -155,7 +220,7 @@ class Parser(object):
                 links = tuple([s.strip() for s in match.group(1).rstrip().split(Const.NEWLINE)])
         else:
             links = tuple(re.findall('> (http.*)', source))
-        cls._logger.debug('parsed content links from editor "%s"', links)
+        cls._logger.debug('parsed content links from "%s"', links)
 
         return links
 
@@ -169,7 +234,7 @@ class Parser(object):
             match = re.search(r'## FILE  :\s*?(\S+|$)', source, re.MULTILINE)
             if match and match.group(1):
                 filename = match.group(1)
-        cls._logger.debug('parsed content filename from editor "%s"', filename)
+        cls._logger.debug('parsed content filename from "%s"', filename)
 
         return filename
 

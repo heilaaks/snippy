@@ -39,12 +39,11 @@ class Snippet(object):
         """Create new snippet."""
 
         self.logger.debug('creating new snippet')
-        snippets = []
-        snippet = Config.get_content(Content(category=Const.SNIPPET))
-        if not snippet.has_data():
+        snippets = Config.get_contents(Content(category=Const.SNIPPET))
+        if not snippets[0].has_data():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory snippet data not defined')
         else:
-            content_digest = self.storage.create(snippet)
+            content_digest = self.storage.create(snippets[0])
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
             snippets = Migrate.content(snippets, self.content_type)
 
@@ -75,8 +74,8 @@ class Snippet(object):
                                        data=Config.content_data)
         if len(snippets) == 1:
             self.logger.debug('updating snippet with digest %.16s', snippets[0].get_digest())
-            snippet = Config.get_content(content=snippets[0])
-            content_digest = self.storage.update(snippet)
+            snippets = Config.get_contents(content=snippets[0])
+            content_digest = self.storage.update(snippets[0])
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
         else:
             Config.validate_search_context(snippets, 'update')

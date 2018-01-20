@@ -19,15 +19,15 @@
 
 """config.py: Configuration management."""
 
-import sys
-import copy
-import os.path
 import datetime
-import pkg_resources
-from snippy.config.constants import Constants as Const
+import os.path
+import sys
 from snippy.cause.cause import Cause
+from snippy.config.constants import Constants as Const
 from snippy.config.source.editor import Editor
+from snippy.config.source.parser import Parser
 from snippy.logger.logger import Logger
+import pkg_resources
 
 
 class Config(object):  # pylint: disable=too-many-public-methods
@@ -262,82 +262,19 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return filetype
 
     @classmethod
-    # def get_content(cls, content, source=Const.EMPTY):
-    def get_content(cls, content):
-        """Get content from configuration, editor or from a given
-        string that contains newlines."""
+    def get_contents(cls, content, source=None):
+        """Create content list from one of the configuration sources."""
 
-        # contents = []
-        # if any(source):
-        #     contents = Parser.read_content(content, source)
-        # elif cls.editor:
-        if cls.editor:
-            editor = Editor((), Config.get_utc_time())
-            content = editor.read_content(content)
-        else:
-            content = Config._get_config_content(content)
-
-        return content
-
-    @classmethod
-    def get_text_contents(cls, content, edited):
-        """Return contents from specified text file."""
-
-        data = []
         contents = []
-        editor = Editor(content, Config.get_utc_time(), edited)
-        if editor.get_edited_category() == Const.SNIPPET:
-            data = Config.split_text_content(edited, '# Add mandatory snippet below', 2)
-        elif editor.get_edited_category() == Const.SOLUTION:
-            data = Config.split_text_content(edited, '## BRIEF :', 1)
+        if source is not None:
+            contents = Parser.read_content(content, source, Config.get_utc_time())
+        elif cls.editor:
+            editor = Editor((), Config.get_utc_time())
+            contents = editor.read_content(content)
         else:
-            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text template content category')
+            contents = Config._read_content(content)
 
-        editor = None
-        for item in data:
-            content_copy = copy.copy(content)
-            editor = Editor(content_copy, Config.get_utc_time(), item)
-            content_copy.set((editor.get_edited_data(),
-                              editor.get_edited_brief(),
-                              editor.get_edited_group(),
-                              editor.get_edited_tags(),
-                              editor.get_edited_links(),
-                              editor.get_edited_category(),
-                              editor.get_edited_filename(),
-                              content_copy.get_runalias(),
-                              content_copy.get_versions(),
-                              editor.get_edited_date(),
-                              content_copy.get_digest(),
-                              content_copy.get_metadata(),
-                              content_copy.get_key()))
-            content_copy.update_digest()
-            if content_copy.is_template(edited=item):
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because it matched to empty template')
-
-            contents.append(content_copy)
-
-        return contents
-
-    @classmethod
-    def split_text_content(cls, edited, split, offset):
-        """Split solution content from a text file."""
-
-        # Find line numbers that are identified by split tag and offset. The matching
-        # line numbers are substracted with offset to get the first line of the solution.
-        # The first item from the list is popped and used as a head and following items
-        # are treated as as line numbers where the next solution starts.
-        edited_list = edited.split(Const.NEWLINE)
-        solutions = []
-        line_numbers = [i for i, line in enumerate(edited_list) if line.startswith(split)]
-        line_numbers[:] = [x-offset for x in line_numbers]
-        if line_numbers:
-            head = line_numbers.pop(0)
-            for line in line_numbers:
-                solutions.append(Const.NEWLINE.join(edited_list[head:line]))
-                head = line
-            solutions.append(Const.NEWLINE.join(edited_list[head:]))
-
-        return solutions
+        return tuple(contents)
 
     @classmethod
     def validate_search_context(cls, contents, operation):  # pylint: disable=too-many-branches
@@ -429,9 +366,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return utc.strftime("%Y-%m-%d %H:%M:%S")
 
     @classmethod
-    def _get_config_content(cls, content):
-        """Read and set the user provided values from configuration."""
+    def _read_content(cls, content):
+        """Read content from configuration."""
 
+        contents = []
         content.set((cls.content_data,
                      cls.content_brief,
                      cls.content_group,
@@ -445,5 +383,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
                      content.get_digest(),
                      content.get_metadata(),
                      content.get_key()))
+        contents.append(content)
 
-        return content
+        return contents

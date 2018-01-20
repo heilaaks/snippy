@@ -318,7 +318,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
     @classmethod
     def is_search_keywords(cls):
-        """Test if search is made with any search option."""
+        """Test if search is made with any of the search option."""
 
         return True if cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws else False
 
@@ -342,8 +342,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def get_operation_file(cls, content_filename=Const.EMPTY):
         """Return file for operation."""
 
-        # Use the content filename only in case of export operation and
-        # when the user did not define the target file from command line.
+        # Use the content filename only in case of export operation
+        # and when user did not define target file from command line.
         filename = cls.operation_filename
         if cls.is_operation_export and content_filename and not Config.source.filename:
             filename = content_filename

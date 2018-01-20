@@ -32,7 +32,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def __init__(self, content=None, category=None):
         self.logger = Logger(__name__).get()
         if content is None:
-            self.content = Content.get_empty(category).get_list()
+            self.content = tuple(Content.get_empty(category).get_list())
         else:
             self.content = content
 

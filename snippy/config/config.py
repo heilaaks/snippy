@@ -269,8 +269,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         if source is not None:
             contents = Parser.read_content(content, source, Config.get_utc_time())
         elif cls.editor:
-            editor = Editor((), Config.get_utc_time())
-            contents = editor.read_content(content)
+            contents = Editor.read_content(content)
         else:
             contents = Config._read_content(content)
 

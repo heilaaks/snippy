@@ -19,7 +19,7 @@
 
 """editor.py: Text editor based content management."""
 
-import os.path
+import os
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
@@ -27,28 +27,17 @@ from snippy.logger.logger import Logger
 
 
 class Editor(object):
-    """Editor based configuration."""
+    """Text editor based content management."""
 
-    # Editor inputs
-    SOLUTION_BRIEF = '## BRIEF :'
-    SOLUTION_DATE = '## DATE  :'
-    DATA_HEAD = '# Add mandatory snippet below.\n'
-    DATA_TAIL = '# Add optional brief description below.\n'
-    BRIEF_HEAD = '# Add optional brief description below.\n'
-    BRIEF_TAIL = '# Add optional single group below.\n'
+    _logger = Logger(__name__).get()
 
-    def __init__(self, content, utc, edited=Const.EMPTY):
-        self.logger = Logger(__name__).get()
-        self.content = content
-        self.edited = edited
-        self.utc = utc
-
-    def read_content(self, content):
+    @classmethod
+    def read_content(cls, content):
         """Read content from editor."""
 
         contents = []
         template = content.convert_text()
-        source = self.call_editor(template)
+        source = cls.call_editor(template)
         category = Parser.content_category(source)
         if category == Const.SNIPPET or category == Const.SOLUTION:
             content.set((Parser.content_data(category, source),
@@ -71,7 +60,8 @@ class Editor(object):
 
         return contents
 
-    def call_editor(self, template):
+    @classmethod
+    def call_editor(cls, template):
         """Run editor session."""
 
         import tempfile
@@ -81,8 +71,8 @@ class Editor(object):
         # testing. This method is mocked to return the edited text.
         message = Const.EMPTY
         template = template.encode('UTF-8')
-        editor = self._get_editor()
-        self.logger.info('using %s as editor', editor)
+        editor = cls._get_editor()
+        cls._logger.info('using %s as editor', editor)
         with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
             outfile.write(template)
             outfile.flush()
@@ -96,7 +86,8 @@ class Editor(object):
 
         return message
 
-    def _get_editor(self):
+    @classmethod
+    def _get_editor(cls):
         """Try to resolve the editor in a secure way."""
 
         # Running code blindly from environment variable is not safe because
@@ -108,91 +99,7 @@ class Editor(object):
         # environment variables? What is the generic way to use editor in
         # Windows and Mac?
         if editor != 'vi':
-            self.logger.info('enforcing vi as default editor instead of %s', editor)
+            cls._logger.info('enforcing vi as default editor instead of %s', editor)
             editor = 'vi'
 
         return editor
-
-    def is_content_identified(self):
-        """Test if content category is identified."""
-
-        identified = False
-        if self.get_edited_category() == Const.SNIPPET or self.get_edited_category() == Const.SOLUTION:
-            identified = True
-
-        return identified
-
-    def get_edited_data(self):
-        """Return content data from editor."""
-
-        category = self.get_edited_category()
-        content_data = Parser.content_data(category, self.edited)
-
-        return content_data
-
-    def get_edited_brief(self):
-        """Return content brief from editor."""
-
-        category = self.get_edited_category()
-        content_brief = Parser.content_brief(category, self.edited)
-
-        return content_brief
-
-    def get_edited_date(self):
-        """Return content date from editor."""
-
-        # Read the time from 1) content or 2) time set for the object or from template.
-        # The first two time stamps are used because it can be that user did not set
-        # the date and time correctly to ISO 8601.
-        if self.content.get_utc():
-            timestamp = self.content.get_utc()
-        else:
-            timestamp = self.utc
-        category = self.get_edited_category()
-        content_date = Parser.content_date(category, self.edited, timestamp)
-
-        return content_date
-
-    def get_edited_group(self):
-        """Return content group from editor."""
-
-        category = self.get_edited_category()
-        content_group = Parser.content_group(category, self.edited)
-
-        return content_group
-
-    def get_edited_tags(self):
-        """Return content tags from editor."""
-
-        category = self.get_edited_category()
-        content_tags = Parser.content_tags(category, self.edited)
-
-        return content_tags
-
-    def get_edited_links(self):
-        """Return content links from editor."""
-
-        category = self.get_edited_category()
-        content_links = Parser.content_links(category, self.edited)
-
-        return content_links
-
-    def get_edited_filename(self):
-        """Return solution filename from editor."""
-
-        category = self.get_edited_category()
-        content_filename = Parser.content_filename(category, self.edited)
-
-        return content_filename
-
-    def get_edited_category(self):
-        """Return content category based on edited content."""
-
-        category = Const.UNKNOWN_CONTENT
-
-        if Editor.DATA_HEAD in self.edited and Editor.BRIEF_HEAD:
-            category = Const.SNIPPET
-        elif Editor.SOLUTION_BRIEF in self.edited and Editor.SOLUTION_DATE:
-            category = Const.SOLUTION
-
-        return category

@@ -59,9 +59,9 @@ class Parser(object):
         else:
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text template content category')
 
-        # Read the time from 1) content or 2) time set by caller. These
-        # are always used because it can be that user did not set the date
-        # and time correctly to ISO 8601 format.
+        # Initialize time from 1) Content() or from 2) time given by caller.
+        # These are always needed because it can be that user did not set
+        # the date correctly to ISO8601 format in the text input.
         if content.get_utc():
             timestamp = content.get_utc()
         for item in data:

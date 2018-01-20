@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """solution_helper.py: Helper methods for solution testing."""
 
@@ -9,7 +26,7 @@ from snippy.metadata import __version__
 from snippy.metadata import __homepage__
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
-from snippy.config.source.editor import Editor
+from snippy.config.source.parser import Parser
 from snippy.config.config import Config
 from snippy.content.content import Content
 from snippy.migrate.migrate import Migrate
@@ -301,21 +318,8 @@ class SolutionHelper(object):
         """Transform text template to content."""
 
         if text:
-            content = Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SOLUTION)
-            editor = Editor(Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SOLUTION), SolutionHelper.UTC, text)
-            content.set((editor.get_edited_data(),
-                         editor.get_edited_brief(),
-                         editor.get_edited_group(),
-                         editor.get_edited_tags(),
-                         editor.get_edited_links(),
-                         editor.get_edited_category(),
-                         editor.get_edited_filename(),
-                         content.get_runalias(),
-                         content.get_versions(),
-                         editor.get_edited_date(),
-                         content.get_digest(),
-                         content.get_metadata(),
-                         content.get_key()))
+            contents = Parser.read_content(Content(category=Const.SOLUTION), text, SolutionHelper.UTC)
+            content = contents[0]
             content.update_digest()
         else:
             content = Content.load({'content': [SolutionHelper.DEFAULTS[solution]]})[0]

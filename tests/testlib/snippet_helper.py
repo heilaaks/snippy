@@ -27,7 +27,7 @@ from snippy.metadata import __version__
 from snippy.metadata import __homepage__
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
-from snippy.config.source.editor import Editor
+from snippy.config.source.parser import Parser
 from snippy.content.content import Content
 from snippy.migrate.migrate import Migrate
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -135,21 +135,8 @@ class SnippetHelper(object):
         """Transform text template to content."""
 
         if text:
-            content = Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SNIPPET)
-            editor = Editor(Content(content=(Const.EMPTY,)*Const.NUMBER_OF_COLUMS, category=Const.SNIPPET), SnippetHelper.UTC1, text)
-            content.set((editor.get_edited_data(),
-                         editor.get_edited_brief(),
-                         editor.get_edited_group(),
-                         editor.get_edited_tags(),
-                         editor.get_edited_links(),
-                         editor.get_edited_category(),
-                         editor.get_edited_filename(),
-                         content.get_runalias(),
-                         content.get_versions(),
-                         editor.get_edited_date(),
-                         content.get_digest(),
-                         content.get_metadata(),
-                         content.get_key()))
+            contents = Parser.read_content(Content(category=Const.SNIPPET), text, SnippetHelper.UTC1)
+            content = contents[0]
             content.update_digest()
         else:
             content = Content.load({'content': [SnippetHelper.DEFAULTS[snippet]]})[0]

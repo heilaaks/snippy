@@ -42,8 +42,8 @@ class Solution(object):
         solution = Config.get_content(Content())
         if not solution.has_data():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory solution data not defined')
-        elif solution.is_data_template():
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because the solution data is matching to empty template')
+        elif solution.is_template():
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because solution is an empty template')
         else:
             self.storage.create(solution)
 
@@ -98,7 +98,7 @@ class Solution(object):
         filename = Config.get_operation_file()
         if Config.template:
             self.logger.debug('exporting solution template %s', Config.get_operation_file())
-            Migrate.dump_template(Content())
+            Migrate.dump_template(Content(category=Const.SOLUTION))
         elif Config.is_search_criteria():
             self.logger.debug('exporting solutions based on search criteria')
             solutions = self.storage.search(Const.SOLUTION,

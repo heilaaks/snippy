@@ -132,8 +132,9 @@ class TestWfImportSnippet(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             # The last call for mock_isfile is unnecessary. It is here because of Python2 way of
             # iteration that seems to require one element after the last call. This is not the
-            # case with Python3.
-            mock_isfile.side_effect = [True, True, False, None]
+            # case with Python3. The below list of boolean values must match True for preceding
+            # calls to isfile which read the default installed files in Config.
+            mock_isfile.side_effect = [True, True, True, True, False, None]
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '-f', './foo.yaml']  ## workflow
             cause = snippy.run_cli()

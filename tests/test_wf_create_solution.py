@@ -72,7 +72,7 @@ class TestWfCreateSolution(unittest.TestCase):
             sys.argv = ['snippy', 'create', '--solution']  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli()
-            assert cause == 'NOK: no content was stored because the solution data is matching to empty template'
+            assert cause == 'NOK: no content was stored because solution is an empty template'
             assert not Database.get_solutions()
             snippy.release()
             snippy = None

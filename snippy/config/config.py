@@ -49,31 +49,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Config.json_logs = Config._json_logs()
         Config.storage_file = Config._storage_file()
         Config.storage_schema = Config._storage_schema()
-
-    @classmethod
-    def _storage_file(cls):
-        """Test that storage path exist."""
-
-        storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
-        if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
-            storage_file = os.path.join(storage_path, 'snippy.db')
-        else:
-            cls.logger.error('NOK: storage path does not exist or is not accessible: %s', storage_path)
-            sys.exit(1)
-
-        return storage_file
-
-    @classmethod
-    def _storage_schema(cls):
-        """Test that database schema file exist."""
-
-        # The database schema is installed with the tool and it must always exist.
-        schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
-        if not os.path.isfile(schema_file):
-            cls.logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_file)
-            sys.exit(1)
-
-        return schema_file
+        Config.snippet_template = Config._content_template('snippet-template.txt')
+        Config.solution_template = Config._content_template('solution-template.txt')
 
     @classmethod
     def _server(cls):
@@ -104,6 +81,42 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Test if logs are formatted as JSON."""
 
         return True if '--json-logs' in sys.argv else False
+
+    @classmethod
+    def _storage_file(cls):
+        """Test that storage path exist."""
+
+        storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
+        if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
+            storage_file = os.path.join(storage_path, 'snippy.db')
+        else:
+            cls.logger.error('NOK: storage path does not exist or is not accessible: %s', storage_path)
+            sys.exit(1)
+
+        return storage_file
+
+    @classmethod
+    def _storage_schema(cls):
+        """Test that database schema file exist."""
+
+        # The database schema is installed with the tool and it must always exist.
+        schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
+        if not os.path.isfile(schema_file):
+            cls.logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_file)
+            sys.exit(1)
+
+        return schema_file
+
+    @classmethod
+    def _content_template(cls, template):
+        """Get defined content template installed with the tool."""
+
+        template = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), template)
+        if not os.path.isfile(template):
+            cls.logger.error('NOK: content template installed with tool does not exist or is not accessible: %s', template)
+            sys.exit(1)
+
+        return template
 
     @classmethod
     def read_source(cls, source):
@@ -249,13 +262,14 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return filetype
 
     @classmethod
-    def get_content(cls, content, text=Const.EMPTY):
+    def get_content(cls, content):
         """Get content from configuration, editor or from a given
         string that contains newlines."""
 
-        #if any(text):
-        #    content = Parser.get_content(content)
-        #elif cls.editor:
+        # contents = []
+        # if any(source):
+        #     contents = Parser.read_content(content, source)
+        # elif cls.editor:
         if cls.editor:
             content = Config._get_edited_content(content)
         else:
@@ -295,7 +309,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
                               content_copy.get_metadata(),
                               content_copy.get_key()))
             content_copy.update_digest()
-            if content_copy.is_data_template(edited=item):
+            if content_copy.is_template(edited=item):
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'content was stored because it matched to empty template')
 
             contents.append(content_copy)
@@ -322,15 +336,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
             solutions.append(Const.NEWLINE.join(edited_list[head:]))
 
         return solutions
-
-    @classmethod
-    def get_content_template(cls, content):
-        """Return content in text template."""
-
-        editor = Editor(content, Config.get_utc_time())
-        template = editor.get_template()
-
-        return template
 
     @classmethod
     def validate_search_context(cls, contents, operation):  # pylint: disable=too-many-branches

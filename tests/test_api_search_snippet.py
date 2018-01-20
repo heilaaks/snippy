@@ -56,12 +56,12 @@ class TestApiSearchSnippet(object):
         ##        only two of them sorted by the brief column. The sorting must be applied
         ##        before limit is applied.
 
-        # [REF_UTC]: Each content generates 4 calls to get UTC time. There are 4 contents
-        #            that are inserted into database and 2 first contain the UTC1 timestamp
-        #            and the last two the UTC2 timestamp. The None is required in Python 2.7
-        #            which behaves differently than Python 3 which does not require additional
-        #            parameter after the last one.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)
+        # [REF_UTC]: Each content generates 2 or 4 (delete) calls to get UTC time. There are
+        #            four contents that are inserted into database and 2 first contain the UTC1
+        #            timestamp and the last two the UTC2 timestamp. The None is required in
+        #            Python 2.7 which behaves differently than Python 3 which does not require
+        #            additional parameter after the last one.
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*4 + (Snippet.UTC2,)*4 + (None,)
         snippy = Snippet.add_defaults(Snippy())
         Snippet.add_one(snippy, Snippet.EXITED)
         Snippet.add_one(snippy, Snippet.NETCAT)
@@ -125,7 +125,7 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /api/v1/snippets and search keywords from all columns. The search
         ##        query matches to four snippets but limit defined in search query results
         ##        only two of them sorted by the utc column in descending order.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*4 + (Snippet.UTC2,)*4 + (None,)  # [REF_UTC]
         snippy = Snippet.add_defaults(Snippy())
         Snippet.add_one(snippy, Snippet.EXITED)
         Snippet.add_one(snippy, Snippet.NETCAT)
@@ -148,7 +148,7 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /api/v1/snippets and search keywords from all columns sorted with
         ##        two fields. This syntax that separates the sorted fields causes the parameter
         ##        to be processed in string context which must handle multiple fields.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*4 + (Snippet.UTC2,)*4 + (None,)  # [REF_UTC]
         snippy = Snippet.add_defaults(Snippy())
         Snippet.add_one(snippy, Snippet.EXITED)
         Snippet.add_one(snippy, Snippet.NETCAT)

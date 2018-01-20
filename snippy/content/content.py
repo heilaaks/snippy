@@ -51,22 +51,26 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         self.content = content
 
-    def is_snippet(self):
-        """Test if content is snippet."""
+    def convert_text(self):
+        """Content content to text."""
 
-        return True if self.content[Const.CATEGORY] == Const.SNIPPET else False
+        template = self._content_template(self.get_category())
+        template = self._add_data(template)
+        template = self._add_brief(template)
+        template = self._add_date(template)
+        template = self._add_group(template)
+        template = self._add_tags(template)
+        template = self._add_links(template)
+        template = self._add_filename(template)
 
-    def has_data(self):
-        """Test if content has data defined."""
+        return template
 
-        return False if not self.content[Const.DATA] or not any(self.content[Const.DATA]) else True
-
-    def is_data_template(self, edited=None):
+    def is_template(self, edited=None):
         """Test if content data is empty template."""
 
-        # Date and group fields are masked out. Date can change and the tool
+        # Date and group fields are masked out. The date can change and the tool
         # enforces default category on top of the template when content is saved.
-        template = Config.get_content_template(Content.get_empty(self.get_category()))
+        template = Content.get_empty(self.get_category()).convert_text()
         if not edited:
             content = self.get_data(form=Const.STRING_CONTENT)
         else:
@@ -77,6 +81,99 @@ class Content(object):  # pylint: disable=too-many-public-methods
         content = re.sub(r'# Add optional single group below.\ndefault', '# Add optional single group below.\n', content)
 
         return True if content == template else False
+
+    @staticmethod
+    def _content_template(category):
+        """Return content template."""
+
+        template = Const.EMPTY
+        if category == Const.SNIPPET:
+            filename = Config.snippet_template
+        else:
+            filename = Config.solution_template
+
+        with open(filename, 'r') as infile:
+            template = infile.read()
+
+        return template
+
+    def _add_data(self, template):
+        """Add content data to template."""
+
+        data = self.get_data(Const.STRING_CONTENT)
+        if data:
+            if self.is_snippet():
+                template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
+            else:
+                template = data
+        else:
+            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
+
+        return template
+
+    def _add_brief(self, template):
+        """Add content brief to template."""
+
+        brief = self.get_brief(Const.STRING_CONTENT)
+        template = template.replace('<SNIPPY_BRIEF>', brief)
+
+        return template
+
+    def _add_date(self, template):
+        """Add content date to template."""
+
+        if '<SNIPPY_DATE>' in template:
+            template = template.replace('<SNIPPY_DATE>', Config.get_utc_time())
+        else:
+            match = re.search(r'(## DATE  :\s*?$)', template, re.MULTILINE)
+            if match and self.get_utc():
+                match.group(1).rstrip()
+                template = template.replace(match.group(1), match.group(1) + Const.SPACE + self.get_utc())
+
+        return template
+
+    def _add_group(self, template):
+        """Add content group to template."""
+
+        group = self.get_group(Const.STRING_CONTENT)
+        template = template.replace('<SNIPPY_GROUP>', group)
+
+        return template
+
+    def _add_tags(self, template):
+        """Add content tags to template."""
+
+        tags = self.get_tags(Const.STRING_CONTENT)
+        template = template.replace('<SNIPPY_TAGS>', tags)
+
+        return template
+
+    def _add_links(self, template):
+        """Add content links to template."""
+
+        links = self.get_links(Const.STRING_CONTENT)
+        links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
+        template = template.replace('<SNIPPY_LINKS>', links)
+
+        return template
+
+    def _add_filename(self, template):
+        """Add content filename to template."""
+
+        filename = self.get_filename(Const.STRING_CONTENT)
+        template = template.replace('<SNIPPY_FILE>', filename)
+
+        return template
+
+    def is_snippet(self):
+        """Test if content is snippet."""
+
+        return True if self.content[Const.CATEGORY] == Const.SNIPPET else False
+
+    def has_data(self):
+        """Test if content has data defined."""
+
+        return False if not self.content[Const.DATA] or not any(self.content[Const.DATA]) else True
 
     def get_data(self, form=Const.NATIVE_CONTENT):
         """Return content data."""

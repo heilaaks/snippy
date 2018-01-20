@@ -10,6 +10,7 @@ from snippy.metadata import __homepage__
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
 from snippy.config.source.editor import Editor
+from snippy.config.config import Config
 from snippy.content.content import Content
 from snippy.migrate.migrate import Migrate
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -334,10 +335,10 @@ class SolutionHelper(object):
     def get_template(dictionary):
         """Transform dictionary to text template."""
 
+        Config()  # Because helper may be called before the Snippy() is created.
         contents = Content.load({'content': [dictionary]})
-        editor = Editor(contents[0], SolutionHelper.UTC)
 
-        return editor.get_template()
+        return contents[0].convert_text()
 
     @staticmethod
     def add_defaults(snippy):

@@ -229,7 +229,7 @@ class Migrate(object):
                               'content': Migrate.get_dictionary_list(contents)}
                 if Config.is_operation_file_text:
                     for content in contents:
-                        template = Config.get_content_template(content)
+                        template = content.convert_text()
                         outfile.write(template)
                         outfile.write(Const.NEWLINE)
                 elif Config.is_operation_file_json:
@@ -252,7 +252,7 @@ class Migrate(object):
         """Dump content template into file."""
 
         filename = Config.get_operation_file(content_filename=content.get_filename())
-        template = Config.get_content_template(content)
+        template = content.convert_text()
         cls._logger.debug('exporting content template %s', filename)
         with open(filename, 'w') as outfile:
             try:

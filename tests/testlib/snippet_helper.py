@@ -170,9 +170,8 @@ class SnippetHelper(object):
         """Transform dictionary to text template."""
 
         contents = Content.load({'content': [dictionary]})
-        editor = Editor(contents[0], SnippetHelper.UTC1)
 
-        return editor.get_template()
+        return contents[0].convert_text()
 
     @staticmethod
     def add_defaults(snippy):

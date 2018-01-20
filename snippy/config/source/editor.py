@@ -1,15 +1,31 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""editor.py: Editor based configuration."""
+"""editor.py: Text editor based content management."""
 
-import re
-import os.path
 import datetime
-import pkg_resources
-from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
+import os.path
+import re
 from snippy.cause.cause import Cause
+from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
+from snippy.logger.logger import Logger
 
 
 class Editor(object):
@@ -41,24 +57,10 @@ class Editor(object):
     def read_content(self):
         """Read the content from editor."""
 
-        template = self.get_template()
+        template = self.content.convert_text()
         self.edited = self.call_editor(template)
         self.is_snippet = self.get_edited_category() == Const.SNIPPET
         self.is_solution = self.get_edited_category() == Const.SOLUTION
-
-    def get_template(self):
-        """Get template for editor."""
-
-        template = self.read_template()
-        template = self.set_template_data(template)
-        template = self.set_template_brief(template)
-        template = self.set_template_date(template)
-        template = self.set_template_group(template)
-        template = self.set_template_tags(template)
-        template = self.set_template_links(template)
-        template = self.set_template_filename(template)
-
-        return template
 
     def is_content_identified(self):
         """Test if content category is identified."""
@@ -221,88 +223,6 @@ class Editor(object):
         self.logger.debug('parsed content filename from editor "%s"', filename)
 
         return filename
-
-    def set_template_data(self, template):
-        """Update template content data."""
-
-        data = self.content.get_data(Const.STRING_CONTENT)
-        if data:
-            if self.content.get_category() == Const.SOLUTION:
-                template = data
-            else:
-                template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
-        else:
-            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
-
-        return template
-
-    def set_template_brief(self, template):
-        """Update template content brief."""
-
-        brief = self.content.get_brief(Const.STRING_CONTENT)
-        template = template.replace('<SNIPPY_BRIEF>', brief)
-
-        return template
-
-    def set_template_date(self, template):
-        """Update template content date."""
-
-        if '<SNIPPY_DATE>' in template:
-            template = template.replace('<SNIPPY_DATE>', self.utc)
-        else:
-            match = re.search(r'(## DATE  :\s*?$)', template, re.MULTILINE)
-            if match and self.content.get_utc():
-                match.group(1).rstrip()
-                template = template.replace(match.group(1), match.group(1) + Const.SPACE + self.content.get_utc())
-
-        return template
-
-    def set_template_group(self, template):
-        """Update template content group."""
-
-        group = self.content.get_group(Const.STRING_CONTENT)
-        template = template.replace('<SNIPPY_GROUP>', group)
-
-        return template
-
-    def set_template_tags(self, template):
-        """Update template content tags."""
-
-        tags = self.content.get_tags(Const.STRING_CONTENT)
-        template = template.replace('<SNIPPY_TAGS>', tags)
-
-        return template
-
-    def set_template_links(self, template):
-        """Update template content links."""
-
-        links = self.content.get_links(Const.STRING_CONTENT)
-        links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
-        template = template.replace('<SNIPPY_LINKS>', links)
-
-        return template
-
-    def set_template_filename(self, template):
-        """Update template content file."""
-
-        filename = self.content.get_filename(Const.STRING_CONTENT)
-        template = template.replace('<SNIPPY_FILE>', filename)
-
-        return template
-
-    def read_template(self):
-        """Return content template."""
-
-        template = Const.EMPTY
-        if self.content.is_snippet():
-            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'snippet-template.txt')
-        else:
-            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), 'solution-template.txt')
-
-        with open(filename, 'r') as infile:
-            template = infile.read()
-
-        return template
 
     def _get_editor(self):
         """Try to resolve the editor in a secure way."""

@@ -101,7 +101,7 @@ class Sqlite3Db(object):
                 self.logger.info(cause[1])
 
                 continue
-            if content.is_data_template():
+            if content.is_template():
                 cause = (Cause.HTTP_BAD_REQUEST, 'no content was stored because the content data is matching to empty template')
                 self.logger.info(cause[1])
 

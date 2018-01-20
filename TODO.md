@@ -27,6 +27,7 @@
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
    - [ ] Change is_template in Content to __cmp__.
+   - [ ] Fix migrate dump load that use YAML error exception that is not imported if try catch inside explodes.
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
    - [ ] Add support to print only selected fields, like brief and digest for text output. Hard to generalize since layout e.g. contains header with three fields.
    - [ ] Hide internal class level variables with _ or __ prefix. The intention is not to allow access to these.

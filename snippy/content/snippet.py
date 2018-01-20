@@ -40,7 +40,7 @@ class Snippet(object):
 
         self.logger.debug('creating new snippet')
         snippets = []
-        snippet = Config.get_content(Content())
+        snippet = Config.get_content(Content(category=Const.SNIPPET))
         if not snippet.has_data():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory snippet data not defined')
         else:
@@ -106,7 +106,7 @@ class Snippet(object):
         filename = Config.get_operation_file()
         if Config.template:
             self.logger.debug('exporting snippet template %s', Config.get_operation_file())
-            Migrate.dump_template(Content())
+            Migrate.dump_template(Content(category=Const.SNIPPET))
         elif Config.is_search_criteria():
             self.logger.debug('exporting snippets based on search criteria')
             snippets = self.storage.search(Const.SNIPPET,
@@ -132,7 +132,7 @@ class Snippet(object):
         if content_digest:
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
             if len(snippets) == 1:
-                dictionary = Migrate.load(Config.get_operation_file(), Content())
+                dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SNIPPET))
                 contents = Content.load(dictionary)
                 snippets[0].migrate_edited(contents)
                 self.storage.update(snippets[0])
@@ -142,7 +142,7 @@ class Snippet(object):
                 Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple snippets with same digest {:.16}'.format(content_digest))
         else:
             self.logger.debug('importing snippets %s', Config.get_operation_file())
-            dictionary = Migrate.load(Config.get_operation_file(), Content())
+            dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SNIPPET))
             snippets = Content.load(dictionary)
             self.storage.import_content(snippets)
 

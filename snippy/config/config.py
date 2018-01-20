@@ -262,7 +262,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return filetype
 
     @classmethod
-    def get_content(cls, content, source=Const.EMPTY):
+    # def get_content(cls, content, source=Const.EMPTY):
+    def get_content(cls, content):
         """Get content from configuration, editor or from a given
         string that contains newlines."""
 
@@ -271,7 +272,8 @@ class Config(object):  # pylint: disable=too-many-public-methods
         #     contents = Parser.read_content(content, source)
         # elif cls.editor:
         if cls.editor:
-            content = Config._get_edited_content(content)
+            editor = Editor((), Config.get_utc_time())
+            content = editor.read_content(content)
         else:
             content = Config._get_config_content(content)
 
@@ -425,37 +427,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         utc = datetime.datetime.utcnow()
 
         return utc.strftime("%Y-%m-%d %H:%M:%S")
-
-    @classmethod
-    def _get_edited_content(cls, content):
-        """Read and set the user provided values from editor."""
-
-        editor = Editor(content, Config.get_utc_time())
-        editor.read_content()
-        if editor.is_content_identified():
-            cls.content_data = editor.get_edited_data()
-            cls.content_brief = editor.get_edited_brief()
-            cls.content_group = editor.get_edited_group()
-            cls.content_tags = editor.get_edited_tags()
-            cls.content_links = editor.get_edited_links()
-            cls.content_filename = editor.get_edited_filename()
-            content.set((cls.content_data,
-                         cls.content_brief,
-                         cls.content_group,
-                         cls.content_tags,
-                         cls.content_links,
-                         content.get_category(),
-                         cls.content_filename,
-                         content.get_runalias(),
-                         content.get_versions(),
-                         content.get_utc(),
-                         content.get_digest(),
-                         content.get_metadata(),
-                         content.get_key()))
-        else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
-
-        return content
 
     @classmethod
     def _get_config_content(cls, content):

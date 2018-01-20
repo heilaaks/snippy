@@ -123,6 +123,30 @@ class TestWfCreateSolution(unittest.TestCase):
             snippy = None
             Database.delete_storage()
 
+    @mock.patch.object(Editor, 'call_editor')
+    @mock.patch.object(Config, '_storage_file')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    def test_create_solution_from_editor(self, mock_isfile, mock_storage_file, mock_call_editor):
+        """Create solution from editor."""
+
+        mock_isfile.return_value = True
+        mock_storage_file.return_value = Database.get_storage()
+
+        ## Brief: Create new solution by defining all values from editor.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
+            mock_call_editor.return_value = template
+            compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
+            sys.argv = ['snippy', 'create', '--solution', '--editor']  ## workflow
+            snippy = Snippy()
+            cause = snippy.run_cli()
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_solutions()) == 1
+            Solution.test_content(snippy, mock_file, compare_content)
+            snippy.release()
+            snippy = None
+            Database.delete_storage()
+
     # pylint: disable=duplicate-code
     def tearDown(self):
         """Teardown each test."""

@@ -39,7 +39,7 @@ class Solution(object):
         """Create new solution."""
 
         self.logger.debug('creating new solution')
-        solution = Config.get_content(Content())
+        solution = Config.get_content(Content(category=Const.SOLUTION))
         if not solution.has_data():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory solution data not defined')
         elif solution.is_template():
@@ -124,7 +124,7 @@ class Solution(object):
         if content_digest:
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
             if len(solutions) == 1:
-                dictionary = Migrate.load(Config.get_operation_file(), Content())
+                dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SOLUTION))
                 contents = Content.load(dictionary)
                 solutions[0].migrate_edited(contents)
                 self.storage.update(solutions[0])
@@ -134,7 +134,7 @@ class Solution(object):
                 Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple solutions with same digest {:.16}'.format(content_digest))
         else:
             self.logger.debug('importing solutions %s', Config.get_operation_file())
-            dictionary = Migrate.load(Config.get_operation_file(), Content())
+            dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SOLUTION))
             solutions = Content.load(dictionary)
             self.storage.import_content(solutions)
 

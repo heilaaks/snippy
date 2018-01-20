@@ -19,6 +19,7 @@
 
 """parser.py: Parse configuration source parameters."""
 
+import datetime
 import re
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
@@ -28,6 +29,149 @@ class Parser(object):
     """Parse configuration source parameters."""
 
     _logger = Logger(__name__).get()
+
+    SOLUTION_BRIEF = '## BRIEF :'
+    SOLUTION_DATE = '## DATE  :'
+    DATA_HEAD = '# Add mandatory snippet below.\n'
+    DATA_TAIL = '# Add optional brief description below.\n'
+    BRIEF_HEAD = '# Add optional brief description below.\n'
+    BRIEF_TAIL = '# Add optional single group below.\n'
+    GROUP_HEAD = '# Add optional single group below.\n'
+    GROUP_TAIL = '# Add optional comma separated list of tags below.\n'
+    TAGS_HEAD = '# Add optional comma separated list of tags below.\n'
+    TAGS_TAIL = '# Add optional links below one link per line.\n'
+    LINKS_HEAD = '# Add optional links below one link per line.\n'
+    LINKS_TAIL = '.'
+
+    @classmethod
+    def content_category(cls, source):
+        """Read content category from text source."""
+
+        category = Const.UNKNOWN_CONTENT
+
+        if cls.DATA_HEAD in source and cls.BRIEF_HEAD:
+            category = Const.SNIPPET
+        elif cls.SOLUTION_BRIEF in source and cls.SOLUTION_DATE:
+            category = Const.SOLUTION
+
+        return category
+
+    @classmethod
+    def content_data(cls, category, source):
+        """Read content data from text source."""
+
+        data = ()
+        if category == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (cls.DATA_HEAD, cls.DATA_TAIL), source, re.DOTALL)
+            if match and not match.group(1).isspace():
+                data = tuple([s.strip() for s in match.group(1).rstrip().split(Const.NEWLINE)])
+        else:
+            # Remove unnecessary newlines at the end and make sure there is one at the end.
+            data = tuple(source.rstrip().split(Const.NEWLINE) + [Const.EMPTY])
+        cls._logger.debug('parsed content data from editor "%s"', data)
+
+        return data
+
+    @classmethod
+    def content_brief(cls, category, source):
+        """Read content brief from text source."""
+
+        brief = Const.EMPTY
+        if category == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (cls.BRIEF_HEAD, cls.BRIEF_TAIL), source, re.DOTALL)
+            if match and not match.group(1).isspace():
+                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_SPACE)])
+                brief = Const.DELIMITER_SPACE.join(lines)
+        else:
+            match = re.search(r'## BRIEF :\s*?(.*|$)', source, re.MULTILINE)
+            if match:
+                brief = match.group(1).strip()
+        cls._logger.debug('parsed content brief from editor "%s"', brief)
+
+        return brief
+
+    @classmethod
+    def content_date(cls, category, source, timestamp):
+        """Read content date from text source."""
+
+        date = timestamp
+        if category == Const.SOLUTION:
+            match = re.search(r'## DATE  :\s*?(.*|$)', source, re.MULTILINE)
+            if match:
+                try:
+                    datetime.datetime.strptime(match.group(1).strip(), '%Y-%m-%d %H:%M:%S')
+                    date = match.group(1).strip()
+                except ValueError:
+                    cls._logger.info('incorrect date and time format "%s"', match.group(1))
+
+        cls._logger.debug('parsed content date from editor "%s"', date)
+
+        return date
+
+    @classmethod
+    def content_group(cls, category, source):
+        """Read content group from text source."""
+
+        group = Const.EMPTY
+        if category == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (cls.GROUP_HEAD, cls.GROUP_TAIL), source, re.DOTALL)
+            if match and not match.group(1).isspace():
+                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_SPACE)])
+                group = Const.DELIMITER_SPACE.join(lines)
+        else:
+            match = re.search(r'## GROUP :\s*?(\S+|$)', source, re.MULTILINE)
+            if match:
+                group = match.group(1).strip()
+        cls._logger.debug('parsed content group from editor "%s"', group)
+
+        return group
+
+    @classmethod
+    def content_tags(cls, category, source):
+        """Read content tags from text source."""
+
+        tags = ()
+        if category == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (cls.TAGS_HEAD, cls.TAGS_TAIL), source, re.DOTALL)
+            if match and not match.group(1).isspace():
+                tags = Parser.keywords([match.group(1)])
+        else:
+            match = re.search(r'## TAGS  :\s*?(.*|$)', source, re.MULTILINE)
+            if match:
+                tags = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_TAGS)])
+        cls._logger.debug('parsed content tags from editor "%s"', tags)
+
+        return tags
+
+    @classmethod
+    def content_links(cls, category, source):
+        """Read content links from text source."""
+
+        # In case of solution, the links are read from the whole content data.
+        links = ()
+        if category == Const.SNIPPET:
+            match = re.search('%s(.*)%s' % (cls.LINKS_HEAD, cls.LINKS_TAIL), source, re.DOTALL)
+            if match and not match.group(1).isspace():
+                links = tuple([s.strip() for s in match.group(1).rstrip().split(Const.NEWLINE)])
+        else:
+            links = tuple(re.findall('> (http.*)', source))
+        cls._logger.debug('parsed content links from editor "%s"', links)
+
+        return links
+
+    @classmethod
+    def content_filename(cls, category, source):
+        """Read content filename from text source."""
+
+        # Only solution content uses optional filename field.
+        filename = Const.EMPTY
+        if category == Const.SOLUTION:
+            match = re.search(r'## FILE  :\s*?(\S+|$)', source, re.MULTILINE)
+            if match and match.group(1):
+                filename = match.group(1)
+        cls._logger.debug('parsed content filename from editor "%s"', filename)
+
+        return filename
 
     @staticmethod
     def keywords(keywords, sort_=True):

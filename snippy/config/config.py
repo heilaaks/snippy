@@ -262,7 +262,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return filetype
 
     @classmethod
-    def get_content(cls, content):
+    def get_content(cls, content, source=Const.EMPTY):
         """Get content from configuration, editor or from a given
         string that contains newlines."""
 
@@ -310,7 +310,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
                               content_copy.get_key()))
             content_copy.update_digest()
             if content_copy.is_template(edited=item):
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'content was stored because it matched to empty template')
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because it matched to empty template')
 
             contents.append(content_copy)
 

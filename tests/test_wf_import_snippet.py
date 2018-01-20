@@ -338,7 +338,7 @@ class TestWfImportSnippet(unittest.TestCase):
             snippy = Snippy()
             sys.argv = ['snippy', 'import', '--template']  ## workflow
             cause = snippy.run_cli()
-            assert cause == 'NOK: content was stored because it matched to empty template'
+            assert cause == 'NOK: no content was stored because it matched to empty template'
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
             snippy.release()

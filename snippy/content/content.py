@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """content.py: Store content."""
 
@@ -10,24 +27,12 @@ from snippy.config.config import Config
 
 
 class Content(object):  # pylint: disable=too-many-public-methods
-    """Manage content."""
+    """Store content."""
 
     def __init__(self, content=None, category=None):
         self.logger = Logger(__name__).get()
         if content is None:
-            self.content = (Config.content_data,
-                            Config.content_brief,
-                            Config.content_group,
-                            Config.content_tags,
-                            Config.content_links,
-                            Config.content_category,
-                            Config.content_filename,
-                            Const.EMPTY,  # runalias
-                            Const.EMPTY,  # versions
-                            None,  # utc
-                            None,  # digest
-                            None,  # metadata
-                            None)  # key
+            self.content = Content.get_empty(category).get_list()
         else:
             self.content = content
 
@@ -69,7 +74,8 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """Test if content data is empty template."""
 
         # Date and group fields are masked out. The date can change and the tool
-        # enforces default category on top of the template when content is saved.
+        # enforces default group only after the content is saved and user did not
+        # give change the group field value in template.
         template = Content.get_empty(self.get_category()).convert_text()
         if not edited:
             content = self.get_data(form=Const.STRING_CONTENT)
@@ -78,7 +84,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
         template = re.sub(r'## DATE  :.*', '## DATE  : ', template)
         content = re.sub(r'## DATE  :.*', '## DATE  : ', content)
         content = re.sub(r'## GROUP :.*', '## GROUP : ', content)
+        template = re.sub(r'## GROUP :.*', '## GROUP : ', template)
         content = re.sub(r'# Add optional single group below.\ndefault', '# Add optional single group below.\n', content)
+        template = re.sub(r'# Add optional single group below.\ndefault', '# Add optional single group below.\n', template)
 
         return True if content == template else False
 
@@ -390,7 +398,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         content = (Const.EMPTY_TUPLE,
                    Const.EMPTY,
-                   Const.EMPTY,
+                   Const.DEFAULT_GROUP,
                    Const.EMPTY_TUPLE,
                    Const.EMPTY_TUPLE,
                    category,

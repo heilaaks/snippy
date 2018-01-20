@@ -491,7 +491,9 @@ class TestWfImportSolution(unittest.TestCase):
 
         ## Brief: Import solution template that does not have any changes to file header
         ##        located at the top of content data. This tests a scenario where user
-        ##        does not bother to do any changes to header which has the solution metadata.
+        ##        does not bother to do any changes to header which has the solution
+        ##        metadata. Because the content was changed the import operation must
+        ##        work.
         edited_template = template.replace('## description', '## description changed')
         mocked_open = mock.mock_open(read_data=edited_template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:

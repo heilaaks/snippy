@@ -29,13 +29,14 @@ from snippy.cause.cause import Cause
 from snippy.config.source.parser import Parser
 from snippy.content.content import Content
 from snippy.migrate.migrate import Migrate
+from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class SolutionHelper(object):
     """Helper methods for solution testing."""
 
-    UTC = '2017-10-01 11:53:17'
+    UTC1 = '2017-10-20 11:11:19'
     BEATS = 0
     NGINX = 1
     KAFKA = 2
@@ -317,7 +318,7 @@ class SolutionHelper(object):
         """Transform text template to content."""
 
         if text:
-            contents = Parser.read_content(Content(category=Const.SOLUTION), text, SolutionHelper.UTC)
+            contents = Parser.read_content(Content(category=Const.SOLUTION), text, SolutionHelper.UTC1)
             content = contents[0]
             content.update_digest()
         else:
@@ -382,6 +383,12 @@ class SolutionHelper(object):
         return snippy
 
     @staticmethod
+    def sorted_json_list(json_data):
+        """Sort list of JSONs but keep the oder of main level list containing JSONs."""
+
+        return Snippet.sorted_json_list(json_data)
+
+    @staticmethod
     def test_content(snippy, mock_file, dictionary):
         """Compare given dictionary against content stored in database based on message digest."""
 
@@ -394,3 +401,9 @@ class SolutionHelper(object):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(SolutionHelper.get_template(dictionary[digest])),
                                                 mock.call(Const.NEWLINE)])
+
+    @staticmethod
+    def test_content2(dictionary):
+        """Compare given dictionary against content stored in database based on message digest."""
+
+        Snippet.test_content2(dictionary)

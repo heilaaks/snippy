@@ -1,61 +1,80 @@
-#!/usr/bin/env python3
-# flake8: noqa # pylint: skip-file
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """api_solutions.py - JSON REST API for Solutions."""
 
 from __future__ import print_function
+import json
 import falcon
-from snippy.metadata import __version__
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.source.api import Api
 from snippy.config.config import Config
 from snippy.content.solution import Solution
+from snippy.server.validate import Validate
 
 
-class ApiSoultions(object):
+class ApiSolutions(object):
     """Process solution collections"""
 
     def __init__(self, storage):
         self.logger = Logger(__name__).get()
         self.storage = storage
 
-    @staticmethod
-    def on_get(request, response):
+    def on_post(self, request, response):
+        """Create new solution."""
+
+        contents = []
+        self.logger.debug('run post /api/v1/solutions')
+        collection = Validate.collection(request.media)
+        for member in collection:
+            api = Api(Const.SOLUTION, Api.CREATE, member)
+            Config.read_source(api)
+            contents = contents + json.loads(Solution(self.storage, Const.CONTENT_TYPE_JSON).run())
+        if Cause.is_ok():
+            response.content_type = falcon.MEDIA_JSON
+            response.body = json.dumps(contents)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = Cause.json_message()
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        Logger.set_new_oid()
+
+    def on_get(self, request, response):
         """Search solutions based on query parameters."""
 
-        print("ApiSolutions")
-        print(request)
-        print("path %s" % request.path)
-        print("query %s" % request.query_string)
-        print("query params %s" % request.params)
-        print("accept %s" % request.accept)
-        print("accept bool %s" % request.client_accepts_json)
+        self.logger.debug('run get /api/v1/solutions')
+        api = Api(Const.SOLUTION, Api.SEARCH, request.params)
+        Config.read_source(api)
+        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if Cause.is_ok():
+            response.content_type = falcon.MEDIA_JSON
+            response.body = contents
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = Cause.json_message()
+            response.status = Cause.http_status()
 
-        hello = __version__
-        response.media = hello
-        response.content_type = falcon.MEDIA_JSON
-
-class ApiSolutionsDigest(object):
-    """Process solution based on digest resource ID."""
-
-    def __init__(self, storage):
-        self.logger = Logger(__name__).get()
-        self.storage = storage
-
-    @staticmethod
-    def on_put(request, response, digest):
-        """Handle PUT reguest."""
-
-        print("ApiSolutionsDigest")
-        print(request)
-        print("path %s" % request.path)
-        print("query %s" % request.query_string)
-        print("query params %s" % request.params)
-        print("accept %s" % request.accept)
-        print("accept bool %s" % request.client_accepts_json)
-        print("digest %s" % digest)
-
-        hello = __version__
-        response.media = hello
+        Cause.reset()
+        Logger.set_new_oid()

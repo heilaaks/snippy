@@ -37,7 +37,6 @@ class ApiSnippets(object):
     def __init__(self, storage):
         self.logger = Logger(__name__).get()
         self.storage = storage
-        self.validate = Validate()
 
     def on_post(self, request, response):
         """Create new snippets."""

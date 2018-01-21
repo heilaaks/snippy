@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_export_solution.py: Test workflows for exporting solutions."""
 
@@ -28,9 +45,9 @@ class TestWfExportSolution(unittest.TestCase):
         """Export all solutions."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Solution.UTC
+        mock_get_utc_time.return_value = Solution.UTC1
         mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
+        export_dict = {'metadata': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
         ## Brief: Export all solutions into file. File name or format are not defined in command
@@ -147,9 +164,9 @@ class TestWfExportSolution(unittest.TestCase):
         """Export defined solution with digest."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Solution.UTC
+        mock_get_utc_time.return_value = Solution.UTC1
         mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
+        export_dict = {'metadata': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
         ## Brief: Export defined solution based on message digest. File name is defined in solution
@@ -421,9 +438,9 @@ class TestWfExportSolution(unittest.TestCase):
         """Export defined solution with search keyword."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Solution.UTC
+        mock_get_utc_time.return_value = Solution.UTC1
         mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
+        export_dict = {'metadata': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
         ## Brief: Export defined solution based on search keyword. File name is defined in solution
@@ -547,9 +564,9 @@ class TestWfExportSolution(unittest.TestCase):
         """Export solution defaults."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Solution.UTC
+        mock_get_utc_time.return_value = Solution.UTC1
         mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'metadata': Solution.get_metadata(Solution.UTC),
+        export_dict = {'metadata': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
         ## Brief: Export solution defaults. All solutions should be exported into predefined file

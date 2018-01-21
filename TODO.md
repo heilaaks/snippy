@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
    - [ ] Fix set/get to properties for Config()
+   - [ ] Add configurable base path. Default to /snippy/api/v1/
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 

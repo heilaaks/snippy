@@ -45,7 +45,11 @@ class Solution(object):
         elif solutions[0].is_template():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because solution is an empty template')
         else:
-            self.storage.create(solutions[0])
+            content_digest = self.storage.create(solutions[0])
+            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
+            solutions = Migrate.content(solutions, self.content_type)
+
+        return solutions
 
     def search(self):
         """Search solutions."""
@@ -141,12 +145,12 @@ class Solution(object):
     def run(self):
         """Run the solution management operation."""
 
-        solutions = Const.EMPTY
+        solutions = ()
 
         self.logger.debug('managing solution')
         Config.content_category = Const.SOLUTION
         if Config.is_operation_create:
-            self.create()
+            solutions = self.create()
         elif Config.is_operation_search:
             solutions = self.search()
         elif Config.is_operation_update:

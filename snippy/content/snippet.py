@@ -148,7 +148,7 @@ class Snippet(object):
     def run(self):
         """Run the snippet management operation."""
 
-        snippets = Const.EMPTY
+        snippets = ()
 
         self.logger.debug('managing snippet')
         Config.content_category = Const.SNIPPET

@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_snippets.py: Test GET /snippets API."""
+"""test_api_search_snippet.py: Test GET /snippy/api/snippets API."""
 
 import sys
 

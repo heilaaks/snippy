@@ -51,7 +51,7 @@ class TestApiCreateSolution(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call POST /api/v1/solutions to create new solution.
+        ## Brief: Call POST /snippy/api/v1/solutions to create new solution.
         solution = Solution.DEFAULTS[Solution.BEATS]
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2204'}
@@ -59,7 +59,7 @@ class TestApiCreateSolution(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/solutions',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/solutions',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(solution))
         assert result.headers == headers
@@ -84,7 +84,8 @@ class TestApiCreateSolution(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call POST /api/v1/solutions in list context to create new solutions.
+        ## Brief: Call POST /snippy/api/v1/solutions in list context to create new
+        ##        solutions.
         solutions = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.KAFKA]]
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS],
                            'eeef5ca': Solution.DEFAULTS[Solution.KAFKA]}
@@ -93,7 +94,7 @@ class TestApiCreateSolution(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/solutions',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/solutions',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(solutions))
         assert result.headers == headers

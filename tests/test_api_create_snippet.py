@@ -52,7 +52,7 @@ class TestApiCreateSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call POST /api/v1/snippets to create new snippet.
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
         snippet = Snippet.DEFAULTS[Snippet.REMOVE]
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '450'}
@@ -60,7 +60,7 @@ class TestApiCreateSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
         assert result.headers == headers
@@ -72,8 +72,8 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call POST /api/v1/snippets to create new snippet. In this case the
-        ##        links and list are defined as list in the JSON message. Note that
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In this case
+        ##        the links and list are defined as list in the JSON message. Note that
         ##        the default input for tags and links from Snippet.REMOVE maps to a
         ##        string but the syntax in this case maps to lists with multiple items.
         snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
@@ -87,7 +87,7 @@ class TestApiCreateSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
         assert result.headers == headers
@@ -99,9 +99,9 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call POST /api/v1/snippets to create new snippet. In this case the
-        ##        content data is defined in string context where each line is separated
-        ##        with a newlin.
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In this case
+        ##        the content data is defined in string context where each line is
+        ##        separated with a newline.
         mock_get_utc_time.return_value = Snippet.UTC2
         snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.EXITED]['data']),
                    'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
@@ -114,7 +114,7 @@ class TestApiCreateSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
         assert result.headers == headers
@@ -127,8 +127,8 @@ class TestApiCreateSnippet(object):
         Database.delete_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
 
-        ## Brief: Call POST /api/v1/snippets to create new snippet. In this case the
-        ##        content data is defined in list context where each line is an item
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In this case
+        ##        the content data is defined in list context where each line is an item
         ##        in a list.
         mock_get_utc_time.return_value = Snippet.UTC2
         snippet = {'data': ['docker rm $(docker ps --all -q -f status=exited)\n\n\n\n',
@@ -143,7 +143,7 @@ class TestApiCreateSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
         assert result.headers == headers
@@ -156,7 +156,7 @@ class TestApiCreateSnippet(object):
         Database.delete_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
 
-        ## Brief: Call POST /api/v1/snippets to create new snippet with only data.
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet with only data.
         snippet = {'data': ['docker rm $(docker ps --all -q -f status=exited)\n']}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '301'}
         body = [{'data': ['docker rm $(docker ps --all -q -f status=exited)'],
@@ -175,7 +175,7 @@ class TestApiCreateSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
         assert result.headers == headers
@@ -208,7 +208,7 @@ class TestApiCreateSnippet(object):
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/api/v1/snippets',  ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippets))
         assert result.headers == headers

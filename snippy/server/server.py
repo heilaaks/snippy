@@ -46,10 +46,10 @@ class Server(object):  # pylint: disable=too-few-public-methods
             'logger_class': CustomGunicornLogger
         }
         self.api = falcon.API()
-        self.api.add_route('/', ApiHello())
-        self.api.add_route('/api/hello', ApiHello())
-        self.api.add_route('/api/v1/hello', ApiHello())
-        self.api.add_route('/api/v1/snippets', ApiSnippets(self.storage))
-        self.api.add_route('/api/v1/snippets/{digest}', ApiSnippetsDigest(self.storage))
-        self.api.add_route('/api/v1/solutions', ApiSolutions(self.storage))
+        self.api.add_route('/snippy', ApiHello())
+        self.api.add_route('/snippy/api/hello', ApiHello())
+        self.api.add_route('/snippy/api/v1/hello', ApiHello())
+        self.api.add_route('/snippy/api/v1/snippets', ApiSnippets(self.storage))
+        self.api.add_route('/snippy/api/v1/snippets/{digest}', ApiSnippetsDigest(self.storage))
+        self.api.add_route('/snippy/api/v1/solutions', ApiSolutions(self.storage))
         SnippyServer(self.api, options).run()

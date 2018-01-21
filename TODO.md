@@ -1,7 +1,7 @@
 ## TODO
    - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
    - [ ] Fix set/get to properties for Config()
-   - [ ] Add configurable base path. Default to /snippy/api/v1/
+   - [ ] Add configurable base path.
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
@@ -68,6 +68,7 @@
    - [ ] Python logging is not following ISO8601 format and it cannot have timezone.
 
 ## DONE
+   - [x] Changed REST API base bath to /snippy/api/v1.
    - [x] Added GMT time and ISO8601 format to JSON logs.
    - [x] Added JSON formatted log output to stdout with --json-logs option.
    - [x] Removed unused logging handlers under gunicorn namespace and quaranteed one line logs with -vv option.

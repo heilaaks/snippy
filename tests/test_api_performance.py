@@ -1,17 +1,38 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_api_performance.py: Verify that there are no major impacts to performance in API usage."""
 
 from __future__ import print_function
-from subprocess import call
-from subprocess import Popen
+
+import json
 import sys
 import time
-import json
-from snippy.config.constants import Constants as Const
+
+from subprocess import call
+from subprocess import Popen
+
 from snippy.cause.cause import Cause
+from snippy.config.constants import Constants as Const
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+
 if not Const.PYTHON2:
     import http.client as httplib # pylint: disable=import-error
     from io import StringIO  # pylint: disable=import-error
@@ -68,7 +89,7 @@ class TestApiPerformance(object):
 
             # POST four snippets in list context.
             conn.request('POST',
-                         '/api/v1/snippets',
+                         '/snippy/api/v1/snippets',
                          json.dumps(snippets),
                          {'content-type':'application/json; charset=UTF-8'})
             resp = conn.getresponse()
@@ -77,21 +98,21 @@ class TestApiPerformance(object):
 
             # GET maximum of two snippets from whole snippet collection.
             conn.request('GET',
-                         '/api/v1/snippets?limit=2&sort=-brief')
+                         '/snippy/api/v1/snippets?limit=2&sort=-brief')
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_200_OK
             assert len(json.loads(resp.read().decode())) == 2
 
             ## GET maximum of four snippets from whole snippet collection with sall search.
             conn.request('GET',
-                         '/api/v1/snippets?sall=docker,swarm&limit=4&sort=brief')
+                         '/snippy/api/v1/snippets?sall=docker,swarm&limit=4&sort=brief')
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_200_OK
             assert len(json.loads(resp.read().decode())) == 3
 
             ## DELETE all snippets one by one by first requesting only digests.
             conn.request('GET',
-                         '/api/v1/snippets?limit=100&fields=digest')
+                         '/snippy/api/v1/snippets?limit=100&fields=digest')
             resp = conn.getresponse()
             body = json.loads(resp.read().decode())
             assert resp.status == Cause.HTTP_200_OK
@@ -99,13 +120,13 @@ class TestApiPerformance(object):
             for member in body:
                 print(member['digest'])
                 conn.request('DELETE',
-                             'http://localhost:8080/api/v1/snippets/' + member['digest'])
+                             'http://localhost:8080/snippy/api/v1/snippets/' + member['digest'])
                 resp = conn.getresponse()
                 assert resp.status == Cause.HTTP_204_NO_CONTENT
 
             # GET all snippets to make sure that all are deleted
             conn.request('GET',
-                         '/api/v1/snippets?limit=100')
+                         '/snippy/api/v1/snippets?limit=100')
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_200_OK
             assert not json.loads(resp.read().decode())

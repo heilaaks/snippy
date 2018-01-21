@@ -315,7 +315,7 @@ class Parser(object):
         if isinstance(value, str):
             string_ = value
         elif isinstance(value, (list, tuple)):
-            string_ = Const.NEWLINE.join([x.strip() for x in value])  # Enforce only one newline at the end.
+            string_ = Const.NEWLINE.join([x.rstrip() for x in value])  # Enforce only one newline at the end.
         else:
             cls._logger.debug('source value conversion to string skipped in normal condition %s : %s', type(value), value)
 

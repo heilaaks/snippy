@@ -1,4 +1,4 @@
-|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-health| |badge-docs| |badge-build|
+|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-health| |badge-codacy| |badge-docs| |badge-build|
 
 Features
 ========
@@ -258,6 +258,9 @@ fill a bug report based on contributing_ instructions.
 
 .. |badge-health| image:: https://landscape.io/github/heilaaks/snippy/master/landscape.svg?style=flat
    :target: https://landscape.io/github/heilaaks/snippy/master
+
+.. |badge-codacy| image:: https://api.codacy.com/project/badge/Grade/170f2ea74ead4f23b574478000ef578a
+   :target: https://www.codacy.com/app/heilaaks/snippy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=heilaaks/snippy&amp;utm_campaign=Badge_Grade
 
 .. |badge-docs| image:: https://readthedocs.org/projects/snippy/badge/?version=latest
    :target: http://snippy.readthedocs.io/en/latest/?badge=latest

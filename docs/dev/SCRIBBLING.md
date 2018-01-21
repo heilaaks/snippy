@@ -475,6 +475,13 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     > https://testpypi.python.org/pypi?%3Aaction=register_form
 
 #######################################
+## Linting
+#######################################
+
+    # Codacy
+    > https://www.codacy.com/wizard/projects
+
+#######################################
 ## Security
 #######################################
 

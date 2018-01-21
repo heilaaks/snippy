@@ -20,7 +20,9 @@
 """solution_helper.py: Helper methods for solution testing."""
 
 import sys
+
 import mock
+
 from snippy.snip import Snippy
 from snippy.metadata import __version__
 from snippy.metadata import __homepage__
@@ -37,6 +39,8 @@ class SolutionHelper(object):
     """Helper methods for solution testing."""
 
     UTC1 = '2017-10-20 11:11:19'
+    UTC2 = '2017-10-20 06:16:27'
+    UTC3 = '2017-10-20 06:16:27'
     BEATS = 0
     NGINX = 1
     KAFKA = 2

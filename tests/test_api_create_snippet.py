@@ -45,7 +45,7 @@ class TestApiCreateSnippet(object):
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
     def test_api_create_snippet_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
-        """Create snippet from API."""
+        """Create one snippet from API."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Snippet.UTC1
@@ -193,7 +193,7 @@ class TestApiCreateSnippet(object):
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
     def test_api_create_snippets_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
-        """Create snippets from API."""
+        """Create list of snippets from API."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Snippet.UTC1

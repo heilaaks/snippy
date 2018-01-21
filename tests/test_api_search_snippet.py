@@ -3,9 +3,11 @@
 """test_api_search_snippets.py: Test GET /snippets API."""
 
 import sys
+
+import mock
 import falcon
 from falcon import testing
-import mock
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.metadata import __version__
@@ -61,6 +63,9 @@ class TestApiSearchSnippet(object):
         #            timestamp and the last two the UTC2 timestamp. The None is required in
         #            Python 2.7 which behaves differently than Python 3 which does not require
         #            additional parameter after the last one.
+        #
+        #            In some cases when there is a test for the content, it includes export
+        #            operation that needs one call to UTC timestamp to run the export operation.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*2 + (Snippet.UTC2,)*2 + (None,)
         snippy = Snippet.add_defaults(Snippy())
         Snippet.add_one(snippy, Snippet.EXITED)

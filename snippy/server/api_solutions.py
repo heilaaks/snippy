@@ -20,8 +20,10 @@
 """api_solutions.py - JSON REST API for Solutions."""
 
 from __future__ import print_function
+
 import json
 import falcon
+
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause

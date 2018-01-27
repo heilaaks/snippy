@@ -60,8 +60,9 @@ class TestApiUpdateSnippet(object):
                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '450'}
-        body = [Snippet.DEFAULTS[Snippet.REMOVE]]
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '594'}
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/53908d68425c61dc'},
+                'data': {'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -85,16 +86,17 @@ class TestApiUpdateSnippet(object):
                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '244'}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '252'}
         body = {'meta': Snippet.get_http_metadata(),
-                'errors': [{'code': 404, 'status': '404 Not Found', 'module': 'snippy.testing.testing:123',
-                            'message': 'cannot find content with message digest 101010101010101'}]}
+                'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
+                            'title': 'cannot find content with message digest 101010101010101'}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/101010101010101',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     body=json.dumps(snippet))
+        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_404

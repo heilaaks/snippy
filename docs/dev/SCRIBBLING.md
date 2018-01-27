@@ -838,6 +838,13 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        - Top level data type set to 'snippets' or 'solutions'.
        - Top level data id always unique ID.
        - Data attributes containing resource or collection with the requested fields.
+       
+       Notes:
+       
+       - Note that numbers are presented as strings. For example HTTP status
+         code is string.
+       - The JSON response fileds are in CamelCase because the expected use
+         case is from Javascript that uses CamelCase.
     
        /1/ http://jsonapi.org/
 

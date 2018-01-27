@@ -49,3 +49,25 @@ class JsonApiV1(object):  # pylint: disable=too-few-public-methods
 #    def format_collection(cls, contents):
 #        """Format JSON API v1.0 collection from content."""
 #
+
+    @classmethod
+    def format_error(cls, causes):
+        """Format JSON API v1.0 error."""
+
+        # Follow CamelCase in field names because expected usage is from
+        # Javascript that uses CamelCase.
+        errors = {'errors': [], 'meta': {}}
+        causes = json.loads(causes)
+        for cause in causes['errors']:
+            errors['errors'].append({'status': str(cause['status']),
+                                     'statusString': cause['status_string'],
+                                     'title': cause['title'],
+                                     'module': cause['module']})
+
+        if not errors:
+            errors = {'errors': [{'status': 500,
+                                  'statusString': '500 Internal Server Error',
+                                  'title': 'Internal errors not found when error detected.'}]}
+        errors['meta'] = causes['meta']
+
+        return json.dumps(errors)

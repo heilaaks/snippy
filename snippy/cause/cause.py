@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """cause.py: Cause code management."""
 
@@ -65,10 +82,10 @@ class Cause(object):
         if status not in Cause.OK_STATUS_LIST:
             caller = cls._caller()
         cls._logger.info('status %s with message %s from %s', status, message, caller)
-        cls._list['errors'].append({'code': int(status.split()[0]),
-                                    'status': status,
+        cls._list['errors'].append({'status': int(status.split()[0]),
+                                    'status_string': status,
                                     'module': caller,
-                                    'message': message})
+                                    'title': message})
 
     @classmethod
     def is_ok(cls):
@@ -77,9 +94,9 @@ class Cause(object):
         is_ok = False
         if not cls._list['errors']:
             is_ok = True
-        elif len(cls._list['errors']) == 1 and cls._list['errors'][0]['status'] in Cause.OK_STATUS_LIST:
+        elif len(cls._list['errors']) == 1 and cls._list['errors'][0]['status_string'] in Cause.OK_STATUS_LIST:
             is_ok = True
-        elif all(error['status'] in Cause.OK_STATUS_LIST for error in cls._list['errors']):
+        elif all(error['status_string'] in Cause.OK_STATUS_LIST for error in cls._list['errors']):
             is_ok = True
 
         return is_ok
@@ -90,7 +107,7 @@ class Cause(object):
 
         status = Cause.HTTP_OK
         if cls._list['errors']:
-            status = cls._list['errors'][0]['status']
+            status = cls._list['errors'][0]['status_string']
 
         return status
 
@@ -110,7 +127,7 @@ class Cause(object):
 
         cause = Cause.ALL_OK
         if not cls.is_ok():
-            cause = 'NOK: ' + cls._list['errors'][0]['message']
+            cause = 'NOK: ' + cls._list['errors'][0]['title']
 
         return cause
 

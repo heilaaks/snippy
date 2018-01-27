@@ -190,13 +190,13 @@ class TestApiSearchSnippet(object):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
-        ## Brief: Try to call GET /snippy/api/v1/snippets with sort parameter set the column
-        ##        name that is not existing. The sort must fall to default sorting.
+        ## Brief: Try to call GET /snippy/api/v1/snippets with sort parameter set to field
+        ##        name that does not exist. In this case sorting must fall to default sorting.
         snippy = Snippet.add_defaults(Snippy())
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '255'}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '263'}
         body = {'meta': Snippet.get_http_metadata(),
-                'errors': [{'code': 400, 'status': '400 Bad Request', 'module': 'snippy.testing.testing:123',
-                            'message': 'sort option validation failed for non existent field=notexisting'}]}
+                'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
+                            'title': 'sort option validation failed for non existent field=notexisting'}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()

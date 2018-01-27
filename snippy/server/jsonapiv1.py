@@ -25,7 +25,7 @@ from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 
 
-class JsonApiV1(object):  # pylint: disable=too-few-public-methods
+class JsonApiV1(object):
     """Format to JSON API v1.0."""
 
     _logger = Logger(__name__).get()
@@ -73,7 +73,7 @@ class JsonApiV1(object):  # pylint: disable=too-few-public-methods
                                      'module': cause['module']})
 
         if not errors['errors']:
-            errors = {'errors': [{'status': 500,
+            errors = {'errors': [{'status': '500',
                                   'statusString': '500 Internal Server Error',
                                   'title': 'Internal errors not found when error detected.'}]}
         errors['meta'] = causes['meta']

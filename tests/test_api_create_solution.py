@@ -54,8 +54,8 @@ class TestApiCreateSolution(object):
         ## Brief: Call POST /snippy/api/v1/solutions to create new solution.
         solution = Solution.DEFAULTS[Solution.BEATS]
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2204'}
-        body = [solution]
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2262'}
+        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -89,8 +89,9 @@ class TestApiCreateSolution(object):
         solutions = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.KAFKA]]
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS],
                            'eeef5ca': Solution.DEFAULTS[Solution.KAFKA]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '6618'}
-        body = solutions
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '6724'}
+        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
+                         {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.KAFKA]}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()

@@ -55,8 +55,9 @@ class TestApiSearchSolution(object):
         ##        search is sorted based on one field. The search result limit defined in
         ##        the search query is not exceeded.
         snippy = Solution.add_defaults(Snippy())
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '4950'}
-        body = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '5056'}
+        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
+                         {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()

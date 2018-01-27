@@ -30,6 +30,7 @@ from snippy.cause.cause import Cause
 from snippy.config.source.api import Api
 from snippy.config.config import Config
 from snippy.content.solution import Solution
+from snippy.server.jsonapiv1 import JsonApiV1
 from snippy.server.validate import Validate
 
 
@@ -52,11 +53,11 @@ class ApiSolutions(object):
             contents = contents + json.loads(Solution(self.storage, Const.CONTENT_TYPE_JSON).run())
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = json.dumps(contents)
+            response.body = JsonApiV1.format_collection(Const.SOLUTION, json.dumps(contents))
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = Cause.json_message()
+            response.body = JsonApiV1.format_error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -71,11 +72,11 @@ class ApiSolutions(object):
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = contents
+            response.body = JsonApiV1.format_collection(Const.SOLUTION, contents)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = Cause.json_message()
+            response.body = JsonApiV1.format_error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()

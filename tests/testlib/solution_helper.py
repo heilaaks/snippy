@@ -318,6 +318,12 @@ class SolutionHelper(object):
         return metadata
 
     @staticmethod
+    def get_http_metadata():
+        """Return the default HTTP metadata."""
+
+        return Snippet.get_http_metadata()
+
+    @staticmethod
     def get_content(text=None, solution=None):
         """Transform text template to content."""
 
@@ -380,9 +386,10 @@ class SolutionHelper(object):
         mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[index]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
             sys.argv = ['snippy', 'import', '-f', 'one-solution.txt']
+            contents = len(Database.get_solutions())
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
+            assert len(Database.get_solutions()) == contents + 1
 
         return snippy
 

@@ -50,7 +50,7 @@ class TestApiSearchSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all columns. The
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields. The
         ##        search query matches to two snippets and both of them are returned. The
         ##        search is sorted based on one field. The limit defined in the search query
         ##        is not exceeded.
@@ -71,9 +71,9 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all columns. The
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields. The
         ##        search query matches to four snippets but limit defined in search query
-        ##        results only two of them sorted by the brief column. The sorting must be
+        ##        results only two of them sorted by the brief field. The sorting must be
         ##        applied before limit is applied.
 
         # [REF_UTC]: Each content generates 1 or 4 (delete) calls to get UTC time. There are
@@ -105,7 +105,7 @@ class TestApiSearchSnippet(object):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all columns. The
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields. The
         ##        search query matches to two snippets but only one of them is returned because
         ##        the limit parameter was set to one. In this case the sort is descending and
         ##        the last match must be returned. The resulting fields are limited only to brief
@@ -114,7 +114,7 @@ class TestApiSearchSnippet(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '125'}
         body = {'data': [{'type': 'snippets',
                           'id': '1',
-                          'attributes': {column: Snippet.DEFAULTS[Snippet.FORCED][column] for column in ['brief', 'category']}}]}
+                          'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -136,7 +136,7 @@ class TestApiSearchSnippet(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '125'}
         body = {'data': [{'type': 'snippets',
                           'id': '1',
-                          'attributes': {column: Snippet.DEFAULTS[Snippet.FORCED][column] for column in ['brief', 'category']}}]}
+                          'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -150,9 +150,9 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all columns. The
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields. The
         ##        search query matches to four snippets but limit defined in search query results
-        ##        only two of them sorted by the utc column in descending order.
+        ##        only two of them sorted by the utc field in descending order.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*2 + (Snippet.UTC2,)*2 + (None,)  # [REF_UTC]
         snippy = Snippet.add_defaults(Snippy())
         Snippet.add_one(snippy, Snippet.EXITED)
@@ -174,7 +174,7 @@ class TestApiSearchSnippet(object):
         Database.delete_storage()
         mock_get_utc_time.side_effect = None
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all columns sorted
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields sorted
         ##        with two fields. This syntax that separates the sorted fields causes the
         ##        parameter to be processed in string context which must handle multiple fields.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*2 + (Snippet.UTC2,)*2 + (None,)  # [REF_UTC]
@@ -224,7 +224,7 @@ class TestApiSearchSnippet(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '125'}
         body = {'data': [{'type': 'snippets',
                           'id': '1',
-                          'attributes': {column: Snippet.DEFAULTS[Snippet.FORCED][column] for column in ['brief', 'category']}}]}
+                          'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -359,7 +359,6 @@ class TestApiSearchSnippet(object):
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets/101010101010101',  ## apiflow
                                                                     headers={'accept': 'application/json'})
-        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200

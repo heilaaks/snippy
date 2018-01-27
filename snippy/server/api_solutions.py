@@ -23,12 +23,12 @@ from __future__ import print_function
 
 import falcon
 
-from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
-from snippy.config.source.api import Api
 from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.config.source.api import Api
 from snippy.content.solution import Solution
+from snippy.logger.logger import Logger
 from snippy.server.jsonapiv1 import JsonApiV1
 from snippy.server.validate import Validate
 

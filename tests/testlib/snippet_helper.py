@@ -125,7 +125,7 @@ class SnippetHelper(object):
 
     @staticmethod
     def get_http_metadata():
-        """Return the default HTTP metadata for failures."""
+        """Return the default HTTP metadata."""
 
         metadata = {'version': __version__,
                     'homepage': __homepage__}

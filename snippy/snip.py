@@ -36,7 +36,6 @@ class Snippy(object):
         Logger.set_level()
         self.logger = Logger(__name__).get()
         self.config = Config()
-        self.cause = Cause()
         self.storage = Storage()
         self.server = None
 
@@ -66,7 +65,7 @@ class Snippy(object):
 
         Logger.print_cause(Cause.get_message())
 
-        return self.cause.reset()
+        return Cause.reset()
 
     def run_server(self):
         """Run API server."""
@@ -84,7 +83,7 @@ class Snippy(object):
         """Release session."""
 
         self.storage.disconnect()
-        self.cause.reset()
+        Cause.reset()
         Logger.reset()
 
 

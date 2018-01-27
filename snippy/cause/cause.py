@@ -55,12 +55,8 @@ class Cause(object):
     HTTP_201_CREATED = 201
     HTTP_204_NO_CONTENT = 204
 
-    _logger = None
     _list = {'errors': []}
-
-    def __init__(self):
-        if not Cause._logger:
-            Cause._logger = Logger(__name__).get()
+    _logger = Logger(__name__).get()
 
     @classmethod
     def reset(cls):

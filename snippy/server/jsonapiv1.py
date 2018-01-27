@@ -34,7 +34,7 @@ class JsonApiV1(object):
     def format_resource(cls, category, contents, uri):
         """Format JSON API v1.0 resource from content."""
 
-        resource_ = {'links': {'self': uri}, 'data': 'null'}
+        resource_ = {}
         for content in json.loads(contents):
             type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
             resource_ = {'links': {'self': uri},
@@ -42,6 +42,9 @@ class JsonApiV1(object):
                                   'id': '1',
                                   'attributes': content}}
             break
+
+        if not resource_:
+            resource_ = json.loads('{"links": {"self": "' + uri + '"}, "data": null}')
 
         return json.dumps(resource_)
 

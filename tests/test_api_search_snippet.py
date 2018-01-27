@@ -350,15 +350,16 @@ class TestApiSearchSnippet(object):
         Database.delete_storage()
 
         ## Brief: Try to call GET /snippy/api/v1/snippets/{digest} with digest that cannot be
-        ##        found.
+        ##        found. In this case the JSON 'null' is converted to Python None.
         snippy = Snippet.add_defaults(Snippy())
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '104'}
-        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/101010101010101'}, 'data': 'null'}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '102'}
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/101010101010101'}, 'data': None}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets/101010101010101',  ## apiflow
                                                                     headers={'accept': 'application/json'})
+        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200

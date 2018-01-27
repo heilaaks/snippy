@@ -24,12 +24,13 @@ from __future__ import print_function
 import json
 import falcon
 
-from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
-from snippy.config.source.api import Api
 from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.config.source.api import Api
 from snippy.content.snippet import Snippet
+from snippy.logger.logger import Logger
+from snippy.server.jsonapiv1 import JsonApiV1
 from snippy.server.validate import Validate
 
 
@@ -127,7 +128,7 @@ class ApiSnippetsDigest(object):
         Cause.reset()
         Logger.set_new_oid()
 
-    def on_get(self, _, response, digest):
+    def on_get(self, request, response, digest):
         """Search snippet based on digest."""
 
         self.logger.debug('run get /api/v1/snippets/{digest} = %s', digest)
@@ -137,7 +138,7 @@ class ApiSnippetsDigest(object):
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = contents
+            response.body = JsonApiV1.format_resource(contents, request.uri)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON

@@ -249,12 +249,12 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     > https://raw.githubusercontent.com/for-GET/http-decision-diagram/master/httpdd.png
 
     # Swagger API
-    $ curl -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker&limit=20" -H "accept: application/json"
-    $ curl -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
-    $ curl -X GET "http://127.0.0.1:8080/api/v1/snippets/53908d68425c61dc" -H "accept: application/json"
-    $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
-    $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-utc" -H "accept: application/json" | python -m json.tool
-    $ curl -s -X GET "http://127.0.0.1:8080/api/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
+    $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=20" -H "accept: application/json"
+    $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
+    $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets/53908d68425c61dc" -H "accept: application/json"
+    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-utc" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
 
     # Fix multiple fields
     $ curl -X GET "https://app.swaggerhub.com/api/v1/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"
@@ -824,6 +824,23 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        The default value for these parameters must be None or the must not
        exist in the parameter set that is give for set_conf in class inherited
        from ConfigSourceBase().
+
+    JSON API
+    
+    1. The JSON API responses must follow JSON API v1.0 specifications
+    
+       Few highlights that are currently supported:
+       
+       - Top level meta, error and data objects
+       - Top level links and self pointing to resource(s)
+       - Top level data as JSON object (not list) when resource requested
+       - Top level data as JSON object list when collection is requested
+       - Top level data set to null if resource not found.
+       - Top level data type set to 'snippets' or 'solutions'.
+       - Top level data id always unique ID.
+       - Data attributes containing resource or collection with the requested fields.
+    
+       /1/ http://jsonapi.org/
 
 #######################################
 ## Command line design

@@ -12,6 +12,7 @@
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add support for /api/v1/solutions.
    - [ ] Fix logger setting with static/class classes like parser.py? this seems to call the logger instance only once?
+   - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?

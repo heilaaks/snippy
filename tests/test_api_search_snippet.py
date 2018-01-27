@@ -324,8 +324,9 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /snippy/api/v1/snippets/{digest} to get explicit snippet based on
         ##        digest. In this case the snippet is found.
         snippy = Snippet.add_defaults(Snippy())
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '450'}
-        body = [Snippet.DEFAULTS[Snippet.REMOVE]]
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '593'}
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b6'},
+                'data': {'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -341,8 +342,8 @@ class TestApiSearchSnippet(object):
         ## Brief: Try to call GET /snippy/api/v1/snippets/{digest} with digest that cannot be
         ##        found.
         snippy = Snippet.add_defaults(Snippy())
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2'}
-        body = []
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '104'}
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/101010101010101'}, 'data': 'null'}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()

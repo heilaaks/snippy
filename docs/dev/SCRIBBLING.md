@@ -784,29 +784,28 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     COMMITS
 
-    1. Git commit logs tries to follow 'keep a changelog' rules
+    1. Git commit logs follows rules from Chris Beams with explicit change types
 
-       The rule must be applied to commit log header which must contain 'Types of
-       changes' and the specified keywords as a first word in the commit log.
+       The commit logs follow seven rules from Chris Beams /1/ with explicit list
+       of change types from /2/.
+       
+       The explicit change types in commit log header are from /2/:
+       
+         1. 'Add' for new features.
+         2. 'Change' for changes in existing functionality.
+         3. 'Deprecat' for soon-to-be removed features.
+         4. 'Remove' for now removed features.
+         5. 'Fix' for any bug fixes.
+         6. 'Security' in case of vulnerabilities.
 
        The rule must be applied so that the logs are written for humans. This means
        that the commit log must tell the reasons and design decisions behind the
        change.
 
-       See the commit log rules from /1/.
-
        This rule tries to force common look and feel for the commit logs.
 
-       It has been realized later on that perhaps better way would be to follow
-       rules defined in /2/. The main different between these two sources is that
-       the source /2/ recommends using imperative mood in the subject line. For
-       example using 'Fix OpenAPI definitions' instead of 'Fixed OpenAPI definitions'.
-       The reasonings are good in /2/ and the usage of imperatives in commit log
-       headers sounds and feels better. How ever, for this project, the chosen
-       rules /1/ must be followed.
-
-       /1/ http://keepachangelog.com/en/1.0.0/
-       /2/ https://chris.beams.io/posts/git-commit/
+       /1/ https://chris.beams.io/posts/git-commit/
+       /2/ http://keepachangelog.com/en/1.0.0/
 
     CONTENT
 

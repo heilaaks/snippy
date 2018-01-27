@@ -99,8 +99,8 @@ class Cause(object):
         """Return errors in JSON data structure."""
 
         response = cls._list
-        response['metadata'] = {'version': __version__,
-                                'homepage': __homepage__}
+        response['meta'] = {'version': __version__,
+                            'homepage': __homepage__}
 
         return json.dumps(response)
 

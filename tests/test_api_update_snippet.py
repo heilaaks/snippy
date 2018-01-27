@@ -85,8 +85,8 @@ class TestApiUpdateSnippet(object):
                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '248'}
-        body = {'metadata': Snippet.get_http_metadata(),
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '244'}
+        body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'code': 404, 'status': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'message': 'cannot find content with message digest 101010101010101'}]}
         sys.argv = ['snippy', '--server']

@@ -193,8 +193,8 @@ class TestApiSearchSnippet(object):
         ## Brief: Try to call GET /snippy/api/v1/snippets with sort parameter set the column
         ##        name that is not existing. The sort must fall to default sorting.
         snippy = Snippet.add_defaults(Snippy())
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '259'}
-        body = {'metadata': Snippet.get_http_metadata(),
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '255'}
+        body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'code': 400, 'status': '400 Bad Request', 'module': 'snippy.testing.testing:123',
                             'message': 'sort option validation failed for non existent field=notexisting'}]}
         sys.argv = ['snippy', '--server']

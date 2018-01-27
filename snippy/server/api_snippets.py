@@ -21,7 +21,6 @@
 
 from __future__ import print_function
 
-import json
 import falcon
 
 from snippy.cause.cause import Cause
@@ -50,14 +49,14 @@ class ApiSnippets(object):
         for member in collection:
             api = Api(Const.SNIPPET, Api.CREATE, member)
             Config.read_source(api)
-            contents = contents + json.loads(Snippet(self.storage, Const.CONTENT_TYPE_JSON).run())
+            contents = contents + Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_collection(Const.SNIPPET, json.dumps(contents))
+            response.body = JsonApiV1.collection(Const.SNIPPET, contents)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_error(Cause.json_message())
+            response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -72,11 +71,11 @@ class ApiSnippets(object):
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_collection(Const.SNIPPET, contents)
+            response.body = JsonApiV1.collection(Const.SNIPPET, contents)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_error(Cause.json_message())
+            response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -93,7 +92,7 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_error(Cause.json_message())
+            response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -118,11 +117,11 @@ class ApiSnippetsDigest(object):
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_resource(Const.SNIPPET, contents, request.uri)
+            response.body = JsonApiV1.resource(Const.SNIPPET, contents, request.uri)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_error(Cause.json_message())
+            response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -138,11 +137,11 @@ class ApiSnippetsDigest(object):
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_resource(Const.SNIPPET, contents, request.uri)
+            response.body = JsonApiV1.resource(Const.SNIPPET, contents, request.uri)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_error(Cause.json_message())
+            response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -160,7 +159,7 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_error(Cause.json_message())
+            response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()

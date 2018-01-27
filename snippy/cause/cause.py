@@ -19,12 +19,12 @@
 
 """cause.py: Cause code management."""
 
-import sys
 import inspect
-import json
-from snippy.metadata import __version__
-from snippy.metadata import __homepage__
+import sys
+
 from snippy.logger.logger import Logger
+from snippy.metadata import __homepage__
+from snippy.metadata import __version__
 
 
 class Cause(object):
@@ -119,7 +119,7 @@ class Cause(object):
         response['meta'] = {'version': __version__,
                             'homepage': __homepage__}
 
-        return json.dumps(response)
+        return response
 
     @classmethod
     def get_message(cls):

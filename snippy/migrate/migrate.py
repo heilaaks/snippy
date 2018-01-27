@@ -46,15 +46,9 @@ class Migrate(object):
         if content_type == Const.CONTENT_TYPE_TEXT:
             migrated = Migrate.terminal(filtered)
         elif content_type == Const.CONTENT_TYPE_JSON:
-            import json
-
-            dictionary = Migrate.get_dictionary_list(filtered)
-            migrated = json.dumps(dictionary)
+            migrated = Migrate.get_dictionary_list(filtered)
         elif content_type == Const.CONTENT_TYPE_YAML:
-            import yaml
-
-            dictionary = Migrate.get_dictionary_list(filtered)
-            migrated = yaml.safe_dump(dictionary, default_flow_style=False)
+            migrated = Migrate.get_dictionary_list(filtered)
 
         return migrated
 

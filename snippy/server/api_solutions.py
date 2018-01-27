@@ -21,7 +21,6 @@
 
 from __future__ import print_function
 
-import json
 import falcon
 
 from snippy.config.constants import Constants as Const
@@ -50,14 +49,14 @@ class ApiSolutions(object):
         for member in collection:
             api = Api(Const.SOLUTION, Api.CREATE, member)
             Config.read_source(api)
-            contents = contents + json.loads(Solution(self.storage, Const.CONTENT_TYPE_JSON).run())
+            contents = contents + Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_collection(Const.SOLUTION, json.dumps(contents))
+            response.body = JsonApiV1.collection(Const.SOLUTION, contents)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_error(Cause.json_message())
+            response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -72,11 +71,11 @@ class ApiSolutions(object):
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_collection(Const.SOLUTION, contents)
+            response.body = JsonApiV1.collection(Const.SOLUTION, contents)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.format_error(Cause.json_message())
+            response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()

@@ -59,9 +59,9 @@ class TestApiPerformance(object):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC:   1 loop :  0.0903 /   55 loop :  5.0361 / 100 loop : 9.1889
-        ##        Reference PC: 880 loop : 79.0157 / 1000 loop : 89.3987
-        ##        Reference PC:  10 loop : 0.9570
+        ##        Reference PC:   1 loop :  0.0944 /   55 loop :  4.2934 / 100 loop : 7.8653
+        ##        Reference PC: 880 loop : 68.8313 / 1000 loop : 78.6837
+        ##        Reference PC:  10 loop : 0.7904
         ##
         ##        NOTE! Vere slow. Is the reason how requests opens the connection
         ##              for every requests?
@@ -94,21 +94,22 @@ class TestApiPerformance(object):
                          {'content-type':'application/json; charset=UTF-8'})
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_201_CREATED
-            assert len(json.loads(resp.read().decode())) == 4
+
+            assert len(json.loads(resp.read().decode())['data']) == 4
 
             # GET maximum of two snippets from whole snippet collection.
             conn.request('GET',
                          '/snippy/api/v1/snippets?limit=2&sort=-brief')
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_200_OK
-            assert len(json.loads(resp.read().decode())) == 2
+            assert len(json.loads(resp.read().decode())['data']) == 2
 
             ## GET maximum of four snippets from whole snippet collection with sall search.
             conn.request('GET',
                          '/snippy/api/v1/snippets?sall=docker,swarm&limit=4&sort=brief')
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_200_OK
-            assert len(json.loads(resp.read().decode())) == 3
+            assert len(json.loads(resp.read().decode())['data']) == 3
 
             ## DELETE all snippets one by one by first requesting only digests.
             conn.request('GET',
@@ -116,11 +117,10 @@ class TestApiPerformance(object):
             resp = conn.getresponse()
             body = json.loads(resp.read().decode())
             assert resp.status == Cause.HTTP_200_OK
-            assert len(body) == 4
-            for member in body:
-                print(member['digest'])
+            assert len(body['data']) == 4
+            for resource_ in body['data']:
                 conn.request('DELETE',
-                             'http://localhost:8080/snippy/api/v1/snippets/' + member['digest'])
+                             'http://localhost:8080/snippy/api/v1/snippets/' + resource_['attributes']['digest'])
                 resp = conn.getresponse()
                 assert resp.status == Cause.HTTP_204_NO_CONTENT
 
@@ -129,7 +129,7 @@ class TestApiPerformance(object):
                          '/snippy/api/v1/snippets?limit=100')
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_200_OK
-            assert not json.loads(resp.read().decode())
+            assert not json.loads(resp.read().decode())['data']
 
         runtime = time.time() - start
         server.terminate()

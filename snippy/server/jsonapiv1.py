@@ -31,12 +31,12 @@ class JsonApiV1(object):  # pylint: disable=too-few-public-methods
     _logger = Logger(__name__).get()
 
     @classmethod
-    def format_resource(cls, contents, uri):
+    def format_resource(cls, category, contents, uri):
         """Format JSON API v1.0 resource from content."""
 
         resource_ = {'links': {'self': uri}, 'data': 'null'}
         for content in json.loads(contents):
-            type_ = 'snippets' if content['category'] == Const.SNIPPET else 'solutions'
+            type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
             resource_ = {'links': {'self': uri},
                          'data': {'type': type_,
                                   'id': '1',
@@ -45,10 +45,18 @@ class JsonApiV1(object):  # pylint: disable=too-few-public-methods
 
         return json.dumps(resource_)
 
-#    @classmethod
-#    def format_collection(cls, contents):
-#        """Format JSON API v1.0 collection from content."""
-#
+    @classmethod
+    def format_collection(cls, category, contents):
+        """Format JSON API v1.0 collection from content."""
+
+        collection = {'data': []}
+        for idx, content in enumerate(json.loads(contents), start=1):
+            type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
+            collection['data'].append({'type': type_,
+                                       'id': str(idx),
+                                       'attributes': content})
+
+        return json.dumps(collection)
 
     @classmethod
     def format_error(cls, causes):
@@ -64,7 +72,7 @@ class JsonApiV1(object):  # pylint: disable=too-few-public-methods
                                      'title': cause['title'],
                                      'module': cause['module']})
 
-        if not errors:
+        if not errors['errors']:
             errors = {'errors': [{'status': 500,
                                   'statusString': '500 Internal Server Error',
                                   'title': 'Internal errors not found when error detected.'}]}

@@ -11,6 +11,7 @@
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add support for /api/v1/solutions.
+   - [ ] Optimize the json.dumps and json.loads in JSON API v1.0 conversion. There is no need to migrate to json.dumps because the conversion is done later.
    - [ ] Fix logger setting with static/class classes like parser.py? this seems to call the logger instance only once?
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.

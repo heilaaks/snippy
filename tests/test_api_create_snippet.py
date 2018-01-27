@@ -55,14 +55,15 @@ class TestApiCreateSnippet(object):
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
         snippet = Snippet.DEFAULTS[Snippet.REMOVE]
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '450'}
-        body = [snippet]
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '507'}
+        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
+        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_201
@@ -82,8 +83,8 @@ class TestApiCreateSnippet(object):
                    'tags': ['cleanup', 'container', 'docker', 'docker-ce', 'moby'],
                    'links': ['https://docs.docker.com/engine/reference/commandline/rm/']}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '450'}
-        body = [Snippet.DEFAULTS[Snippet.REMOVE]]
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '507'}
+        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -109,8 +110,8 @@ class TestApiCreateSnippet(object):
                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '655'}
-        body = [Snippet.DEFAULTS[Snippet.EXITED]]
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '712'}
+        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -138,8 +139,8 @@ class TestApiCreateSnippet(object):
                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '655'}
-        body = [Snippet.DEFAULTS[Snippet.EXITED]]
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '712'}
+        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
@@ -158,26 +159,29 @@ class TestApiCreateSnippet(object):
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet with only data.
         snippet = {'data': ['docker rm $(docker ps --all -q -f status=exited)\n']}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '301'}
-        body = [{'data': ['docker rm $(docker ps --all -q -f status=exited)'],
-                 'brief': '',
-                 'group':
-                 'default',
-                 'tags': [],
-                 'links': [],
-                 'category': 'snippet',
-                 'filename': '',
-                 'runalias': '',
-                 'versions': '',
-                 'utc': '2017-10-14 19:56:31',
-                 'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}]
-        compare = {'3d855210284302d5': body[0]}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '358'}
+        body = {'data': [{'type': 'snippets',
+                          'id': '1',
+                          'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)'],
+                                         'brief': '',
+                                         'group':
+                                         'default',
+                                         'tags': [],
+                                         'links': [],
+                                         'category': 'snippet',
+                                         'filename': '',
+                                         'runalias': '',
+                                         'versions': '',
+                                         'utc': '2017-10-14 19:56:31',
+                                         'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
+        compare = {'3d855210284302d5': body['data'][0]['attributes']}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
+        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_201
@@ -203,8 +207,9 @@ class TestApiCreateSnippet(object):
         ## Brief: Call POST /api/v1/snippets in list context to create new snippets.
         snippets = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
-        body = snippets
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1073'}
+        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
+                         {'type': 'snippets', 'id': '2', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()

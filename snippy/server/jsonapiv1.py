@@ -20,6 +20,10 @@
 """jsonapiv10.py - Format to JSON API v1.0."""
 
 import json
+try:
+    from urllib.parse import urljoin
+except ImportError:
+    from urlparse import urljoin
 
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
@@ -34,16 +38,18 @@ class JsonApiV1(object):
     def resource(cls, category, contents, uri):
         """Format JSON API v1.0 resource from content."""
 
-        resource_ = {}
+        resource_ = {'links': {}, 'data': {}}
         for content in contents:
+            if 'digest' in content:
+                uri = urljoin(uri, content['digest'][:16])
+                resource_['links'] = {'self': uri}
             type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
-            resource_ = {'links': {'self': uri},
-                         'data': {'type': type_,
-                                  'id': '1',
-                                  'attributes': content}}
+            resource_['data'] = {'type': type_,
+                                 'id': '1',
+                                 'attributes': content}
             break
 
-        if not resource_:
+        if not resource_['data']:
             resource_ = json.loads('{"links": {"self": "' + uri + '"}, "data": null}')
 
         return json.dumps(resource_)

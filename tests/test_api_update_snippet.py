@@ -61,7 +61,7 @@ class TestApiUpdateSnippet(object):
                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '594'}
-        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/53908d68425c61dc'},
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
                 'data': {'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
@@ -69,6 +69,7 @@ class TestApiUpdateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/53908d68425c61dc',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     body=json.dumps(snippet))
+        print(Database.print_contents())
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200

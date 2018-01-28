@@ -10,7 +10,6 @@
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
    - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
-   - [ ] Fix Update solution/snippet API per digest because it returns the old link to self with old Digest. The digest should be the new one.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add support for /api/v1/solutions.
    - [ ] Fix logger setting with static/class classes like parser.py? this seems to call the logger instance only once?
@@ -42,6 +41,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] The REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
    - [ ] Changing self._data = data to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
    - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json.
    - [ ] There is a pylint bug that it does not see see Python decorators being used with underscore // https://github.com/PyCQA/pylint/issues/409
@@ -71,6 +71,7 @@
    - [ ] Python logging is not following ISO8601 format and it cannot have timezone.
 
 ## DONE
+   - [x] Fixed incorrect digest in self link being returned if the operation updated resource.
    - [x] Optimized unnecessary JSON conversion when generating content response to JSON API.
    - [x] Changed REST API base bath to /snippy/api/v1.
    - [x] Added GMT time and ISO8601 format to JSON logs.

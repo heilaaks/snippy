@@ -64,17 +64,19 @@ class TestApiUpdateSolution(object):
                     'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}
         compare_content = {'2cd0e794244a07f': Solution.DEFAULTS[Solution.NGINX]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2871'}
-        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/a96accc25dd23ac0'},
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/2cd0e794244a07f8'},
                 'data': {'type': 'solutions', 'id': '1', 'attributes': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])}}
         body['data']['attributes']['filename'] = Const.EMPTY
         body['data']['attributes']['utc'] = Solution.UTC1
-        body['data']['attributes']['digest'] = 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'
+        body['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         sys.argv = ['snippy', '--server']
         snippy = Snippy()
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/solutions/a96accc25dd23ac0',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     body=json.dumps(solution))
+        print(Database.print_contents())
+        print(result.json)
         assert result.headers == headers
         assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
         assert result.status == falcon.HTTP_200

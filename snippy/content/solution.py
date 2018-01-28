@@ -77,7 +77,8 @@ class Solution(object):
         if len(solutions) == 1:
             self.logger.debug('updating solution with digest %.16s', solutions[0].get_digest())
             solutions = Config.get_contents(content=solutions[0])
-            self.storage.update(solutions[0])
+            content_digest = self.storage.update(solutions[0])
+            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
         else:
             Config.validate_search_context(solutions, 'update')
 

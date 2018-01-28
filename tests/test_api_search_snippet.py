@@ -332,10 +332,12 @@ class TestApiSearchSnippet(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call GET /snippy/api/v1/snippets/{digest} to get explicit snippet based on
-        ##        digest. In this case the snippet is found.
+        ##        digest. In this case the snippet is found. In this case the URI path contains
+        ##        15 digit digest. The returned self link must contain the default 16 digit
+        #         digest.
         snippy = Snippet.add_defaults(Snippy())
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '593'}
-        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b6'},
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '594'}
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
                 'data': {'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}}
         sys.argv = ['snippy', '--server']
         snippy = Snippy()

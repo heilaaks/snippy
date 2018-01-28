@@ -248,6 +248,9 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     > http://www.kennethlange.com/posts/The-Ultimate-Checklist-for-REST-APIs.html
     > https://raw.githubusercontent.com/for-GET/http-decision-diagram/master/httpdd.png
 
+    # REST API from user perspective
+    > https://github.com/wearehive/project-guidelines
+
     # Swagger API
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=20" -H "accept: application/json"
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"

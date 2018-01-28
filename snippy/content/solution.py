@@ -81,6 +81,10 @@ class Solution(object):
         else:
             Config.validate_search_context(solutions, 'update')
 
+        solutions = Migrate.content(solutions, self.content_type)
+
+        return solutions
+
     def delete(self):
         """Delete solutions."""
 
@@ -154,7 +158,7 @@ class Solution(object):
         elif Config.is_operation_search:
             solutions = self.search()
         elif Config.is_operation_update:
-            self.update()
+            solutions = self.update()
         elif Config.is_operation_delete:
             self.delete()
         elif Config.is_operation_export:

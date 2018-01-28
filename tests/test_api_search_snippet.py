@@ -398,7 +398,6 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-
         ## Brief: Call GET /snippy/api/v1/snippets without defining search parameters. In this
         ##        case only one snippet must be returned because the limit is set to one. Also
         ##        the sorting based on brief field causes the last snippet to be returned.

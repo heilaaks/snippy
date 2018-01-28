@@ -44,7 +44,7 @@ class ApiSnippets(object):
         """Create new snippets."""
 
         contents = []
-        self.logger.debug('run post /api/v1/snippets')
+        self.logger.debug('run post /snippy/api/v1/snippets')
         collection = Validate.collection(request.media)
         for member in collection:
             api = Api(Const.SNIPPET, Api.CREATE, member)
@@ -65,7 +65,7 @@ class ApiSnippets(object):
     def on_get(self, request, response):
         """Search snippets based on query parameters."""
 
-        self.logger.debug('run get /api/v1/snippets')
+        self.logger.debug('run get /snippy/api/v1/snippets')
         api = Api(Const.SNIPPET, Api.SEARCH, request.params)
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
@@ -84,7 +84,7 @@ class ApiSnippets(object):
     def on_delete(self, request, response):
         """Delete snippet based on query parameters."""
 
-        self.logger.debug('run delete /api/v1/snippets')
+        self.logger.debug('run delete /snippy/api/v1/snippets')
         api = Api(Const.SNIPPET, Api.DELETE, request.params)
         Config.read_source(api)
         Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
@@ -109,7 +109,7 @@ class ApiSnippetsDigest(object):
     def on_put(self, request, response, digest):
         """Update snippet based on digest."""
 
-        self.logger.debug('run put /api/v1/snippets/{digest} = %s', digest)
+        self.logger.debug('run put /snippy/api/v1/snippets/{digest} = %s', digest)
         local_params = request.media
         local_params['digest'] = digest
         api = Api(Const.SNIPPET, Api.UPDATE, local_params)
@@ -130,7 +130,7 @@ class ApiSnippetsDigest(object):
     def on_get(self, request, response, digest):
         """Search snippet based on digest."""
 
-        self.logger.debug('run get /api/v1/snippets/{digest} = %s', digest)
+        self.logger.debug('run get /snippy/api/v1/snippets/{digest} = %s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SNIPPET, Api.SEARCH, local_params)
         Config.read_source(api)
@@ -150,7 +150,7 @@ class ApiSnippetsDigest(object):
     def on_delete(self, _, response, digest):
         """Delete snippet based on digest."""
 
-        self.logger.debug('run delete /api/v1/snippets/{digest} = %s', digest)
+        self.logger.debug('run delete /snippy/api/v1/snippets/{digest} = %s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SNIPPET, Api.DELETE, local_params)
         Config.read_source(api)

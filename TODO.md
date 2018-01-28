@@ -5,10 +5,12 @@
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc. 
+   - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
    - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
+   - [ ] Fix Update solution/snippet API per digest because it returns the old link to self with old Digest. The digest should be the new one.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add support for /api/v1/solutions.
    - [ ] Fix logger setting with static/class classes like parser.py? this seems to call the logger instance only once?

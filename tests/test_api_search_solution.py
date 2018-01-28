@@ -247,165 +247,166 @@ class TestApiSearchSolution(object):
         snippy = None
         Database.delete_storage()
 
-#    @mock.patch('snippy.server.server.SnippyServer')
-#    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-#    @mock.patch.object(Cause, '_caller')
-#    @mock.patch.object(Config, 'get_utc_time')
-#    @mock.patch.object(Config, '_storage_file')
-#    def test_api_search_solutions_with_stag(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
-#        """Search solution from tag fields."""
-#
-#        mock_isfile.return_value = True
-#        mock_get_utc_time.return_value = Solution.UTC1
-#        mock__caller.return_value = 'snippy.testing.testing:123'
-#        mock_get_db_location.return_value = Database.get_storage()
-#
-#        ## Brief: Call GET /snippy/api/v1/solutions with search tag keywords that do not result
-#        ##        any matches.
-#        snippy = Solution.add_defaults(Snippy())
-#        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2'}
-#        body = []
-#        sys.argv = ['snippy', '--server']
-#        snippy = Snippy()
-#        snippy.run()
-#        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
-#                                                                    headers={'accept': 'application/json'},
-#                                                                    query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
-#        assert result.headers == headers
-#        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
-#        assert result.status == falcon.HTTP_200
-#        snippy.release()
-#        snippy = None
-#        Database.delete_storage()
-#
-#    @mock.patch('snippy.server.server.SnippyServer')
-#    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-#    @mock.patch.object(Cause, '_caller')
-#    @mock.patch.object(Config, 'get_utc_time')
-#    @mock.patch.object(Config, '_storage_file')
-#    def test_api_search_solutions_with_sgrp(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
-#        """Search solution from group fields."""
-#
-#        mock_isfile.return_value = True
-#        mock_get_utc_time.return_value = Solution.UTC1
-#        mock__caller.return_value = 'snippy.testing.testing:123'
-#        mock_get_db_location.return_value = Database.get_storage()
-#
-#        ## Brief: Call GET /snippy/api/v1/solutions with search group keywords that do not
-#        ##        result any matches.
-#        snippy = Solution.add_defaults(Snippy())
-#        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2'}
-#        body = []
-#        sys.argv = ['snippy', '--server']
-#        snippy = Snippy()
-#        snippy.run()
-#        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
-#                                                                    headers={'accept': 'application/json'},
-#                                                                    query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
-#        assert result.headers == headers
-#        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
-#        assert result.status == falcon.HTTP_200
-#        snippy.release()
-#        snippy = None
-#        Database.delete_storage()
-#
-#    @mock.patch('snippy.server.server.SnippyServer')
-#    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-#    @mock.patch.object(Cause, '_caller')
-#    @mock.patch.object(Config, 'get_utc_time')
-#    @mock.patch.object(Config, '_storage_file')
-#    def test_api_search_solutions_with_digest(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
-#        """Search solution with digets."""
-#
-#        mock_isfile.return_value = True
-#        mock_get_utc_time.return_value = Solution.UTC1
-#        mock__caller.return_value = 'snippy.testing.testing:123'
-#        mock_get_db_location.return_value = Database.get_storage()
-#
-#        ## Brief: Call GET /snippy/api/v1/solutions/{digest} to get explicit solution based on
-#        ##        digest. In this case the solution is found.
-#        snippy = Solution.add_defaults(Snippy())
-#        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '450'}
-#        body = [Solution.DEFAULTS[Solution.REMOVE]]
-#        sys.argv = ['snippy', '--server']
-#        snippy = Snippy()
-#        snippy.run()
-#        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions/54e41e9b52a02b6',  ## apiflow
-#                                                                    headers={'accept': 'application/json'})
-#        assert result.headers == headers
-#        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
-#        assert result.status == falcon.HTTP_200
-#        snippy.release()
-#        snippy = None
-#        Database.delete_storage()
-#
-#        ## Brief: Try to call GET /snippy/api/v1/solutions/{digest} with digest that cannot be
-#        ##        found.
-#        snippy = Solution.add_defaults(Snippy())
-#        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2'}
-#        body = []
-#        sys.argv = ['snippy', '--server']
-#        snippy = Snippy()
-#        snippy.run()
-#        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions/101010101010101',  ## apiflow
-#                                                                    headers={'accept': 'application/json'})
-#        assert result.headers == headers
-#        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
-#        assert result.status == falcon.HTTP_200
-#        snippy.release()
-#        snippy = None
-#        Database.delete_storage()
-#
-#    @mock.patch('snippy.server.server.SnippyServer')
-#    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-#    @mock.patch.object(Cause, '_caller')
-#    @mock.patch.object(Config, 'get_utc_time')
-#    @mock.patch.object(Config, '_storage_file')
-#    def test_api_search_solutions_without_parameters(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
-#        """Search solution without search parameters."""
-#
-#        mock_isfile.return_value = True
-#        mock_get_utc_time.return_value = Solution.UTC1
-#        mock__caller.return_value = 'snippy.testing.testing:123'
-#        mock_get_db_location.return_value = Database.get_storage()
-#
-#        ## Brief: Call GET /snippy/api/v1/solutions without defining search parameters. In this
-#        ##        case all content should be returned based on filtering parameters.
-#        snippy = Solution.add_defaults(Snippy())
-#        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '969'}
-#        body = [Solution.DEFAULTS[Solution.REMOVE], Solution.DEFAULTS[Solution.FORCED]]
-#        sys.argv = ['snippy', '--server']
-#        snippy = Snippy()
-#        snippy.run()
-#        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
-#                                                                    headers={'accept': 'application/json'},
-#                                                                    query_string='limit=20&sort=brief')
-#        assert result.headers == headers
-#        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
-#        assert result.status == falcon.HTTP_200
-#        snippy.release()
-#        snippy = None
-#        Database.delete_storage()
-#
-#
-#        ## Brief: Call GET /snippy/api/v1/solutions without defining search parameters. In this
-#        ##        case only one solution must be returned because the limit is set to one. Also
-#        ##        the sorting based on brief field causes the last solution to be returned.
-#        snippy = Solution.add_defaults(Snippy())
-#        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '519'}
-#        body = [Solution.DEFAULTS[Solution.FORCED]]
-#        sys.argv = ['snippy', '--server']
-#        snippy = Snippy()
-#        snippy.run()
-#        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
-#                                                                    headers={'accept': 'application/json'},
-#                                                                    query_string='limit=1&sort=-brief')
-#        assert result.headers == headers
-#        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
-#        assert result.status == falcon.HTTP_200
-#        snippy.release()
-#        snippy = None
-#        Database.delete_storage()
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Config, '_storage_file')
+    def test_api_search_solutions_with_stag(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Search solution from tag fields."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Solution.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call GET /snippy/api/v1/solutions with search tag keywords that do not result
+        ##        any matches.
+        snippy = Solution.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '12'}
+        body = {'data': []}
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
+        assert result.headers == headers
+        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Config, '_storage_file')
+    def test_api_search_solutions_with_sgrp(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Search solution from group fields."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Solution.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call GET /snippy/api/v1/solutions with search group keywords that do not
+        ##        result any matches.
+        snippy = Solution.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '12'}
+        body = {'data': []}
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
+        assert result.headers == headers
+        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Config, '_storage_file')
+    def test_api_search_solutions_with_digest(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Search solution with digets."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Solution.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call GET /snippy/api/v1/solutions/{digest} to get explicit solution based on
+        ##        digest. In this case the solution is found.
+        snippy = Solution.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2350'}
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/a96accc25dd23ac0'},
+                'data': {'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]}}
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions/a96accc25dd23ac0',  ## apiflow
+                                                                    headers={'accept': 'application/json'})
+        assert result.headers == headers
+        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+        ## Brief: Try to call GET /snippy/api/v1/solutions/{digest} with digest that cannot be
+        ##        found.
+        snippy = Solution.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '103'}
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/101010101010101'}, 'data': None}
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions/101010101010101',  ## apiflow
+                                                                    headers={'accept': 'application/json'})
+        assert result.headers == headers
+        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Config, '_storage_file')
+    def test_api_search_solutions_without_parameters(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Search solution without search parameters."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Solution.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call GET /snippy/api/v1/solutions without defining search parameters. In this
+        ##        case all content should be returned based on filtering parameters.
+        snippy = Solution.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '5056'}
+        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
+                         {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='limit=20&sort=brief')
+        assert result.headers == headers
+        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+        ## Brief: Call GET /snippy/api/v1/solutions without defining search parameters. In this
+        ##        case only one solution must be returned because the limit is set to one. Also
+        ##        the sorting based on brief field causes the last solution to be returned.
+        snippy = Solution.add_defaults(Snippy())
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2804'}
+        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
+        sys.argv = ['snippy', '--server']
+        snippy = Snippy()
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    query_string='limit=1&sort=-brief')
+        assert result.headers == headers
+        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
 
     # pylint: disable=duplicate-code
     def teardown_class(self):

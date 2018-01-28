@@ -44,7 +44,7 @@ class ApiSolutions(object):
         """Create new solution."""
 
         contents = []
-        self.logger.debug('run post /api/v1/solutions')
+        self.logger.debug('run post /snippy/api/v1/solutions')
         collection = Validate.collection(request.media)
         for member in collection:
             api = Api(Const.SOLUTION, Api.CREATE, member)
@@ -65,13 +65,97 @@ class ApiSolutions(object):
     def on_get(self, request, response):
         """Search solutions based on query parameters."""
 
-        self.logger.debug('run get /api/v1/solutions')
+        self.logger.debug('run get /snippy/api/v1/solutions')
         api = Api(Const.SOLUTION, Api.SEARCH, request.params)
         Config.read_source(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
             response.body = JsonApiV1.collection(Const.SOLUTION, contents)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        Logger.set_new_oid()
+
+    def on_delete(self, request, response):
+        """Delete solution based on query parameters."""
+
+        self.logger.debug('run delete /snippy/api/v1/solutions')
+        api = Api(Const.SNIPPET, Api.DELETE, request.params)
+        Config.read_source(api)
+        Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if Cause.is_ok():
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        Logger.set_new_oid()
+
+
+class ApiSolutionsDigest(object):
+    """Process solutions based on digest resource ID."""
+
+    def __init__(self, storage):
+        self.logger = Logger(__name__).get()
+        self.storage = storage
+
+    def on_put(self, request, response, digest):
+        """Update solution based on digest."""
+
+        self.logger.debug('run put /snippy/api/v1/solutions/{digest} = %s', digest)
+        local_params = request.media
+        local_params['digest'] = digest
+        api = Api(Const.SNIPPET, Api.UPDATE, local_params)
+        Config.read_source(api)
+        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if Cause.is_ok():
+            response.content_type = falcon.MEDIA_JSON
+            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request.uri)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        Logger.set_new_oid()
+
+    def on_get(self, request, response, digest):
+        """Search solutions based on digest."""
+
+        self.logger.debug('run get /snippy/api/v1/solutions/{digest} = %s', digest)
+        local_params = {'digest': digest}
+        api = Api(Const.SNIPPET, Api.SEARCH, local_params)
+        Config.read_source(api)
+        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if Cause.is_ok():
+            response.content_type = falcon.MEDIA_JSON
+            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request.uri)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = falcon.MEDIA_JSON
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        Logger.set_new_oid()
+
+    def on_delete(self, _, response, digest):
+        """Delete solution based on digest."""
+
+        self.logger.debug('run delete /snippy/api/v1/solutions/{digest} = %s', digest)
+        local_params = {'digest': digest}
+        api = Api(Const.SNIPPET, Api.DELETE, local_params)
+        Config.read_source(api)
+        Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if Cause.is_ok():
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON

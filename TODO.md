@@ -1,36 +1,38 @@
 ## TODO
-   - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
-   - [ ] Fix set/get to properties for Config()
+   - [ ] Fix Swagger specification to follow JSON API specification JSON format.
    - [ ] Add configurable base path.
-   - [ ] Add more tests /api/v1/snippets.
-   - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
-   - [ ] Add limits to all parameters: column array size, sort array size, etc. 
-   - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
-   - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
-   - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
-   - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
+   - [ ] Fix hello metadata.
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
-   - [ ] Add support for /api/v1/solutions.
-   - [ ] Fix logger setting with static/class classes like parser.py? this seems to call the logger instance only once?
+   - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
+   - [ ] Add limits to all parameters: column array size, sort array size, etc.
+   - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
+   - [ ] Fix logger setting with static/class classes like parser.py.
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
-   - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
+   - [ ] Set explicit versions for external modules and update them.
+   - [ ] Fix migrate dump load that use YAML error exception that is not imported if try catch inside explodes.
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
+   - [ ] Update documents.
+   - [ ] =============================================================
+   - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
+   - [ ] Add paginations and offsets to JSON API.
+   - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
+   - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
+   - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
    - [ ] Fix "If you want partial updates, use PATCH instead."
+   - [ ] Add more tests /api/v1/snippets.
+   - [ ] =============================================================
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
-   - [ ] Add statistics framework to measure latencies and used time for APIs.
-   - [ ] Update documents.
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
-   - [ ] Add the Falcon logger and exception handling through snippy logger.
+   - [ ] Add the Falcon exception handling through snippy logger.
    - [ ] Fix api performance test failure which leaves the server running and hanging.
    - [ ] Test URL encoded REST API queries. The same problem that was with %2C may be with other formats.
    - [ ] Add support to run with runalias.
    - [ ] Add support to add versions to version list.
    - [ ] Change is_template in Content to __cmp__.
-   - [ ] Fix migrate dump load that use YAML error exception that is not imported if try catch inside explodes.
    - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
    - [ ] Add support to print only selected fields, like brief and digest for text output. Hard to generalize since layout e.g. contains header with three fields.
    - [ ] Hide internal class level variables with _ or __ prefix. The intention is not to allow access to these.
@@ -41,6 +43,8 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
+   - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] The REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
    - [ ] Changing self._data = data to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
    - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json.
@@ -71,6 +75,7 @@
    - [ ] Python logging is not following ISO8601 format and it cannot have timezone.
 
 ## DONE
+   - [x] Added support for /api/v1/solutions.
    - [x] Fixed incorrect digest in self link being returned if the operation updated resource.
    - [x] Optimized unnecessary JSON conversion when generating content response to JSON API.
    - [x] Changed REST API base bath to /snippy/api/v1.
@@ -155,7 +160,7 @@
    - [x] Fixed Apache license layout in generated document. Now the lincese is just pure text.
    - [x] Fixed the make docs and _static folder by creating dummy content and changing the name to source.
    - [x] Changed absolute path of database.sql to relative. This removed the need for mock and relative is better.
-   - [x] Fixed hanging database resources that failed sequential test in case of database test failure. 
+   - [x] Fixed hanging database resources that failed sequential test in case of database test failure.
    - [x] Added timestamp in UTC time for created snippets.
    - [x] Added search with content with -c|--content option.
    - [x] Added basic snippet test suite in common library to avoid writing them to multiple test cases.

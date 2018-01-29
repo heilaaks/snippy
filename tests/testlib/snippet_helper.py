@@ -163,7 +163,7 @@ class SnippetHelper(object):
         return contents[0].convert_text()
 
     @staticmethod
-    def add_defaults(snippy):
+    def add_defaults(snippy=None):
         """Add default snippets for testing purposes."""
 
         if not snippy:
@@ -171,15 +171,13 @@ class SnippetHelper(object):
 
         mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[SnippetHelper.REMOVE]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'one-snippet.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
 
         mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[SnippetHelper.FORCED]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'one-snippet.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
 
@@ -194,9 +192,8 @@ class SnippetHelper(object):
 
         mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[index]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            sys.argv = ['snippy', 'import', '-f', 'one-snippet.txt']
             contents = len(Database.get_snippets())
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'one-snippet.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == contents + 1
 
@@ -235,8 +232,7 @@ class SnippetHelper(object):
 
         for digest in dictionary:
             mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', digest, '-f', 'defined-content.txt'])
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-content.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -251,8 +247,7 @@ class SnippetHelper(object):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             for digest in dictionary:
                 mock_file.reset_mock()
-                sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
-                cause = snippy.run_cli()
+                cause = snippy.run_cli(['snippy', 'export', '-d', digest, '-f', 'defined-content.txt'])
                 assert cause == Cause.ALL_OK
                 mock_file.assert_called_once_with('defined-content.txt', 'w')
                 file_handle = mock_file.return_value.__enter__.return_value

@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_import_snippet.py: Test workflows for importing snippets."""
 
@@ -40,8 +57,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        result tool internal default file name ./snippets.yaml being used by default.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'import']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
@@ -54,8 +70,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'import', '-f', './all-snippets.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.yaml', 'r')
@@ -68,8 +83,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'import', '-f', './all-snippets.json']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.json'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.json', 'r')
@@ -85,8 +99,7 @@ class TestWfImportSnippet(unittest.TestCase):
                                      Snippet.get_template(import_dict['content'][1]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'import', '-f', './all-snippets.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
@@ -102,8 +115,7 @@ class TestWfImportSnippet(unittest.TestCase):
                                      Snippet.get_template(import_dict['content'][1]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'import', '-f', './all-snippets.text']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.text', 'r')
@@ -117,8 +129,7 @@ class TestWfImportSnippet(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=Snippet.get_template(import_dict['content'][0]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'import', '-f', './foo.bar']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             assert not Database.get_contents()
             mock_file.assert_not_called()
@@ -136,8 +147,7 @@ class TestWfImportSnippet(unittest.TestCase):
             # calls to isfile which read the default installed files in Config.
             mock_isfile.side_effect = [True, True, True, True, False, None]
             snippy = Snippy()
-            sys.argv = ['snippy', 'import', '-f', './foo.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', './foo.yaml'])  ## workflow
             assert cause == 'NOK: cannot read file ./foo.yaml'
             assert not Database.get_contents()
             mock_file.assert_not_called()
@@ -151,8 +161,7 @@ class TestWfImportSnippet(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=Const.EMPTY)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'import', '-f', './all-snippets.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
             assert cause == 'NOK: could not identify text template content category'
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
@@ -180,8 +189,7 @@ class TestWfImportSnippet(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_yaml_load.return_value = import_dict
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
-            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
@@ -196,8 +204,7 @@ class TestWfImportSnippet(unittest.TestCase):
             import_dict['content'][0]['tags'] = ('new', 'tags', 'set')
             mock_yaml_load.return_value = import_dict
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
-            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
@@ -213,8 +220,7 @@ class TestWfImportSnippet(unittest.TestCase):
             import_dict['content'][0]['brief'] = 'Updated brief description'
             mock_json_load.return_value = import_dict
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
-            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.json', 'r')
@@ -232,8 +238,7 @@ class TestWfImportSnippet(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             import_dict['content'][0]['links'] = ('https://new.link', )
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
-            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.txt', 'r')
@@ -251,8 +256,7 @@ class TestWfImportSnippet(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             import_dict['content'][0]['links'] = ('https://new.link', )
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
-            sys.argv = ['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.text', 'r')
@@ -267,8 +271,7 @@ class TestWfImportSnippet(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=import_text)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
-            sys.argv = ['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])  ## workflow
             assert cause == 'NOK: cannot find snippet identified with digest 123456789abcdef0'
             assert len(Database.get_snippets()) == 1
             mock_file.assert_not_called()
@@ -294,8 +297,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        location under tool data folder from yaml format.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'import', '--defaults']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '--defaults'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
@@ -310,8 +312,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        categories.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'import', '--defaults']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '--defaults'])  ## workflow
             assert cause == 'NOK: no content was inserted because content data already existed'
             assert len(Database.get_snippets()) == 2
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
@@ -336,8 +337,7 @@ class TestWfImportSnippet(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'import', '--template']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '--template'])  ## workflow
             assert cause == 'NOK: no content was stored because it matched to empty template'
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
@@ -362,8 +362,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        result cause is OK.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'import', '-f', './snippets.yaml']   ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', './snippets.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
             assert len(Database.get_contents()) == 3

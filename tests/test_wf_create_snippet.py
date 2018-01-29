@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_create_snippet.py: Test workflows for creating snippets."""
 
@@ -34,7 +51,7 @@ class TestWfCreateSnippet(object):
             links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
             compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
             sys.argv = ['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
@@ -54,7 +71,7 @@ class TestWfCreateSnippet(object):
             snippet_remove['tags'] = [Snippet.DEFAULTS[Snippet.REMOVE]['tags'][0]]
             compare_content = {'f94cf88b1546a8fd': snippet_remove}
             sys.argv = ['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
@@ -72,7 +89,7 @@ class TestWfCreateSnippet(object):
             compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
             sys.argv = ['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
             snippy = Snippy()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
             assert cause == 'NOK: mandatory snippet data not defined'
             assert not Database.get_snippets()
             snippy.release()
@@ -86,7 +103,7 @@ class TestWfCreateSnippet(object):
             template = Const.NEWLINE.join(Snippet.TEMPLATE)
             mock_call_editor.return_value = template
             sys.argv = ['snippy', 'create', '--editor']  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'create', '--editor'])  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: mandatory snippet data not defined'
             assert not Database.get_snippets()
@@ -100,7 +117,7 @@ class TestWfCreateSnippet(object):
             mock_call_editor.return_value = Const.EMPTY
             sys.argv = ['snippy', 'create', '--editor']  ## workflow
             snippy = Snippy()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'create', '--editor'])  ## workflow
             assert cause == 'NOK: could not identify edited content category - please keep tags in place'
             assert not Database.get_snippets()
             snippy.release()
@@ -117,7 +134,7 @@ class TestWfCreateSnippet(object):
             links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
             compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
             sys.argv = ['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
             assert cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, compare_content)

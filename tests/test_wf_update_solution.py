@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_update_solution.py: Test workflows for updating solutions."""
 
@@ -30,8 +47,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
@@ -47,8 +63,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--solution', '--digest', 'a96ac']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '--digest', 'a96ac'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
@@ -63,8 +78,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
@@ -81,8 +95,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--snippet', '-d', 'a96accc25dd23ac0']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--snippet', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
@@ -100,8 +113,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-d', 'a96accc25dd23ac0']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
@@ -117,8 +129,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--solution', '-d', '123456789abcdef0']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', '123456789abcdef0'])  ## workflow
             assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
@@ -135,8 +146,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--solution', '-d', '']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', ''])  ## workflow
             assert cause == 'NOK: cannot use empty message digest to update content'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
@@ -161,8 +171,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
             data = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-            sys.argv = ['snippy', 'update', '--solution', '-c', data]  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '-c', data])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
@@ -177,8 +186,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--solution', '--content', 'solution not existing']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '--content', 'solution not existing'])  ## workflow
             assert cause == 'NOK: cannot find content with content data \'solution not existing\''
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
@@ -194,8 +202,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--solution', '-c', '']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '-c', ''])  ## workflow
             assert cause == 'NOK: cannot use empty content data to update content'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],

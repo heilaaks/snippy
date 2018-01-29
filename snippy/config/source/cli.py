@@ -116,14 +116,17 @@ class Cli(ConfigSourceBase):
                      '      $ snippy import --solution -f solutions.yaml',
                      '') + ARGS_COPYRIGHT
 
-    def __init__(self):
+    def __init__(self, args):
         super(Cli, self).__init__()
-        parameters = Cli._parse_args()
+        if args is None:
+            args = []
+        args = args[1:]  # Extract the first parameter that is the program name.
+        parameters = Cli._parse_args(args)
         Cli._set_editor(parameters)
         self.set_conf(parameters)
 
     @staticmethod
-    def _parse_args():
+    def _parse_args(args):
         """Parse command line arguments."""
 
         parser = argparse.ArgumentParser(prog='snippy',
@@ -134,7 +137,7 @@ class Cli(ConfigSourceBase):
 
         # positional arguments
         operations = ('create', 'search', 'update', 'delete', 'export', 'import')
-        parser.add_argument('operation', choices=operations, metavar='  {create,search,update,delete,export,import}')
+        parser.add_argument('operation', nargs='?', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
         # content options
         content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGO))
@@ -185,7 +188,7 @@ class Cli(ConfigSourceBase):
 
         # Argparse will exit in case of support options like --help or --version.
         # Also in case of argument parse failures the SystemExit is made here.
-        parameters = vars(parser.parse_args())
+        parameters = vars(parser.parse_args(args))
 
         return parameters
 
@@ -195,7 +198,7 @@ class Cli(ConfigSourceBase):
 
         if parameters['category'] == Const.SNIPPET and parameters['operation'] == Cli.UPDATE:
             parameters['editor'] = True
-
+        
         if parameters['category'] == Const.SOLUTION and (Cli.CREATE or Cli.UPDATE in parameters['operation']):
             parameters['editor'] = True
 

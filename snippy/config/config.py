@@ -24,6 +24,7 @@ import os.path
 import sys
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
+from snippy.config.source.cli import Cli
 from snippy.config.source.editor import Editor
 from snippy.config.source.parser import Parser
 from snippy.logger.logger import Logger
@@ -33,24 +34,28 @@ import pkg_resources
 class Config(object):  # pylint: disable=too-many-public-methods
     """Global configuration management."""
 
-    logger = None
+    _logger = Logger(__name__).get()
     storage_file = None
     storage_schema = None
     search_all_kws = ()
 
-    def __init__(self):
-        if not Config.logger:
-            Config.logger = Logger(__name__).get()
+    def __init__(self, args):
+        Config.debug = True if args and '--debug' in args else False
+        Config.very_verbose = True if args and '-vv' in args else False
+        Config.quiet = True if args and '-q' in args else False
+        Logger.set_level({'very_verbose': Config.very_verbose, 'debug': Config.debug, 'quiet': Config.quiet})
+        
         Config.source = None
         Config.server = Config._server()
-        Config.debug = Config._debug()
         Config.profiler = Config._profiler()
-        Config.quiet = Config._quiet()
         Config.json_logs = Config._json_logs()
         Config.storage_file = Config._storage_file()
         Config.storage_schema = Config._storage_schema()
         Config.snippet_template = Config._content_template('snippet-template.txt')
         Config.solution_template = Config._content_template('solution-template.txt')
+        Config.init_args = args
+        source = Cli(args)
+        self.read_source(source)
 
     @classmethod
     def _server(cls):
@@ -59,22 +64,10 @@ class Config(object):  # pylint: disable=too-many-public-methods
         return True if '--server' in sys.argv else False
 
     @classmethod
-    def _debug(cls):
-        """Test if service is run in debug mode."""
-
-        return True if '--debug' in sys.argv or '-vv' in sys.argv else False
-
-    @classmethod
     def _profiler(cls):
         """Test if profiler is run."""
 
         return True if '--profile' in sys.argv else False
-
-    @classmethod
-    def _quiet(cls):
-        """Test if all output is suppressed."""
-
-        return True if '--quiet' in sys.argv else False
 
     @classmethod
     def _json_logs(cls):
@@ -90,7 +83,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
             storage_file = os.path.join(storage_path, 'snippy.db')
         else:
-            cls.logger.error('NOK: storage path does not exist or is not accessible: %s', storage_path)
+            cls._logger.error('NOK: storage path does not exist or is not accessible: %s', storage_path)
             sys.exit(1)
 
         return storage_file
@@ -102,7 +95,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # The database schema is installed with the tool and it must always exist.
         schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
         if not os.path.isfile(schema_file):
-            cls.logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_file)
+            cls._logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_file)
             sys.exit(1)
 
         return schema_file
@@ -113,7 +106,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         template = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), template)
         if not os.path.isfile(template):
-            cls.logger.error('NOK: content template installed with tool does not exist or is not accessible: %s', template)
+            cls._logger.error('NOK: content template installed with tool does not exist or is not accessible: %s', template)
             sys.exit(1)
 
         return template
@@ -123,7 +116,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         """Read configuration source."""
 
         cls.source = source
-        cls.logger.debug('config source: %s', cls.source)
+        cls._logger.debug('config source: %s', cls.source)
 
         # Operation
         cls.operation = cls.source.operation
@@ -176,31 +169,31 @@ class Config(object):  # pylint: disable=too-many-public-methods
     def _print_config(cls):
         """Print global configuration."""
 
-        cls.logger.debug('configured storage file: %s', cls.storage_file)
-        cls.logger.debug('configured storage schema: %s', cls.storage_schema)
-        cls.logger.debug('configured content operation: %s', cls.operation)
-        cls.logger.debug('configured content category: %s', cls.content_category)
-        cls.logger.debug('configured content data: %s', cls.content_data)
-        cls.logger.debug('configured content brief: %s', cls.content_brief)
-        cls.logger.debug('configured content group: %s', cls.content_group)
-        cls.logger.debug('configured content tags: %s', cls.content_tags)
-        cls.logger.debug('configured content links: %s', cls.content_links)
-        cls.logger.debug('configured content filename: %s', cls.content_filename)
-        cls.logger.debug('configured operation digest: %s', cls.operation_digest)
-        cls.logger.debug('configured operation filename: "%s"', cls.operation_filename)
-        cls.logger.debug('configured operation file type: "%s"', cls.operation_filetype)
-        cls.logger.debug('configured search all keywords: %s', cls.search_all_kws)
-        cls.logger.debug('configured search tag keywords: %s', cls.search_tag_kws)
-        cls.logger.debug('configured search group keywords: %s', cls.search_grp_kws)
-        cls.logger.debug('configured search result filter: %s', cls.search_filter)
-        cls.logger.debug('configured search result limit: %s', cls.search_limit)
-        cls.logger.debug('configured search result sorted field: %s', cls.sorted_fields)
-        cls.logger.debug('configured search result removed fields: %s', cls.remove_fields)
-        cls.logger.debug('configured option editor: %s', cls.editor)
-        cls.logger.debug('configured option use_ansi: %s', cls.use_ansi)
-        cls.logger.debug('configured option defaults: %s', cls.defaults)
-        cls.logger.debug('configured option template: %s', cls.template)
-        cls.logger.debug('configured option server: %s', cls.server)
+        cls._logger.debug('configured storage file: %s', cls.storage_file)
+        cls._logger.debug('configured storage schema: %s', cls.storage_schema)
+        cls._logger.debug('configured content operation: %s', cls.operation)
+        cls._logger.debug('configured content category: %s', cls.content_category)
+        cls._logger.debug('configured content data: %s', cls.content_data)
+        cls._logger.debug('configured content brief: %s', cls.content_brief)
+        cls._logger.debug('configured content group: %s', cls.content_group)
+        cls._logger.debug('configured content tags: %s', cls.content_tags)
+        cls._logger.debug('configured content links: %s', cls.content_links)
+        cls._logger.debug('configured content filename: %s', cls.content_filename)
+        cls._logger.debug('configured operation digest: %s', cls.operation_digest)
+        cls._logger.debug('configured operation filename: "%s"', cls.operation_filename)
+        cls._logger.debug('configured operation file type: "%s"', cls.operation_filetype)
+        cls._logger.debug('configured search all keywords: %s', cls.search_all_kws)
+        cls._logger.debug('configured search tag keywords: %s', cls.search_tag_kws)
+        cls._logger.debug('configured search group keywords: %s', cls.search_grp_kws)
+        cls._logger.debug('configured search result filter: %s', cls.search_filter)
+        cls._logger.debug('configured search result limit: %s', cls.search_limit)
+        cls._logger.debug('configured search result sorted field: %s', cls.sorted_fields)
+        cls._logger.debug('configured search result removed fields: %s', cls.remove_fields)
+        cls._logger.debug('configured option editor: %s', cls.editor)
+        cls._logger.debug('configured option use_ansi: %s', cls.use_ansi)
+        cls._logger.debug('configured option defaults: %s', cls.defaults)
+        cls._logger.debug('configured option template: %s', cls.template)
+        cls._logger.debug('configured option server: %s', cls.server)
 
     @classmethod
     def _operation_filename(cls):
@@ -283,7 +276,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # and 3) search keywords. Search keywords are already validated and invalid
         # keywords are interpreted as 'list all' which is always correct at this
         # point.
-        cls.logger.debug('validating search context with %d results', len(contents))
+        cls._logger.debug('validating search context with %d results', len(contents))
         if cls.is_content_digest():
             if cls.operation_digest:
                 if not contents:

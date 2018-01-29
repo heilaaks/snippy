@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_create_solution.py: Test workflows for creating solutions."""
 
@@ -38,8 +55,7 @@ class TestWfCreateSolution(unittest.TestCase):
             tags = Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.BEATS]['tags'])
             links = Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.BEATS]['links'])
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
-            sys.argv = ['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow # pylint: disable=line-too-long
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -55,8 +71,7 @@ class TestWfCreateSolution(unittest.TestCase):
             mock_call_editor.return_value = template
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
                                '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
-            sys.argv = ['snippy', 'create', '--solution']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'create', '--solution'])  ## workflow
             assert cause == 'NOK: content data already exist with digest a96accc25dd23ac0'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, compare_content)
@@ -69,8 +84,7 @@ class TestWfCreateSolution(unittest.TestCase):
             template = Const.NEWLINE.join(Solution.TEMPLATE)
             mock_call_editor.return_value = template
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
-            sys.argv = ['snippy', 'create', '--solution']  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'create', '--solution'])  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: no content was stored because solution is an empty template'
             assert not Database.get_solutions()
@@ -84,7 +98,7 @@ class TestWfCreateSolution(unittest.TestCase):
             mock_call_editor.return_value = Const.EMPTY
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
             sys.argv = ['snippy', 'create', '--solution']  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'create', '--solution'])  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: could not identify edited content category - please keep tags in place'
             assert not Database.get_solutions()
@@ -114,8 +128,7 @@ class TestWfCreateSolution(unittest.TestCase):
                         '')
             mock_call_editor.return_value = Const.NEWLINE.join(template)
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
-            sys.argv = ['snippy', 'create', '--solution']  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'create', '--solution'])  ## workflow
             cause = snippy.run_cli()
             assert cause == 'NOK: could not identify edited content category - please keep tags in place'
             assert not Database.get_solutions()
@@ -137,8 +150,7 @@ class TestWfCreateSolution(unittest.TestCase):
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             mock_call_editor.return_value = template
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
-            sys.argv = ['snippy', 'create', '--solution', '--editor']  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'create', '--solution', '--editor'])  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1

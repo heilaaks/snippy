@@ -54,8 +54,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        line which should result tool default file and format.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./solutions.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -68,8 +67,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-f', './all-solutions.yaml'] ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.yaml']) ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -82,8 +80,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-f', './all-solutions.json'] ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.json']) ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
@@ -96,8 +93,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        and format are defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-f', './all-solutions.txt'] ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -113,8 +109,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        and format are defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-f', './all-solutions.text'] ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -130,8 +125,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        result error text for end user and no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-f', './foo.bar'] ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
@@ -144,8 +138,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        supported with export operation and error cause is returned.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--all']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--all'])  ## workflow
             assert cause == 'NOK: content category \'all\' is supported only with search operation'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
@@ -173,8 +166,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        metadata but not by command line -f|--file option.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -189,8 +181,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        category is not specified explicitly from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', 'a96accc25dd23ac0']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -208,14 +199,12 @@ class TestWfExportSolution(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=mocked_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'import', '-f', 'mocked_file.txt']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'mocked_file.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 3
 
             mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '--solution', '-d', '7a5bf1bc09939f42']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', '7a5bf1bc09939f42'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('solution.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -231,8 +220,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        format is yaml.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -245,8 +233,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        the content category explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -261,8 +248,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        format is json.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
@@ -275,8 +261,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        the content category explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
@@ -291,8 +276,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        extension is 'txt'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -306,8 +290,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        the content category explicitly. In this case the file extension is *.txt.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -323,8 +306,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        extension is 'text'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -338,8 +320,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        the content category explicitly. In this case the file extension is *.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -354,8 +335,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f', './foo.bar']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
@@ -372,14 +352,12 @@ class TestWfExportSolution(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=mocked_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'import', '-f', 'mocked_file.txt']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'mocked_file.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 3
 
             mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '--solution', '-d', '2c4298ff3c582fe5']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', '2c4298ff3c582fe5'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('solution.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -398,14 +376,12 @@ class TestWfExportSolution(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=mocked_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'import', '-f', 'mocked_file.txt']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'mocked_file.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 3
 
             mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '--solution', '-d', '745c9e70eacc304b']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', '745c9e70eacc304b'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('kubernetes-docker-log-driver-kafka.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -419,8 +395,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        This should result error text for end user and no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '-d', '123456789abcdef0', '-f' './defined-solution.text']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', '123456789abcdef0', '-f' './defined-solution.text'])  ## workflow
             assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
@@ -447,8 +422,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        metadata but not by command line -f|--file option.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '--sall', 'beats']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'beats'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -463,8 +437,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        and yaml format defined by the command line option.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -478,8 +451,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        and json format defined by the command line option.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.json']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.json'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
@@ -494,8 +466,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        extension is 'txt'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '--sall', 'beats', '-f' './defined-solution.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'beats', '-f' './defined-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -509,8 +480,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        matchies to two solutions that must be exported to file defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '--sall', 'howto', '-f' './defined-solutions.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'howto', '-f' './defined-solutions.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solutions.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -525,8 +495,7 @@ class TestWfExportSolution(unittest.TestCase):
         ## Brief: Try to export snippet based on search keyword that cannot befound.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '--sall', 'notfound', '-f', './defined-solution.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'notfound', '-f', './defined-solution.yaml'])  ## workflow
             assert cause == 'NOK: cannot find content with given search criteria'
             mock_file.assert_not_called()
             snippy.release()
@@ -545,8 +514,7 @@ class TestWfExportSolution(unittest.TestCase):
         ## Brief: Export solution template. This should result file name and format based on
         ##        tool internal settings.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy()
-            sys.argv = ['snippy', 'export', '--solution', '--template']  ## workflow
+            snippy = Snippy(['snippy', 'export', '--solution', '--template'])  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./solution-template.txt', 'w')
@@ -573,8 +541,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        location under tool data folder in yaml format.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--solution', '--defaults']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '--defaults'])  ## workflow
             assert cause == Cause.ALL_OK
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'w')
@@ -589,8 +556,7 @@ class TestWfExportSolution(unittest.TestCase):
         ##        processing list of zero items is considered as an OK case.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'export', '--solution', '--defaults']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '--defaults'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
             mock_yaml_dump.assert_not_called()
@@ -623,15 +589,13 @@ class TestWfExportSolution(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=mocked_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'import', '-f', 'mocked_file.txt', '-d', 'a96accc25dd23ac0']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'mocked_file.txt', '-d', 'a96accc25dd23ac0'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
 
             mock_file.reset_mock()
             original = original.replace('## DATE  : 2017-10-20 11:11:19', '## DATE  :  2017-10-14 19:56:31')
-            sys.argv = ['snippy', 'export', '--solution', '-d', '2b4428c3c022abff']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', '2b4428c3c022abff'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value

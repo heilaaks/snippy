@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_console_help.py: Test workflows for getting help from console."""
 
@@ -343,10 +360,10 @@ class TestWfConsoleHelp(object):
         ##        explicitly. This just verifies that the very verbose option prints more
         ##        logs.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
-            sys.argv = ['snippy', 'search', '--sall', '.', '-vv'] ## workflow
+            #sys.argv = ['snippy', 'search', '--sall', '.', '-vv'] ## workflow
             real_stderr = sys.stderr
             sys.stderr = StringIO()
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
             cause = snippy.run_cli()
             snippy.release()
             snippy = None
@@ -354,6 +371,9 @@ class TestWfConsoleHelp(object):
             result_stderr = sys.stderr.getvalue().strip()
             sys.stderr = real_stderr
             assert cause == 'NOK: cannot find content with given search criteria'
+            print("==")
+            print(caplog.text.split(Const.NEWLINE))
+            print("==")
             assert len(caplog.text.split(Const.NEWLINE)) > 30
             assert not result_stderr
 
@@ -403,9 +423,7 @@ class TestWfConsoleHelp(object):
                       '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
                       '   ! metadata : None',
                       '   ! key      : 2')
-            sys.argv = ['snippy', '--debug']  # Debug must be enabled from the creation to get the logs.
-            snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sall', '.', '--debug', '--no-ansi']  ## workflow
+            snippy = Snippet.add_defaults(Snippy(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi']))  ## workflow
             real_stderr = sys.stderr
             real_stdout = sys.stdout
             sys.stderr = StringIO()
@@ -431,12 +449,11 @@ class TestWfConsoleHelp(object):
 
         ## Brief: Disable all logging and output to terminal.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
-            sys.argv = ['snippy', 'search', '--sall', '.', '-q']  ## workflow
             real_stderr = sys.stderr
             real_stdout = sys.stdout
             sys.stderr = StringIO()
             sys.stdout = StringIO()
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'search', '--sall', '.', '-q'])  ## workflow
             cause = snippy.run_cli()
             snippy.release()
             snippy = None
@@ -459,12 +476,11 @@ class TestWfConsoleHelp(object):
         ##        printed and nothing else. The print must be send to stdout.
         cause = Cause.ALL_OK
         try:
-            sys.argv = ['snippy', '--version']  ## workflow
             real_stdout = sys.stdout
             real_stderr = sys.stderr
             sys.stdout = StringIO()
             sys.stderr = StringIO()
-            snippy = Snippy()
+            snippy = Snippy(['snippy', '--version'])  ## workflow
         except SystemExit:
             result_stdout = sys.stdout.getvalue().strip()
             result_stderr = sys.stderr.getvalue().strip()
@@ -473,7 +489,6 @@ class TestWfConsoleHelp(object):
             assert cause == Cause.ALL_OK
             assert result_stdout == __version__
             assert not result_stderr
-            snippy.release()
             snippy = None
             Database.delete_storage()
 
@@ -486,7 +501,7 @@ class TestWfConsoleHelp(object):
             real_stderr = sys.stderr
             sys.stdout = StringIO()
             sys.stderr = StringIO()
-            snippy = Snippy()
+            snippy = Snippy(['snippy', '-v'])  ## workflow
         except SystemExit:
             result_stdout = sys.stdout.getvalue().strip()
             result_stderr = sys.stderr.getvalue().strip()
@@ -495,7 +510,6 @@ class TestWfConsoleHelp(object):
             assert cause == Cause.ALL_OK
             assert result_stdout == __version__
             assert not result_stderr
-            snippy.release()
             snippy = None
             Database.delete_storage()
 
@@ -578,7 +592,7 @@ class TestWfConsoleHelp(object):
             sys.stdout = real_stdout
             sys.stderr = real_stderr
             sys.argv = ['snippy', 'search']  ## workflow
-            snippy.run_cli()
+            snippy.run_cli(['snippy', 'search'])  ## workflow
             ansi_escape = re.compile(r'\x1b[^m]*m')  # Remove all color codes from output.
             result_stdout = ansi_escape.sub('', result_stdout)
             assert Const.NEWLINE.join(output) in result_stdout

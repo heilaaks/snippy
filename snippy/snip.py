@@ -19,6 +19,8 @@
 
 """Snippy - command, solution and code snippet management."""
 
+import sys
+
 from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.source.cli import Cli
@@ -32,10 +34,9 @@ from snippy.devel.profiler import Profiler
 class Snippy(object):
     """Command and solution management."""
 
-    def __init__(self):
-        Logger.set_level()
+    def __init__(self, args=None):
+        Config(args)
         self.logger = Logger(__name__).get()
-        self.config = Config()
         self.storage = Storage()
         self.server = None
 
@@ -47,12 +48,12 @@ class Snippy(object):
         else:
             self.run_cli()
 
-    def run_cli(self):
+    def run_cli(self, args=None):
         """Run command line session."""
 
         self.logger.debug('running command line interface')
-        cli = Cli()  # Exits e.g. in case only a support option like --help is used.
-        Config.read_source(cli)
+        args = Config.init_args if args is None else args
+        Config.read_source(Cli(args))
         if Config.is_category_snippet:
             Snippet(self.storage).run()
         elif Config.is_category_solution:
@@ -91,7 +92,7 @@ def main():
     """Main"""
 
     Profiler.enable()
-    snippy = Snippy()
+    snippy = Snippy(sys.argv)
     snippy.run()
     snippy.release()
     Profiler.disable()

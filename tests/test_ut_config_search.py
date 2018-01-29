@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_ut_config_search.py: Test tool configuration management to search snippets."""
 
@@ -18,8 +35,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('docker',)
         sys.argv = ['snippy', 'search', '--sall', 'docker']
-        obj = Config()
-        obj.read_source(Cli())
+        obj = Config(None)
+        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker']))
         assert isinstance(obj.search_all_kws, tuple)
         self.assertTupleEqual(obj.search_all_kws, search_kw)
 
@@ -29,8 +46,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
-        obj = Config()
-        obj.read_source(Cli())
+        obj = Config(None)
+        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker,container,cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
         self.assertTupleEqual(obj.search_all_kws, search_kw)
 
@@ -40,8 +57,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
-        obj = Config()
-        obj.read_source(Cli())
+        obj = Config(None)
+        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
         self.assertTupleEqual(obj.search_all_kws, search_kw)
 
@@ -51,8 +68,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
-        obj = Config()
-        obj.read_source(Cli())
+        obj = Config(None)
+        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
         self.assertTupleEqual(obj.search_all_kws, search_kw)
 
@@ -63,8 +80,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
-        obj = Config()
-        obj.read_source(Cli())
+        obj = Config(None)
+        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
         self.assertTupleEqual(obj.search_all_kws, search_kw)
 
@@ -74,8 +91,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
-        obj = Config()
-        obj.read_source(Cli())
+        obj = Config(None)
+        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
         self.assertTupleEqual(obj.search_all_kws, search_kw)
 
@@ -85,8 +102,8 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup_testing', 'container-managemenet', 'dockertesting')
         sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
-        obj = Config()
-        obj.read_source(Cli())
+        obj = Config(None)
+        obj.read_source(Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
         assert isinstance(obj.search_all_kws, tuple)
         self.assertTupleEqual(obj.search_all_kws, search_kw)
         assert len(obj.search_all_kws) == 3

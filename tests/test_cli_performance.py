@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_cli_performance.py: Verify that there are no major impacts to performance in console usage."""
 
@@ -61,8 +78,7 @@ class TestCliPerformance(object):
 
             assert len(Database.get_contents()) == 4
             # Search all content
-            sys.argv = ['snippy', 'search', '--all', '--sall', '.']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--all', '--sall', '.'])
             assert cause == Cause.ALL_OK
 
             # Create solution with editor
@@ -71,17 +87,13 @@ class TestCliPerformance(object):
             sys.argv = ['snippy', 'create', '--editor']  ## workflow
 
             # Delete all content
-            sys.argv = ['snippy', 'delete', '-d', '54e41e9b52a02b63']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '-d', '54e41e9b52a02b63'])
             assert cause == Cause.ALL_OK
-            sys.argv = ['snippy', 'delete', '-d', '53908d68425c61dc']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '-d', '53908d68425c61dc'])
             assert cause == Cause.ALL_OK
-            sys.argv = ['snippy', 'delete', '-d', 'a96accc25dd23ac0']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '-d', 'a96accc25dd23ac0'])
             assert cause == Cause.ALL_OK
-            sys.argv = ['snippy', 'delete', '-d', '61a24a156f5e9d2d']
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '-d', '61a24a156f5e9d2d'])
             assert cause == Cause.ALL_OK
             assert not Database.get_contents()
 

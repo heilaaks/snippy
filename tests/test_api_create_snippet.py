@@ -58,7 +58,7 @@ class TestApiCreateSnippet(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '507'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
@@ -86,7 +86,7 @@ class TestApiCreateSnippet(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '507'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
@@ -113,7 +113,7 @@ class TestApiCreateSnippet(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '712'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
         sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
@@ -142,7 +142,7 @@ class TestApiCreateSnippet(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '712'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
         sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
@@ -176,12 +176,11 @@ class TestApiCreateSnippet(object):
                                          'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
         compare = {'3d855210284302d5': body['data'][0]['attributes']}
         sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
-        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_201
@@ -211,7 +210,7 @@ class TestApiCreateSnippet(object):
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                          {'type': 'snippets', 'id': '2', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},

@@ -1,5 +1,12 @@
 # Development Scibbling
 
+# Cli refactoring
+
+- If Snippy() is created without args, the args are taken from pytest args.
+--> Must go with the /1/. Change all Snippy() to SNippy('export', etc)
+/1/ Get idea from : https://stackoverflow.com/questions/18160078/how-do-you-write-tests-for-the-argparse-portion-of-a-python-module/37343818
+- nargs=? from https://stackoverflow.com/questions/7484044/argparse-ignore-multiple-positional-arguments-when-optional-argument-is-specifi
+
 Random notes and scribling during development.
 
 

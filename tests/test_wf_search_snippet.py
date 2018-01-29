@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_search_snippet.py: Test workflows for searching snippets."""
 
@@ -41,10 +58,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sall', 'redis', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', 'redis', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -64,10 +80,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sall', 'all', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', 'all', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -94,10 +109,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sall', 'docker', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', 'docker', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -124,10 +138,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sall', 'moby', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', 'moby', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -150,8 +163,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sall', 'tutorials', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', 'tutorials', '--no-ansi'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -172,10 +184,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -203,10 +214,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sall', 'redis,--quiet', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', 'redis,--quiet', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -234,10 +244,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
-            sys.argv = ['snippy', 'search', '--sall', 'netcat --quiet all', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', 'netcat --quiet all', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -265,8 +274,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sall', '.', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--no-ansi'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -293,10 +301,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sall', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -325,8 +332,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sall', '', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '', '--no-ansi'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -342,8 +348,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippy()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sall', '.', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--no-ansi'])  ## workflow
             assert cause == 'NOK: cannot find content with given search criteria'
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -356,10 +361,9 @@ class TestWfSearchSnippet(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('NOK: cannot find content with given search criteria')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sall', 'not-found', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', 'not-found', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == 'NOK: cannot find content with given search criteria'
@@ -390,8 +394,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             Snippet.add_one(snippy, Snippet.NETCAT)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--stag', 'netcat', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--stag', 'netcat', '--no-ansi'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -407,8 +410,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             Snippet.add_one(snippy, Snippet.NETCAT)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--stag', 'not-found', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--stag', 'not-found', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == 'NOK: cannot find content with given search criteria'
@@ -435,10 +437,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--stag', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--stag', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -467,10 +468,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
-            sys.argv = ['snippy', 'search', '--sgrp', 'linux', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sgrp', 'linux', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -486,8 +486,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             Snippet.add_one(snippy, Snippet.NETCAT)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sgrp', 'not-found', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sgrp', 'not-found', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == 'NOK: cannot find content with given search criteria'
@@ -514,10 +513,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--sgrp', '', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sgrp', '', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -548,8 +546,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             Solution.add_defaults(snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sall', '.', '--filter', '.*(\\$\\s.*)']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--filter', '.*(\\$\\s.*)'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -580,10 +577,9 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
             Solution.add_defaults(snippy)
-            sys.argv = ['snippy', 'search', '--all', '--sall', '.', '--filter', '\\.*(\\$\\s.*)']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--all', '--sall', '.', '--filter', '\\.*(\\$\\s.*)'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -600,8 +596,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             Solution.add_defaults(snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sall', '.', '--filter', 'not-found']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--filter', 'not-found'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -631,8 +626,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             Solution.add_defaults(snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--sall', '.', '--filter', '[invalid(regexp', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--filter', '[invalid(regexp', '--no-ansi'])  ## workflow
             assert cause == 'NOK: listing matching content without filter because it was not syntactically correct regular expression'
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -661,8 +655,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--content', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--content', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -683,8 +676,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--content', 'docker rm --volumes', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--content', 'docker rm --volumes', '--no-ansi'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -706,8 +698,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--content', 'volumes', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--content', 'volumes', '--no-ansi'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -737,8 +728,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -758,10 +748,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--digest', '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5', '--no-ansi']  ## workflow  pylint: disable=line-too-long
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--digest', '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5', '--no-ansi'])  ## workflow  pylint: disable=line-too-long
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -788,10 +777,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '',
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'search', '--digest', '5', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--digest', '5', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -820,8 +808,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--digest', '', '--no-ansi']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--digest', '', '--no-ansi'])  ## workflow
             assert cause == Cause.ALL_OK
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -858,10 +845,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
-            sys.argv = ['snippy', 'search', '--sall', '.', '--sgrp', 'docker', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--sgrp', 'docker', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -895,10 +881,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
-            sys.argv = ['snippy', 'search', '--sall', '.', '--sgrp', 'docker,linux', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--sgrp', 'docker,linux', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -935,10 +920,9 @@ class TestWfSearchSnippet(unittest.TestCase):
                       'OK')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
-            sys.argv = ['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'docker', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'docker', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
@@ -953,10 +937,9 @@ class TestWfSearchSnippet(unittest.TestCase):
             output = ('NOK: cannot find content with given search criteria')
             snippy = Snippet.add_defaults(Snippy())
             Snippet.add_one(snippy, Snippet.NETCAT)
-            sys.argv = ['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'linux', '--no-ansi']  ## workflow
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'linux', '--no-ansi'])  ## workflow
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
             assert cause == 'NOK: cannot find content with given search criteria'
@@ -979,8 +962,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search'])  ## workflow
             assert cause == 'NOK: please define keyword, digest or content data as search criteria'
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout
@@ -997,8 +979,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             snippy = Snippet.add_defaults(Snippy())
             real_stdout = sys.stdout
             sys.stdout = StringIO()
-            sys.argv = ['snippy', 'search', '--filter', '.*(\\$\\s.*)']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'search', '--filter', '.*(\\$\\s.*)'])  ## workflow
             assert cause == 'NOK: please define keyword, digest or content data as search criteria'
             result = sys.stdout.getvalue().strip()
             sys.stdout = real_stdout

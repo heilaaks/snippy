@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_delete_solution.py: Test workflows for deleting solutions."""
 
@@ -25,8 +42,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ## Brief: Delete solution with short 16 byte version of message digest.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 1
             snippy.release()
@@ -36,8 +52,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ## Brief: Delete solution with wihtout explicitly specifying solution category..
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '-d', '61a24a156f5e9d2d']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '-d', '61a24a156f5e9d2d'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 1
             snippy.release()
@@ -47,8 +62,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ## Brief: Delete solution with very short version of digest that matches to one solution.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--solution', '-d', '61a24']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', '61a24'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 1
             snippy.release()
@@ -58,8 +72,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ## Brief: Delete solution with long 16 byte version of message digest.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 1
             snippy.release()
@@ -69,8 +82,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ## Brief: Try to delete solution with message digest that cannot be found.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--solution', '-d', '123456789abcdef0']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', '123456789abcdef0'])  ## workflow
             assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
             assert len(Database.get_solutions()) == 2
             snippy.release()
@@ -81,8 +93,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ##        in this case because there is more than one content stored.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--solution', '-d', '']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', ''])  ## workflow
             assert cause == 'NOK: cannot use empty message digest to delete content'
             assert len(Database.get_solutions()) == 2
             snippy.release()
@@ -93,8 +104,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ##        stored. In this case the last content can be deleted with empty digest.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_one(Snippy(), Solution.NGINX)
-            sys.argv = ['snippy', 'delete', '--solution', '-d', '']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', ''])  ## workflow
             assert cause == 'OK'
             assert not Database.get_solutions()
             snippy.release()
@@ -105,8 +115,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ##        to any existing message digest.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--solution', '-d', '123456']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', '123456'])  ## workflow
             assert cause == 'NOK: cannot find content with message digest 123456'
             assert len(Database.get_solutions()) == 2
             snippy.release()
@@ -125,8 +134,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
             data = Solution.get_template(Solution.DEFAULTS[Solution.NGINX])
-            sys.argv = ['snippy', 'delete', '--solution', '--content', data]  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '--content', data])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 1
             snippy.release()
@@ -137,8 +145,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ##        content data is not truncated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--solution', '--content', 'not-exists']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '--content', 'not-exists'])  ## workflow
             assert cause == 'NOK: cannot find content with content data \'not-exists\''
             assert len(Database.get_solutions()) == 2
             snippy.release()
@@ -150,8 +157,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
             data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
-            sys.argv = ['snippy', 'delete', '--solution', '--content', data]  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '--content', data])  ## workflow
             assert cause == 'NOK: cannot find content with content data \'##############################...\''
             assert len(Database.get_solutions()) == 2
             snippy.release()
@@ -162,8 +168,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ##        in this case because there is more than one content left.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            sys.argv = ['snippy', 'delete', '--solution', '--content', '']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '--content', ''])  ## workflow
             assert cause == 'NOK: cannot use empty content data to delete content'
             assert len(Database.get_solutions()) == 2
             snippy.release()

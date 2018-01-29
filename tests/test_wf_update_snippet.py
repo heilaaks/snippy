@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_update_snippet.py: Test workflows for updating snippets."""
 
@@ -30,8 +47,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-d', '54e41e9b52a02b63']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-d', '54e41e9b52a02b63'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'af8c89629dc1a531': Snippet.get_dictionary(template),
@@ -47,8 +63,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-d', '54e41']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-d', '54e41'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'af8c89629dc1a531': Snippet.get_dictionary(template),
@@ -63,8 +78,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'af8c89629dc1a531': Snippet.get_dictionary(template),
@@ -80,8 +94,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--snippet', '-d', '54e41e9b52a02b63']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--snippet', '-d', '54e41e9b52a02b63'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'af8c89629dc1a531': Snippet.get_dictionary(template),
@@ -98,8 +111,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'af8c89629dc1a531': Snippet.get_dictionary(template),
@@ -115,8 +127,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-d', '123456789abcdef0']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-d', '123456789abcdef0'])  ## workflow
             assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
@@ -133,8 +144,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-d', '']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-d', ''])  ## workflow
             assert cause == 'NOK: cannot use empty message digest to update content'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
@@ -151,8 +161,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-d', '5']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-d', '5'])  ## workflow
             assert cause == 'NOK: given digest 5 matches (2) more than once preventing the operation'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
@@ -176,8 +185,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'af8c89629dc1a531': Snippet.get_dictionary(template),
@@ -192,8 +200,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-c', 'snippet not existing']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-c', 'snippet not existing'])  ## workflow
             assert cause == 'NOK: cannot find content with content data \'snippet not existing\''
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],
@@ -209,8 +216,7 @@ class TestWfUpdateSnippet(unittest.TestCase):
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'update', '-c', '']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'update', '-c', ''])  ## workflow
             assert cause == 'NOK: cannot use empty content data to update content'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE],

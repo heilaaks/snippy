@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_wf_export_snippet.py: Test workflows for exporting snippets."""
 
@@ -35,9 +52,8 @@ class TestWfExportSnippet(unittest.TestCase):
 
         ## Brief: Export all snippets without defining target file name from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export']  ## workflow
-            cause = snippy.run_cli()
+            snippy = Snippet.add_defaults()
+            cause = snippy.run_cli(['snippy', 'export'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_safe_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
             mock_file.assert_called_once_with('./snippets.yaml', 'w')
@@ -49,8 +65,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        In this case the content category is defined explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--snippet']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--snippet'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_safe_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
             mock_file.assert_called_once_with('./snippets.yaml', 'w')
@@ -61,8 +76,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ## Brief: Export all snippets into yaml file defined from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-f', './defined-snippets.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_safe_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
             mock_file.assert_called_once_with('./defined-snippets.yaml', 'w')
@@ -74,8 +88,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        the content category.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_safe_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
             mock_file.assert_called_once_with('./defined-snippets.yaml', 'w')
@@ -87,8 +100,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        result error text for end user and no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-f', 'foo.bar']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-f', 'foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file foo.bar'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
@@ -116,8 +128,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        snippet.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', '53908d68425c61dc'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -131,8 +142,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        line as yaml file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -145,8 +155,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        line as json file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.json']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.json'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
@@ -159,8 +168,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        line. This should result file and format defined by command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -173,8 +181,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ## Brief: Try to export defined snippet based on message digest that cannot be found.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-d', '123456789abcdef0', '-f', 'defined-snippet.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-d', '123456789abcdef0', '-f', 'defined-snippet.txt'])  ## workflow
             assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
             mock_file.assert_not_called()
             snippy.release()
@@ -200,8 +207,7 @@ class TestWfExportSnippet(unittest.TestCase):
         #         and format snippet.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--sall', 'force']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--sall', 'force'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -215,8 +221,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as yaml file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -229,8 +234,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as json file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
@@ -243,8 +247,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as text file with *.txt file extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -258,8 +261,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as text file with *.text file extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -273,8 +275,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        matchies to two snippets that must be exported to file defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -289,8 +290,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ## Brief: Try to export snippet based on search keyword that cannot befound.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--sall', 'notfound', '-f', 'defined-snippet.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--sall', 'notfound', '-f', 'defined-snippet.yaml'])  ## workflow
             assert cause == 'NOK: cannot find content with given search criteria'
             mock_file.assert_not_called()
             snippy.release()
@@ -316,8 +316,7 @@ class TestWfExportSnippet(unittest.TestCase):
         #         and format snippet.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--content', 'docker rm --volumes $(docker ps --all --quiet)']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -331,8 +330,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as yaml file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -345,8 +343,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as json file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
@@ -359,8 +356,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as text file with *.txt file extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
@@ -382,8 +378,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ## Brief: Export snippet template. This should result file name and format based on
         ##        tool internal settings.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'export', '--template']  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'export', '--template'])  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippet-template.txt', 'w')
@@ -396,8 +391,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ## Brief: Export snippet template by explicitly defining content category. This should
         ##        result file name and format based on tool internal settings.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            sys.argv = ['snippy', 'export', '--snippet', '--template']  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', 'export', '--snippet', '--template'])  ## workflow
             cause = snippy.run_cli()
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippet-template.txt', 'w')
@@ -424,8 +418,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        location under tool data folder in yaml format.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            sys.argv = ['snippy', 'export', '--defaults']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--defaults'])  ## workflow
             assert cause == Cause.ALL_OK
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'w')
@@ -440,8 +433,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        processing list of zero items is considered as an OK case.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
-            sys.argv = ['snippy', 'export', '--defaults']  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--defaults'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
             mock_yaml_dump.assert_not_called()

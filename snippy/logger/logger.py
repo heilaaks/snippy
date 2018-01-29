@@ -83,6 +83,9 @@ class Logger(object):
     10. All logs must be printed to stdout.
     """
 
+    # Logger configuration.
+    CONFIG = {}
+
     # Unique operation ID that identifies logs for each operation.
     SERVER_OID = format(getrandbits(32), "08x")
 
@@ -102,9 +105,11 @@ class Logger(object):
 
         return self.logger
 
-    @staticmethod
-    def set_level():
+    @classmethod
+    def set_level(cls, config):
         """Set log level."""
+
+        cls.CONFIG = config
 
         # Set the effective log level for all the loggers created under
         # 'snippy' logger namespace. This relies on that the module level
@@ -120,7 +125,7 @@ class Logger(object):
         #       to be formatted by Snippy logging framework.
         logging.getLogger('snippy').disabled = True
         logging.getLogger('snippy').setLevel(logging.CRITICAL)
-        if '--debug' in sys.argv or '-vv' in sys.argv:
+        if config['debug'] or config['very_verbose']:
             logging.getLogger('snippy').disabled = False
             logging.getLogger('snippy').setLevel(logging.DEBUG)
 
@@ -130,8 +135,8 @@ class Logger(object):
 
         cls.SERVER_OID = format(getrandbits(32), "08x")
 
-    @staticmethod
-    def print_cause(cause):
+    @classmethod
+    def print_cause(cls, cause):
         """Print exit cause."""
 
         # The signal handler manipulation and the flush below prevent the
@@ -142,7 +147,7 @@ class Logger(object):
         # /2/ https://stackoverflow.com/a/26738736
         if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
             Logger(__name__).get().info('exiting with cause %s', cause.lower())
-        elif '-q' not in sys.argv:
+        elif not cls.CONFIG['quiet']:
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
             print(cause)

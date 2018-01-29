@@ -1,4 +1,9 @@
 ## TODO
+   - [ ] Fix --help tests after latest refactoring.
+   - [ ] Fix tests/test_wf_create_solution.py works in make test but not individually. Same update_snippet
+   - [ ] Fix clean and remove snippy = Snippet.add_defaults(Snippy()) with snippy = Snippet.add_defaults().
+   - [ ] Fix clean sys.args. from tests.
+   - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}
    - [ ] Fix Swagger specification to follow JSON API specification JSON format.
    - [ ] Add configurable base path.
    - [ ] Fix hello metadata.

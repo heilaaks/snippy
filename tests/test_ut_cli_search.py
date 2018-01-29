@@ -1,4 +1,21 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+#
+#  Snippy - command, solution and code snippet management.
+#  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
+#
+#  This program is free software: you can redistribute it and/or modify
+#  it under the terms of the GNU Affero General Public License as published
+#  by the Free Software Foundation, either version 3 of the License, or
+#  (at your option) any later version.
+#
+#  This program is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#  GNU Affero General Public License for more details.
+#
+#  You should have received a copy of the GNU Affero General Public License
+#  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 """test_ut_arguments_search.py: Test command line argumens for searching snippets with keywords."""
 
@@ -15,7 +32,7 @@ class TestUtCliSearch(object):
         """Test that search can be used with one keyword."""
 
         sys.argv = ['snippy', 'search', '--sall', 'docker']
-        obj = Cli()
+        obj = Cli(['snippy', 'search', '--sall', 'docker'])
         assert obj.sall == ('docker',)
 
     def test_search_with_quotes_and_separated_by_comma_and_no_space(self):
@@ -23,7 +40,7 @@ class TestUtCliSearch(object):
         comma and without spaces."""
 
         sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
-        obj = Cli()
+        obj = Cli(['snippy', 'search', '--sall', 'docker,container,cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
     def test_search_with_quotes_and_separated_by_comma_and_space(self):
@@ -31,7 +48,7 @@ class TestUtCliSearch(object):
         by comma and spaces after comma."""
 
         sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
-        obj = Cli()
+        obj = Cli(['snippy', 'search', '--sall', 'docker, container, cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
     def test_search_with_quotes_and_separated_by_only_space(self):
@@ -39,7 +56,7 @@ class TestUtCliSearch(object):
         by spaces before and after the words."""
 
         sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
-        obj = Cli()
+        obj = Cli(['snippy', 'search', '--sall', 'docker container cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
     def test_search_separated_by_space(self):
@@ -48,7 +65,7 @@ class TestUtCliSearch(object):
         cleanup'."""
 
         sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
-        obj = Cli()
+        obj = Cli(['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
     def test_search_separated_by_space_and_comma(self):
@@ -56,7 +73,7 @@ class TestUtCliSearch(object):
         by comma after the words like in '-t docker, container, cleanup'."""
 
         sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
-        obj = Cli()
+        obj = Cli(['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
     def test_search_with_special_characters(self):
@@ -64,7 +81,7 @@ class TestUtCliSearch(object):
         characters."""
 
         sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
-        obj = Cli()
+        obj = Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing'])
         assert obj.sall == ('cleanup_testing', 'container-managemenet', 'dockertesting')
 
     # pylint: disable=duplicate-code

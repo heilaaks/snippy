@@ -81,11 +81,6 @@ class TestCliPerformance(object):
             cause = snippy.run_cli(['snippy', 'search', '--all', '--sall', '.'])
             assert cause == Cause.ALL_OK
 
-            # Create solution with editor
-            template = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
-            mock_call_editor.return_value = template
-            sys.argv = ['snippy', 'create', '--editor']  ## workflow
-
             # Delete all content
             cause = snippy.run_cli(['snippy', 'delete', '-d', '54e41e9b52a02b63'])
             assert cause == Cause.ALL_OK

@@ -63,8 +63,7 @@ class TestApiUpdateSnippet(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '594'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
                 'data': {'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/53908d68425c61dc',  ## apiflow
                                                                     headers={'accept': 'application/json'},
@@ -91,8 +90,7 @@ class TestApiUpdateSnippet(object):
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find content with message digest 101010101010101'}]}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/101010101010101',  ## apiflow
                                                                     headers={'accept': 'application/json'},

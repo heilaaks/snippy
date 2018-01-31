@@ -55,8 +55,8 @@ class TestWfCreateSolution(unittest.TestCase):
             tags = Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.BEATS]['tags'])
             links = Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.BEATS]['links'])
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
-            snippy = Snippy(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
-            cause = snippy.run_cli()
+            snippy = Snippy()
+            cause = snippy.run_cli(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             Solution.test_content(snippy, mock_file, compare_content)
@@ -66,7 +66,7 @@ class TestWfCreateSolution(unittest.TestCase):
 
         ## Brief: Try to create same solution again with exactly the same content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults(None)
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             mock_call_editor.return_value = template
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
@@ -84,8 +84,8 @@ class TestWfCreateSolution(unittest.TestCase):
             template = Const.NEWLINE.join(Solution.TEMPLATE)
             mock_call_editor.return_value = template
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
-            snippy = Snippy(['snippy', 'create', '--solution'])  ## workflow
-            cause = snippy.run_cli()
+            snippy = Snippy()
+            cause = snippy.run_cli(['snippy', 'create', '--solution'])  ## workflow
             assert cause == 'NOK: no content was stored because solution is an empty template'
             assert not Database.get_solutions()
             snippy.release()
@@ -97,9 +97,8 @@ class TestWfCreateSolution(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_call_editor.return_value = Const.EMPTY
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
-            sys.argv = ['snippy', 'create', '--solution']  ## workflow
-            snippy = Snippy(['snippy', 'create', '--solution'])  ## workflow
-            cause = snippy.run_cli()
+            snippy = Snippy()
+            cause = snippy.run_cli(['snippy', 'create', '--solution'])  ## workflow
             assert cause == 'NOK: could not identify edited content category - please keep tags in place'
             assert not Database.get_solutions()
             snippy.release()

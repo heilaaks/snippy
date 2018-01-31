@@ -46,7 +46,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Logger.set_level({'very_verbose': Config.very_verbose, 'debug': Config.debug, 'quiet': Config.quiet})
         
         Config.source = None
-        Config.server = Config._server()
         Config.profiler = Config._profiler()
         Config.json_logs = Config._json_logs()
         Config.storage_file = Config._storage_file()
@@ -56,12 +55,6 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Config.init_args = args
         source = Cli(args)
         self.read_source(source)
-
-    @classmethod
-    def _server(cls):
-        """Test if service is run as a server."""
-
-        return True if '--server' in sys.argv else False
 
     @classmethod
     def _profiler(cls):
@@ -147,6 +140,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # Options
         cls.editor = cls.source.editor
         cls.use_ansi = not cls.source.no_ansi
+        cls.server = cls.source.server
 
         # Parsed from defined configuration.
         cls.is_operation_create = True if cls.operation == 'create' else False

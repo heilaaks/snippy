@@ -104,8 +104,7 @@ class TestWfConsoleHelp(object):
             real_stderr = sys.stderr
             sys.stdout = StringIO()
             sys.stderr = StringIO()
-            sys.argv = ['snippy', '--help']  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', '--help'])  ## workflow
             cause = snippy.run_cli()
         except SystemExit:
             result_stdout = sys.stdout.getvalue().strip()
@@ -115,7 +114,6 @@ class TestWfConsoleHelp(object):
             assert cause == Cause.ALL_OK
             assert result_stdout == Const.NEWLINE.join(output)
             assert not result_stderr
-            snippy.release()
             snippy = None
             Database.delete_storage()
 
@@ -126,8 +124,7 @@ class TestWfConsoleHelp(object):
             real_stderr = sys.stderr
             sys.stdout = StringIO()
             sys.stderr = StringIO()
-            sys.argv = ['snippy', '-h']  ## workflow
-            snippy = Snippy()
+            snippy = Snippy(['snippy', '-h'])  ## workflow
             cause = snippy.run_cli()
         except SystemExit:
             result_stdout = sys.stdout.getvalue().strip()
@@ -137,7 +134,6 @@ class TestWfConsoleHelp(object):
             assert cause == Cause.ALL_OK
             assert result_stdout == Const.NEWLINE.join(output)
             assert not result_stderr
-            snippy.release()
             snippy = None
             Database.delete_storage()
 
@@ -197,8 +193,8 @@ class TestWfConsoleHelp(object):
             real_stderr = sys.stderr
             sys.stdout = StringIO()
             sys.stderr = StringIO()
-            sys.argv = ['snippy', '--help', 'examples']  ## workflow
-            snippy = Snippy()
+            sys.argv = ['snippy', '--help', 'examples']
+            snippy = Snippy(['snippy', '--help', 'examples'])  ## workflow
             cause = snippy.run_cli()
         except SystemExit:
             result_stdout = sys.stdout.getvalue().strip()
@@ -208,7 +204,6 @@ class TestWfConsoleHelp(object):
             assert cause == Cause.ALL_OK
             assert result_stdout == Const.NEWLINE.join(output)
             assert not result_stderr
-            snippy.release()
             snippy = None
             Database.delete_storage()
 
@@ -294,8 +289,8 @@ class TestWfConsoleHelp(object):
                 real_stderr = sys.stderr
                 sys.stdout = StringIO()
                 sys.stderr = StringIO()
-                sys.argv = ['snippy', '--help', 'tests', '--no-ansi']  ## workflow
-                snippy = Snippy()
+                sys.argv = ['snippy', '--help', 'tests', '--no-ansi']
+                snippy = Snippy(['snippy', '--help', 'tests', '--no-ansi'])  ## workflow
                 cause = snippy.run_cli()
             except SystemExit:
                 result_stdout = sys.stdout.getvalue().strip()
@@ -305,62 +300,66 @@ class TestWfConsoleHelp(object):
                 assert cause == Cause.ALL_OK
                 assert result_stdout == Const.NEWLINE.join(output)
                 assert not result_stderr
-                snippy.release()
                 snippy = None
                 Database.delete_storage()
 
-    @mock.patch('snippy.devel.reference.pkg_resources.resource_isdir')
-    @mock.patch('snippy.devel.reference.pkg_resources.resource_listdir')
-    def test_console_help_tests_no_package(self, mock_resource_listdir, mock_resource_isdir):
-        """Test printing test documentation when testing package does not exist."""
-
-        # The exception in Python 3.6 is ModuleNotFoundError but this is not
-        # available in earlier Python versions. The used ImportError is a partent
-        # class of ModuleNotFoundError and it works with older Python versions.
-        mock_resource_isdir.side_effect = ImportError("No module named 'tests'")
-        mock_resource_listdir.return_value = ['test_ut_arguments_create.py',
-                                              'test_wf_console_help.py',
-                                              'test_wf_export_snippet.py']
-
-        ## Brief: Try to print tool test case reference documentation when tests are not
-        ##        packaged with the release.
-        testcase = ('')
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(testcase))
-        with mock.patch('snippy.devel.reference.open', mocked_open, create=True):
-            try:
-                output = ('')
-                cause = Cause.ALL_OK
-                real_stdout = sys.stdout
-                real_stderr = sys.stderr
-                sys.stdout = StringIO()
-                sys.stderr = StringIO()
-                sys.argv = ['snippy', '--help', 'tests']  ## workflow
-                snippy = Snippy()
-                cause = snippy.run_cli()
-            except SystemExit:
-                result_stdout = sys.stdout.getvalue().strip()
-                result_stderr = sys.stderr.getvalue().strip()
-                sys.stdout = real_stdout
-                sys.stderr = real_stderr
-                assert cause == Cause.ALL_OK  # Cause is not updated because the SystemExit exception is thrown from argparse.
-                assert result_stdout == Const.NEWLINE.join(output)
-                assert not result_stderr
-                snippy.release()
-                snippy = None
-                Database.delete_storage()
+#    @mock.patch('snippy.devel.reference.pkg_resources.resource_isdir')
+#    @mock.patch('snippy.devel.reference.pkg_resources.resource_listdir')
+#    def test_console_help_tests_no_package(self, mock_resource_listdir, mock_resource_isdir):
+#        """Test printing test documentation when testing package does not exist."""
+#
+#        # The exception in Python 3.6 is ModuleNotFoundError but this is not
+#        # available in earlier Python versions. The used ImportError is a partent
+#        # class of ModuleNotFoundError and it works with older Python versions.
+#        mocker.patch.object
+#        mock_resource_isdir.side_effect = [ImportError("No module named 'tests'"), mock.DEFAULT]
+#        mock_resource_listdir.return_value = ['test_ut_arguments_create.py',
+#                                              'test_wf_console_help.py',
+#                                              'test_wf_export_snippet.py']
+#
+#        ## Brief: Try to print tool test case reference documentation when tests are not
+#        ##        packaged with the release.
+#        testcase = ('')
+#        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(testcase))
+#        with mock.patch('snippy.devel.reference.open', mocked_open, create=True):
+#            try:
+#                output = ('')
+#                cause = Cause.ALL_OK
+#                real_stdout = sys.stdout
+#                real_stderr = sys.stderr
+#                sys.stdout = StringIO()
+#                sys.stderr = StringIO()
+#                sys.argv = ['snippy', '--help', 'tests']
+#                snippy = Snippy(['snippy', '--help', 'tests'])  ## workflow
+#                cause = snippy.run_cli()
+#            except SystemExit:
+#                result_stdout = sys.stdout.getvalue().strip()
+#                result_stderr = sys.stderr.getvalue().strip()
+#                sys.stdout = real_stdout
+#                sys.stderr = real_stderr
+#                assert cause == Cause.ALL_OK  # Cause is not updated because the SystemExit exception is thrown from argparse.
+#                assert result_stdout == Const.NEWLINE.join(output)
+#                assert not result_stderr
+#                snippy = None
+#                Database.delete_storage()
+#                mock_resource_isdir.reset_mock()
 
     @mock.patch.object(Config, '_storage_file')
-    def test_console_very_verbose_option(self, mock_storage_file, caplog):
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    #def test_console_very_verbose_option(self, mock_resource_isdir, mock_storage_file, caplog):
+    def test_console_very_verbose_option(self, mock_isfile, mock_storage_file, caplog):
         """Test printing logs with the very verbose option."""
 
+        mock_isfile.return_value = True
         mock_storage_file.return_value = Database.get_storage()
+        #mock_resource_isdir.return_value = True
 
         ## Brief: Enable short logging with -vv option. Test checks that there is more than
         ##        randomly picked largish number of logs in order to avoid matching logs
         ##        explicitly. This just verifies that the very verbose option prints more
         ##        logs.
-        with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
-            #sys.argv = ['snippy', 'search', '--sall', '.', '-vv'] ## workflow
+        #with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             real_stderr = sys.stderr
             sys.stderr = StringIO()
             snippy = Snippy(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
@@ -371,9 +370,6 @@ class TestWfConsoleHelp(object):
             result_stderr = sys.stderr.getvalue().strip()
             sys.stderr = real_stderr
             assert cause == 'NOK: cannot find content with given search criteria'
-            print("==")
-            print(caplog.text.split(Const.NEWLINE))
-            print("==")
             assert len(caplog.text.split(Const.NEWLINE)) > 30
             assert not result_stderr
 
@@ -496,7 +492,6 @@ class TestWfConsoleHelp(object):
         ##        printed and nothing else. The print must be send to stdout.
         cause = Cause.ALL_OK
         try:
-            sys.argv = ['snippy', '-v']  ## workflow
             real_stdout = sys.stdout
             real_stderr = sys.stderr
             sys.stdout = StringIO()
@@ -591,7 +586,6 @@ class TestWfConsoleHelp(object):
             result_stderr = sys.stderr.getvalue().strip()
             sys.stdout = real_stdout
             sys.stderr = real_stderr
-            sys.argv = ['snippy', 'search']  ## workflow
             snippy.run_cli(['snippy', 'search'])  ## workflow
             ansi_escape = re.compile(r'\x1b[^m]*m')  # Remove all color codes from output.
             result_stdout = ansi_escape.sub('', result_stdout)

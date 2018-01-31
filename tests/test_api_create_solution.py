@@ -56,8 +56,7 @@ class TestApiCreateSolution(object):
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2262'}
         body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/solutions',  ## apiflow
                                                                      headers={'accept': 'application/json'},
@@ -92,8 +91,7 @@ class TestApiCreateSolution(object):
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '6724'}
         body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
                          {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.KAFKA]}]}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/solutions',  ## apiflow
                                                                      headers={'accept': 'application/json'},

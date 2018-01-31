@@ -32,7 +32,6 @@ class TestUtCliCreate(object):
     def test_no_arguments(self):
         """Test default values when only mandatory arguments are used."""
 
-        sys.argv = ['snippy', 'create']
         obj = Cli(['snippy', 'create'])
         assert obj.operation == 'create'
         assert obj.category == Const.SNIPPET
@@ -55,7 +54,6 @@ class TestUtCliCreate(object):
         """Test that new snippet can be created without optional arguments."""
 
         content = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', 'create', '-c', content]
         obj = Cli(['snippy', 'create', '-c', content])
         assert obj.data == (content,)
         assert obj.brief == ''
@@ -67,7 +65,6 @@ class TestUtCliCreate(object):
 
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
-        sys.argv = ['snippy', 'create', '-c', content, '-b', brief]
         obj = Cli(['snippy', 'create', '-c', content, '-b', brief])
         assert obj.data == (content,)
         assert obj.brief == brief
@@ -78,7 +75,6 @@ class TestUtCliCreate(object):
 
         content = 'docker rm $(docker ps -a -q)'
         tags = ['docker']
-        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker']
         obj = Cli(['snippy', 'create', '-c', content, '-t', 'docker'])
         assert obj.data == (content,)
         assert obj.brief == ''
@@ -89,7 +85,6 @@ class TestUtCliCreate(object):
         without spaces."""
 
         content = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup']
         obj = Cli(['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup'])
         assert obj.data == (content,)
         assert obj.brief == ''
@@ -104,7 +99,6 @@ class TestUtCliCreate(object):
         group = 'docker'
         tags = 'docker, container, cleanup'
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', tags, '-l', links]
         obj = Cli(['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', tags, '-l', links])
         assert obj.data == (content,)
         assert obj.brief == brief
@@ -117,7 +111,6 @@ class TestUtCliCreate(object):
         before and after the words."""
 
         content = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker container cleanup']
         obj = Cli(['snippy', 'create', '-c', content, '-t', 'docker container cleanup'])
         assert obj.data == (content,)
         assert obj.brief == ''
@@ -128,7 +121,6 @@ class TestUtCliCreate(object):
         before and after the words like in '-t docker container cleanup'."""
 
         content = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup']
         obj = Cli(['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup'])
         assert obj.data == (content,)
         assert obj.brief == ''
@@ -139,7 +131,6 @@ class TestUtCliCreate(object):
         after the words like in '-t docker, container, cleanup'."""
 
         content = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup']
         obj = Cli(['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup'])
         assert obj.data == (content,)
         assert obj.brief == ''
@@ -149,7 +140,6 @@ class TestUtCliCreate(object):
         """Test that tags are accepted if they contain special characters."""
 
         content = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Cli(['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing'])
         assert obj.data == (content,)
         assert obj.brief == ''
@@ -161,7 +151,6 @@ class TestUtCliCreate(object):
         reproduce this?"""
 
         content = 'docker rm $(docker ps -a -q)'
-        sys.argv = ['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup']
         obj = Cli(['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup'])
         assert obj.data == (content,)
         assert obj.brief == ''
@@ -176,7 +165,6 @@ class TestUtCliCreate(object):
         tags = 'docker, container, cleanup'
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container \
                  https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes'
-        sys.argv = ['snippy', 'create', '-c', content, '-b', brief, '-t', tags, '-l', links]
         obj = Cli(['snippy', 'create', '-c', content, '-b', brief, '-t', tags, '-l', links])
         assert obj.data == (content,)
         assert obj.brief == brief

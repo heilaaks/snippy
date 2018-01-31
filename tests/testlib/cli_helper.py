@@ -11,4 +11,4 @@ class CliHelper(object): # pylint: disable=too-few-public-methods
     def reset(self):
         """Reset command line arguments."""
 
-        sys.argv = ['snippy']
+        pass

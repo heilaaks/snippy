@@ -50,9 +50,8 @@ class TestWfCreateSnippet(object):
             tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
             links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
             compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-            sys.argv = ['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
-            snippy = Snippy(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
-            cause = snippy.run_cli()
+            snippy = Snippy()
+            cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             Snippet.test_content(snippy, mock_file, compare_content)
@@ -70,9 +69,8 @@ class TestWfCreateSnippet(object):
             snippet_remove = Snippet.DEFAULTS[Snippet.REMOVE].copy()
             snippet_remove['tags'] = [Snippet.DEFAULTS[Snippet.REMOVE]['tags'][0]]
             compare_content = {'f94cf88b1546a8fd': snippet_remove}
-            sys.argv = ['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
-            snippy = Snippy(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
-            cause = snippy.run_cli()
+            snippy = Snippy()
+            cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             Snippet.test_content(snippy, mock_file, compare_content)
@@ -87,7 +85,6 @@ class TestWfCreateSnippet(object):
             tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
             links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
             compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-            sys.argv = ['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
             assert cause == 'NOK: mandatory snippet data not defined'
@@ -102,9 +99,8 @@ class TestWfCreateSnippet(object):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             template = Const.NEWLINE.join(Snippet.TEMPLATE)
             mock_call_editor.return_value = template
-            sys.argv = ['snippy', 'create', '--editor']  ## workflow
-            snippy = Snippy(['snippy', 'create', '--editor'])  ## workflow
-            cause = snippy.run_cli()
+            snippy = Snippy()
+            cause = snippy.run_cli(['snippy', 'create', '--editor'])  ## workflow
             assert cause == 'NOK: mandatory snippet data not defined'
             assert not Database.get_snippets()
             snippy.release()
@@ -115,7 +111,6 @@ class TestWfCreateSnippet(object):
         ##        is deleted and the edited solution is an empty string.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_call_editor.return_value = Const.EMPTY
-            sys.argv = ['snippy', 'create', '--editor']  ## workflow
             snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'create', '--editor'])  ## workflow
             assert cause == 'NOK: could not identify edited content category - please keep tags in place'
@@ -126,14 +121,13 @@ class TestWfCreateSnippet(object):
 
         ## Brief: Try to create snippet again with exactly same content than already stored.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults(None)
             data = Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
             brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
             group = Snippet.DEFAULTS[Snippet.REMOVE]['group']
             tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
             links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
             compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-            sys.argv = ['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links]  ## workflow
             cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
             assert cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
             assert len(Database.get_snippets()) == 2

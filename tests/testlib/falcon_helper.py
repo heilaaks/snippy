@@ -17,8 +17,7 @@ class FalconHelper(unittest.TestCase):
     def client():
         """Testing client."""
 
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         # def snippy_teardown():
         #     """Release database."""

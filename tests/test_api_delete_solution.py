@@ -51,11 +51,10 @@ class TestApiDeleteSolution(object):
         ## Brief: Call DELETE /snippy/api/v1/solutions with digest parameter that matches
         ##        one solution that is deleted.
         mock_get_utc_time.side_effect = (Solution.UTC1,)*8 + (Solution.UTC2,)*4 + (None,)  # [REF_UTC]
-        snippy = Solution.add_defaults(Snippy())
+        snippy = Solution.add_defaults(None)
         Solution.add_one(snippy, Solution.KAFKA)
         headers = {}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         assert len(Database.get_solutions()) == 3
         result = testing.TestClient(snippy.server.api).simulate_delete(path='/snippy/api/v1/solutions',  ## apiflow
@@ -71,11 +70,10 @@ class TestApiDeleteSolution(object):
         ## Brief: Call DELETE /snippy/api/v1/solutions/f3fd167c64b6f97e that matches one
         ##        solution that is deleted.
         mock_get_utc_time.side_effect = (Solution.UTC1,)*8 + (Solution.UTC2,)*4 + (None,)  # [REF_UTC]
-        snippy = Solution.add_defaults(Snippy())
+        snippy = Solution.add_defaults(None)
         Solution.add_one(snippy, Solution.KAFKA)
         headers = {}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         assert len(Database.get_solutions()) == 3
         result = testing.TestClient(snippy.server.api).simulate_delete(path='/snippy/api/v1/solutions/eeef5ca3ec9cd36',  ## apiflow
@@ -89,14 +87,13 @@ class TestApiDeleteSolution(object):
 
         ## Brief: Try to DELETE solution with resource location that does not exist.
         mock_get_utc_time.side_effect = (Solution.UTC1,)*8 + (Solution.UTC2,)*4 + (None,)  # [REF_UTC]
-        snippy = Solution.add_defaults(Snippy())
+        snippy = Solution.add_defaults(None)
         Solution.add_one(snippy, Solution.KAFKA)
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '245'}
         body = {'meta': Solution.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find content with message digest beefbeef'}]}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         assert len(Database.get_solutions()) == 3
         result = testing.TestClient(snippy.server.api).simulate_delete(path='/snippy/api/v1/solutions/beefbeef',  ## apiflow

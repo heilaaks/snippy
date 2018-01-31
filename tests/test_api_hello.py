@@ -48,8 +48,7 @@ class TestApiHello(unittest.TestCase):
         ## Brief: Call GET /snippy to get hello!
         header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '25'}
         body = {'snippy': __version__}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy')   ## apiflow
         assert result.headers == header
@@ -71,8 +70,7 @@ class TestApiHello(unittest.TestCase):
         ## Brief: Call GET /snippy/api/hello to get hello!
         header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '25'}
         body = {'snippy': __version__}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/hello')   ## apiflow
         assert result.headers == header
@@ -94,8 +92,7 @@ class TestApiHello(unittest.TestCase):
         ## Brief: Call GET /snippy/api/v1/hello to get hello!
         header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '25'}
         body = {'snippy': __version__}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/hello')   ## apiflow
         assert result.headers == header

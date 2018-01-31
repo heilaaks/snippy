@@ -31,7 +31,6 @@ class TestUtCliSearch(object):
     def test_search_with_one_kw(self):
         """Test that search can be used with one keyword."""
 
-        sys.argv = ['snippy', 'search', '--sall', 'docker']
         obj = Cli(['snippy', 'search', '--sall', 'docker'])
         assert obj.sall == ('docker',)
 
@@ -39,7 +38,6 @@ class TestUtCliSearch(object):
         """Test that keywords can be added inside quotes separated by
         comma and without spaces."""
 
-        sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
         obj = Cli(['snippy', 'search', '--sall', 'docker,container,cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
@@ -47,7 +45,6 @@ class TestUtCliSearch(object):
         """Test that search keywords can be added inside quotes separated
         by comma and spaces after comma."""
 
-        sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
         obj = Cli(['snippy', 'search', '--sall', 'docker, container, cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
@@ -55,7 +52,6 @@ class TestUtCliSearch(object):
         """Test that search keywords can be added so that they are separated
         by spaces before and after the words."""
 
-        sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
         obj = Cli(['snippy', 'search', '--sall', 'docker container cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
@@ -64,7 +60,6 @@ class TestUtCliSearch(object):
         by spaces before and after the words like in '-t docker container
         cleanup'."""
 
-        sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
         obj = Cli(['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
@@ -72,7 +67,6 @@ class TestUtCliSearch(object):
         """Test that search keywords can be added so that they are separated
         by comma after the words like in '-t docker, container, cleanup'."""
 
-        sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
         obj = Cli(['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup'])
         assert obj.sall == ('cleanup', 'container', 'docker')
 
@@ -80,7 +74,6 @@ class TestUtCliSearch(object):
         """Test that search keywords are accepted if they contain special
         characters."""
 
-        sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing'])
         assert obj.sall == ('cleanup_testing', 'container-managemenet', 'dockertesting')
 

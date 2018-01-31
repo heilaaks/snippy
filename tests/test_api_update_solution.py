@@ -56,7 +56,7 @@ class TestApiUpdateSolution(object):
         ## Brief: Call PUT /snippy/api/v1/solutions to update existing solution. In this
         #         case when fields like UTC and filename are not provided, the empty fields
         #         override the content because it was updated with PUT.
-        snippy = Solution.add_one(Snippy(), Solution.BEATS)
+        snippy = Solution.add_one(None, Solution.BEATS)
         solution = {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
                     'group': Solution.DEFAULTS[Solution.NGINX]['group'],
@@ -69,14 +69,11 @@ class TestApiUpdateSolution(object):
         body['data']['attributes']['filename'] = Const.EMPTY
         body['data']['attributes']['utc'] = Solution.UTC1
         body['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/solutions/a96accc25dd23ac0',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     body=json.dumps(solution))
-        print(Database.print_contents())
-        print(result.json)
         assert result.headers == headers
         assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
@@ -88,7 +85,7 @@ class TestApiUpdateSolution(object):
 
         ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with digest that
         ##        cannot be found.
-        snippy = Solution.add_one(Snippy(), Solution.BEATS)
+        snippy = Solution.add_one(None, Solution.BEATS)
         solution = {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
                     'group': Solution.DEFAULTS[Solution.NGINX]['group'],
@@ -98,13 +95,11 @@ class TestApiUpdateSolution(object):
         body = {'meta': Solution.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find content with message digest 101010101010101'}]}
-        sys.argv = ['snippy', '--server']
-        snippy = Snippy()
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/solutions/101010101010101',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     body=json.dumps(solution))
-        print(result.json)
         assert result.headers == headers
         assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
         assert result.status == falcon.HTTP_404

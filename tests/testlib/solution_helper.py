@@ -362,14 +362,12 @@ class SolutionHelper(object):
 
         mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[SolutionHelper.BEATS]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            sys.argv = ['snippy', 'import', '-f', 'howto-debug-elastic-beats.txt']
             cause = snippy.run_cli(['snippy', 'import', '-f', 'howto-debug-elastic-beats.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
 
         mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[SolutionHelper.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            sys.argv = ['snippy', 'import', '-f', 'howto-debug-nginx.txt']
             cause = snippy.run_cli(['snippy', 'import', '-f', 'howto-debug-nginx.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
@@ -385,7 +383,6 @@ class SolutionHelper(object):
 
         mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[index]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            sys.argv = ['snippy', 'import', '-f', 'one-solution.txt']
             contents = len(Database.get_solutions())
             cause = snippy.run_cli(['snippy', 'import', '-f', 'one-solution.txt'])
             assert cause == Cause.ALL_OK
@@ -405,7 +402,6 @@ class SolutionHelper(object):
 
         for digest in dictionary:
             mock_file.reset_mock()
-            sys.argv = ['snippy', 'export', '-d', digest, '-f', 'defined-content.txt']
             cause = snippy.run_cli(['snippy', 'export', '-d', digest, '-f', 'defined-content.txt'])
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-content.txt', 'w')

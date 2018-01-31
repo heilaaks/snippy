@@ -34,7 +34,6 @@ class TestUtConfigSearch(unittest.TestCase):
         """Test that search can be used with one keyword."""
 
         search_kw = ('docker',)
-        sys.argv = ['snippy', 'search', '--sall', 'docker']
         obj = Config(None)
         obj.read_source(Cli(['snippy', 'search', '--sall', 'docker']))
         assert isinstance(obj.search_all_kws, tuple)
@@ -45,7 +44,6 @@ class TestUtConfigSearch(unittest.TestCase):
         comma and without spaces."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        sys.argv = ['snippy', 'search', '--sall', 'docker,container,cleanup']
         obj = Config(None)
         obj.read_source(Cli(['snippy', 'search', '--sall', 'docker,container,cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
@@ -56,7 +54,6 @@ class TestUtConfigSearch(unittest.TestCase):
         comma and spaces after comma."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        sys.argv = ['snippy', 'search', '--sall', 'docker, container, cleanup']
         obj = Config(None)
         obj.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
@@ -67,7 +64,6 @@ class TestUtConfigSearch(unittest.TestCase):
         by spaces before and after the words."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        sys.argv = ['snippy', 'search', '--sall', 'docker container cleanup']
         obj = Config(None)
         obj.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
@@ -79,7 +75,6 @@ class TestUtConfigSearch(unittest.TestCase):
         cleanup'."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        sys.argv = ['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']
         obj = Config(None)
         obj.read_source(Cli(['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
@@ -90,7 +85,6 @@ class TestUtConfigSearch(unittest.TestCase):
         by comma after the words like in '-t docker, container, cleanup'."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        sys.argv = ['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']
         obj = Config(None)
         obj.read_source(Cli(['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']))
         assert isinstance(obj.search_all_kws, tuple)
@@ -101,7 +95,6 @@ class TestUtConfigSearch(unittest.TestCase):
         characters."""
 
         search_kw = ('cleanup_testing', 'container-managemenet', 'dockertesting')
-        sys.argv = ['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']
         obj = Config(None)
         obj.read_source(Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
         assert isinstance(obj.search_all_kws, tuple)

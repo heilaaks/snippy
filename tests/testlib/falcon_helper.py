@@ -2,7 +2,6 @@
 
 """falcon_helper.py: Helper methods Falcon testing."""
 
-import unittest
 import pytest
 
 from falcon import testing
@@ -10,7 +9,7 @@ from falcon import testing
 from snippy.snip import Snippy
 
 
-class FalconHelper(unittest.TestCase):
+class FalconHelper(object):  # pylint: disable=too-few-public-methods
     """Helper methods for Falcon REST API testing."""
 
     @staticmethod

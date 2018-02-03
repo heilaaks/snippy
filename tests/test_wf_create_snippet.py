@@ -121,7 +121,7 @@ class TestWfCreateSnippet(object):
 
         ## Brief: Try to create snippet again with exactly same content than already stored.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults(None)
+            snippy = Snippet.add_defaults()
             data = Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
             brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
             group = Snippet.DEFAULTS[Snippet.REMOVE]['group']

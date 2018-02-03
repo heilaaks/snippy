@@ -1,6 +1,4 @@
 ## TODO
-   - [ ] Fix clean and remove snippy = Snippet.add_defaults(Snippy()) with snippy = Snippet.add_defaults().
-   - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix Swagger specification to follow JSON API specification JSON format.
    - [ ] Add configurable base path.
    - [ ] Fix hello metadata.
@@ -27,6 +25,7 @@
    - [ ] Fix "If you want partial updates, use PATCH instead."
    - [ ] Add more tests /api/v1/snippets.
    - [ ] =============================================================
+   - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix is there way to not to use sys.args in Cli help for examples and tests? Now the cli() help and profile are only ones using sys.argv directly.
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
@@ -46,6 +45,7 @@
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
 
 ## BUBBLING UNDER
+   - [ ] Try to remove few remaining cases that require unittest for specificits assets it this makes sense.
    - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
    - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] The REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
@@ -58,7 +58,6 @@
    - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
    - [ ] Now --editor always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
    - [ ] It was noted that sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
-   - [ ] Inherit the tests from object and remove unittest and change to teardown_class from pylint. This explains the case domino failures?
    - [ ] Is there a way to get logs from Python logger from stdout? Mocking stdout to StringIO does not even though the logger stream is stdout.
    - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect' in import snippet.
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
@@ -78,6 +77,7 @@
    - [ ] Python logging is not following ISO8601 format and it cannot have timezone.
 
 ## DONE
+   - [x] Changed tests to use pytest and correct teardown class.
    - [x] Added support for /api/v1/solutions.
    - [x] Fixed incorrect digest in self link being returned if the operation updated resource.
    - [x] Optimized unnecessary JSON conversion when generating content response to JSON API.

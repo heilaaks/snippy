@@ -19,7 +19,6 @@
 
 """test_wf_create_solution.py: Test workflows for creating solutions."""
 
-import unittest
 import mock
 
 from snippy.cause.cause import Cause
@@ -31,7 +30,7 @@ from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfCreateSolution(unittest.TestCase):
+class TestWfCreateSolution(object):
     """Test workflows for creating solutions."""
 
     @mock.patch.object(Editor, 'call_editor')
@@ -66,7 +65,7 @@ class TestWfCreateSolution(unittest.TestCase):
 
         ## Brief: Try to create same solution again with exactly the same content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_defaults(None)
+            snippy = Solution.add_defaults()
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             mock_call_editor.return_value = template
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
@@ -159,7 +158,7 @@ class TestWfCreateSolution(unittest.TestCase):
             Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

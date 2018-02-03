@@ -182,7 +182,7 @@ class SnippetHelper(object):
         return snippy
 
     @staticmethod
-    def add_one(snippy, index):
+    def add_one(index, snippy=None):
         """Add one default snippet for testing purposes."""
 
         if not snippy:

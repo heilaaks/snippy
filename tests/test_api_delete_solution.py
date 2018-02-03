@@ -49,8 +49,8 @@ class TestApiDeleteSolution(object):
         ## Brief: Call DELETE /snippy/api/v1/solutions with digest parameter that matches
         ##        one solution that is deleted.
         mock_get_utc_time.side_effect = (Solution.UTC1,)*8 + (Solution.UTC2,)*4 + (None,)  # [REF_UTC]
-        snippy = Solution.add_defaults(None)
-        Solution.add_one(snippy, Solution.KAFKA)
+        snippy = Solution.add_defaults()
+        Solution.add_one(Solution.KAFKA, snippy)
         headers = {}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -68,8 +68,8 @@ class TestApiDeleteSolution(object):
         ## Brief: Call DELETE /snippy/api/v1/solutions/f3fd167c64b6f97e that matches one
         ##        solution that is deleted.
         mock_get_utc_time.side_effect = (Solution.UTC1,)*8 + (Solution.UTC2,)*4 + (None,)  # [REF_UTC]
-        snippy = Solution.add_defaults(None)
-        Solution.add_one(snippy, Solution.KAFKA)
+        snippy = Solution.add_defaults()
+        Solution.add_one(Solution.KAFKA, snippy)
         headers = {}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -85,8 +85,8 @@ class TestApiDeleteSolution(object):
 
         ## Brief: Try to DELETE solution with resource location that does not exist.
         mock_get_utc_time.side_effect = (Solution.UTC1,)*8 + (Solution.UTC2,)*4 + (None,)  # [REF_UTC]
-        snippy = Solution.add_defaults(None)
-        Solution.add_one(snippy, Solution.KAFKA)
+        snippy = Solution.add_defaults()
+        Solution.add_one(Solution.KAFKA, snippy)
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '245'}
         body = {'meta': Solution.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',

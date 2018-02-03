@@ -20,12 +20,12 @@
 """test_wf_search_solution.py: Test workflows for searching solutions."""
 
 import sys
-import unittest
+
 import mock
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.snip import Snippy
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 if not Const.PYTHON2:
@@ -34,7 +34,7 @@ else:
     from StringIO import StringIO # pylint: disable=import-error
 
 
-class TestWfSearchSnippet(unittest.TestCase):
+class TestWfSearchSnippet(object):
     """Test workflows for searching solutions."""
 
     @mock.patch.object(Config, '_storage_file')
@@ -97,7 +97,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   :',
                       '',
                       'OK')
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--solution', '--sall', 'filebeat', '--no-ansi'])  ## workflow
@@ -112,7 +112,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         ## Brief: Try to search solutions with keyword that cannot be found.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = 'NOK: cannot find content with given search criteria'
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--solution', '--sall', 'notfound', '--no-ansi'])  ## workflow
@@ -145,7 +145,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '$ docker exec -i -t $(docker ps | egrep -m 1 \'petelk/nginx\' | awk \'{print $1}\') /bin/bash',
                       '',
                       'OK')
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\\$\\s.*)'])  ## workflow
@@ -216,7 +216,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   :',
                       '',
                       'OK')
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--solution', '--digest', 'a96accc25dd23ac0', '--no-ansi'])  ## workflow
@@ -289,7 +289,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   :',
                       '',
                       'OK')
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--solution', '--sall', '.', '--sgrp', 'beats', '--no-ansi'])  ## workflow
@@ -302,7 +302,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

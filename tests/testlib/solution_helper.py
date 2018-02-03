@@ -352,7 +352,7 @@ class SolutionHelper(object):
         return contents[0].convert_text()
 
     @staticmethod
-    def add_defaults(snippy):
+    def add_defaults(snippy=None):
         """Add default solutions for testing purposes."""
 
         if not snippy:
@@ -373,7 +373,7 @@ class SolutionHelper(object):
         return snippy
 
     @staticmethod
-    def add_one(snippy, index):
+    def add_one(index, snippy=None):
         """Add one default solution for testing purposes."""
 
         if not snippy:

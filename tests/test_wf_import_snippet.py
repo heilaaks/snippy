@@ -21,7 +21,7 @@
 
 import re
 import copy
-import unittest
+
 import json
 import yaml
 import mock
@@ -35,7 +35,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfImportSnippet(unittest.TestCase):
+class TestWfImportSnippet(object):
     """Test workflows for importing snippets."""
 
     @mock.patch.object(json, 'load')
@@ -188,7 +188,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        yaml file which contain one snippet. Content was not updated in this case.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_yaml_load.return_value = import_dict
-            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            snippy = Snippet.add_one(Snippet.REMOVE)
             cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
@@ -203,7 +203,7 @@ class TestWfImportSnippet(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             import_dict['content'][0]['tags'] = ('new', 'tags', 'set')
             mock_yaml_load.return_value = import_dict
-            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            snippy = Snippet.add_one(Snippet.REMOVE)
             cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
@@ -219,7 +219,7 @@ class TestWfImportSnippet(unittest.TestCase):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             import_dict['content'][0]['brief'] = 'Updated brief description'
             mock_json_load.return_value = import_dict
-            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            snippy = Snippet.add_one(Snippet.REMOVE)
             cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
@@ -237,7 +237,7 @@ class TestWfImportSnippet(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=import_text)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             import_dict['content'][0]['links'] = ('https://new.link', )
-            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            snippy = Snippet.add_one(Snippet.REMOVE)
             cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
@@ -255,7 +255,7 @@ class TestWfImportSnippet(unittest.TestCase):
         mocked_open = mock.mock_open(read_data=import_text)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             import_dict['content'][0]['links'] = ('https://new.link', )
-            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            snippy = Snippet.add_one(Snippet.REMOVE)
             cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
@@ -270,7 +270,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        case there is one snippet stored.
         mocked_open = mock.mock_open(read_data=import_text)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Snippet.add_one(Snippy(), Snippet.REMOVE)
+            snippy = Snippet.add_one(Snippet.REMOVE)
             cause = snippy.run_cli(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])  ## workflow
             assert cause == 'NOK: cannot find snippet identified with digest 123456789abcdef0'
             assert len(Database.get_snippets()) == 1
@@ -311,7 +311,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        because the content already exist.  The error text must be the same for all content
         ##        categories.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'import', '--defaults'])  ## workflow
             assert cause == 'NOK: no content was inserted because content data already existed'
             assert len(Database.get_snippets()) == 2
@@ -361,7 +361,7 @@ class TestWfImportSnippet(unittest.TestCase):
         ##        not considered as an error and another snippet is imported successfully, the
         ##        result cause is OK.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'import', '-f', './snippets.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
@@ -374,7 +374,7 @@ class TestWfImportSnippet(unittest.TestCase):
             Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

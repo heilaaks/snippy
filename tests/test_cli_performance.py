@@ -20,13 +20,15 @@
 """test_cli_performance.py: Verify that there are no major impacts to performance in console usage."""
 
 from __future__ import print_function
+
 import sys
 import time
+
 import mock
-from snippy.snip import Snippy
+
+from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.cause.cause import Cause
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -71,7 +73,7 @@ class TestCliPerformance(object):
         sys.stdout = StringIO()
         start = time.time()
         for _ in range(55):
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             snippy = Solution.add_defaults(snippy)
 
             assert len(Database.get_contents()) == 4

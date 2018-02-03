@@ -20,8 +20,9 @@
 """test_wf_search_snippet.py: Test workflows for searching snippets."""
 
 import sys
-import unittest
+
 import mock
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
@@ -35,7 +36,7 @@ else:
     from StringIO import StringIO  # pylint: disable=import-error
 
 
-class TestWfSearchSnippet(unittest.TestCase):
+class TestWfSearchSnippet(object):
     """Test workflows for searching snippets."""
 
     @mock.patch.object(Config, '_storage_file')
@@ -57,7 +58,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', 'redis', '--no-ansi'])  ## workflow
@@ -79,7 +80,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', 'all', '--no-ansi'])  ## workflow
@@ -108,7 +109,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', 'docker', '--no-ansi'])  ## workflow
@@ -137,7 +138,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', 'moby', '--no-ansi'])  ## workflow
@@ -160,7 +161,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', 'tutorials', '--no-ansi'])  ## workflow
@@ -183,7 +184,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi'])  ## workflow
@@ -213,7 +214,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', 'redis,--quiet', '--no-ansi'])  ## workflow
@@ -242,8 +243,8 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', 'netcat --quiet all', '--no-ansi'])  ## workflow
@@ -271,7 +272,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--no-ansi'])  ## workflow
@@ -300,7 +301,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', '--no-ansi'])  ## workflow
@@ -329,7 +330,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', '', '--no-ansi'])  ## workflow
@@ -360,7 +361,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         ## Brief: Try to search snippets with keyword that cannot be found.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('NOK: cannot find content with given search criteria')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', 'not-found', '--no-ansi'])  ## workflow
@@ -390,8 +391,8 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--stag', 'netcat', '--no-ansi'])  ## workflow
@@ -406,8 +407,8 @@ class TestWfSearchSnippet(unittest.TestCase):
         ## Brief: Search snippets from tag field. No matches are made.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('NOK: cannot find content with given search criteria')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--stag', 'not-found', '--no-ansi'])  ## workflow
@@ -436,7 +437,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--stag', '--no-ansi'])  ## workflow
@@ -466,8 +467,8 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sgrp', 'linux', '--no-ansi'])  ## workflow
@@ -482,8 +483,8 @@ class TestWfSearchSnippet(unittest.TestCase):
         ## Brief: Search snippets from group field. No matches are made.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('NOK: cannot find content with given search criteria')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sgrp', 'not-found', '--no-ansi'])  ## workflow
@@ -512,7 +513,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sgrp', '', '--no-ansi'])  ## workflow
@@ -541,8 +542,8 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '$ nmap 10.183.19.189',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             Solution.add_defaults(snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -574,8 +575,8 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '$ docker exec -i -t $(docker ps | egrep -m 1 \'petelk/nginx\' | awk \'{print $1}\') /bin/bash',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             Solution.add_defaults(snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -591,8 +592,8 @@ class TestWfSearchSnippet(unittest.TestCase):
         ## Brief: Search all content with regexp filter. There are no matches.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('OK')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             Solution.add_defaults(snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -622,7 +623,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'NOK: listing matching content without filter because it was not syntactically correct regular expression')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             Solution.add_defaults(snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
@@ -652,7 +653,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--content', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi'])  ## workflow
@@ -673,7 +674,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--content', 'docker rm --volumes', '--no-ansi'])  ## workflow
@@ -695,7 +696,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://docs.docker.com/engine/reference/commandline/rm/',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--content', 'volumes', '--no-ansi'])  ## workflow
@@ -725,7 +726,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi'])  ## workflow
@@ -747,7 +748,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--digest', '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5', '--no-ansi'])  ## workflow  pylint: disable=line-too-long
@@ -776,7 +777,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--digest', '5', '--no-ansi'])  ## workflow
@@ -805,7 +806,7 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--digest', '', '--no-ansi'])  ## workflow
@@ -843,8 +844,8 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--sgrp', 'docker', '--no-ansi'])  ## workflow
@@ -879,8 +880,8 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.commandlinux.com/man-page/man1/nc.1.html',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--sgrp', 'docker,linux', '--no-ansi'])  ## workflow
@@ -918,8 +919,8 @@ class TestWfSearchSnippet(unittest.TestCase):
                       '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
                       '',
                       'OK')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'docker', '--no-ansi'])  ## workflow
@@ -935,8 +936,8 @@ class TestWfSearchSnippet(unittest.TestCase):
         ##        case there are no matches made.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = ('NOK: cannot find content with given search criteria')
-            snippy = Snippet.add_defaults(Snippy())
-            Snippet.add_one(snippy, Snippet.NETCAT)
+            snippy = Snippet.add_defaults()
+            Snippet.add_one(Snippet.NETCAT, snippy)
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'linux', '--no-ansi'])  ## workflow
@@ -959,7 +960,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         ## Brief: Try to search snippets without defining any search criteria.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = 'NOK: please define keyword, digest or content data as search criteria'
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search'])  ## workflow
@@ -976,7 +977,7 @@ class TestWfSearchSnippet(unittest.TestCase):
         ##        is applied.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             output = 'NOK: please define keyword, digest or content data as search criteria'
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             real_stdout = sys.stdout
             sys.stdout = StringIO()
             cause = snippy.run_cli(['snippy', 'search', '--filter', '.*(\\$\\s.*)'])  ## workflow
@@ -989,7 +990,7 @@ class TestWfSearchSnippet(unittest.TestCase):
             Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

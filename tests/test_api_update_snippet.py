@@ -52,7 +52,7 @@ class TestApiUpdateSnippet(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet.
-        snippy = Snippet.add_one(Snippy(), Snippet.FORCED)
+        snippy = Snippet.add_one(Snippet.FORCED)
         snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
@@ -79,7 +79,7 @@ class TestApiUpdateSnippet(object):
 
         ## Brief: Try to call PUT /snippy/api/v1/snippets to update snippet with digest that
         ##        cannot be found.
-        snippy = Snippet.add_one(Snippy(), Snippet.FORCED)
+        snippy = Snippet.add_one(Snippet.FORCED)
         snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],

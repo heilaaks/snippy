@@ -49,8 +49,8 @@ class TestApiDeleteSnippet(object):
         ## Brief: Call DELETE /snippy/api/v1/snippets with digest parameter that matches
         ##        one snippet that is deleted.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*4 + (None,)  # [REF_UTC]
-        snippy = Snippet.add_defaults(None)
-        Snippet.add_one(snippy, Snippet.NETCAT)
+        snippy = Snippet.add_defaults()
+        Snippet.add_one(Snippet.NETCAT, snippy)
         headers = {}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -68,8 +68,8 @@ class TestApiDeleteSnippet(object):
         ## Brief: Call DELETE /snippy/api/v1/snippets/f3fd167c64b6f97e that matches one
         ##        snippet that is deleted.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*4 + (None,)  # [REF_UTC]
-        snippy = Snippet.add_defaults(None)
-        Snippet.add_one(snippy, Snippet.NETCAT)
+        snippy = Snippet.add_defaults()
+        Snippet.add_one(Snippet.NETCAT, snippy)
         headers = {}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -85,8 +85,8 @@ class TestApiDeleteSnippet(object):
 
         ## Brief: Try to DELETE snippet with resource location that does not exist.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*4 + (None,)  # [REF_UTC]
-        snippy = Snippet.add_defaults(None)
-        Snippet.add_one(snippy, Snippet.NETCAT)
+        snippy = Snippet.add_defaults()
+        Snippet.add_one(Snippet.NETCAT, snippy)
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '245'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',

@@ -19,7 +19,6 @@
 
 """test_api_hello.py: Test hello API."""
 
-import unittest
 import json
 import mock
 
@@ -32,7 +31,7 @@ from snippy.snip import Snippy
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestApiHello(unittest.TestCase):
+class TestApiHello(object):
     """Test hello API."""
 
     @mock.patch('snippy.server.server.SnippyServer')
@@ -102,7 +101,7 @@ class TestApiHello(unittest.TestCase):
         Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

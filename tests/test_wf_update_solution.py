@@ -19,17 +19,15 @@
 
 """test_wf_update_solution.py: Test workflows for updating solutions."""
 
-import unittest
 import mock
 
 from snippy.config.config import Config
 from snippy.config.source.editor import Editor
-from snippy.snip import Snippy
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfUpdateSolution(unittest.TestCase):
+class TestWfUpdateSolution(object):
     """Test workflows for updating solutions."""
 
     @mock.patch.object(Editor, 'call_editor')
@@ -43,7 +41,7 @@ class TestWfUpdateSolution(unittest.TestCase):
 
         ## Brief: Update solution based on short message digest. Only the content data is updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
@@ -62,7 +60,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'update', '--solution', '--digest', 'a96ac'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
@@ -77,7 +75,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'])  ## workflow # pylint: disable=line-too-long
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
@@ -94,7 +92,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'update', '--snippet', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
@@ -112,7 +110,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'update', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
@@ -128,7 +126,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', '123456789abcdef0'])  ## workflow
             assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
             assert len(Database.get_solutions()) == 2
@@ -145,7 +143,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', ''])  ## workflow
             assert cause == 'NOK: cannot use empty message digest to update content'
             assert len(Database.get_solutions()) == 2
@@ -166,7 +164,7 @@ class TestWfUpdateSolution(unittest.TestCase):
 
         ## Brief: Update solution based on content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
@@ -185,7 +183,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'update', '--solution', '--content', 'solution not existing'])  ## workflow
             assert cause == 'NOK: cannot find content with content data \'solution not existing\''
             assert len(Database.get_solutions()) == 2
@@ -201,7 +199,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'update', '--solution', '-c', ''])  ## workflow
             assert cause == 'NOK: cannot use empty content data to update content'
             assert len(Database.get_solutions()) == 2
@@ -212,7 +210,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

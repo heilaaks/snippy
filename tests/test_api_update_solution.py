@@ -55,7 +55,7 @@ class TestApiUpdateSolution(object):
         ## Brief: Call PUT /snippy/api/v1/solutions to update existing solution. In this
         #         case when fields like UTC and filename are not provided, the empty fields
         #         override the content because it was updated with PUT.
-        snippy = Solution.add_one(None, Solution.BEATS)
+        snippy = Solution.add_one(Solution.BEATS)
         solution = {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
                     'group': Solution.DEFAULTS[Solution.NGINX]['group'],
@@ -84,7 +84,7 @@ class TestApiUpdateSolution(object):
 
         ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with digest that
         ##        cannot be found.
-        snippy = Solution.add_one(None, Solution.BEATS)
+        snippy = Solution.add_one(Solution.BEATS)
         solution = {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
                     'group': Solution.DEFAULTS[Solution.NGINX]['group'],

@@ -20,18 +20,21 @@
 """test_wf_console_help.py: Test workflows for getting help from console."""
 
 from __future__ import print_function
+
 import re
 import sys
+
 import mock
-from snippy.metadata import __version__
-from snippy.metadata import __homepage__
-from snippy.snip import Snippy
-from snippy.snip import main
-from snippy.config.constants import Constants as Const
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+from snippy.config.constants import Constants as Const
+from snippy.metadata import __homepage__
+from snippy.metadata import __version__
+from snippy.snip import Snippy
+from snippy.snip import main
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 if not Const.PYTHON2:
     from io import StringIO  # pylint: disable=import-error
 else:
@@ -219,7 +222,6 @@ class TestWfConsoleHelp(object):
                     'import re',
                     'import sys',
                     'import copy',
-                    'import unittest',
                     'import json',
                     'import yaml',
                     'import mock',
@@ -232,7 +234,7 @@ class TestWfConsoleHelp(object):
                     'from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database',
                     '',
                     '',
-                    'class TestWfImportSnippet(unittest.TestCase):',
+                    'class TestWfImportSnippet(object):',
                     '    """Test workflows for importing snippets."""',
                     '',
                     '    @mock.patch.object(json, \'load\')',
@@ -406,7 +408,8 @@ class TestWfConsoleHelp(object):
                       '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
                       '   ! metadata : None',
                       '   ! key      : 2')
-            snippy = Snippet.add_defaults(Snippy(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi']))  ## workflow
+            snippy = Snippy(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])  ## workflow
+            snippy = Snippet.add_defaults(snippy)
             real_stderr = sys.stderr
             real_stdout = sys.stdout
             sys.stderr = StringIO()
@@ -564,7 +567,7 @@ class TestWfConsoleHelp(object):
             real_stderr = sys.stderr
             sys.stdout = StringIO()
             sys.stderr = StringIO()
-            snippy = Snippet.add_defaults(Snippy())
+            snippy = Snippet.add_defaults()
             print(Database.get_snippets()[0])  # Part of the test.
             print(Database.get_snippets()[1])  # Part of the test.
             result_stdout = sys.stdout.getvalue().strip()

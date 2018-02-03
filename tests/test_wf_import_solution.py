@@ -19,7 +19,6 @@
 
 """test_wf_import_solution.py: Test workflows for importing solutions."""
 
-import unittest
 import json
 import yaml
 import mock
@@ -34,7 +33,7 @@ from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfImportSolution(unittest.TestCase):
+class TestWfImportSolution(object):
     """Test workflows for importing solutions."""
 
     @mock.patch.object(json, 'load')
@@ -189,7 +188,7 @@ class TestWfImportSolution(unittest.TestCase):
         ##        is already stored. Because one solution was stored successfully, the return
         ##        cause is OK.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_one(Snippy(), Solution.BEATS)
+            snippy = Solution.add_one(Solution.BEATS)
             assert len(Database.get_solutions()) == 1
             cause = snippy.run_cli(['snippy', 'import', '--solution', '--file', './all-solutions.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -253,7 +252,7 @@ class TestWfImportSolution(unittest.TestCase):
         ## Brief: Import defined solution based on message digest. File name is defined from command line as
         ##        yaml file which contain one solution. One line in the content data was updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_one(Snippy(), Solution.NGINX)
+            snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -266,7 +265,7 @@ class TestWfImportSolution(unittest.TestCase):
         ## Brief: Import defined solution based on message digest without specifying the content
         ##        category explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_one(Snippy(), Solution.NGINX)
+            snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -280,7 +279,7 @@ class TestWfImportSolution(unittest.TestCase):
         ## Brief: Import defined solution based on message digest. File name is defined from command line as
         ##        json file which contain one solution. One line in the content data was updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_one(Snippy(), Solution.NGINX)
+            snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.json'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -295,7 +294,7 @@ class TestWfImportSolution(unittest.TestCase):
         ##        extension is '*.txt' in this case.
         mocked_open = mock.mock_open(read_data=updated_solution)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Solution.add_one(Snippy(), Solution.NGINX)
+            snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -310,7 +309,7 @@ class TestWfImportSolution(unittest.TestCase):
         ##        extension is '*.text' in this case.
         mocked_open = mock.mock_open(read_data=updated_solution)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Solution.add_one(Snippy(), Solution.NGINX)
+            snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -325,7 +324,7 @@ class TestWfImportSolution(unittest.TestCase):
         ##        category
         mocked_open = mock.mock_open(read_data=updated_solution)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Solution.add_one(Snippy(), Solution.NGINX)
+            snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '--snippet', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -340,7 +339,7 @@ class TestWfImportSolution(unittest.TestCase):
         ##        case there is one solution stored.
         mocked_open = mock.mock_open(read_data=updated_solution)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Solution.add_one(Snippy(), Solution.NGINX)
+            snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '123456789abcdef0', '-f', 'one-solution.text'])  ## workflow
             assert cause == 'NOK: cannot find solution identified with digest 123456789abcdef0'
             assert len(Database.get_solutions()) == 1
@@ -460,7 +459,7 @@ class TestWfImportSolution(unittest.TestCase):
         ##        because the content already exist. The error text must be the same for all content
         ##        categories.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_defaults(Snippy())
+            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'import', '--solution', '--defaults'])  ## workflow
             assert cause == 'NOK: no content was inserted because content data already existed'
             assert len(Database.get_solutions()) == 2
@@ -514,7 +513,7 @@ class TestWfImportSolution(unittest.TestCase):
             Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def tearDown(self):
+    def teardown_class(self):
         """Teardown each test."""
 
         Database.delete_all_contents()

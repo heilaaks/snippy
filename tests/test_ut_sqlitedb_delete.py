@@ -20,6 +20,7 @@
 """test_ut_sqlite3db_delete.py: Test deleting content from sqlite."""
 
 import mock
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const

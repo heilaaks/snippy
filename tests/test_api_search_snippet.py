@@ -52,7 +52,7 @@ class TestApiSearchSnippet(object):
         ##        search query matches to two snippets and both of them are returned. The
         ##        search is sorted based on one field. The limit defined in the search query
         ##        is not exceeded.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1073'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                          {'type': 'snippets', 'id': '2', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
@@ -82,9 +82,9 @@ class TestApiSearchSnippet(object):
         #            In some cases when there is a test for the content, it includes export
         #            operation that needs one call to UTC timestamp to run the export operation.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*2 + (Snippet.UTC2,)*2 + (None,)
-        snippy = Snippet.add_defaults(None)
-        Snippet.add_one(snippy, Snippet.EXITED)
-        Snippet.add_one(snippy, Snippet.NETCAT)
+        snippy = Snippet.add_defaults()
+        Snippet.add_one(Snippet.EXITED, snippy)
+        Snippet.add_one(Snippet.NETCAT, snippy)
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1209'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                          {'type': 'snippets', 'id': '2', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
@@ -106,7 +106,7 @@ class TestApiSearchSnippet(object):
         ##        the limit parameter was set to one. In this case the sort is descending and
         ##        the last match must be returned. The resulting fields are limited only to brief
         ##        and category.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '125'}
         body = {'data': [{'type': 'snippets',
                           'id': '1',
@@ -127,7 +127,7 @@ class TestApiSearchSnippet(object):
         ##        return only two fields. This syntax that separates the sorted fields causes
         ##        the parameter to be processed in string context which must handle multiple
         ##        fields.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '125'}
         body = {'data': [{'type': 'snippets',
                           'id': '1',
@@ -148,9 +148,9 @@ class TestApiSearchSnippet(object):
         ##        search query matches to four snippets but limit defined in search query results
         ##        only two of them sorted by the utc field in descending order.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*2 + (Snippet.UTC2,)*2 + (None,)  # [REF_UTC]
-        snippy = Snippet.add_defaults(None)
-        Snippet.add_one(snippy, Snippet.EXITED)
-        Snippet.add_one(snippy, Snippet.NETCAT)
+        snippy = Snippet.add_defaults()
+        Snippet.add_one(Snippet.EXITED, snippy)
+        Snippet.add_one(Snippet.NETCAT, snippy)
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1177'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]},
                          {'type': 'snippets', 'id': '2', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
@@ -171,9 +171,9 @@ class TestApiSearchSnippet(object):
         ##        with two fields. This syntax that separates the sorted fields causes the
         ##        parameter to be processed in string context which must handle multiple fields.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*2 + (Snippet.UTC2,)*2 + (None,)  # [REF_UTC]
-        snippy = Snippet.add_defaults(None)
-        Snippet.add_one(snippy, Snippet.EXITED)
-        Snippet.add_one(snippy, Snippet.NETCAT)
+        snippy = Snippet.add_defaults()
+        Snippet.add_one(Snippet.EXITED, snippy)
+        Snippet.add_one(Snippet.NETCAT, snippy)
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1177'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]},
                          {'type': 'snippets', 'id': '2', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
@@ -192,7 +192,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Try to call GET /snippy/api/v1/snippets with sort parameter set to field
         ##        name that does not exist. In this case sorting must fall to default sorting.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '263'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
@@ -211,7 +211,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Call GET /snippy/api/v1/snippets to return only defined fields. In this case
         ##        the fields are defined by setting the 'fields' parameter multiple times.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '125'}
         body = {'data': [{'type': 'snippets',
                           'id': '1',
@@ -230,7 +230,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Call GET /snippy/api/v1/snippets with search keywords that do not result any
         ##        matches.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '12'}
         body = {'data': []}
         snippy = Snippy(['snippy', '--server'])
@@ -260,7 +260,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Call GET /snippy/api/v1/snippets with search tag keywords that do not result
         ##        any matches.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '12'}
         body = {'data': []}
         snippy = Snippy(['snippy', '--server'])
@@ -290,7 +290,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Call GET /snippy/api/v1/snippets with search group keywords that do not
         ##        result any matches.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '12'}
         body = {'data': []}
         snippy = Snippy(['snippy', '--server'])
@@ -322,7 +322,7 @@ class TestApiSearchSnippet(object):
         ##        digest. In this case the snippet is found. In this case the URI path contains
         ##        15 digit digest. The returned self link must contain the default 16 digit
         #         digest.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '594'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
                 'data': {'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}}
@@ -339,7 +339,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Try to call GET /snippy/api/v1/snippets/{digest} with digest that cannot be
         ##        found. In this case the JSON 'null' is converted to Python None.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '102'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/101010101010101'}, 'data': None}
         snippy = Snippy(['snippy', '--server'])
@@ -368,7 +368,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Call GET /snippy/api/v1/snippets without defining search parameters. In this
         ##        case all content should be returned based on filtering parameters.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1073'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                          {'type': 'snippets', 'id': '2', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
@@ -387,7 +387,7 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /snippy/api/v1/snippets without defining search parameters. In this
         ##        case only one snippet must be returned because the limit is set to one. Also
         ##        the sorting based on brief field causes the last snippet to be returned.
-        snippy = Snippet.add_defaults(None)
+        snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '576'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         snippy = Snippy(['snippy', '--server'])

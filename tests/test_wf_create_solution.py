@@ -47,6 +47,7 @@ class TestWfCreateSolution(unittest.TestCase):
         ##        Creating solution from command line will always use editor to create the
         ##        content.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippy()
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             mock_call_editor.return_value = template
             data = Const.NEWLINE.join(Solution.DEFAULTS[Solution.BEATS]['data'])
@@ -55,7 +56,6 @@ class TestWfCreateSolution(unittest.TestCase):
             tags = Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.BEATS]['tags'])
             links = Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.BEATS]['links'])
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
-            snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
@@ -146,11 +146,11 @@ class TestWfCreateSolution(unittest.TestCase):
 
         ## Brief: Create new solution by defining all values from editor.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippy()
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             mock_call_editor.return_value = template
             compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS]}
-            snippy = Snippy(['snippy', 'create', '--solution', '--editor'])  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'create', '--solution', '--editor'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             Solution.test_content(snippy, mock_file, compare_content)

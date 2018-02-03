@@ -2,7 +2,6 @@
    - [ ] Fix is there way to not to use sys.args in Cli help for examples and tests?
    - [ ] Fix console tests and no package exception. This setting may leak the side effect to global https://github.com/pytest-dev/pytest-mock/issues/84
    - [ ] Fix --help tests after latest refactoring.
-   - [ ] Fix tests/test_wf_create_solution.py works in make test but not individually. Same update_snippet
    - [ ] Fix clean and remove snippy = Snippet.add_defaults(Snippy()) with snippy = Snippet.add_defaults().
    - [ ] Fix clean sys.args. from tests.
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}

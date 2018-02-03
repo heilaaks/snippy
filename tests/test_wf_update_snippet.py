@@ -43,10 +43,10 @@ class TestWfUpdateSnippet(unittest.TestCase):
 
         ## Brief: Update snippet based on short message digest. Only the content data is updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
             template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
-            snippy = Snippet.add_defaults(Snippy())
             cause = snippy.run_cli(['snippy', 'update', '-d', '54e41e9b52a02b63'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_snippets()) == 2
@@ -181,10 +181,10 @@ class TestWfUpdateSnippet(unittest.TestCase):
 
         ## Brief: Update snippet based on content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Snippet.add_defaults(Snippy())
             template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
             template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
             mock_call_editor.return_value = template
-            snippy = Snippet.add_defaults(Snippy())
             cause = snippy.run_cli(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_snippets()) == 2

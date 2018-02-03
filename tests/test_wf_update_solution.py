@@ -43,10 +43,10 @@ class TestWfUpdateSolution(unittest.TestCase):
 
         ## Brief: Update solution based on short message digest. Only the content data is updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
             cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
@@ -166,10 +166,10 @@ class TestWfUpdateSolution(unittest.TestCase):
 
         ## Brief: Update solution based on content data.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            snippy = Solution.add_defaults(Snippy())
             template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
-            snippy = Solution.add_defaults(Snippy())
             data = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
             cause = snippy.run_cli(['snippy', 'update', '--solution', '-c', data])  ## workflow
             assert cause == 'OK'

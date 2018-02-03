@@ -1,6 +1,6 @@
 ## TODO
    - [ ] Fix clean and remove snippy = Snippet.add_defaults(Snippy()) with snippy = Snippet.add_defaults().
-   - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}
+   - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix Swagger specification to follow JSON API specification JSON format.
    - [ ] Add configurable base path.
    - [ ] Fix hello metadata.

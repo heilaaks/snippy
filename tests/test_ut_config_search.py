@@ -20,8 +20,9 @@
 """test_ut_config_search.py: Test tool configuration management to search snippets."""
 
 from __future__ import print_function
-import sys
+
 import unittest
+
 from snippy.config.config import Config
 from snippy.config.source.cli import Cli
 from tests.testlib.cli_helper import CliHelper

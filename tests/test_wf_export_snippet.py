@@ -19,12 +19,12 @@
 
 """test_wf_export_snippet.py: Test workflows for exporting snippets."""
 
-import sys
 import unittest
+
 import json
-import yaml
 import mock
 import pkg_resources
+import yaml
 
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
@@ -330,7 +330,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as yaml file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  ## workflow
+            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  ## workflow # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
             mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -343,7 +343,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as json file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  ## workflow
+            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  ## workflow # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.json', 'w')
             mock_json_dump.assert_called_with(export_dict, mock.ANY)
@@ -356,7 +356,7 @@ class TestWfExportSnippet(unittest.TestCase):
         ##        command line as text file with *.txt file extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults(Snippy())
-            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  ## workflow
+            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  ## workflow # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value

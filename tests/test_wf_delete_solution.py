@@ -19,9 +19,9 @@
 
 """test_wf_delete_solution.py: Test workflows for deleting solutions."""
 
-import sys
 import unittest
 import mock
+
 from snippy.config.config import Config
 from snippy.snip import Snippy
 from tests.testlib.solution_helper import SolutionHelper as Solution
@@ -72,7 +72,7 @@ class TestWfDeleteSolution(unittest.TestCase):
         ## Brief: Delete solution with long 16 byte version of message digest.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
             snippy = Solution.add_defaults(Snippy())
-            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'])  ## workflow
+            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'])  ## workflow # pylint: disable=line-too-long
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 1
             snippy.release()

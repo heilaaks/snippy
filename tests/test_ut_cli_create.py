@@ -20,7 +20,7 @@
 """test_ut_arguments_create.py: Test command line argumens for creating new snippets."""
 
 from __future__ import print_function
-import sys
+
 from snippy.config.constants import Constants as Const
 from snippy.config.source.cli import Cli
 from tests.testlib.cli_helper import CliHelper

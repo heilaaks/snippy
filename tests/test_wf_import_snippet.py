@@ -20,13 +20,13 @@
 """test_wf_import_snippet.py: Test workflows for importing snippets."""
 
 import re
-import sys
 import copy
 import unittest
 import json
 import yaml
 import mock
 import pkg_resources
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const

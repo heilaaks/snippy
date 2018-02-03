@@ -20,7 +20,6 @@
 """test_api_create_solution.py: Test POST /solutions API."""
 
 import json
-import sys
 
 import mock
 import falcon

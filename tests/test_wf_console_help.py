@@ -467,42 +467,40 @@ class TestWfConsoleHelp(object):
         ## Brief: Output tool version with long option. Only the version must be
         ##        printed and nothing else. The print must be send to stdout.
         cause = Cause.ALL_OK
-        try:
-            real_stdout = sys.stdout
-            real_stderr = sys.stderr
-            sys.stdout = StringIO()
-            sys.stderr = StringIO()
-            snippy = Snippy(['snippy', '--version'])  ## workflow
-        except SystemExit:
-            result_stdout = sys.stdout.getvalue().strip()
-            result_stderr = sys.stderr.getvalue().strip()
-            sys.stdout = real_stdout
-            sys.stderr = real_stderr
-            assert cause == Cause.ALL_OK
-            assert result_stdout == __version__
-            assert not result_stderr
-            snippy = None
-            Database.delete_storage()
+        real_stdout = sys.stdout
+        real_stderr = sys.stderr
+        sys.stdout = StringIO()
+        sys.stderr = StringIO()
+        snippy = Snippy(['snippy', '--version'])  ## workflow
+        snippy.release()
+        result_stdout = sys.stdout.getvalue().strip()
+        result_stderr = sys.stderr.getvalue().strip()
+        sys.stdout = real_stdout
+        sys.stderr = real_stderr
+        assert cause == Cause.ALL_OK
+        assert result_stdout == __version__
+        assert not result_stderr
+        snippy = None
+        Database.delete_storage()
 
         ## Brief: Output tool version with short option. Only the version must be
         ##        printed and nothing else. The print must be send to stdout.
         cause = Cause.ALL_OK
-        try:
-            real_stdout = sys.stdout
-            real_stderr = sys.stderr
-            sys.stdout = StringIO()
-            sys.stderr = StringIO()
-            snippy = Snippy(['snippy', '-v'])  ## workflow
-        except SystemExit:
-            result_stdout = sys.stdout.getvalue().strip()
-            result_stderr = sys.stderr.getvalue().strip()
-            sys.stdout = real_stdout
-            sys.stderr = real_stderr
-            assert cause == Cause.ALL_OK
-            assert result_stdout == __version__
-            assert not result_stderr
-            snippy = None
-            Database.delete_storage()
+        real_stdout = sys.stdout
+        real_stderr = sys.stderr
+        sys.stdout = StringIO()
+        sys.stderr = StringIO()
+        snippy = Snippy(['snippy', '-v'])  ## workflow
+        snippy.release()
+        result_stdout = sys.stdout.getvalue().strip()
+        result_stderr = sys.stderr.getvalue().strip()
+        sys.stdout = real_stdout
+        sys.stderr = real_stderr
+        assert cause == Cause.ALL_OK
+        assert result_stdout == __version__
+        assert not result_stderr
+        snippy = None
+        Database.delete_storage()
 
     @mock.patch.object(Config, '_storage_file')
     def test_snippy_main(self, mock_storage_file):

@@ -21,7 +21,6 @@
 
 import copy
 import json
-import sys
 
 import mock
 import falcon

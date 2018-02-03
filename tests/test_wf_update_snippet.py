@@ -19,9 +19,9 @@
 
 """test_wf_update_snippet.py: Test workflows for updating snippets."""
 
-import sys
 import unittest
 import mock
+
 from snippy.config.config import Config
 from snippy.config.source.editor import Editor
 from snippy.snip import Snippy

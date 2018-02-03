@@ -19,12 +19,12 @@
 
 """test_wf_import_solution.py: Test workflows for importing solutions."""
 
-import sys
 import unittest
 import json
 import yaml
 import mock
 import pkg_resources
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const

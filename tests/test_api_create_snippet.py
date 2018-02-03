@@ -20,7 +20,6 @@
 """test_api_create_snippet.py: Test POST /snippets API."""
 
 import json
-import sys
 
 import mock
 import falcon

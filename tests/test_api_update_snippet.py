@@ -20,7 +20,6 @@
 """test_api_update_snippet.py: Test PUT /snippets API."""
 
 import json
-import sys
 
 import mock
 import falcon

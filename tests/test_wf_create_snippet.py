@@ -19,8 +19,8 @@
 
 """test_wf_create_snippet.py: Test workflows for creating snippets."""
 
-import sys
 import mock
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
@@ -51,7 +51,7 @@ class TestWfCreateSnippet(object):
             links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
             compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
             snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
+            cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             Snippet.test_content(snippy, mock_file, compare_content)
@@ -70,7 +70,7 @@ class TestWfCreateSnippet(object):
             snippet_remove['tags'] = [Snippet.DEFAULTS[Snippet.REMOVE]['tags'][0]]
             compare_content = {'f94cf88b1546a8fd': snippet_remove}
             snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
+            cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             Snippet.test_content(snippy, mock_file, compare_content)
@@ -128,7 +128,7 @@ class TestWfCreateSnippet(object):
             tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
             links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
             compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-            cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
+            cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
             assert cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
             assert len(Database.get_snippets()) == 2
             Snippet.test_content(snippy, mock_file, compare_content)

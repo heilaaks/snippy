@@ -27,7 +27,6 @@ from snippy.snip import Snippy
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
-from snippy.config.source.editor import Editor
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -40,10 +39,9 @@ else:
 class TestCliPerformance(object):
     """Test tool performance."""
 
-    @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_cli_performance(self, mock_isfile, mock_storage_file, mock_call_editor):
+    def test_cli_performance(self, mock_isfile, mock_storage_file):
         """Test console performance."""
 
         mock_isfile.return_value = True

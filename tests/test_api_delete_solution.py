@@ -19,8 +19,6 @@
 
 """test_api_delete_solutions.py: Test DELETE /solutions API."""
 
-import sys
-
 import mock
 import falcon
 from falcon import testing

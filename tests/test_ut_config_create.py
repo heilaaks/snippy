@@ -20,10 +20,11 @@
 """test_ut_config_create.py: Test tool configuration management for creating new snippets."""
 
 from __future__ import print_function
-import sys
+
 import unittest
-from snippy.config.constants import Constants as Const
+
 from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
 from snippy.config.source.cli import Cli
 from snippy.content.content import Content
 from tests.testlib.cli_helper import CliHelper

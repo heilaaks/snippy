@@ -19,7 +19,6 @@
 
 """test_api_hello.py: Test hello API."""
 
-import sys
 import unittest
 import json
 import mock

@@ -19,8 +19,6 @@
 
 """snippet_helper.py: Helper methods for snippet testing."""
 
-import sys
-
 import mock
 import six
 

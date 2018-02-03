@@ -19,8 +19,6 @@
 
 """test_api_delete_snippets.py: Test DELETE /snippets API."""
 
-import sys
-
 import mock
 import falcon
 from falcon import testing

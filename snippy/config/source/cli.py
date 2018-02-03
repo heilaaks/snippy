@@ -196,7 +196,6 @@ class Cli(ConfigSourceBase):
             parameters['exit'] = False
         except SystemExit:
             parameters['exit'] = True
-            pass
 
         return parameters
 

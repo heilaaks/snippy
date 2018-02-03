@@ -2,10 +2,11 @@
 
 """falcon_helper.py: Helper methods Falcon testing."""
 
-import sys
 import unittest
 import pytest
+
 from falcon import testing
+
 from snippy.snip import Snippy
 
 

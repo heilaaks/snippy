@@ -19,8 +19,6 @@
 
 """solution_helper.py: Helper methods for solution testing."""
 
-import sys
-
 import mock
 
 from snippy.snip import Snippy

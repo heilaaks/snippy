@@ -19,9 +19,9 @@
 
 """test_wf_update_solution.py: Test workflows for updating solutions."""
 
-import sys
 import unittest
 import mock
+
 from snippy.config.config import Config
 from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
@@ -78,7 +78,7 @@ class TestWfUpdateSolution(unittest.TestCase):
             template = template.replace('## description', '## updated content description')
             mock_call_editor.return_value = template
             snippy = Solution.add_defaults(Snippy())
-            cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'])  ## workflow
+            cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'])  ## workflow # pylint: disable=line-too-long
             assert cause == 'OK'
             assert len(Database.get_solutions()) == 2
             Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),

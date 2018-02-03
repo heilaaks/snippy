@@ -19,9 +19,9 @@
 
 """test_wf_create_solution.py: Test workflows for creating solutions."""
 
-import sys
 import unittest
 import mock
+
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const

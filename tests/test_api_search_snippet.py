@@ -19,8 +19,6 @@
 
 """test_api_search_snippet.py: Test GET /snippy/api/snippets API."""
 
-import sys
-
 import mock
 import falcon
 from falcon import testing

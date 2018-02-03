@@ -20,7 +20,7 @@
 """test_ut_arguments_search.py: Test command line argumens for searching snippets with keywords."""
 
 from __future__ import print_function
-import sys
+
 from snippy.config.source.cli import Cli
 from tests.testlib.cli_helper import CliHelper
 

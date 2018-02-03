@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Fix Swagger specification to follow JSON API specification JSON format.
    - [ ] Add configurable base path.
+   - [ ] Fix using --json-logs causes the CLI command to exit? It does not run the command like search.
    - [ ] Fix hello metadata.
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.

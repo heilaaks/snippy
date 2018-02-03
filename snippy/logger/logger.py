@@ -20,12 +20,15 @@
 """logger.py: Common logging."""
 
 from __future__ import print_function
+
 from random import getrandbits
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
 import logging
 import sys
 import time
+
 import json
+
 try:
     from gunicorn.glogging import Logger as GunicornLogger
 except ImportError:
@@ -90,7 +93,17 @@ class Logger(object):
     SERVER_OID = format(getrandbits(32), "08x")
 
     def __init__(self, module):
-        log_format = '%(asctime)s %(appname)s[%(process)04d] [%(oid)s] [%(levelname)-5s]: %(message)s'
+        # Use severity level names from RFC 5424 /1/. The level name is
+        # printed with one letter when debug logs are in text mode. In
+        # JSON format, the logs contain the full level name.
+        #
+        # /1/ https://en.wikipedia.org/wiki/Syslog#Severity_level
+        logging.addLevelName(logging.CRITICAL, 'crit')
+        logging.addLevelName(logging.ERROR, 'err')
+        logging.addLevelName(logging.WARNING, 'warning')
+        logging.addLevelName(logging.INFO, 'info')
+        logging.addLevelName(logging.DEBUG, 'debug')
+        log_format = '%(asctime)s %(appname)s[%(process)04d] [%(levelname).1s] [%(oid)s]: %(message)s'
         self.logger = logging.getLogger(module)
         if not self.logger.handlers:
             formatter = CustomFormatter(log_format)

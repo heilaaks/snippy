@@ -53,7 +53,6 @@ class Snippy(object):
     def run_cli(self, args=None):
         """Run command line session."""
 
-        self.logger.debug('running command line interface')
         args = Config.init_args if args is None else args
         Config.read_source(Cli(args))
         if Config.is_category_snippet:

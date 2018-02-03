@@ -187,7 +187,7 @@ class Cli(ConfigSourceBase):
         server.add_argument('--server', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # Argparse will exit with support options like --help or --version and
-        # when argument parsíng fails. Catching the exception here allows the
+        # when argument parsing fails. Catching the exception here allows the
         # tool to exit in controlled manner and release pending resources.
         parameters = {}
         try:

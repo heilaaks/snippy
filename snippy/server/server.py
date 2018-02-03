@@ -19,15 +19,16 @@
 
 """server.py - JSON REST API server."""
 
+import falcon
+
 from snippy.logger.logger import CustomGunicornLogger
 from snippy.logger.logger import Logger
-from snippy.server.api_hello import ApiHello
-from snippy.server.api_snippets import ApiSnippets
-from snippy.server.api_snippets import ApiSnippetsDigest
-from snippy.server.api_solutions import ApiSolutions
-from snippy.server.api_solutions import ApiSolutionsDigest
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
-import falcon
+from snippy.server.rest.api_hello import ApiHello
+from snippy.server.rest.api_snippets import ApiSnippets
+from snippy.server.rest.api_snippets import ApiSnippetsDigest
+from snippy.server.rest.api_solutions import ApiSolutions
+from snippy.server.rest.api_solutions import ApiSolutionsDigest
 
 
 class Server(object):  # pylint: disable=too-few-public-methods

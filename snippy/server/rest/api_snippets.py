@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""api_solutions.py - JSON REST API for Solutions."""
+"""api_snippets.py - JSON REST API for Snippets."""
 
 from __future__ import print_function
 
@@ -27,32 +27,32 @@ from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.config.source.api import Api
-from snippy.content.solution import Solution
+from snippy.content.snippet import Snippet
 from snippy.logger.logger import Logger
-from snippy.server.jsonapiv1 import JsonApiV1
-from snippy.server.validate import Validate
+from snippy.server.rest.jsonapiv1 import JsonApiV1
+from snippy.server.rest.validate import Validate
 
 
-class ApiSolutions(object):
-    """Process solution collections"""
+class ApiSnippets(object):
+    """Process snippet collections."""
 
     def __init__(self, storage):
         self.logger = Logger(__name__).get()
         self.storage = storage
 
     def on_post(self, request, response):
-        """Create new solution."""
+        """Create new snippets."""
 
         contents = []
-        self.logger.debug('run post /snippy/api/v1/solutions')
+        self.logger.debug('run post /snippy/api/v1/snippets')
         collection = Validate.collection(request.media)
         for member in collection:
-            api = Api(Const.SOLUTION, Api.CREATE, member)
+            api = Api(Const.SNIPPET, Api.CREATE, member)
             Config.read_source(api)
-            contents = contents + Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+            contents = contents + Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.collection(Const.SOLUTION, contents)
+            response.body = JsonApiV1.collection(Const.SNIPPET, contents)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
@@ -63,15 +63,15 @@ class ApiSolutions(object):
         Logger.set_new_oid()
 
     def on_get(self, request, response):
-        """Search solutions based on query parameters."""
+        """Search snippets based on query parameters."""
 
-        self.logger.debug('run get /snippy/api/v1/solutions')
-        api = Api(Const.SOLUTION, Api.SEARCH, request.params)
+        self.logger.debug('run get /snippy/api/v1/snippets')
+        api = Api(Const.SNIPPET, Api.SEARCH, request.params)
         Config.read_source(api)
-        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.collection(Const.SOLUTION, contents)
+            response.body = JsonApiV1.collection(Const.SNIPPET, contents)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
@@ -82,12 +82,12 @@ class ApiSolutions(object):
         Logger.set_new_oid()
 
     def on_delete(self, request, response):
-        """Delete solution based on query parameters."""
+        """Delete snippet based on query parameters."""
 
-        self.logger.debug('run delete /snippy/api/v1/solutions')
+        self.logger.debug('run delete /snippy/api/v1/snippets')
         api = Api(Const.SNIPPET, Api.DELETE, request.params)
         Config.read_source(api)
-        Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.status = Cause.http_status()
         else:
@@ -99,25 +99,25 @@ class ApiSolutions(object):
         Logger.set_new_oid()
 
 
-class ApiSolutionsDigest(object):
-    """Process solutions based on digest resource ID."""
+class ApiSnippetsDigest(object):
+    """Process snippet based on digest resource ID."""
 
     def __init__(self, storage):
         self.logger = Logger(__name__).get()
         self.storage = storage
 
     def on_put(self, request, response, digest):
-        """Update solution based on digest."""
+        """Update snippet based on digest."""
 
-        self.logger.debug('run put /snippy/api/v1/solutions/{digest} = %s', digest)
+        self.logger.debug('run put /snippy/api/v1/snippets/{digest} = %s', digest)
         local_params = request.media
         local_params['digest'] = digest
         api = Api(Const.SNIPPET, Api.UPDATE, local_params)
         Config.read_source(api)
-        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request.uri)
+            response.body = JsonApiV1.resource(Const.SNIPPET, contents, request.uri)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
@@ -128,16 +128,16 @@ class ApiSolutionsDigest(object):
         Logger.set_new_oid()
 
     def on_get(self, request, response, digest):
-        """Search solutions based on digest."""
+        """Search snippet based on digest."""
 
-        self.logger.debug('run get /snippy/api/v1/solutions/{digest} = %s', digest)
+        self.logger.debug('run get /snippy/api/v1/snippets/{digest} = %s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SNIPPET, Api.SEARCH, local_params)
         Config.read_source(api)
-        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = falcon.MEDIA_JSON
-            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request.uri)
+            response.body = JsonApiV1.resource(Const.SNIPPET, contents, request.uri)
             response.status = Cause.http_status()
         else:
             response.content_type = falcon.MEDIA_JSON
@@ -148,13 +148,13 @@ class ApiSolutionsDigest(object):
         Logger.set_new_oid()
 
     def on_delete(self, _, response, digest):
-        """Delete solution based on digest."""
+        """Delete snippet based on digest."""
 
-        self.logger.debug('run delete /snippy/api/v1/solutions/{digest} = %s', digest)
+        self.logger.debug('run delete /snippy/api/v1/snippets/{digest} = %s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SNIPPET, Api.DELETE, local_params)
         Config.read_source(api)
-        Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.status = Cause.http_status()
         else:

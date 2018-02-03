@@ -209,7 +209,7 @@ class TestWfConsoleHelp(object):
 
     @mock.patch('snippy.devel.reference.pkg_resources.resource_isdir')
     @mock.patch('snippy.devel.reference.pkg_resources.resource_listdir')
-    def test_console_help_tests(self, mock_resource_listdir, mock_resource_isdir):
+    def test_console_help_tests_list(self, mock_resource_listdir, mock_resource_isdir):
         """Test printing test documentation from consoler."""
 
         mock_resource_isdir.return_value = True
@@ -260,8 +260,7 @@ class TestWfConsoleHelp(object):
                     '        ##        result tool internal default file name ./snippets.yaml being used by default.',
                     '        with mock.patch(\'snippy.migrate.migrate.open\', mock.mock_open(), create=True) as mock_file:',
                     '            snippy = Snippy()',
-                    '            sys.argv = [\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\']  ## workflow',
-                    '            cause = snippy.run_cli()',
+                    '            cause = snippy.run_cli([\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\'])  ## workflow',
                     '            assert cause == Cause.ALL_OK',
                     '            assert len(Database.get_snippets()) == 2',
                     '            mock_file.assert_called_once_with(\'./snippets.yaml\', \'r\')',
@@ -271,37 +270,35 @@ class TestWfConsoleHelp(object):
                     '            Database.delete_storage()')
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(testcase))
         with mock.patch('snippy.devel.reference.open', mocked_open, create=True):
-            try:
-                cause = Cause.ALL_OK
-                output = ('test case reference list:',
-                          '',
-                          '   $ snippy import --filter .*(\\$\\s.*)',
-                          '   # Import all snippets. File name is not defined in commmand line.',
-                          '   # This should result tool internal default file name',
-                          '   # ./snippets.yaml being used by default.',
-                          '',
-                          '   $ snippy import --filter .*(\\$\\s.*)',
-                          '   # Import all snippets. File name is not defined in commmand line.',
-                          '   # This should result tool internal default file name',
-                          '   # ./snippets.yaml being used by default.')
-                cause = Cause.ALL_OK
-                real_stdout = sys.stdout
-                real_stderr = sys.stderr
-                sys.stdout = StringIO()
-                sys.stderr = StringIO()
-                sys.argv = ['snippy', '--help', 'tests', '--no-ansi']
-                snippy = Snippy(['snippy', '--help', 'tests', '--no-ansi'])  ## workflow
-                cause = snippy.run_cli()
-            except SystemExit:
-                result_stdout = sys.stdout.getvalue().strip()
-                result_stderr = sys.stderr.getvalue().strip()
-                sys.stdout = real_stdout
-                sys.stderr = real_stderr
-                assert cause == Cause.ALL_OK
-                assert result_stdout == Const.NEWLINE.join(output)
-                assert not result_stderr
-                snippy = None
-                Database.delete_storage()
+            cause = Cause.ALL_OK
+            output = ('test case reference list:',
+                      '',
+                      '   $ snippy import --filter .*(\\$\\s.*)',
+                      '   # Import all snippets. File name is not defined in commmand line.',
+                      '   # This should result tool internal default file name',
+                      '   # ./snippets.yaml being used by default.',
+                      '',
+                      '   $ snippy import --filter .*(\\$\\s.*)',
+                      '   # Import all snippets. File name is not defined in commmand line.',
+                      '   # This should result tool internal default file name',
+                      '   # ./snippets.yaml being used by default.')
+            cause = Cause.ALL_OK
+            real_stdout = sys.stdout
+            real_stderr = sys.stderr
+            sys.stdout = StringIO()
+            sys.stderr = StringIO()
+            sys.argv = ['snippy', '--help', 'tests', '--no-ansi']
+            snippy = Snippy(['snippy', '--help', 'tests', '--no-ansi'])  ## workflow
+            snippy.release()
+            result_stdout = sys.stdout.getvalue().strip()
+            result_stderr = sys.stderr.getvalue().strip()
+            sys.stdout = real_stdout
+            sys.stderr = real_stderr
+            assert cause == Cause.ALL_OK
+            assert result_stdout == Const.NEWLINE.join(output)
+            assert not result_stderr
+            snippy = None
+            Database.delete_storage()
 
     @mock.patch('snippy.devel.reference.pkg_resources.resource_isdir')
     @mock.patch('snippy.devel.reference.pkg_resources.resource_listdir')

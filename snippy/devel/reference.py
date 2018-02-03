@@ -135,11 +135,14 @@ class Reference(object):
 
         # The regexp below must not match to console help test case that
         # contains example test case.
-        match = re.search(r'^\s+sys\.argv(.*)##\s+workflow', line)
+        #
+        # Example 1: sys.argv = ['snippy', 'search', '--sall', '.', '--profile']  ## workflow
+        # Example 2: Snippy(['snippy', 'search', '--sall', '.', '-q'])  ## workflow
+        # Example 3: snippy.run_cli(['snippy', 'search'])  ## workflow
+        match = re.search(r'\[(.*)\][\)\s]+##\s+workflow', line)
         if match:
             command = match.group(1).strip()
-            command = re.search(r'\[(.*)\]', command)
-            command = command.group(1).replace('\'', Const.EMPTY).replace(',', Const.EMPTY)
+            command = command.replace('\'', Const.EMPTY).replace(',', Const.EMPTY)
             # Special characters are escaped in commands.
             command = command.replace('\\\\$', '\\$').replace('\\\\s', '\\s')
 

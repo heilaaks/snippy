@@ -46,6 +46,7 @@ class Snippy(object):
         if Config.server:
             self.run_server()
         elif Config.cli:
+            print("RUNCLI")
             self.run_cli()
         else:
             self.release()

@@ -21,14 +21,14 @@
 
 import sys
 
-from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
-from snippy.config.source.cli import Cli
 from snippy.config.config import Config
-from snippy.storage.storage import Storage
+from snippy.config.source.cli import Cli
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
 from snippy.devel.profiler import Profiler
+from snippy.logger.logger import Logger
+from snippy.storage.storage import Storage
 
 
 class Snippy(object):

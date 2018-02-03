@@ -44,6 +44,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Config.very_verbose = True if args and '-vv' in args else False
         Config.quiet = True if args and '-q' in args else False
         Logger.set_level({'very_verbose': Config.very_verbose, 'debug': Config.debug, 'quiet': Config.quiet})
+        Config._logger.debug('initial command line arguments: %s', args)
 
         Config.source = None
         Config.profiler = Config._profiler()

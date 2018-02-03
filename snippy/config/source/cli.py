@@ -120,7 +120,7 @@ class Cli(ConfigSourceBase):
         super(Cli, self).__init__()
         if args is None:
             args = []
-        args = args[1:]  # Extract the first parameter that is the program name.
+        args = args[1:]  # Remove the first parameter that is the program name.
         parameters = Cli._parse_args(args)
         Cli._set_editor(parameters)
         self.set_conf(parameters)
@@ -186,10 +186,9 @@ class Cli(ConfigSourceBase):
         server = parser.add_argument_group(title='server options')
         server.add_argument('--server', action='store_true', default=False, help=argparse.SUPPRESS)
 
-        # Argparse will exit in case of support options like --help or --version.
-        # Also in case of argument parse failures the SystemExit is made here.
-        # Catching SystemEXit here allows main level Snippy() to release resources
-        # in case of exit.
+        # Argparse will exit with support options like --help or --version and
+        # when argument parsíng fails. Catching the exception here allows the
+        # tool to exit in controlled manner and release pending resources.
         parameters = {}
         try:
             parameters = vars(parser.parse_args(args))

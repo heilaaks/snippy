@@ -98,114 +98,108 @@ class TestWfConsoleHelp(object):
                   'Homepage ' + __homepage__)
 
         ## Brief: Print tool help with long option.
-        try:
-            cause = Cause.ALL_OK
-            real_stdout = sys.stdout
-            real_stderr = sys.stderr
-            sys.stdout = StringIO()
-            sys.stderr = StringIO()
-            snippy = Snippy(['snippy', '--help'])  ## workflow
-            cause = snippy.run_cli()
-        except SystemExit:
-            result_stdout = sys.stdout.getvalue().strip()
-            result_stderr = sys.stderr.getvalue().strip()
-            sys.stdout = real_stdout
-            sys.stderr = real_stderr
-            assert cause == Cause.ALL_OK
-            assert result_stdout == Const.NEWLINE.join(output)
-            assert not result_stderr
-            snippy = None
-            Database.delete_storage()
+        cause = Cause.ALL_OK
+        real_stdout = sys.stdout
+        real_stderr = sys.stderr
+        sys.stdout = StringIO()
+        sys.stderr = StringIO()
+        snippy = Snippy(['snippy', '--help'])  ## workflow
+        snippy.release()
+        result_stdout = sys.stdout.getvalue().strip()
+        result_stderr = sys.stderr.getvalue().strip()
+        sys.stdout = real_stdout
+        sys.stderr = real_stderr
+        assert cause == Cause.ALL_OK
+        assert result_stdout == Const.NEWLINE.join(output)
+        assert not result_stderr
+        snippy = None
+        Database.delete_storage()
 
         ## Brief: Print tool help with short option.
-        try:
-            cause = Cause.ALL_OK
-            real_stdout = sys.stdout
-            real_stderr = sys.stderr
-            sys.stdout = StringIO()
-            sys.stderr = StringIO()
-            snippy = Snippy(['snippy', '-h'])  ## workflow
-            cause = snippy.run_cli()
-        except SystemExit:
-            result_stdout = sys.stdout.getvalue().strip()
-            result_stderr = sys.stderr.getvalue().strip()
-            sys.stdout = real_stdout
-            sys.stderr = real_stderr
-            assert cause == Cause.ALL_OK
-            assert result_stdout == Const.NEWLINE.join(output)
-            assert not result_stderr
-            snippy = None
-            Database.delete_storage()
+        cause = Cause.ALL_OK
+        real_stdout = sys.stdout
+        real_stderr = sys.stderr
+        sys.stdout = StringIO()
+        sys.stderr = StringIO()
+        snippy = Snippy(['snippy', '-h'])  ## workflow
+        snippy.release()
+        result_stdout = sys.stdout.getvalue().strip()
+        result_stderr = sys.stderr.getvalue().strip()
+        sys.stdout = real_stdout
+        sys.stderr = real_stderr
+        assert cause == Cause.ALL_OK
+        assert result_stdout == Const.NEWLINE.join(output)
+        assert not result_stderr
+        snippy = None
+        Database.delete_storage()
 
     def test_console_help_examples(self):
         """Test printing examples from console."""
 
         ## Brief: Print tool command examples from help.
-        try:
-            output = ('examples:',
-                      '    Creating new content:',
-                      '      $ snippy create --snippet --editor',
-                      '      $ snippy create --snippet -c \'docker ps\' -b \'list containers\' -t docker,moby',
-                      '',
-                      '    Searching and filtering content:',
-                      '      $ snippy search --snippet --sall docker,moby',
-                      '      $ snippy search --snippet --sall .',
-                      '      $ snippy search --snippet --sall . --no-ansi | grep \'\\$\' | sort',
-                      '      $ snippy search --solution --sall .',
-                      '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
-                      '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
-                      '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
-                      '',
-                      '    Updating content:',
-                      '      $ snippy update --snippet -d 44afdd0c59e17159',
-                      '      $ snippy update --snippet -c \'docker ps\'',
-                      '',
-                      '    Deleting content:',
-                      '      $ snippy delete --snippet -d 44afdd0c59e17159',
-                      '      $ snippy delete --snippet -c \'docker ps\'',
-                      '',
-                      '    Migrating default content:',
-                      '      $ snippy import --snippet --defaults',
-                      '      $ snippy import --solution --defaults',
-                      '',
-                      '    Migrating content templates:',
-                      '      $ snippy export --solution --template',
-                      '      $ snippy import --solution --template',
-                      '      $ snippy import --solution -f solution-template.txt',
-                      '',
-                      '    Migrating specific content:',
-                      '      $ snippy export -d 76a1a02951f6bcb4',
-                      '      $ snippy import -d 76a1a02951f6bcb4 -f howto-debug-elastic-beats.txt',
-                      '',
-                      '    Migrating content:',
-                      '      $ snippy export --snippet -f snippets.yaml',
-                      '      $ snippy export --snippet -f snippets.json',
-                      '      $ snippy export --snippet -f snippets.text',
-                      '      $ snippy import --snippet -f snippets.yaml',
-                      '      $ snippy export --solution -f solutions.yaml',
-                      '      $ snippy import --solution -f solutions.yaml',
-                      '',
-                      'Snippy version ' + __version__ + ' - license GNU AGPLv3',
-                      'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
-                      'Homepage ' + __homepage__)
-            cause = Cause.ALL_OK
-            real_stdout = sys.stdout
-            real_stderr = sys.stderr
-            sys.stdout = StringIO()
-            sys.stderr = StringIO()
-            sys.argv = ['snippy', '--help', 'examples']
-            snippy = Snippy(['snippy', '--help', 'examples'])  ## workflow
-            cause = snippy.run_cli()
-        except SystemExit:
-            result_stdout = sys.stdout.getvalue().strip()
-            result_stderr = sys.stderr.getvalue().strip()
-            sys.stdout = real_stdout
-            sys.stderr = real_stderr
-            assert cause == Cause.ALL_OK
-            assert result_stdout == Const.NEWLINE.join(output)
-            assert not result_stderr
-            snippy = None
-            Database.delete_storage()
+        output = ('examples:',
+                  '    Creating new content:',
+                  '      $ snippy create --snippet --editor',
+                  '      $ snippy create --snippet -c \'docker ps\' -b \'list containers\' -t docker,moby',
+                  '',
+                  '    Searching and filtering content:',
+                  '      $ snippy search --snippet --sall docker,moby',
+                  '      $ snippy search --snippet --sall .',
+                  '      $ snippy search --snippet --sall . --no-ansi | grep \'\\$\' | sort',
+                  '      $ snippy search --solution --sall .',
+                  '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
+                  '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
+                  '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
+                  '',
+                  '    Updating content:',
+                  '      $ snippy update --snippet -d 44afdd0c59e17159',
+                  '      $ snippy update --snippet -c \'docker ps\'',
+                  '',
+                  '    Deleting content:',
+                  '      $ snippy delete --snippet -d 44afdd0c59e17159',
+                  '      $ snippy delete --snippet -c \'docker ps\'',
+                  '',
+                  '    Migrating default content:',
+                  '      $ snippy import --snippet --defaults',
+                  '      $ snippy import --solution --defaults',
+                  '',
+                  '    Migrating content templates:',
+                  '      $ snippy export --solution --template',
+                  '      $ snippy import --solution --template',
+                  '      $ snippy import --solution -f solution-template.txt',
+                  '',
+                  '    Migrating specific content:',
+                  '      $ snippy export -d 76a1a02951f6bcb4',
+                  '      $ snippy import -d 76a1a02951f6bcb4 -f howto-debug-elastic-beats.txt',
+                  '',
+                  '    Migrating content:',
+                  '      $ snippy export --snippet -f snippets.yaml',
+                  '      $ snippy export --snippet -f snippets.json',
+                  '      $ snippy export --snippet -f snippets.text',
+                  '      $ snippy import --snippet -f snippets.yaml',
+                  '      $ snippy export --solution -f solutions.yaml',
+                  '      $ snippy import --solution -f solutions.yaml',
+                  '',
+                  'Snippy version ' + __version__ + ' - license GNU AGPLv3',
+                  'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+                  'Homepage ' + __homepage__)
+        cause = Cause.ALL_OK
+        real_stdout = sys.stdout
+        real_stderr = sys.stderr
+        sys.stdout = StringIO()
+        sys.stderr = StringIO()
+        sys.argv = ['snippy', '--help', 'examples']
+        snippy = Snippy(['snippy', '--help', 'examples'])  ## workflow
+        snippy.release()
+        result_stdout = sys.stdout.getvalue().strip()
+        result_stderr = sys.stderr.getvalue().strip()
+        sys.stdout = real_stdout
+        sys.stderr = real_stderr
+        assert cause == Cause.ALL_OK
+        assert result_stdout == Const.NEWLINE.join(output)
+        assert not result_stderr
+        snippy = None
+        Database.delete_storage()
 
     @mock.patch('snippy.devel.reference.pkg_resources.resource_isdir')
     @mock.patch('snippy.devel.reference.pkg_resources.resource_listdir')

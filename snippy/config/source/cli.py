@@ -188,7 +188,15 @@ class Cli(ConfigSourceBase):
 
         # Argparse will exit in case of support options like --help or --version.
         # Also in case of argument parse failures the SystemExit is made here.
-        parameters = vars(parser.parse_args(args))
+        # Catching SystemEXit here allows main level Snippy() to release resources
+        # in case of exit.
+        parameters = {}
+        try:
+            parameters = vars(parser.parse_args(args))
+            parameters['exit'] = False
+        except SystemExit:
+            parameters['exit'] = True
+            pass
 
         return parameters
 
@@ -196,9 +204,12 @@ class Cli(ConfigSourceBase):
     def _set_editor(parameters):
         """Enforce editor usage for some operations for better usability."""
 
+        if parameters['exit']:
+            return
+
         if parameters['category'] == Const.SNIPPET and parameters['operation'] == Cli.UPDATE:
             parameters['editor'] = True
-        
+
         if parameters['category'] == Const.SOLUTION and (Cli.CREATE or Cli.UPDATE in parameters['operation']):
             parameters['editor'] = True
 

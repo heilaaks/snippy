@@ -45,8 +45,10 @@ class Snippy(object):
 
         if Config.server:
             self.run_server()
-        else:
+        elif Config.cli:
             self.run_cli()
+        else:
+            self.release()
 
     def run_cli(self, args=None):
         """Run command line session."""

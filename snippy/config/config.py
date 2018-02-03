@@ -53,8 +53,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         Config.snippet_template = Config._content_template('snippet-template.txt')
         Config.solution_template = Config._content_template('solution-template.txt')
         Config.init_args = args
-        source = Cli(args)
-        self.read_source(source)
+        self.read_source(Cli(args))
 
     @classmethod
     def _profiler(cls):
@@ -141,6 +140,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         cls.editor = cls.source.editor
         cls.use_ansi = not cls.source.no_ansi
         cls.server = cls.source.server
+        cls.cli = not cls.source.exit
 
         # Parsed from defined configuration.
         cls.is_operation_create = True if cls.operation == 'create' else False

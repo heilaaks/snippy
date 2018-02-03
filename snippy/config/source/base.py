@@ -91,8 +91,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def set_conf(self, parameters):
         """Set API configuration parameters."""
 
-        if not parameters:
-            return
+        if parameters is None:
+            parameters = {}
 
         # There are few parameters like 'data' and 'digest' where the code
         # error logic must know if these were given at all. These parameters
@@ -105,6 +105,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.defaults = parameters.get('defaults', False)
         self.digest = parameters.get('digest', None)
         self.editor = parameters.get('editor', False)
+        self.exit = parameters.get('exit', False)
         self.filename = parameters.get('filename', Const.EMPTY)
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
         self.limit = parameters.get('limit', self.LIMIT_DEFAULT)

@@ -38,16 +38,12 @@ paths:
         description: "New snippet that is stored"
         required: true
         schema:
-          type: array
-          items:
-            $ref: "#/definitions/Collection"
+          $ref: "#/definitions/Collection"
       responses:
         201:
           description: "Snippet created"
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Collection"
+            $ref: "#/definitions/Collection"
         405:
           description: "Invalid input"
           schema:
@@ -123,9 +119,7 @@ paths:
         200:
           description: OK
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Collection"
+            $ref: "#/definitions/Collection"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -139,7 +133,7 @@ paths:
     delete:
       tags:
       - "snippet"
-      summary: "Delete one snippet"
+      summary: "Delete snippets"
       description: ""
       parameters:
         - name: sall
@@ -218,9 +212,7 @@ paths:
         200:
           description: "Snippet updated"
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Resource"
+            $ref: "#/definitions/Resource"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -253,9 +245,7 @@ paths:
         200:
           description: OK
           schema:
-            type: array
-            items:
-              $ref: "#/definitions/Resource"
+            $ref: "#/definitions/Resource"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -331,7 +321,7 @@ definitions:
       id:
         type: string
       attributes:
-          $ref: '#/definitions/Attributes'
+        $ref: '#/definitions/Attributes'
     required:
       - type
       - attributes

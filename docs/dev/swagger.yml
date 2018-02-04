@@ -1,12 +1,12 @@
 openapi: 3.0.0
 servers:
-  - url: /snippy/api/v1
+  - url: 'https://virtserver.swaggerhub.com/heilaaks1/snippy/1.0.0'
 info:
   version: "1.0.0-oas3"
   title: Snippy JSON RESTish API
   description: >-
-    Snippy provides command and solution snippet management through JSON
-    RESTish API. The API follows subset of JSON API specification v1.0.
+    Snippy provides command and solution snippet management through JSON RESTish
+    API. The API follows subset of JSON API specification v1.0.
   termsOfService: 'https://github.com/heilaaks/snippy'
   contact:
     email: laaksonen.heikki.j@gmail.com
@@ -26,9 +26,7 @@ paths:
           content:
             application/json; charset=UTF-8:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Collection'
+                $ref: '#/components/schemas/Collection'
         '405':
           description: Invalid input
           content:
@@ -144,9 +142,7 @@ paths:
           content:
             application/json; charset=UTF-8:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Collection'
+                $ref: '#/components/schemas/Collection'
         '400':
           description: Request not syntactically correct
           content:
@@ -246,9 +242,7 @@ paths:
           content:
             application/json; charset=UTF-8:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Resource'
+                $ref: '#/components/schemas/Resource'
         '400':
           description: Request not syntactically correct
           content:
@@ -295,9 +289,7 @@ paths:
           content:
             application/json; charset=UTF-8:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Resource'
+                $ref: '#/components/schemas/Resource'
         '400':
           description: Request not syntactically correct
           content:
@@ -379,7 +371,7 @@ components:
         id:
           type: string
         attributes:
-            $ref: '#/components/schemas/Attributes'
+          $ref: '#/components/schemas/Attributes'
       required:
         - type
         - attributes

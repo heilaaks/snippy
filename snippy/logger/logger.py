@@ -119,8 +119,8 @@ class Logger(object):
         return self.logger
 
     @classmethod
-    def set_level(cls, config):
-        """Set log level."""
+    def init(cls, config):
+        """Initialize logger."""
 
         cls.CONFIG = config
 
@@ -138,7 +138,7 @@ class Logger(object):
         #       to be formatted by Snippy logging framework.
         logging.getLogger('snippy').disabled = True
         logging.getLogger('snippy').setLevel(logging.CRITICAL)
-        if config['debug'] or config['very_verbose']:
+        if cls.CONFIG['debug'] or config['very_verbose']:
             logging.getLogger('snippy').disabled = False
             logging.getLogger('snippy').setLevel(logging.DEBUG)
 

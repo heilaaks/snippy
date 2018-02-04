@@ -94,10 +94,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         if parameters is None:
             parameters = {}
 
-        # There are few parameters like 'data' and 'digest' where the code
-        # error logic must know if these were given at all. These parameters
-        # must be set to None by default. All other parameters must have
-        # default value like empty list or string that makes sense.
+        # There are few parameters like 'data' and 'digest' where the tool
+        # error logic must know if value was defined at all. This kind of
+        # parameters must be set to None by default. All other parameters
+        # must have default value like empty list or string that makes sense.
         self.brief = parameters.get('brief', Const.EMPTY)
         self.category = parameters.get('category')
         self.data = parameters.get('data', None)
@@ -108,6 +108,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.exit = parameters.get('exit', False)
         self.filename = parameters.get('filename', Const.EMPTY)
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
+        self.json_logs = parameters.get('json_logs', False)
         self.limit = parameters.get('limit', self.LIMIT_DEFAULT)
         self.links = parameters.get('links', ())
         self.no_ansi = parameters.get('no_ansi', False)

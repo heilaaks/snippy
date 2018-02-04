@@ -17,56 +17,52 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""config.py: Configuration management."""
+"""config.py: Global configuration management."""
 
 import datetime
 import os.path
 import sys
+
+import pkg_resources
+
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.cli import Cli
 from snippy.config.source.editor import Editor
 from snippy.config.source.parser import Parser
 from snippy.logger.logger import Logger
-import pkg_resources
 
 
-class Config(object):  # pylint: disable=too-many-public-methods
+class Config(object):
     """Global configuration management."""
 
     _logger = Logger(__name__).get()
-    storage_file = None
-    storage_schema = None
-    search_all_kws = ()
-
-    def __init__(self, args):
-        Config.debug = True if args and '--debug' in args else False
-        Config.very_verbose = True if args and '-vv' in args else False
-        Config.quiet = True if args and '-q' in args else False
-        Logger.set_level({'very_verbose': Config.very_verbose, 'debug': Config.debug, 'quiet': Config.quiet})
-        Config._logger.debug('initial command line arguments: %s', args)
-
-        Config.source = None
-        Config.profiler = Config._profiler()
-        Config.json_logs = Config._json_logs()
-        Config.storage_file = Config._storage_file()
-        Config.storage_schema = Config._storage_schema()
-        Config.snippet_template = Config._content_template('snippet-template.txt')
-        Config.solution_template = Config._content_template('solution-template.txt')
-        Config.init_args = args
-        self.read_source(Cli(args))
 
     @classmethod
-    def _profiler(cls):
-        """Test if profiler is run."""
+    def init(cls, args):
+        """Initialize global configuration."""
 
-        return True if '--profile' in sys.argv else False
+        # Initialize logger configuration.
+        cls.debug = True if args and '--debug' in args else False
+        cls.very_verbose = True if args and '-vv' in args else False
+        cls.quiet = True if args and '-q' in args else False
+        cls.json_logs = True if args and '--json-logs' in args else False
+        cls.profiler = True if args and '--profile' in args else False
+        Logger.init({'debug': cls.debug,
+                     'very_verbose': cls.very_verbose,
+                     'quiet': cls.quiet,
+                     'json_logs': cls.json_logs})
+        cls._logger.debug('initial command line arguments: %s', args)
 
-    @classmethod
-    def _json_logs(cls):
-        """Test if logs are formatted as JSON."""
+        # Initialize storage configuration.
+        cls.storage_file = cls._storage_file()
+        cls.storage_schema = cls._storage_schema()
+        cls.snippet_template = cls._content_template('snippet-template.txt')
+        cls.solution_template = cls._content_template('solution-template.txt')
 
-        return True if '--json-logs' in sys.argv else False
+        # Initialize remaining confiuguration.
+        cls.init_args = args
+        cls.read_source(Cli(args))
 
     @classmethod
     def _storage_file(cls):
@@ -197,11 +193,11 @@ class Config(object):  # pylint: disable=too-many-public-methods
         with defaults option cause the filename to be updated automatically
         to point into correct location that stores e.g. the default content."""
 
-        filename = Config.source.filename
+        filename = cls.source.filename
 
         defaults = 'snippets.yaml'
         template = 'snippet-template.txt'
-        if Config.is_category_solution:
+        if cls.is_category_solution:
             defaults = 'solutions.yaml'
             template = 'solution-template.txt'
 
@@ -216,9 +212,9 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # Run export operation with specified content without specifying
         # the operation file.
         if cls.is_operation_export and cls.is_search_criteria():
-            if Config.is_category_snippet and not filename:
+            if cls.is_category_snippet and not filename:
                 filename = 'snippet.' + Const.CONTENT_TYPE_TEXT
-            elif Config.is_category_solution and not filename:
+            elif cls.is_category_solution and not filename:
                 filename = 'solution.' + Const.CONTENT_TYPE_TEXT
 
         # In case user did not provide filename, set defaults. For example
@@ -255,11 +251,11 @@ class Config(object):  # pylint: disable=too-many-public-methods
 
         contents = []
         if source is not None:
-            contents = Parser.read_content(content, source, Config.get_utc_time())
+            contents = Parser.read_content(content, source, cls.get_utc_time())
         elif cls.editor:
             contents = Editor.read_content(content)
         else:
-            contents = Config._read_content(content)
+            contents = cls._read_content(content)
 
         return tuple(contents)
 
@@ -333,7 +329,7 @@ class Config(object):  # pylint: disable=too-many-public-methods
         # Use the content filename only in case of export operation
         # and when user did not define target file from command line.
         filename = cls.operation_filename
-        if cls.is_operation_export and content_filename and not Config.source.filename:
+        if cls.is_operation_export and content_filename and not cls.source.filename:
             filename = content_filename
 
         return filename

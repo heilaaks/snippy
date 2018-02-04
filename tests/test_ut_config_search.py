@@ -19,13 +19,10 @@
 
 """test_ut_config_search.py: Test tool configuration management to search snippets."""
 
-from __future__ import print_function
-
 import unittest
 
 from snippy.config.config import Config
 from snippy.config.source.cli import Cli
-from tests.testlib.cli_helper import CliHelper
 
 
 class TestUtConfigSearch(unittest.TestCase):
@@ -35,40 +32,40 @@ class TestUtConfigSearch(unittest.TestCase):
         """Test that search can be used with one keyword."""
 
         search_kw = ('docker',)
-        obj = Config(None)
-        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker']))
-        assert isinstance(obj.search_all_kws, tuple)
-        self.assertTupleEqual(obj.search_all_kws, search_kw)
+        Config.init(None)
+        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker']))
+        assert isinstance(Config.search_all_kws, tuple)
+        self.assertTupleEqual(Config.search_all_kws, search_kw)
 
     def test_search_with_quotes_and_separated_by_comma_and_no_space(self):
         """Test that search keywords can be added inside quotes separated by
         comma and without spaces."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        obj = Config(None)
-        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker,container,cleanup']))
-        assert isinstance(obj.search_all_kws, tuple)
-        self.assertTupleEqual(obj.search_all_kws, search_kw)
+        Config.init(None)
+        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker,container,cleanup']))
+        assert isinstance(Config.search_all_kws, tuple)
+        self.assertTupleEqual(Config.search_all_kws, search_kw)
 
     def test_search_with_quotes_and_separated_by_comma_and_space(self):
         """Test that search keywords can be added inside quotes separated by
         comma and spaces after comma."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        obj = Config(None)
-        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
-        assert isinstance(obj.search_all_kws, tuple)
-        self.assertTupleEqual(obj.search_all_kws, search_kw)
+        Config.init(None)
+        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
+        assert isinstance(Config.search_all_kws, tuple)
+        self.assertTupleEqual(Config.search_all_kws, search_kw)
 
     def test_search_with_quotes_and_separated_by_only_space(self):
         """Test that search keywords can be added so that they are separated
         by spaces before and after the words."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        obj = Config(None)
-        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
-        assert isinstance(obj.search_all_kws, tuple)
-        self.assertTupleEqual(obj.search_all_kws, search_kw)
+        Config.init(None)
+        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
+        assert isinstance(Config.search_all_kws, tuple)
+        self.assertTupleEqual(Config.search_all_kws, search_kw)
 
     def test_search_separated_by_space(self):
         """Test that search keywords can be added so that they are separated
@@ -76,43 +73,41 @@ class TestUtConfigSearch(unittest.TestCase):
         cleanup'."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        obj = Config(None)
-        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']))
-        assert isinstance(obj.search_all_kws, tuple)
-        self.assertTupleEqual(obj.search_all_kws, search_kw)
+        Config.init(None)
+        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']))
+        assert isinstance(Config.search_all_kws, tuple)
+        self.assertTupleEqual(Config.search_all_kws, search_kw)
 
     def test_search_separated_by_space_and_comma(self):
         """Test that search keywords can be added so that they are separated
         by comma after the words like in '-t docker, container, cleanup'."""
 
         search_kw = ('cleanup', 'container', 'docker')
-        obj = Config(None)
-        obj.read_source(Cli(['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']))
-        assert isinstance(obj.search_all_kws, tuple)
-        self.assertTupleEqual(obj.search_all_kws, search_kw)
+        Config.init(None)
+        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']))
+        assert isinstance(Config.search_all_kws, tuple)
+        self.assertTupleEqual(Config.search_all_kws, search_kw)
 
     def test_search_with_special_characters(self):
         """Test that search keywords are accepted if they contain special
         characters."""
 
         search_kw = ('cleanup_testing', 'container-managemenet', 'dockertesting')
-        obj = Config(None)
-        obj.read_source(Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
-        assert isinstance(obj.search_all_kws, tuple)
-        self.assertTupleEqual(obj.search_all_kws, search_kw)
-        assert len(obj.search_all_kws) == 3
+        Config.init(None)
+        Config.read_source(Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
+        assert isinstance(Config.search_all_kws, tuple)
+        self.assertTupleEqual(Config.search_all_kws, search_kw)
+        assert len(Config.search_all_kws) == 3
 
     # pylint: disable=duplicate-code
     @classmethod
     def setup_class(cls):
         """Test class setup before any of the tests are run."""
 
-        print('setup_class()')
-        CliHelper().reset()
+        Config.init(None)
 
     @classmethod
     def teardown_class(cls):
         """Test class teardown after all tests run."""
 
-        print('teardown_class()')
-        CliHelper().reset()
+        Config.init(None)

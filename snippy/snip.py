@@ -35,7 +35,7 @@ class Snippy(object):
     """Command and solution management."""
 
     def __init__(self, args=None):
-        Config(args)
+        Config.init(args)
         self.logger = Logger(__name__).get()
         self.storage = Storage()
         self.server = None

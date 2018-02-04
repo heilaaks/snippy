@@ -54,8 +54,8 @@ class Logger(object):
     option prints limited length log messages in lower case letters.
 
     There are two formats for logs: text (default) and JSON. JSON logs can
-    be enabled with --json-logs option. JSON log have more information
-    fields than text formatted logs. When -vv option is used with JSON logs,
+    be enabled with --json-logs option. A JSON log has more information
+    fields than text formatted log. When -vv option is used with JSON logs,
     it truncates log message in the same way as with text logs.
 
     Timestamps are in local time with text formatted logs. In case of JSON
@@ -66,7 +66,7 @@ class Logger(object):
     specific operation. The operation ID must be refreshed by logger user
     after each operation is completed.
 
-    All logs including Gunicorn server logs are formatted to match format
+    All logs including Gunicorn server logs, are formatted to match format
     defined in this logger.
 
     All logs are printed to stdout.
@@ -82,7 +82,7 @@ class Logger(object):
     6. All other than error logs must be printed in lower case string.
     7. The --debug option must print logs without filters in full-length.
     8. The -vv option must print logs in lower case and one log per line.
-    9. All external libraries must follow same log format.
+    9. All external libraries must follow the same log format.
     10. All logs must be printed to stdout.
     """
 
@@ -95,7 +95,7 @@ class Logger(object):
     def __init__(self, module):
         # Use severity level names from RFC 5424 /1/. The level name is
         # printed with one letter when debug logs are in text mode. In
-        # JSON format, the logs contain the full level name.
+        # JSON format logs contain full length severity level name.
         #
         # /1/ https://en.wikipedia.org/wiki/Syslog#Severity_level
         logging.addLevelName(logging.CRITICAL, 'crit')

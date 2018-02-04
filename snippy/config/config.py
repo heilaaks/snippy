@@ -107,11 +107,11 @@ class Config(object):
         cls.source = source
         cls._logger.debug('config source: %s', cls.source)
 
-        # Operation
+        # operation
         cls.operation = cls.source.operation
         cls.operation_digest = cls.source.digest
 
-        # Content
+        # content
         cls.content_category = cls.source.category
         cls.content_data = cls.source.data
         cls.content_brief = cls.source.brief
@@ -120,7 +120,7 @@ class Config(object):
         cls.content_links = cls.source.links
         cls.content_filename = cls.source.filename
 
-        # Search
+        # search
         cls.search_all_kws = cls.source.sall
         cls.search_tag_kws = cls.source.stag
         cls.search_grp_kws = cls.source.sgrp
@@ -129,11 +129,11 @@ class Config(object):
         cls.remove_fields = cls.source.rfields
         cls.sorted_fields = cls.source.sfields
 
-        # Migrate
+        # migrate
         cls.defaults = cls.source.defaults
         cls.template = cls.source.template
 
-        # Options
+        # options
         cls.editor = cls.source.editor
         cls.use_ansi = not cls.source.no_ansi
         cls.server = cls.source.server

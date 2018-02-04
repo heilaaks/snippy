@@ -110,9 +110,8 @@ class ApiSnippetsDigest(object):
         """Update snippet based on digest."""
 
         self.logger.debug('run put /snippy/api/v1/snippets/{digest} = %s', digest)
-        local_params = request.media
-        local_params['digest'] = digest
-        api = Api(Const.SNIPPET, Api.UPDATE, local_params)
+        resource_ = Validate.resource(request.media, digest)
+        api = Api(Const.SNIPPET, Api.UPDATE, resource_)
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():

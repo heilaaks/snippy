@@ -29,18 +29,37 @@ class Validate(object):  # pylint: disable=too-few-public-methods
 
     @classmethod
     def collection(cls, media):
-        """Return media as collection of contents."""
+        """Return media as collection of content."""
 
         collection = []
         try:
-            if isinstance(media, dict):
-                collection.append(media)
-                collection = tuple(collection)
-            elif isinstance(media, (list, tuple)):
-                collection = tuple(media)
+            if 'data' in media and isinstance(media['data'], (list, tuple)):
+                for data in media['data']:
+                    if 'attributes' in data:
+                        collection.append(data['attributes'])
+            elif 'data' in media and isinstance(media['data'], dict):
+                if 'attributes' in media['data']:
+                    collection.append(media['data']['attributes'])
             else:
                 cls._logger.info('media ignored because of unknown type %s', media)
         except ValueError:
-            cls._logger.info('media validation failed and it was ignored %s', media)
+            cls._logger.info('media collection validation failed and it was ignored %s', media)
 
-        return collection
+        return tuple(collection)
+
+    @classmethod
+    def resource(cls, media, digest):
+        """Return media as specific resource with digest."""
+
+        resource_ = {}
+        try:
+            if 'data' in media and isinstance(media['data'], dict):
+                if 'attributes' in media['data']:
+                    resource_ = media['data']['attributes']
+                    resource_['digest'] = digest
+            else:
+                cls._logger.info('media ignored because of unknown type %s', media)
+        except ValueError:
+            cls._logger.info('media resource validation failed and it was ignored %s', media)
+
+        return resource_

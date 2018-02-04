@@ -56,11 +56,11 @@ class TestApiUpdateSolution(object):
         #         case when fields like UTC and filename are not provided, the empty fields
         #         override the content because it was updated with PUT.
         snippy = Solution.add_one(Solution.BEATS)
-        solution = {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
-                    'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'group': Solution.DEFAULTS[Solution.NGINX]['group'],
-                    'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}
+        solution = {'data': {'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                                                               'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
+                                                               'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                                                               'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
+                                                               'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
         compare_content = {'2cd0e794244a07f': Solution.DEFAULTS[Solution.NGINX]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2871'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/2cd0e794244a07f8'},
@@ -82,14 +82,14 @@ class TestApiUpdateSolution(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with digest that
-        ##        cannot be found.
+        ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with
+        ##        digest that cannot be found.
         snippy = Solution.add_one(Solution.BEATS)
-        solution = {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
-                    'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'group': Solution.DEFAULTS[Solution.NGINX]['group'],
-                    'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}
+        solution = {'data': {'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                                                               'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
+                                                               'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                                                               'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
+                                                               'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '252'}
         body = {'meta': Solution.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',

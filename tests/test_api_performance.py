@@ -51,8 +51,10 @@ class TestApiPerformance(object):
         call(['make', 'clean-db'])
         server = Popen(['python', './runner', '--server'])
         time.sleep(1)  # Wait untill server up. TODO: Get some indicator for this.
-        snippets = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED],
-                    Snippet.DEFAULTS[Snippet.EXITED], Snippet.DEFAULTS[Snippet.NETCAT]]
+        snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
+                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]},
+                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]},
+                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]}]}
 
         ## Brief: Verify performance of the tool on a rough scale. The intention
         ##        is to keep a reference test that is just iterated few times and

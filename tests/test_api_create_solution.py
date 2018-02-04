@@ -51,7 +51,7 @@ class TestApiCreateSolution(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call POST /snippy/api/v1/solutions to create new solution.
-        solution = Solution.DEFAULTS[Solution.BEATS]
+        solution = {'data': [{'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2262'}
         body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
@@ -84,7 +84,8 @@ class TestApiCreateSolution(object):
 
         ## Brief: Call POST /snippy/api/v1/solutions in list context to create new
         ##        solutions.
-        solutions = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.KAFKA]]
+        solutions = {'data': [{'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
+                              {'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.KAFKA]}]}
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS],
                            'eeef5ca': Solution.DEFAULTS[Solution.KAFKA]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '6724'}

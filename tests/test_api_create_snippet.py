@@ -52,11 +52,11 @@ class TestApiCreateSnippet(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
-        snippet = Snippet.DEFAULTS[Snippet.REMOVE]
+        snippet = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '507'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
-        snippy = Snippy(['snippy', '--server', '-vv'])
+        snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
@@ -74,11 +74,11 @@ class TestApiCreateSnippet(object):
         ##        the links and list are defined as list in the JSON message. Note that
         ##        the default input for tags and links from Snippet.REMOVE maps to a
         ##        string but the syntax in this case maps to lists with multiple items.
-        snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                   'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                   'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                   'tags': ['cleanup', 'container', 'docker', 'docker-ce', 'moby'],
-                   'links': ['https://docs.docker.com/engine/reference/commandline/rm/']}
+        snippet = {'data': [{'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                                                               'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                                                               'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                                                               'tags': ['cleanup', 'container', 'docker', 'docker-ce', 'moby'],
+                                                               'links': ['https://docs.docker.com/engine/reference/commandline/rm/']}}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '507'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
@@ -100,11 +100,11 @@ class TestApiCreateSnippet(object):
         ##        the content data is defined in string context where each line is
         ##        separated with a newline.
         mock_get_utc_time.return_value = Snippet.UTC2
-        snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.EXITED]['data']),
-                   'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
-                   'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
-                   'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
-                   'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}
+        snippet = {'data': [{'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.EXITED]['data']),
+                                                               'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
+                                                               'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
+                                                               'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
+                                                               'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}}]}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '712'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
@@ -127,12 +127,12 @@ class TestApiCreateSnippet(object):
         ##        the content data is defined in list context where each line is an item
         ##        in a list.
         mock_get_utc_time.return_value = Snippet.UTC2
-        snippet = {'data': ['docker rm $(docker ps --all -q -f status=exited)\n\n\n\n',
-                            'docker images -q --filter dangling=true | xargs docker rmi'],
-                   'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
-                   'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
-                   'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
-                   'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}
+        snippet = {'data': [{'type': 'snippet', 'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)\n\n\n\n',
+                                                                        'docker images -q --filter dangling=true | xargs docker rmi'],
+                                                               'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
+                                                               'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
+                                                               'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
+                                                               'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}}]}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '712'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
@@ -152,7 +152,7 @@ class TestApiCreateSnippet(object):
         mock_get_utc_time.return_value = Snippet.UTC1
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet with only data.
-        snippet = {'data': ['docker rm $(docker ps --all -q -f status=exited)\n']}
+        snippet = {'data': [{'type': 'snippet', 'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)\n']}}]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '358'}
         body = {'data': [{'type': 'snippets',
                           'id': '1',
@@ -197,7 +197,8 @@ class TestApiCreateSnippet(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call POST /api/v1/snippets in list context to create new snippets.
-        snippets = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
+        snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
+                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1073'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},

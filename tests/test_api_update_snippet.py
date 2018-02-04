@@ -51,13 +51,14 @@ class TestApiUpdateSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet.
+        ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
+        ##        with specified digest.
         snippy = Snippet.add_one(Snippet.FORCED)
-        snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                   'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                   'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                   'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                   'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}
+        snippet = {'data': {'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                                                              'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                                                              'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                                                              'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+                                                              'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '594'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
@@ -76,14 +77,14 @@ class TestApiUpdateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to call PUT /snippy/api/v1/snippets to update snippet with digest that
-        ##        cannot be found.
+        ## Brief: Try to call PUT /snippy/api/v1/snippets to update snippet with
+        ##        digest that cannot be found.
         snippy = Snippet.add_one(Snippet.FORCED)
-        snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                   'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                   'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                   'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                   'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}
+        snippet = {'data': {'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                                                              'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                                                              'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                                                              'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+                                                              'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
         headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '252'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',

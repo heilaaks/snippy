@@ -85,7 +85,7 @@ class ApiSolutions(object):
         """Delete solution based on query parameters."""
 
         self.logger.debug('run delete /snippy/api/v1/solutions')
-        api = Api(Const.SNIPPET, Api.DELETE, request.params)
+        api = Api(Const.SOLUTION, Api.DELETE, request.params)
         Config.read_source(api)
         Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
@@ -110,9 +110,8 @@ class ApiSolutionsDigest(object):
         """Update solution based on digest."""
 
         self.logger.debug('run put /snippy/api/v1/solutions/{digest} = %s', digest)
-        local_params = request.media
-        local_params['digest'] = digest
-        api = Api(Const.SNIPPET, Api.UPDATE, local_params)
+        resource_ = Validate.resource(request.media, digest)
+        api = Api(Const.SOLUTION, Api.UPDATE, resource_)
         Config.read_source(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
@@ -132,7 +131,7 @@ class ApiSolutionsDigest(object):
 
         self.logger.debug('run get /snippy/api/v1/solutions/{digest} = %s', digest)
         local_params = {'digest': digest}
-        api = Api(Const.SNIPPET, Api.SEARCH, local_params)
+        api = Api(Const.SOLUTION, Api.SEARCH, local_params)
         Config.read_source(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
@@ -152,7 +151,7 @@ class ApiSolutionsDigest(object):
 
         self.logger.debug('run delete /snippy/api/v1/solutions/{digest} = %s', digest)
         local_params = {'digest': digest}
-        api = Api(Const.SNIPPET, Api.DELETE, local_params)
+        api = Api(Const.SOLUTION, Api.DELETE, local_params)
         Config.read_source(api)
         Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():

@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Fix Swagger specification to follow JSON API specification JSON format.
    - [ ] Fix hello metadata.
+   - [ ] Add Failure handling and HTTP cause with tests to media collection and resource JSON parse failures.
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.

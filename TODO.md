@@ -1,7 +1,8 @@
 ## TODO
-   - [ ] Fix Swagger specification to follow JSON API specification JSON format.
    - [ ] Fix hello metadata.
    - [ ] Add Failure handling and HTTP cause with tests to media collection and resource JSON parse failures.
+   - [ ] FIx GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found
+   - [ ] Add support for Content-Type: application/vnd.api+json for server responses.
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
@@ -77,6 +78,7 @@
    - [ ] Python logging is not following ISO8601 format and it cannot have timezone.
 
 ## DONE
+   - [x] Updated OpenAPI and Swagger specifications to follow the JSON API v1.0 defintions that are used.
    - [x] Added configurable server base path.
    - [x] Fixed --json-logs option with command line interface.
    - [x] Changed tests to use pytest and correct teardown class.

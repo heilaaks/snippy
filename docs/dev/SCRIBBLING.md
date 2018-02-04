@@ -263,7 +263,9 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/hello"
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=20" -H "accept: application/json"
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
-    $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets/53908d68425c61dc" -H "accept: application/json"
+    $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets/a516e2d6f8aa5c6f" -H "accept: application/json"
+    $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets/a516e2d6f8aa5c6f" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=2" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-utc" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool

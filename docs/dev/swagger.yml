@@ -1,10 +1,12 @@
 openapi: 3.0.0
 servers:
-  - url: /api/v1
+  - url: /snippy/api/v1
 info:
-  description: Snippy REST API
   version: "1.0.0-oas3"
-  title: Snippy REST API
+  title: Snippy JSON RESTish API
+  description: >-
+    Snippy provides command and solution snippet management through JSON
+    RESTish API. The API follows subset of JSON API specification v1.0.
   termsOfService: 'https://github.com/heilaaks/snippy'
   contact:
     email: laaksonen.heikki.j@gmail.com
@@ -16,7 +18,7 @@ paths:
     post:
       tags:
         - snippet
-      summary: Add new snippet
+      summary: Add new snippets
       description: ''
       responses:
         '201':
@@ -26,7 +28,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Content'
+                  $ref: '#/components/schemas/Collection'
         '405':
           description: Invalid input
           content:
@@ -39,9 +41,7 @@ paths:
         content:
           application/json; charset=UTF-8:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Content'
+              $ref: '#/components/schemas/Collection'
         description: New snippet that is stored
         required: true
     get:
@@ -117,7 +117,6 @@ paths:
               - versions
               - utc
               - digest
-              - key
             default: brief
         - name: fields
           in: query
@@ -139,7 +138,6 @@ paths:
                 - versions
                 - utc
                 - digest
-                - key
       responses:
         '200':
           description: OK
@@ -148,7 +146,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Content'
+                  $ref: '#/components/schemas/Collection'
         '400':
           description: Request not syntactically correct
           content:
@@ -166,7 +164,7 @@ paths:
     delete:
       tags:
         - snippet
-      summary: Delete one snippet
+      summary: Delete snippets
       description: ''
       parameters:
         - name: sall
@@ -232,7 +230,7 @@ paths:
     put:
       tags:
         - snippet
-      summary: Update defined snippet
+      summary: Update defined snippet based on digest
       description: ''
       parameters:
         - name: digest
@@ -250,7 +248,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Content'
+                  $ref: '#/components/schemas/Resource'
         '400':
           description: Request not syntactically correct
           content:
@@ -275,13 +273,13 @@ paths:
         content:
           application/json; charset=UTF-8:
             schema:
-              $ref: '#/components/schemas/Content'
+              $ref: '#/components/schemas/Resource'
         description: Existing snippet that is updated
         required: true
     get:
       tags:
         - snippet
-      summary: Get snippet with digest
+      summary: Search defined snippet based on digest
       description: ''
       parameters:
         - name: digest
@@ -299,7 +297,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Content'
+                  $ref: '#/components/schemas/Resource'
         '400':
           description: Request not syntactically correct
           content:
@@ -317,7 +315,7 @@ paths:
     delete:
       tags:
         - snippet
-      summary: Delete snippet with digest
+      summary: Delete defined snippet based on digest
       description: ''
       parameters:
         - name: digest
@@ -346,7 +344,46 @@ paths:
           description: Internal server error
 components:
   schemas:
-    Content:
+    Resource:
+      type: object
+      properties:
+        links:
+          $ref: '#/components/schemas/Links'
+        data:
+          $ref: '#/components/schemas/Data'
+      required:
+        - data
+    Collection:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Data'
+      required:
+        - data
+    Links:
+      type: object
+      properties:
+        self:
+          type: string
+          description: Link pointing to resource.
+    Data:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - snippet
+            - solution
+        id:
+          type: string
+        attributes:
+            $ref: '#/components/schemas/Attributes'
+      required:
+        - type
+        - attributes
+    Attributes:
       type: object
       properties:
         data:
@@ -398,27 +435,21 @@ components:
           description: >-
             Automatically assigned message digest that uniquely identifies the
             content.
-        metadata:
-          type: string
-          description: Automatically assigned internal metadata.
-        key:
-          type: string
-          description: Automatically assigned internal contentn key.
       required:
         - data
     Errors:
       type: object
       properties:
-        metadata:
-          $ref: '#/components/schemas/Metadata'
+        meta:
+          $ref: '#/components/schemas/Meta'
         errors:
           type: array
           items:
             $ref: '#/components/schemas/Error'
       required:
-        - metadata
+        - meta
         - errors
-    Metadata:
+    Meta:
       type: object
       properties:
         version:
@@ -433,23 +464,23 @@ components:
     Error:
       type: object
       properties:
-        code:
-          type: integer
-          description: HTTP status code
         status:
           type: string
-          description: HTTP status code with text
+          description: HTTP status code
+        statusString:
+          type: string
+          description: HTTP status as text string
         module:
           type: string
           description: Location of error
-        message:
+        title:
           type: string
           description: Message describing the error.
       required:
-        - code
         - status
+        - statusString
         - module
-        - message
+        - title
     Search:
       type: object
       properties:

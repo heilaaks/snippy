@@ -4,9 +4,11 @@ swagger: "2.0"
 #                              API Information                                 #
 ################################################################################
 info:
-  description: "Snippy REST API"
   version: "1.0.0"
-  title: "Snippy REST API"
+  title: Snippy JSON RESTish API
+  description: >-
+    Snippy provides command and solution snippet management through JSON
+    RESTish API. The API follows subset of JSON API specification v1.0.
   termsOfService: "https://github.com/heilaaks/snippy"
   contact:
     email: "laaksonen.heikki.j@gmail.com"
@@ -14,7 +16,7 @@ info:
     name: "GNU AGPLv3"
     url: "https://github.com/heilaaks/snippy/blob/master/LICENSE"
 host: "snippettips.com"
-basePath: "/api/v1"
+basePath: "/snippy/api/v1"
 
 ################################################################################
 #                                           Paths                              #
@@ -24,7 +26,7 @@ paths:
     post:
       tags:
       - "snippet"
-      summary: "Add new snippet"
+      summary: "Add new snippets"
       description: ""
       consumes:
       - "application/json; charset=UTF-8"
@@ -38,14 +40,14 @@ paths:
         schema:
           type: array
           items:
-            $ref: "#/definitions/Content"
+            $ref: "#/definitions/Collection"
       responses:
         201:
           description: "Snippet created"
           schema:
             type: array
             items:
-              $ref: "#/definitions/Content"
+              $ref: "#/definitions/Collection"
         405:
           description: "Invalid input"
           schema:
@@ -105,7 +107,7 @@ paths:
         - name: sort
           type: string
           default: brief
-          enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest, key]
+          enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest]
           in: query
           required: false
           description: "Sort based on defined field."
@@ -113,7 +115,7 @@ paths:
           type: array
           items:
             type: string
-            enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest, key]
+            enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest]
           in: query
           required: false
           description: "Limit fields that are returned in result list."
@@ -123,7 +125,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Content"
+              $ref: "#/definitions/Collection"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -193,7 +195,7 @@ paths:
     put:
       tags:
       - "snippet"
-      summary: "Update defined snippet"
+      summary: "Update defined snippet based on digest"
       description: ""
       consumes:
       - "application/json; charset=UTF-8"
@@ -211,14 +213,14 @@ paths:
           description: "Existing snippet that is updated"
           required: true
           schema:
-            $ref: "#/definitions/Content"
+            $ref: "#/definitions/Resource"
       responses:
         200:
           description: "Snippet updated"
           schema:
             type: array
             items:
-              $ref: "#/definitions/Content"
+              $ref: "#/definitions/Resource"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -236,7 +238,7 @@ paths:
     get:
       tags:
       - "snippet"
-      summary: "Get snippet with digest"
+      summary: "Search defined snippet based on digest"
       description: ""
       produces:
       - "application/json; charset=UTF-8"
@@ -253,7 +255,7 @@ paths:
           schema:
             type: array
             items:
-              $ref: "#/definitions/Content"
+              $ref: "#/definitions/Resource"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -267,7 +269,7 @@ paths:
     delete:
       tags:
       - "snippet"
-      summary: "Delete snippet with digest"
+      summary: "Delete defined snippet based on digest"
       description: ""
       parameters:
         - name: digest
@@ -294,102 +296,143 @@ paths:
 #                                 Definitions                                  #
 ################################################################################
 definitions:
-  Content:
+  Resource:
+    type: object
+    properties:
+      links:
+        $ref: '#/definitions/Links'
+      data:
+        $ref: '#/definitions/Data'
+    required:
+      - data
+  Collection:
+    type: object
+    properties:
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/Data'
+    required:
+      - data
+  Links:
+    type: object
+    properties:
+      self:
+        type: string
+        description: Link pointing to resource.
+  Data:
+    type: object
+    properties:
+      type:
+        type: string
+        enum:
+          - snippet
+          - solution
+      id:
+        type: string
+      attributes:
+          $ref: '#/definitions/Attributes'
+    required:
+      - type
+      - attributes
+  Attributes:
     type: object
     properties:
       data:
         type: array
         items:
           type: string
-        description: "Mandatory content data in list context with one line per element."
+        description: Mandatory content data in list context with one line per element.
       brief:
         type: string
-        description: "Optional brief description of the content."
+        description: Optional brief description of the content.
       group:
         type: string
-        description: "Optional group to which the content belongs."
+        description: Optional group to which the content belongs.
         default: default
       tags:
         type: array
         items:
           type: string
-        description: "Optional list of tags."
+        description: Optional list of tags.
       links:
         type: array
         items:
           type: string
-        description: "Optional list of refrence links."
+        description: Optional list of refrence links.
       category:
         type: string
-        enum: [snippet, solution]
-        description: "Automatically assigned content category."
+        enum:
+          - snippet
+          - solution
+        description: Automatically assigned content category.
       filename:
         type: string
-        description: "Optional filename that that defines automatically used filename when content is exported."
+        description: >-
+          Optional filename that that defines automatically used filename when
+          content is exported.
       runalias:
         type: string
-        description: "Optional alias to run the content."
+        description: Optional alias to run the content.
       versions:
         type: string
-        description: "Optional list of services and versions related to the snippet."
+        description: Optional list of services and versions related to the snippet.
       utc:
         type: string
-        description: "Optional UTC timestamp in ISO 8601 format that is automatically assigned if left out."
+        description: >-
+          Optional UTC timestamp in ISO 8601 format that is automatically
+          assigned if left out.
       digest:
         type: string
-        description: "Automatically assigned message digest that uniquely identifies the content."
-      metadata:
-        type: string
-        description: "Automatically assigned internal metadata."
-      key:
-        type: string
-        description: "Automatically assigned internal contentn key."
+        description: >-
+          Automatically assigned message digest that uniquely identifies the
+          content.
     required:
       - data
   Errors:
     type: object
     properties:
-      metadata:
-        $ref: '#/definitions/Metadata'
+      meta:
+        $ref: '#/definitions/Meta'
       errors:
         type: array
         items:
           $ref: '#/definitions/Error'
     required:
-      - metadata
+      - meta
       - errors
-  Metadata:
+  Meta:
     type: object
     properties:
       version:
         type: string
-        description: "Server version"
+        description: Server version
       homepage:
         type: string
-        description: "Server homepage URL"
+        description: Server homepage URL
     required:
       - version
       - homepage
   Error:
     type: object
     properties:
-      code:
-        type: integer
-        description: "HTTP status code"
       status:
         type: string
-        description: "HTTP status code with text"
+        description: HTTP status code
+      statusString:
+        type: string
+        description: HTTP status as text string
       module:
         type: string
-        description: "Location of error"
-      message:
+        description: Location of error
+      title:
         type: string
-        description: "Message describing the error."
+        description: Message describing the error.
     required:
-      - code
       - status
+      - statusString
       - module
-      - message
+      - title
   Search:
     type: object
     properties:
@@ -397,23 +440,23 @@ definitions:
         type: array
         items:
           type: string
-        description: "Search keywords from all fields."
+        description: Search keywords from all fields.
       stag:
         type: array
         items:
           type: string
-        description: "Search keywords only from tag field."
+        description: Search keywords only from tag field.
       sgrp:
         type: array
         items:
           type: string
-        description: "Search keywords only from group field."
+        description: Search keywords only from group field.
       digest:
         type: string
-        description: "Search only based on message digest."
+        description: Search only based on message digest.
       data:
         type: string
-        description: "Search only from content data."
+        description: Search only from content data.
       filter:
         type: string
-        description: "Filter search result with regexp."
+        description: Filter search result with regexp.

@@ -67,7 +67,6 @@ class TestApiUpdateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/53908d68425c61dc',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     body=json.dumps(snippet))
-        print(Database.print_contents())
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
@@ -94,7 +93,6 @@ class TestApiUpdateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/101010101010101',  ## apiflow
                                                                     headers={'accept': 'application/json'},
                                                                     body=json.dumps(snippet))
-        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_404

@@ -259,6 +259,8 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     > https://github.com/wearehive/project-guidelines
 
     # Swagger API
+    $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/"
+    $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/hello"
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=20" -H "accept: application/json"
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json"
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets/53908d68425c61dc" -H "accept: application/json"

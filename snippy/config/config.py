@@ -52,7 +52,7 @@ class Config(object):
                      'very_verbose': cls.very_verbose,
                      'quiet': cls.quiet,
                      'json_logs': cls.json_logs})
-        cls._logger.debug('initial command line arguments: %s', args)
+        cls._logger.debug('config initial command line arguments: %s', args)
 
         # Initialize storage configuration.
         cls.storage_file = cls._storage_file()
@@ -137,6 +137,7 @@ class Config(object):
         cls.editor = cls.source.editor
         cls.use_ansi = not cls.source.no_ansi
         cls.server = cls.source.server
+        cls.base_path = cls.source.base_path
         cls.cli = not cls.source.exit
 
         # Parsed from defined configuration.
@@ -185,6 +186,7 @@ class Config(object):
         cls._logger.debug('configured option defaults: %s', cls.defaults)
         cls._logger.debug('configured option template: %s', cls.template)
         cls._logger.debug('configured option server: %s', cls.server)
+        cls._logger.debug('configured option server base path: %s', cls.base_path)
 
     @classmethod
     def _operation_filename(cls):

@@ -20,11 +20,12 @@
 """base.py: Base class for configuration sources."""
 
 import re
-from snippy.metadata import __version__
+
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
 from snippy.logger.logger import Logger
+from snippy.metadata import __version__
 
 
 class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
@@ -57,6 +58,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     # Defaults
     LIMIT_DEFAULT = 20
+    BASE_PATH = '/snippy/api/v1/'
 
     def __init__(self, parameters=None):
         self._logger = Logger(__name__).get()
@@ -98,6 +100,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         # error logic must know if value was defined at all. This kind of
         # parameters must be set to None by default. All other parameters
         # must have default value like empty list or string that makes sense.
+        self.base_path = parameters.get('base_path', ConfigSourceBase.BASE_PATH)
         self.brief = parameters.get('brief', Const.EMPTY)
         self.category = parameters.get('category')
         self.data = parameters.get('data', None)
@@ -294,4 +297,32 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         requested_fields = Parser.keywords(value)
         self._rfields = tuple(set(self.ALL_FIELDS) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
-        self._logger.debug('content fields that are removed from response: %s', self._rfields)
+        self._logger.debug('config source content fields that are removed from response: %s', self._rfields)
+
+    @property
+    def base_path(self):
+        """Get server base path."""
+
+        return self._base_path
+
+    @base_path.setter
+    def base_path(self, value):
+        """Make sure that server base path ends with slash."""
+
+        # Joining base path URL always assumes that the base path starts
+        # and ends with slash. The os.path cannot be used because it
+        # causes incorrect URL on Windows.
+        if not value.startswith('/'):
+            value = '/' + value
+        if not value.endswith('/'):
+            value = value + '/'
+
+        # Checking the base path is far from complete and it is not known
+        # how to do it to be absolutely certain that it works without
+        # copying all the same checks as used server. Therefore this is
+        # just a portion of checks for possible failure cases.
+        if '//' in value:
+            self._logger.debug('config source uses default base path because invalid configuration: %s', value)
+            value = ConfigSourceBase.BASE_PATH
+
+        self._base_path = value  # pylint: disable=attribute-defined-outside-init

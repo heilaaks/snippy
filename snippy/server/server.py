@@ -20,7 +20,12 @@
 """server.py - JSON REST API server."""
 
 import falcon
+try:
+    from urllib.parse import urljoin
+except ImportError:
+    from urlparse import urljoin
 
+from snippy.config.config import Config
 from snippy.logger.logger import CustomGunicornLogger
 from snippy.logger.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
@@ -47,12 +52,13 @@ class Server(object):  # pylint: disable=too-few-public-methods
             'workers': 1,
             'logger_class': CustomGunicornLogger
         }
+        self.logger.debug('run server with base path: %s', Config.base_path)
         self.api = falcon.API()
         self.api.add_route('/snippy', ApiHello())
-        self.api.add_route('/snippy/api/hello', ApiHello())
-        self.api.add_route('/snippy/api/v1/hello', ApiHello())
-        self.api.add_route('/snippy/api/v1/snippets', ApiSnippets(self.storage))
-        self.api.add_route('/snippy/api/v1/snippets/{digest}', ApiSnippetsDigest(self.storage))
-        self.api.add_route('/snippy/api/v1/solutions', ApiSolutions(self.storage))
-        self.api.add_route('/snippy/api/v1/solutions/{digest}', ApiSolutionsDigest(self.storage))
+        self.api.add_route(Config.base_path.rstrip('/'), ApiHello())
+        self.api.add_route(urljoin(Config.base_path, 'hello'), ApiHello())
+        self.api.add_route(urljoin(Config.base_path, 'snippets'), ApiSnippets(self.storage))
+        self.api.add_route(urljoin(Config.base_path, 'snippets/{digest}'), ApiSnippetsDigest(self.storage))
+        self.api.add_route(urljoin(Config.base_path, 'solutions'), ApiSolutions(self.storage))
+        self.api.add_route(urljoin(Config.base_path, 'solutions/{digest}'), ApiSolutionsDigest(self.storage))
         SnippyServer(self.api, options).run()

@@ -186,6 +186,7 @@ class Cli(ConfigSourceBase):
         # server options
         server = parser.add_argument_group(title='server options')
         server.add_argument('--server', action='store_true', default=False, help=argparse.SUPPRESS)
+        server.add_argument('--base-path', type=str, dest='base_path', default=Cli.BASE_PATH, help=argparse.SUPPRESS)
 
         # Argparse will exit with support options like --help or --version and
         # when argument parsing fails. Catching the exception here allows the

@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Fix hello metadata.
    - [ ] Add Failure handling and HTTP cause with tests to media collection and resource JSON parse failures.
+   - [ ] Add configuration for port.
    - [ ] FIx GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found
    - [ ] Add support for Content-Type: application/vnd.api+json for server responses.
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
@@ -15,6 +16,7 @@
    - [ ] Fix migrate dump load that use YAML error exception that is not imported if try catch inside explodes.
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
    - [ ] Update documents.
+   - [ ] Fix the hash from Introduction example. Now it is faked.
    - [ ] =============================================================
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Add paginations and offsets to JSON API.

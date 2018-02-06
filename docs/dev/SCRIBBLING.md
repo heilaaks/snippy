@@ -250,6 +250,24 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
 
     # Swagger
     > https://app.swaggerhub.com/apis/heilaaks1/snippy-rest_api/1.0.0
+    
+    # Swagger to Sphinx
+    $ .. swaggerv2doc:: ../dev/swagger-2.0.json
+    $ .. openapi:: ../dev/swagger-2.0.yml
+    
+    # Swagger to github pages
+    > https://community.smartbear.com/t5/SwaggerHub/Host-swagger-API-documentation-on-my-own-server/td-p/141523
+    $ sudo docker pull swaggerapi/swagger-ui
+    $ sudo docker run -p 80:8080 -e "SWAGGER_JSON=/api.json" -v /actual/path/to/api.json:/api.json swaggerapi/swagger-ui
+    $ sudo docker run -p 80:8080 -e API_URL="https://api.swaggerhub.com/apis/heilaaks1/snippy/1.0.0" swaggerapi/swagger-ui
+    $ http://localhost/
+
+    # No good generators?
+    # Use *.rst and example like
+    > http://docs.readthedocs.io/en/latest/api.html#api-endpoints
+
+    # 30 API docs
+    > https://nordicapis.com/ultimate-guide-to-30-api-documentation-solutions/
 
     # REST API design
     > http://www.kennethlange.com/posts/The-Ultimate-Checklist-for-REST-APIs.html

@@ -6,10 +6,11 @@ Welcome to Snippy documentation!
    :caption: Contents:
 
    introduction
-   features
    installation
-   examples
+   features
+   usage
    workflows
+   api
    development
    license
 

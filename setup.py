@@ -57,6 +57,7 @@ setup(
     packages=find_packages(exclude=['tests', 'tests.testlib']),
     package_dir={'snippy': 'snippy'},
     package_data={'snippy': ['data/config/*', 'data/default/*', 'data/template/*', 'data/storage/*']},
+    zip_safe=False,
     entry_points={
         'console_scripts': [
             'snippy = snippy.snip:main'

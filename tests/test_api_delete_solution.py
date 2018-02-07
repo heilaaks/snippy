@@ -87,7 +87,7 @@ class TestApiDeleteSolution(object):
         mock_get_utc_time.side_effect = (Solution.UTC1,)*8 + (Solution.UTC2,)*4 + (None,)  # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '245'}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '362'}
         body = {'meta': Solution.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find content with message digest beefbeef'}]}

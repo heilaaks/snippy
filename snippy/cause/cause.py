@@ -23,7 +23,9 @@ import inspect
 import sys
 
 from snippy.logger.logger import Logger
+from snippy.metadata import __docs__
 from snippy.metadata import __homepage__
+from snippy.metadata import __openapi__
 from snippy.metadata import __version__
 
 
@@ -113,7 +115,9 @@ class Cause(object):
 
         response = cls._list
         response['meta'] = {'version': __version__,
-                            'homepage': __homepage__}
+                            'homepage': __homepage__,
+                            'docs': __docs__,
+                            'openapi': __openapi__}
 
         return response
 

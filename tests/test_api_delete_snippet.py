@@ -87,7 +87,7 @@ class TestApiDeleteSnippet(object):
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*4 + (None,)  # [REF_UTC]
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.NETCAT, snippy)
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '245'}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '362'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find content with message digest beefbeef'}]}

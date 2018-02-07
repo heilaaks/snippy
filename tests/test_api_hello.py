@@ -25,7 +25,6 @@ import falcon
 from falcon import testing
 
 from snippy.config.config import Config
-from snippy.metadata import __version__
 from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -44,8 +43,8 @@ class TestApiHello(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call GET /snippy/api/v1/ to get hello!
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '19'}
-        body = {'snippy': __version__}
+        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')   ## apiflow
@@ -67,8 +66,8 @@ class TestApiHello(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call GET /snippy/api/v1/hello to get hello!
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '19'}
-        body = {'snippy': __version__}
+        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/hello')   ## apiflow
@@ -90,8 +89,8 @@ class TestApiHello(object):
 
         ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
         ##        base path is changed from default and it is set in correct format.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '19'}
-        body = {'snippy': __version__}
+        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api/'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')   ## apiflow
@@ -106,8 +105,8 @@ class TestApiHello(object):
         ##        base path configuration is incorrect. The server base path must
         ##        contain trailing slash which is missing from this test. The
         ##        configuration must be updated and the API call must work.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '19'}
-        body = {'snippy': __version__}
+        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')   ## apiflow
@@ -122,8 +121,8 @@ class TestApiHello(object):
         ##        base path configuration is incorrect. The server base path must
         ##        contain leading slash which is missing from this test. The
         ##        configuration must be updated and the API call must work.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '19'}
-        body = {'snippy': __version__}
+        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api/'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')   ## apiflow
@@ -138,8 +137,8 @@ class TestApiHello(object):
         ##        base path configuration is incorrect. The server base path must
         ##        contain leading and trailing slashes which are missing from this
         ##        test. The configuration must be updated and the API call must work.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '19'}
-        body = {'snippy': __version__}
+        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api')   ## apiflow
@@ -153,8 +152,8 @@ class TestApiHello(object):
         ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
         ##        base path configuration is incorrect because it contains two slashes.
         ##        In this case this misconfiguration results default base path.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '19'}
-        body = {'snippy': __version__}
+        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy//api'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1')   ## apiflow

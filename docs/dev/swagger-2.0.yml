@@ -1,10 +1,7 @@
 swagger: "2.0"
 
-################################################################################
-#                              API Information                                 #
-################################################################################
 info:
-  version: "1.0.0"
+  version: "1.0"
   title: Snippy JSON RESTish API
   description: >-
     Snippy provides command and solution snippet management through JSON
@@ -18,9 +15,6 @@ info:
 host: "snippettips.com"
 basePath: "/snippy/api/v1"
 
-################################################################################
-#                                           Paths                              #
-################################################################################
 paths:
   /snippets:
     post:
@@ -282,9 +276,6 @@ paths:
         500:
           description: "Internal server error"
 
-################################################################################
-#                                 Definitions                                  #
-################################################################################
 definitions:
   Resource:
     type: object

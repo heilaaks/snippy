@@ -1,11 +1,10 @@
 ## TODO
-   - [ ] Fix hello metadata.
    - [ ] Add Failure handling and HTTP cause with tests to media collection and resource JSON parse failures.
    - [ ] Add configuration for port.
-   - [ ] FIx GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found
+   - [ ] Add configuration for database location.
    - [ ] Add support for Content-Type: application/vnd.api+json for server responses.
-   - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
-   - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
+   - [ ] Fix GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found
+   - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Fix ints to string in swagger? JSON API specs mandate string?
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
@@ -81,6 +80,7 @@
    - [ ] Python logging is not following ISO8601 format and it cannot have timezone.
 
 ## DONE
+   - [x] Changed meta in helloAPI and error response. Meta is now synchronized and has links to docs and oas.
    - [x] Updated OpenAPI and Swagger specifications to follow the JSON API v1.0 defintions that are used.
    - [x] Added configurable server base path.
    - [x] Fixed --json-logs option with command line interface.

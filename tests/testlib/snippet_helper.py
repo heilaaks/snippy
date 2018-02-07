@@ -26,7 +26,9 @@ from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
 from snippy.content.content import Content
+from snippy.metadata import __docs__
 from snippy.metadata import __homepage__
+from snippy.metadata import __openapi__
 from snippy.metadata import __version__
 from snippy.migrate.migrate import Migrate
 from snippy.snip import Snippy
@@ -126,7 +128,9 @@ class SnippetHelper(object):
         """Return the default HTTP metadata."""
 
         metadata = {'version': __version__,
-                    'homepage': __homepage__}
+                    'homepage': __homepage__,
+                    'docs': __docs__,
+                    'openapi': __openapi__}
 
         return metadata
 

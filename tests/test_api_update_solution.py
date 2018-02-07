@@ -90,7 +90,7 @@ class TestApiUpdateSolution(object):
                                                                'group': Solution.DEFAULTS[Solution.NGINX]['group'],
                                                                'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                                                                'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '252'}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '369'}
         body = {'meta': Solution.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find content with message digest 101010101010101'}]}

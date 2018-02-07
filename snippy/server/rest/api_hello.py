@@ -20,7 +20,12 @@
 """api_hello.py - JSON REST API hello."""
 
 import json
+
 import falcon
+
+from snippy.metadata import __docs__
+from snippy.metadata import __homepage__
+from snippy.metadata import __openapi__
 from snippy.metadata import __version__
 
 
@@ -31,7 +36,10 @@ class ApiHello(object):  # pylint: disable=too-few-public-methods
     def on_get(_, response):
         """Get Hello!"""
 
-        hello = {'snippy': __version__}
+        hello = {'meta': {'version': __version__,
+                          'homepage': __homepage__,
+                          'docs': __docs__,
+                          'openapi': __openapi__}}
         response.content_type = falcon.MEDIA_JSON
         response.body = json.dumps(hello)
         response.status = falcon.HTTP_200

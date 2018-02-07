@@ -184,7 +184,7 @@ class TestApiSearchSolution(object):
         ## Brief: Try to call GET /snippy/api/v1/solutions with sort parameter set to field
         ##        name that is not existing. The sort must fall to default sorting.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '263'}
+        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '380'}
         body = {'meta': Solution.get_http_metadata(),
                 'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
                             'title': 'sort option validation failed for non existent field=notexisting'}]}

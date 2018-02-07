@@ -7,6 +7,7 @@
    - [ ] Add link to specific version API document for the /hello. Like https://readthedocs.com/snippy/0.7.0/api/documents.
    - [ ] Add link to specific OAS specficiation from failure test on top of homepage.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
+   - [ ] Fix ints to string in swagger? JSON API specs mandate string?
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
    - [ ] Fix logger setting with static/class classes like parser.py.

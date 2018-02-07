@@ -15,7 +15,7 @@ Snippy tool outputs always OK after successful operation and NOK with a failure 
 case of failure. You can use debug option with the command to investigate possible problems.
 For more detailed troubleshooting instructions, please refer to the development section.
 
-The workflow section below contains use cases.
+The workflow chapter contains use cases and examples.
 
 .. note::
 

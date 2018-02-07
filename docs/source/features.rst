@@ -22,6 +22,6 @@ of JSON API v1.0 specification.
 
 The command below opens starts the server on localhost port 8080.
 
-.. code:: bash
+.. code-block:: none
 
     snippy --server

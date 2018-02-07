@@ -6,8 +6,7 @@ Terminal
 
 Content managed by Snippy is divided into two categories called snippets and solutions.
 Snippets are short command examples and solutions are longer solution descriptions.
-You can combine metadata like links and tags with the content to help searching and
-tracking the content.
+You can add metadata like links and tags to help to search content.
 
 You can operate snippet or solution content with six basic operations: create, search,
 update, delete, import and export. These operations manage the content in persistent

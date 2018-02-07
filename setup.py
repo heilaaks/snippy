@@ -66,6 +66,7 @@ setup(
     install_requires=['pyyaml'],
     extras_require={
         'dev': dev_require + tests_require + docs_require + server_require,
+        'docs': docs_require,
         'server': server_require,
         'test': tests_require + server_require,
     },

@@ -54,7 +54,7 @@ class TestApiCreateSnippet(object):
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
         snippet = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '507'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '507'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -80,7 +80,7 @@ class TestApiCreateSnippet(object):
                                                                'tags': ['cleanup', 'container', 'docker', 'docker-ce', 'moby'],
                                                                'links': ['https://docs.docker.com/engine/reference/commandline/rm/']}}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '507'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '507'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -106,7 +106,7 @@ class TestApiCreateSnippet(object):
                                                                'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
                                                                'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}}]}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '712'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '712'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -134,7 +134,7 @@ class TestApiCreateSnippet(object):
                                                                'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
                                                                'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}}]}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '712'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '712'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -153,7 +153,7 @@ class TestApiCreateSnippet(object):
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet with only data.
         snippet = {'data': [{'type': 'snippet', 'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)\n']}}]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '358'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '358'}
         body = {'data': [{'type': 'snippets',
                           'id': '1',
                           'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)'],
@@ -200,7 +200,7 @@ class TestApiCreateSnippet(object):
         snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '1073'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1073'}
         body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                          {'type': 'snippets', 'id': '2', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         snippy = Snippy(['snippy', '--server'])
@@ -213,6 +213,39 @@ class TestApiCreateSnippet(object):
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 2
         Snippet.test_content2(compare_content)
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Config, '_storage_file')
+    def test_api_create_snippet_failures(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Try to create snippet with malformed queries."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Trye to call POST /snippy/api/v1/snippets to create new snippet with
+        ##        malformed JSON request.
+        #snippet = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
+        snippet = {'data': Snippet.DEFAULTS[Snippet.REMOVE]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '12'}
+        body = {'data': []}
+        snippy = Snippy(['snippy', '--server'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
+                                                                     headers={'accept': 'application/json'},
+                                                                     body=json.dumps(snippet))
+        print(result.headers)
+        print(result.json)
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
         snippy.release()
         snippy = None
         Database.delete_storage()

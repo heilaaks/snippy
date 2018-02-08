@@ -62,7 +62,7 @@ class TestApiUpdateSolution(object):
                                                                'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                                                                'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
         compare_content = {'2cd0e794244a07f': Solution.DEFAULTS[Solution.NGINX]}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '2871'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2871'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/2cd0e794244a07f8'},
                 'data': {'type': 'solutions', 'id': '1', 'attributes': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])}}
         body['data']['attributes']['filename'] = Const.EMPTY
@@ -90,7 +90,7 @@ class TestApiUpdateSolution(object):
                                                                'group': Solution.DEFAULTS[Solution.NGINX]['group'],
                                                                'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                                                                'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
-        headers = {'content-type': 'application/json; charset=UTF-8', 'content-length': '369'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '369'}
         body = {'meta': Solution.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find content with message digest 101010101010101'}]}

@@ -19,6 +19,7 @@
 
 """validate.py - Validate REST API input."""
 
+from snippy.cause.cause import Cause
 from snippy.logger.logger import Logger
 
 
@@ -42,6 +43,7 @@ class Validate(object):  # pylint: disable=too-few-public-methods
                     collection.append(media['data']['attributes'])
             else:
                 cls._logger.info('media ignored because of unknown type %s', media)
+                Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
         except ValueError:
             cls._logger.info('media collection validation failed and it was ignored %s', media)
 

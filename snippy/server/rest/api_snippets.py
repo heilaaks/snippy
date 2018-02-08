@@ -19,10 +19,6 @@
 
 """api_snippets.py - JSON REST API for Snippets."""
 
-from __future__ import print_function
-
-import falcon
-
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
@@ -51,11 +47,11 @@ class ApiSnippets(object):
             Config.read_source(api)
             contents = contents + Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.collection(Const.SNIPPET, contents)
             response.status = Cause.http_status()
         else:
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
@@ -70,11 +66,11 @@ class ApiSnippets(object):
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.collection(Const.SNIPPET, contents)
             response.status = Cause.http_status()
         else:
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
@@ -91,7 +87,7 @@ class ApiSnippets(object):
         if Cause.is_ok():
             response.status = Cause.http_status()
         else:
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
@@ -115,11 +111,11 @@ class ApiSnippetsDigest(object):
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.resource(Const.SNIPPET, contents, request.uri)
             response.status = Cause.http_status()
         else:
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
@@ -135,11 +131,11 @@ class ApiSnippetsDigest(object):
         Config.read_source(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.resource(Const.SNIPPET, contents, request.uri)
             response.status = Cause.http_status()
         else:
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 
@@ -157,7 +153,7 @@ class ApiSnippetsDigest(object):
         if Cause.is_ok():
             response.status = Cause.http_status()
         else:
-            response.content_type = falcon.MEDIA_JSON
+            response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()
 

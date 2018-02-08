@@ -23,6 +23,7 @@ import json
 
 import falcon
 
+from snippy.config.constants import Constants as Const
 from snippy.metadata import __docs__
 from snippy.metadata import __homepage__
 from snippy.metadata import __openapi__
@@ -40,6 +41,6 @@ class ApiHello(object):  # pylint: disable=too-few-public-methods
                           'homepage': __homepage__,
                           'docs': __docs__,
                           'openapi': __openapi__}}
-        response.content_type = falcon.MEDIA_JSON
+        response.content_type = Const.MEDIA_JSON_API
         response.body = json.dumps(hello)
         response.status = falcon.HTTP_200

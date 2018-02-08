@@ -59,3 +59,6 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     CONTENT_TYPE_YAML = 'yaml'
     CONTENT_TYPE_JSON = 'json'
     CONTENT_TYPE_TEXT = 'text'
+
+    # JSON API media type
+    MEDIA_JSON_API = 'application/vnd.api+json; charset=UTF-8'

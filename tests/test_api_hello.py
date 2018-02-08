@@ -43,7 +43,7 @@ class TestApiHello(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call GET /snippy/api/v1/ to get hello!
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
         body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -66,7 +66,7 @@ class TestApiHello(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call GET /snippy/api/v1/hello to get hello!
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
         body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -89,7 +89,7 @@ class TestApiHello(object):
 
         ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
         ##        base path is changed from default and it is set in correct format.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
         body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api/'])
         snippy.run()
@@ -105,7 +105,7 @@ class TestApiHello(object):
         ##        base path configuration is incorrect. The server base path must
         ##        contain trailing slash which is missing from this test. The
         ##        configuration must be updated and the API call must work.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
         body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api'])
         snippy.run()
@@ -121,7 +121,7 @@ class TestApiHello(object):
         ##        base path configuration is incorrect. The server base path must
         ##        contain leading slash which is missing from this test. The
         ##        configuration must be updated and the API call must work.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
         body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api/'])
         snippy.run()
@@ -137,7 +137,7 @@ class TestApiHello(object):
         ##        base path configuration is incorrect. The server base path must
         ##        contain leading and trailing slashes which are missing from this
         ##        test. The configuration must be updated and the API call must work.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
         body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api'])
         snippy.run()
@@ -152,7 +152,7 @@ class TestApiHello(object):
         ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
         ##        base path configuration is incorrect because it contains two slashes.
         ##        In this case this misconfiguration results default base path.
-        header = {'content-type': 'application/json; charset=UTF-8', 'content-length': '197'}
+        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
         body = {'meta': Snippet.get_http_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy//api'])
         snippy.run()

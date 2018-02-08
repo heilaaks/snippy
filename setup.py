@@ -22,7 +22,7 @@ from setuptools import setup, find_packages
 dev_require = ('logging_tree',)
 tests_require = ('pytest==3.3.2', 'pytest-cov', 'tox', 'codecov', 'mock', 'six', 'flake8')
 docs_require = ('sphinx==1.6.7', 'sphinx-autobuild==0.7.1', 'sphinx_rtd_theme==0.2.4', 'sphinxcontrib-openapi==0.3.2')
-server_require = ('falcon==1.3.0', 'gunicorn==19.7.1')
+server_require = ('falcon==1.3.0', 'gunicorn==19.7.1', 'jsonschema==2.6.0')
 exec(open('snippy/metadata.py').read())
 
 setup(

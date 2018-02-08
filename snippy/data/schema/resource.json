@@ -1,0 +1,5 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "Schema for Snippet resources",
+    "$ref": "file:content.json#/definitions/Resource"
+}

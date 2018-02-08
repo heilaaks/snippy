@@ -275,6 +275,9 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
 
     # REST API from user perspective
     > https://github.com/wearehive/project-guidelines
+    
+    # jsonschema examples
+    > https://medium.com/grammofy/handling-complex-json-schemas-in-python-9eacc04a60cf
 
     # Swagger API
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/"

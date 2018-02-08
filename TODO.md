@@ -11,12 +11,15 @@
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
    - [ ] Fix logger setting with static/class classes like parser.py.
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
+   - [ ] Fix POST/Create to have ID in the response in mail level to contain the digest: 
+   - [ ] Fix A server MUST return 403 Forbidden in response to an unsupported request to create a resource with a client-generated ID.
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Set explicit versions for external modules and update them.
    - [ ] Fix migrate dump load that use YAML error exception that is not imported if try catch inside explodes.
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
    - [ ] Update documents.
    - [ ] Fix the hash from Introduction example. Now it is faked.
+   - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
    - [ ] =============================================================
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Add paginations and offsets to JSON API.

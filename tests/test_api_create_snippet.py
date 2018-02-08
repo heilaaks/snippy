@@ -232,8 +232,8 @@ class TestApiCreateSnippet(object):
 
         ## Brief: Trye to call POST /snippy/api/v1/snippets to create new snippet with
         ##        malformed JSON request.
-        #snippet = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
-        snippet = {'data': Snippet.DEFAULTS[Snippet.REMOVE]}
+        snippet = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
+        snippet = Snippet.DEFAULTS[Snippet.REMOVE]
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '12'}
         body = {'data': []}
         snippy = Snippy(['snippy', '--server'])

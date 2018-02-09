@@ -251,9 +251,13 @@ class Validate(object):  # pylint: disable=too-few-public-methods
         #jsonschema.RefResolver('file://' + base_dir + '/' + 'Fields/Ranges.json', schema)
         #print(data)
 
-        #data = json.load(open('./snippy/data/schema/collection.json'))
+        #schema = json.load(open('./snippy/data/schema/collection.json'))
+        ##resolver = jsonschema.RefResolver.from_schema(schema, base_uri="file:///root/devel/snippy/snippy/data/schema")
+        ##resolver = jsonschema.RefResolver.from_schema(schema)
+        ##resolver = jsonschema.RefResolver('file:///root/devel/snippy/snippy/data/schema/', schema)
+        #resolver = jsonschema.RefResolver('file:///root/devel/snippy/snippy/data/schema/content.json', None)
         #try:
-        #    jsonschema.validate(media, data)
+        #    jsonschema.validate(media, schema, resolver=resolver)
         #    print("VALID")
         #except jsonschema.exceptions.ValidationError as exception:
         #    print("NON VALID")

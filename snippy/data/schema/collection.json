@@ -1,5 +1,5 @@
 {
     "$schema": "http://json-schema.org/draft-04/schema#",
     "title": "Schema for Snippet collections",
-    "$ref": "file:/home/heilaaks/devel/snippy/snippy/data/schema/content.json#/definitions/Collection"
+    "$ref": "content.json#/definitions/Collection"
 }

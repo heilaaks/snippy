@@ -70,8 +70,8 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
     """Validate JSON again schema."""
 
     # Strings are either unicode or str depending on Python version. The
-    # hack below makes possible to have single version from Schema that
-    # worsk with Python 2 or Python 3.
+    # hack below makes it possible to have single version from Schema that
+    # works with Python 2 or Python 3.
     if not Const.PYTHON2:
         string_ = str
     else:
@@ -79,20 +79,20 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
 
     _data = {'type': And(string_,
                          lambda s: s in ('snippet', 'solution'),
-                         error='top level data type must be \'snippet\' or \'solution\''),
+                         error='top level data object type must be \'snippet\' or \'solution\''),
              'attributes': {'data': And(Or(list, string_))}}
     RESOURCE = Schema({'data': _data}, ignore_extra_keys=True)
     COLLECTION = Schema({'data': [_data]}, ignore_extra_keys=True)
 
     @classmethod
     def validate(cls, schema, media):
-        """Validate collection against JSON schema."""
+        """Validate media against JSON schema."""
 
         validated = False
         try:
             Schema(schema).validate(media)
             validated = True
         except SchemaError as exception:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'json data validation failure: {}'.format(exception))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'json media validation failed: {}'.format(exception))
 
         return validated

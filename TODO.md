@@ -1,18 +1,18 @@
 ## TODO
    - [ ] Add configuration for port.
    - [ ] Add configuration for database location.
+   - [ ] Fix OpenAPI specification and return values. The documentation seem to contain HTTP status values that are not exsiting.
+   - [ ] Fix int to string in swagger? JSON API specs mandate string?
    - [ ] Fix GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
-   - [ ] Fix ints to string in swagger? JSON API specs mandate string?
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
    - [ ] Fix logger setting with static/class classes like parser.py.
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
-   - [ ] Fix POST/Create to have ID in the response in mail level to contain the digest: 
+   - [ ] Fix POST/Create to have ID in the response in main level to contain the digest. That is the response data.id must be the digest.
    - [ ] Fix A server MUST return 403 Forbidden in response to an unsupported request to create a resource with a client-generated ID.
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
-   - [ ] Set explicit versions for external modules and update them.
    - [ ] Fix migrate dump load that use YAML error exception that is not imported if try catch inside explodes.
    - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
    - [ ] Update documents.
@@ -83,6 +83,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added explicit versions for most of the external dependencies.
    - [x] Added initial checking of JSON schema against POST and PUT requests.
    - [x] Added Content-Type: application/vnd.api+json for server responses.
    - [x] Changed meta in helloAPI and error response. Meta is now synchronized and has links to docs and oas.

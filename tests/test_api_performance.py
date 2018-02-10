@@ -87,7 +87,7 @@ class TestApiPerformance(object):
         sys.stderr = StringIO()
         sys.stdout = StringIO()
         start = time.time()
-        for _ in range(55):
+        for _ in range(10):
 
             # POST four snippets in list context.
             conn.request('POST',

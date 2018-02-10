@@ -271,10 +271,10 @@ class TestApiCreateSnippet(object):
                                             'versions': '',
                                             'utc': '2017-10-14 19:56:31',
                                             'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '397'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '404'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
-                            'title': "json data validation failure: top level data type must be 'snippet' or 'solution'"}]}
+                            'title': "json media validation failed: top level data object type must be 'snippet' or 'solution'"}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow

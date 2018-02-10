@@ -235,7 +235,7 @@ class TestApiCreateSnippet(object):
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '626'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
-                            'title': "json data validation failure: Key 'data' error:\nOr({'type': And(<class 'str'>, <built-in function len>), 'attributes': {'data': Or(<class 'list'>, <class 'str'>)}}) did not validate 'docker rm --volumes $(docker ps --all --quiet)'\n'docker rm --volumes $(docker ps --all --quiet)' should be instance of 'dict'"}]}  # pylint: disable=line-too-long
+                            'title': "json data validation failure: Key 'data' error:\nOr({'type': And(<class 'str'>, <built-in function len>), 'attributes': {'data': Or(<class 'list'>, <class 'str'>)}}) did not validate 'docker rm --volumes $(docker ps --all --quiet)'\n'docker rm --volumes $(docker ps --all --quiet)' should be instance of 'dict'"}]}  # noqa: E501 # pylint: disable=line-too-long
         # 'not compared because of hash structure in random order inside the string'
         snippy = Snippy(['snippy', '--server'])
         snippy.run()

@@ -2,7 +2,6 @@
    - [ ] Add Failure handling and HTTP cause with tests to media collection and resource JSON parse failures.
    - [ ] Add configuration for port.
    - [ ] Add configuration for database location.
-   - [ ] Add support for Content-Type: application/vnd.api+json for server responses.
    - [ ] Fix GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
@@ -81,8 +80,11 @@
 ## FOLLOW EXTERNAL BUGS/ISSUES
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
    - [ ] Python logging is not following ISO8601 format and it cannot have timezone.
+   - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
+   - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added Content-Type: application/vnd.api+json for server responses.
    - [x] Changed meta in helloAPI and error response. Meta is now synchronized and has links to docs and oas.
    - [x] Updated OpenAPI and Swagger specifications to follow the JSON API v1.0 defintions that are used.
    - [x] Added configurable server base path.

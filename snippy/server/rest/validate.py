@@ -37,7 +37,7 @@ class Validate(object):  # pylint: disable=too-few-public-methods
                                         ignore_extra_keys=True)}
     else:
         _schema = {'collection': Schema({'data': [{'type': And(unicode, len),  # noqa: F821 # pylint: disable=undefined-variable
-                                                   'attributes': {'data': Or(list, unicode)}}]},  # noqa: F821 # pylint: disable=undefined-variable
+                                                   'attributes': {'data': Or(list, unicode)}}]},  # noqa: F821,E501 # pylint: disable=undefined-variable
                                         ignore_extra_keys=True)}
 
     @classmethod

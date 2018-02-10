@@ -31,37 +31,40 @@ class Validate(object):  # pylint: disable=too-few-public-methods
     """Validate REST API input."""
 
     _logger = Logger(__name__).get()
+
+    # Strings are either unicode or str depending on Python version. The
+    # hack below makes possible to have single version from Schema that
+    # worsk with Python 2 or Python 3.
     if not Const.PYTHON2:
-        _schema = {'collection': Schema({'data': [{'type': And(str, len),
-                                                   'attributes': {'data': Or(list, str)}}]},
-                                        ignore_extra_keys=True)}
+        unicode_str = str
     else:
-        _schema = {'collection': Schema({'data': [{'type': And(unicode, len),  # noqa: F821 # pylint: disable=undefined-variable
-                                                   'attributes': {'data': Or(list, unicode)}}]},  # noqa: F821,E501 # pylint: disable=undefined-variable
-                                        ignore_extra_keys=True)}
+        unicode_str = unicode  # noqa: F821 # pylint: disable=undefined-variable
+    _schema = {'collection': Schema({'data': [{'type': And(unicode_str),
+                                               'attributes': {'data': Or(list, unicode_str)}}]},
+                                    ignore_extra_keys=True)}
 
     @classmethod
     def collection(cls, media):
         """Return media as collection of content."""
 
         collection = []
+        validated = False
         try:
             Schema(Validate._schema['collection']).validate(media)
+            validated = True
         except SchemaError as exception:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'json data validation failure: {}'.format(exception))
 
-        try:
-            if 'data' in media and isinstance(media['data'], (list, tuple)):
+        if validated:
+            if isinstance(media['data'], (list, tuple)):
                 for data in media['data']:
                     if 'attributes' in data:
                         collection.append(data['attributes'])
-            elif 'data' in media and isinstance(media['data'], dict):
+            elif isinstance(media['data'], dict):
                 if 'attributes' in media['data']:
                     collection.append(media['data']['attributes'])
             else:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'request ignored because top level data member missing')
-        except ValueError:
-            cls._logger.info('media collection validation failed and it was ignored %s', media)
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(media['data'])))  # noqa: E501 # pylint: disable=line-too-long
 
         return tuple(collection)
 

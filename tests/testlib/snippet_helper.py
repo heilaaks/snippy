@@ -244,8 +244,9 @@ class SnippetHelper(object):
     def six_error_body(json):
         """Make Python2 and Python3 compatible error body."""
 
-        for error in json['errors']:
-            error['title'] = 'not compared because of hash structure in random order inside the string'
+        if Const.PYTHON2:
+            for error in json['errors']:
+                error['title'] = 'not compared because of hash structure in random order inside the string'
 
         return SnippetHelper.sorted_json_list(json)
 

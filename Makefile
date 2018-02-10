@@ -28,6 +28,9 @@ lint:
 	-pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
 	-flake8 --config tests/flake8/flake8.ini snippy
 
+schema:
+	openapi2jsonschema docs/dev/swagger-2.0.yml -o snippy/data/schema/
+
 docker: clean clean-db
 	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .
 

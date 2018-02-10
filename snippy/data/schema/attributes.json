@@ -1,0 +1,67 @@
+{
+  "$schema": "http://json-schema.org/schema#", 
+  "required": [
+    "data"
+  ], 
+  "type": "object", 
+  "properties": {
+    "category": {
+      "enum": [
+        "snippet", 
+        "solution"
+      ], 
+      "type": "string", 
+      "description": "Automatically assigned content category."
+    }, 
+    "utc": {
+      "type": "string", 
+      "description": "Optional UTC timestamp in ISO 8601 format that is automatically assigned if left out."
+    }, 
+    "group": {
+      "default": "default", 
+      "type": "string", 
+      "description": "Optional group to which the content belongs."
+    }, 
+    "runalias": {
+      "type": "string", 
+      "description": "Optional alias to run the content."
+    }, 
+    "links": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array", 
+      "description": "Optional list of refrence links."
+    }, 
+    "tags": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array", 
+      "description": "Optional list of tags."
+    }, 
+    "versions": {
+      "type": "string", 
+      "description": "Optional list of services and versions related to the snippet."
+    }, 
+    "brief": {
+      "type": "string", 
+      "description": "Optional brief description of the content."
+    }, 
+    "filename": {
+      "type": "string", 
+      "description": "Optional filename that that defines automatically used filename when content is exported."
+    }, 
+    "data": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array", 
+      "description": "Mandatory content data in list context with one line per element."
+    }, 
+    "digest": {
+      "type": "string", 
+      "description": "Automatically assigned message digest that uniquely identifies the content."
+    }
+  }
+}

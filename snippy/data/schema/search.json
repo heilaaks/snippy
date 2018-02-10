@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/schema#", 
+  "type": "object", 
+  "properties": {
+    "sall": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array", 
+      "description": "Search keywords from all fields."
+    }, 
+    "sgrp": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array", 
+      "description": "Search keywords only from group field."
+    }, 
+    "filter": {
+      "type": "string", 
+      "description": "Filter search result with regexp."
+    }, 
+    "stag": {
+      "items": {
+        "type": "string"
+      }, 
+      "type": "array", 
+      "description": "Search keywords only from tag field."
+    }, 
+    "data": {
+      "type": "string", 
+      "description": "Search only from content data."
+    }, 
+    "digest": {
+      "type": "string", 
+      "description": "Search only based on message digest."
+    }
+  }
+}

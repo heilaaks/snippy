@@ -1,0 +1,229 @@
+{
+  "definitions": {
+    "Search": {
+      "type": "object", 
+      "properties": {
+        "filter": {
+          "type": "string", 
+          "description": "Filter search result with regexp."
+        }, 
+        "stag": {
+          "items": {
+            "type": "string"
+          }, 
+          "type": "array", 
+          "description": "Search keywords only from tag field."
+        }, 
+        "sall": {
+          "items": {
+            "type": "string"
+          }, 
+          "type": "array", 
+          "description": "Search keywords from all fields."
+        }, 
+        "data": {
+          "type": "string", 
+          "description": "Search only from content data."
+        }, 
+        "sgrp": {
+          "items": {
+            "type": "string"
+          }, 
+          "type": "array", 
+          "description": "Search keywords only from group field."
+        }, 
+        "digest": {
+          "type": "string", 
+          "description": "Search only based on message digest."
+        }
+      }
+    }, 
+    "Errors": {
+      "required": [
+        "meta", 
+        "errors"
+      ], 
+      "type": "object", 
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        }, 
+        "errors": {
+          "items": {
+            "$ref": "#/definitions/Error"
+          }, 
+          "type": "array"
+        }
+      }
+    }, 
+    "Resource": {
+      "required": [
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/Data"
+        }, 
+        "links": {
+          "$ref": "#/definitions/Links"
+        }
+      }
+    }, 
+    "Links": {
+      "type": "object", 
+      "properties": {
+        "self": {
+          "type": "string", 
+          "description": "Link pointing to resource."
+        }
+      }
+    }, 
+    "Collection": {
+      "required": [
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "data": {
+          "items": {
+            "$ref": "#/definitions/Data"
+          }, 
+          "type": "array"
+        }
+      }
+    }, 
+    "Meta": {
+      "required": [
+        "version", 
+        "homepage"
+      ], 
+      "type": "object", 
+      "properties": {
+        "version": {
+          "type": "string", 
+          "description": "Server version"
+        }, 
+        "homepage": {
+          "type": "string", 
+          "description": "Server homepage URL"
+        }
+      }
+    }, 
+    "Error": {
+      "required": [
+        "status", 
+        "statusString", 
+        "module", 
+        "title"
+      ], 
+      "type": "object", 
+      "properties": {
+        "status": {
+          "type": "string", 
+          "description": "HTTP status code"
+        }, 
+        "statusString": {
+          "type": "string", 
+          "description": "HTTP status as text string"
+        }, 
+        "module": {
+          "type": "string", 
+          "description": "Location of error"
+        }, 
+        "title": {
+          "type": "string", 
+          "description": "Message describing the error."
+        }
+      }
+    }, 
+    "Attributes": {
+      "required": [
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "category": {
+          "enum": [
+            "snippet", 
+            "solution"
+          ], 
+          "type": "string", 
+          "description": "Automatically assigned content category."
+        }, 
+        "utc": {
+          "type": "string", 
+          "description": "Optional UTC timestamp in ISO 8601 format that is automatically assigned if left out."
+        }, 
+        "group": {
+          "default": "default", 
+          "type": "string", 
+          "description": "Optional group to which the content belongs."
+        }, 
+        "runalias": {
+          "type": "string", 
+          "description": "Optional alias to run the content."
+        }, 
+        "links": {
+          "items": {
+            "type": "string"
+          }, 
+          "type": "array", 
+          "description": "Optional list of refrence links."
+        }, 
+        "tags": {
+          "items": {
+            "type": "string"
+          }, 
+          "type": "array", 
+          "description": "Optional list of tags."
+        }, 
+        "versions": {
+          "type": "string", 
+          "description": "Optional list of services and versions related to the snippet."
+        }, 
+        "brief": {
+          "type": "string", 
+          "description": "Optional brief description of the content."
+        }, 
+        "filename": {
+          "type": "string", 
+          "description": "Optional filename that that defines automatically used filename when content is exported."
+        }, 
+        "data": {
+          "items": {
+            "type": "string"
+          }, 
+          "type": "array", 
+          "description": "Mandatory content data in list context with one line per element."
+        }, 
+        "digest": {
+          "type": "string", 
+          "description": "Automatically assigned message digest that uniquely identifies the content."
+        }
+      }
+    }, 
+    "Data": {
+      "required": [
+        "type", 
+        "attributes"
+      ], 
+      "type": "object", 
+      "properties": {
+        "attributes": {
+          "$ref": "#/definitions/Attributes"
+        }, 
+        "type": {
+          "enum": [
+            "snippet", 
+            "solution"
+          ], 
+          "type": "string"
+        }, 
+        "id": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

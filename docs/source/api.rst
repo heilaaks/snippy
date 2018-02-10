@@ -1,4 +1,4 @@
 Api
 ===
 
-.. openapi:: ../dev/swagger-2.0.yml
+.. openapi:: ../../snippy/data/openapi/swagger-2.0.yml

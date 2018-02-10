@@ -44,7 +44,7 @@ class TestApiUpdateSolution(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_update_solution_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_update_solution(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Update solution from API."""
 
         mock_isfile.return_value = True
@@ -102,6 +102,45 @@ class TestApiUpdateSolution(object):
         assert result.headers == headers
         assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
         assert result.status == falcon.HTTP_404
+        assert len(Database.get_solutions()) == 1
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Config, '_storage_file')
+    def test_api_update_solution_failures(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Try to update solution with malformed queries."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Solution.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Try to call PUT /snippy/api/v1/solutions to update new solution with
+        ##        malformed JSON request.
+        snippy = Solution.add_one(Solution.BEATS)
+        solution = {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                    'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
+                    'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                    'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
+                    'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}
+        headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2707'}
+        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2708'}
+        body = {'meta': Solution.get_http_metadata(),
+                'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
+                            'title': 'not compared because of hash structure in random order inside the string'}]}
+        snippy = Snippy(['snippy', '--server'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/solutions/a96accc25dd23ac0',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    body=json.dumps(solution))
+        assert result.headers == headers_p2 or result.headers == headers_p3
+        assert Solution.error_body(result.json) == Solution.error_body(body)
+        assert result.status == falcon.HTTP_400
         assert len(Database.get_solutions()) == 1
         snippy.release()
         snippy = None

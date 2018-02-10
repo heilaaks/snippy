@@ -109,9 +109,10 @@ class ApiSolutionsDigest(object):
 
         self.logger.debug('run put /snippy/api/v1/solutions/{digest} = %s', digest)
         resource_ = Validate.resource(request.media, digest)
-        api = Api(Const.SOLUTION, Api.UPDATE, resource_)
-        Config.read_source(api)
-        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if resource_:
+            api = Api(Const.SOLUTION, Api.UPDATE, resource_)
+            Config.read_source(api)
+            contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.resource(Const.SOLUTION, contents, request.uri)

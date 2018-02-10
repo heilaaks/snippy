@@ -41,7 +41,7 @@ class TestApiCreateSnippet(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_create_snippet_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_create_snippet(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Create one snippet from API."""
 
         mock_isfile.return_value = True
@@ -59,7 +59,6 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
-        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_201
@@ -187,7 +186,7 @@ class TestApiCreateSnippet(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_create_snippets_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_create_snippets(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Create list of snippets from API."""
 
         mock_isfile.return_value = True
@@ -230,20 +229,59 @@ class TestApiCreateSnippet(object):
         mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Try to call POST /snippy/api/v1/snippets to create new snippet with
-        ##        malformed JSON request.
+        ##        malformed JSON request. In this case the top level json object is
+        ##        incorrect.
         snippet = Snippet.DEFAULTS[Snippet.REMOVE]
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '601'}
+        headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '656'}
+        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '652'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
-                            'title': "json data validation failure: Key 'data' error:\nOr({'type': And(<class 'str'>), 'attributes': {'data': Or(<class 'list'>, <class 'str'>)}}) did not validate 'docker rm --volumes $(docker ps --all --quiet)'\n'docker rm --volumes $(docker ps --all --quiet)' should be instance of 'dict'"}]}  # noqa: E501 # pylint: disable=line-too-long
-        # 'not compared because of hash structure in random order inside the string'
+                            'title': 'not compared because of hash structure in random order inside the string'}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
-        assert Snippet.six_error_hdr(result.headers, result.json) == headers
-        assert Snippet.six_error_body(result.json) == Snippet.six_error_body(body)
+        assert result.headers == headers_p2 or result.headers == headers_p3
+        assert Snippet.error_body(result.json) == Snippet.error_body(body)
+        assert result.status == falcon.HTTP_400
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Try to call POST /snippy/api/v1/snippets to create new snippet with
+        ##        malformed JSON request. In this case the top level data JSON object
+        ##        type is not 'snippet' or 'solution'.
+        snippet = {'data': [{'type': 'snippe',
+                             'id': '1',
+                             'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)'],
+                                            'brief': '',
+                                            'group':
+                                            'default',
+                                            'tags': [],
+                                            'links': [],
+                                            'category': 'snippet',
+                                            'filename': '',
+                                            'runalias': '',
+                                            'versions': '',
+                                            'utc': '2017-10-14 19:56:31',
+                                            'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '397'}
+        body = {'meta': Snippet.get_http_metadata(),
+                'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
+                            'title': "json data validation failure: top level data type must be 'snippet' or 'solution'"}]}
+        snippy = Snippy(['snippy', '--server'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
+                                                                     headers={'accept': 'application/json'},
+                                                                     body=json.dumps(snippet))
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_400
         snippy.release()
         snippy = None

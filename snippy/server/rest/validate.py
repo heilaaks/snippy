@@ -32,30 +32,12 @@ class Validate(object):  # pylint: disable=too-few-public-methods
 
     _logger = Logger(__name__).get()
 
-    # Strings are either unicode or str depending on Python version. The
-    # hack below makes possible to have single version from Schema that
-    # worsk with Python 2 or Python 3.
-    if not Const.PYTHON2:
-        unicode_str = str
-    else:
-        unicode_str = unicode  # noqa: F821 # pylint: disable=undefined-variable
-    _schema = {'collection': Schema({'data': [{'type': And(unicode_str),
-                                               'attributes': {'data': Or(list, unicode_str)}}]},
-                                    ignore_extra_keys=True)}
-
     @classmethod
     def collection(cls, media):
         """Return media as collection of content."""
 
         collection = []
-        validated = False
-        try:
-            Schema(Validate._schema['collection']).validate(media)
-            validated = True
-        except SchemaError as exception:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'json data validation failure: {}'.format(exception))
-
-        if validated:
+        if JsonSchema.validate(JsonSchema.COLLECTION, media):
             if isinstance(media['data'], (list, tuple)):
                 for data in media['data']:
                     if 'attributes' in data:
@@ -73,14 +55,44 @@ class Validate(object):  # pylint: disable=too-few-public-methods
         """Return media as specific resource with digest."""
 
         resource_ = {}
-        try:
-            if 'data' in media and isinstance(media['data'], dict):
+        if JsonSchema.validate(JsonSchema.RESOURCE, media):
+            if isinstance(media['data'], dict):
                 if 'attributes' in media['data']:
                     resource_ = media['data']['attributes']
                     resource_['digest'] = digest
             else:
-                cls._logger.info('media ignored because of unknown type %s', media)
-        except ValueError:
-            cls._logger.info('media resource validation failed and it was ignored %s', media)
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(media['data'])))  # noqa: E501 # pylint: disable=line-too-long
 
         return resource_
+
+
+class JsonSchema(object):  # pylint: disable=too-few-public-methods
+    """Validate JSON again schema."""
+
+    # Strings are either unicode or str depending on Python version. The
+    # hack below makes possible to have single version from Schema that
+    # worsk with Python 2 or Python 3.
+    if not Const.PYTHON2:
+        string_ = str
+    else:
+        string_ = unicode  # noqa: F821 # pylint: disable=undefined-variable
+
+    _data = {'type': And(string_,
+                         lambda s: s in ('snippet', 'solution'),
+                         error='top level data type must be \'snippet\' or \'solution\''),
+             'attributes': {'data': And(Or(list, string_))}}
+    RESOURCE = Schema({'data': _data}, ignore_extra_keys=True)
+    COLLECTION = Schema({'data': [_data]}, ignore_extra_keys=True)
+
+    @classmethod
+    def validate(cls, schema, media):
+        """Validate collection against JSON schema."""
+
+        validated = False
+        try:
+            Schema(schema).validate(media)
+            validated = True
+        except SchemaError as exception:
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'json data validation failure: {}'.format(exception))
+
+        return validated

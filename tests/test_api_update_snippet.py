@@ -43,7 +43,7 @@ class TestApiUpdateSnippet(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_update_snippet_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_update_snippet(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Update snippet from API."""
 
         mock_isfile.return_value = True
@@ -97,6 +97,45 @@ class TestApiUpdateSnippet(object):
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_404
+        assert len(Database.get_snippets()) == 1
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Config, '_storage_file')
+    def test_api_update_snippet_failure(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Try to update snippet with malformed queries."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Try to call PUT /snippy/api/v1/snippets to update new snippet with
+        ##        malformed JSON request.
+        snippy = Snippet.add_one(Snippet.FORCED)
+        snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                   'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                   'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                   'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+                   'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}
+        headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '442'}
+        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '443'}
+        body = {'meta': Snippet.get_http_metadata(),
+                'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
+                            'title': 'not compared because of hash structure in random order inside the string'}]}
+        snippy = Snippy(['snippy', '--server'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/53908d68425c61dc',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    body=json.dumps(snippet))
+        assert result.headers == headers_p2 or result.headers == headers_p3
+        assert Snippet.error_body(result.json) == Snippet.error_body(body)
+        assert result.status == falcon.HTTP_400
         assert len(Database.get_snippets()) == 1
         snippy.release()
         snippy = None

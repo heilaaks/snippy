@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Add Failure handling and HTTP cause with tests to media collection and resource JSON parse failures.
    - [ ] Add configuration for port.
    - [ ] Add configuration for database location.
    - [ ] Fix GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found
@@ -84,6 +83,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added initial checking of JSON schema against POST and PUT requests.
    - [x] Added Content-Type: application/vnd.api+json for server responses.
    - [x] Changed meta in helloAPI and error response. Meta is now synchronized and has links to docs and oas.
    - [x] Updated OpenAPI and Swagger specifications to follow the JSON API v1.0 defintions that are used.

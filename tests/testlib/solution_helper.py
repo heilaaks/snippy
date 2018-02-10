@@ -395,6 +395,12 @@ class SolutionHelper(object):
         return Snippet.sorted_json_list(json_data)
 
     @staticmethod
+    def error_body(body):
+        """Make Python2 and Python3 compatible error body."""
+
+        return Snippet.error_body(body)
+
+    @staticmethod
     def test_content(snippy, mock_file, dictionary):
         """Compare given dictionary against content stored in database based on message digest."""
 

@@ -1,0 +1,23 @@
+{
+  "$schema": "http://json-schema.org/schema#", 
+  "required": [
+    "type", 
+    "attributes"
+  ], 
+  "type": "object", 
+  "properties": {
+    "attributes": {
+      "$ref": "_definitions.json#/definitions/Attributes"
+    }, 
+    "type": {
+      "enum": [
+        "snippet", 
+        "solution"
+      ], 
+      "type": "string"
+    }, 
+    "id": {
+      "type": "string"
+    }
+  }
+}

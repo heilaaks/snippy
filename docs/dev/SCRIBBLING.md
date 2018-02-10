@@ -278,6 +278,14 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     
     # jsonschema examples
     > https://medium.com/grammofy/handling-complex-json-schemas-in-python-9eacc04a60cf
+    
+    # Open API to JSON schema
+    $ openapi2jsonschema docs/dev/swagger-2.0.yml -o snippy/data/schema/ --stand-alone
+    openapi2jsonschema --stand-alone docs/dev/swagger-2.0.yml -o snippy/data/schema/
+    #$ openapi2jsonschema https://raw.githubusercontent.com/kubernetes/kubernetes/master/api/openapi-spec/swagger.json
+    #$ openapi2jsonschema docs/dev/swagger.yml --stand-alone
+    #$ openapi2jsonschema https://github.com/heilaaks/snippy/blob/master/docs/dev/swagger-2.0.yml
+    #$ openapi2jsonschema https://github.com/heilaaks/snippy/blob/master/docs/dev/swagger-2.0.yml --stand-alone
 
     # Swagger API
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/"

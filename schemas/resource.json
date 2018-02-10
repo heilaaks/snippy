@@ -1,0 +1,15 @@
+{
+  "$schema": "http://json-schema.org/schema#", 
+  "required": [
+    "data"
+  ], 
+  "type": "object", 
+  "properties": {
+    "data": {
+      "$ref": "_definitions.json#/definitions/Data"
+    }, 
+    "links": {
+      "$ref": "_definitions.json#/definitions/Links"
+    }
+  }
+}

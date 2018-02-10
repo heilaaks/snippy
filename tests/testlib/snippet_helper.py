@@ -229,6 +229,27 @@ class SnippetHelper(object):
         return json
 
     @staticmethod
+    def six_error_hdr(header, body):
+        """Make Python2 and Python3 compatible error header."""
+
+        if Const.PYTHON2:
+            for error in body['errors']:
+                count_ = error['title'].count("unicode")
+                # Convert 'unicode' to 'str' to make same comparisong in Python2 and Python3.
+                header['content-length'] = str(int(header['content-length']) - count_*4 + 1)
+
+        return header
+
+    @staticmethod
+    def six_error_body(json):
+        """Make Python2 and Python3 compatible error body."""
+
+        for error in json['errors']:
+            error['title'] = 'not compared because of hash structure in random order inside the string'
+
+        return SnippetHelper.sorted_json_list(json)
+
+    @staticmethod
     def test_content(snippy, mock_file, dictionary):
         """Compare given dictionary against content stored in database based on message digest."""
 

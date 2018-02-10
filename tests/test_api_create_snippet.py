@@ -28,8 +28,6 @@ from falcon import testing
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.metadata import __homepage__
-from snippy.metadata import __version__
 from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -61,6 +59,7 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
+        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_201
@@ -230,22 +229,22 @@ class TestApiCreateSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Trye to call POST /snippy/api/v1/snippets to create new snippet with
+        ## Brief: Try to call POST /snippy/api/v1/snippets to create new snippet with
         ##        malformed JSON request.
-        snippet = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         snippet = Snippet.DEFAULTS[Snippet.REMOVE]
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '12'}
-        body = {'data': []}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '626'}
+        body = {'meta': Snippet.get_http_metadata(),
+                'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
+                            'title': "json data validation failure: Key 'data' error:\nOr({'type': And(<class 'str'>, <built-in function len>), 'attributes': {'data': Or(<class 'list'>, <class 'str'>)}}) did not validate 'docker rm --volumes $(docker ps --all --quiet)'\n'docker rm --volumes $(docker ps --all --quiet)' should be instance of 'dict'"}]}  # pylint: disable=line-too-long
+        # 'not compared because of hash structure in random order inside the string'
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
-        print(result.headers)
-        print(result.json)
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
+        assert Snippet.six_error_hdr(result.headers, result.json) == headers
+        assert Snippet.six_error_body(result.json) == Snippet.six_error_body(body)
+        assert result.status == falcon.HTTP_400
         snippy.release()
         snippy = None
         Database.delete_storage()

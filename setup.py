@@ -19,10 +19,22 @@
 
 from setuptools import setup, find_packages
 
-dev_require = ('logging_tree==1.7', 'openapi2jsonschema==0.7.0')
-tests_require = ('pytest==3.3.2', 'pytest-cov', 'tox', 'codecov', 'mock', 'six', 'flake8')
-docs_require = ('sphinx==1.6.7', 'sphinx-autobuild==0.7.1', 'sphinx_rtd_theme==0.2.4', 'sphinxcontrib-openapi==0.3.2')
-server_require = ('falcon==1.3.0', 'gunicorn==19.7.1', 'schema==0.6.7')
+server_require = ('falcon==1.3.0',
+                  'gunicorn==19.7.1',
+                  'schema==0.6.7')
+dev_require = ('logging_tree==1.7',
+               'openapi2jsonschema==0.7.0')
+tests_require = ('codecov==2.0.15',
+                 'flake8==3.5.0',
+                 'mock==2.0.0',
+                 'pytest==3.3.2',
+                 'pytest-cov==2.5.1',
+                 'six==1.11.0',
+                 'tox==2.9.1')
+docs_require = ('sphinx==1.6.7',
+                'sphinx-autobuild==0.7.1',
+                'sphinxcontrib-openapi==0.3.2',
+                'sphinx_rtd_theme==0.2.4')
 exec(open('snippy/metadata.py').read())
 
 setup(
@@ -63,7 +75,7 @@ setup(
             'snippy = snippy.snip:main'
         ],
     },
-    install_requires=['pyyaml'],
+    install_requires=['pyyaml==3.12'],
     extras_require={
         'dev': dev_require + tests_require + docs_require + server_require,
         'docs': docs_require,

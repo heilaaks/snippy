@@ -14,7 +14,6 @@ info:
     url: "https://github.com/heilaaks/snippy/blob/master/LICENSE"
 host: "snippettips.com"
 basePath: "/snippy/api/v1"
-
 paths:
   /snippets:
     post:
@@ -23,13 +22,13 @@ paths:
       summary: "Add new snippets"
       description: ""
       consumes:
-      - "application/json; charset=UTF-8"
+      - "application/vnd.api+json; charset=UTF-8"
       produces:
-      - "application/json; charset=UTF-8"
+      - "application/vnd.api+json; charset=UTF-8"
       parameters:
       - name: snippet
         in: body
-        description: "New snippet that is stored"
+        description: "New snippet to be created"
         required: true
         schema:
           $ref: "#/definitions/Collection"
@@ -38,8 +37,8 @@ paths:
           description: "Snippet created"
           schema:
             $ref: "#/definitions/Collection"
-        405:
-          description: "Invalid input"
+        400:
+          description: "Request not syntactically correct"
           schema:
             $ref: '#/definitions/Errors'
         500:
@@ -50,68 +49,20 @@ paths:
       summary: "Search snippets"
       description: ""
       produces:
-      - "application/json; charset=UTF-8"
+      - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - name: sall
-          type: array
-          items:
-            type: string
-          in: query
-          required: false
-          description: "Search keywords from all fields."
-        - name: stag
-          type: array
-          items:
-            type: string
-          in: query
-          required: false
-          description: "Search keywords only from tag field."
-        - name: sgrp
-          type: array
-          items:
-            type: string
-          in: query
-          required: false
-          description: "Search keywords only from group field."
-        - name: digest
-          type: string
-          in: query
-          required: false
-          description: "Search only based on message digest field."
-        - name: data
-          type: string
-          in: query
-          required: false
-          description: "Search only from content data."
-        - name: filter
-          type: string
-          in: query
-          required: false
-          description: "Filter search result with provided regexp."
-        - name: limit
-          type: integer
-          default: 20
-          in: query
-          required: false
-          description: "Limit query result list."
-        - name: sort
-          type: string
-          default: brief
-          enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest]
-          in: query
-          required: false
-          description: "Sort based on defined field."
-        - name: fields
-          type: array
-          items:
-            type: string
-            enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest]
-          in: query
-          required: false
-          description: "Limit fields that are returned in result list."
+        - $ref: '#/parameters/sall'
+        - $ref: '#/parameters/stag'
+        - $ref: '#/parameters/sgrp'
+        - $ref: '#/parameters/digest'
+        - $ref: '#/parameters/data'
+        - $ref: '#/parameters/filter'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/sort'
+        - $ref: '#/parameters/fields'
       responses:
         200:
-          description: OK
+          description: "OK"
           schema:
             $ref: "#/definitions/Collection"
         400:
@@ -130,37 +81,11 @@ paths:
       summary: "Delete snippets"
       description: ""
       parameters:
-        - name: sall
-          type: array
-          items:
-            type: string
-          in: query
-          required: false
-          description: "Search keywords from all fields."
-        - name: stag
-          type: array
-          items:
-            type: string
-          in: query
-          required: false
-          description: "Search keywords only from tag field."
-        - name: sgrp
-          type: array
-          items:
-            type: string
-          in: query
-          required: false
-          description: "Search keywords only from group field."
-        - name: digest
-          type: string
-          in: query
-          required: false
-          description: "Search only based on message digest."
-        - name: data
-          type: string
-          in: query
-          required: false
-          description: "Search only from content data."
+        - $ref: '#/parameters/sall'
+        - $ref: '#/parameters/stag'
+        - $ref: '#/parameters/sgrp'
+        - $ref: '#/parameters/digest'
+        - $ref: '#/parameters/data'
       responses:
         204:
           description: "Snippet deleted"
@@ -172,13 +97,12 @@ paths:
           description: "Snippet not found"
           schema:
             $ref: '#/definitions/Errors'
-        405:
+        409:
           description: "More than one snippet found"
           schema:
             $ref: '#/definitions/Errors'
         500:
           description: "Internal server error"
-
   /snippets/{digest}:
     put:
       tags:
@@ -186,9 +110,9 @@ paths:
       summary: "Update defined snippet based on digest"
       description: ""
       consumes:
-      - "application/json; charset=UTF-8"
+      - "application/vnd.api+json; charset=UTF-8"
       produces:
-      - "application/json; charset=UTF-8"
+      - "application/vnd.api+json; charset=UTF-8"
       parameters:
         - name: digest
           in: path
@@ -215,10 +139,6 @@ paths:
           description: "Snippet not found"
           schema:
             $ref: '#/definitions/Errors'
-        405:
-          description: "Validation exception"
-          schema:
-            $ref: '#/definitions/Errors'    
         500:
           description: "Internal server error"
     get:
@@ -227,7 +147,7 @@ paths:
       summary: "Search defined snippet based on digest"
       description: ""
       produces:
-      - "application/json; charset=UTF-8"
+      - "application/vnd.api+json; charset=UTF-8"
       parameters:
         - name: digest
           in: path
@@ -265,17 +185,20 @@ paths:
       responses:
         204:
           description: "Snippet deleted"
+        400:
+          description: "Request not syntactically correct"
+          schema:
+            $ref: '#/definitions/Errors'
         404:
           description: "Snippet not found"
           schema:
             $ref: '#/definitions/Errors'
-        405:
+        409:
           description: "More than one snippet found"
           schema:
             $ref: '#/definitions/Errors'
         500:
           description: "Internal server error"
-
 definitions:
   Resource:
     type: object
@@ -300,7 +223,7 @@ definitions:
     properties:
       self:
         type: string
-        description: Link pointing to resource.
+        description: "Link pointing to resource."
   Data:
     type: object
     properties:
@@ -323,30 +246,30 @@ definitions:
         type: array
         items:
           type: string
-        description: Mandatory content data in list context with one line per element.
+        description: "Mandatory content data in list context with one line per element."
       brief:
         type: string
-        description: Optional brief description of the content.
+        description: "Optional brief description of the content."
       group:
         type: string
-        description: Optional group to which the content belongs.
+        description: "Optional group to which the content belongs."
         default: default
       tags:
         type: array
         items:
           type: string
-        description: Optional list of tags.
+        description: "Optional list of tags."
       links:
         type: array
         items:
           type: string
-        description: Optional list of refrence links.
+        description: "Optional list of refrence links."
       category:
         type: string
         enum:
           - snippet
           - solution
-        description: Automatically assigned content category.
+        description: "Automatically assigned content category."
       filename:
         type: string
         description: >-
@@ -354,10 +277,10 @@ definitions:
           content is exported.
       runalias:
         type: string
-        description: Optional alias to run the content.
+        description: "Optional alias to run the content."
       versions:
         type: string
-        description: Optional list of services and versions related to the snippet.
+        description: "Optional list of services and versions related to the snippet."
       utc:
         type: string
         description: >-
@@ -387,10 +310,10 @@ definitions:
     properties:
       version:
         type: string
-        description: Server version
+        description: "Server version."
       homepage:
         type: string
-        description: Server homepage URL
+        description: "Server homepage URL."
     required:
       - version
       - homepage
@@ -399,45 +322,85 @@ definitions:
     properties:
       status:
         type: string
-        description: HTTP status code
+        description: "HTTP status code."
       statusString:
         type: string
-        description: HTTP status as text string
+        description: "HTTP status as text string."
       module:
         type: string
-        description: Location of error
+        description: "Location of error."
       title:
         type: string
-        description: Message describing the error.
+        description: "Message describing the error."
     required:
       - status
       - statusString
       - module
       - title
-  Search:
-    type: object
-    properties:
-      sall:
-        type: array
-        items:
-          type: string
-        description: Search keywords from all fields.
-      stag:
-        type: array
-        items:
-          type: string
-        description: Search keywords only from tag field.
-      sgrp:
-        type: array
-        items:
-          type: string
-        description: Search keywords only from group field.
-      digest:
-        type: string
-        description: Search only based on message digest.
-      data:
-        type: string
-        description: Search only from content data.
-      filter:
-        type: string
-        description: Filter search result with regexp.
+parameters:
+  sall:
+    name: sall
+    type: array
+    items:
+      type: string
+    in: query
+    required: false
+    description: "Search keywords from all fields."
+  stag:
+    name: stag
+    type: array
+    items:
+      type: string
+    in: query
+    required: false
+    description: "Search keywords only from tag field."
+  sgrp:
+    name: sgrp
+    type: array
+    items:
+      type: string
+    in: query
+    required: false
+    description: "Search keywords only from group field."
+  digest:
+    name: digest
+    type: string
+    in: query
+    required: false
+    description: "Search only based on message digest field."
+  data:
+    name: data
+    type: string
+    in: query
+    required: false
+    description: "Search only from content data."
+  filter:
+    name: filter
+    type: string
+    in: query
+    required: false
+    description: "Filter search result with provided regexp."
+  limit:
+    name: limit
+    type: string
+    default: 20
+    in: query
+    required: false
+    description: "Limit query result list."
+  sort:
+    name: sort
+    type: string
+    default: brief
+    enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest]
+    in: query
+    required: false
+    description: "Sort based on defined field."
+  fields:
+    name: fields
+    type: array
+    items:
+      type: string
+      enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest]
+    in: query
+    required: false
+    description: "Limit fields that are returned in result list."

@@ -8,11 +8,11 @@
   "properties": {
     "version": {
       "type": "string", 
-      "description": "Server version"
+      "description": "Server version."
     }, 
     "homepage": {
       "type": "string", 
-      "description": "Server homepage URL"
+      "description": "Server homepage URL."
     }
   }
 }

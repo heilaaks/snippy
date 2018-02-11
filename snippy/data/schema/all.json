@@ -1,9 +1,6 @@
 {
   "oneOf": [
     {
-      "$ref": "_definitions.json#/definitions/Search"
-    }, 
-    {
       "$ref": "_definitions.json#/definitions/Errors"
     }, 
     {

@@ -1,43 +1,5 @@
 {
   "definitions": {
-    "Search": {
-      "type": "object", 
-      "properties": {
-        "filter": {
-          "type": "string", 
-          "description": "Filter search result with regexp."
-        }, 
-        "stag": {
-          "items": {
-            "type": "string"
-          }, 
-          "type": "array", 
-          "description": "Search keywords only from tag field."
-        }, 
-        "sall": {
-          "items": {
-            "type": "string"
-          }, 
-          "type": "array", 
-          "description": "Search keywords from all fields."
-        }, 
-        "data": {
-          "type": "string", 
-          "description": "Search only from content data."
-        }, 
-        "sgrp": {
-          "items": {
-            "type": "string"
-          }, 
-          "type": "array", 
-          "description": "Search keywords only from group field."
-        }, 
-        "digest": {
-          "type": "string", 
-          "description": "Search only based on message digest."
-        }
-      }
-    }, 
     "Errors": {
       "required": [
         "meta", 
@@ -102,11 +64,11 @@
       "properties": {
         "version": {
           "type": "string", 
-          "description": "Server version"
+          "description": "Server version."
         }, 
         "homepage": {
           "type": "string", 
-          "description": "Server homepage URL"
+          "description": "Server homepage URL."
         }
       }
     }, 
@@ -121,15 +83,15 @@
       "properties": {
         "status": {
           "type": "string", 
-          "description": "HTTP status code"
+          "description": "HTTP status code."
         }, 
         "statusString": {
           "type": "string", 
-          "description": "HTTP status as text string"
+          "description": "HTTP status as text string."
         }, 
         "module": {
           "type": "string", 
-          "description": "Location of error"
+          "description": "Location of error."
         }, 
         "title": {
           "type": "string", 

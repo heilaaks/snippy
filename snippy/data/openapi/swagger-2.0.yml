@@ -41,6 +41,10 @@ paths:
           description: "Request not syntactically correct"
           schema:
             $ref: '#/definitions/Errors'
+        403:
+          description: "Using client generated ID is not supported"
+          schema:
+            $ref: '#/definitions/Errors'
         500:
           description: "Internal server error"
     get:
@@ -133,6 +137,10 @@ paths:
             $ref: "#/definitions/Resource"
         400:
           description: "Request not syntactically correct"
+          schema:
+            $ref: '#/definitions/Errors'
+        403:
+          description: "Using client generated ID is not supported"
           schema:
             $ref: '#/definitions/Errors'
         404:

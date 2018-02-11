@@ -55,7 +55,7 @@ class TestApiSearchSnippet(object):
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
-                         {'type': 'snippets', 
+                         {'type': 'snippets',
                           'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                           'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         snippy = Snippy(['snippy', '--server'])

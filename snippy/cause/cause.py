@@ -38,6 +38,7 @@ class Cause(object):
     HTTP_201 = '201 Created'
     HTTP_204 = '204 No Content'
     HTTP_400 = '400 Bad Request'
+    HTTP_403 = '403 Forbidden'
     HTTP_404 = '404 Not Found'
     HTTP_409 = '409 Conflict'
     HTTP_500 = '500 Internal Server Error'
@@ -46,6 +47,7 @@ class Cause(object):
     HTTP_CREATED = HTTP_201
     HTTP_NO_CONTENT = HTTP_204
     HTTP_BAD_REQUEST = HTTP_400
+    HTTP_FORBIDDEN = HTTP_403
     HTTP_NOT_FOUND = HTTP_404
     HTTP_CONFLICT = HTTP_409
     HTTP_INTERNAL_SERVER_ERROR = HTTP_500

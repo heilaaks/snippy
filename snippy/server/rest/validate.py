@@ -28,7 +28,22 @@ from snippy.logger.logger import Logger
 
 
 class Validate(object):  # pylint: disable=too-few-public-methods
-    """Validate REST API input."""
+    """Validate REST API input.
+
+    Description
+    ===========
+
+    This class validates JSON REST API content. The validattion rules are
+    from JSON API v1.0 specification.
+
+    Implemented Rules
+    =================
+
+    1. "A server MUST return 403 Forbidden in response to an unsupported
+        request to create a resource with a client-generated ID." /1/
+
+    /1/ http://jsonapi.org/format/
+    """
 
     _logger = Logger(__name__).get()
 
@@ -40,10 +55,10 @@ class Validate(object):  # pylint: disable=too-few-public-methods
         if JsonSchema.validate(JsonSchema.COLLECTION, media):
             if isinstance(media['data'], (list, tuple)):
                 for data in media['data']:
-                    if 'attributes' in data:
+                    if cls.is_valid_data(data):
                         collection.append(data['attributes'])
             elif isinstance(media['data'], dict):
-                if 'attributes' in media['data']:
+                if cls.is_valid_data(media['data']):
                     collection.append(media['data']['attributes'])
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(media['data'])))  # noqa: E501 # pylint: disable=line-too-long
@@ -57,13 +72,24 @@ class Validate(object):  # pylint: disable=too-few-public-methods
         resource_ = {}
         if JsonSchema.validate(JsonSchema.RESOURCE, media):
             if isinstance(media['data'], dict):
-                if 'attributes' in media['data']:
+                if cls.is_valid_data(media['data']):
                     resource_ = media['data']['attributes']
                     resource_['digest'] = digest
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(media['data'])))  # noqa: E501 # pylint: disable=line-too-long
 
         return resource_
+
+    @staticmethod
+    def is_valid_data(data):
+        """Validata top level data object."""
+
+        valid = True
+        if 'id' in data:
+            Cause.push(Cause.HTTP_FORBIDDEN, 'client generated resource id is not supported, remove member data.id')
+            valid = False
+
+        return valid
 
 
 class JsonSchema(object):  # pylint: disable=too-few-public-methods

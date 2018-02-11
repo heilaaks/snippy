@@ -52,9 +52,9 @@ class TestApiUpdateSolution(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call PUT /snippy/api/v1/solutions to update existing solution. In this
-        #         case when fields like UTC and filename are not provided, the empty fields
-        #         override the content because it was updated with PUT.
+        ## Brief: Call PUT /snippy/api/v1/solutions to update existing solution. In
+        ##        this case when fields like UTC and filename are not provided, the
+        ##        empty fields override the content because it was updated with PUT.
         snippy = Solution.add_one(Solution.BEATS)
         solution = {'data': {'type': 'snippet',
                              'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
@@ -124,7 +124,7 @@ class TestApiUpdateSolution(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Try to call PUT /snippy/api/v1/solutions to update new solution with
+        ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with
         ##        malformed JSON request.
         snippy = Solution.add_one(Solution.BEATS)
         solution = {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
@@ -145,6 +145,61 @@ class TestApiUpdateSolution(object):
         assert result.headers == headers_p2 or result.headers == headers_p3
         assert Solution.error_body(result.json) == Solution.error_body(body)
         assert result.status == falcon.HTTP_400
+        assert len(Database.get_solutions()) == 1
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+        ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with
+        ##        client generated resource ID. In this case the ID looks like a
+        ##        valid message digest.
+        snippy = Solution.add_one(Solution.BEATS)
+        solution = {'data': {'type': 'snippet',
+                             'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
+                             'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                                            'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
+                                            'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                                            'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
+                                            'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '382'}
+        body = {'meta': Solution.get_http_metadata(),
+                'errors': [{'status': '403', 'statusString': '403 Forbidden', 'module': 'snippy.testing.testing:123',
+                            'title': 'client generated resource id is not supported, remove member data.id'}]}
+        snippy = Snippy(['snippy', '--server'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/solutions/a96accc25dd23ac0',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    body=json.dumps(solution))
+        assert result.headers == headers
+        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
+        assert result.status == falcon.HTTP_403
+        assert len(Database.get_solutions()) == 1
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+        ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with
+        ##        client generated resource ID. In this case the ID is empty string.
+        snippy = Solution.add_one(Solution.BEATS)
+        solution = {'data': {'type': 'snippet',
+                             'id': '',
+                             'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                                            'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
+                                            'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                                            'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
+                                            'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '382'}
+        body = {'meta': Solution.get_http_metadata(),
+                'errors': [{'status': '403', 'statusString': '403 Forbidden', 'module': 'snippy.testing.testing:123',
+                            'title': 'client generated resource id is not supported, remove member data.id'}]}
+        snippy = Snippy(['snippy', '--server'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/solutions/a96accc25dd23ac0',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    body=json.dumps(solution))
+        assert result.headers == headers
+        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
+        assert result.status == falcon.HTTP_403
         assert len(Database.get_solutions()) == 1
         snippy.release()
         snippy = None

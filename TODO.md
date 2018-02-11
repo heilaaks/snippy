@@ -1,4 +1,6 @@
 ## TODO
+   - [ ] Fix POST and PUT which now likely insert/update the data if one of the elements fails. Could be easy and strict that if any validation fails, no changes.
+   - [ ] Fix OpenAPI to exclude the ID from sending side for POST and PUT. For response this must be there.
    - [ ] Fix GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found.
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.

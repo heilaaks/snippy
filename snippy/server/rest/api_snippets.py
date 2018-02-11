@@ -44,7 +44,7 @@ class ApiSnippets(object):
         collection = Validate.collection(request.media)
         for member in collection:
             api = Api(Const.SNIPPET, Api.CREATE, member)
-            Config.read_source(api)
+            Config.load(api)
             contents = contents + Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -63,7 +63,7 @@ class ApiSnippets(object):
 
         self.logger.debug('run get /snippy/api/v1/snippets')
         api = Api(Const.SNIPPET, Api.SEARCH, request.params)
-        Config.read_source(api)
+        Config.load(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -82,7 +82,7 @@ class ApiSnippets(object):
 
         self.logger.debug('run delete /snippy/api/v1/snippets')
         api = Api(Const.SNIPPET, Api.DELETE, request.params)
-        Config.read_source(api)
+        Config.load(api)
         Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.status = Cause.http_status()
@@ -109,7 +109,7 @@ class ApiSnippetsDigest(object):
         resource_ = Validate.resource(request.media, digest)
         if resource_:
             api = Api(Const.SNIPPET, Api.UPDATE, resource_)
-            Config.read_source(api)
+            Config.load(api)
             contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -129,7 +129,7 @@ class ApiSnippetsDigest(object):
         self.logger.debug('run get /snippy/api/v1/snippets/{digest} = %s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SNIPPET, Api.SEARCH, local_params)
-        Config.read_source(api)
+        Config.load(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -149,7 +149,7 @@ class ApiSnippetsDigest(object):
         self.logger.debug('run delete /snippy/api/v1/snippets/{digest} = %s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SNIPPET, Api.DELETE, local_params)
-        Config.read_source(api)
+        Config.load(api)
         Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.status = Cause.http_status()

@@ -35,7 +35,7 @@ class TestUtConfigCreate(unittest.TestCase):
 
         snippet = ((), '', Const.DEFAULT_GROUP, (), (), Const.SNIPPET, '', '', '', None, None, None, None)
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create']))
+        Config.load(Cli(['snippy', 'create']))
         assert isinstance(Config.content_category, str)
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
@@ -83,7 +83,7 @@ class TestUtConfigCreate(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content]))
+        Config.load(Cli(['snippy', 'create', '-c', content]))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -98,7 +98,7 @@ class TestUtConfigCreate(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-b', brief]))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-b', brief]))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -112,7 +112,7 @@ class TestUtConfigCreate(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         tags = ('docker',)
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-t', 'docker']))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-t', 'docker']))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -127,7 +127,7 @@ class TestUtConfigCreate(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         tags = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup']))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-t', 'docker,container,cleanup']))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -145,8 +145,8 @@ class TestUtConfigCreate(unittest.TestCase):
         tags = ('cleanup', 'container', 'docker')
         links = ('https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',)
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', 'docker, container, cleanup',
-                                '-l', links[0]]))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', 'docker, container, cleanup',
+                         '-l', links[0]]))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_group, str)
@@ -165,7 +165,7 @@ class TestUtConfigCreate(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         tags = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-t', 'docker container cleanup']))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-t', 'docker container cleanup']))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -179,7 +179,7 @@ class TestUtConfigCreate(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         tags = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup']))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-t', 'docker ', 'container ', 'cleanup']))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -193,7 +193,7 @@ class TestUtConfigCreate(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         tags = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup']))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-t', 'docker,', 'container,', 'cleanup']))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -206,7 +206,7 @@ class TestUtConfigCreate(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         tags = ('cleanup_testing', 'container-managemenet', 'dockertesting')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -222,7 +222,7 @@ class TestUtConfigCreate(unittest.TestCase):
         content = 'docker rm $(docker ps -a -q)'
         tags = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup']))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-t', 'docker', 'container', 'cleanup']))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -239,7 +239,7 @@ class TestUtConfigCreate(unittest.TestCase):
         links = ('https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
                  'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', ' '.join(links)]))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', ' '.join(links)]))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)
@@ -259,7 +259,7 @@ class TestUtConfigCreate(unittest.TestCase):
         links = ('https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',
                  'https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', '|'.join(links)]))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-b', brief, '-t', 'docker, container, cleanup', '-l', '|'.join(links)]))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)

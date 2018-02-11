@@ -54,7 +54,7 @@ class Snippy(object):
         """Run command line session."""
 
         args = Config.init_args if args is None else args
-        Config.read_source(Cli(args))
+        Config.load(Cli(args))
         if Config.is_category_snippet:
             Snippet(self.storage).run()
         elif Config.is_category_solution:

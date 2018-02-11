@@ -33,7 +33,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('docker',)
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker']))
+        Config.load(Cli(['snippy', 'search', '--sall', 'docker']))
         assert isinstance(Config.search_all_kws, tuple)
         self.assertTupleEqual(Config.search_all_kws, search_kw)
 
@@ -43,7 +43,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker,container,cleanup']))
+        Config.load(Cli(['snippy', 'search', '--sall', 'docker,container,cleanup']))
         assert isinstance(Config.search_all_kws, tuple)
         self.assertTupleEqual(Config.search_all_kws, search_kw)
 
@@ -53,7 +53,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
+        Config.load(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
         assert isinstance(Config.search_all_kws, tuple)
         self.assertTupleEqual(Config.search_all_kws, search_kw)
 
@@ -63,7 +63,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
+        Config.load(Cli(['snippy', 'search', '--sall', 'docker, container, cleanup']))
         assert isinstance(Config.search_all_kws, tuple)
         self.assertTupleEqual(Config.search_all_kws, search_kw)
 
@@ -74,7 +74,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']))
+        Config.load(Cli(['snippy', 'search', '--sall', 'docker ', 'container ', 'cleanup']))
         assert isinstance(Config.search_all_kws, tuple)
         self.assertTupleEqual(Config.search_all_kws, search_kw)
 
@@ -84,7 +84,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup', 'container', 'docker')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']))
+        Config.load(Cli(['snippy', 'search', '--sall', 'docker,', 'container,', 'cleanup']))
         assert isinstance(Config.search_all_kws, tuple)
         self.assertTupleEqual(Config.search_all_kws, search_kw)
 
@@ -94,7 +94,7 @@ class TestUtConfigSearch(unittest.TestCase):
 
         search_kw = ('cleanup_testing', 'container-managemenet', 'dockertesting')
         Config.init(None)
-        Config.read_source(Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
+        Config.load(Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
         assert isinstance(Config.search_all_kws, tuple)
         self.assertTupleEqual(Config.search_all_kws, search_kw)
         assert len(Config.search_all_kws) == 3

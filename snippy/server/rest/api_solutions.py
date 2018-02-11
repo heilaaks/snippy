@@ -46,7 +46,7 @@ class ApiSolutions(object):
         collection = Validate.collection(request.media)
         for member in collection:
             api = Api(Const.SOLUTION, Api.CREATE, member)
-            Config.read_source(api)
+            Config.load(api)
             contents = contents + Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -65,7 +65,7 @@ class ApiSolutions(object):
 
         self.logger.debug('run get /snippy/api/v1/solutions')
         api = Api(Const.SOLUTION, Api.SEARCH, request.params)
-        Config.read_source(api)
+        Config.load(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -84,7 +84,7 @@ class ApiSolutions(object):
 
         self.logger.debug('run delete /snippy/api/v1/solutions')
         api = Api(Const.SOLUTION, Api.DELETE, request.params)
-        Config.read_source(api)
+        Config.load(api)
         Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.status = Cause.http_status()
@@ -111,7 +111,7 @@ class ApiSolutionsDigest(object):
         resource_ = Validate.resource(request.media, digest)
         if resource_:
             api = Api(Const.SOLUTION, Api.UPDATE, resource_)
-            Config.read_source(api)
+            Config.load(api)
             contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -131,7 +131,7 @@ class ApiSolutionsDigest(object):
         self.logger.debug('run get /snippy/api/v1/solutions/{digest} = %s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SOLUTION, Api.SEARCH, local_params)
-        Config.read_source(api)
+        Config.load(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -151,7 +151,7 @@ class ApiSolutionsDigest(object):
         self.logger.debug('run delete /snippy/api/v1/solutions/{digest} = %s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SOLUTION, Api.DELETE, local_params)
-        Config.read_source(api)
+        Config.load(api)
         Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.status = Cause.http_status()

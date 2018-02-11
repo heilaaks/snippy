@@ -54,55 +54,19 @@ class Config(object):
                      'json_logs': cls.json_logs})
         cls._logger.debug('config initial command line arguments: %s', args)
 
-        # Initialize storage configuration.
+        # Set storage configuration.
         cls.storage_file = cls._storage_file()
         cls.storage_schema = cls._storage_schema()
         cls.snippet_template = cls._content_template('snippet-template.txt')
         cls.solution_template = cls._content_template('solution-template.txt')
 
-        # Initialize remaining confiuguration.
+        # Set remaining configuration.
         cls.init_args = args
-        cls.read_source(Cli(args))
+        cls.load(Cli(args))
 
     @classmethod
-    def _storage_file(cls):
-        """Test that storage path exist."""
-
-        storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
-        if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
-            storage_file = os.path.join(storage_path, 'snippy.db')
-        else:
-            cls._logger.error('NOK: storage path does not exist or is not accessible: %s', storage_path)
-            sys.exit(1)
-
-        return storage_file
-
-    @classmethod
-    def _storage_schema(cls):
-        """Test that database schema file exist."""
-
-        # The database schema is installed with the tool and it must always exist.
-        schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
-        if not os.path.isfile(schema_file):
-            cls._logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_file)
-            sys.exit(1)
-
-        return schema_file
-
-    @classmethod
-    def _content_template(cls, template):
-        """Get defined content template installed with the tool."""
-
-        template = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), template)
-        if not os.path.isfile(template):
-            cls._logger.error('NOK: content template installed with tool does not exist or is not accessible: %s', template)
-            sys.exit(1)
-
-        return template
-
-    @classmethod
-    def read_source(cls, source):
-        """Read configuration source."""
+    def load(cls, source):
+        """Load configuration source."""
 
         cls.source = source
         cls._logger.debug('config source: %s', cls.source)
@@ -162,36 +126,75 @@ class Config(object):
         cls._print_config()
 
     @classmethod
-    def _print_config(cls):
-        """Print global configuration."""
+    def get_contents(cls, content, source=None):
+        """Get list of contents configured from one of the config sources."""
 
-        cls._logger.debug('configured storage file: %s', cls.storage_file)
-        cls._logger.debug('configured storage schema: %s', cls.storage_schema)
-        cls._logger.debug('configured content operation: %s', cls.operation)
-        cls._logger.debug('configured content category: %s', cls.content_category)
-        cls._logger.debug('configured content data: %s', cls.content_data)
-        cls._logger.debug('configured content brief: %s', cls.content_brief)
-        cls._logger.debug('configured content group: %s', cls.content_group)
-        cls._logger.debug('configured content tags: %s', cls.content_tags)
-        cls._logger.debug('configured content links: %s', cls.content_links)
-        cls._logger.debug('configured content filename: %s', cls.content_filename)
-        cls._logger.debug('configured operation digest: %s', cls.operation_digest)
-        cls._logger.debug('configured operation filename: "%s"', cls.operation_filename)
-        cls._logger.debug('configured operation file type: "%s"', cls.operation_filetype)
-        cls._logger.debug('configured search all keywords: %s', cls.search_all_kws)
-        cls._logger.debug('configured search tag keywords: %s', cls.search_tag_kws)
-        cls._logger.debug('configured search group keywords: %s', cls.search_grp_kws)
-        cls._logger.debug('configured search result filter: %s', cls.search_filter)
-        cls._logger.debug('configured search result limit: %s', cls.search_limit)
-        cls._logger.debug('configured search result sorted field: %s', cls.sorted_fields)
-        cls._logger.debug('configured search result removed fields: %s', cls.remove_fields)
-        cls._logger.debug('configured option editor: %s', cls.editor)
-        cls._logger.debug('configured option use_ansi: %s', cls.use_ansi)
-        cls._logger.debug('configured option defaults: %s', cls.defaults)
-        cls._logger.debug('configured option template: %s', cls.template)
-        cls._logger.debug('configured option server: %s', cls.server)
-        cls._logger.debug('configured option server api base path: %s', cls.base_path)
-        cls._logger.debug('configured option server ip %s and port %s', cls.server_ip, cls.server_port)
+        if source is not None:
+            contents = Parser.read_content(content, source, cls.get_utc_time())
+        elif cls.editor:
+            contents = Editor.read_content(content)
+        else:
+            contents = cls._read_content(content)
+
+        return tuple(contents)
+
+    @classmethod
+    def _read_content(cls, content):
+        """Read content from configuration."""
+
+        contents = []
+        content.set((cls.content_data,
+                     cls.content_brief,
+                     cls.content_group,
+                     cls.content_tags,
+                     cls.content_links,
+                     content.get_category(),
+                     cls.content_filename,
+                     content.get_runalias(),
+                     content.get_versions(),
+                     content.get_utc(),
+                     content.get_digest(),
+                     content.get_metadata(),
+                     content.get_key()))
+        contents.append(content)
+
+        return contents
+
+    @classmethod
+    def _storage_file(cls):
+        """Test that storage path exist."""
+
+        storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
+        if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
+            storage_file = os.path.join(storage_path, 'snippy.db')
+        else:
+            cls._logger.error('NOK: storage path does not exist or is not accessible: %s', storage_path)
+            sys.exit(1)
+
+        return storage_file
+
+    @classmethod
+    def _storage_schema(cls):
+        """Test that database schema file exist."""
+
+        # The database schema is installed with the tool and it must always exist.
+        schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
+        if not os.path.isfile(schema_file):
+            cls._logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_file)
+            sys.exit(1)
+
+        return schema_file
+
+    @classmethod
+    def _content_template(cls, template):
+        """Get defined content template installed with the tool."""
+
+        template = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), template)
+        if not os.path.isfile(template):
+            cls._logger.error('NOK: content template installed with tool does not exist or is not accessible: %s', template)
+            sys.exit(1)
+
+        return template
 
     @classmethod
     def _operation_filename(cls):
@@ -253,20 +256,6 @@ class Config(object):
         return filetype
 
     @classmethod
-    def get_contents(cls, content, source=None):
-        """Create content list from one of the configuration sources."""
-
-        contents = []
-        if source is not None:
-            contents = Parser.read_content(content, source, cls.get_utc_time())
-        elif cls.editor:
-            contents = Editor.read_content(content)
-        else:
-            contents = cls._read_content(content)
-
-        return tuple(contents)
-
-    @classmethod
     def validate_search_context(cls, contents, operation):  # pylint: disable=too-many-branches
         """Validate content search context."""
 
@@ -298,7 +287,7 @@ class Config(object):
                                (data, len(contents)))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content data to %s content' % operation)
-        elif cls.is_search_keywords():
+        elif cls._is_search_keywords():
             if not contents:
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
             elif len(contents) > 1:
@@ -308,7 +297,7 @@ class Config(object):
             Cause.push(Cause.HTTP_BAD_REQUEST, 'no message digest, content data or search keywords were provided')
 
     @classmethod
-    def is_search_keywords(cls):
+    def _is_search_keywords(cls):
         """Test if search is made with any of the search option."""
 
         return True if cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws else False
@@ -324,7 +313,7 @@ class Config(object):
         """Test if any of the search criterias were used."""
 
         criteria = False
-        if cls.is_search_keywords() or cls.is_content_digest() or cls.content_data:
+        if cls._is_search_keywords() or cls.is_content_digest() or cls.content_data:
             criteria = True
 
         return criteria
@@ -356,23 +345,33 @@ class Config(object):
         return utc.strftime("%Y-%m-%d %H:%M:%S")
 
     @classmethod
-    def _read_content(cls, content):
-        """Read content from configuration."""
+    def _print_config(cls):
+        """Print global configuration."""
 
-        contents = []
-        content.set((cls.content_data,
-                     cls.content_brief,
-                     cls.content_group,
-                     cls.content_tags,
-                     cls.content_links,
-                     content.get_category(),
-                     cls.content_filename,
-                     content.get_runalias(),
-                     content.get_versions(),
-                     content.get_utc(),
-                     content.get_digest(),
-                     content.get_metadata(),
-                     content.get_key()))
-        contents.append(content)
-
-        return contents
+        cls._logger.debug('configured storage file: %s', cls.storage_file)
+        cls._logger.debug('configured storage schema: %s', cls.storage_schema)
+        cls._logger.debug('configured content operation: %s', cls.operation)
+        cls._logger.debug('configured content category: %s', cls.content_category)
+        cls._logger.debug('configured content data: %s', cls.content_data)
+        cls._logger.debug('configured content brief: %s', cls.content_brief)
+        cls._logger.debug('configured content group: %s', cls.content_group)
+        cls._logger.debug('configured content tags: %s', cls.content_tags)
+        cls._logger.debug('configured content links: %s', cls.content_links)
+        cls._logger.debug('configured content filename: %s', cls.content_filename)
+        cls._logger.debug('configured operation digest: %s', cls.operation_digest)
+        cls._logger.debug('configured operation filename: "%s"', cls.operation_filename)
+        cls._logger.debug('configured operation file type: "%s"', cls.operation_filetype)
+        cls._logger.debug('configured search all keywords: %s', cls.search_all_kws)
+        cls._logger.debug('configured search tag keywords: %s', cls.search_tag_kws)
+        cls._logger.debug('configured search group keywords: %s', cls.search_grp_kws)
+        cls._logger.debug('configured search result filter: %s', cls.search_filter)
+        cls._logger.debug('configured search result limit: %s', cls.search_limit)
+        cls._logger.debug('configured search result sorted field: %s', cls.sorted_fields)
+        cls._logger.debug('configured search result removed fields: %s', cls.remove_fields)
+        cls._logger.debug('configured option editor: %s', cls.editor)
+        cls._logger.debug('configured option use_ansi: %s', cls.use_ansi)
+        cls._logger.debug('configured option defaults: %s', cls.defaults)
+        cls._logger.debug('configured option template: %s', cls.template)
+        cls._logger.debug('configured option server: %s', cls.server)
+        cls._logger.debug('configured option server api base path: %s', cls.base_path)
+        cls._logger.debug('configured option server ip %s and port %s', cls.server_ip, cls.server_port)

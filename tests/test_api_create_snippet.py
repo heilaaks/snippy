@@ -21,9 +21,9 @@
 
 import json
 
-import mock
-import falcon
 from falcon import testing
+import falcon
+import mock
 
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
@@ -41,7 +41,7 @@ class TestApiCreateSnippet(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_create_snippet(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_create_one_snippet(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Create one snippet from API."""
 
         mock_isfile.return_value = True
@@ -52,13 +52,16 @@ class TestApiCreateSnippet(object):
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
         snippet = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '507'}
-        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '570'}
+        body = {'data': [{'type': 'snippets',
+                          'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                          'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
+        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_201
@@ -78,8 +81,10 @@ class TestApiCreateSnippet(object):
                                                                'tags': ['cleanup', 'container', 'docker', 'docker-ce', 'moby'],
                                                                'links': ['https://docs.docker.com/engine/reference/commandline/rm/']}}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '507'}
-        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '570'}
+        body = {'data': [{'type': 'snippets',
+                          'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                          'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
@@ -104,8 +109,10 @@ class TestApiCreateSnippet(object):
                                                                'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
                                                                'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}}]}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '712'}
-        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '775'}
+        body = {'data': [{'type': 'snippets',
+                          'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                          'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
@@ -125,15 +132,18 @@ class TestApiCreateSnippet(object):
         ##        the content data is defined in list context where each line is an item
         ##        in a list.
         mock_get_utc_time.return_value = Snippet.UTC2
-        snippet = {'data': [{'type': 'snippet', 'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)\n\n\n\n',
-                                                                        'docker images -q --filter dangling=true | xargs docker rmi'],
-                                                               'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
-                                                               'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
-                                                               'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
-                                                               'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}}]}
+        snippet = {'data': [{'type': 'snippet',
+                             'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)\n\n\n\n',
+                                                     'docker images -q --filter dangling=true | xargs docker rmi'],
+                                            'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
+                                            'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
+                                            'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
+                                            'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}}]}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '712'}
-        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '775'}
+        body = {'data': [{'type': 'snippets',
+                          'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                          'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
@@ -151,9 +161,9 @@ class TestApiCreateSnippet(object):
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet with only data.
         snippet = {'data': [{'type': 'snippet', 'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)\n']}}]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '358'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '421'}
         body = {'data': [{'type': 'snippets',
-                          'id': '1',
+                          'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
                           'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)'],
                                          'brief': '',
                                          'group':
@@ -198,9 +208,13 @@ class TestApiCreateSnippet(object):
         snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1073'}
-        body = {'data': [{'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
-                         {'type': 'snippets', 'id': '2', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1199'}
+        body = {'data': [{'type': 'snippets',
+                          'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                          'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
+                         {'type': 'snippets',
+                          'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                          'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
@@ -220,7 +234,7 @@ class TestApiCreateSnippet(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_create_snippet_failures(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_create_snippet_errors(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Try to create snippet with malformed queries."""
 
         mock_isfile.return_value = True

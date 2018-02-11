@@ -21,9 +21,9 @@
 
 import json
 
-import mock
-import falcon
 from falcon import testing
+import falcon
+import mock
 
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
@@ -42,7 +42,7 @@ class TestApiCreateSolution(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_create_solution_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_create_one_solution(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Create one solution from API."""
 
         mock_isfile.return_value = True
@@ -53,8 +53,10 @@ class TestApiCreateSolution(object):
         ## Brief: Call POST /snippy/api/v1/solutions to create new solution.
         solution = {'data': [{'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2262'}
-        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2325'}
+        body = {'data': [{'type': 'solutions',
+                          'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                          'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/solutions',  ## apiflow
@@ -74,7 +76,7 @@ class TestApiCreateSolution(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_create_solutions_from_api(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_create_solutions(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Create list of solutions from API."""
 
         mock_isfile.return_value = True
@@ -88,9 +90,13 @@ class TestApiCreateSolution(object):
                               {'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.KAFKA]}]}
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS],
                            'eeef5ca': Solution.DEFAULTS[Solution.KAFKA]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '6724'}
-        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
-                         {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.KAFKA]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '6850'}
+        body = {'data': [{'type': 'solutions',
+                          'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                          'attributes': Solution.DEFAULTS[Solution.BEATS]},
+                         {'type': 'solutions',
+                          'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                          'attributes': Solution.DEFAULTS[Solution.KAFKA]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/solutions',  ## apiflow

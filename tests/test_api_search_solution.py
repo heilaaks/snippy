@@ -19,14 +19,12 @@
 
 """test_api_search_solution.py: Test GET /snippy/api/solutions API."""
 
-import mock
-import falcon
 from falcon import testing
+import falcon
+import mock
 
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from snippy.metadata import __version__
-from snippy.metadata import __homepage__
 from snippy.snip import Snippy
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -53,9 +51,13 @@ class TestApiSearchSolution(object):
         ##        search is sorted based on one field. The search result limit defined in
         ##        the search query is not exceeded.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5056'}
-        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
-                         {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5182'}
+        body = {'data': [{'type': 'solutions',
+                          'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                          'attributes': Solution.DEFAULTS[Solution.BEATS]},
+                         {'type': 'solutions',
+                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                          'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
@@ -77,9 +79,13 @@ class TestApiSearchSolution(object):
         mock_get_utc_time.side_effect = (Solution.UTC1,)*3 + (Solution.UTC2,)*6 + (None,) # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5056'}
-        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
-                         {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5182'}
+        body = {'data': [{'type': 'solutions',
+                          'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                          'attributes': Solution.DEFAULTS[Solution.BEATS]},
+                         {'type': 'solutions',
+                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                          'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
@@ -99,9 +105,9 @@ class TestApiSearchSolution(object):
         ##        the last match must be returned. The resulting fields are limited to brief
         ##        and category.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '112'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '175'}
         body = {'data': [{'type': 'solutions',
-                          'id': '1',
+                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                           'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -120,9 +126,9 @@ class TestApiSearchSolution(object):
         ##        the parameter to be processed in string context which must handle multiple
         ##        fields.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '112'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '175'}
         body = {'data': [{'type': 'solutions',
-                          'id': '1',
+                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                           'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -143,9 +149,13 @@ class TestApiSearchSolution(object):
         mock_get_utc_time.side_effect = (Solution.UTC1,)*3 + (Solution.UTC2,)*6 + (None,)  # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7266'}
-        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.KAFKA]},
-                         {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7392'}
+        body = {'data': [{'type': 'solutions',
+                          'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                          'attributes': Solution.DEFAULTS[Solution.KAFKA]},
+                         {'type': 'solutions',
+                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                          'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
@@ -165,9 +175,13 @@ class TestApiSearchSolution(object):
         mock_get_utc_time.side_effect = (Solution.UTC1,)*3 + (Solution.UTC2,)*6 + (None,)  # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7266'}
-        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.KAFKA]},
-                         {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7392'}
+        body = {'data': [{'type': 'solutions',
+                          'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                          'attributes': Solution.DEFAULTS[Solution.KAFKA]},
+                         {'type': 'solutions',
+                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                          'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
@@ -203,9 +217,9 @@ class TestApiSearchSolution(object):
         ## Brief: Call GET /snippy/api/v1/solutions to return only defined fields. In this case
         ##        the fields are defined by setting the 'fields' parameter multiple times.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '112'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '175'}
         body = {'data': [{'type': 'solutions',
-                          'id': '1',
+                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                           'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -312,9 +326,11 @@ class TestApiSearchSolution(object):
         ## Brief: Call GET /snippy/api/v1/solutions/{digest} to get explicit solution based on
         ##        digest. In this case the solution is found.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2350'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2413'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/a96accc25dd23ac0'},
-                'data': {'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]}}
+                'data': {'type': 'solutions',
+                         'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                         'attributes': Solution.DEFAULTS[Solution.BEATS]}}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions/a96accc25dd23ac0',  ## apiflow
@@ -358,9 +374,13 @@ class TestApiSearchSolution(object):
         ## Brief: Call GET /snippy/api/v1/solutions without defining search parameters. In this
         ##        case all content should be returned based on filtering parameters.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5056'}
-        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
-                         {'type': 'solutions', 'id': '2', 'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5182'}
+        body = {'data': [{'type': 'solutions',
+                          'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                          'attributes': Solution.DEFAULTS[Solution.BEATS]},
+                         {'type': 'solutions',
+                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                          'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
@@ -377,8 +397,10 @@ class TestApiSearchSolution(object):
         ##        case only one solution must be returned because the limit is set to one. Also
         ##        the sorting based on brief field causes the last solution to be returned.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2804'}
-        body = {'data': [{'type': 'solutions', 'id': '1', 'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2867'}
+        body = {'data': [{'type': 'solutions',
+                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                          'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow

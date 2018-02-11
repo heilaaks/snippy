@@ -396,8 +396,12 @@ class Migrate(object):
                       'utc': content.get_utc(),
                       'digest': content.get_digest()}
 
+        # Digest is always needed when JSON REST API response is constructed.
+        # Because of this, the digest is not removed in here but just before
+        # constructing the JSON API response.
         fields = Config.remove_fields
         for field in fields:
-            dictionary.pop(field, None)
+            if field != 'digest':
+                dictionary.pop(field, None)
 
         return dictionary

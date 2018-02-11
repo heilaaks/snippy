@@ -19,9 +19,9 @@
 
 """test_api_delete_solutions.py: Test DELETE /solutions API."""
 
-import mock
-import falcon
 from falcon import testing
+import falcon
+import mock
 
 from snippy.cause.cause import Cause
 from snippy.config.config import Config

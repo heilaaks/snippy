@@ -25,6 +25,7 @@ try:
 except ImportError:
     from urlparse import urljoin
 
+from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 
@@ -45,7 +46,7 @@ class JsonApiV1(object):
                 resource_['links'] = {'self': uri}
             type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
             resource_['data'] = {'type': type_,
-                                 'id': '1',
+                                 'id': content['digest'],
                                  'attributes': content}
             break
 
@@ -59,10 +60,13 @@ class JsonApiV1(object):
         """Format JSON API v1.0 collection from content."""
 
         collection = {'data': []}
-        for idx, content in enumerate(contents, start=1):
+        for content in contents:
             type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
+            digest = content['digest']
+            if 'digest' in Config.remove_fields:
+                content.pop('digest', None)
             collection['data'].append({'type': type_,
-                                       'id': str(idx),
+                                       'id': digest,
                                        'attributes': content})
 
         return json.dumps(collection)

@@ -44,7 +44,7 @@ class TestApiUpdateSolution(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_update_solution(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_update_one_solution(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Update solution from API."""
 
         mock_isfile.return_value = True
@@ -56,15 +56,18 @@ class TestApiUpdateSolution(object):
         #         case when fields like UTC and filename are not provided, the empty fields
         #         override the content because it was updated with PUT.
         snippy = Solution.add_one(Solution.BEATS)
-        solution = {'data': {'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
-                                                               'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                                                               'group': Solution.DEFAULTS[Solution.NGINX]['group'],
-                                                               'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-                                                               'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
+        solution = {'data': {'type': 'snippet',
+                             'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                                            'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
+                                            'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                                            'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
+                                            'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
         compare_content = {'2cd0e794244a07f': Solution.DEFAULTS[Solution.NGINX]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2871'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2934'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/2cd0e794244a07f8'},
-                'data': {'type': 'solutions', 'id': '1', 'attributes': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])}}
+                'data': {'type': 'solutions',
+                         'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
+                         'attributes': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])}}
         body['data']['attributes']['filename'] = Const.EMPTY
         body['data']['attributes']['utc'] = Solution.UTC1
         body['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
@@ -85,11 +88,12 @@ class TestApiUpdateSolution(object):
         ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with
         ##        digest that cannot be found.
         snippy = Solution.add_one(Solution.BEATS)
-        solution = {'data': {'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
-                                                               'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                                                               'group': Solution.DEFAULTS[Solution.NGINX]['group'],
-                                                               'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-                                                               'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
+        solution = {'data': {'type': 'snippet',
+                             'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                                            'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
+                                            'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                                            'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
+                                            'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '369'}
         body = {'meta': Solution.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
@@ -112,7 +116,7 @@ class TestApiUpdateSolution(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_update_solution_failures(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_update_solution_errors(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Try to update solution with malformed queries."""
 
         mock_isfile.return_value = True

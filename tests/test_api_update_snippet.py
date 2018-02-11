@@ -43,7 +43,7 @@ class TestApiUpdateSnippet(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_update_snippet(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_update_one_snippet(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Update snippet from API."""
 
         mock_isfile.return_value = True
@@ -54,15 +54,18 @@ class TestApiUpdateSnippet(object):
         ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
         ##        with specified digest.
         snippy = Snippet.add_one(Snippet.FORCED)
-        snippet = {'data': {'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                                                              'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                                                              'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                                                              'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                                                              'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
+        snippet = {'data': {'type': 'snippet',
+                            'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                                           'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                                           'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                                           'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+                                           'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '594'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '657'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
-                'data': {'type': 'snippets', 'id': '1', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}}
+                'data': {'type': 'snippets',
+                         'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                         'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/53908d68425c61dc',  ## apiflow
@@ -80,11 +83,12 @@ class TestApiUpdateSnippet(object):
         ## Brief: Try to call PUT /snippy/api/v1/snippets to update snippet with
         ##        digest that cannot be found.
         snippy = Snippet.add_one(Snippet.FORCED)
-        snippet = {'data': {'type': 'snippet', 'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                                                              'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                                                              'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                                                              'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                                                              'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
+        snippet = {'data': {'type': 'snippet',
+                            'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                                           'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                                           'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                                           'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+                                           'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '369'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
@@ -107,7 +111,7 @@ class TestApiUpdateSnippet(object):
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_update_snippet_failure(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_update_snippet_errors(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Try to update snippet with malformed queries."""
 
         mock_isfile.return_value = True

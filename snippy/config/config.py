@@ -42,26 +42,27 @@ class Config(object):
     def init(cls, args):
         """Initialize global configuration."""
 
+        cls.init_args = args
+
         # Set logging and profiling configuration.
-        cls.debug = True if args and '--debug' in args else False
-        cls.very_verbose = True if args and '-vv' in args else False
-        cls.quiet = True if args and '-q' in args else False
-        cls.json_logs = True if args and '--json-logs' in args else False
-        cls.profiler = True if args and '--profile' in args else False
+        cls.debug = True if cls.init_args and '--debug' in cls.init_args else False
+        cls.very_verbose = True if cls.init_args and '-vv' in cls.init_args else False
+        cls.quiet = True if cls.init_args and '-q' in cls.init_args else False
+        cls.json_logs = True if cls.init_args and '--json-logs' in cls.init_args else False
+        cls.profiler = True if cls.init_args and '--profile' in cls.init_args else False
         Logger.init({'debug': cls.debug,
                      'very_verbose': cls.very_verbose,
                      'quiet': cls.quiet,
                      'json_logs': cls.json_logs})
-        cls._logger.debug('config initial command line arguments: %s', args)
-
-        # Set dynamic configuration.
-        cls.init_args = args
-        cls.load(Cli(args))
+        cls._logger.debug('config initial command line arguments: %s', cls.init_args)
 
         # Set static configuration.
         cls.storage_schema = cls._storage_schema()
         cls.snippet_template = cls._content_template('snippet-template.txt')
         cls.solution_template = cls._content_template('solution-template.txt')
+
+        # Set dynamic configuration.
+        cls.load(Cli(args))
 
         cls._print_config()
 
@@ -165,23 +166,6 @@ class Config(object):
         return contents
 
     @classmethod
-    def _storage_file(cls):
-        """Test that storage path exist."""
-
-        if Config.storage_path:
-            storage_path = Config.storage_path
-        else:
-            storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
-
-        if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
-            storage_file = os.path.join(storage_path, 'snippy.db')
-        else:
-            cls._logger.error('NOK: storage path does not exist or is not accessible: %s', storage_path)
-            sys.exit(1)
-
-        return storage_file
-
-    @classmethod
     def _storage_schema(cls):
         """Test that database schema file exist."""
 
@@ -203,6 +187,23 @@ class Config(object):
             sys.exit(1)
 
         return template
+
+    @classmethod
+    def _storage_file(cls):
+        """Test that storage path exist."""
+
+        if Config.storage_path:
+            storage_path = Config.storage_path
+        else:
+            storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
+
+        if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
+            storage_file = os.path.join(storage_path, 'snippy.db')
+        else:
+            cls._logger.error('NOK: storage path does not exist or is not accessible: %s', storage_path)
+            sys.exit(1)
+
+        return storage_file
 
     @classmethod
     def _operation_filename(cls):

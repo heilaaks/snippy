@@ -48,7 +48,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         """Run Snippy API server."""
 
         options = {
-            'bind': '%s:%s' % ('127.0.0.1', '8080'),
+            'bind': '%s:%s' % (Config.server_ip, Config.server_port),
             'workers': 1,
             'logger_class': CustomGunicornLogger
         }

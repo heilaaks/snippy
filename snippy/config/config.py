@@ -42,7 +42,7 @@ class Config(object):
     def init(cls, args):
         """Initialize global configuration."""
 
-        # Initialize logger configuration.
+        # Set logger configuration.
         cls.debug = True if args and '--debug' in args else False
         cls.very_verbose = True if args and '-vv' in args else False
         cls.quiet = True if args and '-q' in args else False
@@ -136,9 +136,13 @@ class Config(object):
         # options
         cls.editor = cls.source.editor
         cls.use_ansi = not cls.source.no_ansi
-        cls.server = cls.source.server
-        cls.base_path = cls.source.base_path
         cls.cli = not cls.source.exit
+
+        # server
+        cls.base_path = cls.source.base_path
+        cls.server = cls.source.server
+        cls.server_ip = cls.source.server_ip
+        cls.server_port = cls.source.server_port
 
         # Parsed from defined configuration.
         cls.is_operation_create = True if cls.operation == 'create' else False
@@ -186,7 +190,8 @@ class Config(object):
         cls._logger.debug('configured option defaults: %s', cls.defaults)
         cls._logger.debug('configured option template: %s', cls.template)
         cls._logger.debug('configured option server: %s', cls.server)
-        cls._logger.debug('configured option server base path: %s', cls.base_path)
+        cls._logger.debug('configured option server api base path: %s', cls.base_path)
+        cls._logger.debug('configured option server ip %s and port %s', cls.server_ip, cls.server_port)
 
     @classmethod
     def _operation_filename(cls):

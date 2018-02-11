@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Add configuration for port.
    - [ ] Add configuration for database location.
    - [ ] Fix OpenAPI specification and return values. The documentation seem to contain HTTP status values that are not exsiting.
    - [ ] Fix int to string in swagger? JSON API specs mandate string?
@@ -83,6 +82,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added configuration for server port and IP address.
    - [x] Added explicit versions for most of the external dependencies.
    - [x] Added initial checking of JSON schema against POST and PUT requests.
    - [x] Added Content-Type: application/vnd.api+json for server responses.

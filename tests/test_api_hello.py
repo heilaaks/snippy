@@ -19,10 +19,9 @@
 
 """test_api_hello.py: Test hello API."""
 
-import mock
-
 import falcon
 from falcon import testing
+import mock
 
 from snippy.config.config import Config
 from snippy.snip import Snippy
@@ -82,7 +81,7 @@ class TestApiHello(object):
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Config, '_storage_file')
     def test_api_hello_server_base_path(self, mock_get_db_location, mock_isfile, _):
-        """Test hello API with modified server base path configuration"""
+        """Test hello API with modified server base path configuration."""
 
         mock_isfile.return_value = True
         mock_get_db_location.return_value = Database.get_storage()
@@ -160,6 +159,30 @@ class TestApiHello(object):
         assert result.headers == header
         assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
         assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Config, '_storage_file')
+    def test_api_hello_server_ip_port(self, mock_get_db_location, mock_isfile, _, caplog):
+        """Test hello API with modified server ip and port configuration."""
+
+        mock_isfile.return_value = True
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
+        ##        base path is changed from default and it is set in correct format.
+        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
+        body = {'meta': Snippet.get_http_metadata()}
+        snippy = Snippy(['snippy', '--server', '--ip', 'localhost', '--port', '8081', '-vv'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')   ## apiflow
+        assert result.headers == header
+        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        assert result.status == falcon.HTTP_200
+        assert 'configured option server ip localhost and port 8081' in caplog.text
         snippy.release()
         snippy = None
         Database.delete_storage()

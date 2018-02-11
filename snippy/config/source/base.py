@@ -59,6 +59,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     # Defaults
     LIMIT_DEFAULT = 20
     BASE_PATH = '/snippy/api/v1/'
+    SERVER_IP = '127.0.0.1'
+    SERVER_PORT = '8080'
 
     def __init__(self, parameters=None):
         self._logger = Logger(__name__).get()
@@ -111,6 +113,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.exit = parameters.get('exit', False)
         self.filename = parameters.get('filename', Const.EMPTY)
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
+        self.server_ip = parameters.get('server_ip', ConfigSourceBase.SERVER_IP)
+        self.server_port = parameters.get('server_port', ConfigSourceBase.SERVER_PORT)
         self.json_logs = parameters.get('json_logs', False)
         self.limit = parameters.get('limit', self.LIMIT_DEFAULT)
         self.links = parameters.get('links', ())

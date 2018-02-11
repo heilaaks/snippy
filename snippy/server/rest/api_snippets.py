@@ -41,6 +41,7 @@ class ApiSnippets(object):
 
         contents = []
         self.logger.debug('run post /snippy/api/v1/snippets')
+        print(request.media)
         collection = Validate.collection(request.media)
         for member in collection:
             api = Api(Const.SNIPPET, Api.CREATE, member)

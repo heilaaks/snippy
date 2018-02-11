@@ -306,12 +306,13 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     > http://dredd.org/en/latest/quickstart.html
     $ sudo yum install nodejs
     $ sudo npm install -g dredd
-    $ dredd ./docs/dev/swagger-2.0.yml http://127.0.0.1:8080
-    $ dredd ./docs/dev/swagger-2.0.yml http://127.0.0.1:8080 --dry-run
-    $ dredd ./docs/dev/swagger.yml http://127.0.0.1:8080 --dry-run
+    $ dredd snippy/data/openapi/swagger-2.0.yml http://127.0.0.1:8080
+    $ dredd snippy/data/openapi/swagger-2.0.yml http://127.0.0.1:8080 --dry-run
+    $ dredd snippy/data/openapi/swagger.yml http://127.0.0.1:8080 --dry-run
 
-    $ curl -X POST "http://127.0.0.1:8080/api/v1/snippets" -H "Content-Type: application/json" -d '{}'
-    $ curl -X POST "http://127.0.0.1:8080/api/v1/snippets" -H "Content-Type: application/json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
+    $ curl -X POST "http://127.0.0.1:8080/snippy/api/v1/snippets" -H "Content-Type: application/json" -d '{}'
+    $ curl -X POST "http://127.0.0.1:8080/snippy/api/v1/snippets" -H "Content-Type: application/json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
+    $ curl -X POST "http://127.0.0.1:8080/snippy/api/v1/snippets" -H "Content-Type: application/vnd.api+json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
 
 #######################################
 ## Devel

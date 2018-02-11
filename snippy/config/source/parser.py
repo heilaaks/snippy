@@ -30,8 +30,6 @@ from snippy.logger.logger import Logger
 class Parser(object):
     """Parse configuration source parameters."""
 
-    _logger = Logger(__name__).get()
-
     SOLUTION_BRIEF = '## BRIEF :'
     SOLUTION_DATE = '## DATE  :'
     DATA_HEAD = '# Add mandatory snippet below.\n'
@@ -44,6 +42,8 @@ class Parser(object):
     TAGS_TAIL = '# Add optional links below one link per line.\n'
     LINKS_HEAD = '# Add optional links below one link per line.\n'
     LINKS_TAIL = '.'
+
+    _logger = Logger(__name__).get()
 
     @staticmethod
     def read_content(content, source, timestamp):

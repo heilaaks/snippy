@@ -1,28 +1,28 @@
 ## TODO
-   - [ ] Fix GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found
-   - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
-   - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
-   - [ ] Add limits to all parameters: column array size, sort array size, etc.
+   - [ ] Fix POST and PUT which return the data.id with incorrect value. The data.id must be the new digest.
+   - [ ] Fix GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found.
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
-   - [ ] Fix logger setting with static/class classes like parser.py.
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
-   - [ ] Fix POST/Create to have ID in the response in main level to contain the digest. That is the response data.id must be the digest.
-   - [ ] Fix A server MUST return 403 Forbidden in response to an unsupported request to create a resource with a client-generated ID.
+   - [ ] Fix "A server MUST return 403 Forbidden in response to an unsupported request to create a resource with a client-generated ID".
+   - [ ] Add REPR and print for Config() to get nice printout.
+   - [ ] Add created_time and updated_time into database.
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Fix migrate dump load that use YAML error exception that is not imported if try catch inside explodes.
-   - [ ] Fix test coverage that does not show coverage from -v|--version in the console test?
    - [ ] Update documents.
-   - [ ] Fix the hash from Introduction example. Now it is faked.
+   - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
+   - [ ] Fix the hash from Introduction example (first usage). Now it is faked.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
    - [ ] =============================================================
+   - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
+   - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
+   - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add paginations and offsets to JSON API.
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
-   - [ ] Fix "If you want partial updates, use PATCH instead."
    - [ ] Add more tests /api/v1/snippets.
    - [ ] =============================================================
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help

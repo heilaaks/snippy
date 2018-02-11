@@ -190,6 +190,9 @@ class Cli(ConfigSourceBase):
         server.add_argument('--ip', type=str, dest='server_ip', default=Cli.SERVER_IP, help=argparse.SUPPRESS)
         server.add_argument('--port', type=str, dest='server_port', default=Cli.SERVER_PORT, help=argparse.SUPPRESS)
 
+        # storage options
+        server.add_argument('--storage-path', type=str, dest='storage_path', default=Const.EMPTY, help=argparse.SUPPRESS)
+
         # Argparse will exit with support options like --help or --version and
         # when argument parsing fails. Catching the exception here allows the
         # tool to exit in controlled manner and release pending resources.

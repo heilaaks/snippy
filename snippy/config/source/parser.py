@@ -319,8 +319,6 @@ class Parser(object):
         else:
             cls._logger.debug('source value conversion to string skipped in normal condition %s : %s', type(value), value)
 
-        cls._logger.debug('testing')
-
         return string_
 
     @classmethod

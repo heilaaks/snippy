@@ -47,7 +47,6 @@ class TestApiHello(object):
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')   ## apiflow
-        print(result.json)
         assert result.headers == header
         assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
         assert result.status == falcon.HTTP_200

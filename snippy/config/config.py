@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""config.py: Global configuration management."""
+"""config.py: Global configuration."""
 
 import datetime
 import os.path
@@ -34,7 +34,7 @@ from snippy.logger.logger import Logger
 
 
 class Config(object):
-    """Global configuration management."""
+    """Global configuration object."""
 
     _logger = Logger(__name__).get()
 
@@ -42,7 +42,7 @@ class Config(object):
     def init(cls, args):
         """Initialize global configuration."""
 
-        # Set logger configuration.
+        # Set logging and profiling configuration.
         cls.debug = True if args and '--debug' in args else False
         cls.very_verbose = True if args and '-vv' in args else False
         cls.quiet = True if args and '-q' in args else False
@@ -54,19 +54,20 @@ class Config(object):
                      'json_logs': cls.json_logs})
         cls._logger.debug('config initial command line arguments: %s', args)
 
-        # Set storage configuration.
-        cls.storage_file = cls._storage_file()
+        # Set dynamic configuration.
+        cls.init_args = args
+        cls.load(Cli(args))
+
+        # Set static configuration.
         cls.storage_schema = cls._storage_schema()
         cls.snippet_template = cls._content_template('snippet-template.txt')
         cls.solution_template = cls._content_template('solution-template.txt')
 
-        # Set remaining configuration.
-        cls.init_args = args
-        cls.load(Cli(args))
+        cls._print_config()
 
     @classmethod
     def load(cls, source):
-        """Load configuration source."""
+        """Load dynamic configuration from source."""
 
         cls.source = source
         cls._logger.debug('config source: %s', cls.source)
@@ -108,6 +109,9 @@ class Config(object):
         cls.server_ip = cls.source.server_ip
         cls.server_port = cls.source.server_port
 
+        # storage
+        cls.storage_path = cls.source.storage_path
+
         # Parsed from defined configuration.
         cls.is_operation_create = True if cls.operation == 'create' else False
         cls.is_operation_search = True if cls.operation == 'search' else False
@@ -123,7 +127,7 @@ class Config(object):
         cls.is_operation_file_json = True if cls.operation_filetype == Const.CONTENT_TYPE_JSON else False
         cls.is_operation_file_text = True if cls.operation_filetype == Const.CONTENT_TYPE_TEXT else False
         cls.is_operation_file_yaml = True if cls.operation_filetype == Const.CONTENT_TYPE_YAML else False
-        cls._print_config()
+        cls.storage_file = cls._storage_file()
 
     @classmethod
     def get_contents(cls, content, source=None):
@@ -164,7 +168,11 @@ class Config(object):
     def _storage_file(cls):
         """Test that storage path exist."""
 
-        storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
+        if Config.storage_path:
+            storage_path = Config.storage_path
+        else:
+            storage_path = pkg_resources.resource_filename('snippy', 'data/storage')
+
         if os.path.exists(storage_path) and os.access(storage_path, os.W_OK):
             storage_file = os.path.join(storage_path, 'snippy.db')
         else:

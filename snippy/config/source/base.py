@@ -115,6 +115,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
         self.server_ip = parameters.get('server_ip', ConfigSourceBase.SERVER_IP)
         self.server_port = parameters.get('server_port', ConfigSourceBase.SERVER_PORT)
+        self.storage_path = parameters.get('storage_path', Const.EMPTY)
         self.json_logs = parameters.get('json_logs', False)
         self.limit = parameters.get('limit', self.LIMIT_DEFAULT)
         self.links = parameters.get('links', ())

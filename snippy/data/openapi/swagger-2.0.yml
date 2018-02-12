@@ -162,6 +162,7 @@ paths:
           type: string
           required: true
           description: "Unique snippet identified by message digest."
+          x-example: 44afdd0c59e17159
       responses:
         200:
           description: OK

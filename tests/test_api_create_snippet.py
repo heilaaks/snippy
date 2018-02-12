@@ -250,7 +250,7 @@ class TestApiCreateSnippet(object):
         ##        incorrect.
         snippet = Snippet.DEFAULTS[Snippet.REMOVE]
         headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '656'}
-        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '647'}
+        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '652'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
                             'title': 'not compared because of hash structure in random order inside the string'}]}
@@ -334,7 +334,7 @@ class TestApiCreateSnippet(object):
                              {'type': 'snippet',
                               'attributes': {'brief': ''}}]}
         headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '624'}
-        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '618'}
+        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '623'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
                             'title': 'not compared because of hash structure in random order inside the string'}]}

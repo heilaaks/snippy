@@ -27,7 +27,7 @@ from snippy.config.constants import Constants as Const
 from snippy.logger.logger import Logger
 
 
-class Validate(object):  # pylint: disable=too-few-public-methods
+class Validate(object):
     """Validate REST API input.
 
     Description
@@ -39,7 +39,10 @@ class Validate(object):  # pylint: disable=too-few-public-methods
     Implemented Rules
     =================
 
-    1. "A server MUST return 403 Forbidden in response to an unsupported
+    1. Single invalid resource will invalidate whole requst. This aims to
+       simplify error logic and amount of code.
+
+    2. "A server MUST return 403 Forbidden in response to an unsupported
         request to create a resource with a client-generated ID." /1/
 
     /1/ http://jsonapi.org/format/
@@ -57,6 +60,9 @@ class Validate(object):  # pylint: disable=too-few-public-methods
                 for data in media['data']:
                     if cls.is_valid_data(data):
                         collection.append(data['attributes'])
+                    else:
+                        collection = []
+                        break
             elif isinstance(media['data'], dict):
                 if cls.is_valid_data(media['data']):
                     collection.append(media['data']['attributes'])

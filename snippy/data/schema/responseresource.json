@@ -6,7 +6,7 @@
   "type": "object", 
   "properties": {
     "data": {
-      "$ref": "_definitions.json#/definitions/Data"
+      "$ref": "_definitions.json#/definitions/ResponseData"
     }, 
     "links": {
       "$ref": "_definitions.json#/definitions/Links"

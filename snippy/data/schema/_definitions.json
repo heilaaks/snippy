@@ -1,5 +1,27 @@
 {
   "definitions": {
+    "ResponseData": {
+      "required": [
+        "type", 
+        "attributes"
+      ], 
+      "type": "object", 
+      "properties": {
+        "attributes": {
+          "$ref": "#/definitions/Attributes"
+        }, 
+        "type": {
+          "enum": [
+            "snippet", 
+            "solution"
+          ], 
+          "type": "string"
+        }, 
+        "id": {
+          "type": "string"
+        }
+      }
+    }, 
     "Errors": {
       "required": [
         "meta", 
@@ -18,20 +40,6 @@
         }
       }
     }, 
-    "Resource": {
-      "required": [
-        "data"
-      ], 
-      "type": "object", 
-      "properties": {
-        "data": {
-          "$ref": "#/definitions/Data"
-        }, 
-        "links": {
-          "$ref": "#/definitions/Links"
-        }
-      }
-    }, 
     "Links": {
       "type": "object", 
       "properties": {
@@ -41,7 +49,7 @@
         }
       }
     }, 
-    "Collection": {
+    "RequestCollection": {
       "required": [
         "data"
       ], 
@@ -49,9 +57,56 @@
       "properties": {
         "data": {
           "items": {
-            "$ref": "#/definitions/Data"
+            "$ref": "#/definitions/RequestData"
           }, 
           "type": "array"
+        }
+      }
+    }, 
+    "ResponseResource": {
+      "required": [
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/ResponseData"
+        }, 
+        "links": {
+          "$ref": "#/definitions/Links"
+        }
+      }
+    }, 
+    "ResponseCollection": {
+      "required": [
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "data": {
+          "items": {
+            "$ref": "#/definitions/ResponseData"
+          }, 
+          "type": "array"
+        }
+      }
+    }, 
+    "RequestData": {
+      "required": [
+        "type", 
+        "attributes"
+      ], 
+      "type": "object", 
+      "properties": {
+        "attributes": {
+          "$ref": "#/definitions/Attributes"
+        }, 
+        "type": {
+          "enum": [
+            "snippet", 
+            "solution"
+          ], 
+          "type": "string"
         }
       }
     }, 
@@ -69,6 +124,20 @@
         "homepage": {
           "type": "string", 
           "description": "Server homepage URL."
+        }
+      }
+    }, 
+    "RequestResource": {
+      "required": [
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/RequestData"
+        }, 
+        "links": {
+          "$ref": "#/definitions/Links"
         }
       }
     }, 
@@ -162,28 +231,6 @@
         "digest": {
           "type": "string", 
           "description": "Automatically assigned message digest that uniquely identifies the content."
-        }
-      }
-    }, 
-    "Data": {
-      "required": [
-        "type", 
-        "attributes"
-      ], 
-      "type": "object", 
-      "properties": {
-        "attributes": {
-          "$ref": "#/definitions/Attributes"
-        }, 
-        "type": {
-          "enum": [
-            "snippet", 
-            "solution"
-          ], 
-          "type": "string"
-        }, 
-        "id": {
-          "type": "string"
         }
       }
     }

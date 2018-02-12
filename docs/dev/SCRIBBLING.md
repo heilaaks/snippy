@@ -269,6 +269,9 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     # 30 API docs
     > https://nordicapis.com/ultimate-guide-to-30-api-documentation-solutions/
 
+    # Good examples from API Docs
+    > https://stripe.com/docs/api
+
     # REST API design
     > http://www.kennethlange.com/posts/The-Ultimate-Checklist-for-REST-APIs.html
     > https://raw.githubusercontent.com/for-GET/http-decision-diagram/master/httpdd.png

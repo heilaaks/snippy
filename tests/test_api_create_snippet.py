@@ -62,7 +62,6 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
-        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_201
@@ -251,7 +250,7 @@ class TestApiCreateSnippet(object):
         ##        incorrect.
         snippet = Snippet.DEFAULTS[Snippet.REMOVE]
         headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '656'}
-        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '652'}
+        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '647'}
         body = {'meta': Snippet.get_http_metadata(),
                 'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
                             'title': 'not compared because of hash structure in random order inside the string'}]}
@@ -260,6 +259,7 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
+        print(result.json)
         assert result.headers == headers_p2 or result.headers == headers_p3
         assert Snippet.error_body(result.json) == Snippet.error_body(body)
         assert result.status == falcon.HTTP_400
@@ -322,6 +322,59 @@ class TestApiCreateSnippet(object):
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_403
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+        ## Brief: Try to call POST /snippy/api/v1/snippets to create two snippets. First one
+        ##        is correctly defind but the second one contains error in JSON strcutre. This
+        ##        must not create any resources and the whole request must be considered erronous.
+        snippets = {'data': [{'type': 'snippet',
+                              'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
+                             {'type': 'snippet',
+                              'attributes': {'brief': ''}}]}
+        headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '624'}
+        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '618'}
+        body = {'meta': Snippet.get_http_metadata(),
+                'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
+                            'title': 'not compared because of hash structure in random order inside the string'}]}
+        snippy = Snippy(['snippy', '--server'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
+                                                                     headers={'accept': 'application/json'},
+                                                                     body=json.dumps(snippets))
+        assert result.headers == headers_p2 or result.headers == headers_p3
+        assert Snippet.error_body(result.json) == Snippet.error_body(body)
+        assert result.status == falcon.HTTP_400
+        assert not Database.get_snippets()
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+        ## Brief: Try to call POST /snippy/api/v1/snippets to create two snippets. First one
+        ##        is correctly defind but the second one contains error in JSON strcutre. The
+        ##        error is the client generated ID which is not supported. This must not create
+        ##        any resources and the whole request must be considered erronous
+        snippets = {'data': [{'type': 'snippet',
+                              'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
+                             {'type': 'snippet',
+                              'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
+                              'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)']}}]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '382'}
+        body = {'meta': Snippet.get_http_metadata(),
+                'errors': [{'status': '403', 'statusString': '403 Forbidden', 'module': 'snippy.testing.testing:123',
+                            'title': 'client generated resource id is not supported, remove member data.id'}]}
+        snippy = Snippy(['snippy', '--server'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
+                                                                     headers={'accept': 'application/json'},
+                                                                     body=json.dumps(snippets))
+        print(result.headers)
+        print(result.json)
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_403
+        assert not Database.get_snippets()
         snippy.release()
         snippy = None
         Database.delete_storage()

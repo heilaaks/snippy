@@ -7,7 +7,7 @@
   "properties": {
     "data": {
       "items": {
-        "$ref": "_definitions.json#/definitions/Data"
+        "$ref": "_definitions.json#/definitions/RequestData"
       }, 
       "type": "array"
     }

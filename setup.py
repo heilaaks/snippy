@@ -31,10 +31,10 @@ tests_require = ('codecov==2.0.15',
                  'pytest-cov==2.5.1',
                  'six==1.11.0',
                  'tox==2.9.1')
-docs_require = ('sphinx==1.6.7',
-                'sphinx-autobuild==0.7.1',
+docs_require = ('sphinx==1.7.0',
                 'sphinxcontrib-openapi==0.3.2',
-                'sphinx_rtd_theme==0.2.4')
+                'sphinx_rtd_theme==0.2.4',
+                'sphinx-autobuild==0.7.1')
 exec(open('snippy/metadata.py').read())
 
 setup(

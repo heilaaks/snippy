@@ -56,6 +56,7 @@ class Cause(object):
     HTTP_200_OK = 200
     HTTP_201_CREATED = 201
     HTTP_204_NO_CONTENT = 204
+    HTTP_404_NOT_FOUND = 404
 
     _list = {'errors': []}
     _logger = Logger(__name__).get()

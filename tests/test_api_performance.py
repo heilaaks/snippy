@@ -130,8 +130,7 @@ class TestApiPerformance(object):
             conn.request('GET',
                          '/snippy/api/v1/snippets?limit=100')
             resp = conn.getresponse()
-            assert resp.status == Cause.HTTP_200_OK
-            assert not json.loads(resp.read().decode())['data']
+            assert resp.status == Cause.HTTP_404_NOT_FOUND
 
         runtime = time.time() - start
         server.terminate()

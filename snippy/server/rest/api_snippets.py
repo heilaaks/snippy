@@ -65,6 +65,8 @@ class ApiSnippets(object):
         api = Api(Const.SNIPPET, Api.SEARCH, request.params)
         Config.load(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if not contents:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.collection(Const.SNIPPET, contents)
@@ -131,6 +133,8 @@ class ApiSnippetsDigest(object):
         api = Api(Const.SNIPPET, Api.SEARCH, local_params)
         Config.load(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if not contents:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.resource(Const.SNIPPET, contents, request.uri)

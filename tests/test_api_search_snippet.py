@@ -242,11 +242,13 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /snippy/api/v1/snippets with search keywords that do not result any
-        ##        matches.
+        ## Brief: Try to call GET /snippy/api/v1/snippets with search keywords that do not result
+        ##        any matches.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '12'}
-        body = {'data': []}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '335'}
+        body = {'meta': Snippet.get_http_metadata(),
+                'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
+                            'title': 'cannot find resources'}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets',  ## apiflow
@@ -254,7 +256,7 @@ class TestApiSearchSnippet(object):
                                                                     query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
+        assert result.status == falcon.HTTP_404
         snippy.release()
         snippy = None
         Database.delete_storage()
@@ -272,11 +274,13 @@ class TestApiSearchSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call GET /snippy/api/v1/snippets with search tag keywords that do not result
-        ##        any matches.
+        ## Brief: Try to call GET /snippy/api/v1/snippets with search tag keywords that do not
+        ##        result any matches.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '12'}
-        body = {'data': []}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '335'}
+        body = {'meta': Snippet.get_http_metadata(),
+                'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
+                            'title': 'cannot find resources'}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets',  ## apiflow
@@ -284,7 +288,7 @@ class TestApiSearchSnippet(object):
                                                                     query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
+        assert result.status == falcon.HTTP_404
         snippy.release()
         snippy = None
         Database.delete_storage()
@@ -305,8 +309,10 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /snippy/api/v1/snippets with search group keywords that do not
         ##        result any matches.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '12'}
-        body = {'data': []}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '335'}
+        body = {'meta': Snippet.get_http_metadata(),
+                'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
+                            'title': 'cannot find resources'}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets',  ## apiflow
@@ -314,7 +320,7 @@ class TestApiSearchSnippet(object):
                                                                     query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
+        assert result.status == falcon.HTTP_404
         snippy.release()
         snippy = None
         Database.delete_storage()
@@ -356,15 +362,17 @@ class TestApiSearchSnippet(object):
         ## Brief: Try to call GET /snippy/api/v1/snippets/{digest} with digest that cannot be
         ##        found. In this case the JSON 'null' is converted to Python None.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '102'}
-        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/101010101010101'}, 'data': None}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '334'}
+        body = {'meta': Snippet.get_http_metadata(),
+                'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
+                            'title': 'cannot find resource'}]}
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets/101010101010101',  ## apiflow
                                                                     headers={'accept': 'application/json'})
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
+        assert result.status == falcon.HTTP_404
         snippy.release()
         snippy = None
         Database.delete_storage()

@@ -1,6 +1,4 @@
 ## TODO
-   - [ ] Fix GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found.
-   - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
    - [ ] Add REPR and print for Config() to get nice printout.
    - [ ] Add created_time and updated_time into database.
@@ -8,7 +6,6 @@
    - [ ] Fix migrate dump load that use YAML error exception that is not imported if try catch inside explodes.
    - [ ] Update documents.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
-   - [ ] Fix the hash from Introduction example (first usage). Now it is faked.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
    - [ ] =============================================================
    - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
@@ -78,6 +75,8 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Fixed resource or collection not found to return 404. In Cli the response is ok but now in API it is 404.
+   - [x] Noted that JSON API specification does not forbid sending data.links.self when GET does not return resource.
    - [x] Changed OpenAPI definitions to exclude the data.id member from POST and PUT requests.
    - [x] Added failure handling to JSON validation where any failure will invalidate the whole request.
    - [x] Added 403 Forbidden as required by JSON API v1.0 specification if client generated ID is not supported.

@@ -67,6 +67,8 @@ class ApiSolutions(object):
         api = Api(Const.SOLUTION, Api.SEARCH, request.params)
         Config.load(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if not contents:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.collection(Const.SOLUTION, contents)
@@ -133,6 +135,8 @@ class ApiSolutionsDigest(object):
         api = Api(Const.SOLUTION, Api.SEARCH, local_params)
         Config.load(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if not contents:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.resource(Const.SOLUTION, contents, request.uri)

@@ -6,10 +6,7 @@
   "type": "object", 
   "properties": {
     "data": {
-      "items": {
-        "$ref": "_definitions.json#/definitions/RequestData"
-      }, 
-      "type": "array"
+      "$ref": "_definitions.json#/definitions/RequestContentData"
     }
   }
 }

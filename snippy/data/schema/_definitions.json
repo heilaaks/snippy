@@ -1,6 +1,6 @@
 {
   "definitions": {
-    "ResponseData": {
+    "RequestContentData": {
       "required": [
         "type", 
         "attributes"
@@ -15,9 +15,6 @@
             "snippet", 
             "solution"
           ], 
-          "type": "string"
-        }, 
-        "id": {
           "type": "string"
         }
       }
@@ -40,6 +37,21 @@
         }
       }
     }, 
+    "ContentResponse": {
+      "required": [
+        "links", 
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/ContentResponseData"
+        }, 
+        "links": {
+          "$ref": "#/definitions/Links"
+        }
+      }
+    }, 
     "Links": {
       "type": "object", 
       "properties": {
@@ -49,7 +61,7 @@
         }
       }
     }, 
-    "RequestCollection": {
+    "RequestContents": {
       "required": [
         "data"
       ], 
@@ -57,27 +69,13 @@
       "properties": {
         "data": {
           "items": {
-            "$ref": "#/definitions/RequestData"
+            "$ref": "#/definitions/RequestContentData"
           }, 
           "type": "array"
         }
       }
     }, 
-    "ResponseResource": {
-      "required": [
-        "data"
-      ], 
-      "type": "object", 
-      "properties": {
-        "data": {
-          "$ref": "#/definitions/ResponseData"
-        }, 
-        "links": {
-          "$ref": "#/definitions/Links"
-        }
-      }
-    }, 
-    "ResponseCollection": {
+    "ContentsResponse": {
       "required": [
         "data"
       ], 
@@ -85,28 +83,9 @@
       "properties": {
         "data": {
           "items": {
-            "$ref": "#/definitions/ResponseData"
+            "$ref": "#/definitions/ContentResponseData"
           }, 
           "type": "array"
-        }
-      }
-    }, 
-    "RequestData": {
-      "required": [
-        "type", 
-        "attributes"
-      ], 
-      "type": "object", 
-      "properties": {
-        "attributes": {
-          "$ref": "#/definitions/Attributes"
-        }, 
-        "type": {
-          "enum": [
-            "snippet", 
-            "solution"
-          ], 
-          "type": "string"
         }
       }
     }, 
@@ -127,17 +106,26 @@
         }
       }
     }, 
-    "RequestResource": {
+    "ContentResponseData": {
       "required": [
-        "data"
+        "type", 
+        "id", 
+        "attributes"
       ], 
       "type": "object", 
       "properties": {
-        "data": {
-          "$ref": "#/definitions/RequestData"
+        "attributes": {
+          "$ref": "#/definitions/Attributes"
         }, 
-        "links": {
-          "$ref": "#/definitions/Links"
+        "type": {
+          "enum": [
+            "snippet", 
+            "solution"
+          ], 
+          "type": "string"
+        }, 
+        "id": {
+          "type": "string"
         }
       }
     }, 
@@ -231,6 +219,17 @@
         "digest": {
           "type": "string", 
           "description": "Automatically assigned message digest that uniquely identifies the content."
+        }
+      }
+    }, 
+    "RequestContent": {
+      "required": [
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/RequestContentData"
         }
       }
     }

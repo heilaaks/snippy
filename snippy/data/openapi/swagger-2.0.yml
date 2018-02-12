@@ -31,12 +31,12 @@ paths:
         description: "New snippet to be created"
         required: true
         schema:
-          $ref: "#/definitions/RequestCollection"
+          $ref: "#/definitions/RequestContents"
       responses:
         201:
           description: "Snippet created"
           schema:
-            $ref: "#/definitions/ResponseCollection"
+            $ref: "#/definitions/ContentsResponse"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -68,7 +68,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/ResponseCollection"
+            $ref: "#/definitions/ContentsResponse"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -129,12 +129,12 @@ paths:
           description: "Existing snippet that is updated"
           required: true
           schema:
-            $ref: "#/definitions/RequestResource"
+            $ref: "#/definitions/RequestContent"
       responses:
         200:
           description: "Snippet updated"
           schema:
-            $ref: "#/definitions/ResponseResource"
+            $ref: "#/definitions/ContentResponse"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -162,12 +162,11 @@ paths:
           type: string
           required: true
           description: "Unique snippet identified by message digest."
-          x-example: 44afdd0c59e17159
       responses:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/ResponseResource"
+            $ref: "#/definitions/ContentResponse"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -208,40 +207,39 @@ paths:
         500:
           description: "Internal server error"
 definitions:
-  RequestResource:
+  RequestContent:
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/RequestContentData'
+    required:
+      - data
+  ContentResponse:
     type: object
     properties:
       links:
         $ref: '#/definitions/Links'
       data:
-        $ref: '#/definitions/RequestData'
+        $ref: '#/definitions/ContentResponseData'
     required:
+      - links
       - data
-  ResponseResource:
-    type: object
-    properties:
-      links:
-        $ref: '#/definitions/Links'
-      data:
-        $ref: '#/definitions/ResponseData'
-    required:
-      - data
-  RequestCollection:
+  RequestContents:
     type: object
     properties:
       data:
         type: array
         items:
-          $ref: '#/definitions/RequestData'
+          $ref: '#/definitions/RequestContentData'
     required:
       - data
-  ResponseCollection:
+  ContentsResponse:
     type: object
     properties:
       data:
         type: array
         items:
-          $ref: '#/definitions/ResponseData'
+          $ref: '#/definitions/ContentResponseData'
     required:
       - data
   Links:
@@ -250,7 +248,7 @@ definitions:
       self:
         type: string
         description: "Link pointing to resource."
-  RequestData:
+  RequestContentData:
     type: object
     properties:
       type:
@@ -263,7 +261,7 @@ definitions:
     required:
       - type
       - attributes
-  ResponseData:
+  ContentResponseData:
     type: object
     properties:
       type:
@@ -277,6 +275,7 @@ definitions:
         $ref: '#/definitions/Attributes'
     required:
       - type
+      - id
       - attributes
   Attributes:
     type: object
@@ -443,4 +442,3 @@ parameters:
     in: query
     required: false
     description: "Limit fields that are returned in result list."
-

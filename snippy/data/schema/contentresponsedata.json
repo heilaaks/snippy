@@ -2,6 +2,7 @@
   "$schema": "http://json-schema.org/schema#", 
   "required": [
     "type", 
+    "id", 
     "attributes"
   ], 
   "type": "object", 

@@ -1,6 +1,4 @@
 ## TODO
-   - [ ] Fix POST and PUT which now likely insert/update the data if one of the elements fails. Could be easy and strict that if any validation fails, no changes.
-   - [ ] Fix OpenAPI to exclude the ID from sending side for POST and PUT. For response this must be there.
    - [ ] Fix GET specific digest that is not found which seems to result links and self with the same link. This is likely not ok because the digest is not found.
    - [ ] Fix GET /api/v1/snippets/{digest} with digest that is not found. This is currently set to return OK with empty list but should perhaps should result 404?
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
@@ -80,6 +78,8 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Changed OpenAPI definitions to exclude the data.id member from POST and PUT requests.
+   - [x] Added failure handling to JSON validation where any failure will invalidate the whole request.
    - [x] Added 403 Forbidden as required by JSON API v1.0 specification if client generated ID is not supported.
    - [x] Fixed POST and PUT respomses data.id to have the message digest.
    - [x] Fixed OpenAPI specification HTTP codes and prepared it for Solution definitions.

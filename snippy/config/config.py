@@ -45,12 +45,12 @@ class Config(object):
         cls.init_args = args
 
         # Set logging and profiling configuration.
-        cls.debug = True if cls.init_args and '--debug' in cls.init_args else False
+        cls.debug_logs = True if cls.init_args and '--debug' in cls.init_args else False
         cls.very_verbose = True if cls.init_args and '-vv' in cls.init_args else False
         cls.quiet = True if cls.init_args and '-q' in cls.init_args else False
         cls.json_logs = True if cls.init_args and '--json-logs' in cls.init_args else False
         cls.profiler = True if cls.init_args and '--profile' in cls.init_args else False
-        Logger.init({'debug': cls.debug,
+        Logger.init({'debug': cls.debug_logs,
                      'very_verbose': cls.very_verbose,
                      'quiet': cls.quiet,
                      'json_logs': cls.json_logs})
@@ -63,8 +63,6 @@ class Config(object):
 
         # Set dynamic configuration.
         cls.load(Cli(args))
-
-        cls._print_config()
 
     @classmethod
     def load(cls, source):
@@ -129,6 +127,8 @@ class Config(object):
         cls.is_operation_file_text = True if cls.operation_filetype == Const.CONTENT_TYPE_TEXT else False
         cls.is_operation_file_yaml = True if cls.operation_filetype == Const.CONTENT_TYPE_YAML else False
         cls.storage_file = cls._storage_file()
+
+        cls.debug()
 
     @classmethod
     def get_contents(cls, content, source=None):
@@ -354,8 +354,8 @@ class Config(object):
         return utc.strftime("%Y-%m-%d %H:%M:%S")
 
     @classmethod
-    def _print_config(cls):
-        """Print global configuration."""
+    def debug(cls):
+        """Debug Config."""
 
         cls._logger.debug('configured storage file: %s', cls.storage_file)
         cls._logger.debug('configured storage schema: %s', cls.storage_schema)

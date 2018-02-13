@@ -21,6 +21,7 @@
 
 from __future__ import print_function
 
+from functools import wraps
 from random import getrandbits
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
 import logging
@@ -64,7 +65,8 @@ class Logger(object):
 
     All logs include operation ID that uniquely identifies all logs within
     specific operation. The operation ID must be refreshed by logger user
-    after each operation is completed.
+    after each operation is completed or the method must be wrapped with
+    @Logger.timeit decorator which takes care of the OID refreshing.
 
     All logs including Gunicorn server logs, are formatted to match format
     defined in this logger.
@@ -120,7 +122,11 @@ class Logger(object):
 
     @classmethod
     def init(cls, config):
-        """Initialize logger."""
+        """Initialize logger.
+
+        Arguments:
+            config: logger configuration dictionary.
+        """
 
         cls.CONFIG = config
 
@@ -175,8 +181,25 @@ class Logger(object):
         logging.getLogger('snippy').setLevel(logging.WARNING)
 
     @staticmethod
+    def timeit(method):
+        """Time method by measuring it latency."""
+
+        @wraps(method)
+        def timed(*args, **kw):
+            """Wrapper to measure latency."""
+
+            start = time.time()
+            result = method(*args, **kw)
+            Logger(__name__).get().debug('operation duration: %.6fs', (time.time() - start))
+            Logger.set_new_oid()
+
+            return result
+
+        return timed
+
+    @staticmethod
     def debug():
-        """Debug logging hierarchy."""
+        """Debug Logger."""
 
         from logging_tree import printout
         printout()

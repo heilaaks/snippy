@@ -42,8 +42,8 @@
 
 ## BUBBLING UNDER
    - [ ] Try to remove few remaining cases that require unittest for specificits assets it this makes sense.
+   - [ ] Create statistics object which tracks peak and percentile latencies with memory and CPU usage.
    - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
-   - [ ] Add statistics framework to measure latencies and used time for APIs.
    - [ ] The REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
    - [ ] Changing self._data = data to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
    - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json.
@@ -75,6 +75,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added simple statistics to time each API transaction latency. The output is in debug logs. 
    - [x] Fixed resource or collection not found to return 404. In Cli the response is ok but now in API it is 404.
    - [x] Noted that JSON API specification does not forbid sending data.links.self when GET does not return resource.
    - [x] Changed OpenAPI definitions to exclude the data.id member from POST and PUT requests.

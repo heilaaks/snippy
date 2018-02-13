@@ -364,7 +364,6 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 
     > https://www.relaxdiego.com/2014/07/logging-in-python.html
 
-
 #######################################
 ## Logging
 #######################################
@@ -372,6 +371,10 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     # Documens - generated document for MT
     > https://stackoverflow.com/questions/7250659/python-code-to-generate-part-of-sphinx-documentation-is-it-possible
 
+    # Sphinx API docs
+    > https://samnicholls.net/2016/06/15/how-to-sphinx-readthedocs/
+    $ sphinx-apidoc -f -o docs/source/snippy snippy
+    $ sphinx-apidoc -fMeET -o docs/source/snippy snippy
 
 #######################################
 ## Formatting

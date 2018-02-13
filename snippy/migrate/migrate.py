@@ -72,13 +72,13 @@ class Migrate(object):
         #
         # /1/ https://stackoverflow.com/a/4233482
         if regexp and contents:
-            cls._logger.debug('apply search regexp filter to search query')
+            cls._logger.debug('apply regexp filter to query response: %s', regexp)
         if sorting and contents:
-            cls._logger.debug('apply search sorting filters to search query')
+            cls._logger.debug('apply field sort to query response: %s', sorting)
             for sort_column in reversed(sorting['order']):
                 contents = contents[0].sort_contents(contents, sort_column, sorting['value'][sort_column])
         if limit and contents:
-            cls._logger.debug('apply search limit %d filter to search query', limit)
+            cls._logger.debug('apply limit of resources in query response: %s', limit)
             contents = contents[:limit]
 
         return contents
@@ -101,7 +101,7 @@ class Migrate(object):
                 text = Const.NEWLINE.join(match) + Const.NEWLINE
                 Migrate.print_stdout(text)
         else:
-            text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi, debug=Config.debug)
+            text = Migrate.get_terminal_text(contents, ansi=Config.use_ansi, debug=Config.debug_logs)
             Migrate.print_stdout(text)
 
         return text

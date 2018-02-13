@@ -38,6 +38,7 @@ class ApiSolutions(object):
         self.logger = Logger(__name__).get()
         self.storage = storage
 
+    @Logger.timeit
     def on_post(self, request, response):
         """Create new solution."""
 
@@ -47,7 +48,7 @@ class ApiSolutions(object):
         for member in collection:
             api = Api(Const.SOLUTION, Api.CREATE, member)
             Config.load(api)
-            contents = contents + Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+            contents.extend(Solution(self.storage, Const.CONTENT_TYPE_JSON).run())
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.collection(Const.SOLUTION, contents)
@@ -58,8 +59,9 @@ class ApiSolutions(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.set_new_oid()
+        self.logger.debug('end post /snippy/api/v1/solutions')
 
+    @Logger.timeit
     def on_get(self, request, response):
         """Search solutions based on query parameters."""
 
@@ -79,8 +81,9 @@ class ApiSolutions(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.set_new_oid()
+        self.logger.debug('end get /snippy/api/v1/solutions')
 
+    @Logger.timeit
     def on_delete(self, request, response):
         """Delete solution based on query parameters."""
 
@@ -96,7 +99,7 @@ class ApiSolutions(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.set_new_oid()
+        self.logger.debug('end delete /snippy/api/v1/solutions')
 
 
 class ApiSolutionsDigest(object):
@@ -106,10 +109,11 @@ class ApiSolutionsDigest(object):
         self.logger = Logger(__name__).get()
         self.storage = storage
 
+    @Logger.timeit
     def on_put(self, request, response, digest):
         """Update solution based on digest."""
 
-        self.logger.debug('run put /snippy/api/v1/solutions/{digest} = %s', digest)
+        self.logger.debug('run put /snippy/api/v1/solutions/%s', digest)
         resource_ = Validate.resource(request.media, digest)
         if resource_:
             api = Api(Const.SOLUTION, Api.UPDATE, resource_)
@@ -125,12 +129,13 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.set_new_oid()
+        self.logger.debug('end put /snippy/api/v1/solutions/%s', digest)
 
+    @Logger.timeit
     def on_get(self, request, response, digest):
         """Search solutions based on digest."""
 
-        self.logger.debug('run get /snippy/api/v1/solutions/{digest} = %s', digest)
+        self.logger.debug('run get /snippy/api/v1/solutions/%s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SOLUTION, Api.SEARCH, local_params)
         Config.load(api)
@@ -147,12 +152,13 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.set_new_oid()
+        self.logger.debug('end get /snippy/api/v1/solutions/%s', digest)
 
+    @Logger.timeit
     def on_delete(self, _, response, digest):
         """Delete solution based on digest."""
 
-        self.logger.debug('run delete /snippy/api/v1/solutions/{digest} = %s', digest)
+        self.logger.debug('run delete /snippy/api/v1/solutions/%s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SOLUTION, Api.DELETE, local_params)
         Config.load(api)
@@ -165,4 +171,4 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        Logger.set_new_oid()
+        self.logger.debug('end delete /snippy/api/v1/solutions/%s', digest)

@@ -17,7 +17,7 @@ test:
 	python -m pytest -x ./tests/test_*.py --cov snippy
 
 coverage:
-	pytest --cov=snippy --cov-report html tests/
+	pytest --cov=snippy --cov-branch --cov-report html tests/
 	pytest --cov=snippy tests/
 
 docs:

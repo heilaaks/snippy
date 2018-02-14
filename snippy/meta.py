@@ -29,4 +29,3 @@ __project__ = 'snippy'
 __version__ = '0.7.0'
 
 __docs__ = 'http://snippy.readthedocs.io/en/v' + __version__ + '/'
-

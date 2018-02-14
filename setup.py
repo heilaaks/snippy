@@ -55,16 +55,14 @@ def readme():
     with open('README.rst') as f:
         return f.read()
 
-#exec(open('snippy/meta.py').read())
-
 setup(
     name = 'snippy',
     version = __version__,
     author = __author__,
     author_email = __email__,
-    url = __webpage__,
+    url = __homepage__,
     description = 'Command, solution and code snippet management.',
-    long_description = readme()
+    long_description = readme(),
     license=__license__,
     classifiers=[
         'Development Status :: 4 - Beta',

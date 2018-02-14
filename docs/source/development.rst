@@ -61,3 +61,16 @@ The Pylint rc file can be generated for the very first time like:
     pylint --generate-rcfile > tests/pylint/pylint-snippy.rc
 
 .. _virtualenvwrapper: http://virtualenvwrapper.readthedocs.io/en/latest/command_ref.html
+
+Modules
+-------
+
+snippy.logger
+~~~~~~~~~~~~~
+
+This is a test.
+
+.. autoclass:: snippy.logger.Logger
+   :members:
+   :member-order: bysource
+

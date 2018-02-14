@@ -24,7 +24,7 @@ from schema import SchemaError
 
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 
 
 class Validate(object):
@@ -48,7 +48,7 @@ class Validate(object):
     /1/ http://jsonapi.org/format/
     """
 
-    _logger = Logger(__name__).get()
+    _logger = Logger(__name__).logger
 
     @classmethod
     def collection(cls, media):

@@ -27,13 +27,13 @@ except ImportError:
 
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 
 
 class JsonApiV1(object):
     """Format to JSON API v1.0."""
 
-    _logger = Logger(__name__).get()
+    _logger = Logger(__name__).logger
 
     @classmethod
     def resource(cls, category, contents, uri):

@@ -23,13 +23,13 @@ import os
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 
 
 class Editor(object):
     """Text editor based content management."""
 
-    _logger = Logger(__name__).get()
+    _logger = Logger(__name__).logger
 
     @classmethod
     def read_content(cls, content):

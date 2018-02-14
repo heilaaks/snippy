@@ -26,10 +26,10 @@ from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
 from snippy.content.content import Content
-from snippy.metadata import __docs__
-from snippy.metadata import __homepage__
-from snippy.metadata import __openapi__
-from snippy.metadata import __version__
+from snippy.meta import __docs__
+from snippy.meta import __homepage__
+from snippy.meta import __openapi__
+from snippy.meta import __version__
 from snippy.migrate.migrate import Migrate
 from snippy.snip import Snippy
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database

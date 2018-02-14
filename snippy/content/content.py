@@ -22,15 +22,15 @@
 import re
 import hashlib
 from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
 from snippy.config.config import Config
+from snippy.logger import Logger
 
 
 class Content(object):  # pylint: disable=too-many-public-methods
     """Store content."""
 
     def __init__(self, content=None, category=None):
-        self.logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         if content is None:
             self.content = tuple(Content.get_empty(category).get_list())
         else:

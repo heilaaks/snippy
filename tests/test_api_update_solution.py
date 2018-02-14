@@ -29,8 +29,8 @@ from falcon import testing
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.metadata import __homepage__
-from snippy.metadata import __version__
+from snippy.meta import __homepage__
+from snippy.meta import __version__
 from snippy.snip import Snippy
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database

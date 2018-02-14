@@ -24,7 +24,7 @@ import os.path
 import sqlite3
 from contextlib import closing
 from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 
@@ -33,7 +33,7 @@ class Sqlite3Db(object):
     """Sqlite3 database management."""
 
     def __init__(self):
-        self.logger = Logger(__name__).get()
+        self.logger = Logger(__name__).logger
         self.connection = None
 
     def init(self):

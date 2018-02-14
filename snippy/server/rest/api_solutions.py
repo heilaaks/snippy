@@ -26,7 +26,7 @@ from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.config.source.api import Api
 from snippy.content.solution import Solution
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 from snippy.server.rest.jsonapiv1 import JsonApiV1
 from snippy.server.rest.validate import Validate
 
@@ -35,7 +35,7 @@ class ApiSolutions(object):
     """Process solution collections"""
 
     def __init__(self, storage):
-        self.logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self.storage = storage
 
     @Logger.timeit
@@ -43,7 +43,7 @@ class ApiSolutions(object):
         """Create new solution."""
 
         contents = []
-        self.logger.debug('run post /snippy/api/v1/solutions')
+        self._logger.debug('run post /snippy/api/v1/solutions')
         collection = Validate.collection(request.media)
         for member in collection:
             api = Api(Const.SOLUTION, Api.CREATE, member)
@@ -59,13 +59,13 @@ class ApiSolutions(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end post /snippy/api/v1/solutions')
+        self._logger.debug('end post /snippy/api/v1/solutions')
 
     @Logger.timeit
     def on_get(self, request, response):
         """Search solutions based on query parameters."""
 
-        self.logger.debug('run get /snippy/api/v1/solutions')
+        self._logger.debug('run get /snippy/api/v1/solutions')
         api = Api(Const.SOLUTION, Api.SEARCH, request.params)
         Config.load(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
@@ -81,13 +81,13 @@ class ApiSolutions(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end get /snippy/api/v1/solutions')
+        self._logger.debug('end get /snippy/api/v1/solutions')
 
     @Logger.timeit
     def on_delete(self, request, response):
         """Delete solution based on query parameters."""
 
-        self.logger.debug('run delete /snippy/api/v1/solutions')
+        self._logger.debug('run delete /snippy/api/v1/solutions')
         api = Api(Const.SOLUTION, Api.DELETE, request.params)
         Config.load(api)
         Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
@@ -99,21 +99,21 @@ class ApiSolutions(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end delete /snippy/api/v1/solutions')
+        self._logger.debug('end delete /snippy/api/v1/solutions')
 
 
 class ApiSolutionsDigest(object):
     """Process solutions based on digest resource ID."""
 
     def __init__(self, storage):
-        self.logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self.storage = storage
 
     @Logger.timeit
     def on_put(self, request, response, digest):
         """Update solution based on digest."""
 
-        self.logger.debug('run put /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('run put /snippy/api/v1/solutions/%s', digest)
         resource_ = Validate.resource(request.media, digest)
         if resource_:
             api = Api(Const.SOLUTION, Api.UPDATE, resource_)
@@ -129,13 +129,13 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end put /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('end put /snippy/api/v1/solutions/%s', digest)
 
     @Logger.timeit
     def on_get(self, request, response, digest):
         """Search solutions based on digest."""
 
-        self.logger.debug('run get /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('run get /snippy/api/v1/solutions/%s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SOLUTION, Api.SEARCH, local_params)
         Config.load(api)
@@ -152,13 +152,13 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end get /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('end get /snippy/api/v1/solutions/%s', digest)
 
     @Logger.timeit
     def on_delete(self, _, response, digest):
         """Delete solution based on digest."""
 
-        self.logger.debug('run delete /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('run delete /snippy/api/v1/solutions/%s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SOLUTION, Api.DELETE, local_params)
         Config.load(api)
@@ -171,4 +171,4 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end delete /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('end delete /snippy/api/v1/solutions/%s', digest)

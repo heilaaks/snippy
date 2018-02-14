@@ -24,8 +24,8 @@ import re
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
-from snippy.logger.logger import Logger
-from snippy.metadata import __version__
+from snippy.logger import Logger
+from snippy.meta import __version__
 
 
 class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
@@ -63,7 +63,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     SERVER_PORT = '8080'
 
     def __init__(self, parameters=None):
-        self._logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self._repr = self._get_repr()
         self.set_conf(parameters)
 

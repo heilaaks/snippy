@@ -19,36 +19,53 @@
 
 from setuptools import setup, find_packages
 
-server_require = ('falcon==1.3.0',
-                  'gunicorn==19.7.1',
-                  'schema==0.6.7')
-dev_require = ('logging_tree==1.7',
-               'openapi2jsonschema==0.7.0')
-tests_require = ('codecov==2.0.15',
-                 'flake8==3.5.0',
-                 'mock==2.0.0',
-                 'pytest==3.3.2',
-                 'pytest-cov==2.5.1',
-                 'six==1.11.0',
-                 'tox==2.9.1')
-docs_require = ('sphinx==1.7.0',
-                'sphinxcontrib-openapi==0.3.2',
-                'sphinx_rtd_theme==0.2.4',
-                'sphinx-autobuild==0.7.1')
-exec(open('snippy/metadata.py').read())
+from snippy.meta import __author__
+from snippy.meta import __email__
+from snippy.meta import __homepage__
+from snippy.meta import __license__
+from snippy.meta import __version__
+
+
+dev_require = (
+    'logging_tree==1.7',
+    'openapi2jsonschema==0.7.0'
+)
+docs_require = (
+    'sphinx==1.7.0',
+    'sphinxcontrib-openapi==0.3.2',
+    'sphinx_rtd_theme==0.2.4',
+    'sphinx-autobuild==0.7.1'
+)
+server_require = (
+    'falcon==1.3.0',
+    'gunicorn==19.7.1',
+    'schema==0.6.7'
+)
+tests_require = (
+    'codecov==2.0.15',
+    'flake8==3.5.0',
+    'mock==2.0.0',
+    'pytest==3.3.2',
+    'pytest-cov==2.5.1',
+    'six==1.11.0',
+    'tox==2.9.1'
+)
+
+def readme():
+    with open('README.rst') as f:
+        return f.read()
+
+#exec(open('snippy/meta.py').read())
 
 setup(
-    name='snippy',
-    version=__version__,
-    author='Heikki J. Laaksonen',
-    author_email='laaksonen.heikki.j@gmail.com',
-    url=__homepage__,
-    description='Command, solution and code snippet management.',
-    long_description='Manage command examples and solutions directly from command line.' +
-                     'Snippy tool is intended to support software development and troubleshooting ' +
-                     'workflows by collecting command examples and troubleshooting solutions ' +
-                     'into one manager.',
-    license='GNU AGPLv3',
+    name = 'snippy',
+    version = __version__,
+    author = __author__,
+    author_email = __email__,
+    url = __webpage__,
+    description = 'Command, solution and code snippet management.',
+    long_description = readme()
+    license=__license__,
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
@@ -68,7 +85,13 @@ setup(
     keywords='command solution snippet manager console',
     packages=find_packages(exclude=['tests', 'tests.testlib']),
     package_dir={'snippy': 'snippy'},
-    package_data={'snippy': ['data/config/*', 'data/default/*', 'data/template/*', 'data/storage/*']},
+    package_data={'snippy': [
+        'data/config/*',
+        'data/default/*',
+        'data/storage/*'
+        'data/template/*',
+        ]
+    },
     zip_safe=False,
     entry_points={
         'console_scripts': [

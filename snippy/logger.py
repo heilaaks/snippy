@@ -17,7 +17,11 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""logger.py: Common logging."""
+"""
+.. module:: logger
+   :platform: Unix
+   :synopsis: Logging services.
+"""
 
 from __future__ import print_function
 
@@ -42,10 +46,7 @@ except ImportError:
 
 
 class Logger(object):
-    """Logging methods and rules for Snippy.
-
-    Description
-    ===========
+    """Logging services and rules.
 
     By default, there are no logs printed to the users. This applies also
     to error logs.
@@ -74,7 +75,6 @@ class Logger(object):
     All logs are printed to stdout.
 
     Logging Rules
-    =============
 
     1. Only OK or NOK with cause text must be printed with defaults.
     2. There must be no logs printed to user.
@@ -95,6 +95,12 @@ class Logger(object):
     SERVER_OID = format(getrandbits(32), "08x")
 
     def __init__(self, module):
+        """Logging object initialization.
+
+        Args:
+           module (str): Name of the module that requests a Logger.
+        """
+
         # Use severity level names from RFC 5424 /1/. The level name is
         # printed with one letter when debug logs are in text mode. In
         # JSON format logs contain full length severity level name.
@@ -115,17 +121,21 @@ class Logger(object):
             self.logger.addHandler(handler)
         self.logger = logging.LoggerAdapter(self.logger, {'appname': 'snippy', 'oid': Logger.SERVER_OID})
 
-    def get(self):
-        """Return logger."""
-
-        return self.logger
-
     @classmethod
-    def init(cls, config):
-        """Initialize logger.
+    def configure(cls, config):
+        """Set logger configuration.
 
-        Arguments:
-            config: logger configuration dictionary.
+        Parameters
+        ----------
+        Args:
+            config (dict): Logger configuration dictionary.
+
+        Examples
+        --------
+        >>> Logger.configure({'debug': True,
+        >>>                   'very_verbose': False,
+        >>>                   'quiet': False,
+        >>>                   'json_logs': True})
         """
 
         cls.CONFIG = config
@@ -165,7 +175,7 @@ class Logger(object):
         # /1/ https://stackoverflow.com/a/16865106
         # /2/ https://stackoverflow.com/a/26738736
         if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
-            Logger(__name__).get().info('exiting with cause %s', cause.lower())
+            Logger(__name__).logger.info('exiting with cause %s', cause.lower())
         elif not cls.CONFIG['quiet']:
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
@@ -190,7 +200,7 @@ class Logger(object):
 
             start = time.time()
             result = method(*args, **kw)
-            Logger(__name__).get().debug('operation duration: %.6fs', (time.time() - start))
+            Logger(__name__).logger.debug('operation duration: %.6fs', (time.time() - start))
             Logger.set_new_oid()
 
             return result
@@ -289,8 +299,8 @@ class CustomGunicornLogger(GunicornLogger):
         self._remove_handlers(self.access_log)
         logging.getLogger('gunicorn').propagate = False
 
-        self.error_log = Logger('snippy.server.gunicorn.error').get()
-        self.access_log = Logger('snippy.server.gunicorn.access').get()
+        self.error_log = Logger('snippy.server.gunicorn.error').logger
+        self.access_log = Logger('snippy.server.gunicorn.access').logger
 
     @staticmethod
     def _remove_handlers(logger):

@@ -19,26 +19,26 @@
 
 """snippet.py: Snippet management."""
 
-from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from snippy.migrate.migrate import Migrate
+from snippy.config.constants import Constants as Const
 from snippy.content.content import Content
+from snippy.logger import Logger
+from snippy.migrate.migrate import Migrate
 
 
 class Snippet(object):
     """Snippet management."""
 
     def __init__(self, storage, content_type=Const.CONTENT_TYPE_TEXT):
-        self.logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self.storage = storage
         self.content_type = content_type
 
     def create(self):
         """Create new snippet."""
 
-        self.logger.debug('creating new snippet')
+        self._logger.debug('creating new snippet')
         snippets = Config.get_contents(Content(category=Const.SNIPPET))
         if not snippets[0].has_data():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory snippet data not defined')
@@ -52,7 +52,7 @@ class Snippet(object):
     def search(self):
         """Search snippets."""
 
-        self.logger.debug('searching snippets')
+        self._logger.debug('searching snippets')
         snippets = self.storage.search(Const.SNIPPET,
                                        sall=Config.search_all_kws,
                                        stag=Config.search_tag_kws,
@@ -73,7 +73,7 @@ class Snippet(object):
                                        digest=Config.operation_digest,
                                        data=Config.content_data)
         if len(snippets) == 1:
-            self.logger.debug('updating snippet with digest %.16s', snippets[0].get_digest())
+            self._logger.debug('updating snippet with digest %.16s', snippets[0].get_digest())
             snippets = Config.get_contents(content=snippets[0])
             content_digest = self.storage.update(snippets[0])
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
@@ -94,7 +94,7 @@ class Snippet(object):
                                        digest=Config.operation_digest,
                                        data=Config.content_data)
         if len(snippets) == 1:
-            self.logger.debug('deleting snippet with digest %.16s', snippets[0].get_digest())
+            self._logger.debug('deleting snippet with digest %.16s', snippets[0].get_digest())
             self.storage.delete(snippets[0].get_digest())
         else:
             Config.validate_search_context(snippets, 'delete')
@@ -104,10 +104,10 @@ class Snippet(object):
 
         filename = Config.get_operation_file()
         if Config.template:
-            self.logger.debug('exporting snippet template %s', Config.get_operation_file())
+            self._logger.debug('exporting snippet template %s', Config.get_operation_file())
             Migrate.dump_template(Content(category=Const.SNIPPET))
         elif Config.is_search_criteria():
-            self.logger.debug('exporting snippets based on search criteria')
+            self._logger.debug('exporting snippets based on search criteria')
             snippets = self.storage.search(Const.SNIPPET,
                                            sall=Config.search_all_kws,
                                            stag=Config.search_tag_kws,
@@ -120,7 +120,7 @@ class Snippet(object):
                 Config.validate_search_context(snippets, 'export')
             Migrate.dump(snippets, filename)
         else:
-            self.logger.debug('exporting all snippets %s', filename)
+            self._logger.debug('exporting all snippets %s', filename)
             snippets = self.storage.export_content(Const.SNIPPET)
             Migrate.dump(snippets, filename)
 
@@ -140,7 +140,7 @@ class Snippet(object):
             else:
                 Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple snippets with same digest {:.16}'.format(content_digest))
         else:
-            self.logger.debug('importing snippets %s', Config.get_operation_file())
+            self._logger.debug('importing snippets %s', Config.get_operation_file())
             dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SNIPPET))
             snippets = Content.load(dictionary)
             self.storage.import_content(snippets)
@@ -150,7 +150,7 @@ class Snippet(object):
 
         snippets = ()
 
-        self.logger.debug('managing snippet')
+        self._logger.debug('managing snippet')
         Config.content_category = Const.SNIPPET
         if Config.is_operation_create:
             snippets = self.create()

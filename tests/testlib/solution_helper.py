@@ -21,14 +21,14 @@
 
 import mock
 
-from snippy.snip import Snippy
-from snippy.metadata import __version__
-from snippy.metadata import __homepage__
-from snippy.config.constants import Constants as Const
 from snippy.cause.cause import Cause
+from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
 from snippy.content.content import Content
+from snippy.meta import __homepage__
+from snippy.meta import __version__
 from snippy.migrate.migrate import Migrate
+from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 

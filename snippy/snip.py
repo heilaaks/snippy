@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""Snippy - command, solution and code snippet management."""
+"""snippy - command, solution and code snippet management."""
 
 import sys
 
@@ -27,7 +27,7 @@ from snippy.config.source.cli import Cli
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
 from snippy.devel.profiler import Profiler
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 from snippy.storage.storage import Storage
 
 
@@ -36,7 +36,7 @@ class Snippy(object):
 
     def __init__(self, args=None):
         Config.init(args)
-        self.logger = Logger(__name__).get()
+        self.logger = Logger(__name__).logger
         self.storage = Storage()
         self.server = None
 

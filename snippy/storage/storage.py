@@ -20,7 +20,7 @@
 """storage.py: Storage management."""
 
 from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 from snippy.config.config import Config
 from snippy.content.content import Content
 from snippy.storage.database.sqlite3db import Sqlite3Db as Database
@@ -30,7 +30,7 @@ class Storage(object):
     """Storage management for all types of content."""
 
     def __init__(self):
-        self._logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self._database = Database()
         self._database.init()
 

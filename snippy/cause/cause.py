@@ -22,11 +22,11 @@
 import inspect
 import sys
 
-from snippy.logger.logger import Logger
-from snippy.metadata import __docs__
-from snippy.metadata import __homepage__
-from snippy.metadata import __openapi__
-from snippy.metadata import __version__
+from snippy.logger import Logger
+from snippy.meta import __docs__
+from snippy.meta import __homepage__
+from snippy.meta import __openapi__
+from snippy.meta import __version__
 
 
 class Cause(object):
@@ -59,7 +59,7 @@ class Cause(object):
     HTTP_404_NOT_FOUND = 404
 
     _list = {'errors': []}
-    _logger = Logger(__name__).get()
+    _logger = Logger(__name__).logger
 
     @classmethod
     def reset(cls):

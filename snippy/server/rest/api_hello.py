@@ -24,10 +24,10 @@ import json
 import falcon
 
 from snippy.config.constants import Constants as Const
-from snippy.metadata import __docs__
-from snippy.metadata import __homepage__
-from snippy.metadata import __openapi__
-from snippy.metadata import __version__
+from snippy.meta import __docs__
+from snippy.meta import __homepage__
+from snippy.meta import __openapi__
+from snippy.meta import __version__
 
 
 class ApiHello(object):  # pylint: disable=too-few-public-methods

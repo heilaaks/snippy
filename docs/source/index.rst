@@ -2,6 +2,7 @@ Welcome to Snippy documentation!
 ================================
 
 .. toctree::
+   :glob:
    :maxdepth: 2
    :caption: Contents:
 
@@ -13,3 +14,4 @@ Welcome to Snippy documentation!
    api
    development
    license
+

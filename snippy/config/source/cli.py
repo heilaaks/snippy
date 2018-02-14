@@ -22,8 +22,8 @@
 from __future__ import print_function
 import sys
 import argparse
-from snippy.metadata import __version__
-from snippy.metadata import __homepage__
+from snippy.meta import __version__
+from snippy.meta import __homepage__
 from snippy.config.constants import Constants as Const
 from snippy.config.source.base import ConfigSourceBase
 

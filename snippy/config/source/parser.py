@@ -24,7 +24,7 @@ import datetime
 import re
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 
 
 class Parser(object):
@@ -43,7 +43,7 @@ class Parser(object):
     LINKS_HEAD = '# Add optional links below one link per line.\n'
     LINKS_TAIL = '.'
 
-    _logger = Logger(__name__).get()
+    _logger = Logger(__name__).logger
 
     @staticmethod
     def read_content(content, source, timestamp):

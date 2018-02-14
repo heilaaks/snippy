@@ -24,7 +24,7 @@ from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.config.source.api import Api
 from snippy.content.snippet import Snippet
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 from snippy.server.rest.jsonapiv1 import JsonApiV1
 from snippy.server.rest.validate import Validate
 
@@ -33,7 +33,7 @@ class ApiSnippets(object):
     """Process snippet collections."""
 
     def __init__(self, storage):
-        self.logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self.storage = storage
 
     @Logger.timeit
@@ -41,7 +41,7 @@ class ApiSnippets(object):
         """Create new snippets."""
 
         contents = []
-        self.logger.debug('run post /snippy/api/v1/snippets')
+        self._logger.debug('run post /snippy/api/v1/snippets')
         collection = Validate.collection(request.media)
         for member in collection:
             api = Api(Const.SNIPPET, Api.CREATE, member)
@@ -57,13 +57,13 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end post /snippy/api/v1/snippets')
+        self._logger.debug('end post /snippy/api/v1/snippets')
 
     @Logger.timeit
     def on_get(self, request, response):
         """Search snippets based on query parameters."""
 
-        self.logger.debug('run get /snippy/api/v1/snippets')
+        self._logger.debug('run get /snippy/api/v1/snippets')
         api = Api(Const.SNIPPET, Api.SEARCH, request.params)
         Config.load(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
@@ -79,13 +79,13 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end get /snippy/api/v1/snippets')
+        self._logger.debug('end get /snippy/api/v1/snippets')
 
     @Logger.timeit
     def on_delete(self, request, response):
         """Delete snippet based on query parameters."""
 
-        self.logger.debug('run delete /snippy/api/v1/snippets')
+        self._logger.debug('run delete /snippy/api/v1/snippets')
         api = Api(Const.SNIPPET, Api.DELETE, request.params)
         Config.load(api)
         Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
@@ -97,21 +97,21 @@ class ApiSnippets(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end delete /snippy/api/v1/snippets')
+        self._logger.debug('end delete /snippy/api/v1/snippets')
 
 
 class ApiSnippetsDigest(object):
     """Process snippet based on digest resource ID."""
 
     def __init__(self, storage):
-        self.logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self.storage = storage
 
     @Logger.timeit
     def on_put(self, request, response, digest):
         """Update snippet based on digest."""
 
-        self.logger.debug('run put /snippy/api/v1/snippets/%s', digest)
+        self._logger.debug('run put /snippy/api/v1/snippets/%s', digest)
         resource_ = Validate.resource(request.media, digest)
         if resource_:
             api = Api(Const.SNIPPET, Api.UPDATE, resource_)
@@ -127,13 +127,13 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end put /snippy/api/v1/snippets/%s', digest)
+        self._logger.debug('end put /snippy/api/v1/snippets/%s', digest)
 
     @Logger.timeit
     def on_get(self, request, response, digest):
         """Search snippet based on digest."""
 
-        self.logger.debug('run get /snippy/api/v1/snippets/%s', digest)
+        self._logger.debug('run get /snippy/api/v1/snippets/%s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SNIPPET, Api.SEARCH, local_params)
         Config.load(api)
@@ -150,13 +150,13 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end get /snippy/api/v1/snippets/%s', digest)
+        self._logger.debug('end get /snippy/api/v1/snippets/%s', digest)
 
     @Logger.timeit
     def on_delete(self, _, response, digest):
         """Delete snippet based on digest."""
 
-        self.logger.debug('run delete /snippy/api/v1/snippets/%s', digest)
+        self._logger.debug('run delete /snippy/api/v1/snippets/%s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SNIPPET, Api.DELETE, local_params)
         Config.load(api)
@@ -169,4 +169,4 @@ class ApiSnippetsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self.logger.debug('end delete /snippy/api/v1/snippets/%s', digest)
+        self._logger.debug('end delete /snippy/api/v1/snippets/%s', digest)

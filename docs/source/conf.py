@@ -17,10 +17,12 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-# import os
-# import sys
-# sys.path.insert(0, os.path.abspath('.'))
+import os
+import sys
+sys.path.insert(0, os.path.abspath('../../'))
 
+# Project metadata
+exec(open('../../snippy/meta.py').read())
 
 # -- General configuration ------------------------------------------------
 
@@ -31,7 +33,11 @@
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
-extensions = ['sphinxcontrib.openapi']
+extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.napoleon',
+    'sphinxcontrib.openapi'
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -47,15 +53,14 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'snippy'
-copyright = '2017-2018, Heikki Laaksonen'
-author = 'Heikki Laaksonen'
+copyright = __copyright__
+author = __author__
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
 # The short X.Y version.
-exec(open('../../snippy/metadata.py').read())
 version = __version__
 # The full version, including alpha/beta/rc tags.
 release = __version__
@@ -168,6 +173,4 @@ texinfo_documents = [
      author, 'snippy', 'One line description of project.',
      'Miscellaneous'),
 ]
-
-
 

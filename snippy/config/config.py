@@ -30,13 +30,13 @@ from snippy.config.constants import Constants as Const
 from snippy.config.source.cli import Cli
 from snippy.config.source.editor import Editor
 from snippy.config.source.parser import Parser
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 
 
 class Config(object):
     """Global configuration object."""
 
-    _logger = Logger(__name__).get()
+    _logger = Logger(__name__).logger
 
     @classmethod
     def init(cls, args):
@@ -50,10 +50,10 @@ class Config(object):
         cls.quiet = True if cls.init_args and '-q' in cls.init_args else False
         cls.json_logs = True if cls.init_args and '--json-logs' in cls.init_args else False
         cls.profiler = True if cls.init_args and '--profile' in cls.init_args else False
-        Logger.init({'debug': cls.debug_logs,
-                     'very_verbose': cls.very_verbose,
-                     'quiet': cls.quiet,
-                     'json_logs': cls.json_logs})
+        Logger.configure({'debug': cls.debug_logs,
+                          'very_verbose': cls.very_verbose,
+                          'quiet': cls.quiet,
+                          'json_logs': cls.json_logs})
         cls._logger.debug('config initial command line arguments: %s', cls.init_args)
 
         # Set static configuration.

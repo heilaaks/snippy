@@ -26,8 +26,8 @@ except ImportError:
     from urlparse import urljoin
 
 from snippy.config.config import Config
-from snippy.logger.logger import CustomGunicornLogger
-from snippy.logger.logger import Logger
+from snippy.logger import CustomGunicornLogger
+from snippy.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
 from snippy.server.rest.api_hello import ApiHello
 from snippy.server.rest.api_snippets import ApiSnippets
@@ -40,7 +40,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
     """REST API Server."""
 
     def __init__(self, storage):
-        self.logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self.api = None
         self.storage = storage
 
@@ -52,7 +52,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
             'workers': 1,
             'logger_class': CustomGunicornLogger
         }
-        self.logger.debug('run server with base path: %s', Config.base_path)
+        self._logger.debug('run server with base path: %s', Config.base_path)
         self.api = falcon.API(media_type='application/vnd.api+json')
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})

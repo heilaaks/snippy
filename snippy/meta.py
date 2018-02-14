@@ -17,11 +17,16 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""metadata.py: Metadata information for the tool."""
+"""meta: Metadata information for the tool."""
 
-__version__ = '0.7.0'
-__license__ = 'GNU Affero General Public License v3'
-__copyright__ = 'Heikki J. Laaksonen'
+__author__ = 'Heikki J. Laaksonen'
+__copyright__ = '2017-2018, Heikki J. Laaksonen'
+__email__ = 'laaksonen.heikki.j@gmail.com'
 __homepage__ = 'https://github.com/heilaaks/snippy'
-__docs__ = 'http://snippy.readthedocs.io/en/v' + __version__ + '/'
+__license__ = 'GNU Affero General Public License v3'
 __openapi__ = 'https://app.swaggerhub.com/apis/heilaaks/snippy/1.0'
+__project__ = 'snippy'
+__version__ = '0.7.0'
+
+__docs__ = 'http://snippy.readthedocs.io/en/v' + __version__ + '/'
+

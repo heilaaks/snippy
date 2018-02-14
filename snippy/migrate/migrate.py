@@ -27,15 +27,15 @@ from signal import signal, getsignal, SIGPIPE, SIG_DFL
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
-from snippy.metadata import __homepage__
-from snippy.metadata import __version__
+from snippy.logger import Logger
+from snippy.meta import __homepage__
+from snippy.meta import __version__
 
 
 class Migrate(object):
     """Import and export management."""
 
-    _logger = Logger(__name__).get()
+    _logger = Logger(__name__).logger
 
     @classmethod
     def content(cls, contents, content_type):

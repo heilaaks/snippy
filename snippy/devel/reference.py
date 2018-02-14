@@ -11,7 +11,7 @@ import pkg_resources
 
 from snippy.cause.cause import Cause
 from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
+from snippy.logger import Logger
 
 
 class Reference(object):
@@ -20,7 +20,7 @@ class Reference(object):
     TEST_SEPARATOR = ' <WF_SEPARATOR> '
 
     def __init__(self):
-        self.logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self.tests = []
 
     def print_tests(self, ansi=True):

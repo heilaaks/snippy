@@ -19,26 +19,26 @@
 
 """solution.py: Solution management."""
 
-from snippy.config.constants import Constants as Const
-from snippy.logger.logger import Logger
 from snippy.cause.cause import Cause
 from snippy.config.config import Config
-from snippy.migrate.migrate import Migrate
+from snippy.config.constants import Constants as Const
 from snippy.content.content import Content
+from snippy.logger import Logger
+from snippy.migrate.migrate import Migrate
 
 
 class Solution(object):
     """Solution management."""
 
     def __init__(self, storage, content_type=Const.CONTENT_TYPE_TEXT):
-        self.logger = Logger(__name__).get()
+        self._logger = Logger(__name__).logger
         self.storage = storage
         self.content_type = content_type
 
     def create(self):
         """Create new solution."""
 
-        self.logger.debug('creating new solution')
+        self._logger.debug('creating new solution')
         solutions = Config.get_contents(Content(category=Const.SOLUTION))
         if not solutions[0].has_data():
             Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory solution data not defined')
@@ -54,7 +54,7 @@ class Solution(object):
     def search(self):
         """Search solutions."""
 
-        self.logger.debug('searching solutions')
+        self._logger.debug('searching solutions')
         solutions = self.storage.search(Const.SOLUTION,
                                         sall=Config.search_all_kws,
                                         stag=Config.search_tag_kws,
@@ -75,7 +75,7 @@ class Solution(object):
                                         digest=Config.operation_digest,
                                         data=Config.content_data)
         if len(solutions) == 1:
-            self.logger.debug('updating solution with digest %.16s', solutions[0].get_digest())
+            self._logger.debug('updating solution with digest %.16s', solutions[0].get_digest())
             solutions = Config.get_contents(content=solutions[0])
             content_digest = self.storage.update(solutions[0])
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
@@ -96,7 +96,7 @@ class Solution(object):
                                         digest=Config.operation_digest,
                                         data=Config.content_data)
         if len(solutions) == 1:
-            self.logger.debug('deleting solution with digest %.16s', solutions[0].get_digest())
+            self._logger.debug('deleting solution with digest %.16s', solutions[0].get_digest())
             self.storage.delete(solutions[0].get_digest())
         else:
             Config.validate_search_context(solutions, 'delete')
@@ -106,10 +106,10 @@ class Solution(object):
 
         filename = Config.get_operation_file()
         if Config.template:
-            self.logger.debug('exporting solution template %s', Config.get_operation_file())
+            self._logger.debug('exporting solution template %s', Config.get_operation_file())
             Migrate.dump_template(Content(category=Const.SOLUTION))
         elif Config.is_search_criteria():
-            self.logger.debug('exporting solutions based on search criteria')
+            self._logger.debug('exporting solutions based on search criteria')
             solutions = self.storage.search(Const.SOLUTION,
                                             sall=Config.search_all_kws,
                                             stag=Config.search_tag_kws,
@@ -122,7 +122,7 @@ class Solution(object):
                 Config.validate_search_context(solutions, 'export')
             Migrate.dump(solutions, filename)
         else:
-            self.logger.debug('exporting all solutions %s', filename)
+            self._logger.debug('exporting all solutions %s', filename)
             solutions = self.storage.export_content(Const.SOLUTION)
             Migrate.dump(solutions, filename)
 
@@ -142,7 +142,7 @@ class Solution(object):
             else:
                 Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple solutions with same digest {:.16}'.format(content_digest))
         else:
-            self.logger.debug('importing solutions %s', Config.get_operation_file())
+            self._logger.debug('importing solutions %s', Config.get_operation_file())
             dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SOLUTION))
             solutions = Content.load(dictionary)
             self.storage.import_content(solutions)
@@ -152,7 +152,7 @@ class Solution(object):
 
         solutions = ()
 
-        self.logger.debug('managing solution')
+        self._logger.debug('managing solution')
         Config.content_category = Const.SOLUTION
         if Config.is_operation_create:
             solutions = self.create()

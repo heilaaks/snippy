@@ -46,47 +46,7 @@ except ImportError:
 
 
 class Logger(object):
-    """Logging services and rules.
-
-    By default, there are no logs printed to the users. This applies also
-    to error logs.
-
-    There are two levels of logging verbosity. All logs are printed in full
-    length without filters with the --debug option. The -vv (very verbose)
-    option prints limited length log messages in lower case letters.
-
-    There are two formats for logs: text (default) and JSON. JSON logs can
-    be enabled with --json-logs option. A JSON log has more information
-    fields than text formatted log. When -vv option is used with JSON logs,
-    it truncates log message in the same way as with text logs.
-
-    Timestamps are in local time with text formatted logs. In case of JSON
-    logs, the timestamp is in GMT time zone and it follows strictly the
-    ISO8601 format. Both timestamps are in millisecond granularity.
-
-    All logs include operation ID that uniquely identifies all logs within
-    specific operation. The operation ID must be refreshed by logger user
-    after each operation is completed or the method must be wrapped with
-    @Logger.timeit decorator which takes care of the OID refreshing.
-
-    All logs including Gunicorn server logs, are formatted to match format
-    defined in this logger.
-
-    All logs are printed to stdout.
-
-    Logging Rules
-
-    1. Only OK or NOK with cause text must be printed with defaults.
-    2. There must be no logs printed to user.
-    3. There must be no exceptions printed to user.
-    4. Exceptions logs are printed is INFO and all other logs is DEBUG.
-    5. Variables printed in logs must be separated with colon.
-    6. All other than error logs must be printed in lower case string.
-    7. The --debug option must print logs without filters in full-length.
-    8. The -vv option must print logs in lower case and one log per line.
-    9. All external libraries must follow the same log format.
-    10. All logs must be printed to stdout.
-    """
+    """Logging services."""
 
     # Logger configuration.
     CONFIG = {}
@@ -95,8 +55,10 @@ class Logger(object):
     SERVER_OID = format(getrandbits(32), "08x")
 
     def __init__(self, module):
-        """Logging object initialization.
+        """
 
+        Parameters
+        ----------
         Args:
            module (str): Name of the module that requests a Logger.
         """
@@ -159,14 +121,26 @@ class Logger(object):
             logging.getLogger('snippy').setLevel(logging.DEBUG)
 
     @classmethod
-    def set_new_oid(cls):
-        """Set new operation ID."""
+    def refresh_oid(cls):
+        """Refresh operation ID (OID).
+
+
+        The OID is used to separate logs within one operation. The helps
+        post-processing of the logs by allowing for example querying all
+        the logs in failing operatoion.
+        """
 
         cls.SERVER_OID = format(getrandbits(32), "08x")
 
     @classmethod
     def print_cause(cls, cause):
-        """Print exit cause."""
+        """Print exit cause.
+
+        Parameters
+        ----------
+        Args:
+            cause (str): Exit cause to be printed on stdout.
+        """
 
         # The signal handler manipulation and the flush below prevent the
         # 'broken pipe' errors with grep. For example incorrect parameter
@@ -192,7 +166,10 @@ class Logger(object):
 
     @staticmethod
     def timeit(method):
-        """Time method by measuring it latency."""
+        """Time method by measuring it latency.
+
+        The operation ID (OID) is refreshed automatically at the end.
+        """
 
         @wraps(method)
         def timed(*args, **kw):
@@ -201,7 +178,7 @@ class Logger(object):
             start = time.time()
             result = method(*args, **kw)
             Logger(__name__).logger.debug('operation duration: %.6fs', (time.time() - start))
-            Logger.set_new_oid()
+            Logger.refresh_oid()
 
             return result
 
@@ -209,7 +186,7 @@ class Logger(object):
 
     @staticmethod
     def debug():
-        """Debug Logger."""
+        """Debug Logger by printing logging hierarchy."""
 
         from logging_tree import printout
         printout()

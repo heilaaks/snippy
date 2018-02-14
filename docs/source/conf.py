@@ -174,3 +174,5 @@ texinfo_documents = [
      'Miscellaneous'),
 ]
 
+# Project settings
+autoclass_content = 'both'

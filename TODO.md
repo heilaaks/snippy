@@ -1,6 +1,5 @@
 ## TODO
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
-   - [ ] Add REPR and print for Config() to get nice printout.
    - [ ] Add created_time and updated_time into database.
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Fix migrate dump load that use YAML error exception that is not imported if try catch inside explodes.

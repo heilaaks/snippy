@@ -24,7 +24,8 @@ import os.path
 import re
 import sys
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
-from snippy.cause.cause import Cause
+
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.logger import Logger

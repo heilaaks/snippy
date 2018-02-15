@@ -21,7 +21,7 @@
 
 from __future__ import print_function
 
-from snippy.cause.cause import Cause
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.config.source.api import Api

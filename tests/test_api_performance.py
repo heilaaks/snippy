@@ -28,7 +28,7 @@ import time
 from subprocess import call
 from subprocess import Popen
 
-from snippy.cause.cause import Cause
+from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database

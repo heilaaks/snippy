@@ -23,9 +23,10 @@ import re
 import os.path
 import sqlite3
 from contextlib import closing
+
 from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
-from snippy.cause.cause import Cause
+from snippy.cause import Cause
 from snippy.config.config import Config
 
 

@@ -22,7 +22,7 @@
 from schema import Schema, And, Or
 from schema import SchemaError
 
-from snippy.cause.cause import Cause
+from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
 

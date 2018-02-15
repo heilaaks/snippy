@@ -21,7 +21,7 @@
 
 import sys
 
-from snippy.cause.cause import Cause
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.source.cli import Cli
 from snippy.content.snippet import Snippet

@@ -25,7 +25,7 @@ import sys
 
 import pkg_resources
 
-from snippy.cause.cause import Cause
+from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.cli import Cli
 from snippy.config.source.editor import Editor

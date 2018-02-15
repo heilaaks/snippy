@@ -17,11 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""
-.. module:: logger
-   :platform: Unix
-   :synopsis: Logging services.
-"""
+"""logger: Logging services."""
 
 from __future__ import print_function
 

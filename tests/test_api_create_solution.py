@@ -25,7 +25,7 @@ from falcon import testing
 import falcon
 import mock
 
-from snippy.cause.cause import Cause
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.meta import __homepage__
 from snippy.meta import __version__

@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""cause.py: Cause code management."""
+"""cause: Cause code services."""
 
 import inspect
 import sys
@@ -30,10 +30,11 @@ from snippy.meta import __version__
 
 
 class Cause(object):
-    """Cause code management."""
+    """Cause code services."""
 
     ALL_OK = 'OK'
 
+    # HTTP status codes.
     HTTP_200 = '200 OK'
     HTTP_201 = '201 Created'
     HTTP_204 = '204 No Content'
@@ -72,7 +73,18 @@ class Cause(object):
 
     @classmethod
     def push(cls, status, message):
-        """Append cause to list."""
+        """Append cause to list.
+
+        Parameters
+        ----------
+        Args:
+            status (str): One of the predefined HTTP status codes.
+            message (str): Description of the cause.
+
+        Examples
+        --------
+        >>> Cause.push(Cause.HTTP_CREATED, 'content created')
+        """
 
         # Optimization: Prevent setting the caller module and line number in case
         # of success causes. Reading of the line number requires file access that

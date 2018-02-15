@@ -22,7 +22,7 @@
 import mock
 import six
 
-from snippy.cause.cause import Cause
+from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
 from snippy.content.content import Content

@@ -128,3 +128,19 @@ All logs are printed to stdout.
    :members:
    :member-order: bysource
 
+snippy.cause
+~~~~~~~~~~~~
+
+**Service**
+
+Cause class offers storage services for normal and error causes. The causes are
+stored in a list where user can get all the failues that happened for example
+during the operation.
+
+All causes are operated with predefind constants for HTTP causes and short
+descriptions of the event. 
+
+.. autoclass:: snippy.cause.Cause
+   :members:
+   :member-order: bysource
+

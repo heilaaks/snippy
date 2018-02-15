@@ -21,7 +21,7 @@
 
 import mock
 
-from snippy.cause.cause import Cause
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.storage.database.sqlite3db import Sqlite3Db

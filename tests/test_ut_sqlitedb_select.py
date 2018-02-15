@@ -20,7 +20,8 @@
 """test_ut_sqlite3db_select.py: Test selecting content from sqlite."""
 
 import mock
-from snippy.cause.cause import Cause
+
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.storage.database.sqlite3db import Sqlite3Db

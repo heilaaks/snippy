@@ -22,7 +22,8 @@
 import copy
 import datetime
 import re
-from snippy.cause.cause import Cause
+
+from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
 

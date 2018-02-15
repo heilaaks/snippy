@@ -669,12 +669,18 @@ content:
   - '    # Release notes'
   - '    > https://github.com/kubernetes/kubernetes/releases'
   - ''
+  - '    # Getting started (Blog)'
+  - '    > https://blog.codeship.com/getting-started-with-kubernetes/'
+  - ''
   - '################################################################################'
   - '## commands'
   - '################################################################################'
   - ''
   - '    # Version'
   - '    $ kubectl version -o yaml'
+  - ''
+  - '    # Configuration'
+  - '    $ cat ~/.kube/config'
   - ''
   - '    # Cluster'
   - '    $ kubectl cluster-info'
@@ -688,6 +694,7 @@ content:
   - ''
   - '    # Pods'
   - '    $ kubectl get pods -n kube-system'
+  - '    $ kubectl get pods --all-namespaces'
   - ''
   - '    # Namespaces'
   - '    $ kubectl get namespace'
@@ -703,6 +710,12 @@ content:
   - '    $ kubectl delete -f ./manifests/301-svc-registry.yaml'
   - '    $ kubectl get service cm -o=yaml'
   - '    $ kubectl get all -o wide'
+  - ''
+  - '    # Restart pod (two options)'
+  - '    $ kubectl get pod kubernetes-dashboard-845747bdd4-9fbd6 -n kube-system -o
+    yaml | kubectl replace --force -f -'
+  - '    $ kubectl -n kube-system delete $(kubectl -n kube-system get pod -o name
+    | grep dashboard)'
   - ''
   - '    # Deployments and scaling'
   - '    $ kubectl get deployments'
@@ -744,6 +757,42 @@ content:
   - '    $ docker ps -a'
   - '    $ journalctl -r | grep -E ''node has conditions: \[DiskPressure\]'''
   - ''
+  - '    # Deploy and access dashboard'
+  - '    # ==========================='
+  - '    #'
+  - '    # The default examples do not give any privileges to Dashboard.'
+  - '    > https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#deploying-the-dashboard-ui'
+  - '    $ kubectl config view'
+  - '    $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/alternative/kubernetes-dashboard.yaml'
+  - '    $ vi dashboard_admin.yaml'
+  - '      apiVersion: rbac.authorization.k8s.io/v1beta1'
+  - '      kind: ClusterRoleBinding'
+  - '      metadata:'
+  - '        name: kubernetes-dashboard'
+  - '        labels:'
+  - '          k8s-app: kubernetes-dashboard'
+  - '      roleRef:'
+  - '        apiGroup: rbac.authorization.k8s.io'
+  - '        kind: ClusterRole'
+  - '        name: cluster-admin'
+  - '      subjects:'
+  - '      - kind: ServiceAccount'
+  - '        name: kubernetes-dashboard'
+  - '        namespace: kube-system'
+  - '    $ kubectl create -f dashboard_admin.yaml'
+  - '    $ kubectl edit svc kubernetes-dashboard -n kube-system #Set type to NodePort'
+  - ''
+  - '    # Recommended way that does not seem to work. The problem seems to be that'
+  - '    # there are no privileges given to dashboard in recomended way.'
+  - '    $ kubectl create -f https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml'
+  - '    $ kubectl edit svc kubernetes-dashboard -n kube-system # Set to ''type: NodePort'''
+  - '    $ kubectl get pod kubernetes-dashboard-845747bdd4-9fbd6 -n kube-system -o
+    yaml | kubectl replace --force -f -'
+  - '    $ kubectl -n kube-system delete $(kubectl -n kube-system get pod -o name
+    | grep dashboard)'
+  - '    $ kubectl describe pod kubernetes-dashboard-845747bdd4-jjrjf -n kube-system'
+  - '    $ kubectl get all -n kube-system'
+  - ''
   - '################################################################################'
   - '## configurations'
   - '################################################################################'
@@ -752,11 +801,13 @@ content:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  digest: 9919be51109b52fac83806394f924f8450516264fd5fbf4d78d1c906157fc42a
+  digest: d4255650684fc01ef7f6d6d4a66b2c4270330e68398577f5432d56ec87a3f6fe
   filename: howto-debug-kubernetes.txt
   group: kubernetes
   links:
+  - https://blog.codeship.com/getting-started-with-kubernetes/
   - https://github.com/kubernetes/kubernetes/releases
+  - https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#deploying-the-dashboard-ui
   runalias: ''
   tags:
   - debug
@@ -764,7 +815,7 @@ content:
   - howto
   - kubernetes
   - moby
-  utc: '2018-01-11 11:00:17'
+  utc: '2018-02-15 13:49:38'
   versions: ''
 - brief: Debugging Kafka
   category: solution
@@ -951,7 +1002,118 @@ content:
   - howto
   utc: '2017-10-20 11:11:19'
   versions: ''
+- brief: Debugging LXC containers
+  category: solution
+  data:
+  - '################################################################################'
+  - '## BRIEF : Debugging LXC containers'
+  - '##'
+  - '## DATE  : 2017-01-29 12:31:00'
+  - '## GROUP : containers'
+  - '## TAGS  : lxc,containers,debug,howto'
+  - '## FILE  : howto-debug-lxc-containers.txt'
+  - '################################################################################'
+  - ''
+  - ''
+  - '################################################################################'
+  - '## description'
+  - '################################################################################'
+  - ''
+  - '    # Instructions how to debug LXC containers.'
+  - ''
+  - '################################################################################'
+  - '## references'
+  - '################################################################################'
+  - ''
+  - '    # Versions'
+  - '    # LXC containers version 2.0.9'
+  - ''
+  - '    # LXC containers release notes'
+  - '    > '
+  - ''
+  - '    # LXC containers downloads'
+  - '    > https://linuxcontainers.org/lxc/downloads/'
+  - ''
+  - '################################################################################'
+  - '## commands'
+  - '################################################################################'
+  - ''
+  - '    # Install on Fedora 38'
+  - '    > https://www.cyberciti.biz/faq/how-to-install-and-setup-lxc-linux-container-on-fedora-linux-26/'
+  - '    $ yum install lxc lxc-templates lxc-extra debootstrap libvirt perl gpg #
+    Fedora 38 2.0.9-1'
+  - '    $ systemctl start libvirtd.service'
+  - '    $ systemctl start lxc.service'
+  - '    $ systemctl status libvirtd.service'
+  - '    $ systemctl status lxc.service'
+  - '    $ lxc-checkconfig | grep -i bridge # enabled, loaded'
+  - '    $ ip a # should have virbr0 and virbr0-nic'
+  - '    $ brctl show'
+  - '    $ cat /etc/lxc/default.conf'
+  - '    $ cp /etc/lxc/default.conf ~/.config/lxc/default.conf'
+  - '    $ vi ~/.config/lxc/default.conf # Set lxc.network.link to virbr0'
+  - '      lxc.network.type = veth'
+  - '      lxc.network.link = virbr0'
+  - '      lxc.network.flags = up'
+  - '      lxc.network.hwaddr = 00:16:3e:xx:xx:xx'
+  - '    $ journalctl -u libvirtd.service | grep range # IP address range for containers'
+  - ''
+  - '    # Run container'
+  - '    $ lxc-create -t download -n ubuntu-c1 -- -d ubuntu -r xenial -a amd64'
+  - '    $ lxc-ls'
+  - '    $ /var/lib/lxc/ubuntu-c1/rootfs/ passwd ubuntu # set admin password'
+  - '    $ chroot /var/lib/lxc/ubuntu-c1/rootfs/ passwd # make sure the account is
+    locked'
+  - '    $ lxc-start -n ubuntu-c1'
+  - '    $ lxc-start -n ubuntu-c1 -l trace -o stdout'
+  - '    $ lxc-info -n ubuntu-c1'
+  - '    $ lxc-ls -f'
+  - '    $ lxc-console -n ubuntu-c1 # ubuntu/lxc'
+  - '    $ lxc-stop -n ubuntu-c1'
+  - ''
+  - '    # List images'
+  - '    $ lxc-create -t download -n NULL -- --list'
+  - ''
+  - '################################################################################'
+  - '## solutions'
+  - '################################################################################'
+  - ''
+  - '    # Exit from container console connection not working'
+  - '    # =================================================='
+  - '    #'
+  - '    # At least on Ubuntu image, the exit from console connection does not'
+  - '    # work. Also key combination ctrl-a q does not work. The options are to'
+  - '    # stop the container from another console or to run the container as a'
+  - '    # daemon. This seems to be a bug.'
+  - '    > https://serverfault.com/a/438824'
+  - '    $ lxc-start -d -n ubuntu-c1'
+  - '    $ exit / ctrl-a q'
+  - '    $ lxc-stop -n ubuntu-c1'
+  - ''
+  - '################################################################################'
+  - '## configurations'
+  - '################################################################################'
+  - ''
+  - '################################################################################'
+  - '## whiteboard'
+  - '################################################################################'
+  - ''
+  digest: 0b8d2d7a33e388e281d4f7c7ce76afc6defaee0ae479f3a870794d365678893f
+  filename: howto-debug-lxc-containers.txt
+  group: containers
+  links:
+  - https://linuxcontainers.org/lxc/downloads/
+  - https://serverfault.com/a/438824
+  - https://www.cyberciti.biz/faq/how-to-install-and-setup-lxc-linux-container-on-fedora-linux-26/
+  runalias: ''
+  tags:
+  - containers
+  - debug
+  - howto
+  - lxc
+  utc: '2017-01-29 12:31:00'
+  versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy
-  utc: '2018-01-11 11:02:27'
+  utc: '2018-02-15 13:51:10'
   version: 0.7.0

@@ -26,26 +26,27 @@ from snippy.meta import __license__
 from snippy.meta import __version__
 
 
-dev_require = (
+extras_dev = (
     'logging_tree==1.7',
-    'openapi2jsonschema==0.7.0'
+    'openapi2jsonschema==0.7.0',
+    'pyflakes==1.6.0'
 )
-docs_require = (
+extras_docs = (
     'sphinx==1.7.0',
     'sphinxcontrib-openapi==0.3.2',
     'sphinx_rtd_theme==0.2.4',
     'sphinx-autobuild==0.7.1'
 )
-server_require = (
+extras_server = (
     'falcon==1.3.0',
     'gunicorn==19.7.1',
     'schema==0.6.7'
 )
-tests_require = (
+extras_tests = (
     'codecov==2.0.15',
     'flake8==3.5.0',
     'mock==2.0.0',
-    'pytest==3.3.2',
+    'pytest==3.4.0',
     'pytest-cov==2.5.1',
     'six==1.11.0',
     'tox==2.9.1'
@@ -98,11 +99,11 @@ setup(
     },
     install_requires=['pyyaml==3.12'],
     extras_require={
-        'dev': dev_require + tests_require + docs_require + server_require,
-        'docs': docs_require,
-        'server': server_require,
-        'test': tests_require + server_require,
+        'dev': extras_dev + extras_docs + extras_server + extras_tests,
+        'docs': extras_docs,
+        'server': extras_server,
+        'test': extras_server + extras_tests,
     },
-    tests_require=tests_require,
+    tests_require=extras_tests,
     test_suite='tests'
 )

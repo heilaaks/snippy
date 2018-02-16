@@ -19,6 +19,11 @@
 #
 import os
 import sys
+
+from snippy.meta import __author__
+from snippy.meta import __copyright__
+from snippy.meta import __version__
+
 sys.path.insert(0, os.path.abspath('../../'))
 
 # Project metadata

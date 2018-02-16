@@ -27,8 +27,6 @@ import mock
 
 from snippy.cause import Cause
 from snippy.config.config import Config
-from snippy.meta import __homepage__
-from snippy.meta import __version__
 from snippy.snip import Snippy
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database

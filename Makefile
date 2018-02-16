@@ -20,6 +20,9 @@ coverage:
 	pytest --cov=snippy --cov-branch --cov-report html tests/
 	pytest --cov=snippy tests/
 
+outdated:
+	pip list --outdated
+
 docs:
 	make -C docs html
 
@@ -27,6 +30,9 @@ lint:
 	-pylint --rcfile tests/pylint/pylint-snippy-tests.rc tests/ | tee tests/pylint/pylint-snippy-tests.txt
 	-pylint --rcfile tests/pylint/pylint-snippy.rc snippy/ | tee tests/pylint/pylint-snippy.txt
 	-flake8 --config tests/flake8/flake8.ini snippy
+
+pyflakes:
+	-python -m pyflakes .
 
 schema:
 	openapi2jsonschema snippy/data/openapi/swagger-2.0.yml -o snippy/data/schema/
@@ -63,4 +69,4 @@ clean:
 clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall server dev test coverage docs lint docker security-scan clean clean-db
+.PHONY: install upgrade uninstall server dev test coverage outdated docs lint pyflakes docker security-scan clean clean-db

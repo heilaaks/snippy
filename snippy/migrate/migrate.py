@@ -17,13 +17,17 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""migrate.py: Import and export management."""
+"""migrate: Import and export management."""
 
 from __future__ import print_function
+
+import json
 import os.path
 import re
 import sys
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
+
+import yaml
 
 from snippy.cause import Cause
 from snippy.config.config import Config
@@ -228,13 +232,9 @@ class Migrate(object):
                         outfile.write(template)
                         outfile.write(Const.NEWLINE)
                 elif Config.is_operation_file_json:
-                    import json
-
                     json.dump(dictionary, outfile)
                     outfile.write(Const.NEWLINE)
                 elif Config.is_operation_file_yaml:
-                    import yaml
-
                     yaml.safe_dump(dictionary, outfile, default_flow_style=False)
                 else:
                     cls._logger.debug('unknown export file format')
@@ -274,12 +274,8 @@ class Migrate(object):
                         contents = Config.get_contents(content, infile.read())
                         dictionary = {'content': Migrate.get_dictionary_list(contents)}
                     elif Config.is_operation_file_json:
-                        import json
-
                         dictionary = json.load(infile)
                     elif Config.is_operation_file_yaml:
-                        import yaml
-
                         dictionary = yaml.safe_load(infile)
                     else:
                         cls._logger.debug('unknown import file format')

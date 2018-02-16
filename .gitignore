@@ -9,6 +9,7 @@ dist/
 
 # Python unit test / coverage reports
 .cache
+.pytest_cache
 .coverage
 .coverage.*
 .tox

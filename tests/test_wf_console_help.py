@@ -389,6 +389,7 @@ class TestWfConsoleHelp(object):
                       '   ! runalias : ',
                       '   ! versions : ',
                       '   ! created  : 2017-10-14 19:56:31',
+                      '   ! updated  : 2017-10-14 19:56:31',
                       '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
                       '   ! metadata : None',
                       '   ! key      : 1',
@@ -405,6 +406,7 @@ class TestWfConsoleHelp(object):
                       '   ! runalias : ',
                       '   ! versions : ',
                       '   ! created  : 2017-10-14 19:56:31',
+                      '   ! updated  : 2017-10-14 19:56:31',
                       '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
                       '   ! metadata : None',
                       '   ! key      : 2')
@@ -545,6 +547,7 @@ class TestWfConsoleHelp(object):
                       '   ! runalias : ',
                       '   ! versions : ',
                       '   ! created  : 2017-10-14 19:56:31',
+                      '   ! updated  : 2017-10-14 19:56:31',
                       '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
                       '   ! metadata : None',
                       '   ! key      : 1',
@@ -561,6 +564,7 @@ class TestWfConsoleHelp(object):
                       '   ! runalias : ',
                       '   ! versions : ',
                       '   ! created  : 2017-10-14 19:56:31',
+                      '   ! updated  : 2017-10-14 19:56:31',
                       '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
                       '   ! metadata : None',
                       '   ! key      : 2')

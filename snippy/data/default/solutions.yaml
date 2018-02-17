@@ -111,6 +111,7 @@ content:
   - moby
   - plugin
   created: '2017-10-30 08:24:28'
+  updated: '2017-10-30 08:24:28'
   versions: ''
 - brief: Debugging nginx
   category: solution
@@ -339,6 +340,7 @@ content:
   - logging
   - nginx
   created: '2018-01-11 11:00:32'
+  updated: '2018-01-11 11:00:32'
   versions: ''
 - brief: Debugging Elastic Beats
   category: solution
@@ -469,6 +471,7 @@ content:
   - filebeat
   - howto
   created: '2017-10-30 08:21:40'
+  updated: '2017-10-30 08:21:40'
   versions: ''
 - brief: Debugging Docker
   category: solution
@@ -638,6 +641,7 @@ content:
   - howto
   - swarm
   created: '2018-01-11 10:59:24'
+  updated: '2018-01-11 10:59:24'
   versions: ''
 - brief: Debugging Kubernetes
   category: solution
@@ -816,6 +820,7 @@ content:
   - kubernetes
   - moby
   created: '2018-02-15 13:49:38'
+  updated: '2018-02-15 13:49:38'
   versions: ''
 - brief: Debugging Kafka
   category: solution
@@ -882,6 +887,7 @@ content:
   - kafka
   - zookeeper
   created: '2018-01-10 07:29:35'
+  updated: '2018-01-10 07:29:35'
   versions: ''
 - brief: Debugging Elasticsearch
   category: solution
@@ -1001,6 +1007,7 @@ content:
   - elasticsearch
   - howto
   created: '2017-10-20 11:11:19'
+  updated: '2017-10-20 11:11:19'
   versions: ''
 - brief: Debugging LXC containers
   category: solution
@@ -1112,6 +1119,7 @@ content:
   - howto
   - lxc
   created: '2017-01-29 12:31:00'
+  updated: '2017-01-29 12:31:00'
   versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy

@@ -43,13 +43,14 @@ class TestUtSqlite3dbDelete(object):
         sqlite.init()
 
         ## Brief: Delete snippets with short version from digest.
+        timestamp = '2018-02-17 13:23:43'
         content1 = Snippet.get_content(snippet=Snippet.REMOVE)
         content2 = Snippet.get_content(snippet=Snippet.FORCED)
         keywords = ['foo', 'engine', 'digitalocean']
-        sqlite.insert_content(content1, content1.get_digest(), content1.get_metadata())
+        sqlite.insert_content(content1, content1.get_digest(), timestamp, timestamp, content1.get_metadata())
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        sqlite.insert_content(content2, content2.get_digest(), content2.get_metadata())
+        sqlite.insert_content(content2, content2.get_digest(), timestamp, timestamp, content2.get_metadata())
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
         Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
@@ -75,13 +76,14 @@ class TestUtSqlite3dbDelete(object):
         sqlite.init()
 
         ## Brief: Delete snippets with long version from digest.
+        timestamp = '2018-02-17 13:23:43'
         content1 = Snippet.get_content(snippet=Snippet.REMOVE)
         content2 = Snippet.get_content(snippet=Snippet.FORCED)
         keywords = ['foo', 'engine', 'digitalocean']
-        sqlite.insert_content(content1, content1.get_digest(), content1.get_metadata())
+        sqlite.insert_content(content1, content1.get_digest(), timestamp, timestamp, content1.get_metadata())
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        sqlite.insert_content(content2, content2.get_digest(), content2.get_metadata())
+        sqlite.insert_content(content2, content2.get_digest(), timestamp, timestamp, content2.get_metadata())
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
         Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)

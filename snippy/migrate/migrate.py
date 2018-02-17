@@ -150,6 +150,7 @@ class Migrate(object):
                 text = text + Migrate._terminal_runalias(ansi) % content.get_runalias()
                 text = text + Migrate._terminal_versions(ansi) % content.get_versions()
                 text = text + Migrate._terminal_created(ansi) % content.get_created()
+                text = text + Migrate._terminal_updated(ansi) % content.get_updated()
                 text = text + Migrate._terminal_digest(ansi) % (content.get_digest(),
                                                                 content.get_digest() == content.compute_digest())
                 text = text + Migrate._terminal_metadata(ansi) % content.get_metadata()
@@ -350,6 +351,12 @@ class Migrate(object):
         return '   \x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m  : %s\n' if ansi else '   ! created  : %s\n'
 
     @staticmethod
+    def _terminal_updated(ansi=False):
+        """Format content UTC timestamp when it was updated."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m  : %s\n' if ansi else '   ! updated  : %s\n'
+
+    @staticmethod
     def _terminal_digest(ansi=False):
         """Format content digest."""
 
@@ -391,6 +398,7 @@ class Migrate(object):
                       'runalias': content.get_runalias(),
                       'versions': content.get_versions(),
                       'created': content.get_created(),
+                      'updated': content.get_updated(),
                       'digest': content.get_digest()}
 
         # Digest is always needed when JSON REST API response is constructed.

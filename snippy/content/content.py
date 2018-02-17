@@ -244,9 +244,14 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return self.content[Const.VERSIONS]
 
     def get_created(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
-        """Return content creation UTC timestamp."""
+        """Return UTC timestamp when content was created."""
 
         return self.content[Const.CREATED]
+
+    def get_updated(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
+        """Return UTC timestamp when content was updated."""
+
+        return self.content[Const.UPDATED]
 
     def get_digest(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
         """Return content digest."""
@@ -286,6 +291,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                         content[Const.RUNALIAS],
                         content[Const.VERSIONS],
                         content[Const.CREATED],
+                        content[Const.UPDATED],
                         content[Const.DIGEST],
                         content[Const.METADATA],
                         content[Const.KEY])
@@ -305,6 +311,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                         content[Const.RUNALIAS],
                         content[Const.VERSIONS],
                         content[Const.CREATED],
+                        content[Const.UPDATED],
                         content[Const.DIGEST],
                         content[Const.METADATA],
                         content[Const.KEY])
@@ -337,6 +344,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                    self.get_runalias(),
                    self.get_versions(),
                    self.get_created(),
+                   self.get_updated(),
                    self.get_digest(),
                    self.get_metadata(),
                    self.get_key()]
@@ -359,6 +367,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content[Const.RUNALIAS] = migrated.get_runalias()
             content[Const.VERSIONS] = migrated.get_versions()
             content[Const.CREATED] = migrated.get_created()
+            content[Const.UPDATED] = migrated.get_updated()
             self.content = (content[Const.DATA],
                             content[Const.BRIEF],
                             content[Const.GROUP],
@@ -369,6 +378,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                             content[Const.RUNALIAS],
                             content[Const.VERSIONS],
                             content[Const.CREATED],
+                            content[Const.UPDATED],
                             content[Const.DIGEST],
                             content[Const.METADATA],
                             content[Const.KEY])
@@ -396,6 +406,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def get_empty(cls, category):
         """Get empty content."""
 
+        timestamp = Config.get_utc_time()
         content = (Const.EMPTY_TUPLE,
                    Const.EMPTY,
                    Const.DEFAULT_GROUP,
@@ -405,7 +416,8 @@ class Content(object):  # pylint: disable=too-many-public-methods
                    Const.EMPTY,
                    Const.EMPTY,
                    Const.EMPTY,
-                   None,  # created
+                   timestamp,  # created
+                   timestamp,  # updated
                    None,  # digest
                    None,  # metadata
                    None)  # key
@@ -436,6 +448,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                            dictionary['runalias'],
                            dictionary['versions'],
                            dictionary['created'],
+                           dictionary['updated'],
                            dictionary['digest'],
                            None,   # metadata
                            None])  # key

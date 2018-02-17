@@ -51,7 +51,7 @@ class TestApiSearchSnippet(object):
         ##        search is sorted based on one field. The limit defined in the search query
         ##        is not exceeded.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1207'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1275'}
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
@@ -83,11 +83,11 @@ class TestApiSearchSnippet(object):
         #
         #            In some cases when there is a test for the content, it includes export
         #            operation that needs one call to UTC timestamp to run the export operation.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*2 + (Snippet.UTC2,)*2 + (None,)
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)
         Snippet.add_one(Snippet.NETCAT, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1343'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1411'}
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
@@ -153,11 +153,11 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields. The
         ##        search query matches to four snippets but limit defined in search query results
         ##        only two of them sorted by the utc field in descending order.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*2 + (Snippet.UTC2,)*2 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)
         Snippet.add_one(Snippet.NETCAT, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1311'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1379'}
         body = {'data': [{'type': 'snippets',
                           'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
                           'attributes': Snippet.DEFAULTS[Snippet.NETCAT]},
@@ -180,11 +180,11 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields sorted
         ##        with two fields. This syntax that separates the sorted fields causes the
         ##        parameter to be processed in string context which must handle multiple fields.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*2 + (Snippet.UTC2,)*2 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)
         Snippet.add_one(Snippet.NETCAT, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1311'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1379'}
         body = {'data': [{'type': 'snippets',
                           'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
                           'attributes': Snippet.DEFAULTS[Snippet.NETCAT]},
@@ -343,7 +343,7 @@ class TestApiSearchSnippet(object):
         ##        15 digit digest. The returned self link must contain the default 16 digit
         #         digest.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '661'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '695'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
                 'data': {'type': 'snippets',
                          'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -393,7 +393,7 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /snippy/api/v1/snippets without defining search parameters. In this
         ##        case all content should be returned based on filtering parameters.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1207'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1275'}
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
@@ -416,7 +416,7 @@ class TestApiSearchSnippet(object):
         ##        case only one snippet must be returned because the limit is set to one. Also
         ##        the sorting based on brief field causes the last snippet to be returned.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '643'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '677'}
         body = {'data': [{'type': 'snippets',
                           'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                           'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}

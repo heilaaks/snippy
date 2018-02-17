@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
-   - [ ] Add created_time and updated_time into database.
+   - [ ] Fix Datbase UT tests do not work separately.
+   - [ ] Fix pytest tests/test_wf_import_solution.py -k test_import_defined_solution
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Update documents.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
@@ -19,6 +20,7 @@
    - [ ] Fix Override header: "GET requests should never change data on the server!" // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add more tests /api/v1/snippets.
    - [ ] =============================================================
+   - [ ] Fix mocking UTC it is a mess now.
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix is there way to not to use sys.args in Cli help for examples and tests? Now the cli() help and profile are only ones using sys.argv directly.
    - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
@@ -73,6 +75,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added created and updated fields into content.
    - [x] Added simple statistics to time each API transaction latency. The output is in debug logs. 
    - [x] Fixed resource or collection not found to return 404. In Cli the response is ok but now in API it is 404.
    - [x] Noted that JSON API specification does not forbid sending data.links.self when GET does not return resource.

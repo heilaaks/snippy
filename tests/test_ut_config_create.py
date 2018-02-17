@@ -21,6 +21,8 @@
 
 import unittest
 
+import mock
+
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.config.source.cli import Cli
@@ -30,10 +32,14 @@ from snippy.content.content import Content
 class TestUtConfigCreate(unittest.TestCase):
     """Testing configurationg management for creating snippets."""
 
-    def test_no_arguments(self):
+    @mock.patch.object(Config, 'get_utc_time')
+    def test_no_arguments(self, mock_get_utc_time):
         """Test that empty argument list is set to configuration."""
 
-        snippet = ((), '', Const.DEFAULT_GROUP, (), (), Const.SNIPPET, '', '', '', None, None, None, None)
+        mock_get_utc_time.return_value = '2018-02-17 13:23:43'
+
+        snippet = ((), '', Const.DEFAULT_GROUP, (), (), Const.SNIPPET, '', '', '', '2018-02-17 13:23:43',
+                   '2018-02-17 13:23:43', None, None, None)
         Config.init(None)
         Config.load(Cli(['snippy', 'create']))
         assert isinstance(Config.content_category, str)

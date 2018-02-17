@@ -16,6 +16,7 @@ content:
   - docker-ce
   - moby
   created: '2017-10-12 11:52:11'
+  updated: '2017-10-12 11:52:11'
   versions: ''
 - brief: Find pattern from files
   category: snippet
@@ -34,6 +35,7 @@ content:
   - linux
   - search
   created: '2017-10-16 12:09:34'
+  updated: '2017-10-16 12:09:34'
   versions: ''
 - brief: Remove all exited containers and dangling images
   category: snippet
@@ -57,6 +59,7 @@ content:
   - moby
   - prune
   created: '2017-10-24 07:07:05'
+  updated: '2017-10-24 07:07:05'
   versions: ''
 - brief: Stop and delete all running containers and images
   category: snippet
@@ -81,6 +84,7 @@ content:
   - moby
   - stop
   created: '2017-10-16 12:06:07'
+  updated: '2017-10-16 12:06:07'
   versions: ''
 - brief: Build docker containers
   category: snippet
@@ -102,6 +106,7 @@ content:
   - docker-ce
   - moby
   created: '2017-10-16 19:42:19'
+  updated: '2017-10-16 19:42:19'
   versions: ''
 - brief: Run containers and connect to them
   category: snippet
@@ -125,6 +130,7 @@ content:
   - moby
   - run
   created: '2017-10-16 12:43:15'
+  updated: '2017-10-16 12:43:15'
   versions: ''
 - brief: Compile with screen window manager
   category: snippet
@@ -147,6 +153,7 @@ content:
   - screen
   - terminal
   created: '2017-10-16 19:10:55'
+  updated: '2017-10-16 19:10:55'
   versions: ''
 - brief: Install docker compose
   category: snippet
@@ -170,6 +177,7 @@ content:
   - install
   - moby
   created: '2017-10-19 10:25:26'
+  updated: '2017-10-19 10:25:26'
   versions: ''
 - brief: Install docker-ce on RHEL
   category: snippet
@@ -201,6 +209,7 @@ content:
   - rhel
   - rpm
   created: '2017-12-04 11:30:21'
+  updated: '2017-12-04 11:30:21'
   versions: ''
 - brief: Initialize, deploy and remove docker swarm
   category: snippet
@@ -231,6 +240,7 @@ content:
   - moby
   - swarm
   created: '2017-10-19 10:55:01'
+  updated: '2017-10-19 10:55:01'
   versions: ''
 - brief: Solve docker networking 'has active endpoints' problem
   category: snippet
@@ -255,6 +265,7 @@ content:
   - solution
   - swarm
   created: '2017-10-19 11:02:06'
+  updated: '2017-10-19 11:02:06'
   versions: ''
 - brief: Print Elasticsearch basic information
   category: snippet
@@ -279,6 +290,7 @@ content:
   - rest
   - security
   created: '2017-12-12 18:17:26'
+  updated: '2017-12-12 18:17:26'
   versions: ''
 - brief: Print logs from Kubernetes pods
   category: snippet
@@ -299,6 +311,7 @@ content:
   - logginig
   - moby
   created: '2017-10-19 11:17:37'
+  updated: '2017-10-19 11:17:37'
   versions: ''
 - brief: List, dump and delete Elasticsearch indices
   category: snippet
@@ -326,6 +339,7 @@ content:
   - rest
   - security
   created: '2017-12-11 17:34:40'
+  updated: '2017-12-11 17:34:40'
   versions: ''
 - brief: Debug TLS/SSL connection
   category: snippet
@@ -346,6 +360,7 @@ content:
   - ssl
   - tls
   created: '2017-10-20 05:42:26'
+  updated: '2017-10-20 05:42:26'
   versions: ''
 - brief: Test if specific port is open
   category: snippet
@@ -364,6 +379,7 @@ content:
   - networking
   - port
   created: '2017-10-20 07:08:45'
+  updated: '2017-10-20 07:08:45'
   versions: ''
 - brief: Manage Elasticsearch templates
   category: snippet
@@ -399,6 +415,7 @@ content:
   - template
   - update
   created: '2017-12-11 17:34:23'
+  updated: '2017-12-11 17:34:23'
   versions: ''
 - brief: Perform recursive git pull on subdirectories
   category: snippet
@@ -415,6 +432,7 @@ content:
   - git
   - pull
   created: '2017-11-07 07:58:46'
+  updated: '2017-11-07 07:58:46'
   versions: ''
 - brief: List git commit log headers
   category: snippet
@@ -432,6 +450,7 @@ content:
   - git
   - log
   created: '2017-11-12 09:54:23'
+  updated: '2017-11-12 09:54:23'
   versions: ''
 - brief: Install docker-ce on Fedora
   category: snippet
@@ -462,6 +481,7 @@ content:
   - moby
   - rpm
   created: '2017-12-07 10:27:57'
+  updated: '2017-12-07 10:27:57'
   versions: ''
 - brief: Set single node Elasticsearch cluster to green state
   category: snippet
@@ -484,6 +504,7 @@ content:
   - settings
   - shards
   created: '2017-12-05 06:48:05'
+  updated: '2017-12-05 06:48:05'
   versions: ''
 - brief: Manage Elasticsearch x-pack watches
   category: snippet
@@ -516,6 +537,7 @@ content:
   - watcher
   - x-pack
   created: '2017-12-05 06:48:50'
+  updated: '2017-12-05 06:48:50'
   versions: ''
 - brief: Manage Elasticsearch plugins
   category: snippet
@@ -536,6 +558,7 @@ content:
   - rest
   - x-pack
   created: '2017-12-05 06:49:47'
+  updated: '2017-12-05 06:49:47'
   versions: ''
 - brief: Perform recursive git status on subdirectories
   category: snippet
@@ -552,6 +575,7 @@ content:
   - git
   - status
   created: '2018-01-11 07:59:46'
+  updated: '2018-01-11 07:59:46'
   versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy

@@ -14,6 +14,7 @@ create table if not exists contents (
     runalias    text default '',
     versions    text default '',
     created     datetime default current_timestamp,
+    updated     datetime default current_timestamp,
     digest      blob(64),
     metadata    text default '',
     id          integer primary key

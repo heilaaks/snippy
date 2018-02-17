@@ -76,7 +76,8 @@ class Parser(object):
                               Parser.content_filename(category, item),
                               content_copy.get_runalias(),
                               content_copy.get_versions(),
-                              Parser.content_date(category, item, timestamp),
+                              content_copy.get_created(),
+                              Parser.content_updated(category, item, timestamp),
                               content_copy.get_digest(),
                               content_copy.get_metadata(),
                               content_copy.get_key()))
@@ -157,8 +158,8 @@ class Parser(object):
         return brief
 
     @classmethod
-    def content_date(cls, category, source, timestamp):
-        """Read content date from text source."""
+    def content_updated(cls, category, source, timestamp):
+        """Read content updated date from text source."""
 
         date = timestamp
         if category == Const.SOLUTION:

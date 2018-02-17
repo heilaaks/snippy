@@ -50,11 +50,12 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     FILENAME = 'filename'
     RUNALIAS = 'runalias'
     VERSIONS = 'versions'
-    CREATED_UTC = 'created'
+    CREATED = 'created'
+    CREATED = 'updated'
     DIGEST = 'digest'
     KEY = 'key'
     ALL_FIELDS = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
-                  'runalias', 'versions', 'created', 'digest', 'key')
+                  'runalias', 'versions', 'created', 'updated', 'digest', 'key')
 
     # Defaults
     LIMIT_DEFAULT = 20
@@ -253,7 +254,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         try:
             self._limit = int(value)  # pylint: disable=attribute-defined-outside-init
         except ValueError:
-            self._logger.info('search result limit is not a number and thus default use: %d', self._limit)
+            self._logger.info('search result limit is not a number and thus default used: %d', self._limit)
 
     @property
     def sfields(self):

@@ -53,6 +53,7 @@ class TestApiUpdateSolution(object):
         ## Brief: Call PUT /snippy/api/v1/solutions to update existing solution. In
         ##        this case when fields like UTC and filename are not provided, the
         ##        empty fields override the content because it was updated with PUT.
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*7 + (None,) # [REF_UTC]
         snippy = Solution.add_one(Solution.BEATS)
         solution = {'data': {'type': 'snippet',
                              'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
@@ -61,13 +62,14 @@ class TestApiUpdateSolution(object):
                                             'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                                             'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
         compare_content = {'2cd0e794244a07f': Solution.DEFAULTS[Solution.NGINX]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2938'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2972'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/2cd0e794244a07f8'},
                 'data': {'type': 'solutions',
                          'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
                          'attributes': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])}}
         body['data']['attributes']['filename'] = Const.EMPTY
         body['data']['attributes']['created'] = Solution.UTC1
+        body['data']['attributes']['updated'] = Solution.UTC1
         body['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         snippy = Snippy(['snippy', '--server'])
         snippy.run()
@@ -85,6 +87,7 @@ class TestApiUpdateSolution(object):
 
         ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with
         ##        digest that cannot be found.
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*7 + (None,) # [REF_UTC]
         snippy = Solution.add_one(Solution.BEATS)
         solution = {'data': {'type': 'snippet',
                              'attributes': {'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),

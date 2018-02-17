@@ -32,7 +32,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     DELIMITER_LINKS = NEWLINE
 
     # Content index in the data structure.
-    NUMBER_OF_COLUMS = 13  # The number of colums in contents table.
+    NUMBER_OF_COLUMS = 14  # The number of colums in contents table.
     DATA = 0
     BRIEF = 1
     GROUP = 2
@@ -43,9 +43,10 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     RUNALIAS = 7
     VERSIONS = 8
     CREATED = 9
-    DIGEST = 10
-    METADATA = 11
-    KEY = 12
+    UPDATED = 10
+    DIGEST = 11
+    METADATA = 12
+    KEY = 13
 
     # Content formats
     NATIVE_CONTENT = 0  # Native format from content.

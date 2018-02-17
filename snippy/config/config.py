@@ -158,6 +158,7 @@ class Config(object):
                      content.get_runalias(),
                      content.get_versions(),
                      content.get_created(),
+                     content.get_updated(),
                      content.get_digest(),
                      content.get_metadata(),
                      content.get_key()))

@@ -245,6 +245,7 @@ class TestWfImportSolution(object):
                                     'runalias': '',
                                     'versions': '',
                                     'created': None,
+                                    'updated': None,
                                     'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'}]}
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict

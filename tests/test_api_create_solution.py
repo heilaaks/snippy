@@ -51,7 +51,7 @@ class TestApiCreateSolution(object):
         ## Brief: Call POST /snippy/api/v1/solutions to create new solution.
         solution = {'data': [{'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2329'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2363'}
         body = {'data': [{'type': 'solutions',
                           'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                           'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
@@ -78,7 +78,7 @@ class TestApiCreateSolution(object):
         """Create list of solutions from API."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*2 + (Solution.UTC3,)*2 + (Solution.UTC1,)*1 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*4 + (Solution.UTC3,)*4 + (Solution.UTC1,)*2 + (None,)  # [REF_UTC]
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
@@ -88,7 +88,7 @@ class TestApiCreateSolution(object):
                               {'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.KAFKA]}]}
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS],
                            'eeef5ca': Solution.DEFAULTS[Solution.KAFKA]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '6858'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '6926'}
         body = {'data': [{'type': 'solutions',
                           'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                           'attributes': Solution.DEFAULTS[Solution.BEATS]},

@@ -93,6 +93,7 @@ class SolutionHelper(object):
                  'runalias': '',
                  'versions': '',
                  'created' :'2017-10-20 11:11:19',
+                 'updated' :'2017-10-20 11:11:19',
                  'digest':'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'},
                 {'data':('################################################################################',
                          '## BRIEF : Debugging nginx ',
@@ -165,6 +166,7 @@ class SolutionHelper(object):
                  'runalias': '',
                  'versions': '',
                  'created': '2017-10-20 06:16:27',
+                 'updated': '2017-10-20 06:16:27',
                  'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'},
                 {'data':('################################################################################',
                          '## BRIEF : Testing docker log drivers',
@@ -267,6 +269,7 @@ class SolutionHelper(object):
                  'runalias': '',
                  'versions': '',
                  'created': '2017-10-20 06:16:27',
+                 'updated': '2017-10-20 06:16:27',
                  'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'})
 
     TEMPLATE_UTC = '2017-10-14 19:56:31'

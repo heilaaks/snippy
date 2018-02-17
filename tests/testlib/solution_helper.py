@@ -309,11 +309,7 @@ class SolutionHelper(object):
     def get_metadata(utc):
         """Return the default metadata for exported data."""
 
-        metadata = {'utc': utc,
-                    'version': __version__,
-                    'homepage': __homepage__}
-
-        return metadata
+        return Snippet.get_metadata(utc)
 
     @staticmethod
     def get_http_metadata():

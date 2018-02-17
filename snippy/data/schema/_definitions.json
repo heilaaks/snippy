@@ -1,6 +1,6 @@
 {
   "definitions": {
-    "RequestContentData": {
+    "ResponseData": {
       "required": [
         "type", 
         "attributes"
@@ -15,6 +15,9 @@
             "snippet", 
             "solution"
           ], 
+          "type": "string"
+        }, 
+        "id": {
           "type": "string"
         }
       }
@@ -37,21 +40,6 @@
         }
       }
     }, 
-    "ContentResponse": {
-      "required": [
-        "links", 
-        "data"
-      ], 
-      "type": "object", 
-      "properties": {
-        "data": {
-          "$ref": "#/definitions/ContentResponseData"
-        }, 
-        "links": {
-          "$ref": "#/definitions/Links"
-        }
-      }
-    }, 
     "Links": {
       "type": "object", 
       "properties": {
@@ -61,7 +49,7 @@
         }
       }
     }, 
-    "RequestContents": {
+    "RequestCollection": {
       "required": [
         "data"
       ], 
@@ -69,13 +57,27 @@
       "properties": {
         "data": {
           "items": {
-            "$ref": "#/definitions/RequestContentData"
+            "$ref": "#/definitions/RequestData"
           }, 
           "type": "array"
         }
       }
     }, 
-    "ContentsResponse": {
+    "ResponseResource": {
+      "required": [
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "data": {
+          "$ref": "#/definitions/ResponseData"
+        }, 
+        "links": {
+          "$ref": "#/definitions/Links"
+        }
+      }
+    }, 
+    "ResponseCollection": {
       "required": [
         "data"
       ], 
@@ -83,9 +85,28 @@
       "properties": {
         "data": {
           "items": {
-            "$ref": "#/definitions/ContentResponseData"
+            "$ref": "#/definitions/ResponseData"
           }, 
           "type": "array"
+        }
+      }
+    }, 
+    "RequestData": {
+      "required": [
+        "type", 
+        "attributes"
+      ], 
+      "type": "object", 
+      "properties": {
+        "attributes": {
+          "$ref": "#/definitions/Attributes"
+        }, 
+        "type": {
+          "enum": [
+            "snippet", 
+            "solution"
+          ], 
+          "type": "string"
         }
       }
     }, 
@@ -106,26 +127,17 @@
         }
       }
     }, 
-    "ContentResponseData": {
+    "RequestResource": {
       "required": [
-        "type", 
-        "id", 
-        "attributes"
+        "data"
       ], 
       "type": "object", 
       "properties": {
-        "attributes": {
-          "$ref": "#/definitions/Attributes"
+        "data": {
+          "$ref": "#/definitions/RequestData"
         }, 
-        "type": {
-          "enum": [
-            "snippet", 
-            "solution"
-          ], 
-          "type": "string"
-        }, 
-        "id": {
-          "type": "string"
+        "links": {
+          "$ref": "#/definitions/Links"
         }
       }
     }, 
@@ -170,10 +182,6 @@
           "type": "string", 
           "description": "Automatically assigned content category."
         }, 
-        "utc": {
-          "type": "string", 
-          "description": "Optional UTC timestamp in ISO 8601 format that is automatically assigned if left out."
-        }, 
         "group": {
           "default": "default", 
           "type": "string", 
@@ -209,6 +217,10 @@
           "type": "string", 
           "description": "Optional filename that that defines automatically used filename when content is exported."
         }, 
+        "created": {
+          "type": "string", 
+          "description": "Optional UTC timestamp for creation time in ISO 8601 format that is automatically assigned if left out."
+        }, 
         "data": {
           "items": {
             "type": "string"
@@ -219,17 +231,6 @@
         "digest": {
           "type": "string", 
           "description": "Automatically assigned message digest that uniquely identifies the content."
-        }
-      }
-    }, 
-    "RequestContent": {
-      "required": [
-        "data"
-      ], 
-      "type": "object", 
-      "properties": {
-        "data": {
-          "$ref": "#/definitions/RequestContentData"
         }
       }
     }

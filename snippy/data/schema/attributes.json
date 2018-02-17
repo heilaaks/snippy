@@ -13,10 +13,6 @@
       "type": "string", 
       "description": "Automatically assigned content category."
     }, 
-    "utc": {
-      "type": "string", 
-      "description": "Optional UTC timestamp in ISO 8601 format that is automatically assigned if left out."
-    }, 
     "group": {
       "default": "default", 
       "type": "string", 
@@ -33,16 +29,16 @@
       "type": "array", 
       "description": "Optional list of refrence links."
     }, 
+    "versions": {
+      "type": "string", 
+      "description": "Optional list of services and versions related to the snippet."
+    }, 
     "tags": {
       "items": {
         "type": "string"
       }, 
       "type": "array", 
       "description": "Optional list of tags."
-    }, 
-    "versions": {
-      "type": "string", 
-      "description": "Optional list of services and versions related to the snippet."
     }, 
     "brief": {
       "type": "string", 
@@ -51,6 +47,10 @@
     "filename": {
       "type": "string", 
       "description": "Optional filename that that defines automatically used filename when content is exported."
+    }, 
+    "created": {
+      "type": "string", 
+      "description": "Optional UTC timestamp for creation time in ISO 8601 format that is automatically assigned if left out."
     }, 
     "data": {
       "items": {

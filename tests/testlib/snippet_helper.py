@@ -117,7 +117,7 @@ class SnippetHelper(object):
     def get_metadata(utc):
         """Return the default metadata for exported data."""
 
-        metadata = {'utc': utc,
+        metadata = {'updated': utc,
                     'version': __version__,
                     'homepage': __homepage__}
 

@@ -222,7 +222,7 @@ class Migrate(object):
         cls._logger.debug('exporting contents %s', filename)
         with open(filename, 'w') as outfile:
             try:
-                dictionary = {'metadata': {'utc': Config.get_utc_time(),
+                dictionary = {'metadata': {'updated': Config.get_utc_time(),
                                            'version': __version__,
                                            'homepage': __homepage__},
                               'content': Migrate.get_dictionary_list(contents)}

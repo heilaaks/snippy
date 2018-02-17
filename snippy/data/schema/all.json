@@ -1,37 +1,37 @@
 {
   "oneOf": [
     {
-      "$ref": "_definitions.json#/definitions/RequestContentData"
+      "$ref": "_definitions.json#/definitions/ResponseData"
     }, 
     {
       "$ref": "_definitions.json#/definitions/Errors"
     }, 
     {
-      "$ref": "_definitions.json#/definitions/ContentResponse"
-    }, 
-    {
       "$ref": "_definitions.json#/definitions/Links"
     }, 
     {
-      "$ref": "_definitions.json#/definitions/RequestContents"
+      "$ref": "_definitions.json#/definitions/RequestCollection"
     }, 
     {
-      "$ref": "_definitions.json#/definitions/ContentsResponse"
+      "$ref": "_definitions.json#/definitions/ResponseResource"
+    }, 
+    {
+      "$ref": "_definitions.json#/definitions/ResponseCollection"
+    }, 
+    {
+      "$ref": "_definitions.json#/definitions/RequestData"
     }, 
     {
       "$ref": "_definitions.json#/definitions/Meta"
     }, 
     {
-      "$ref": "_definitions.json#/definitions/ContentResponseData"
+      "$ref": "_definitions.json#/definitions/RequestResource"
     }, 
     {
       "$ref": "_definitions.json#/definitions/Error"
     }, 
     {
       "$ref": "_definitions.json#/definitions/Attributes"
-    }, 
-    {
-      "$ref": "_definitions.json#/definitions/RequestContent"
     }
   ]
 }

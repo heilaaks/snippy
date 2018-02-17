@@ -224,7 +224,8 @@ class TestWfUpdateSnippet(object):
             Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def teardown_class(self):
+    @classmethod
+    def teardown_class(cls):
         """Teardown each test."""
 
         Database.delete_all_contents()

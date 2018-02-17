@@ -98,7 +98,6 @@ class TestUtSqlite3dbDelete(object):
         Database.delete_all_contents()
         Database.delete_storage()
 
-
     @classmethod
     def setup_class(cls):
         """Setup the test class."""

@@ -19,6 +19,7 @@
 
 """test_api_update_snippet.py: Test PUT /snippets API."""
 
+import copy
 import json
 
 import mock
@@ -143,8 +144,56 @@ class TestApiUpdateSnippet(object):
         snippy = None
         Database.delete_storage()
 
+    @mock.patch('snippy.server.server.SnippyServer')
+    @mock.patch('snippy.migrate.migrate.os.path.isfile')
+    @mock.patch.object(Cause, '_caller')
+    @mock.patch.object(Config, 'get_utc_time')
+    @mock.patch.object(Config, '_storage_file')
+    def test_update_snippet_verify_updated(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+        """Updated snippet and verify created and updated timestamps."""
+
+        mock_isfile.return_value = True
+        mock_get_utc_time.return_value = Snippet.UTC1
+        mock__caller.return_value = 'snippy.testing.testing:123'
+        mock_get_db_location.return_value = Database.get_storage()
+
+        ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
+        ##        with specified digest. This test verifies that the created
+        ##        timestamp does not change and the updated timestamp changes
+        ##        when the content is updated.
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*4 + (Snippet.UTC2,)*1 + (None,) # [REF_UTC]
+        snippy = Snippet.add_one(Snippet.FORCED)
+        snippet = {'data': {'type': 'snippet',
+                            'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                                           'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                                           'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                                           'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+                                           'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
+        compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '695'}
+        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
+                'data': {'type': 'snippets',
+                         'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                         'attributes': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])}}
+        body['data']['attributes']['updated'] = Snippet.UTC2
+        snippy = Snippy(['snippy', '--server'])
+        snippy.run()
+        result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/53908d68425c61dc',  ## apiflow
+                                                                    headers={'accept': 'application/json'},
+                                                                    body=json.dumps(snippet))
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        assert len(Database.get_snippets()) == 1
+        Snippet.test_content2(compare_content)
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+        Config.init(None)
+
     # pylint: disable=duplicate-code
-    def teardown_class(self):
+    @classmethod
+    def teardown_class(cls):
         """Teardown each test."""
 
         Database.delete_all_contents()

@@ -5,6 +5,7 @@
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
    - [ ] =============================================================
+   - [ ] The pytest setup and teardown are class mehotds so fix def teardown_class(self): @classmethod def teardown_class(cls):
    - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.

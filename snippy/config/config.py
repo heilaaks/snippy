@@ -157,7 +157,7 @@ class Config(object):
                      cls.content_filename,
                      content.get_runalias(),
                      content.get_versions(),
-                     content.get_utc(),
+                     content.get_created(),
                      content.get_digest(),
                      content.get_metadata(),
                      content.get_key()))

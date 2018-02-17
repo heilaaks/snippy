@@ -149,7 +149,7 @@ class Migrate(object):
                 text = text + Migrate._terminal_filename(ansi) % content.get_filename()
                 text = text + Migrate._terminal_runalias(ansi) % content.get_runalias()
                 text = text + Migrate._terminal_versions(ansi) % content.get_versions()
-                text = text + Migrate._terminal_utc(ansi) % content.get_utc()
+                text = text + Migrate._terminal_created(ansi) % content.get_created()
                 text = text + Migrate._terminal_digest(ansi) % (content.get_digest(),
                                                                 content.get_digest() == content.compute_digest())
                 text = text + Migrate._terminal_metadata(ansi) % content.get_metadata()
@@ -344,10 +344,10 @@ class Migrate(object):
         return '   \x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m : %s\n' if ansi else '   ! versions : %s\n'
 
     @staticmethod
-    def _terminal_utc(ansi=False):
-        """Format content utc."""
+    def _terminal_created(ansi=False):
+        """Format content creation UTC timestamp."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mutc\x1b[0m      : %s\n' if ansi else '   ! utc      : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m  : %s\n' if ansi else '   ! created  : %s\n'
 
     @staticmethod
     def _terminal_digest(ansi=False):
@@ -390,7 +390,7 @@ class Migrate(object):
                       'filename': content.get_filename(),
                       'runalias': content.get_runalias(),
                       'versions': content.get_versions(),
-                      'utc': content.get_utc(),
+                      'created': content.get_created(),
                       'digest': content.get_digest()}
 
         # Digest is always needed when JSON REST API response is constructed.

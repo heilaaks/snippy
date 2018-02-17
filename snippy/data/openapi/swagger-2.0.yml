@@ -31,12 +31,12 @@ paths:
         description: "New snippet to be created"
         required: true
         schema:
-          $ref: "#/definitions/RequestContents"
+          $ref: "#/definitions/RequestCollection"
       responses:
         201:
           description: "Snippet created"
           schema:
-            $ref: "#/definitions/ContentsResponse"
+            $ref: "#/definitions/ResponseCollection"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -68,7 +68,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/ContentsResponse"
+            $ref: "#/definitions/ResponseCollection"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -129,12 +129,12 @@ paths:
           description: "Existing snippet that is updated"
           required: true
           schema:
-            $ref: "#/definitions/RequestContent"
+            $ref: "#/definitions/RequestResource"
       responses:
         200:
           description: "Snippet updated"
           schema:
-            $ref: "#/definitions/ContentResponse"
+            $ref: "#/definitions/ResponseResource"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -167,7 +167,7 @@ paths:
         200:
           description: OK
           schema:
-            $ref: "#/definitions/ContentResponse"
+            $ref: "#/definitions/ResponseResource"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -208,39 +208,40 @@ paths:
         500:
           description: "Internal server error"
 definitions:
-  RequestContent:
-    type: object
-    properties:
-      data:
-        $ref: '#/definitions/RequestContentData'
-    required:
-      - data
-  ContentResponse:
+  RequestResource:
     type: object
     properties:
       links:
         $ref: '#/definitions/Links'
       data:
-        $ref: '#/definitions/ContentResponseData'
+        $ref: '#/definitions/RequestData'
     required:
-      - links
       - data
-  RequestContents:
+  ResponseResource:
+    type: object
+    properties:
+      links:
+        $ref: '#/definitions/Links'
+      data:
+        $ref: '#/definitions/ResponseData'
+    required:
+      - data
+  RequestCollection:
     type: object
     properties:
       data:
         type: array
         items:
-          $ref: '#/definitions/RequestContentData'
+          $ref: '#/definitions/RequestData'
     required:
       - data
-  ContentsResponse:
+  ResponseCollection:
     type: object
     properties:
       data:
         type: array
         items:
-          $ref: '#/definitions/ContentResponseData'
+          $ref: '#/definitions/ResponseData'
     required:
       - data
   Links:
@@ -249,7 +250,7 @@ definitions:
       self:
         type: string
         description: "Link pointing to resource."
-  RequestContentData:
+  RequestData:
     type: object
     properties:
       type:
@@ -262,7 +263,7 @@ definitions:
     required:
       - type
       - attributes
-  ContentResponseData:
+  ResponseData:
     type: object
     properties:
       type:
@@ -276,7 +277,6 @@ definitions:
         $ref: '#/definitions/Attributes'
     required:
       - type
-      - id
       - attributes
   Attributes:
     type: object
@@ -320,10 +320,10 @@ definitions:
       versions:
         type: string
         description: "Optional list of services and versions related to the snippet."
-      utc:
+      created:
         type: string
         description: >-
-          Optional UTC timestamp in ISO 8601 format that is automatically
+          Optional UTC timestamp for creation time in ISO 8601 format that is automatically
           assigned if left out.
       digest:
         type: string
@@ -430,7 +430,7 @@ parameters:
     name: sort
     type: string
     default: brief
-    enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest]
+    enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, digest]
     in: query
     required: false
     description: "Sort based on defined field."
@@ -439,7 +439,7 @@ parameters:
     type: array
     items:
       type: string
-      enum: [data, brief, group, tags, links, category, filename, runalias, versions, utc, digest]
+      enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, digest]
     in: query
     required: false
     description: "Limit fields that are returned in result list."

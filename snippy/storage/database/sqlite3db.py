@@ -54,12 +54,12 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_content(self, content, digest, utc, metadata=None, bulk_insert=False):
+    def insert_content(self, content, digest, created, metadata=None, bulk_insert=False):
         """Insert content into database."""
 
         if self.connection:
             query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, ' +
-                     'runalias, versions, utc, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
+                     'runalias, versions, created, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
             self.logger.debug('insert "%s" with digest %.16s', content.get_brief(), digest)
             try:
                 with closing(self.connection.cursor()) as cursor:
@@ -72,7 +72,7 @@ class Sqlite3Db(object):
                                            content.get_filename(Const.STRING_CONTENT),
                                            content.get_runalias(Const.STRING_CONTENT),
                                            content.get_versions(Const.STRING_CONTENT),
-                                           utc,
+                                           created,
                                            digest,
                                            metadata))
                     self.connection.commit()
@@ -108,7 +108,7 @@ class Sqlite3Db(object):
 
                 continue
 
-            utc = content.get_utc()
+            created = content.get_created()
             digest = content.get_digest()
             if not self._select_content_data(content.get_data()):
                 if digest != content.compute_digest():
@@ -116,7 +116,7 @@ class Sqlite3Db(object):
                     digest = content.compute_digest()
 
                 inserted = inserted + 1
-                self.insert_content(content, digest, utc, bulk_insert=True)
+                self.insert_content(content, digest, created, bulk_insert=True)
             else:
                 cause = (Cause.HTTP_CONFLICT, 'no content was inserted because content data already existed')
                 self.logger.info(cause[1])
@@ -227,12 +227,12 @@ class Sqlite3Db(object):
 
         return rows
 
-    def update_content(self, content, digest, utc, metadata=None):
+    def update_content(self, content, digest, created, metadata=None):
         """Update existing content."""
 
         if self.connection:
             query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, '
-                     'runalias=?, versions=?, utc=?, digest=?, metadata=? WHERE digest LIKE ?')
+                     'runalias=?, versions=?, created=?, digest=?, metadata=? WHERE digest LIKE ?')
             self.logger.debug('updating content %.16s with new digest %.16s and brief "%s"', content.get_digest(), digest,
                               content.get_brief())
             try:
@@ -246,7 +246,7 @@ class Sqlite3Db(object):
                                            content.get_filename(Const.STRING_CONTENT),
                                            content.get_runalias(Const.STRING_CONTENT),
                                            content.get_versions(Const.STRING_CONTENT),
-                                           utc,
+                                           created,
                                            digest,
                                            metadata,
                                            content.get_digest(Const.STRING_CONTENT)))

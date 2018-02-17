@@ -13,7 +13,7 @@ create table if not exists contents (
     filename    text default '',
     runalias    text default '',
     versions    text default '',
-    utc         datetime default current_timestamp,
+    created     datetime default current_timestamp,
     digest      blob(64),
     metadata    text default '',
     id          integer primary key

@@ -37,9 +37,9 @@ class Storage(object):
     def create(self, content):
         """Create content."""
 
-        utc = Config.get_utc_time()
+        created = Config.get_utc_time()
         digest = content.compute_digest()
-        self._database.insert_content(content, digest, utc)
+        self._database.insert_content(content, digest, created)
 
         return digest
 
@@ -54,9 +54,9 @@ class Storage(object):
     def update(self, content):
         """Update content."""
 
-        utc = Config.get_utc_time()
+        updated = Config.get_utc_time()
         digest = content.compute_digest()
-        self._database.update_content(content, digest, utc)
+        self._database.update_content(content, digest, updated)
 
         return digest
 
@@ -108,7 +108,7 @@ class Storage(object):
                            row[Const.FILENAME],
                            row[Const.RUNALIAS],
                            row[Const.VERSIONS],
-                           row[Const.UTC],
+                           row[Const.CREATED],
                            row[Const.DIGEST],
                            row[Const.METADATA],
                            row[Const.KEY]))

@@ -50,11 +50,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     FILENAME = 'filename'
     RUNALIAS = 'runalias'
     VERSIONS = 'versions'
-    UTC = 'utc'
+    CREATED_UTC = 'created'
     DIGEST = 'digest'
     KEY = 'key'
     ALL_FIELDS = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
-                  'runalias', 'versions', 'utc', 'digest', 'key')
+                  'runalias', 'versions', 'created', 'digest', 'key')
 
     # Defaults
     LIMIT_DEFAULT = 20

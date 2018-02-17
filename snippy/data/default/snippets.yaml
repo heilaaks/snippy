@@ -15,7 +15,7 @@ content:
   - docker
   - docker-ce
   - moby
-  utc: '2017-10-12 11:52:11'
+  created: '2017-10-12 11:52:11'
   versions: ''
 - brief: Find pattern from files
   category: snippet
@@ -33,7 +33,7 @@ content:
   tags:
   - linux
   - search
-  utc: '2017-10-16 12:09:34'
+  created: '2017-10-16 12:09:34'
   versions: ''
 - brief: Remove all exited containers and dangling images
   category: snippet
@@ -56,7 +56,7 @@ content:
   - image
   - moby
   - prune
-  utc: '2017-10-24 07:07:05'
+  created: '2017-10-24 07:07:05'
   versions: ''
 - brief: Stop and delete all running containers and images
   category: snippet
@@ -80,7 +80,7 @@ content:
   - docker-ce
   - moby
   - stop
-  utc: '2017-10-16 12:06:07'
+  created: '2017-10-16 12:06:07'
   versions: ''
 - brief: Build docker containers
   category: snippet
@@ -101,7 +101,7 @@ content:
   - docker
   - docker-ce
   - moby
-  utc: '2017-10-16 19:42:19'
+  created: '2017-10-16 19:42:19'
   versions: ''
 - brief: Run containers and connect to them
   category: snippet
@@ -124,7 +124,7 @@ content:
   - lingering
   - moby
   - run
-  utc: '2017-10-16 12:43:15'
+  created: '2017-10-16 12:43:15'
   versions: ''
 - brief: Compile with screen window manager
   category: snippet
@@ -146,7 +146,7 @@ content:
   - linux
   - screen
   - terminal
-  utc: '2017-10-16 19:10:55'
+  created: '2017-10-16 19:10:55'
   versions: ''
 - brief: Install docker compose
   category: snippet
@@ -169,7 +169,7 @@ content:
   - docker-ce
   - install
   - moby
-  utc: '2017-10-19 10:25:26'
+  created: '2017-10-19 10:25:26'
   versions: ''
 - brief: Install docker-ce on RHEL
   category: snippet
@@ -200,7 +200,7 @@ content:
   - moby
   - rhel
   - rpm
-  utc: '2017-12-04 11:30:21'
+  created: '2017-12-04 11:30:21'
   versions: ''
 - brief: Initialize, deploy and remove docker swarm
   category: snippet
@@ -230,7 +230,7 @@ content:
   - docker-ce
   - moby
   - swarm
-  utc: '2017-10-19 10:55:01'
+  created: '2017-10-19 10:55:01'
   versions: ''
 - brief: Solve docker networking 'has active endpoints' problem
   category: snippet
@@ -254,7 +254,7 @@ content:
   - remove
   - solution
   - swarm
-  utc: '2017-10-19 11:02:06'
+  created: '2017-10-19 11:02:06'
   versions: ''
 - brief: Print Elasticsearch basic information
   category: snippet
@@ -278,7 +278,7 @@ content:
   - elasticsearch
   - rest
   - security
-  utc: '2017-12-12 18:17:26'
+  created: '2017-12-12 18:17:26'
   versions: ''
 - brief: Print logs from Kubernetes pods
   category: snippet
@@ -298,7 +298,7 @@ content:
   - kubernetes
   - logginig
   - moby
-  utc: '2017-10-19 11:17:37'
+  created: '2017-10-19 11:17:37'
   versions: ''
 - brief: List, dump and delete Elasticsearch indices
   category: snippet
@@ -325,7 +325,7 @@ content:
   - list
   - rest
   - security
-  utc: '2017-12-11 17:34:40'
+  created: '2017-12-11 17:34:40'
   versions: ''
 - brief: Debug TLS/SSL connection
   category: snippet
@@ -345,7 +345,7 @@ content:
   - security
   - ssl
   - tls
-  utc: '2017-10-20 05:42:26'
+  created: '2017-10-20 05:42:26'
   versions: ''
 - brief: Test if specific port is open
   category: snippet
@@ -363,7 +363,7 @@ content:
   - netcat
   - networking
   - port
-  utc: '2017-10-20 07:08:45'
+  created: '2017-10-20 07:08:45'
   versions: ''
 - brief: Manage Elasticsearch templates
   category: snippet
@@ -398,7 +398,7 @@ content:
   - security
   - template
   - update
-  utc: '2017-12-11 17:34:23'
+  created: '2017-12-11 17:34:23'
   versions: ''
 - brief: Perform recursive git pull on subdirectories
   category: snippet
@@ -414,7 +414,7 @@ content:
   tags:
   - git
   - pull
-  utc: '2017-11-07 07:58:46'
+  created: '2017-11-07 07:58:46'
   versions: ''
 - brief: List git commit log headers
   category: snippet
@@ -431,7 +431,7 @@ content:
   tags:
   - git
   - log
-  utc: '2017-11-12 09:54:23'
+  created: '2017-11-12 09:54:23'
   versions: ''
 - brief: Install docker-ce on Fedora
   category: snippet
@@ -461,7 +461,7 @@ content:
   - install
   - moby
   - rpm
-  utc: '2017-12-07 10:27:57'
+  created: '2017-12-07 10:27:57'
   versions: ''
 - brief: Set single node Elasticsearch cluster to green state
   category: snippet
@@ -483,7 +483,7 @@ content:
   - rest
   - settings
   - shards
-  utc: '2017-12-05 06:48:05'
+  created: '2017-12-05 06:48:05'
   versions: ''
 - brief: Manage Elasticsearch x-pack watches
   category: snippet
@@ -515,7 +515,7 @@ content:
   - rest
   - watcher
   - x-pack
-  utc: '2017-12-05 06:48:50'
+  created: '2017-12-05 06:48:50'
   versions: ''
 - brief: Manage Elasticsearch plugins
   category: snippet
@@ -535,7 +535,7 @@ content:
   - plugin
   - rest
   - x-pack
-  utc: '2017-12-05 06:49:47'
+  created: '2017-12-05 06:49:47'
   versions: ''
 - brief: Perform recursive git status on subdirectories
   category: snippet
@@ -551,7 +551,7 @@ content:
   tags:
   - git
   - status
-  utc: '2018-01-11 07:59:46'
+  created: '2018-01-11 07:59:46'
   versions: ''
 metadata:
   homepage: https://github.com/heilaaks/snippy

@@ -61,13 +61,13 @@ class TestApiUpdateSolution(object):
                                             'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                                             'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
         compare_content = {'2cd0e794244a07f': Solution.DEFAULTS[Solution.NGINX]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2934'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2938'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/2cd0e794244a07f8'},
                 'data': {'type': 'solutions',
                          'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
                          'attributes': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])}}
         body['data']['attributes']['filename'] = Const.EMPTY
-        body['data']['attributes']['utc'] = Solution.UTC1
+        body['data']['attributes']['created'] = Solution.UTC1
         body['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         snippy = Snippy(['snippy', '--server'])
         snippy.run()

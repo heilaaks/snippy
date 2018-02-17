@@ -53,7 +53,7 @@ class TestApiCreateSnippet(object):
         snippet = {'data': [{'type': 'snippet',
                              'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '570'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '574'}
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
@@ -82,7 +82,7 @@ class TestApiCreateSnippet(object):
                                             'tags': ['cleanup', 'container', 'docker', 'docker-ce', 'moby'],
                                             'links': ['https://docs.docker.com/engine/reference/commandline/rm/']}}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '570'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '574'}
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
@@ -111,7 +111,7 @@ class TestApiCreateSnippet(object):
                                             'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
                                             'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}}]}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '775'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '779'}
         body = {'data': [{'type': 'snippets',
                           'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                           'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
@@ -142,7 +142,7 @@ class TestApiCreateSnippet(object):
                                             'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
                                             'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])}}]}
         compare_content = {'49d6916b6711f13d': Snippet.DEFAULTS[Snippet.EXITED]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '775'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '779'}
         body = {'data': [{'type': 'snippets',
                           'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                           'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
@@ -164,7 +164,7 @@ class TestApiCreateSnippet(object):
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet with only data.
         snippet = {'data': [{'type': 'snippet',
                              'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)\n']}}]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '421'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '425'}
         body = {'data': [{'type': 'snippets',
                           'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
                           'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)'],
@@ -177,7 +177,7 @@ class TestApiCreateSnippet(object):
                                          'filename': '',
                                          'runalias': '',
                                          'versions': '',
-                                         'utc': '2017-10-14 19:56:31',
+                                         'created': '2017-10-14 19:56:31',
                                          'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
         compare = {'3d855210284302d5': body['data'][0]['attributes']}
         snippy = Snippy(['snippy', '--server'])
@@ -211,7 +211,7 @@ class TestApiCreateSnippet(object):
         snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1199'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1207'}
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},

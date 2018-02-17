@@ -51,7 +51,7 @@ class TestApiSearchSnippet(object):
         ##        search is sorted based on one field. The limit defined in the search query
         ##        is not exceeded.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1199'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1207'}
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
@@ -87,7 +87,7 @@ class TestApiSearchSnippet(object):
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)
         Snippet.add_one(Snippet.NETCAT, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1335'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1343'}
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
@@ -157,7 +157,7 @@ class TestApiSearchSnippet(object):
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)
         Snippet.add_one(Snippet.NETCAT, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1303'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1311'}
         body = {'data': [{'type': 'snippets',
                           'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
                           'attributes': Snippet.DEFAULTS[Snippet.NETCAT]},
@@ -168,7 +168,7 @@ class TestApiSearchSnippet(object):
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets',  ## apiflow
                                                                     headers={'accept': 'application/json'},
-                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-utc,-brief')
+                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-created,-brief')
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
@@ -184,7 +184,7 @@ class TestApiSearchSnippet(object):
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)
         Snippet.add_one(Snippet.NETCAT, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1303'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1311'}
         body = {'data': [{'type': 'snippets',
                           'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
                           'attributes': Snippet.DEFAULTS[Snippet.NETCAT]},
@@ -195,7 +195,7 @@ class TestApiSearchSnippet(object):
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets',  ## apiflow
                                                                     headers={'accept': 'application/json'},
-                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-utc%2C-brief')
+                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
@@ -343,7 +343,7 @@ class TestApiSearchSnippet(object):
         ##        15 digit digest. The returned self link must contain the default 16 digit
         #         digest.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '657'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '661'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
                 'data': {'type': 'snippets',
                          'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -393,7 +393,7 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /snippy/api/v1/snippets without defining search parameters. In this
         ##        case all content should be returned based on filtering parameters.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1199'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1207'}
         body = {'data': [{'type': 'snippets',
                           'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                           'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
@@ -416,7 +416,7 @@ class TestApiSearchSnippet(object):
         ##        case only one snippet must be returned because the limit is set to one. Also
         ##        the sorting based on brief field causes the last snippet to be returned.
         snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '639'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '643'}
         body = {'data': [{'type': 'snippets',
                           'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                           'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}

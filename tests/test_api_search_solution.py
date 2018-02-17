@@ -51,7 +51,7 @@ class TestApiSearchSolution(object):
         ##        search is sorted based on one field. The search result limit defined in
         ##        the search query is not exceeded.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5182'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5190'}
         body = {'data': [{'type': 'solutions',
                           'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                           'attributes': Solution.DEFAULTS[Solution.BEATS]},
@@ -79,7 +79,7 @@ class TestApiSearchSolution(object):
         mock_get_utc_time.side_effect = (Solution.UTC1,)*3 + (Solution.UTC2,)*6 + (None,) # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5182'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5190'}
         body = {'data': [{'type': 'solutions',
                           'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                           'attributes': Solution.DEFAULTS[Solution.BEATS]},
@@ -149,7 +149,7 @@ class TestApiSearchSolution(object):
         mock_get_utc_time.side_effect = (Solution.UTC1,)*3 + (Solution.UTC2,)*6 + (None,)  # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7392'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7400'}
         body = {'data': [{'type': 'solutions',
                           'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
                           'attributes': Solution.DEFAULTS[Solution.KAFKA]},
@@ -160,7 +160,7 @@ class TestApiSearchSolution(object):
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
                                                                     headers={'accept': 'application/json'},
-                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-utc,-brief')
+                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-created,-brief')
         assert result.headers == headers
         assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
@@ -175,7 +175,7 @@ class TestApiSearchSolution(object):
         mock_get_utc_time.side_effect = (Solution.UTC1,)*3 + (Solution.UTC2,)*6 + (None,)  # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7392'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7400'}
         body = {'data': [{'type': 'solutions',
                           'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
                           'attributes': Solution.DEFAULTS[Solution.KAFKA]},
@@ -186,7 +186,7 @@ class TestApiSearchSolution(object):
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
                                                                     headers={'accept': 'application/json'},
-                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-utc%2C-brief')
+                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
         assert result.headers == headers
         assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
@@ -332,7 +332,7 @@ class TestApiSearchSolution(object):
         ## Brief: Call GET /snippy/api/v1/solutions/{digest} to get explicit solution based on
         ##        digest. In this case the solution is found.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2413'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2417'}
         body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/solutions/a96accc25dd23ac0'},
                 'data': {'type': 'solutions',
                          'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
@@ -382,7 +382,7 @@ class TestApiSearchSolution(object):
         ## Brief: Call GET /snippy/api/v1/solutions without defining search parameters. In this
         ##        case all content should be returned based on filtering parameters.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5182'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5190'}
         body = {'data': [{'type': 'solutions',
                           'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                           'attributes': Solution.DEFAULTS[Solution.BEATS]},
@@ -405,7 +405,7 @@ class TestApiSearchSolution(object):
         ##        case only one solution must be returned because the limit is set to one. Also
         ##        the sorting based on brief field causes the last solution to be returned.
         snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2867'}
+        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2871'}
         body = {'data': [{'type': 'solutions',
                           'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                           'attributes': Solution.DEFAULTS[Solution.NGINX]}]}

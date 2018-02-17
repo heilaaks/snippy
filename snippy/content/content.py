@@ -134,9 +134,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
             template = template.replace('<SNIPPY_DATE>', Config.get_utc_time())
         else:
             match = re.search(r'(## DATE  :\s*?$)', template, re.MULTILINE)
-            if match and self.get_utc():
+            if match and self.get_created():
                 match.group(1).rstrip()
-                template = template.replace(match.group(1), match.group(1) + Const.SPACE + self.get_utc())
+                template = template.replace(match.group(1), match.group(1) + Const.SPACE + self.get_created())
 
         return template
 
@@ -243,10 +243,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         return self.content[Const.VERSIONS]
 
-    def get_utc(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
-        """Return content UTC."""
+    def get_created(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
+        """Return content creation UTC timestamp."""
 
-        return self.content[Const.UTC]
+        return self.content[Const.CREATED]
 
     def get_digest(self, form=Const.NATIVE_CONTENT):  # pylint: disable=unused-argument
         """Return content digest."""
@@ -285,7 +285,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                         content[Const.FILENAME],
                         content[Const.RUNALIAS],
                         content[Const.VERSIONS],
-                        content[Const.UTC],
+                        content[Const.CREATED],
                         content[Const.DIGEST],
                         content[Const.METADATA],
                         content[Const.KEY])
@@ -304,7 +304,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                         content[Const.FILENAME],
                         content[Const.RUNALIAS],
                         content[Const.VERSIONS],
-                        content[Const.UTC],
+                        content[Const.CREATED],
                         content[Const.DIGEST],
                         content[Const.METADATA],
                         content[Const.KEY])
@@ -336,7 +336,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                    self.get_filename(),
                    self.get_runalias(),
                    self.get_versions(),
-                   self.get_utc(),
+                   self.get_created(),
                    self.get_digest(),
                    self.get_metadata(),
                    self.get_key()]
@@ -358,7 +358,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content[Const.FILENAME] = migrated.get_filename()
             content[Const.RUNALIAS] = migrated.get_runalias()
             content[Const.VERSIONS] = migrated.get_versions()
-            content[Const.UTC] = migrated.get_utc()
+            content[Const.CREATED] = migrated.get_created()
             self.content = (content[Const.DATA],
                             content[Const.BRIEF],
                             content[Const.GROUP],
@@ -368,7 +368,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                             content[Const.FILENAME],
                             content[Const.RUNALIAS],
                             content[Const.VERSIONS],
-                            content[Const.UTC],
+                            content[Const.CREATED],
                             content[Const.DIGEST],
                             content[Const.METADATA],
                             content[Const.KEY])
@@ -405,7 +405,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                    Const.EMPTY,
                    Const.EMPTY,
                    Const.EMPTY,
-                   None,  # utc
+                   None,  # created
                    None,  # digest
                    None,  # metadata
                    None)  # key
@@ -435,7 +435,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                            dictionary['filename'],
                            dictionary['runalias'],
                            dictionary['versions'],
-                           dictionary['utc'],
+                           dictionary['created'],
                            dictionary['digest'],
                            None,   # metadata
                            None])  # key

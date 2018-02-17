@@ -63,8 +63,8 @@ class Parser(object):
         # Initialize time from 1) Content() or from 2) time given by caller.
         # These are always needed because it can be that user did not set
         # the date correctly to ISO8601 format in the text input.
-        if content.get_utc():
-            timestamp = content.get_utc()
+        if content.get_created():
+            timestamp = content.get_created()
         for item in data:
             content_copy = copy.copy(content)
             content_copy.set((Parser.content_data(category, item),

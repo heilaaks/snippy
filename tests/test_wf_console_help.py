@@ -388,7 +388,7 @@ class TestWfConsoleHelp(object):
                       '   ! filename : ',
                       '   ! runalias : ',
                       '   ! versions : ',
-                      '   ! utc      : 2017-10-14 19:56:31',
+                      '   ! created  : 2017-10-14 19:56:31',
                       '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
                       '   ! metadata : None',
                       '   ! key      : 1',
@@ -404,7 +404,7 @@ class TestWfConsoleHelp(object):
                       '   ! filename : ',
                       '   ! runalias : ',
                       '   ! versions : ',
-                      '   ! utc      : 2017-10-14 19:56:31',
+                      '   ! created  : 2017-10-14 19:56:31',
                       '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
                       '   ! metadata : None',
                       '   ! key      : 2')
@@ -421,6 +421,7 @@ class TestWfConsoleHelp(object):
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
             assert len(result_stdout.split(Const.NEWLINE)) > 25
+            print(result_stdout)
             assert Const.NEWLINE.join(output) in result_stdout
             assert not result_stderr
             snippy.release()
@@ -543,7 +544,7 @@ class TestWfConsoleHelp(object):
                       '   ! filename : ',
                       '   ! runalias : ',
                       '   ! versions : ',
-                      '   ! utc      : 2017-10-14 19:56:31',
+                      '   ! created  : 2017-10-14 19:56:31',
                       '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
                       '   ! metadata : None',
                       '   ! key      : 1',
@@ -559,7 +560,7 @@ class TestWfConsoleHelp(object):
                       '   ! filename : ',
                       '   ! runalias : ',
                       '   ! versions : ',
-                      '   ! utc      : 2017-10-14 19:56:31',
+                      '   ! created  : 2017-10-14 19:56:31',
                       '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
                       '   ! metadata : None',
                       '   ! key      : 2')

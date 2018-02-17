@@ -1,4 +1,8 @@
 ## TODO
+   - [ ] Change file metadata to meta
+   - [ ] Cannot parametrize because add_defaults calls template that uses get_utc which is different than without call to add_defaults
+   - [ ] In update the Config.get_utc_time() is not needed because default is taken when Content() created?
+   - [ ] Why snippet UTC stuff has one more call to utc?
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Update documents.

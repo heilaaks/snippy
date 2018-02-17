@@ -44,7 +44,7 @@ class TestApiCreateSolution(object):
         """Create one solution from API."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Solution.UTC1
+        mock_get_utc_time.return_value = Solution.BEATS_CREATED
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
@@ -78,12 +78,15 @@ class TestApiCreateSolution(object):
         """Create list of solutions from API."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*3 + (Solution.UTC3,)*3 + (Solution.UTC1,)*2 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Solution.CREATE_BEATS +
+                                         Solution.CREATE_KAFKA +
+                                         Solution.TEST_CONTENT*2 +
+                                         Solution.TEST_PYTHON2)
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call POST /snippy/api/v1/solutions in list context to create new
-        ##        solutions.
+        ## Brief: Call POST /snippy/api/v1/solutions in list context to create
+        ##        new solutions.
         solutions = {'data': [{'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.BEATS]},
                               {'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.KAFKA]}]}
         compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS],
@@ -110,7 +113,8 @@ class TestApiCreateSolution(object):
         Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def teardown_class(self):
+    @classmethod
+    def teardown_class(cls):
         """Teardown each test."""
 
         Database.delete_all_contents()

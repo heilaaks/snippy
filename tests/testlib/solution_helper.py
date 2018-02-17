@@ -36,12 +36,23 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class SolutionHelper(object):
     """Helper methods for solution testing."""
 
-    UTC1 = '2017-10-20 11:11:19'
-    UTC2 = '2017-10-20 06:16:27'
-    UTC3 = '2017-10-20 06:16:27'
     BEATS = 0
     NGINX = 1
     KAFKA = 2
+    BEATS_CREATED = '2017-10-20 11:11:19'
+    NGINX_CREATED = '2017-10-20 06:16:27'
+    KAFKA_CREATED = '2017-10-20 06:16:27'
+    CREATE_BEATS = (BEATS_CREATED,)*3
+    CREATE_NGINX = (NGINX_CREATED,)*3
+    CREATE_KAFKA = (KAFKA_CREATED,)*3
+    CREATE_BEATS_DEF = CREATE_BEATS*2
+    CREATE_NGINX_DEF = CREATE_NGINX*2
+    CREATE_KAFKA_DEF = CREATE_KAFKA*2
+    TEST_CONTENT = Snippet.TEST_CONTENT
+    TEST_PYTHON2 = Snippet.TEST_PYTHON2
+    UTC1 = '2017-10-20 11:11:19'
+    UTC2 = '2017-10-20 06:16:27'
+    UTC3 = '2017-10-20 06:16:27'
     DEFAULTS = ({'data':('################################################################################',
                          '## BRIEF : Debugging Elastic Beats',
                          '##',

@@ -42,13 +42,15 @@ class TestApiDeleteSolution(object):
         """Delete solution with digest."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Solution.UTC1
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call DELETE /snippy/api/v1/solutions with digest parameter that matches
-        ##        one solution that is deleted.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*12 + (Solution.UTC2,)*6 + (None,)  # [REF_UTC]
+        ## Brief: Call DELETE /snippy/api/v1/solutions with digest parameter
+        ##        that matches one solution that is deleted.
+        mock_get_utc_time.side_effect = (Solution.CREATE_BEATS_DEF +
+                                         Solution.CREATE_NGINX_DEF +
+                                         Solution.CREATE_KAFKA_DEF +
+                                         Solution.TEST_PYTHON2)
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
         headers = {}
@@ -65,9 +67,12 @@ class TestApiDeleteSolution(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call DELETE /snippy/api/v1/solutions/f3fd167c64b6f97e that matches one
-        ##        solution that is deleted.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*12 + (Solution.UTC2,)*6 + (None,)  # [REF_UTC]
+        ## Brief: Call DELETE /snippy/api/v1/solutions/f3fd167c64b6f97e that
+        ##        matches one solution that is deleted.
+        mock_get_utc_time.side_effect = (Solution.CREATE_BEATS_DEF +
+                                         Solution.CREATE_NGINX_DEF +
+                                         Solution.CREATE_KAFKA_DEF +
+                                         Solution.TEST_PYTHON2)
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
         headers = {}
@@ -83,8 +88,12 @@ class TestApiDeleteSolution(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to DELETE solution with resource location that does not exist.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*12 + (Solution.UTC2,)*6 + (None,)  # [REF_UTC]
+        ## Brief: Try to DELETE solution with resource location that does
+        ##        not exist.
+        mock_get_utc_time.side_effect = (Solution.CREATE_BEATS_DEF +
+                                         Solution.CREATE_NGINX_DEF +
+                                         Solution.CREATE_KAFKA_DEF +
+                                         Solution.TEST_PYTHON2)
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '362'}
@@ -105,7 +114,8 @@ class TestApiDeleteSolution(object):
         Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def teardown_class(self):
+    @classmethod
+    def teardown_class(cls):
         """Teardown each test."""
 
         Database.delete_all_contents()

@@ -45,7 +45,7 @@ class TestApiCreateSnippet(object):
         """Create one snippet from API."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
+        mock_get_utc_time.return_value = Snippet.REMOVE_CREATED
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
@@ -71,10 +71,11 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In this case
-        ##        the links and list are defined as list in the JSON message. Note that
-        ##        the default input for tags and links from Snippet.REMOVE maps to a
-        ##        string but the syntax in this case maps to lists with multiple items.
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In
+        ##        this case the links and list are defined as list in the JSON
+        ##        message. Note that the default input for tags and links from
+        ##        Snippet.REMOVE maps to a string but the syntax in this case
+        ##        maps to lists with multiple items.
         snippet = {'data': [{'type': 'snippet',
                              'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                                             'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
@@ -100,10 +101,10 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In this case
-        ##        the content data is defined in string context where each line is
-        ##        separated with a newline.
-        mock_get_utc_time.return_value = Snippet.UTC2
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In
+        ##        this case the content data is defined in string context where
+        ##        each line is separated with a newline.
+        mock_get_utc_time.return_value = Snippet.EXITED_CREATED
         snippet = {'data': [{'type': 'snippet',
                              'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.EXITED]['data']),
                                             'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
@@ -128,12 +129,11 @@ class TestApiCreateSnippet(object):
         snippy.release()
         snippy = None
         Database.delete_storage()
-        mock_get_utc_time.return_value = Snippet.UTC1
 
-        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In this case
-        ##        the content data is defined in list context where each line is an item
-        ##        in a list.
-        mock_get_utc_time.return_value = Snippet.UTC2
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In
+        ##        this case the content data is defined in list context where
+        ##        each line is an item in a list.
+        mock_get_utc_time.return_value = Snippet.EXITED_CREATED
         snippet = {'data': [{'type': 'snippet',
                              'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)\n\n\n\n',
                                                      'docker images -q --filter dangling=true | xargs docker rmi'],
@@ -159,9 +159,10 @@ class TestApiCreateSnippet(object):
         snippy.release()
         snippy = None
         Database.delete_storage()
-        mock_get_utc_time.return_value = Snippet.UTC1
 
-        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet with only data.
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet with
+        ##        only data.
+        mock_get_utc_time.return_value = Snippet.REMOVE_CREATED
         snippet = {'data': [{'type': 'snippet',
                              'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)\n']}}]}
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '459'}
@@ -204,11 +205,12 @@ class TestApiCreateSnippet(object):
         """Create list of snippets from API."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
+        mock_get_utc_time.return_value = Snippet.FORCED_CREATED
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call POST /api/v1/snippets in list context to create new snippets.
+        ## Brief: Call POST /api/v1/snippets in list context to create
+        ##        new snippets.
         snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
         compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
@@ -242,13 +244,13 @@ class TestApiCreateSnippet(object):
         """Try to create snippet with malformed queries."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
+        mock_get_utc_time.return_value = Snippet.REMOVE_CREATED
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Try to call POST /snippy/api/v1/snippets to create new snippet with
-        ##        malformed JSON request. In this case the top level json object is
-        ##        incorrect.
+        ## Brief: Try to call POST /snippy/api/v1/snippets to create new
+        ##        snippet with malformed JSON request. In this case the
+        ##        top level json object is incorrect.
         snippet = Snippet.DEFAULTS[Snippet.REMOVE]
         headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '656'}
         headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '652'}
@@ -260,7 +262,6 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippet))
-        print(result.json)
         assert result.headers == headers_p2 or result.headers == headers_p3
         assert Snippet.error_body(result.json) == Snippet.error_body(body)
         assert result.status == falcon.HTTP_400
@@ -269,13 +270,14 @@ class TestApiCreateSnippet(object):
         Database.delete_storage()
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
+        mock_get_utc_time.return_value = Snippet.REMOVE_CREATED
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Try to call POST /snippy/api/v1/snippets to create new snippet with
-        ##        malformed JSON request. In this case the top level data JSON object
-        ##        type is not 'snippet' or 'solution'.
+        ## Brief: Try to call POST /snippy/api/v1/snippets to create new
+        ##        snippet with malformed JSON request. In this case the
+        ##        top level data JSON object type is not 'snippet' or
+        ##        'solution'.
         snippet = {'data': [{'type': 'snippe',
                              'id': '1',
                              'attributes': {'data': ['docker rm $(docker ps --all -q -f status=exited)'],
@@ -306,8 +308,9 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to call POST /snippy/api/v1/snippets to create new snippet with
-        ##        client generated ID. This is not supported and it will generate error.
+        ## Brief: Try to call POST /snippy/api/v1/snippets to create new
+        ##        snippet with client generated ID. This is not supported
+        ##        and it will generate error.
         snippet = {'data': [{'type': 'snippet',
                              'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
                              'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
@@ -327,9 +330,11 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to call POST /snippy/api/v1/snippets to create two snippets. First one
-        ##        is correctly defind but the second one contains error in JSON strcutre. This
-        ##        must not create any resources and the whole request must be considered erronous.
+        ## Brief: Try to call POST /snippy/api/v1/snippets to create two
+        ##        snippets. First one is correctly defind but the second
+        ##        one contains error in JSON strcutre. This must not create
+        ##        any resources and the whole request must be considered
+        ##        erronous.
         snippets = {'data': [{'type': 'snippet',
                               'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                              {'type': 'snippet',
@@ -352,10 +357,12 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to call POST /snippy/api/v1/snippets to create two snippets. First one
-        ##        is correctly defind but the second one contains error in JSON strcutre. The
-        ##        error is the client generated ID which is not supported. This must not create
-        ##        any resources and the whole request must be considered erronous
+        ## Brief: Try to call POST /snippy/api/v1/snippets to create two
+        ##        snippets. First one is correctly defind but the second
+        ##        one contains error in JSON strcutre. The error is the
+        ##        client generated ID which is not supported. This must
+        ##        not create any resources and the whole request must be
+        ##        considered erronous
         snippets = {'data': [{'type': 'snippet',
                               'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                              {'type': 'snippet',
@@ -370,8 +377,6 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
                                                                      headers={'accept': 'application/json'},
                                                                      body=json.dumps(snippets))
-        print(result.headers)
-        print(result.json)
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_403

@@ -42,13 +42,15 @@ class TestApiDeleteSnippet(object):
         """Delete snippet with digest."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call DELETE /snippy/api/v1/snippets with digest parameter that matches
-        ##        one snippet that is deleted.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*4 + (None,)  # [REF_UTC]
+        ## Brief: Call DELETE /snippy/api/v1/snippets with digest parameter
+        ##        that matches one snippet that is deleted.
+        mock_get_utc_time.side_effect = (Snippet.CREATE_REMOVE +
+                                         Snippet.CREATE_FORCED +
+                                         Snippet.CREATE_NETCAT +
+                                         Snippet.TEST_PYTHON2)
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.NETCAT, snippy)
         headers = {}
@@ -65,9 +67,12 @@ class TestApiDeleteSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call DELETE /snippy/api/v1/snippets/f3fd167c64b6f97e that matches one
-        ##        snippet that is deleted.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*4 + (None,)  # [REF_UTC]
+        ## Brief: Call DELETE /snippy/api/v1/snippets/f3fd167c64b6f97e that
+        ##        matches one snippet that is deleted.
+        mock_get_utc_time.side_effect = (Snippet.CREATE_REMOVE +
+                                         Snippet.CREATE_FORCED +
+                                         Snippet.CREATE_NETCAT +
+                                         Snippet.TEST_PYTHON2)
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.NETCAT, snippy)
         headers = {}
@@ -83,8 +88,12 @@ class TestApiDeleteSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to DELETE snippet with resource location that does not exist.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*4 + (None,)  # [REF_UTC]
+        ## Brief: Try to DELETE snippet with resource location that does not 
+        ##        exist.
+        mock_get_utc_time.side_effect = (Snippet.CREATE_REMOVE +
+                                         Snippet.CREATE_FORCED +
+                                         Snippet.CREATE_NETCAT +
+                                         Snippet.TEST_PYTHON2)
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.NETCAT, snippy)
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '362'}
@@ -105,7 +114,8 @@ class TestApiDeleteSnippet(object):
         Database.delete_storage()
 
     # pylint: disable=duplicate-code
-    def teardown_class(self):
+    @classmethod
+    def teardown_class(cls):
         """Teardown each test."""
 
         Database.delete_all_contents()

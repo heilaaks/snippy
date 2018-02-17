@@ -38,12 +38,33 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class SnippetHelper(object):
     """Helper methods for snippet testing."""
 
-    UTC1 = '2017-10-14 19:56:31'
-    UTC2 = '2017-10-20 07:08:45'
     REMOVE = 0
     FORCED = 1
     EXITED = 2
     NETCAT = 3
+    REMOVE_CREATED = '2017-10-14 19:56:31'
+    FORCED_CREATED = '2017-10-14 19:56:31'
+    EXITED_CREATED = '2017-10-20 07:08:45'
+    NETCAT_CREATED = '2017-10-20 07:08:45'
+
+    # [REF_UTC]: Each content type and way how the content is added generates different
+    #            amount calls to get UTC timestamps.  The None is required in Python 2
+    #            which behaves differently than Python 3. Python 2 requires one more
+    #            parameter after last valid call to work.
+    #
+    #            The probelem is that add_defaults and add_one call a template which
+    #            uses Snippy code that calls the get_utc_time method. That is, this
+    #            is a test function misbehaving and calling the code (due to lazyness).
+    #            This makes the amount of get_utc_time dependent on how the content
+    #            is added in test case. This makes it hard to have one constant.
+    CREATE_REMOVE = (REMOVE_CREATED,)*4
+    CREATE_FORCED = (FORCED_CREATED,)*4
+    CREATE_EXITED = (EXITED_CREATED,)*4
+    CREATE_NETCAT = (NETCAT_CREATED,)*4
+    TEST_CONTENT = ('2018-02-02 02:02:02',)
+    TEST_PYTHON2 = (None,)
+    UTC1 = '2017-10-14 19:56:31'
+    UTC2 = '2017-10-20 07:08:45'
     DEFAULTS = ({'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
                  'brief': 'Remove all docker containers with volumes',
                  'group': 'docker',

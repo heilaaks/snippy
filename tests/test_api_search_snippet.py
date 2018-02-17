@@ -74,15 +74,6 @@ class TestApiSearchSnippet(object):
         ##        search query matches to four snippets but limit defined in search query
         ##        results only two of them sorted by the brief field. The sorting must be
         ##        applied before limit is applied.
-
-        # [REF_UTC]: Each content generates 1 or 4 (delete) calls to get UTC time. There are
-        #            four contents that are inserted into database and 2 first contain the UTC1
-        #            timestamp and the last two the UTC2 timestamp. The None is required in
-        #            Python 2.7 which behaves differently than Python 3 which does not require
-        #            additional parameter after the last one.
-        #
-        #            In some cases when there is a test for the content, it includes export
-        #            operation that needs one call to UTC timestamp to run the export operation.
         mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)

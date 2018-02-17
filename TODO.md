@@ -1,7 +1,5 @@
 ## TODO
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
-   - [ ] Fix Datbase UT tests do not work separately.
-   - [ ] Fix pytest tests/test_wf_import_solution.py -k test_import_defined_solution
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Update documents.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.

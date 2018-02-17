@@ -513,8 +513,15 @@ class TestWfImportSolution(object):
             snippy = None
             Database.delete_storage()
 
+    @classmethod
+    def setup_class(cls):
+        """Setup the test class."""
+
+        Config.init(None)
+
     # pylint: disable=duplicate-code
-    def teardown_class(self):
+    @classmethod
+    def teardown_class(cls):
         """Teardown each test."""
 
         Database.delete_all_contents()

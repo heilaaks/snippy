@@ -56,7 +56,14 @@ class TestUtSqlite3dbSelect(object):
         Database.delete_all_contents()
         Database.delete_storage()
 
-    def teardown_class(self):
+    @classmethod
+    def setup_class(cls):
+        """Setup the test class."""
+
+        Config.init(None)
+
+    @classmethod
+    def teardown_class(cls):
         """Teardown each test."""
 
         Database.delete_all_contents()

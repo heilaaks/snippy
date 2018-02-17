@@ -44,10 +44,9 @@ class TestUtSqlite3dbSelect(object):
 
         ## Brief: Select content with regexp stored into sqlite. In this
         ##        case th last keyword matches to links column.
-        timestamp = '2018-02-17 13:23:43'
         content = Snippet.get_content(snippet=Snippet.FORCED)
         keywords = ['foo', 'bar', 'digitalocean']
-        sqlite.insert_content(content, content.get_digest(), timestamp, timestamp, content.get_metadata())
+        sqlite.insert_content(content, content.get_digest(), content.get_metadata())
         mock_cause_push.reset_mock()
         Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content)
         assert len(sqlite.select_content(Const.SNIPPET, keywords)) == 1

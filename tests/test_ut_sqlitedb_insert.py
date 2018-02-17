@@ -41,9 +41,8 @@ class TestUtSqlite3dbInsert(object):
         sqlite.init()
 
         ## Brief: Insert content into database with all parameters.
-        timestamp = '2018-02-17 13:23:43'
         content = Snippet.get_content(snippet=Snippet.REMOVE)
-        sqlite.insert_content(content, content.get_digest(), timestamp, timestamp, content.get_metadata())
+        sqlite.insert_content(content, content.get_digest(), content.get_metadata())
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
         Snippet.compare_db((Database.select_all_snippets())[0], content)
@@ -62,9 +61,8 @@ class TestUtSqlite3dbInsert(object):
         sqlite.init()
 
         ## Brief: Insert content with multiple links.
-        timestamp = '2018-02-17 13:23:43'
         content = Snippet.get_content(snippet=Snippet.FORCED)
-        sqlite.insert_content(content, content.get_digest(), timestamp, timestamp, content.get_metadata())
+        sqlite.insert_content(content, content.get_digest(), content.get_metadata())
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
         Snippet.compare_db((Database.select_all_snippets())[0], content)

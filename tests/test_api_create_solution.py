@@ -78,7 +78,7 @@ class TestApiCreateSolution(object):
         """Create list of solutions from API."""
 
         mock_isfile.return_value = True
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*4 + (Solution.UTC3,)*4 + (Solution.UTC1,)*2 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*3 + (Solution.UTC3,)*3 + (Solution.UTC1,)*2 + (None,)  # [REF_UTC]
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 

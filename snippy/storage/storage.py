@@ -37,10 +37,8 @@ class Storage(object):
     def create(self, content):
         """Create content."""
 
-        created = content.get_created()
-        updated = Config.get_utc_time()
         digest = content.compute_digest()
-        self._database.insert_content(content, digest, created, updated)
+        self._database.insert_content(content, digest)
 
         return digest
 

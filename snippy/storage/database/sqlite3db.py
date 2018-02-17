@@ -54,7 +54,7 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_content(self, content, digest, created, updated, metadata=None, bulk_insert=False):
+    def insert_content(self, content, digest, metadata=None, bulk_insert=False):
         """Insert content into database."""
 
         if self.connection:
@@ -72,8 +72,8 @@ class Sqlite3Db(object):
                                            content.get_filename(Const.STRING_CONTENT),
                                            content.get_runalias(Const.STRING_CONTENT),
                                            content.get_versions(Const.STRING_CONTENT),
-                                           created,
-                                           updated,
+                                           content.get_created(Const.STRING_CONTENT),
+                                           content.get_updated(Const.STRING_CONTENT),
                                            digest,
                                            metadata))
                     self.connection.commit()
@@ -109,8 +109,6 @@ class Sqlite3Db(object):
 
                 continue
 
-            created = content.get_created()
-            updated = content.get_updated()
             digest = content.get_digest()
             if not self._select_content_data(content.get_data()):
                 if digest != content.compute_digest():
@@ -118,7 +116,7 @@ class Sqlite3Db(object):
                     digest = content.compute_digest()
 
                 inserted = inserted + 1
-                self.insert_content(content, digest, created, updated, bulk_insert=True)
+                self.insert_content(content, digest, bulk_insert=True)
             else:
                 cause = (Cause.HTTP_CONFLICT, 'no content was inserted because content data already existed')
                 self.logger.info(cause[1])

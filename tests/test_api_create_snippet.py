@@ -20,6 +20,7 @@
 """test_api_create_snippet.py: Test POST /snippets API."""
 
 import json
+import pytest
 
 from falcon import testing
 import falcon
@@ -29,6 +30,7 @@ from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -36,40 +38,51 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiCreateSnippet(object):
     """Test POST /snippets API."""
 
+    @pytest.mark.usefixtures('server', 'snippy', 'remove_utc')
+    def test_api_create_snippet_001(self, snippy):
+        """Create one snippet with POST."""
+
+        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
+        content_send = {
+            'data': [{
+                'type': 'snippet',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }]
+        }
+        content_read = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
+        headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '608'
+        }
+        body = {
+            'data': [{
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }]
+        }
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            body=json.dumps(content_send))
+        assert result.headers == headers
+        assert Content.ordered(result.json) == Content.ordered(body)
+        assert result.status == falcon.HTTP_201
+        Content.verified(content_read)
+
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Cause, '_caller')
     @mock.patch.object(Config, 'get_utc_time')
     @mock.patch.object(Config, '_storage_file')
-    def test_api_create_one_snippet(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    def test_api_create_snippet_002(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Create one snippet from API."""
 
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Snippet.REMOVE_CREATED
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
-
-        ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
-        snippet = {'data': [{'type': 'snippet',
-                             'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
-        compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '608'}
-        body = {'data': [{'type': 'snippets',
-                          'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                          'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}]}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/snippets',  ## apiflow
-                                                                     headers={'accept': 'application/json'},
-                                                                     body=json.dumps(snippet))
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_201
-        assert len(Database.get_snippets()) == 1
-        Snippet.test_content2(compare_content)
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In
         ##        this case the links and list are defined as list in the JSON

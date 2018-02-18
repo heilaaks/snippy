@@ -69,6 +69,12 @@ def add_remove_snippet(mocker, snippy):
     contents = [Snippet.DEFAULTS[Snippet.REMOVE]]
     add_content(snippy, mocker, contents, Snippet.CREATE_REMOVE)
 
+@pytest.fixture(scope='function', name='remove_utc')
+def add_remove_snippet_time_mock(mocker):
+    """Add 'remove' snippet timestamp mock."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=Snippet.CREATE_REMOVE)
+
 @pytest.fixture(scope='function', name='forced')
 def add_forced_snippet(mocker, snippy):
     """Add 'forced' snippet for testing purposes."""

@@ -22,6 +22,7 @@
 from falcon import testing
 import falcon
 import mock
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
@@ -32,6 +33,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 class TestApiSearchSnippet(object):
     """Test GET /snippets API."""
+
+    testdata=[Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -46,10 +49,11 @@ class TestApiSearchSnippet(object):
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields. The
-        ##        search query matches to two snippets and both of them are returned. The
-        ##        search is sorted based on one field. The limit defined in the search query
-        ##        is not exceeded.
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ##        fields. The search query matches to two snippets and both of
+        ##        them are returned. The search is sorted based on one field.
+        ##        The limit defined in the search query is not exceeded.
+        mock_get_utc_time.side_effect = Snippet.ADD_DEFAULTS
         snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1275'}
         body = {'data': [{'type': 'snippets',
@@ -70,11 +74,16 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields. The
-        ##        search query matches to four snippets but limit defined in search query
-        ##        results only two of them sorted by the brief field. The sorting must be
-        ##        applied before limit is applied.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ##        fields. The search query matches to four snippets but limit
+        ##        defined in search query results only two of them sorted by
+        ##        the brief field. The sorting must be applied before limit is
+        ##        applied.
+        mock_get_utc_time.side_effect = (Snippet.CREATE_REMOVE +
+                                         Snippet.CREATE_FORCED +
+                                         Snippet.CREATE_EXITED +
+                                         Snippet.CREATE_NETCAT +
+                                         Snippet.TEST_PYTHON2)
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)
         Snippet.add_one(Snippet.NETCAT, snippy)
@@ -96,13 +105,14 @@ class TestApiSearchSnippet(object):
         snippy.release()
         snippy = None
         Database.delete_storage()
-        mock_get_utc_time.side_effect = None
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields. The
-        ##        search query matches to two snippets but only one of them is returned because
-        ##        the limit parameter was set to one. In this case the sort is descending and
-        ##        the last match must be returned. The resulting fields are limited only to brief
-        ##        and category.
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ##        fields. The search query matches to two snippets but only one
+        ##        of them is returned because the limit parameter was set to one.
+        ##        In this case the sort is descending and the last match must be
+        ##        returned. The resulting fields are limited only to brief and
+        ##       category.
+        mock_get_utc_time.side_effect = Snippet.ADD_DEFAULTS
         snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '188'}
         body = {'data': [{'type': 'snippets',
@@ -124,6 +134,7 @@ class TestApiSearchSnippet(object):
         ##        return only two fields. This syntax that separates the sorted fields causes
         ##        the parameter to be processed in string context which must handle multiple
         ##        fields.
+        mock_get_utc_time.side_effect = Snippet.ADD_DEFAULTS
         snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '188'}
         body = {'data': [{'type': 'snippets',
@@ -144,7 +155,11 @@ class TestApiSearchSnippet(object):
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields. The
         ##        search query matches to four snippets but limit defined in search query results
         ##        only two of them sorted by the utc field in descending order.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Snippet.CREATE_REMOVE +
+                                         Snippet.CREATE_FORCED +
+                                         Snippet.CREATE_EXITED +
+                                         Snippet.CREATE_NETCAT +
+                                         Snippet.TEST_PYTHON2)
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)
         Snippet.add_one(Snippet.NETCAT, snippy)
@@ -166,12 +181,15 @@ class TestApiSearchSnippet(object):
         snippy.release()
         snippy = None
         Database.delete_storage()
-        mock_get_utc_time.side_effect = None
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields sorted
         ##        with two fields. This syntax that separates the sorted fields causes the
         ##        parameter to be processed in string context which must handle multiple fields.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*8 + (Snippet.UTC2,)*8 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Snippet.CREATE_REMOVE +
+                                         Snippet.CREATE_FORCED +
+                                         Snippet.CREATE_EXITED +
+                                         Snippet.CREATE_NETCAT +
+                                         Snippet.TEST_PYTHON2)
         snippy = Snippet.add_defaults()
         Snippet.add_one(Snippet.EXITED, snippy)
         Snippet.add_one(Snippet.NETCAT, snippy)
@@ -197,6 +215,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Try to call GET /snippy/api/v1/snippets with sort parameter set to field
         ##        name that does not exist. In this case sorting must fall to default sorting.
+        mock_get_utc_time.side_effect = Snippet.ADD_DEFAULTS
         snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '380'}
         body = {'meta': Snippet.get_http_metadata(),
@@ -216,6 +235,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Call GET /snippy/api/v1/snippets to return only defined fields. In this case
         ##        the fields are defined by setting the 'fields' parameter multiple times.
+        mock_get_utc_time.side_effect = Snippet.ADD_DEFAULTS
         snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '188'}
         body = {'data': [{'type': 'snippets',
@@ -235,6 +255,7 @@ class TestApiSearchSnippet(object):
 
         ## Brief: Try to call GET /snippy/api/v1/snippets with search keywords that do not result
         ##        any matches.
+        mock_get_utc_time.side_effect = Snippet.ADD_DEFAULTS
         snippy = Snippet.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '335'}
         body = {'meta': Snippet.get_http_metadata(),
@@ -423,9 +444,46 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
+    @pytest.mark.usefixtures('snippy', 'server')
+    def test_pytest_fixtures(self, snippy):
+        """Test pytest fixtures with pytest specific mocking."""
+
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ##        fields. The search query matches to two snippets and both of
+        ##        them are returned. The search is sorted based on one field.
+        ##        The limit defined in the search query is not exceeded.
+        headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '1275'
+        }
+        body = {
+            'data': [{
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippets',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+            }]
+        }
+        snippy.run_server()
+        result = testing.TestClient(
+            snippy.server.api).simulate_get(
+                path='/snippy/api/v1/snippets',  ## apiflow
+                headers={'accept': 'application/json'},
+                query_string='sall=docker%2Cswarm&limit=20&sort=brief')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
     # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

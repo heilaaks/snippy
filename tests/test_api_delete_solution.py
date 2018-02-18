@@ -116,7 +116,7 @@ class TestApiDeleteSolution(object):
     # pylint: disable=duplicate-code
     @classmethod
     def teardown_class(cls):
-        """Teardown each test."""
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

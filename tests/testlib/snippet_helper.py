@@ -63,6 +63,7 @@ class SnippetHelper(object):
     CREATE_NETCAT = (NETCAT_CREATED,)*4
     TEST_CONTENT = ('2018-02-02 02:02:02',)
     TEST_PYTHON2 = (None,)
+    ADD_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
     UTC1 = '2017-10-14 19:56:31'
     UTC2 = '2017-10-20 07:08:45'
     DEFAULTS = ({'data': ('docker rm --volumes $(docker ps --all --quiet)', ),

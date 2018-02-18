@@ -88,7 +88,7 @@ class TestApiDeleteSnippet(object):
         snippy = None
         Database.delete_storage()
 
-        ## Brief: Try to DELETE snippet with resource location that does not 
+        ## Brief: Try to DELETE snippet with resource location that does not
         ##        exist.
         mock_get_utc_time.side_effect = (Snippet.CREATE_REMOVE +
                                          Snippet.CREATE_FORCED +
@@ -116,7 +116,7 @@ class TestApiDeleteSnippet(object):
     # pylint: disable=duplicate-code
     @classmethod
     def teardown_class(cls):
-        """Teardown each test."""
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

@@ -466,17 +466,13 @@ class TestApiSearchSnippet(object):
             }]
         }
         snippy.run_server()
-        result = testing.TestClient(  ## apiflow
-            snippy.server.api).simulate_get(
-                path='/snippy/api/v1/snippets',
-                headers={'accept': 'application/json'},
-                query_string='sall=docker%2Cswarm&limit=20&sort=brief')
+        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
     @pytest.mark.usefixtures('server', 'snippy', 'remove', 'forced', 'exited', 'netcat')
     def test_pytest_fixtures2(self, snippy):
@@ -503,17 +499,13 @@ class TestApiSearchSnippet(object):
             }]
         }
         snippy.run_server()
-        result = testing.TestClient(  ## apiflow
-            snippy.server.api).simulate_get(
-                path='/snippy/api/v1/snippets',
-                headers={'accept': 'application/json'},
-                query_string='sall=docker%2Cnmap&limit=2&sort=brief')
+        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&limit=2&sort=brief')
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
     # pylint: disable=duplicate-code
     @classmethod

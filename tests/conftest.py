@@ -29,10 +29,16 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 @pytest.fixture(scope='function', name='snippy')
-def mocked_snippy(mocker):
+def mocked_snippy(mocker, request):
     """Create mocked instance from snippy."""
 
     snippy = create_snippy(mocker)
+    def fin():
+        """Clear the resources at the end."""
+
+        snippy.release()
+        Database.delete_storage()
+    request.addfinalizer(fin)
 
     return snippy
 
@@ -96,4 +102,4 @@ def add_content(snippy, mocker, contents, timestamps):
         mocker.patch('snippy.migrate.migrate.open', mocked_open, create=True)
         cause = snippy.run_cli(['snippy', 'import', '-f', 'content.txt'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == idx
+        assert len(Database.get_contents()) == idx

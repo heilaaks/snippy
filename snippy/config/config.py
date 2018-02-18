@@ -135,7 +135,7 @@ class Config(object):
         """Get list of contents configured from one of the config sources."""
 
         if source is not None:
-            contents = Parser.read_content(content, source, cls.get_utc_time())
+            contents = Parser.read_content(content, source)
         elif cls.editor:
             contents = Editor.read_content(content)
         else:

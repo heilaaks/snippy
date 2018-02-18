@@ -250,11 +250,11 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
 
     # Swagger
     > https://app.swaggerhub.com/apis/heilaaks1/snippy-rest_api/1.0.0
-    
+
     # Swagger to Sphinx
     $ .. swaggerv2doc:: ../dev/swagger-2.0.json
     $ .. openapi:: ../dev/swagger-2.0.yml
-    
+
     # Swagger to github pages
     > https://community.smartbear.com/t5/SwaggerHub/Host-swagger-API-documentation-on-my-own-server/td-p/141523
     $ sudo docker pull swaggerapi/swagger-ui
@@ -278,10 +278,10 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
 
     # REST API from user perspective
     > https://github.com/wearehive/project-guidelines
-    
+
     # jsonschema examples
     > https://medium.com/grammofy/handling-complex-json-schemas-in-python-9eacc04a60cf
-    
+
     # Open API to JSON schema
     $ openapi2jsonschema docs/dev/swagger-2.0.yml -o snippy/data/schema/
     $ openapi2jsonschema --stand-alone docs/dev/swagger-2.0.yml -o snippy/data/schema/
@@ -710,6 +710,28 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 ## Design decisions
 #######################################
 
+    TIME STAMPS
+
+    1. Rules to update time stamps
+
+       A) When content is created, the created and updated time stamps are the
+          same.
+
+       B) When content is updated, the created time stamps remains same.
+
+       C) When content is updated, the updated time stamps is always updated
+          automatically. That is, the updated timestamp is never read from the
+          user input like the Solution text template.
+
+       D) When content is imported from JSON or YAML file, the created and
+          updated times will remain as defined in the source file.
+
+       E) When content is imported from TEXT file, the updated and created times
+          are lost. In this case the time stamps are sert automatically based
+          on the time of import.
+
+       F) All time stamps are in UTC/GMT time.
+
     CONFIGURATION
 
     1. The tool configuration is global and shared with all instances of Snippy()
@@ -838,9 +860,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        The commit logs follow seven rules from Chris Beams /1/ with explicit list
        of change types from /2/.
-       
+
        The explicit change types in commit log header are from /2/:
-       
+
          1. 'Add' for new features.
          2. 'Change' for changes in existing functionality.
          3. 'Deprecat' for soon-to-be removed features.
@@ -875,11 +897,11 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        from ConfigSourceBase().
 
     JSON API
-    
+
     1. The JSON API responses must follow JSON API v1.0 specifications
-    
+
        Few highlights that are currently supported:
-       
+
        - Top level meta, error and data objects
        - Top level links and self pointing to resource(s)
        - Top level data as JSON object (not list) when resource requested
@@ -888,14 +910,14 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        - Top level data type set to 'snippets' or 'solutions'.
        - Top level data id always unique ID.
        - Data attributes containing resource or collection with the requested fields.
-       
+
        Notes:
-       
+
        - Note that numbers are presented as strings. For example HTTP status
          code is string.
        - The JSON response fileds are in CamelCase because the expected use
          case is from Javascript that uses CamelCase.
-    
+
        /1/ http://jsonapi.org/
 
 #######################################

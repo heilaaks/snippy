@@ -506,6 +506,7 @@ class TestApiSearchSnippet(object):
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
+        assert 0
 
     # pylint: disable=duplicate-code
     @classmethod

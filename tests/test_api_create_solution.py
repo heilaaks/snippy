@@ -68,6 +68,7 @@ class TestApiCreateSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_body)
         assert result.status == falcon.HTTP_201
         Content.verified(mocker, snippy, content_read)
+        assert 0
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')

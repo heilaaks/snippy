@@ -223,6 +223,7 @@ class Migrate(object):
         cls._logger.debug('exporting contents %s', filename)
         with open(filename, 'w') as outfile:
             try:
+                print("migrate get_utc_time")
                 dictionary = {'metadata': {'updated': Config.get_utc_time(),
                                            'version': __version__,
                                            'homepage': __homepage__},
@@ -272,7 +273,7 @@ class Migrate(object):
             with open(filename, 'r') as infile:
                 try:
                     if Config.is_operation_file_text:
-                        contents = Config.get_contents(content, infile.read())
+                        contents = Config.get_contents(content, source=infile.read())
                         dictionary = {'content': Migrate.get_dictionary_list(contents)}
                     elif Config.is_operation_file_json:
                         dictionary = json.load(infile)

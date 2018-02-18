@@ -53,9 +53,9 @@ class Storage(object):
     def update(self, content):
         """Update content."""
 
-        updated = Config.get_utc_time()
+        content.update_updated()
         digest = content.compute_digest()
-        self._database.update_content(content, digest, updated)
+        self._database.update_content(content, digest)
 
         return digest
 

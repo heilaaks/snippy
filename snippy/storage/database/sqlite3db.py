@@ -227,7 +227,7 @@ class Sqlite3Db(object):
 
         return rows
 
-    def update_content(self, content, digest, updated, metadata=None):
+    def update_content(self, content, digest, metadata=None):
         """Update existing content."""
 
         if self.connection:
@@ -247,7 +247,7 @@ class Sqlite3Db(object):
                                            content.get_runalias(Const.STRING_CONTENT),
                                            content.get_versions(Const.STRING_CONTENT),
                                            content.get_created(Const.STRING_CONTENT),
-                                           updated,
+                                           content.get_updated(Const.STRING_CONTENT),
                                            digest,
                                            metadata,
                                            content.get_digest(Const.STRING_CONTENT)))

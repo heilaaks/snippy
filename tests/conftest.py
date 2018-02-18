@@ -27,15 +27,32 @@ from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
+# Content importing and get_utc_time():
+#
+#   1) Create empty content.
+#   2) Comparing content against template calls implicitly empty conten creation (parser).
+#   3) Comparing content against template calls implicitly empty conten creation (storage).
+#
+# Content creation and get_utc_time():
+#
+#   1) Creating empty content.
+#
+# Content exporting and get_utc_time():
+#
+#   1) Creating metadata with export timestamp.
 
 REMOVE_CREATED = '2017-10-14 19:56:31'
 FORCED_CREATED = '2017-10-14 19:56:31'
 EXITED_CREATED = '2017-10-20 07:08:45'
 NETCAT_CREATED = '2017-10-20 07:08:45'
-CREATE_REMOVE = (REMOVE_CREATED,)*4
-CREATE_FORCED = (FORCED_CREATED,)*4
-CREATE_EXITED = (EXITED_CREATED,)*4
-CREATE_NETCAT = (NETCAT_CREATED,)*4
+CREATE_REMOVE = (REMOVE_CREATED,)*1
+CREATE_FORCED = (FORCED_CREATED,)*1
+CREATE_EXITED = (EXITED_CREATED,)*1
+CREATE_NETCAT = (NETCAT_CREATED,)*1
+IMPORT_REMOVE = (REMOVE_CREATED,)*3
+IMPORT_FORCED = (FORCED_CREATED,)*3
+IMPORT_EXITED = (EXITED_CREATED,)*3
+IMPORT_NETCAT = (NETCAT_CREATED,)*3
 
 BEATS_CREATED = '2017-10-20 11:11:19'
 NGINX_CREATED = '2017-10-20 06:16:27'
@@ -46,6 +63,8 @@ CREATE_KAFKA = (KAFKA_CREATED,)*3
 
 TEST_PYTHON2 = (None,)
 ADD_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
+CREATE_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
+IMPORT_DEFAULTS = (IMPORT_REMOVE + IMPORT_FORCED + TEST_PYTHON2)
 
 @pytest.fixture(scope='function', name='snippy')
 def mocked_snippy(mocker, request):
@@ -70,51 +89,51 @@ def server(mocker):
 ## Snippets
 
 @pytest.fixture(scope='function', name='defaults')
-def add_default_snippets(mocker, snippy):
-    """Add default snippets for testing purposes."""
+def import_default_snippets(mocker, snippy):
+    """Import default snippets for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
-    add_content(snippy, mocker, contents, ADD_DEFAULTS)
+    import_content(snippy, mocker, contents, IMPORT_DEFAULTS)
 
 @pytest.fixture(scope='function', name='exited')
-def add_exited_snippet(mocker, snippy):
-    """Add 'exited' snippet for testing purposes."""
+def import_exited_snippet(mocker, snippy):
+    """Import 'exited' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.EXITED]]
-    add_content(snippy, mocker, contents, CREATE_EXITED)
+    import_content(snippy, mocker, contents, IMPORT_EXITED)
 
 @pytest.fixture(scope='function', name='remove')
-def add_remove_snippet(mocker, snippy):
-    """Add 'remove' snippet for testing purposes."""
+def import_remove_snippet(mocker, snippy):
+    """Import 'remove' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.REMOVE]]
-    add_content(snippy, mocker, contents, CREATE_REMOVE)
-
-@pytest.fixture(scope='function', name='remove_utc')
-def add_remove_snippet_time_mock(mocker):
-    """Add 'remove' snippet timestamp mock."""
-
-    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_REMOVE)
+    import_content(snippy, mocker, contents, IMPORT_REMOVE)
 
 @pytest.fixture(scope='function', name='forced')
-def add_forced_snippet(mocker, snippy):
-    """Add 'forced' snippet for testing purposes."""
+def import_forced_snippet(mocker, snippy):
+    """Import 'forced' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.FORCED]]
-    add_content(snippy, mocker, contents, CREATE_FORCED)
+    import_content(snippy, mocker, contents, IMPORT_FORCED)
 
 @pytest.fixture(scope='function', name='netcat')
-def add_netcat_snippet(mocker, snippy):
-    """Add 'netcat' snippet for testing purposes."""
+def import_netcat_snippet(mocker, snippy):
+    """Import 'netcat' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.NETCAT]]
-    add_content(snippy, mocker, contents, CREATE_NETCAT)
+    import_content(snippy, mocker, contents, IMPORT_NETCAT)
+
+@pytest.fixture(scope='function', name='remove_utc')
+def create_remove_snippet_time_mock(mocker):
+    """Mock timestamps to create 'remove' snippet."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_REMOVE)
 
 ## Solutions
 
 @pytest.fixture(scope='function', name='beats_utc')
-def add_beats_solution_time_mock(mocker):
-    """Add 'beats' solution timestamp mock."""
+def create_beats_solution_time_mock(mocker):
+    """Mock timestamps to create 'beats' solution."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_BEATS)
 
@@ -129,14 +148,16 @@ def create_snippy(mocker):
 
     return snippy
 
-def add_content(snippy, mocker, contents, timestamps):
-    """Add requested content."""
+def import_content(snippy, mocker, contents, timestamps):
+    """Import requested content."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=timestamps)
     start = len(Database.get_contents()) + 1
     for idx, content in enumerate(contents, start=start):
         mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
         mocker.patch('snippy.migrate.migrate.open', mocked_open, create=True)
+        print("==")
         cause = snippy.run_cli(['snippy', 'import', '-f', 'content.txt'])
+        print("==")
         assert cause == Cause.ALL_OK
         assert len(Database.get_contents()) == idx

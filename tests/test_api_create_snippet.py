@@ -66,7 +66,11 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
-        #print("calls %d" % Config.get_utc_time.called)
+        print("")
+        print("calls %s" % Config.get_utc_time.called)
+        print("calls %s" % Config.get_utc_time.call_count)
+        print("calls %s" % Config.get_utc_time.call_count)
+        print("calls %s" % Config.get_utc_time.mock_calls)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_body)
         assert result.status == falcon.HTTP_201

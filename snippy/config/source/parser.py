@@ -47,7 +47,7 @@ class Parser(object):
     _logger = Logger(__name__).logger
 
     @staticmethod
-    def read_content(content, source, timestamp):
+    def read_content(content, source):
         """Read content from text source."""
 
         data = []
@@ -60,11 +60,6 @@ class Parser(object):
         else:
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text template content category')
 
-        # Initialize time from 1) Content() or from 2) time given by caller.
-        # These are always needed because it can be that user did not set
-        # the date correctly to ISO8601 format in the text input.
-        if content.get_created():
-            timestamp = content.get_created()
         for item in data:
             content_copy = copy.copy(content)
             content_copy.set((Parser.content_data(category, item),
@@ -77,7 +72,7 @@ class Parser(object):
                               content_copy.get_runalias(),
                               content_copy.get_versions(),
                               content_copy.get_created(),
-                              Parser.content_updated(category, item, timestamp),
+                              content_copy.get_updated(),
                               content_copy.get_digest(),
                               content_copy.get_metadata(),
                               content_copy.get_key()))
@@ -156,24 +151,6 @@ class Parser(object):
         cls._logger.debug('parsed content brief from "%s"', brief)
 
         return brief
-
-    @classmethod
-    def content_updated(cls, category, source, timestamp):
-        """Read content updated date from text source."""
-
-        date = timestamp
-        if category == Const.SOLUTION:
-            match = re.search(r'## DATE  :\s*?(.*|$)', source, re.MULTILINE)
-            if match:
-                try:
-                    datetime.datetime.strptime(match.group(1).strip(), '%Y-%m-%d %H:%M:%S')
-                    date = match.group(1).strip()
-                except ValueError:
-                    cls._logger.info('incorrect date and time format "%s"', match.group(1))
-
-        cls._logger.debug('parsed content date from "%s"', date)
-
-        return date
 
     @classmethod
     def content_group(cls, category, source):

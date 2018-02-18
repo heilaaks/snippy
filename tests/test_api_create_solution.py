@@ -24,10 +24,12 @@ import json
 from falcon import testing
 import falcon
 import mock
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -35,36 +37,38 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiCreateSolution(object):
     """Test POST /solutions API."""
 
-    @mock.patch('snippy.server.server.SnippyServer')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    @mock.patch.object(Cause, '_caller')
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    def test_api_create_one_solution(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    @pytest.mark.usefixtures('server', 'snippy', 'beats_utc')
+    def test_api_create_solution_001(self, snippy, mocker):
         """Create one solution from API."""
 
-        mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Solution.BEATS_CREATED
-        mock__caller.return_value = 'snippy.testing.testing:123'
-        mock_get_db_location.return_value = Database.get_storage()
-
         ## Brief: Call POST /snippy/api/v1/solutions to create new solution.
-        solution = {'data': [{'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
-        compare_content = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2363'}
-        body = {'data': [{'type': 'solutions',
-                          'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
-                          'attributes': Solution.DEFAULTS[Solution.BEATS]}]}
+        content_send = {
+            'data': [{
+                'type': 'snippet',
+                'attributes': Solution.DEFAULTS[Solution.BEATS]
+            }]
+        }
+        content_read = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '2363'}
+        result_body = {
+            'data': [{
+                'type': 'solutions',
+                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'attributes': Solution.DEFAULTS[Solution.BEATS]
+            }]
+        }
         snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_post(path='/snippy/api/v1/solutions',  ## apiflow
-                                                                     headers={'accept': 'application/json'},
-                                                                     body=json.dumps(solution))
-        assert result.headers == headers
-        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+            path='/snippy/api/v1/solutions',
+            headers={'accept': 'application/json'},
+            body=json.dumps(content_send))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_body)
         assert result.status == falcon.HTTP_201
-        assert len(Database.get_solutions()) == 1
-        Solution.test_content2(compare_content)
+        Content.verified(mocker, snippy, content_read)
         snippy.release()
         snippy = None
         Database.delete_storage()
@@ -76,6 +80,7 @@ class TestApiCreateSolution(object):
     @mock.patch.object(Config, '_storage_file')
     def test_api_create_solutions(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
         """Create list of solutions from API."""
+
 
         mock_isfile.return_value = True
         mock_get_utc_time.side_effect = (Solution.CREATE_BEATS +

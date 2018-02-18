@@ -39,7 +39,7 @@ class TestApiCreateSnippet(object):
     """Test POST /snippets API."""
 
     @pytest.mark.usefixtures('server', 'snippy', 'remove_utc')
-    def test_api_create_snippet_001(self, snippy):
+    def test_api_create_snippet_001(self, snippy, mocker):
         """Create one snippet with POST."""
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
@@ -50,11 +50,11 @@ class TestApiCreateSnippet(object):
             }]
         }
         content_read = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {
+        result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '608'
         }
-        body = {
+        result_body = {
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -66,10 +66,13 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
-        assert result.headers == headers
-        assert Content.ordered(result.json) == Content.ordered(body)
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_body)
         assert result.status == falcon.HTTP_201
-        Content.verified(content_read)
+        Content.verified(mocker, snippy, content_read)
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')

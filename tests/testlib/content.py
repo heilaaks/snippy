@@ -22,13 +22,15 @@
 import mock
 
 from snippy.cause import Cause
+from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 class Content(object):
     """Helper methods for content testing."""
+
+    EXPORT_TIME = ('2018-02-02 02:02:02',)
 
     @staticmethod
     def ordered(json):
@@ -47,10 +49,10 @@ class Content(object):
         return tuple(jsons)
 
     @staticmethod
-    def verified(content):
+    def verified(mocker, snippy, content):
         """Compare given content against content stored in database."""
 
-        snippy = Snippy()
+        mocker.patch.object(Config, 'get_utc_time', side_effect=Content.EXPORT_TIME*len(content))
         assert len(Database.get_contents()) == len(content)
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open()) as mock_file:
             for digest in content:

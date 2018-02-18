@@ -473,6 +473,9 @@ class TestApiSearchSnippet(object):
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
 
     @pytest.mark.usefixtures('server', 'snippy', 'remove', 'forced', 'exited', 'netcat')
     def test_pytest_fixtures2(self, snippy):
@@ -506,6 +509,9 @@ class TestApiSearchSnippet(object):
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
 
     # pylint: disable=duplicate-code
     @classmethod

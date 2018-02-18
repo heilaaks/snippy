@@ -107,7 +107,6 @@ class Snippet(object):
             self._logger.debug('exporting snippet template %s', Config.get_operation_file())
             Migrate.dump_template(Content(category=Const.SNIPPET))
         elif Config.is_search_criteria():
-            print("HERE")
             self._logger.debug('exporting snippets based on search criteria')
             snippets = self.storage.search(Const.SNIPPET,
                                            sall=Config.search_all_kws,

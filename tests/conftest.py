@@ -25,8 +25,28 @@ from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
+
+REMOVE_CREATED = '2017-10-14 19:56:31'
+FORCED_CREATED = '2017-10-14 19:56:31'
+EXITED_CREATED = '2017-10-20 07:08:45'
+NETCAT_CREATED = '2017-10-20 07:08:45'
+CREATE_REMOVE = (REMOVE_CREATED,)*4
+CREATE_FORCED = (FORCED_CREATED,)*4
+CREATE_EXITED = (EXITED_CREATED,)*4
+CREATE_NETCAT = (NETCAT_CREATED,)*4
+
+BEATS_CREATED = '2017-10-20 11:11:19'
+NGINX_CREATED = '2017-10-20 06:16:27'
+KAFKA_CREATED = '2017-10-20 06:16:27'
+CREATE_BEATS = (BEATS_CREATED,)*1
+CREATE_NGINX = (NGINX_CREATED,)*1
+CREATE_KAFKA = (KAFKA_CREATED,)*1
+
+TEST_PYTHON2 = (None,)
+ADD_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
 
 @pytest.fixture(scope='function', name='snippy')
 def mocked_snippy(mocker, request):
@@ -37,7 +57,7 @@ def mocked_snippy(mocker, request):
         """Clear the resources at the end."""
 
         snippy.release()
-        Database.delete_storage()
+        #Database.delete_storage()
     request.addfinalizer(fin)
 
     return snippy
@@ -48,46 +68,58 @@ def server(mocker):
 
     mocker.patch('snippy.server.server.SnippyServer')
 
+## Snippets
+
 @pytest.fixture(scope='function', name='defaults')
 def add_default_snippets(mocker, snippy):
     """Add default snippets for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
-    add_content(snippy, mocker, contents, Snippet.ADD_DEFAULTS)
+    add_content(snippy, mocker, contents, ADD_DEFAULTS)
 
 @pytest.fixture(scope='function', name='exited')
 def add_exited_snippet(mocker, snippy):
     """Add 'exited' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.EXITED]]
-    add_content(snippy, mocker, contents, Snippet.CREATE_EXITED)
+    add_content(snippy, mocker, contents, CREATE_EXITED)
 
 @pytest.fixture(scope='function', name='remove')
 def add_remove_snippet(mocker, snippy):
     """Add 'remove' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.REMOVE]]
-    add_content(snippy, mocker, contents, Snippet.CREATE_REMOVE)
+    add_content(snippy, mocker, contents, CREATE_REMOVE)
 
 @pytest.fixture(scope='function', name='remove_utc')
 def add_remove_snippet_time_mock(mocker):
     """Add 'remove' snippet timestamp mock."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=Snippet.CREATE_REMOVE)
+    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_REMOVE)
 
 @pytest.fixture(scope='function', name='forced')
 def add_forced_snippet(mocker, snippy):
     """Add 'forced' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.FORCED]]
-    add_content(snippy, mocker, contents, Snippet.CREATE_FORCED)
+    add_content(snippy, mocker, contents, CREATE_FORCED)
 
 @pytest.fixture(scope='function', name='netcat')
 def add_netcat_snippet(mocker, snippy):
     """Add 'netcat' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.NETCAT]]
-    add_content(snippy, mocker, contents, Snippet.CREATE_NETCAT)
+    add_content(snippy, mocker, contents, CREATE_NETCAT)
+
+## Solutions
+
+@pytest.fixture(scope='function', name='beats_utc')
+def add_beats_solution_time_mock(mocker):
+    """Add 'beats' solution timestamp mock."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=Solution.CREATE_BEATS)
+
+## Helpers
 
 def create_snippy(mocker):
     """Create snippy with mocks."""

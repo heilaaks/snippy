@@ -1,5 +1,4 @@
 ## TODO
-   - [ ] Release not working with the fixtures?
    - [ ] Change file metadata to meta
    - [ ] Cannot parametrize because add_defaults calls template that uses get_utc which is different than without call to add_defaults
    - [ ] In update the Config.get_utc_time() is not needed because default is taken when Content() created?

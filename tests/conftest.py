@@ -25,7 +25,6 @@ from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
@@ -41,9 +40,9 @@ CREATE_NETCAT = (NETCAT_CREATED,)*4
 BEATS_CREATED = '2017-10-20 11:11:19'
 NGINX_CREATED = '2017-10-20 06:16:27'
 KAFKA_CREATED = '2017-10-20 06:16:27'
-CREATE_BEATS = (BEATS_CREATED,)*1
-CREATE_NGINX = (NGINX_CREATED,)*1
-CREATE_KAFKA = (KAFKA_CREATED,)*1
+CREATE_BEATS = (BEATS_CREATED,)*3
+CREATE_NGINX = (NGINX_CREATED,)*3
+CREATE_KAFKA = (KAFKA_CREATED,)*3
 
 TEST_PYTHON2 = (None,)
 ADD_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
@@ -57,7 +56,7 @@ def mocked_snippy(mocker, request):
         """Clear the resources at the end."""
 
         snippy.release()
-        #Database.delete_storage()
+        Database.delete_storage()
     request.addfinalizer(fin)
 
     return snippy
@@ -117,7 +116,7 @@ def add_netcat_snippet(mocker, snippy):
 def add_beats_solution_time_mock(mocker):
     """Add 'beats' solution timestamp mock."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=Solution.CREATE_BEATS)
+    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_BEATS)
 
 ## Helpers
 

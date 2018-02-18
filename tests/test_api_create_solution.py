@@ -59,7 +59,6 @@ class TestApiCreateSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }]
         }
-        snippy = Snippy(['snippy', '--server'])
         snippy.run_server()
         result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/solutions',
@@ -69,9 +68,6 @@ class TestApiCreateSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_body)
         assert result.status == falcon.HTTP_201
         Content.verified(mocker, snippy, content_read)
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')

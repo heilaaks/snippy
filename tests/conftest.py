@@ -29,26 +29,71 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 @pytest.fixture(scope='function', name='snippy')
-def snippy_defaults(mocker):
-    """Add default snippets for testing purposes."""
+def mocked_snippy(mocker):
+    """Create mocked instance from snippy."""
 
-    mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
-    snippy = Snippy()
-    mocker.patch('snippy.migrate.migrate.os.path.isfile', return_value=True)
-    mocker.patch.object(Config, 'get_utc_time', side_effect=Snippet.ADD_DEFAULTS)
-
-    contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
-    for idx, content in enumerate(contents, start=1):
-        mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
-        mocker.patch('snippy.migrate.migrate.open', mocked_open, create=True)
-        cause = snippy.run_cli(['snippy', 'import', '-f', 'one-snippet.txt'])
-        assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == idx
+    snippy = create_snippy(mocker)
 
     return snippy
 
-@pytest.fixture(scope='function')
+@pytest.fixture(scope='function', name='server')
 def server(mocker):
-    """Run mocker server for testing purposes."""
+    """Run mocked server for testing purposes."""
 
     mocker.patch('snippy.server.server.SnippyServer')
+
+@pytest.fixture(scope='function', name='defaults')
+def add_default_snippets(mocker, snippy):
+    """Add default snippets for testing purposes."""
+
+    contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
+    add_content(snippy, mocker, contents, Snippet.ADD_DEFAULTS)
+
+@pytest.fixture(scope='function', name='exited')
+def add_exited_snippet(mocker, snippy):
+    """Add 'exited' snippet for testing purposes."""
+
+    contents = [Snippet.DEFAULTS[Snippet.EXITED]]
+    add_content(snippy, mocker, contents, Snippet.CREATE_EXITED)
+
+@pytest.fixture(scope='function', name='remove')
+def add_remove_snippet(mocker, snippy):
+    """Add 'remove' snippet for testing purposes."""
+
+    contents = [Snippet.DEFAULTS[Snippet.REMOVE]]
+    add_content(snippy, mocker, contents, Snippet.CREATE_REMOVE)
+
+@pytest.fixture(scope='function', name='forced')
+def add_forced_snippet(mocker, snippy):
+    """Add 'forced' snippet for testing purposes."""
+
+    contents = [Snippet.DEFAULTS[Snippet.FORCED]]
+    add_content(snippy, mocker, contents, Snippet.CREATE_FORCED)
+
+@pytest.fixture(scope='function', name='netcat')
+def add_netcat_snippet(mocker, snippy):
+    """Add 'netcat' snippet for testing purposes."""
+
+    contents = [Snippet.DEFAULTS[Snippet.NETCAT]]
+    add_content(snippy, mocker, contents, Snippet.CREATE_NETCAT)
+
+def create_snippy(mocker):
+    """Create snippy with mocks."""
+
+    mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
+    mocker.patch('snippy.migrate.migrate.os.path.isfile', return_value=True)
+    snippy = Snippy()
+
+    return snippy
+
+def add_content(snippy, mocker, contents, timestamps):
+    """Add requested content."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=timestamps)
+    start = len(Database.get_contents()) + 1
+    for idx, content in enumerate(contents, start=start):
+        mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
+        mocker.patch('snippy.migrate.migrate.open', mocked_open, create=True)
+        cause = snippy.run_cli(['snippy', 'import', '-f', 'content.txt'])
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_snippets()) == idx

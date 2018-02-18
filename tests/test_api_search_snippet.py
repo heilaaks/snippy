@@ -34,8 +34,6 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiSearchSnippet(object):
     """Test GET /snippets API."""
 
-    testdata=[Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
-
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Cause, '_caller')
@@ -444,7 +442,7 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-    @pytest.mark.usefixtures('snippy', 'server')
+    @pytest.mark.usefixtures('server', 'snippy', 'defaults')
     def test_pytest_fixtures(self, snippy):
         """Test pytest fixtures with pytest specific mocking."""
 
@@ -468,11 +466,48 @@ class TestApiSearchSnippet(object):
             }]
         }
         snippy.run_server()
-        result = testing.TestClient(
+        result = testing.TestClient(  ## apiflow
             snippy.server.api).simulate_get(
-                path='/snippy/api/v1/snippets',  ## apiflow
+                path='/snippy/api/v1/snippets',
                 headers={'accept': 'application/json'},
                 query_string='sall=docker%2Cswarm&limit=20&sort=brief')
+        assert result.headers == headers
+        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.status == falcon.HTTP_200
+        snippy.release()
+        snippy = None
+        Database.delete_storage()
+
+    @pytest.mark.usefixtures('server', 'snippy', 'remove', 'forced', 'exited', 'netcat')
+    def test_pytest_fixtures2(self, snippy):
+        """Test pytest fixtures with pytest specific mocking."""
+
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ##        fields. The search query matches to four snippets but limit
+        ##        defined in search query results only two of them sorted by
+        ##        the brief field. The sorting must be applied before limit is
+        ##        applied.
+        headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '1411'
+        }
+        body = {
+            'data': [{
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippets',
+                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+            }]
+        }
+        snippy.run_server()
+        result = testing.TestClient(  ## apiflow
+            snippy.server.api).simulate_get(
+                path='/snippy/api/v1/snippets',
+                headers={'accept': 'application/json'},
+                query_string='sall=docker%2Cnmap&limit=2&sort=brief')
         assert result.headers == headers
         assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
         assert result.status == falcon.HTTP_200

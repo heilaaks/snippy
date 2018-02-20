@@ -206,10 +206,8 @@ class TestWfExportSolution(object):
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  : ')
         mocked_open = mock.mock_open(read_data=mocked_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            print(mock_get_utc_time.call_count)
             mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*12 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
-            print(mock_get_utc_time.call_count)
             cause = snippy.run_cli(['snippy', 'import', '-f', 'mocked_file.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 3
@@ -631,7 +629,7 @@ class TestWfExportSolution(object):
 
     @classmethod
     def teardown_class(cls):
-        """Teardown each test."""
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

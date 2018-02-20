@@ -423,7 +423,6 @@ class TestWfConsoleHelp(object):
             sys.stdout = real_stdout
             assert cause == Cause.ALL_OK
             assert len(result_stdout.split(Const.NEWLINE)) > 25
-            print(result_stdout)
             assert Const.NEWLINE.join(output) in result_stdout
             assert not result_stderr
             snippy.release()
@@ -588,9 +587,9 @@ class TestWfConsoleHelp(object):
             snippy = None
             Database.delete_storage()
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

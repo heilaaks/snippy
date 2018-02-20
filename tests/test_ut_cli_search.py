@@ -80,14 +80,12 @@ class TestUtCliSearch(object):
     # pylint: disable=duplicate-code
     @classmethod
     def setup_class(cls):
-        """Test class setup before any of the tests are run."""
+        """Setup class."""
 
-        print('setup_class()')
         CliHelper().reset()
 
     @classmethod
     def teardown_class(cls):
-        """Test class teardown after all tests run."""
+        """Teardown class."""
 
-        print('teardown_class()')
         CliHelper().reset()

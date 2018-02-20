@@ -57,10 +57,10 @@ class SnippetHelper(object):
     #            is a test function misbehaving and calling the code (due to lazyness).
     #            This makes the amount of get_utc_time dependent on how the content
     #            is added in test case. This makes it hard to have one constant.
-    CREATE_REMOVE = (REMOVE_CREATED,)*4
-    CREATE_FORCED = (FORCED_CREATED,)*4
-    CREATE_EXITED = (EXITED_CREATED,)*4
-    CREATE_NETCAT = (NETCAT_CREATED,)*4
+    CREATE_REMOVE = (REMOVE_CREATED,)*3
+    CREATE_FORCED = (FORCED_CREATED,)*3
+    CREATE_EXITED = (EXITED_CREATED,)*3
+    CREATE_NETCAT = (NETCAT_CREATED,)*3
     TEST_CONTENT = ('2018-02-02 02:02:02',)
     TEST_PYTHON2 = (None,)
     ADD_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
@@ -165,7 +165,7 @@ class SnippetHelper(object):
         """Transform text template to content."""
 
         if text:
-            contents = Parser.read_content(Content(category=Const.SNIPPET), text, SnippetHelper.UTC1)
+            contents = Parser.read_content(Content(category=Const.SNIPPET), text)
             content = contents[0]
             content.update_digest()
         else:

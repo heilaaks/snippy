@@ -336,7 +336,7 @@ class SolutionHelper(object):
         """Transform text template to content."""
 
         if text:
-            contents = Parser.read_content(Content(category=Const.SOLUTION), text, SolutionHelper.UTC1)
+            contents = Parser.read_content(Content(category=Const.SOLUTION), text)
             content = contents[0]
             content.update_digest()
         else:

@@ -393,6 +393,13 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     # Mocking cookbook
     > http://chase-seibert.github.io/blog/2015/06/25/python-mocking-cookbook.html
 
+    # Mocking examples for fixture prints.
+    print("")
+    print("calls %s" % Config.get_utc_time.called)
+    print("calls %s" % Config.get_utc_time.call_count)
+    print("calls %s" % Config.get_utc_time.call_count)
+    print("calls %s" % Config.get_utc_time.mock_calls)
+
     # List tests
     $ cat tests/test_wf_* | grep -E '[[:space:]]{12}\$' | grep -Ev SnippetHelp
 

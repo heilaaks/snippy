@@ -143,9 +143,7 @@ class Snippet(object):
             self._logger.debug('importing snippets %s', Config.get_operation_file())
             dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SNIPPET))
             snippets = Content.load(dictionary)
-            print("TEST1")
             self.storage.import_content(snippets)
-            print("TEST2")
 
     def run(self):
         """Run the snippet management operation."""

@@ -20,7 +20,6 @@
 """parser.py: Parse configuration source parameters."""
 
 import copy
-import datetime
 import re
 
 from snippy.cause import Cause

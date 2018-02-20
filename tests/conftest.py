@@ -27,20 +27,27 @@ from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
-# Content importing and get_utc_time():
+# Snippet importing and get_utc_time():
 #
 #   1) Create empty content.
-#   2) Comparing content against template calls implicitly empty conten creation (parser).
-#   3) Comparing content against template calls implicitly empty conten creation (storage).
+#   2) Comparing content against template calls implicitly empty content creation in Parser.
+#   3) Comparing content against template calls implicitly empty content creation in Storage.
 #
-# Content creation and get_utc_time():
+# Snippet creation and get_utc_time():
 #
 #   1) Creating empty content.
 #
-# Content exporting and get_utc_time():
+# Solution creation and get_utc_time():
+#
+#   1) Creating empty content.
+#   2) Comparing against content template (create empty).
+#   3) Comparing against content template (make timestamp).
+#
+# Snippet or solution exporting and get_utc_time():
 #
 #   1) Creating metadata with export timestamp.
 
+# Snippets
 REMOVE_CREATED = '2017-10-14 19:56:31'
 FORCED_CREATED = '2017-10-14 19:56:31'
 EXITED_CREATED = '2017-10-20 07:08:45'
@@ -54,6 +61,7 @@ IMPORT_FORCED = (FORCED_CREATED,)*3
 IMPORT_EXITED = (EXITED_CREATED,)*3
 IMPORT_NETCAT = (NETCAT_CREATED,)*3
 
+# Solutions
 BEATS_CREATED = '2017-10-20 11:11:19'
 NGINX_CREATED = '2017-10-20 06:16:27'
 KAFKA_CREATED = '2017-10-20 06:16:27'

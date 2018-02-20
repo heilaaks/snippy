@@ -1,7 +1,6 @@
 ## TODO
-   - [ ] Create solution calls get_time 3 times but snippet only once?
+   - [ ] Make operation timestamp to Config(). This could be helpfull since it guarantees same stamp to output during one operation. Also reduces calls to get_utc_time
    - [ ] Change file metadata to meta
-   - [ ] Cannot parametrize because add_defaults calls template that uses get_utc which is different than without call to add_defaults
    - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed?
    - [ ] In update the Config.get_utc_time() is not needed because default is taken when Content() created?
    - [ ] Why snippet UTC stuff has one more call to utc?

@@ -186,7 +186,6 @@ class TestApiHello(object):
         snippy = None
         Database.delete_storage()
 
-    # pylint: disable=duplicate-code
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

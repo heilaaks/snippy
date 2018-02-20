@@ -17,14 +17,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_create_snippet.py: Test POST /snippets API."""
+"""test_api_create_snippet: Test POST /snippets API."""
 
 import json
-import pytest
 
 from falcon import testing
 import falcon
 import mock
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
@@ -43,13 +43,13 @@ class TestApiCreateSnippet(object):
         """Create one snippet with POST."""
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
+        content_read = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
         content_send = {
             'data': [{
                 'type': 'snippet',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }]
         }
-        content_read = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '608'
@@ -66,11 +66,6 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
-        print("")
-        print("calls %s" % Config.get_utc_time.called)
-        print("calls %s" % Config.get_utc_time.call_count)
-        print("calls %s" % Config.get_utc_time.call_count)
-        print("calls %s" % Config.get_utc_time.mock_calls)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_body)
         assert result.status == falcon.HTTP_201
@@ -403,7 +398,6 @@ class TestApiCreateSnippet(object):
         snippy = None
         Database.delete_storage()
 
-    # pylint: disable=duplicate-code
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

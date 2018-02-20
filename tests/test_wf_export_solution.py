@@ -52,7 +52,7 @@ class TestWfExportSolution(object):
         ## Brief: Export all solutions into file. File name or format are not defined in command
         ##        line which should result tool default file and format.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -66,7 +66,7 @@ class TestWfExportSolution(object):
         ## Brief: Export all solutions into defined yaml file. File name and format are defined
         ##        in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.yaml']) ## workflow
             assert cause == Cause.ALL_OK
@@ -80,7 +80,7 @@ class TestWfExportSolution(object):
         ## Brief: Export all solutions into defined json file. File name and format are defined
         ##        in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.json']) ## workflow
             assert cause == Cause.ALL_OK
@@ -94,7 +94,7 @@ class TestWfExportSolution(object):
         ## Brief: Export all solutions into defined text file with file extension 'txt'. File name
         ##        and format are defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.txt'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -111,7 +111,7 @@ class TestWfExportSolution(object):
         ## Brief: Export all solutions into defined text file with file extension 'text'. File name
         ##        and format are defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.text'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -128,7 +128,7 @@ class TestWfExportSolution(object):
         ## Brief: Try to export all solutions into file format that is not supported. This should
         ##        result error text for end user and no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
@@ -142,7 +142,7 @@ class TestWfExportSolution(object):
         ## Brief: Try to export all content by defining the content category to --all. This is not
         ##        supported with export operation and error cause is returned.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--all'])  ## workflow
             assert cause == 'NOK: content category \'all\' is supported only with search operation'
@@ -171,7 +171,7 @@ class TestWfExportSolution(object):
         ## Brief: Export defined solution based on message digest. File name is defined in solution
         ##        metadata but not by command line -f|--file option.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -187,7 +187,7 @@ class TestWfExportSolution(object):
         ##        metadata but not by command line -f|--file option. In this case the content
         ##        category is not specified explicitly from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -230,7 +230,7 @@ class TestWfExportSolution(object):
         ##        and format defined by the command line option. In this case the created file
         ##        format is yaml.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -244,7 +244,7 @@ class TestWfExportSolution(object):
         ## Brief: Export defined solution based on message digest to yaml file without specifying
         ##        the content category explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -260,7 +260,7 @@ class TestWfExportSolution(object):
         ##        and format defined by the command line option. In this case the created file
         ##        format is json.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -274,7 +274,7 @@ class TestWfExportSolution(object):
         ## Brief: Export defined solution based on message digest to json file without specifying
         ##        the content category explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -290,7 +290,7 @@ class TestWfExportSolution(object):
         ##        and format defined by the command line option. In this case the text format file
         ##        extension is 'txt'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -305,7 +305,7 @@ class TestWfExportSolution(object):
         ## Brief: Export defined solution based on message digest to text file without specifying
         ##        the content category explicitly. In this case the file extension is *.txt.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -322,7 +322,7 @@ class TestWfExportSolution(object):
         ##        and format defined by the command line option. In this case the text format file
         ##        extension is 'text'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -337,7 +337,7 @@ class TestWfExportSolution(object):
         ## Brief: Export defined solution based on message digest to text file without specifying
         ##        the content category explicitly. In this case the file extension is *.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -353,7 +353,7 @@ class TestWfExportSolution(object):
         ##        not supported. This should result error string for end user and no files should
         ##        be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
@@ -371,7 +371,7 @@ class TestWfExportSolution(object):
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  :')
         mocked_open = mock.mock_open(read_data=mocked_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*12 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*10 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'import', '-f', 'mocked_file.txt'])
             assert cause == Cause.ALL_OK
@@ -416,7 +416,7 @@ class TestWfExportSolution(object):
         ## Brief: Try to export defined solution based on message digest that cannot be found.
         ##        This should result error text for end user and no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*12 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*10 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', '123456789abcdef0', '-f' './defined-solution.text'])  ## workflow
             assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
@@ -563,7 +563,7 @@ class TestWfExportSolution(object):
         ## Brief: Export solution defaults. All solutions should be exported into predefined file
         ##        location under tool data folder in yaml format.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
+            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '--defaults'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -629,8 +629,8 @@ class TestWfExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
+    @classmethod
+    def teardown_class(cls):
         """Teardown each test."""
 
         Database.delete_all_contents()

@@ -131,7 +131,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """Add content date to template."""
 
         if '<SNIPPY_DATE>' in template:
-            print("content1 get_utc_time")
             template = template.replace('<SNIPPY_DATE>', Config.get_utc_time())
         else:
             match = re.search(r'(## DATE  :\s*?$)', template, re.MULTILINE)
@@ -301,7 +300,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """Update content update timestamp."""
 
         content = self.get_list()
-        print("content3 get_utc_time")
         content[Const.UPDATED] = Config.get_utc_time()
         self.content = (content[Const.DATA],
                         content[Const.BRIEF],
@@ -428,7 +426,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def get_empty(cls, category):
         """Get empty content."""
 
-        print("content2 get_utc_time")
         timestamp = Config.get_utc_time()
         content = (Const.EMPTY_TUPLE,
                    Const.EMPTY,

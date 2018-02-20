@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_create_solution.py: Test POST /solutions API."""
+"""test_api_create_solution: Test POST /solutions API."""
 
 import json
 
@@ -42,13 +42,13 @@ class TestApiCreateSolution(object):
         """Create one solution from API."""
 
         ## Brief: Call POST /snippy/api/v1/solutions to create new solution.
+        content_read = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
         content_send = {
             'data': [{
                 'type': 'snippet',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }]
         }
-        content_read = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2363'}
@@ -68,7 +68,6 @@ class TestApiCreateSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_body)
         assert result.status == falcon.HTTP_201
         Content.verified(mocker, snippy, content_read)
-        assert 0
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -114,7 +113,6 @@ class TestApiCreateSolution(object):
         snippy = None
         Database.delete_storage()
 
-    # pylint: disable=duplicate-code
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

@@ -50,7 +50,7 @@ class TestApiSearchSolution(object):
         ##        search query matches to two solutions and both of them are returned. The
         ##        search is sorted based on one field. The search result limit defined in
         ##        the search query is not exceeded.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (None,) # [REF_UTC]
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (None,) # [REF_UTC]
         snippy = Solution.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5258'}
         body = {'data': [{'type': 'solutions',
@@ -77,7 +77,7 @@ class TestApiSearchSolution(object):
         ##        applied before limit is applied. The search is case insensitive and the
         ##        search keywords are stored with initial letters capitalized when the search
         ##        keys are all small letters. The search keywords must still match.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*12 + (None,) # [REF_UTC]
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*10 + (None,) # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5258'}
@@ -147,7 +147,7 @@ class TestApiSearchSolution(object):
         ##        search query matches to three solutions but limit defined in search query
         ##        results only two of them sorted by the utc field in descending order and
         ##        then based on brief field in descending order.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*12 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*10 + (None,)  # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7468'}
@@ -173,7 +173,7 @@ class TestApiSearchSolution(object):
         ## Brief: Call GET /snippy/api/v1/solutions and search keywords from all fields sorted
         ##        with two fields. This syntax that separates the sorted fields causes the
         ##        parameter to be processed in string context which must handle multiple fields.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*12 + (None,)  # [REF_UTC]
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*10 + (None,)  # [REF_UTC]
         snippy = Solution.add_defaults()
         Solution.add_one(Solution.KAFKA, snippy)
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '7468'}
@@ -382,7 +382,7 @@ class TestApiSearchSolution(object):
 
         ## Brief: Call GET /snippy/api/v1/solutions without defining search parameters. In this
         ##        case all content should be returned based on filtering parameters.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (None,) # [REF_UTC]
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (None,) # [REF_UTC]
         snippy = Solution.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5258'}
         body = {'data': [{'type': 'solutions',
@@ -406,7 +406,7 @@ class TestApiSearchSolution(object):
         ## Brief: Call GET /snippy/api/v1/solutions without defining search parameters. In this
         ##        case only one solution must be returned because the limit is set to one. Also
         ##        the sorting based on brief field causes the last solution to be returned.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*6 + (None,) # [REF_UTC]
+        mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (None,) # [REF_UTC]
         snippy = Solution.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2905'}
         body = {'data': [{'type': 'solutions',
@@ -424,9 +424,9 @@ class TestApiSearchSolution(object):
         snippy = None
         Database.delete_storage()
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

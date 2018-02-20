@@ -161,7 +161,7 @@ class TestApiUpdateSnippet(object):
         ##        with specified digest. This test verifies that the created
         ##        timestamp does not change and the updated timestamp changes
         ##        when the content is updated.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*4 + (Snippet.UTC2,)*1 + (None,) # [REF_UTC]
+        mock_get_utc_time.side_effect = (Snippet.UTC1,)*3 + (Snippet.UTC2,)*1 + (None,) # [REF_UTC]
         snippy = Snippet.add_one(Snippet.FORCED)
         snippet = {'data': {'type': 'snippet',
                             'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
@@ -191,10 +191,9 @@ class TestApiUpdateSnippet(object):
         Database.delete_storage()
         Config.init(None)
 
-    # pylint: disable=duplicate-code
     @classmethod
     def teardown_class(cls):
-        """Teardown each test."""
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

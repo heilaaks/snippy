@@ -21,7 +21,6 @@
 
 from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
-from snippy.config.config import Config
 from snippy.content.content import Content
 from snippy.storage.database.sqlite3db import Sqlite3Db as Database
 

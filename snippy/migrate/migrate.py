@@ -223,9 +223,9 @@ class Migrate(object):
         cls._logger.debug('exporting contents %s', filename)
         with open(filename, 'w') as outfile:
             try:
-                dictionary = {'metadata': {'updated': Config.get_utc_time(),
-                                           'version': __version__,
-                                           'homepage': __homepage__},
+                dictionary = {'meta': {'updated': Config.get_utc_time(),
+                                       'version': __version__,
+                                       'homepage': __homepage__},
                               'content': Migrate.get_dictionary_list(contents)}
                 if Config.is_operation_file_text:
                     for content in contents:

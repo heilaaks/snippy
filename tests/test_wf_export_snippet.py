@@ -45,7 +45,7 @@ class TestWfExportSnippet(object):
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Snippet.UTC1
         mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
+        export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export all snippets without defining target file name from command line.
@@ -118,7 +118,7 @@ class TestWfExportSnippet(object):
         mock_isfile.return_value = True
         mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
-        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
+        export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export defined snippet based on message digest. File name is not defined in command
@@ -197,7 +197,7 @@ class TestWfExportSnippet(object):
         mock_isfile.return_value = True
         mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
-        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
+        export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export defined snippet based on search keyword. File name is not defined in
@@ -306,7 +306,7 @@ class TestWfExportSnippet(object):
         mock_isfile.return_value = True
         mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
-        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
+        export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE]]}
 
         ## Brief: Export defined snippet based on content data. File name is not defined in
@@ -409,7 +409,7 @@ class TestWfExportSnippet(object):
         mock_isfile.return_value = True
         mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = Snippet.UTC1
-        export_dict = {'metadata': Snippet.get_metadata(Snippet.UTC1),
+        export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export snippet defaults. All snippets should be exported into predefined file
@@ -440,9 +440,9 @@ class TestWfExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

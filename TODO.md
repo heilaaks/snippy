@@ -1,6 +1,5 @@
 ## TODO
    - [ ] Make operation timestamp to Config(). This could be helpfull since it guarantees same stamp to output during one operation. Also reduces calls to get_utc_time
-   - [ ] Change file metadata to meta
    - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed?
    - [ ] In update the Config.get_utc_time() is not needed because default is taken when Content() created?
    - [ ] Why snippet UTC stuff has one more call to utc?
@@ -9,6 +8,7 @@
    - [ ] Update documents.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
+   - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] =============================================================
    - [ ] The pytest setup and teardown are class mehotds so fix def teardown_class(self): @classmethod def teardown_class(cls):
    - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
@@ -79,6 +79,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Changed exported yaml and json to use 'meta' instead of 'metadata'.
    - [x] Added created and updated fields into content.
    - [x] Added simple statistics to time each API transaction latency. The output is in debug logs. 
    - [x] Fixed resource or collection not found to return 404. In Cli the response is ok but now in API it is 404.

@@ -46,7 +46,7 @@ class TestWfExportSolution(object):
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Solution.UTC1
         mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'metadata': Solution.get_metadata(Solution.UTC1),
+        export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
         ## Brief: Export all solutions into file. File name or format are not defined in command
@@ -165,7 +165,7 @@ class TestWfExportSolution(object):
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Solution.UTC1
         mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'metadata': Solution.get_metadata(Solution.UTC1),
+        export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
         ## Brief: Export defined solution based on message digest. File name is defined in solution
@@ -436,7 +436,7 @@ class TestWfExportSolution(object):
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Solution.UTC1
         mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'metadata': Solution.get_metadata(Solution.UTC1),
+        export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
         ## Brief: Export defined solution based on search keyword. File name is defined in solution
@@ -555,7 +555,7 @@ class TestWfExportSolution(object):
         mock_isfile.return_value = True
         mock_get_utc_time.return_value = Solution.UTC1
         mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'metadata': Solution.get_metadata(Solution.UTC1),
+        export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
         ## Brief: Export solution defaults. All solutions should be exported into predefined file

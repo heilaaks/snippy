@@ -1121,7 +1121,7 @@ content:
   created: '2017-01-29 12:31:00'
   updated: '2017-01-29 12:31:00'
   versions: ''
-metadata:
+meta:
   homepage: https://github.com/heilaaks/snippy
   updated: '2018-02-15 13:51:10'
   version: 0.7.0

@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_snippet.py: Test GET /snippy/api/snippets API."""
+"""test_api_search_snippet: Test GET /snippy/api/snippets API."""
 
 from falcon import testing
 import falcon
@@ -27,12 +27,46 @@ import pytest
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestApiSearchSnippet(object):
-    """Test GET /snippets API."""
+    """Test GET /snippy/api/snippets API."""
+
+    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
+    def test_api_search_snippet_001(self, snippy):
+        """Search snippets with GET."""
+
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from
+        ##        all fields. The search query matches to two snippets and
+        ##        both of them are returned. The search is sorted based on
+        ##        one field. The limit defined in the search query is not
+        ##        exceeded.
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '1275'
+        }
+        result_json = {
+            'data': [{
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippets',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+            }]
+        }
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cswarm&limit=20&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -46,31 +80,6 @@ class TestApiSearchSnippet(object):
         mock_get_utc_time.return_value = Snippet.UTC1
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
-
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
-        ##        fields. The search query matches to two snippets and both of
-        ##        them are returned. The search is sorted based on one field.
-        ##        The limit defined in the search query is not exceeded.
-        mock_get_utc_time.side_effect = Snippet.ADD_DEFAULTS
-        snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1275'}
-        body = {'data': [{'type': 'snippets',
-                          'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                          'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
-                         {'type': 'snippets',
-                          'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                          'attributes': Snippet.DEFAULTS[Snippet.FORCED]}]}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets',  ## apiflow
-                                                                    headers={'accept': 'application/json'},
-                                                                    query_string='sall=docker%2Cswarm&limit=20&sort=brief')
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
         ##        fields. The search query matches to four snippets but limit

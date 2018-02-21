@@ -17,21 +17,56 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_solution.py: Test GET /snippy/api/solutions API."""
+"""test_api_search_solution: Test GET /snippy/api/solutions API."""
 
 from falcon import testing
 import falcon
 import mock
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestApiSearchSolution(object):
     """Test GET /snippy/api/solutions API."""
+
+    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions')
+    def test_api_search_solution_001(self, snippy):
+        """Search solution with GET."""
+
+        ## Brief: Call GET /snippy/api/v1/solutions and search keywords from
+        ##        all fields. The search query matches to two solutions and
+        ##        both of them are returned. The search is sorted based on
+        ##        one field. The search result limit defined in the search
+        ##        query is not exceeded.
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '5258'
+        }
+        result_json = {
+            'data': [{
+                'type': 'solutions',
+                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'attributes': Solution.DEFAULTS[Solution.BEATS]
+            }, {
+                'type': 'solutions',
+                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'attributes': Solution.DEFAULTS[Solution.NGINX]
+            }]
+        }
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+            path='/snippy/api/v1/solutions',
+            headers={'accept': 'application/json'},
+            query_string='sall=nginx%2CElastic&limit=20&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -45,31 +80,6 @@ class TestApiSearchSolution(object):
         mock_get_utc_time.return_value = Solution.UTC1
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
-
-        ## Brief: Call GET /snippy/api/v1/solutions and search keywords from all fields. The
-        ##        search query matches to two solutions and both of them are returned. The
-        ##        search is sorted based on one field. The search result limit defined in
-        ##        the search query is not exceeded.
-        mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (None,) # [REF_UTC]
-        snippy = Solution.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5258'}
-        body = {'data': [{'type': 'solutions',
-                          'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
-                          'attributes': Solution.DEFAULTS[Solution.BEATS]},
-                         {'type': 'solutions',
-                          'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
-                          'attributes': Solution.DEFAULTS[Solution.NGINX]}]}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/solutions',  ## apiflow
-                                                                    headers={'accept': 'application/json'},
-                                                                    query_string='sall=nginx%2CElastic&limit=20&sort=brief')
-        assert result.headers == headers
-        assert Solution.sorted_json_list(result.json) == Solution.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
         ## Brief: Call GET /snippy/api/v1/solutions and search keywords from all fields. The
         ##        search query matches to three solutions but limit defined in search query

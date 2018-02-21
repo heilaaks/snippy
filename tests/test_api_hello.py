@@ -17,11 +17,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_hello.py: Test hello API."""
+"""test_api_hello: Test hello API."""
 
-import falcon
 from falcon import testing
+import falcon
 import mock
+import pytest
 
 from snippy.config.config import Config
 from snippy.snip import Snippy
@@ -32,49 +33,37 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiHello(object):
     """Test hello API."""
 
-    @mock.patch('snippy.server.server.SnippyServer')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    @mock.patch.object(Config, '_storage_file')
-    def test_api_hello_root(self, mock_get_db_location, mock_isfile, _):
+    @pytest.mark.usefixtures('server', 'snippy')
+    def test_api_hello_root_001(self, snippy):
         """Test hello API in /snippy/api/v1/."""
 
-        mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
-
         ## Brief: Call GET /snippy/api/v1/ to get hello!
-        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
-        body = {'meta': Snippet.get_http_metadata()}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')   ## apiflow
-        assert result.headers == header
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '197'
+        }
+        result_json = {'meta': Snippet.get_http_metadata()}
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')  ## apiflow
+        assert result.headers == result_headers
+        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(result_json)
         assert result.status == falcon.HTTP_200
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
-    @mock.patch('snippy.server.server.SnippyServer')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    @mock.patch.object(Config, '_storage_file')
-    def test_api_hello_api(self, mock_get_db_location, mock_isfile, _):
+    @pytest.mark.usefixtures('server', 'snippy')
+    def test_api_hello_api_001(self, snippy):
         """Test hello API in /snippy/api/hello."""
 
-        mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
-
         ## Brief: Call GET /snippy/api/v1/hello to get hello!
-        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
-        body = {'meta': Snippet.get_http_metadata()}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
+        result_header = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '197'
+        }
+        result_json = {'meta': Snippet.get_http_metadata()}
+        snippy.run_server()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/hello')   ## apiflow
-        assert result.headers == header
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        assert result.headers == result_header
+        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(result_json)
         assert result.status == falcon.HTTP_200
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')

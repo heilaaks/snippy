@@ -41,11 +41,13 @@ class TestApiDeleteSnippet(object):
 
         ## Brief: Call DELETE /snippy/api/v1/snippets with digest parameter
         ##        that matches one snippet that is deleted.
-        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-                        Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]}
+        content_read = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        }
         result_headers = {}
         snippy.run_server()
-        assert len(Database.get_snippets()) == 3
+        assert len(Database.get_contents()) == 3
         result = testing.TestClient(snippy.server.api).simulate_delete(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},

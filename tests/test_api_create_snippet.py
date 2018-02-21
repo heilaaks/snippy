@@ -38,7 +38,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiCreateSnippet(object):
     """Test POST /snippets API."""
 
-    @pytest.mark.usefixtures('server', 'snippy', 'remove_utc')
+    @pytest.mark.usefixtures('server', 'snippy', 'remove-utc')
     def test_api_create_snippet_001(self, snippy, mocker):
         """Create one snippet with POST."""
 
@@ -69,6 +69,7 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @mock.patch('snippy.server.server.SnippyServer')

@@ -41,11 +41,13 @@ class TestApiDeleteSolution(object):
 
         ## Brief: Call DELETE /snippy/api/v1/solutions with digest parameter
         ##        that matches one solution that is deleted.
-        content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
-                        Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]}
+        content_read = {
+            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
         result_headers = {}
         snippy.run_server()
-        assert len(Database.get_solutions()) == 3
+        assert len(Database.get_contents()) == 3
         result = testing.TestClient(snippy.server.api).simulate_delete(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},

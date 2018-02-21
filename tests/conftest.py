@@ -133,7 +133,7 @@ def import_netcat_snippet(mocker, snippy):
     contents = [Snippet.DEFAULTS[Snippet.NETCAT]]
     import_content(snippy, mocker, contents, IMPORT_NETCAT)
 
-@pytest.fixture(scope='function', name='remove_utc')
+@pytest.fixture(scope='function', name='remove-utc')
 def create_remove_snippet_time_mock(mocker):
     """Mock timestamps to create 'remove' snippet."""
 
@@ -148,6 +148,13 @@ def import_default_solutions(mocker, snippy):
     contents = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]
     import_content(snippy, mocker, contents, IMPORT_DEFAULT_SOLUTIONS)
 
+@pytest.fixture(scope='function', name='beats')
+def import_beats_solution(mocker, snippy):
+    """Import 'beats' solution for testing purposes."""
+
+    contents = [Solution.DEFAULTS[Solution.BEATS]]
+    import_content(snippy, mocker, contents, IMPORT_BEATS)
+
 @pytest.fixture(scope='function', name='kafka')
 def import_kafka_solution(mocker, snippy):
     """Import 'kafka' solution for testing purposes."""
@@ -155,11 +162,23 @@ def import_kafka_solution(mocker, snippy):
     contents = [Solution.DEFAULTS[Solution.KAFKA]]
     import_content(snippy, mocker, contents, IMPORT_KAFKA)
 
-@pytest.fixture(scope='function', name='beats_utc')
+@pytest.fixture(scope='function', name='beats-utc')
 def create_beats_solution_time_mock(mocker):
     """Mock timestamps to create 'beats' solution."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_BEATS)
+
+@pytest.fixture(scope='function', name='kafka-utc')
+def create_kafka_solution_time_mock(mocker):
+    """Mock timestamps to create 'kafka' solution."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_KAFKA)
+
+@pytest.fixture(scope='function', name='beats-kafka-utc')
+def create_beats_kafka_solution_time_mock(mocker):
+    """Mock timestamps to create 'beats' and 'kafka' solutions."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_BEATS + CREATE_KAFKA)
 
 ## Helpers
 

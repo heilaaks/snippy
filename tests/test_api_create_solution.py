@@ -42,7 +42,7 @@ class TestApiCreateSolution(object):
         """Create one solution from API."""
 
         ## Brief: Call POST /snippy/api/v1/solutions to create new solution.
-        content_read = {'a96accc25dd23ac': Solution.DEFAULTS[Solution.BEATS]}
+        content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
         content_send = {
             'data': [{
                 'type': 'snippet',
@@ -52,7 +52,7 @@ class TestApiCreateSolution(object):
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2363'}
-        result_body = {
+        result_json = {
             'data': [{
                 'type': 'solutions',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
@@ -65,7 +65,7 @@ class TestApiCreateSolution(object):
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
         assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_body)
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         Content.verified(mocker, snippy, content_read)
 

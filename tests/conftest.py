@@ -25,6 +25,7 @@ from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 # Snippet importing and get_utc_time():
@@ -68,11 +69,13 @@ KAFKA_CREATED = '2017-10-20 06:16:27'
 CREATE_BEATS = (BEATS_CREATED,)*3
 CREATE_NGINX = (NGINX_CREATED,)*3
 CREATE_KAFKA = (KAFKA_CREATED,)*3
+IMPORT_BEATS = (BEATS_CREATED,)*5
+IMPORT_NGINX = (NGINX_CREATED,)*5
+IMPORT_KAFKA = (KAFKA_CREATED,)*5
 
 TEST_PYTHON2 = (None,)
-ADD_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
-CREATE_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
-IMPORT_DEFAULTS = (IMPORT_REMOVE + IMPORT_FORCED + TEST_PYTHON2)
+IMPORT_DEFAULT_SNIPPETS = (IMPORT_REMOVE + IMPORT_FORCED + TEST_PYTHON2)
+IMPORT_DEFAULT_SOLUTIONS = (IMPORT_BEATS + IMPORT_NGINX + TEST_PYTHON2)
 
 @pytest.fixture(scope='function', name='snippy')
 def mocked_snippy(mocker, request):
@@ -96,12 +99,12 @@ def server(mocker):
 
 ## Snippets
 
-@pytest.fixture(scope='function', name='defaults')
+@pytest.fixture(scope='function', name='default-snippets')
 def import_default_snippets(mocker, snippy):
     """Import default snippets for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
-    import_content(snippy, mocker, contents, IMPORT_DEFAULTS)
+    import_content(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
 
 @pytest.fixture(scope='function', name='exited')
 def import_exited_snippet(mocker, snippy):
@@ -138,6 +141,20 @@ def create_remove_snippet_time_mock(mocker):
     mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_REMOVE)
 
 ## Solutions
+
+@pytest.fixture(scope='function', name='default-solutions')
+def import_default_solutions(mocker, snippy):
+    """Import default soutions for testing purposes."""
+
+    contents = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]
+    import_content(snippy, mocker, contents, IMPORT_DEFAULT_SOLUTIONS)
+
+@pytest.fixture(scope='function', name='kafka')
+def import_kafka_solution(mocker, snippy):
+    """Import 'kafka' solution for testing purposes."""
+
+    contents = [Solution.DEFAULTS[Solution.KAFKA]]
+    import_content(snippy, mocker, contents, IMPORT_KAFKA)
 
 @pytest.fixture(scope='function', name='beats_utc')
 def create_beats_solution_time_mock(mocker):

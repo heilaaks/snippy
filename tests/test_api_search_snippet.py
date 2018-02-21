@@ -442,7 +442,7 @@ class TestApiSearchSnippet(object):
         snippy = None
         Database.delete_storage()
 
-    @pytest.mark.usefixtures('server', 'snippy', 'defaults')
+    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
     def test_pytest_fixtures(self, snippy):
         """Test pytest fixtures with pytest specific mocking."""
 

@@ -53,6 +53,9 @@ class SolutionHelper(object):
     UTC1 = '2017-10-20 11:11:19'
     UTC2 = '2017-10-20 06:16:27'
     UTC3 = '2017-10-20 06:16:27'
+    BEATS_DIGEST = 'a96accc25dd23ac0'
+    NGINX_DIGEST = '61a24a156f5e9d2d'
+    KAFKA_DIGEST = 'eeef5ca3ec9cd364'
     DEFAULTS = ({'data':('################################################################################',
                          '## BRIEF : Debugging Elastic Beats',
                          '##',

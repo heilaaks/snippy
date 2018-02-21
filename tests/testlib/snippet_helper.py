@@ -66,6 +66,10 @@ class SnippetHelper(object):
     ADD_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
     UTC1 = '2017-10-14 19:56:31'
     UTC2 = '2017-10-20 07:08:45'
+    REMOVE_DIGEST = '54e41e9b52a02b63'
+    FORCED_DIGEST = '53908d68425c61dc'
+    EXITED_DIGEST = '49d6916b6711f13d'
+    NETCAT_DIGEST = 'f3fd167c64b6f97e'
     DEFAULTS = ({'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
                  'brief': 'Remove all docker containers with volumes',
                  'group': 'docker',

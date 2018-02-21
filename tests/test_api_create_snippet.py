@@ -43,7 +43,7 @@ class TestApiCreateSnippet(object):
         """Create one snippet with POST."""
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
-        content_read = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
+        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         content_send = {
             'data': [{
                 'type': 'snippet',
@@ -54,7 +54,7 @@ class TestApiCreateSnippet(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '608'
         }
-        result_body = {
+        result_json = {
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -67,7 +67,7 @@ class TestApiCreateSnippet(object):
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
         assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_body)
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         Content.verified(mocker, snippy, content_read)
 

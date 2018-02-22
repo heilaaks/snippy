@@ -66,7 +66,7 @@ class TestApiCreateSolution(object):
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'beats-kafka-utc')
+    @pytest.mark.usefixtures('server', 'snippy', 'beats-utc', 'kafka-utc')
     def test_api_create_solutions_001(self, snippy, mocker):
         """Create multiple solutions from API."""
 

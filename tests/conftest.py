@@ -163,22 +163,26 @@ def import_kafka_solution(mocker, snippy):
     import_content(snippy, mocker, contents, IMPORT_KAFKA)
 
 @pytest.fixture(scope='function', name='beats-utc')
-def create_beats_solution_time_mock(mocker):
+def create_beats_time_mock(mocker):
     """Mock timestamps to create 'beats' solution."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_BEATS)
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_BEATS)
 
 @pytest.fixture(scope='function', name='kafka-utc')
 def create_kafka_solution_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_KAFKA)
-
-@pytest.fixture(scope='function', name='beats-kafka-utc')
-def create_beats_kafka_solution_time_mock(mocker):
-    """Mock timestamps to create 'beats' and 'kafka' solutions."""
-
-    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_BEATS + CREATE_KAFKA)
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_KAFKA)
 
 ## Helpers
 

@@ -1,5 +1,3 @@
-************* Module tests.conftest
-C:178, 0: Function name "create_beats_kafka_solution_time_mock" doesn't conform to '(([a-z][a-z0-9_]{2,30})|(_[a-z0-9_]*))$' pattern (invalid-name)
 
 --------------------------------------------------------------------
 Your code has been rated at 10.00/10 (previous run: 10.00/10, +0.00)

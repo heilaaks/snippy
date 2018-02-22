@@ -96,6 +96,12 @@ def server(mocker):
 
     mocker.patch('snippy.server.server.SnippyServer')
 
+@pytest.fixture(scope='function', name='caller')
+def caller(mocker):
+    """Mock _caller() used to mark code module and line in logs."""
+
+    mocker.patch.object(Cause, '_caller', return_value='snippy.testing.testing:123')
+
 ## Snippets
 
 @pytest.fixture(scope='function', name='default-snippets')

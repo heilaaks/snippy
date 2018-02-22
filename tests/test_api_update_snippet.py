@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_update_snippet.py: Test PUT /snippets API."""
+"""test_api_update_snippet: Test PUT /snippets API."""
 
 import copy
 import json
@@ -25,17 +25,63 @@ import json
 import mock
 import falcon
 from falcon import testing
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestApiUpdateSnippet(object):
     """Test PUT /snippets/{digest] API."""
+
+    @pytest.mark.usefixtures('server', 'snippy', 'forced', 'remove-utc')
+    def test_api_update_snippet_001(self, snippy, mocker):
+        """Update one snippet with PUT."""
+
+        ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
+        ##        with specified digest.
+        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
+        content_send = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+                }
+            }
+        }
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '695'
+        }
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'
+            },
+            'data': {
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }
+        }
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            headers={'accept': 'application/json'},
+            body=json.dumps(content_send))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+        assert len(Database.get_snippets()) == 1
+        Content.verified(mocker, snippy, content_read)
 
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -49,35 +95,6 @@ class TestApiUpdateSnippet(object):
         mock_get_utc_time.return_value = Snippet.UTC1
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
-
-        ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
-        ##        with specified digest.
-        snippy = Snippet.add_one(Snippet.FORCED)
-        snippet = {'data': {'type': 'snippet',
-                            'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                                           'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                                           'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                                           'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                                           'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
-        compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '695'}
-        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
-                'data': {'type': 'snippets',
-                         'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                         'attributes': Snippet.DEFAULTS[Snippet.REMOVE]}}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/53908d68425c61dc',  ## apiflow
-                                                                    headers={'accept': 'application/json'},
-                                                                    body=json.dumps(snippet))
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
-        assert len(Database.get_snippets()) == 1
-        Snippet.test_content2(compare_content)
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
         ## Brief: Try to call PUT /snippy/api/v1/snippets to update snippet with
         ##        digest that cannot be found.

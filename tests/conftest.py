@@ -209,13 +209,6 @@ def edit_remove_snippet(mocker):
     template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
     mocker.patch.object(Editor, 'call_editor', return_value=template)
     mocker.patch.object(Config, 'get_utc_time', side_effect=EDITED_REMOVE)
-#
-#    side_effects = ()
-#    try:
-#        side_effects = Config.get_utc_time.side_effect
-#    except AttributeError:
-#        pass
-#    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_BEATS)
 
 @pytest.fixture(scope='function', name='edit-beats')
 def edit_beats_solution(mocker):

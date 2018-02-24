@@ -1,10 +1,10 @@
 ## TODO
-   - [ ] The storage file was missing from check.
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
    - [ ] Does docker rm -f snippy leave server hanging?
    - [ ] snippy without arguments produces strange output.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Tests are failing if gunicorn is not installed.
+   - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] PyPI was not working with README.rst. There is no format at all. https://pypi.org/project/snippy/#description
    - [ ] starting server seems to cause error log from missing parameter with (incorrect syntax for -ip) snippy --server --port 8080 -ip 127.0.0.1 -vv
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
@@ -84,6 +84,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added proper prints for all cases where the tool exists because of internal failure in the startup.
    - [x] Changed exported yaml and json to use 'meta' instead of 'metadata'.
    - [x] Added created and updated fields into content.
    - [x] Added simple statistics to time each API transaction latency. The output is in debug logs. 

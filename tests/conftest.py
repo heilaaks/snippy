@@ -201,7 +201,6 @@ def create_kafka_solution_time_mock(mocker):
         pass
     mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_KAFKA)
 
-
 @pytest.fixture(scope='function', name='edit-remove')
 def edit_remove_snippet(mocker):
     """Edited 'remove' snippet."""

@@ -5,7 +5,7 @@ To install, run:
 
 .. code:: bash
 
-    pip install snippy
+    pip install snippy --user
 
 To remove, run:
 

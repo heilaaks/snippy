@@ -1,8 +1,8 @@
 ## TODO
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
-   - [ ] Does docker rm -f snippy leave server hanging?
    - [ ] snippy without arguments produces strange output.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
+   - [ ] Make docs does not work locally?
    - [ ] Tests are failing if gunicorn is not installed.
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] PyPI was not working with README.rst. There is no format at all. https://pypi.org/project/snippy/#description

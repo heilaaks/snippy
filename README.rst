@@ -20,11 +20,10 @@ You can operate snippet or solution content with six basic operations: create,
 search, update, delete, import and export. These operations manage the content
 in persistent file storage installed into the same location as the tool.
 
-There is also experimental `RESTish JSON API`_. The API follows
-subset of `JSON API V1.0`_. Please note that the server must be installed from
-the source code or run as a Docker continer from Docker Hub. The server is not
-installed by default from PyPI.
-
+There is also experimental `RESTish JSON API`_. The API follows a subset of
+the `JSON API V1.0`_. The tool must be installed from Docker Hub or from
+source code in order to run the server. The server is not available when the
+tool is installed from PyPI.
 
 .. raw:: html
 
@@ -33,11 +32,11 @@ installed by default from PyPI.
 Installation
 ============
 
-Installing from PyPI.
+Installing from PyPI for local user.
 
 .. code-block:: none
 
-   pip install snippy
+   pip install snippy --user
 
 Installing from Docker Hub.
 
@@ -248,11 +247,48 @@ is executed. You can define the file name and path with the ``-f|--file`` option
    snippy import --snippet
    snippy import --solution
 
-Running as server
-=================
+Server
+======
 
-The server can be installed currently from git repository or from Docker Hub. The experimental
-API is defined as `OpenAPI definition`_.
+The JSON REST API server is available when the tool is installed from Docker
+Hub or directly from the source code. The API is experimental and changes can
+be expected. The API is documented in Swagger Hub `OpenAPI definitions`_.
+
+.. code-block:: none
+
+   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --json-logs -vv
+   curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+   curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+
+You can change the port and IP address by defining them from the command
+line. Remember to remove the stopped container before starting it with new
+perameters.
+
+.. code-block:: none
+
+   docker rm -f snippy
+   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --json-logs -vv
+   curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+
+You can see the logs from the server from the default Docker log. If you do
+not want to read JSON logs, remove the --json-logs parameter from the server
+startup optons. You can remove all the logs by removing the -vv option.
+
+.. code-block:: none
+
+   docker rm -f snippy
+   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
+   docker logs snippy
+
+You can remove the server with command example.
+
+.. code-block:: none
+
+   docker rm -f snippy
+
+Note that Docker container is immutable and it does not share volume from the
+host. If you want to run a server that allows content modification, you must
+install the server from code repository.
 
 .. code-block:: none
 
@@ -260,16 +296,15 @@ API is defined as `OpenAPI definition`_.
    cd snippy
    make server
 
-   snippy import --defaults
-   snippy import --defaults --solution
-   snippy --server -vv
-   snippy --server --port 8080 --ip 127.0.0.1 -vv
-   curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
+With a local server, you can change to location of the storage from the default.
+If the default content is needed, you need to import it into the new location
+before starting the server.
 
 .. code-block:: none
 
-   sudo docker run -d --net="host" heilaaks/snippy --server
-   curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
+   snippy import --defaults --storage-path ${HOME}/devel/temp
+   snippy import --defaults --solution --storage-path ${HOME}/devel/temp
+   snippy --server --storage-path ${HOME}/devel/temp --port 8080 --ip 127.0.0.1 -vv
 
 Contributing
 ============
@@ -313,6 +348,6 @@ fill a bug report based on contributing_ instructions.
 
 .. _RESTish JSON API: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
 
-.. _OpenAPI definition: `RESTish JSON API`_
+.. _OpenAPI definitions: `RESTish JSON API`_
 
 .. _JSON API V1.0: http://jsonapi.org/format/

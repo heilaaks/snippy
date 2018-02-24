@@ -306,6 +306,6 @@ fill a bug report based on contributing_ instructions.
 
 .. _RESTish JSON API: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
 
-.. _OpenAPI definition: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+.. _OpenAPI definition: `RESTish JSON API`_
 
 .. _JSON API V1.0: http://jsonapi.org/format/

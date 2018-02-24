@@ -173,7 +173,8 @@ class Config(object):
         # The database schema is installed with the tool and it must always exist.
         schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
         if not os.path.isfile(schema_file):
-            cls._logger.error('NOK: database schema file path does not exist or is not accessible: %s', schema_file)
+            Cause.push(Cause.HTTP_500, 'database schema file path does not exist or it is not accessible: {}'.format(schema_file))
+            Logger.print_cause(Cause.get_message())
             sys.exit(1)
 
         return schema_file
@@ -184,7 +185,8 @@ class Config(object):
 
         template = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), template)
         if not os.path.isfile(template):
-            cls._logger.error('NOK: content template installed with tool does not exist or is not accessible: %s', template)
+            Cause.push(Cause.HTTP_500, 'content templates do not exist or they are not accessible: {}'.format(template))
+            Logger.print_cause(Cause.get_message())
             sys.exit(1)
 
         return template

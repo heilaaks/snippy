@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Update documents.
    - [ ] =============================================================
+   - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Tests are failing if gunicorn is not installed
    - [ ] starting server seems to cause error log from missing parameter with (incorrect syntax for -ip) snippy --server --port 8080 -ip 127.0.0.1 -vv
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?

@@ -88,8 +88,8 @@ setup(
     package_data={'snippy': [
         'data/config/*',
         'data/default/*',
-        'data/storage/*'
-        'data/template/*',
+        'data/storage/*',
+        'data/template/*'
         ]
     },
     zip_safe=False,

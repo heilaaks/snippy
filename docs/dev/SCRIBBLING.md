@@ -585,17 +585,22 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     $ su
     $ make docker
     $ docker rm $(docker ps --all -q -f status=exited)
-    $ docker rmi 0b4881af2b2d
-    $ sudo docker login docker.io
+    $ docker images -q --filter dangling=true | xargs docker rmi
+    $ docker images
+    $ docker rmi heilaaks/snippy:v0.6.0
+    $ docker rmi heilaaks/snippy:latest
+    $ docker rmi docker.io/heilaaks/snippy
+    $ docker images
+    $ docker login docker.io
     $ docker tag <image-hash> docker.io/<docker-hub-user-id>/<name>
     $ docker push docker.io/<docker-hub-user-id>/<name>
-    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:v0.7.0
-    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:latest
+    $ sudo docker tag 5dc22d1d3380 docker.io/heilaaks/snippy:v0.7.0
+    $ sudo docker tag 5dc22d1d3380 docker.io/heilaaks/snippy:latest
     $ sudo docker push docker.io/heilaaks/snippy:v0.7.0
     $ sudo docker push docker.io/heilaaks/snippy:latest
 
     # Pull
-    $ docker pull heilaaks/snippy:v0.6.0
+    $ docker pull heilaaks/snippy:v0.7.0
     $ docker pull heilaaks/snippy:latest
 
 #######################################
@@ -603,7 +608,7 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 #######################################
 
 
-    # Release
+    # Release (OLD)
     $ git tag -a v0.7.0 -m "Experimental RESTish JSON API"
     $ git push -u origin v0.7.0
     $ python setup.py sdist # Build source distribution

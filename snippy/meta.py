@@ -26,6 +26,6 @@ __homepage__ = 'https://github.com/heilaaks/snippy'
 __license__ = 'GNU Affero General Public License v3'
 __openapi__ = 'https://app.swaggerhub.com/apis/heilaaks/snippy/1.0'
 __project__ = 'snippy'
-__version__ = '0.7.0'
+__version__ = '0.8.d'
 
 __docs__ = 'http://snippy.readthedocs.io/en/v' + __version__ + '/'

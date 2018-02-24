@@ -1,8 +1,11 @@
 ## TODO
-   - [ ] Update documents.
-   - [ ] =============================================================
+   - [ ] The storage file was missing from check.
+   - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
+   - [ ] Does docker rm -f snippy leave server hanging?
+   - [ ] snippy without arguments produces strange output.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
-   - [ ] Tests are failing if gunicorn is not installed
+   - [ ] Tests are failing if gunicorn is not installed.
+   - [ ] PyPI was not working with README.rst. There is no format at all. https://pypi.org/project/snippy/#description
    - [ ] starting server seems to cause error log from missing parameter with (incorrect syntax for -ip) snippy --server --port 8080 -ip 127.0.0.1 -vv
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
@@ -24,6 +27,7 @@
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
    - [ ] Fix Override header: "GET requests should never change data on the server!" // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add more tests /api/v1/snippets.
+   - [ ] Update documents.
    - [ ] =============================================================
    - [ ] Fix mocking UTC it is a mess now.
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help

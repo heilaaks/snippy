@@ -301,6 +301,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-created" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
+    $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
 
     # Fix multiple fields
     $ curl -X GET "https://app.swaggerhub.com/api/v1/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"
@@ -589,18 +590,20 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 
 
     # Testing
+    $ make clean
+    $ make clean-db
     $ python setup.py sdist # Build source distribution
     $ python setup.py sdist upload -r testpypi
-    sudo pip install --index-url https://test.pypi.org/simple/ snippy
-    sudo pip uninstall snippy
-    pip3 install --user --index-url https://test.pypi.org/simple/ snippy
-    pip3 uninstall snippy
+    $ sudo pip install --index-url https://test.pypi.org/simple/ snippy
+    $ sudo pip uninstall snippy
+    $ pip3 install --user --index-url https://test.pypi.org/simple/ snippy
+    $ pip3 uninstall snippy
 
     # Release
-    $ git tag -a v0.5.0 -m "Experimental beta release"
-    $ git push -u origin v0.5.0
+    $ git tag -a v0.7.0 -m "Experimental RESTish JSON API"
+    $ git push -u origin v0.7.0
     $ python setup.py sdist # Build source distribution
-    $ twine register dist/snippy-0.5.0.tar.gz
+    $ twine register dist/snippy-0.7.0.tar.gz
     $ twine upload dist/*
 
     # Source dist for PyPI

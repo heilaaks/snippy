@@ -33,7 +33,7 @@ import json
 try:
     from gunicorn.glogging import Logger as GunicornLogger
 except ImportError:
-    pass
+    GunicornLogger = object
 
 try:
     from collections import OrderedDict

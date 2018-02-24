@@ -23,6 +23,8 @@ import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
@@ -44,6 +46,13 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 #   2) Comparing against content template (create empty).
 #   3) Comparing against content template (make timestamp).
 #
+# Editing solution and get_utc_time():
+#
+#   1) Creating empty content.
+#   2) converting text in Editor()
+#   3) Comparing against content template (create empty).
+#   4) Comparing against content template (make timestamp).
+#
 # Snippet or solution exporting and get_utc_time():
 #
 #   1) Creating metadata with export timestamp.
@@ -61,6 +70,7 @@ IMPORT_REMOVE = (REMOVE_CREATED,)*3
 IMPORT_FORCED = (FORCED_CREATED,)*3
 IMPORT_EXITED = (EXITED_CREATED,)*3
 IMPORT_NETCAT = (NETCAT_CREATED,)*3
+EDITED_REMOVE = (REMOVE_CREATED,)*1
 
 # Solutions
 BEATS_CREATED = '2017-10-20 11:11:19'
@@ -72,6 +82,7 @@ CREATE_KAFKA = (KAFKA_CREATED,)*3
 IMPORT_BEATS = (BEATS_CREATED,)*5
 IMPORT_NGINX = (NGINX_CREATED,)*5
 IMPORT_KAFKA = (KAFKA_CREATED,)*5
+EDITED_BEATS = (BEATS_CREATED,)*4
 
 IMPORT_DEFAULT_SNIPPETS = (IMPORT_REMOVE + IMPORT_FORCED)
 IMPORT_DEFAULT_SOLUTIONS = (IMPORT_BEATS + IMPORT_NGINX)
@@ -189,6 +200,80 @@ def create_kafka_solution_time_mock(mocker):
     except AttributeError:
         pass
     mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_KAFKA)
+
+
+@pytest.fixture(scope='function', name='edit-remove')
+def edit_remove_snippet(mocker):
+    """Edited 'remove' snippet."""
+
+    template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+    mocker.patch.object(Editor, 'call_editor', return_value=template)
+    mocker.patch.object(Config, 'get_utc_time', side_effect=EDITED_REMOVE)
+#
+#    side_effects = ()
+#    try:
+#        side_effects = Config.get_utc_time.side_effect
+#    except AttributeError:
+#        pass
+#    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_BEATS)
+
+@pytest.fixture(scope='function', name='edit-beats')
+def edit_beats_solution(mocker):
+    """Edited 'beats' solution."""
+
+    template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
+    mocker.patch.object(Editor, 'call_editor', return_value=template)
+
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_BEATS)
+
+## Templates
+
+@pytest.fixture(scope='function', name='edit-snippet-template')
+def edit_snippet_template(mocker):
+    """Edited default snippet template."""
+
+    template = Const.NEWLINE.join(Snippet.TEMPLATE)
+    mocker.patch.object(Editor, 'call_editor', return_value=template)
+
+@pytest.fixture(scope='function', name='edit-solution-template')
+def edit_solution_template(mocker):
+    """Edited default solution template."""
+
+    template = Const.NEWLINE.join(Solution.TEMPLATE)
+    mocker.patch.object(Editor, 'call_editor', return_value=template)
+
+@pytest.fixture(scope='function', name='edit-empty')
+def edit_empty_template(mocker):
+    """Edited empty template."""
+
+    mocker.patch.object(Editor, 'call_editor', return_value=Const.EMPTY)
+
+@pytest.fixture(scope='function', name='edit-unknown-template')
+def edit_unidentified_template(mocker):
+    """Edited unidentified template."""
+
+    template = ('################################################################################',
+                '## description',
+                '################################################################################',
+                '',
+                '################################################################################',
+                '## solutions',
+                '################################################################################',
+                '',
+                '################################################################################',
+                '## configurations',
+                '################################################################################',
+                '',
+                '################################################################################',
+                '## whiteboard',
+                '################################################################################',
+                '')
+    mocker.patch.object(Editor, 'call_editor', return_value=template)
 
 ## Helpers
 

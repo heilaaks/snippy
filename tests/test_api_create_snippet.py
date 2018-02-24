@@ -36,7 +36,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestApiCreateSnippet(object):
-    """Test POST /snippets API."""
+    """Test POST snippets collection API."""
 
     @pytest.mark.usefixtures('server', 'snippy', 'remove-utc')
     def test_api_create_snippet_001(self, snippy, mocker):

@@ -31,7 +31,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestApiCreateSolution(object):
-    """Test POST /solutions API."""
+    """Test POST solutions collection API."""
 
     @pytest.mark.usefixtures('server', 'snippy', 'beats-utc')
     def test_api_create_solution_001(self, snippy, mocker):

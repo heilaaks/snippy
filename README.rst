@@ -20,6 +20,10 @@ You can operate snippet or solution content with six basic operations: create,
 search, update, delete, import and export. These operations manage the content
 in persistent file storage installed into the same location as the tool.
 
+There is also experimental `RESTish JSON API`_. The API follows
+subset of `JSON API V1.0`_. Please note that the server must be installed from
+the source code and it is not available by default when installed from PyPI.
+
 .. raw:: html
 
    <a href="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO"><img src="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO.png"/></a>
@@ -46,6 +50,14 @@ Installing from repository.
    git clone https://github.com/heilaaks/snippy.git
    cd snippy
    make install
+
+Installing server.
+
+.. code-block:: none
+
+   git clone https://github.com/heilaaks/snippy.git
+   cd snippy
+   make server
 
 Usage
 =====
@@ -234,6 +246,24 @@ is executed. You can define the file name and path with the ``-f|--file`` option
    snippy import --snippet
    snippy import --solution
 
+Running as server
+=================
+
+The server can be installed currently only from the git code repository. The experimental API
+is defined as `OpenAPI definition`_.
+
+.. code-block:: none
+
+   git clone https://github.com/heilaaks/snippy.git
+   cd snippy
+   make server
+
+   snippy import --defaults
+   snippy import --defaults --solution
+   snippy --server -vv
+   snippy --server --port 8080 --ip 127.0.0.1 -vv
+   curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
+
 Contributing
 ============
 
@@ -273,3 +303,9 @@ fill a bug report based on contributing_ instructions.
 .. _contributing: https://github.com/heilaaks/snippy/blob/master/CONTRIBUTING.rst
 
 .. _asciinema: https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
+
+.. _RESTish JSON API: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+
+.. _OpenAPI definition: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+
+.. _JSON API V1.0: http://jsonapi.org/format/

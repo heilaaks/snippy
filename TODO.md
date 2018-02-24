@@ -1,12 +1,13 @@
 ## TODO
-   - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed?
-   - [ ] Fix JSON API UTC time field does not follow ISO8601 format.
-   - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
-   - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] Update documents.
+   - [ ] =============================================================
+   - [ ] starting server seems to cause error log from missing parameter with (incorrect syntax for -ip) snippy --server --port 8080 -ip 127.0.0.1 -vv
+   - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
+   - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
-   - [ ] =============================================================
+   - [ ] Fix JSON API UTC time field does not follow ISO8601 format. This affects to utc mock and digest. It is better to refactor tests to make this easier.
+   - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed? Affects also test. Refactor tests first.
    - [ ] Make operation timestamp to Config(). This could be helpfull since it guarantees same stamp to output during one operation. Also reduces calls to get_utc_time
    - [ ] The pytest setup and teardown are class mehotds so fix def teardown_class(self): @classmethod def teardown_class(cls):
    - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."

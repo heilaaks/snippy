@@ -589,9 +589,9 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     $ sudo docker login docker.io
     $ docker tag <image-hash> docker.io/<docker-hub-user-id>/<name>
     $ docker push docker.io/<docker-hub-user-id>/<name>
-    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:v0.6.0
+    $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:v0.7.0
     $ sudo docker tag 0b4881af2b2d docker.io/heilaaks/snippy:latest
-    $ sudo docker push docker.io/heilaaks/snippy:v0.6.0
+    $ sudo docker push docker.io/heilaaks/snippy:v0.7.0
     $ sudo docker push docker.io/heilaaks/snippy:latest
 
     # Pull

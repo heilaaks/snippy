@@ -553,6 +553,19 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 ## Releasing
 #######################################
 
+    # Testing in test PyPI.
+    $ make clean
+    $ make clean-db
+    $ python setup.py sdist # Build source distribution
+    $ python setup.py sdist bdist_wheel
+    $ python setup.py sdist upload -r testpypi
+    $ sudo pip uninstall snippy -y
+    $ sudo pip3 uninstall snippy -y
+    $ sudo pip install --index-url https://test.pypi.org/simple/ snippy
+    $ sudo pip3 install --index-url https://test.pypi.org/simple/ snippy
+    $ pip3 install --user --index-url https://test.pypi.org/simple/ snippy
+    $ pip3 uninstall snippy -y
+
     # Release Wheels instead of Egg next time. Try the below:
     > https://packaging.python.org/discussions/wheel-vs-egg/
     > https://packaging.python.org/tutorials/distributing-packages/
@@ -562,14 +575,15 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 
     # Release PyPI (deprecated use universal wheel)
     > https://pypi.org/project/snippy/
-    $ git tag -a v0.6.0 -m "Bug fixes and testing"
-    $ git push -u origin v0.6.0
+    $ git tag -a v0.7.0 -m "Experimental RESTish JSON API"
+    $ git push -u origin v0.7.0
     $ python setup.py sdist # Build source distribution
-    $ twine register dist/snippy-0.6.0.tar.gz
+    $ twine register dist/snippy-0.7.0.tar.gz
     $ twine upload dist/*
 
     # Push docker hub with Fedora
     $ su
+    $ make docker
     $ docker rm $(docker ps --all -q -f status=exited)
     $ docker rmi 0b4881af2b2d
     $ sudo docker login docker.io
@@ -588,17 +602,6 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 ## PyPI
 #######################################
 
-
-    # Testing
-    $ make clean
-    $ make clean-db
-    $ python setup.py sdist # Build source distribution
-    $ python setup.py sdist upload -r testpypi
-    $ python setup.py sdist bdist_wheel # Did not work? No prints when installed...
-    $ sudo pip install --index-url https://test.pypi.org/simple/ snippy
-    $ sudo pip uninstall snippy
-    $ pip3 install --user --index-url https://test.pypi.org/simple/ snippy
-    $ pip3 uninstall snippy
 
     # Release
     $ git tag -a v0.7.0 -m "Experimental RESTish JSON API"

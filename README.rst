@@ -22,7 +22,9 @@ in persistent file storage installed into the same location as the tool.
 
 There is also experimental `RESTish JSON API`_. The API follows
 subset of `JSON API V1.0`_. Please note that the server must be installed from
-the source code and it is not available by default when installed from PyPI.
+the source code or run as a Docker continer from Docker Hub. The server is not
+installed by default from PyPI.
+
 
 .. raw:: html
 
@@ -51,7 +53,7 @@ Installing from repository.
    cd snippy
    make install
 
-Installing server.
+Installing server from repository.
 
 .. code-block:: none
 
@@ -249,8 +251,8 @@ is executed. You can define the file name and path with the ``-f|--file`` option
 Running as server
 =================
 
-The server can be installed currently only from the git code repository. The experimental API
-is defined as `OpenAPI definition`_.
+The server can be installed currently from git repository or from Docker Hub. The experimental
+API is defined as `OpenAPI definition`_.
 
 .. code-block:: none
 
@@ -262,6 +264,11 @@ is defined as `OpenAPI definition`_.
    snippy import --defaults --solution
    snippy --server -vv
    snippy --server --port 8080 --ip 127.0.0.1 -vv
+   curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
+
+.. code-block:: none
+
+   sudo docker run -d --net="host" heilaaks/snippy --server
    curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
 
 Contributing

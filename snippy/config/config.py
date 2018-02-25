@@ -43,18 +43,7 @@ class Config(object):
         """Initialize global configuration."""
 
         cls.init_args = args
-
-        # Set logging and profiling configuration.
-        cls.debug_logs = True if cls.init_args and '--debug' in cls.init_args else False
-        cls.very_verbose = True if cls.init_args and '-vv' in cls.init_args else False
-        cls.quiet = True if cls.init_args and '-q' in cls.init_args else False
-        cls.json_logs = True if cls.init_args and '--json-logs' in cls.init_args else False
-        cls.profiler = True if cls.init_args and '--profile' in cls.init_args else False
-        Logger.configure({'debug': cls.debug_logs,
-                          'very_verbose': cls.very_verbose,
-                          'quiet': cls.quiet,
-                          'json_logs': cls.json_logs})
-        cls._logger.debug('config initial command line arguments: %s', cls.init_args)
+        cls._init_logs()
 
         # Set static configuration.
         cls.storage_schema = cls._storage_schema()
@@ -129,6 +118,22 @@ class Config(object):
         cls.storage_file = cls._storage_file()
 
         cls.debug()
+
+    @classmethod
+    def _init_logs(cls):
+        """Initialize logging and development configuration."""
+
+        # Set logging and profiling configuration.
+        cls.debug_logs = True if cls.init_args and '--debug' in cls.init_args else False
+        cls.very_verbose = True if cls.init_args and '-vv' in cls.init_args else False
+        cls.quiet = True if cls.init_args and '-q' in cls.init_args else False
+        cls.json_logs = True if cls.init_args and '--json-logs' in cls.init_args else False
+        cls.profiler = True if cls.init_args and '--profile' in cls.init_args else False
+        Logger.configure({'debug': cls.debug_logs,
+                          'very_verbose': cls.very_verbose,
+                          'quiet': cls.quiet,
+                          'json_logs': cls.json_logs})
+        cls._logger.debug('config initial command line arguments: %s', cls.init_args)
 
     @classmethod
     def get_contents(cls, content, source=None):

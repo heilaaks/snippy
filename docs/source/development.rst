@@ -62,6 +62,8 @@ The Pylint rc file can be generated for the very first time like:
 
 .. _virtualenvwrapper: http://virtualenvwrapper.readthedocs.io/en/latest/command_ref.html
 
+.. include:: releasing.rst
+
 Modules
 -------
 
@@ -143,4 +145,3 @@ descriptions of the event.
 .. autoclass:: snippy.cause.Cause
    :members:
    :member-order: bysource
-

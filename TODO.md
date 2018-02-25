@@ -1,6 +1,7 @@
 ## TODO
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
    - [ ] snippy without arguments produces strange output.
+   - [ ] Add test with new media type for JSON API specs.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Tests are failing if gunicorn is not installed.
    - [ ] Add tests for 3 scenarios that exit with log in the startup.

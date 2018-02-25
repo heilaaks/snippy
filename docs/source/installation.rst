@@ -3,25 +3,25 @@ Installation
 
 To install, run:
 
-.. code:: bash
+.. code:: text
 
     pip install snippy --user
 
 To remove, run:
 
-.. code:: bash
+.. code:: text
 
     pip uninstall --yes snippy
 
 To install from Docker Hub, run:
 
-.. code:: bash
+.. code:: text
 
     docker pull heilaaks/snippy
 
 To install from Github, run:
 
-.. code-block:: none
+.. code-block:: text
 
     git clone https://github.com/heilaaks/snippy.git
     cd snippy
@@ -33,6 +33,7 @@ To try for the very first time, run:
 
     <div class="highlight-none"><div class="highlight"><pre><span></span>
     $ snippy import --defaults
+    OK
     $ snippy search --sall docker
 
     <font color="#20b2aa">1.</font> <font color="#228B22">Remove all docker containers with volumes</font> @docker <font color="#979a9a">[54e41e9b52a02b63]</font>

@@ -30,7 +30,7 @@ Swagger Hub `OpenAPI definitions`_.
 The JSON REST API server is available only when the tool is installed from
 Docker Hub or directly from the source code.
 
-.. code-block:: none
+.. code-block:: text
 
    # Start server by sharing host network and enable JSON logs with limited
    # message length. Always remove previosly started container before running
@@ -53,7 +53,7 @@ Docker Hub or directly from the source code.
 
 You can query the server logs with the Docker log command.
 
-.. code-block:: none
+.. code-block:: text
 
    docker logs snippy
 
@@ -67,7 +67,7 @@ Note that Docker container is immutable and it does not share volume from the
 host. If you want to run a server that allows content modification, you must
 install the server from code repository.
 
-.. code-block:: none
+.. code-block:: text
 
    git clone https://github.com/heilaaks/snippy.git
    cd snippy
@@ -77,7 +77,7 @@ With a local server, you can change to location of the storage from the default.
 If the default content is needed, you need to import it into the new location
 before starting the server.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy import --defaults --storage-path ${HOME}/devel/temp
    snippy import --defaults --solution --storage-path ${HOME}/devel/temp

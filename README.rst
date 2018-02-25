@@ -21,73 +21,72 @@ search, update, delete, import and export. These operations manage the content
 in persistent file storage installed into the same location as the tool.
 
 There is also experimental `RESTish JSON API`_. The API follows a subset of
-the `JSON API V1.0`_. The tool must be installed from Docker Hub or from
-source code in order to run the server. The server is not available when the
-tool is installed from PyPI.
+the `JSON API V1.0`_ specification. The tool must be installed from Docker Hub
+or from the github repository. The server is not available when installed from
+PyPI.
 
-.. raw:: html
-
-   <a href="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO"><img src="https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO.png"/></a>
+.. image:: https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO.png
+    :target: https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
+    :alt: Snippy in action!
 
 Installation
 ============
 
-Installing from PyPI for local user.
+To install, run:
 
-.. code-block:: none
+.. code:: text
 
-   pip install snippy --user
+    pip install snippy --user
 
-Installing from Docker Hub.
+To remove, run:
 
-.. code-block:: none
+.. code:: text
 
-   docker pull heilaaks/snippy
+    pip uninstall --yes snippy
 
-Installing from repository.
+To install from Docker Hub, run:
 
-.. code-block:: none
+.. code:: text
 
-   git clone https://github.com/heilaaks/snippy.git
-   cd snippy
-   make install
+    docker pull heilaaks/snippy
 
-Installing server from repository.
+To install from Github, run:
 
-.. code-block:: none
+.. code-block:: text
 
-   git clone https://github.com/heilaaks/snippy.git
-   cd snippy
-   make server
+    git clone https://github.com/heilaaks/snippy.git
+    cd snippy
+    make install
 
 Usage
 =====
 
-Snippy commands always include content operation and category. The content operation
-is one of the six basic operations and the category is either snippet or solution.
-The content category is snippet by default. Metadata attached to the content allows
-adding brief description of the content, single group to which the content belongs,
-list of tags to assist search operations and a list of links for more information
-about the content.
+Snippy commands always include content operation and category. The content
+operation is one of the six basic operations and the category is either snippet
+or solution. The content category is snippet by default. Metadata attached to
+the content allows adding brief description of the content, single group to
+which the content belongs, list of tags to assist search operations and a list
+of links for more information about the content.
 
 Snippy tool outputs always OK after successful operation and NOK with a failure
-string in case of failure. You can use debug option with the command to investigate
-possible problems. For more detailed troubleshooting instructions, please refer
-to the contributing_ instructions.
+string in case of failure. You can use debug option with the command to
+investigate possible problems. For more detailed troubleshooting instructions,
+please refer to the `contributing instructions`_.
 
-The workflow section below contains the basic use cases. Please see more detailed
-documentation from `Read the Docs`_.
-
-.. note::
-
-   The tool is used by the author in Linux environment. There is an edit functionality
-   with editor that always assumes vi editor. This limitation can be circumvented by
-   using text based templates to import content or command line options in case of
-   snippets.
+The workflow section below contains the basic use cases. You can read more
+detailed documentation from the documentation hosted in the `Read the Docs`_.
 
 .. note::
 
-   The default content is provided "as is" basis without warranties of any kind.
+   The tool is used by the author in Linux environment. There is an edit
+   functionality with editor that always assumes vi editor. This limitation
+   can be circumvented by using text based templates to import content or
+   command line options in case of snippets.
+
+.. note::
+
+   The default content is provided "as is" basis without warranties of any
+   kind.
 
 Workflows
 =========
@@ -97,7 +96,7 @@ Printing help and examples
 
 Use help option with keyword examples to read about basic usage.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy --help
    snippy --help examples
@@ -105,10 +104,10 @@ Use help option with keyword examples to read about basic usage.
 Importing default content
 -------------------------
 
-Snippy instals by default without content. Following examples allow importing default
-content for snippets and solutions.
+Snippy instals by default without content. Following examples allow importing
+default content for snippets and solutions.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy import --snippet --defaults
    snippy import --solution --defaults
@@ -116,12 +115,13 @@ content for snippets and solutions.
 Using docker container
 ----------------------
 
-Snippy tool is available also from Docker container. In this case the default content
-is already imported. How ever, the content cannot be changed because the container is
-immuateble and the content is not mapped from any volume from the host machine. Exactly
-same commands work with container version than the command line version.
+Snippy tool is available also from Docker container. In this case the default
+content is already imported. How ever, the content cannot be changed because
+the container is immuateble and the content is not mapped from any volume from
+the host machine. Exactly same commands work with container version than the
+command line version.
 
-.. code-block:: none
+.. code-block:: text
 
    docker run heilaaks/snippy --help
    docker run heilaaks/snippy search --sall docker
@@ -132,11 +132,11 @@ Searching content
 Printing all content to console
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It is possible to print all snippets and solutions to console by using a dot in the
-search query. The only special character passed to the query is dot which matches to
-to any character.
+It is possible to print all snippets and solutions to console by using a dot
+in the search query. The only special character passed to the query is dot
+which matches to to any character.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy search --sall .
    snippy search --solution --sall .
@@ -144,17 +144,17 @@ to any character.
 Filtering with grep
 ~~~~~~~~~~~~~~~~~~~
 
-With Linux grep it is possible to filter for example only the actual commands from the
-search query.
+With Linux grep it is possible to filter for example only the actual commands
+from the search query.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy search --sall . --no-ansi | grep '\$'
    snippy search --sgrp docker --no-ansi | grep '\$'
 
 Filtering out solution content to list only the metadata.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy search --solution --sall . | grep -Ev '[^\s]+:'
 
@@ -164,11 +164,11 @@ Creating content
 Create snippet with vi editor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Following command uses vi editor to create new content. The command opens an input template
-where you can define the mandatory snippet and optional brief description, group, tags and
-links related to the snippet.
+Following command uses vi editor to create new content. The command opens an
+input template where you can define the mandatory snippet and optional brief
+description, group, tags and links related to the snippet.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy create --snippet --editor
 
@@ -177,7 +177,7 @@ Create snippet from text template
 
 Following commands allows using a text template to import new snippet.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy export --snippet --template
    snippy import --snippet -f snippet-template.txt
@@ -187,7 +187,7 @@ Create solution from text template
 
 Following commands allows using a text template to import new solution.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy export --solution --template
    snippy import --snippet -f solution-template.txt
@@ -198,21 +198,21 @@ Updating content
 Update snippet with vi editor
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Following command allows updating existing snippet with vi editor. The command will
-launch a vi editor which allows you to modify the content. The content is updated
-automatically after the file is saved and editor is exit.
+Following command allows updating existing snippet with vi editor. The command
+will launch a vi editor which allows you to modify the content. The content is
+updated automatically after the file is saved and editor is exit.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy update --digest 54e41e9b52a02b63
 
 Update solution from text template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Following commands allow updating existing solution by exporting the content to text
-file and importing it again.
+Following commands allow updating existing solution by exporting the content
+to text file and importing it again.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy export --digest 76a1a02951f6bcb4
    snippy import --digest 76a1a02951f6bcb4 --file howto-debug-elastic-beats.txt
@@ -223,12 +223,12 @@ Migrating content
 Exporting content
 ~~~~~~~~~~~~~~~~~
 
-Following commands allow exporting all snippets and solutions to YAML file that you use to
-back-up your data. The commands below will create snippets.yaml and solutions.yaml files into
-same directory where the command was executed. You can define the file name and path with the
-``-f|--file`` option.
+Following commands allow exporting all snippets and solutions to YAML file that
+you use to back-up your data. The commands below will create snippets.yaml and
+solutions.yaml files into same directory where the command was executed. You can
+define the file name and path with the ``-f|--file`` option.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy export --snippet
    snippy export --snippet -f my-snippets.yaml
@@ -238,11 +238,12 @@ same directory where the command was executed. You can define the file name and 
 Importing content
 ~~~~~~~~~~~~~~~~~
 
-Following commands allow importing snippets and solutions from default YAML files named
-snippets.yaml and solutions.yaml that must be located in the same directory where the command
-is executed. You can define the file name and path with the ``-f|--file`` option.
+Following commands allow importing snippets and solutions from default YAML files
+named snippets.yaml and solutions.yaml that must be located in the same directory
+where the command is executed. You can define the file name and path with the
+``-f|--file`` option.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy import --snippet
    snippy import --solution
@@ -254,7 +255,7 @@ The JSON REST API server is available when the tool is installed from Docker
 Hub or directly from the source code. The API is experimental and changes can
 be expected. The API is documented in Swagger Hub `OpenAPI definitions`_.
 
-.. code-block:: none
+.. code-block:: text
 
    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --json-logs -vv
    curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
@@ -264,17 +265,18 @@ You can change the port and IP address by defining them from the command
 line. Remember to remove the stopped container before starting it with new
 perameters.
 
-.. code-block:: none
+.. code-block:: text
 
    docker rm -f snippy
    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --json-logs -vv
    curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
 You can see the logs from the server from the default Docker log. If you do
-not want to read JSON logs, remove the --json-logs parameter from the server
-startup optons. You can remove all the logs by removing the -vv option.
+not want to read JSON logs, remove the ``--json-logs`` parameter from the
+server startup optons. You can remove all the logs by removing the ``-vv``
+option.
 
-.. code-block:: none
+.. code-block:: text
 
    docker rm -f snippy
    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
@@ -282,7 +284,7 @@ startup optons. You can remove all the logs by removing the -vv option.
 
 You can remove the server with command example.
 
-.. code-block:: none
+.. code-block:: text
 
    docker rm -f snippy
 
@@ -290,17 +292,17 @@ Note that Docker container is immutable and it does not share volume from the
 host. If you want to run a server that allows content modification, you must
 install the server from code repository.
 
-.. code-block:: none
+.. code-block:: text
 
    git clone https://github.com/heilaaks/snippy.git
    cd snippy
    make server
 
-With a local server, you can change to location of the storage from the default.
-If the default content is needed, you need to import it into the new location
-before starting the server.
+With a local server, you can change to location of the storage from the
+default. If the default content is needed, you need to import it into the new
+location before starting the server.
 
-.. code-block:: none
+.. code-block:: text
 
    snippy import --defaults --storage-path ${HOME}/devel/temp
    snippy import --defaults --solution --storage-path ${HOME}/devel/temp
@@ -342,7 +344,7 @@ fill a bug report based on contributing_ instructions.
 
 .. _Read the Docs: http://snippy.readthedocs.io/en/latest/
 
-.. _contributing: https://github.com/heilaaks/snippy/blob/master/CONTRIBUTING.rst
+.. _contributing instructions: https://github.com/heilaaks/snippy/blob/master/CONTRIBUTING.rst
 
 .. _asciinema: https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
 

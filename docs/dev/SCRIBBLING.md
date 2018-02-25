@@ -553,6 +553,20 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 ## Releasing
 #######################################
 
+    # Check long description
+    $ python setup.py check --restructuredtext
+    $ pip install collective.checkdocs
+    $ python setup.py checkdocs
+    $ st2html.py README.rst  > /tmp/test.html
+    $ python setup.py check --restructuredtext
+    
+    # Test PyPI
+    > https://testpypi.python.org/pypi
+    > https://pypi.python.org/pypi/snippy
+    > https://pypi.python.org/pypi/html2text
+    $ python setup.py sdist bdist_wheel
+    $ python setup.py sdist upload -r testpypi
+
     # Testing in test PyPI.
     $ make clean
     $ make clean-db

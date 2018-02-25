@@ -6,6 +6,7 @@
    - [ ] Tests are failing if gunicorn is not installed.
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] starting server seems to cause error log from missing parameter with (incorrect syntax for -ip) snippy --server --port 8080 -ip 127.0.0.1 -vv
+   - [ ] Change tests to use run instead of run_cli(). The run is better and the proper way to control this.
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
@@ -19,6 +20,7 @@
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add paginations and offsets to JSON API.
+   - [ ] Investigate 'I/O operation on closed file' note in SCRIBLING.md
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?

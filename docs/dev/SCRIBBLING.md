@@ -743,6 +743,14 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 ## Design decisions
 #######################################
 
+    STRANGER THINGS
+    
+    1. 'I/O operation on closed file'
+    
+       If test 'test_debug_option_001' removes the caplog, there is error about
+       I/O operation on closed file. Why? The case seems to work so this is
+       caplog or capsys issue? Investigate more.
+
     TIME STAMPS
 
     1. Rules to update time stamps

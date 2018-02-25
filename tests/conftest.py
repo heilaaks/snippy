@@ -91,7 +91,12 @@ IMPORT_DEFAULT_SOLUTIONS = (IMPORT_BEATS + IMPORT_NGINX)
 def mocked_snippy(mocker, request):
     """Create mocked instance from snippy."""
 
-    snippy = create_snippy(mocker)
+    params = []
+    if hasattr(request, 'param'):
+        params = request.param
+
+    params.insert(0, 'snippy')  # Add the tool name here to args list.
+    snippy = create_snippy(mocker, params)
     def fin():
         """Clear the resources at the end."""
 
@@ -269,12 +274,12 @@ def edit_unidentified_template(mocker):
 
 ## Helpers
 
-def create_snippy(mocker):
+def create_snippy(mocker, options):
     """Create snippy with mocks."""
 
     mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
     mocker.patch('snippy.migrate.migrate.os.path.isfile', return_value=True)
-    snippy = Snippy()
+    snippy = Snippy(options)
 
     return snippy
 

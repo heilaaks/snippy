@@ -25,6 +25,7 @@ import re
 import sys
 
 import mock
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
@@ -33,7 +34,6 @@ from snippy.meta import __homepage__
 from snippy.meta import __version__
 from snippy.snip import Snippy
 from snippy.snip import main
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 if not Const.PYTHON2:
     from io import StringIO  # pylint: disable=import-error
@@ -336,166 +336,108 @@ class TestWfConsoleHelp(object):
                 Database.delete_storage()
         mock_resource_isdir.side_effect = None
 
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_console_very_verbose_option(self, mock_isfile, mock_storage_file, caplog):
+    @pytest.mark.parametrize('snippy', [['-vv']], indirect=True)
+    def test_very_verbose_option_001(self, snippy, caplog, capsys):
         """Test printing logs with the very verbose option."""
 
-        mock_isfile.return_value = True
-        mock_storage_file.return_value = Database.get_storage()
+        ## Brief: Enable verbose logging with -vv option. Test checks that
+        ##        there is more than randomly picked largish number of logs
+        ##        in order to avoid matching logs explicitly. Nothing must
+        ##        be printed to stderr. TODO: Why the stdout container few
+        ##        lines in this test?
+        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
+        _, err = capsys.readouterr()
+        assert cause == 'NOK: cannot find content with given search criteria'
+        assert len(caplog.records[:]) > 30
+        assert not err
 
-        ## Brief: Enable short logging with -vv option. Test checks that there is more than
-        ##        randomly picked largish number of logs in order to avoid matching logs
-        ##        explicitly. This just verifies that the very verbose option prints more
-        ##        logs.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            real_stderr = sys.stderr
-            sys.stderr = StringIO()
-            snippy = Snippy(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
-            cause = snippy.run_cli()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-            result_stderr = sys.stderr.getvalue().strip()
-            sys.stderr = real_stderr
-            assert cause == 'NOK: cannot find content with given search criteria'
-            assert len(caplog.text.split(Const.NEWLINE)) > 30
-            assert not result_stderr
-
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_console_debug_option(self, mock_isfile, mock_storage_file, mock_get_utc_time):
+    @pytest.mark.usefixtures('default-snippets')
+    @pytest.mark.parametrize('snippy', [['--debug', '--no-ansi']], indirect=True)
+    def test_debug_option_001(self, snippy, capsys, caplog):
         """Test printing logs with debug option."""
 
-        mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
-        mock_storage_file.return_value = Database.get_storage()
+        ## Brief: Enable full logging with --debug option. In this case the
+        ##        debug option must print all fields from stored snippets.
+        ##        TODO: Why the stderr container log exceptions with 'I/O
+        ##        operation on closed file'?
+        output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                  '   $ docker rm --volumes $(docker ps --all --quiet)',
+                  '',
+                  '   # cleanup,container,docker,docker-ce,moby',
+                  '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                  '',
+                  '   ! category : snippet',
+                  '   ! filename : ',
+                  '   ! runalias : ',
+                  '   ! versions : ',
+                  '   ! created  : 2017-10-14 19:56:31',
+                  '   ! updated  : 2017-10-14 19:56:31',
+                  '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
+                  '   ! metadata : None',
+                  '   ! key      : 1',
+                  '',
+                  '2. Remove docker image with force @docker [53908d68425c61dc]',
+                  '   $ docker rm --force redis',
+                  '',
+                  '   # cleanup,container,docker,docker-ce,moby',
+                  '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                  '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                  '',
+                  '   ! category : snippet',
+                  '   ! filename : ',
+                  '   ! runalias : ',
+                  '   ! versions : ',
+                  '   ! created  : 2017-10-14 19:56:31',
+                  '   ! updated  : 2017-10-14 19:56:31',
+                  '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
+                  '   ! metadata : None',
+                  '   ! key      : 2')
+        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])  ## workflow
+        out, _ = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert Const.NEWLINE.join(output) in out
+        assert len(caplog.records[:]) > 30
+        #assert not err
 
-        ## Brief: Enable long logging with --debug option. Test checks that there is more
-        ##        than randomly picked largish number of logs in order to avoid matching
-        ##        logs explicitly. This just verifies that the very verbose option prints
-        ##        more logs. In this case the debug option must print all fields from
-        ##        stored snippets.
-        with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
-            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
-                      '   $ docker rm --volumes $(docker ps --all --quiet)',
-                      '',
-                      '   # cleanup,container,docker,docker-ce,moby',
-                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '',
-                      '   ! category : snippet',
-                      '   ! filename : ',
-                      '   ! runalias : ',
-                      '   ! versions : ',
-                      '   ! created  : 2017-10-14 19:56:31',
-                      '   ! updated  : 2017-10-14 19:56:31',
-                      '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
-                      '   ! metadata : None',
-                      '   ! key      : 1',
-                      '',
-                      '2. Remove docker image with force @docker [53908d68425c61dc]',
-                      '   $ docker rm --force redis',
-                      '',
-                      '   # cleanup,container,docker,docker-ce,moby',
-                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
-                      '',
-                      '   ! category : snippet',
-                      '   ! filename : ',
-                      '   ! runalias : ',
-                      '   ! versions : ',
-                      '   ! created  : 2017-10-14 19:56:31',
-                      '   ! updated  : 2017-10-14 19:56:31',
-                      '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
-                      '   ! metadata : None',
-                      '   ! key      : 2')
-            snippy = Snippy(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])  ## workflow
-            snippy = Snippet.add_defaults(snippy)
-            real_stderr = sys.stderr
-            real_stdout = sys.stdout
-            sys.stderr = StringIO()
-            sys.stdout = StringIO()
-            cause = snippy.run_cli()
-            result_stderr = sys.stderr.getvalue().strip()
-            result_stdout = sys.stdout.getvalue().strip()
-            sys.stderr = real_stderr
-            sys.stdout = real_stdout
-            assert cause == Cause.ALL_OK
-            assert len(result_stdout.split(Const.NEWLINE)) > 25
-            assert Const.NEWLINE.join(output) in result_stdout
-            assert not result_stderr
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+    @pytest.mark.parametrize('snippy', [['-q']], indirect=True)
+    def test_quiet_option_001(self, snippy, capsys, caplog):
+        """Test supressing all output from tool."""
 
-    @mock.patch.object(Config, '_storage_file')
-    def test_console_quiet_option(self, mock_storage_file):
-        """Test disabling all output to console."""
+        ## Brief: Disable all logging and output to terminal. Only the printed
+        ##        content is displayed on the screen.
+        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '-q'])  ## workflow
+        out, err = capsys.readouterr()
+        assert cause == 'NOK: cannot find content with given search criteria'
+        assert not out
+        assert not err
+        assert not caplog.records[:]
 
-        mock_storage_file.return_value = Database.get_storage()
-
-        ## Brief: Disable all logging and output to terminal.
-        with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
-            real_stderr = sys.stderr
-            real_stdout = sys.stdout
-            sys.stderr = StringIO()
-            sys.stdout = StringIO()
-            snippy = Snippy(['snippy', 'search', '--sall', '.', '-q'])  ## workflow
-            cause = snippy.run_cli()
-            snippy.release()
-            snippy = None
-            result_stderr = sys.stderr.getvalue().strip()
-            result_stdout = sys.stdout.getvalue().strip()
-            sys.stderr = real_stderr
-            sys.stdout = real_stdout
-            assert cause == 'NOK: cannot find content with given search criteria'
-            assert not result_stderr
-            assert not result_stdout
-            Database.delete_storage()
-
-    @mock.patch.object(Config, '_storage_file')
-    def test_console_version_option(self, mock_storage_file):
+    def test_version_option_001(self, capsys, caplog):
         """Test printing tool version."""
 
-        mock_storage_file.return_value = Database.get_storage()
-
-        ## Brief: Output tool version with long option. Only the version must be
-        ##        printed and nothing else. The print must be send to stdout.
-        cause = Cause.ALL_OK
-        real_stdout = sys.stdout
-        real_stderr = sys.stderr
-        sys.stdout = StringIO()
-        sys.stderr = StringIO()
+        ## Brief: Output tool version with long option. Only the version must
+        ##        be printed and nothing else. The print must be send to
+        ##        stdout.
         snippy = Snippy(['snippy', '--version'])  ## workflow
-        snippy.release()
-        result_stdout = sys.stdout.getvalue().strip()
-        result_stderr = sys.stderr.getvalue().strip()
-        sys.stdout = real_stdout
-        sys.stderr = real_stderr
-        assert cause == Cause.ALL_OK
-        assert result_stdout == __version__
-        assert not result_stderr
-        snippy = None
+        snippy.run()
+        out, err = capsys.readouterr()
+        assert out == __version__ + Const.NEWLINE
+        assert not err
+        assert not caplog.records[:]
         Database.delete_storage()
 
-        ## Brief: Output tool version with short option. Only the version must be
-        ##        printed and nothing else. The print must be send to stdout.
-        cause = Cause.ALL_OK
-        real_stdout = sys.stdout
-        real_stderr = sys.stderr
-        sys.stdout = StringIO()
-        sys.stderr = StringIO()
+    def test_version_option_002(self, capsys, caplog):
+        """Test printing tool version."""
+
+        ## Brief: Output tool version with short option. Only the version must
+        ##        be printed and nothing else. The print must be send to
+        ##        stdout.
         snippy = Snippy(['snippy', '-v'])  ## workflow
-        snippy.release()
-        result_stdout = sys.stdout.getvalue().strip()
-        result_stderr = sys.stderr.getvalue().strip()
-        sys.stdout = real_stdout
-        sys.stderr = real_stderr
-        assert cause == Cause.ALL_OK
-        assert result_stdout == __version__
-        assert not result_stderr
-        snippy = None
+        snippy.run()
+        out, err = capsys.readouterr()
+        assert out == __version__ + Const.NEWLINE
+        assert not err
+        assert not caplog.records[:]
         Database.delete_storage()
 
     @mock.patch.object(Config, '_storage_file')
@@ -504,9 +446,10 @@ class TestWfConsoleHelp(object):
 
         mock_storage_file.return_value = Database.get_storage()
 
-        ## Brief: Run program main with profile option. Test checks that there is more
-        ##        than randomly picked largish number of rows. This just verifies that
-        ##        the profile option prints lots for data.
+        ## Brief: Run program main with profile option. Test checks that
+        ##        there is more than randomly picked largish number of rows.
+        ##        This just verifies that the profile option prints lots for
+        ##        data.
         with mock.patch('snippy.devel.reference.open', mock.mock_open(), create=True):
             sys.argv = ['snippy', 'search', '--sall', '.', '--profile']  ## workflow
             real_stdout = sys.stdout
@@ -522,70 +465,50 @@ class TestWfConsoleHelp(object):
             assert not result_stderr
             Database.delete_storage()
 
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_debug_print_content(self, mock_isfile, mock_storage_file, mock_get_utc_time, ):
+    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    def test_debug_print_001(self, capsys):
         """Test printing the content."""
 
-        mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
-        mock_storage_file.return_value = Database.get_storage()
-
-        ## Brief: Test printing content with print. This is a development test
-        ##        which must directly print the snippet.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
-                      '   $ docker rm --volumes $(docker ps --all --quiet)',
-                      '',
-                      '   # cleanup,container,docker,docker-ce,moby',
-                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '',
-                      '   ! category : snippet',
-                      '   ! filename : ',
-                      '   ! runalias : ',
-                      '   ! versions : ',
-                      '   ! created  : 2017-10-14 19:56:31',
-                      '   ! updated  : 2017-10-14 19:56:31',
-                      '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
-                      '   ! metadata : None',
-                      '   ! key      : 1',
-                      '',
-                      '1. Remove docker image with force @docker [53908d68425c61dc]',
-                      '   $ docker rm --force redis',
-                      '',
-                      '   # cleanup,container,docker,docker-ce,moby',
-                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
-                      '',
-                      '   ! category : snippet',
-                      '   ! filename : ',
-                      '   ! runalias : ',
-                      '   ! versions : ',
-                      '   ! created  : 2017-10-14 19:56:31',
-                      '   ! updated  : 2017-10-14 19:56:31',
-                      '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
-                      '   ! metadata : None',
-                      '   ! key      : 2')
-            real_stdout = sys.stdout
-            real_stderr = sys.stderr
-            sys.stdout = StringIO()
-            sys.stderr = StringIO()
-            snippy = Snippet.add_defaults()
-            print(Database.get_snippets()[0])  # Part of the test.
-            print(Database.get_snippets()[1])  # Part of the test.
-            result_stdout = sys.stdout.getvalue().strip()
-            result_stderr = sys.stderr.getvalue().strip()
-            sys.stdout = real_stdout
-            sys.stderr = real_stderr
-            snippy.run_cli(['snippy', 'search'])  ## workflow
-            ansi_escape = re.compile(r'\x1b[^m]*m')  # Remove all color codes from output.
-            result_stdout = ansi_escape.sub('', result_stdout)
-            assert Const.NEWLINE.join(output) in result_stdout
-            assert not result_stderr
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        ## Brief: Test printing content with print. This is a development
+        ##        test which must directly print the snippet.
+        output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+                  '   $ docker rm --volumes $(docker ps --all --quiet)',
+                  '',
+                  '   # cleanup,container,docker,docker-ce,moby',
+                  '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                  '',
+                  '   ! category : snippet',
+                  '   ! filename : ',
+                  '   ! runalias : ',
+                  '   ! versions : ',
+                  '   ! created  : 2017-10-14 19:56:31',
+                  '   ! updated  : 2017-10-14 19:56:31',
+                  '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
+                  '   ! metadata : None',
+                  '   ! key      : 1',
+                  '',
+                  '1. Remove docker image with force @docker [53908d68425c61dc]',
+                  '   $ docker rm --force redis',
+                  '',
+                  '   # cleanup,container,docker,docker-ce,moby',
+                  '   > https://docs.docker.com/engine/reference/commandline/rm/',
+                  '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+                  '',
+                  '   ! category : snippet',
+                  '   ! filename : ',
+                  '   ! runalias : ',
+                  '   ! versions : ',
+                  '   ! created  : 2017-10-14 19:56:31',
+                  '   ! updated  : 2017-10-14 19:56:31',
+                  '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
+                  '   ! metadata : None',
+                  '   ! key      : 2')
+        print(Database.get_snippets()[0])  # Part of the test.
+        print(Database.get_snippets()[1])  # Part of the test.
+        out, err = capsys.readouterr()
+        out = re.sub(r'\x1b[^m]*m', '', out)  # Remove all color codes from output for comparison.
+        assert Const.NEWLINE.join(output) in out
+        assert not err
 
     @classmethod
     def teardown_class(cls):

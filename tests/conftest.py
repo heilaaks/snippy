@@ -272,6 +272,94 @@ def edit_unidentified_template(mocker):
                 '')
     mocker.patch.object(Editor, 'call_editor', return_value=template)
 
+## Devel
+
+@pytest.fixture(scope='function', name='devel_file_list')
+def devel_file_list(mocker):
+    """Mock devel package file list for tests."""
+
+    tests = [
+        'test_ut_arguments_create.py',
+        'test_wf_console_help.py',
+        'test_wf_export_snippet.py'
+    ]
+    mocker.patch('snippy.devel.reference.pkg_resources.resource_isdir', return_value=True)
+    mocker.patch('snippy.devel.reference.pkg_resources.resource_listdir', return_value=tests)
+
+@pytest.fixture(scope='function', name='devel_file_data')
+def devel_file_data(mocker):
+    """Mock devel package file reading for tests."""
+
+    testcase = ('#!/usr/bin/env python3',
+                '',
+                '"""test_wf_import_snippet.py: Test workflows for importing snippets."""',
+                '',
+                'import re',
+                'import sys',
+                'import copy',
+                'import json',
+                'import yaml',
+                'import mock',
+                'import pkg_resources',
+                'from snippy.snip import Snippy',
+                'from snippy.config.config import Config',
+                'from snippy.config.constants import Constants as Const',
+                'from snippy.cause import Cause',
+                'from tests.testlib.snippet_helper import SnippetHelper as Snippet',
+                'from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database',
+                '',
+                '',
+                'class TestWfImportSnippet(object):',
+                '    """Test workflows for importing snippets."""',
+                '',
+                '    @mock.patch.object(json, \'load\')',
+                '    @mock.patch.object(yaml, \'safe_load\')',
+                '    @mock.patch.object(Config, \'_storage_file\')',
+                '    @mock.patch(\'snippy.migrate.migrate.os.path.isfile\')',
+                '    def test_import_all_snippets(self, mock_isfile, mock_storage_file, mock_yaml_load, mock_json_load):',
+                '        """Import all snippets."""',
+                '',
+                '        mock_isfile.return_value = True',
+                '        mock_storage_file.return_value = Database.get_storage()',
+                '        import_dict = {\'content\': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}',
+                '        mock_yaml_load.return_value = import_dict',
+                '        mock_json_load.return_value = import_dict',
+                '        compare_content = {\'54e41e9b52a02b63\': import_dict[\'content\'][0],',
+                '                           \'f3fd167c64b6f97e\': import_dict[\'content\'][1]}',
+                '',
+                '        ## Brief: Import all snippets. File name is not defined in commmand line. This should',
+                '        ##        result tool internal default file name ./snippets.yaml being used by default.',
+                '        with mock.patch(\'snippy.migrate.migrate.open\', mock.mock_open(), create=True) as mock_file:',
+                '            snippy = Snippy()',
+                '            cause = snippy.run_cli([\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\'])  ## workflow',
+                '            assert cause == Cause.ALL_OK',
+                '            assert len(Database.get_snippets()) == 2',
+                '            mock_file.assert_called_once_with(\'./snippets.yaml\', \'r\')',
+                '            Snippet.test_content(snippy, mock_file, compare_content)',
+                '            snippy.release()',
+                '            snippy = None',
+                '            Database.delete_storage()')
+
+    mocked_open = mocker.mock_open(read_data=Const.NEWLINE.join(testcase))
+    mocker.patch('snippy.devel.reference.open', mocked_open)
+
+@pytest.fixture(scope='function', name='devel_no_tests')
+def devel_no_tests(mocker):
+    """Mock tests package missing exception."""
+
+    tests = [
+        'test_ut_arguments_create.py',
+        'test_wf_console_help.py',
+        'test_wf_export_snippet.py'
+    ]
+    # The exception in Python 3.6 is ModuleNotFoundError but this is not
+    # available in earlier Python versions. The used ImportError is a parent
+    # class of ModuleNotFoundError and it works with older Python versions.
+    mocker.patch('snippy.devel.reference.pkg_resources.resource_isdir', side_effect=[ImportError("No module named 'tests'"), mocker.DEFAULT])
+    mocker.patch('snippy.devel.reference.pkg_resources.resource_listdir', return_value=tests)
+    mocked_open = mocker.mock_open(read_data=Const.EMPTY)
+    mocker.patch('snippy.devel.reference.open', mocked_open)
+
 ## Helpers
 
 def create_snippy(mocker, options):
@@ -290,7 +378,7 @@ def import_content(snippy, mocker, contents, timestamps):
     start = len(Database.get_contents()) + 1
     for idx, content in enumerate(contents, start=start):
         mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
-        mocker.patch('snippy.migrate.migrate.open', mocked_open, create=True)
+        mocker.patch('snippy.migrate.migrate.open', mocked_open)
         cause = snippy.run_cli(['snippy', 'import', '-f', 'content.txt'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_contents()) == idx

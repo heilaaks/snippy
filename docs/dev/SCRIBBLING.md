@@ -852,6 +852,8 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        exceptions printed to user', it is more suitable to use always the stdout.
        This is also considered more predictable for the end user who is debugging.
        the logs.
+       
+       The exception is that the argument parser prints parse failures to stderr.
 
     4. Logs from exceptions are printed in INFO level all other logs in DEBUG
 

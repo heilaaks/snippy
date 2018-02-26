@@ -4,6 +4,7 @@
    - [ ] Add test with new media type for JSON API specs.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Tests are failing if gunicorn is not installed.
+   - [ ] snippy.run() does not return but run_cli() does. This does not make sense. This is due to tests which use run_cli. Refactor tests to use run()
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] starting server seems to cause error log from missing parameter with (incorrect syntax for -ip) snippy --server --port 8080 -ip 127.0.0.1 -vv
    - [ ] Change tests to use run instead of run_cli(). The run is better and the proper way to control this.

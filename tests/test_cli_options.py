@@ -222,7 +222,7 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     @pytest.mark.usefixtures('devel_no_tests')
-    def test_help_option_005(self, capsys, caplog):
+    def test_help_option_006(self, capsys, caplog):
         """Test printing test documentation when testing package does not exist."""
 
         ## Brief: Try to print tool test case reference documentation when

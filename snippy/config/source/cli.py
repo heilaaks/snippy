@@ -140,7 +140,7 @@ class Cli(ConfigSourceBase):
         self.set_conf(parameters)
 
     @staticmethod
-    def _parse_args(args):
+    def _parse_args(args):  # pylint: disable=too-many-statements
         """Parse command line arguments."""
 
         parameters = {}
@@ -244,16 +244,15 @@ class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-metho
     def __call__(self, parser, namespace, values, option_string=None):
         """Customised example printing to override positional arguments."""
 
-        if option_string == '-h' or option_string == '--help':
-            if 'examples' in sys.argv:
-                print(Const.NEWLINE.join(Cli.ARGS_EXAMPLES))
-            elif 'tests' in sys.argv:
-                from snippy.devel.reference import Reference
-                ansi = True if '--no-ansi' not in sys.argv else False
-                test = Reference()
-                test.print_tests(ansi)
-            else:
-                parser.print_help()
+        if 'examples' in sys.argv:
+            print(Const.NEWLINE.join(Cli.ARGS_EXAMPLES))
+        elif 'tests' in sys.argv:
+            from snippy.devel.reference import Reference
+            ansi = True if '--no-ansi' not in sys.argv else False
+            test = Reference()
+            test.print_tests(ansi)
+        else:
+            parser.print_help()
 
         parser.exit()
 
@@ -267,7 +266,6 @@ class CustomVersionAction(argparse.Action):  # pylint: disable=too-few-public-me
         # Argparse and Python versions below 3.4 print to stderr. In order
         # to have consistent functionality between supported Python versions,
         # the version must be explicitly printed to stdout.
-        if option_string == '-v' or option_string == '--version':
-            print(__version__)
+        print(__version__)
 
         parser.exit()

@@ -1,6 +1,5 @@
 ## TODO
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
-   - [ ] snippy without arguments produces strange output.
    - [ ] Add test with new media type for JSON API specs.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Tests are failing if gunicorn is not installed.
@@ -86,6 +85,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added the default help message when tool is run without any parameters.
    - [x] Fixed README.rst to work also in PyPI.
    - [x] Fixed local doc build.
    - [x] Added proper prints for all cases where the tool exists because of internal failure in the startup.

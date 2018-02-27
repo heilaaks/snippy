@@ -61,9 +61,9 @@ class TestApiPerformance(object):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC:   1 loop :  0.0973 /   55 loop :  4.7275 / 100 loop : 8.4567
-        ##        Reference PC: 880 loop : 72.8752 / 1000 loop : 83.6648
-        ##        Reference PC:  10 loop : 0.8260
+        ##        Reference PC:   1 loop :  0.1346 /   55 loop :  4.9043 / 100 loop : 8.5054
+        ##        Reference PC: 880 loop : 75.5142 / 1000 loop : 85.6471
+        ##        Reference PC:  10 loop : 0.8883
         ##
         ##        NOTE! Vere slow. Is the reason how requests opens the connection
         ##              for every requests?

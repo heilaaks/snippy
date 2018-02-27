@@ -344,7 +344,7 @@ def devel_file_data(mocker):
         '            Database.delete_storage()'
     )
     mocked_open = mocker.mock_open(read_data=Const.NEWLINE.join(testcase))
-    mocker.patch('snippy.devel.reference.open', mocked_open)
+    mocker.patch('snippy.devel.reference.open', mocked_open, create=True)
 
 @pytest.fixture(scope='function', name='devel_no_tests')
 def devel_no_tests(mocker):
@@ -361,7 +361,7 @@ def devel_no_tests(mocker):
     mocker.patch('snippy.devel.reference.pkg_resources.resource_isdir', side_effect=[ImportError("No module named 'tests'"), mocker.DEFAULT])
     mocker.patch('snippy.devel.reference.pkg_resources.resource_listdir', return_value=tests)
     mocked_open = mocker.mock_open(read_data=Const.EMPTY)
-    mocker.patch('snippy.devel.reference.open', mocked_open)
+    mocker.patch('snippy.devel.reference.open', mocked_open, create=True)
 
 ## Helpers
 

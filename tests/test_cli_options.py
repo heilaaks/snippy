@@ -171,10 +171,11 @@ class TestCliOptions(object):
         """Test printing examples from console."""
 
         ## Brief: Print command examples from help.
+        sys.argv = ['snippy', '--help', 'examples']
         snippy = Snippy(['snippy', '--help', 'examples'])  ## workflow
         snippy.run()
         out, err = capsys.readouterr()
-        assert out == Const.NEWLINE.join(TestCliOptions.HELP)
+        assert out == Const.NEWLINE.join(TestCliOptions.EXAMPLES)
         assert not err
         assert not caplog.records[:]
         Database.delete_storage()

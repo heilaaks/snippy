@@ -17,104 +17,118 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""cli.py: CLI based content management."""
+"""cli: CLI based content management."""
 
 from __future__ import print_function
+
 import sys
 import argparse
-from snippy.meta import __version__
-from snippy.meta import __homepage__
+
 from snippy.config.constants import Constants as Const
 from snippy.config.source.base import ConfigSourceBase
+from snippy.meta import __homepage__
+from snippy.meta import __version__
 
 
 class Cli(ConfigSourceBase):
     """CLI argument management."""
 
-    ARGS_COPYRIGHT = ('Snippy version ' + __version__ + ' - license GNU AGPLv3',
-                      'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
-                      'Homepage ' + __homepage__)
+    ARGS_COPYRIGHT = (
+        'Snippy version ' + __version__ + ' - license GNU AGPLv3',
+        'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
+        'Homepage ' + __homepage__
+    )
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')
-    ARGS_CATEGO = ('  --snippet                     operate snippets (default)',
-                   '  --solution                    operate solutions',
-                   '  --all                         operate all content (search only)')
-    ARGS_EDITOR = ('  -e, --editor                  use vi editor to add content',
-                   '  -c, --content CONTENT         define example content',
-                   '  -b, --brief BRIEF             define content brief description',
-                   '  -g, --group GROUP             define content group',
-                   '  -t, --tags [TAG,...]          define comma separated list of tags',
-                   '  -l, --links [LINK ...]        define space separated list of links',
-                   '  -d, --digest DIGEST           idenfity content with digest')
-    ARGS_SEARCH = ('  --sall [KW,...]               search keywords from all fields',
-                   '  --stag [KW,...]               search keywords only from tags',
-                   '  --sgrp [KW,...]               search keywords only from groups',
-                   '  --filter REGEXP               filter search output with regexp',
-                   '  --no-ansi                     remove ANSI characters from output')
-    ARGS_MIGRAT = ('  -f, --file FILE               define file for operation',
-                   '  --defaults                    migrate category specific defaults',
-                   '  --template                    migrate category specific template',)
-    ARGS_EPILOG = ('symbols:',
-                   '    $    snippet',
-                   '    :    solution',
-                   '    @    group',
-                   '    #    tag',
-                   '    >    url',
-                   '',
-                   'examples:',
-                   '    Import default content.',
-                   '      $ snippy import --snippet --defaults',
-                   '      $ snippy import --solution --defaults',
-                   '',
-                   '    List all snippets.',
-                   '      $ snippy search --snippet --sall .',
-                   '',
-                   '    List more examples.',
-                   '      $ snippy --help examples',
-                   '') + ARGS_COPYRIGHT
+    ARGS_CATEGO = (
+        '  --snippet                     operate snippets (default)',
+        '  --solution                    operate solutions',
+        '  --all                         operate all content (search only)'
+    )
+    ARGS_EDITOR = (
+        '  -e, --editor                  use vi editor to add content',
+        '  -c, --content CONTENT         define example content',
+        '  -b, --brief BRIEF             define content brief description',
+        '  -g, --group GROUP             define content group',
+        '  -t, --tags [TAG,...]          define comma separated list of tags',
+        '  -l, --links [LINK ...]        define space separated list of links',
+        '  -d, --digest DIGEST           idenfity content with digest'
+    )
+    ARGS_SEARCH = (
+        '  --sall [KW,...]               search keywords from all fields',
+        '  --stag [KW,...]               search keywords only from tags',
+        '  --sgrp [KW,...]               search keywords only from groups',
+        '  --filter REGEXP               filter search output with regexp',
+        '  --no-ansi                     remove ANSI characters from output'
+    )
+    ARGS_MIGRAT = (
+        '  -f, --file FILE               define file for operation',
+        '  --defaults                    migrate category specific defaults',
+        '  --template                    migrate category specific template',
+    )
+    ARGS_EPILOG = (
+        'symbols:',
+        '    $    snippet',
+        '    :    solution',
+        '    @    group',
+        '    #    tag',
+        '    >    url',
+        '',
+        'examples:',
+        '    Import default content.',
+        '      $ snippy import --snippet --defaults',
+        '      $ snippy import --solution --defaults',
+        '',
+        '    List all snippets.',
+        '      $ snippy search --snippet --sall .',
+        '',
+        '    List more examples.',
+        '      $ snippy --help examples',
+        '') + ARGS_COPYRIGHT
 
-    ARGS_EXAMPLES = ('examples:',
-                     '    Creating new content:',
-                     '      $ snippy create --snippet --editor',
-                     '      $ snippy create --snippet -c \'docker ps\' -b \'list containers\' -t docker,moby',
-                     '',
-                     '    Searching and filtering content:',
-                     '      $ snippy search --snippet --sall docker,moby',
-                     '      $ snippy search --snippet --sall .',
-                     '      $ snippy search --snippet --sall . --no-ansi | grep \'\\$\' | sort',
-                     '      $ snippy search --solution --sall .',
-                     '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
-                     '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
-                     '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
-                     '',
-                     '    Updating content:',
-                     '      $ snippy update --snippet -d 44afdd0c59e17159',
-                     '      $ snippy update --snippet -c \'docker ps\'',
-                     '',
-                     '    Deleting content:',
-                     '      $ snippy delete --snippet -d 44afdd0c59e17159',
-                     '      $ snippy delete --snippet -c \'docker ps\'',
-                     '',
-                     '    Migrating default content:',
-                     '      $ snippy import --snippet --defaults',
-                     '      $ snippy import --solution --defaults',
-                     '',
-                     '    Migrating content templates:',
-                     '      $ snippy export --solution --template',
-                     '      $ snippy import --solution --template',
-                     '      $ snippy import --solution -f solution-template.txt',
-                     '',
-                     '    Migrating specific content:',
-                     '      $ snippy export -d 76a1a02951f6bcb4',
-                     '      $ snippy import -d 76a1a02951f6bcb4 -f howto-debug-elastic-beats.txt',
-                     '',
-                     '    Migrating content:',
-                     '      $ snippy export --snippet -f snippets.yaml',
-                     '      $ snippy export --snippet -f snippets.json',
-                     '      $ snippy export --snippet -f snippets.text',
-                     '      $ snippy import --snippet -f snippets.yaml',
-                     '      $ snippy export --solution -f solutions.yaml',
-                     '      $ snippy import --solution -f solutions.yaml',
-                     '') + ARGS_COPYRIGHT
+    ARGS_EXAMPLES = (
+        'examples:',
+        '    Creating new content:',
+        '      $ snippy create --snippet --editor',
+        '      $ snippy create --snippet -c \'docker ps\' -b \'list containers\' -t docker,moby',
+        '',
+        '    Searching and filtering content:',
+        '      $ snippy search --snippet --sall docker,moby',
+        '      $ snippy search --snippet --sall .',
+        '      $ snippy search --snippet --sall . --no-ansi | grep \'\\$\' | sort',
+        '      $ snippy search --solution --sall .',
+        '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
+        '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
+        '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
+        '',
+        '    Updating content:',
+        '      $ snippy update --snippet -d 44afdd0c59e17159',
+        '      $ snippy update --snippet -c \'docker ps\'',
+        '',
+        '    Deleting content:',
+        '      $ snippy delete --snippet -d 44afdd0c59e17159',
+        '      $ snippy delete --snippet -c \'docker ps\'',
+        '',
+        '    Migrating default content:',
+        '      $ snippy import --snippet --defaults',
+        '      $ snippy import --solution --defaults',
+        '',
+        '    Migrating content templates:',
+        '      $ snippy export --solution --template',
+        '      $ snippy import --solution --template',
+        '      $ snippy import --solution -f solution-template.txt',
+        '',
+        '    Migrating specific content:',
+        '      $ snippy export -d 76a1a02951f6bcb4',
+        '      $ snippy import -d 76a1a02951f6bcb4 -f howto-debug-elastic-beats.txt',
+        '',
+        '    Migrating content:',
+        '      $ snippy export --snippet -f snippets.yaml',
+        '      $ snippy export --snippet -f snippets.json',
+        '      $ snippy export --snippet -f snippets.text',
+        '      $ snippy import --snippet -f snippets.yaml',
+        '      $ snippy export --solution -f solutions.yaml',
+        '      $ snippy import --solution -f solutions.yaml',
+        '') + ARGS_COPYRIGHT
 
     def __init__(self, args):
         super(Cli, self).__init__()
@@ -129,6 +143,7 @@ class Cli(ConfigSourceBase):
     def _parse_args(args):
         """Parse command line arguments."""
 
+        parameters = {}
         parser = argparse.ArgumentParser(prog='snippy',
                                          add_help=False,
                                          usage=Cli.ARGS_USAGE,
@@ -196,11 +211,15 @@ class Cli(ConfigSourceBase):
         # Argparse will exit with support options like --help or --version and
         # when argument parsing fails. Catching the exception here allows the
         # tool to exit in controlled manner and release pending resources.
-        parameters = {}
         try:
             parameters = vars(parser.parse_args(args))
             parameters['exit'] = False
         except SystemExit:
+            parameters['exit'] = True
+
+        # In case no parameters are provided, print the default help text.
+        if not args:
+            parser.print_help(sys.stdout)
             parameters['exit'] = True
 
         return parameters

@@ -17,14 +17,17 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_wf_delete_snippet.py: Test workflows for deleting snippets."""
+"""test_wf_delete_snippet: Test workflows for deleting snippets."""
 
 import sys
 
 import mock
+import pytest
 
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 if not Const.PYTHON2:
@@ -36,6 +39,17 @@ else:
 class TestWfDeleteSnippet(object):
     """Test workflows for deleting snippets."""
 
+    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    def test_cli_delete_snippet_001(self, snippy, mocker):
+        """Delete snippet from CLI."""
+
+        ## Brief: Delete snippet with short 16 byte version of message digest.
+        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
+        cause = snippy.run_cli(['snippy', 'delete', '-d', '53908d68425c61dc'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_snippets()) == 1
+        Content.verified(mocker, snippy, content_read)
+
     @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     def test_delete_snippet_with_digest(self, mock_isfile, mock_storage_file):
@@ -43,16 +57,6 @@ class TestWfDeleteSnippet(object):
 
         mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
-
-        ## Brief: Delete snippet with short 16 byte version of message digest.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            snippy = Snippet.add_defaults()
-            cause = snippy.run_cli(['snippy', 'delete', '-d', '53908d68425c61dc'])  ## workflow
-            assert cause == 'OK'
-            assert len(Database.get_snippets()) == 1
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Delete snippet with very short version of digest that matches to one snippet.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
@@ -223,9 +227,9 @@ class TestWfDeleteSnippet(object):
             snippy = None
             Database.delete_storage()
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

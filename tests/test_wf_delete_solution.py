@@ -17,17 +17,31 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_wf_delete_solution.py: Test workflows for deleting solutions."""
+"""test_wf_delete_solution: Test workflows for deleting solutions."""
 
 import mock
+import pytest
 
+from snippy.cause import Cause
 from snippy.config.config import Config
+from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestWfDeleteSolution(object):
     """Test workflows for deleting solutions."""
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    def test_cli_delete_solution_001(self, snippy, mocker):
+        """Delete solution from CLI."""
+
+        ## Brief: Delete solution with short 16 byte version of message digest.
+        content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
+        cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_solutions()) == 1
+        Content.verified(mocker, snippy, content_read)
 
     @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -36,16 +50,6 @@ class TestWfDeleteSolution(object):
 
         mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
-
-        ## Brief: Delete solution with short 16 byte version of message digest.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d'])  ## workflow
-            assert cause == 'OK'
-            assert len(Database.get_solutions()) == 1
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Delete solution with wihtout explicitly specifying solution category..
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
@@ -173,9 +177,9 @@ class TestWfDeleteSolution(object):
             snippy = None
             Database.delete_storage()
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

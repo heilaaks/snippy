@@ -1,11 +1,13 @@
 ## TODO
+   - [ ] Fix printing help with 'snippy' only somehow? This prints the help in each test because they misuse the Snippy() which triggers this from Config.init().
+   - [ ] Remove DELETE collection and allow it only for specific resource.
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
    - [ ] Add test with new media type for JSON API specs.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Tests are failing if gunicorn is not installed.
    - [ ] snippy.run() does not return but run_cli() does. This does not make sense. This is due to tests which use run_cli. Refactor tests to use run()
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
-   - [ ] starting server seems to cause error log from missing parameter with (incorrect syntax for -ip) snippy --server --port 8080 -ip 127.0.0.1 -vv
+   - [ ] When server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
    - [ ] Change tests to use run instead of run_cli(). The run is better and the proper way to control this.
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
@@ -19,7 +21,7 @@
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
-   - [ ] Add paginations and offsets to JSON API.
+   - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
    - [ ] Investigate 'I/O operation on closed file' note in SCRIBLING.md
    - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.

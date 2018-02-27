@@ -381,7 +381,7 @@ def import_content(snippy, mocker, contents, timestamps):
     start = len(Database.get_contents()) + 1
     for idx, content in enumerate(contents, start=start):
         mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
-        mocker.patch('snippy.migrate.migrate.open', mocked_open)
+        mocker.patch('snippy.migrate.migrate.open', mocked_open, create=True)
         cause = snippy.run_cli(['snippy', 'import', '-f', 'content.txt'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_contents()) == idx

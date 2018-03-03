@@ -32,6 +32,7 @@
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Update documents.
    - [ ] =============================================================
+   - [ ] Move test case brief to test case document. This cannot be done untill are cases are in new format because the documentation is lost.
    - [ ] Fix mocking UTC it is a mess now.
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix is there way to not to use sys.args in Cli help for examples and tests? Now the cli() help and profile are only ones using sys.argv directly.

@@ -32,7 +32,7 @@ extras_dev = (
     'pyflakes==1.6.0'
 )
 extras_docs = (
-    'sphinx==1.7.0',
+    'sphinx==1.7.1',
     'sphinxcontrib-openapi==0.3.2',
     'sphinx_rtd_theme==0.2.4',
     'sphinx-autobuild==0.7.1'
@@ -48,7 +48,7 @@ extras_tests = (
     'mock==2.0.0',
     'pytest==3.4.1',
     'pytest-cov==2.5.1',
-    'pytest-mock==1.7.0',
+    'pytest-mock==1.7.1',
     'six==1.11.0',
     'tox==2.9.1'
 )

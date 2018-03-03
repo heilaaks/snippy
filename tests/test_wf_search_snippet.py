@@ -17,11 +17,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_wf_search_snippet.py: Test workflows for searching snippets."""
+"""test_cli_search_snippet: Test workflows for searching snippets."""
 
 import sys
 
 import mock
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
@@ -36,8 +37,53 @@ else:
     from StringIO import StringIO  # pylint: disable=import-error
 
 
-class TestWfSearchSnippet(object):
+class TestCliSearchSnippet(object):
     """Test workflows for searching snippets."""
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    def test_cli_search_snippet_001(self, snippy, capsys):
+        """Search snippet from all fields."""
+
+        ## Brief: Search snippets from all fields. The match is made from one
+        ##        snippet content data.
+        output = (
+            '1. Remove docker image with force @docker [53908d68425c61dc]',
+            '   $ docker rm --force redis',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run_cli(['snippy', 'search', '--sall', 'redis', '--no-ansi'])  ## workflow
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    def test_cli_search_snippet_002(self, snippy, capsys):
+        """Search snippet from all fields."""
+
+        ## Brief: Search snippets from all fields. The match is made from one
+        ##        snippet brief description.
+        output = (
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run_cli(['snippy', 'search', '--sall', 'all', '--no-ansi'])  ## workflow
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
 
     @mock.patch.object(Config, '_storage_file')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
@@ -46,51 +92,6 @@ class TestWfSearchSnippet(object):
 
         mock_isfile.return_value = True
         mock_storage_file.return_value = Database.get_storage()
-
-        ## Brief: Search snippets from all fields. The match is made from one snippet
-        ##        content data.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ('1. Remove docker image with force @docker [53908d68425c61dc]',
-                      '   $ docker rm --force redis',
-                      '',
-                      '   # cleanup,container,docker,docker-ce,moby',
-                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
-                      '',
-                      'OK')
-            snippy = Snippet.add_defaults()
-            real_stdout = sys.stdout
-            sys.stdout = StringIO()
-            cause = snippy.run_cli(['snippy', 'search', '--sall', 'redis', '--no-ansi'])  ## workflow
-            result = sys.stdout.getvalue().strip()
-            sys.stdout = real_stdout
-            assert cause == Cause.ALL_OK
-            assert result == Const.NEWLINE.join(output)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Search snippets from all fields. The match is made from one snippet
-        ##        brief description.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True):
-            output = ('1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
-                      '   $ docker rm --volumes $(docker ps --all --quiet)',
-                      '',
-                      '   # cleanup,container,docker,docker-ce,moby',
-                      '   > https://docs.docker.com/engine/reference/commandline/rm/',
-                      '',
-                      'OK')
-            snippy = Snippet.add_defaults()
-            real_stdout = sys.stdout
-            sys.stdout = StringIO()
-            cause = snippy.run_cli(['snippy', 'search', '--sall', 'all', '--no-ansi'])  ## workflow
-            result = sys.stdout.getvalue().strip()
-            sys.stdout = real_stdout
-            assert cause == Cause.ALL_OK
-            assert result == Const.NEWLINE.join(output)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Search snippets from all fields. The match is made from two snippets
         ##        group metadata.
@@ -989,9 +990,9 @@ class TestWfSearchSnippet(object):
             snippy = None
             Database.delete_storage()
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

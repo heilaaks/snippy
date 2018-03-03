@@ -40,7 +40,7 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Content.get_api_metadata()}
+        result_json = {'meta': Content.get_api_meta()}
         snippy.run_server()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')  ## apiflow
         assert result.headers == result_headers
@@ -56,9 +56,9 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Content.get_api_metadata()}
+        result_json = {'meta': Content.get_api_meta()}
         snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/hello')   ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/hello')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -74,10 +74,10 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Content.get_api_metadata()}
+        result_json = {'meta': Content.get_api_meta()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api/'])
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')   ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -97,10 +97,10 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Content.get_api_metadata()}
+        result_json = {'meta': Content.get_api_meta()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api'])
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')   ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -120,10 +120,10 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Content.get_api_metadata()}
+        result_json = {'meta': Content.get_api_meta()}
         snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api/'])
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')   ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -143,10 +143,10 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Content.get_api_metadata()}
+        result_json = {'meta': Content.get_api_meta()}
         snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api'])
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api')   ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -165,10 +165,10 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Content.get_api_metadata()}
+        result_json = {'meta': Content.get_api_meta()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy//api'])
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1')   ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -186,10 +186,10 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Content.get_api_metadata()}
+        result_json = {'meta': Content.get_api_meta()}
         snippy = Snippy(['snippy', '--server', '--ip', 'localhost', '--port', '8081', '-vv'])
         snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')   ## apiflow
+        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200

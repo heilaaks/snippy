@@ -101,7 +101,7 @@ def mocked_snippy(mocker, request):
         params = request.param
 
     params.insert(0, 'snippy')  # Add the tool name here to args list.
-    snippy = create_snippy(mocker, params)
+    snippy = _create_snippy(mocker, params)
     def fin():
         """Clear the resources at the end."""
 
@@ -130,86 +130,27 @@ def import_default_snippets(mocker, snippy):
     """Import default snippets for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
-    import_content(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
+    _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
 
 @pytest.fixture(scope='function', name='exited')
 def import_exited_snippet(mocker, snippy):
     """Import 'exited' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.EXITED]]
-    import_content(snippy, mocker, contents, IMPORT_EXITED)
+    _import_content(snippy, mocker, contents, IMPORT_EXITED)
 
 @pytest.fixture(scope='function', name='remove')
 def import_remove_snippet(mocker, snippy):
     """Import 'remove' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.REMOVE]]
-    import_content(snippy, mocker, contents, IMPORT_REMOVE)
-
-@pytest.fixture(scope='function', name='forced')
-def import_forced_snippet(mocker, snippy):
-    """Import 'forced' snippet for testing purposes."""
-
-    contents = [Snippet.DEFAULTS[Snippet.FORCED]]
-    import_content(snippy, mocker, contents, IMPORT_FORCED)
-
-@pytest.fixture(scope='function', name='netcat')
-def import_netcat_snippet(mocker, snippy):
-    """Import 'netcat' snippet for testing purposes."""
-
-    contents = [Snippet.DEFAULTS[Snippet.NETCAT]]
-    import_content(snippy, mocker, contents, IMPORT_NETCAT)
+    _import_content(snippy, mocker, contents, IMPORT_REMOVE)
 
 @pytest.fixture(scope='function', name='remove-utc')
 def create_remove_snippet_time_mock(mocker):
     """Mock timestamps to create 'remove' snippet."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_REMOVE)
-
-## Solutions
-
-@pytest.fixture(scope='function', name='default-solutions')
-def import_default_solutions(mocker, snippy):
-    """Import default soutions for testing purposes."""
-
-    contents = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]
-    import_content(snippy, mocker, contents, IMPORT_DEFAULT_SOLUTIONS)
-
-@pytest.fixture(scope='function', name='beats')
-def import_beats_solution(mocker, snippy):
-    """Import 'beats' solution for testing purposes."""
-
-    contents = [Solution.DEFAULTS[Solution.BEATS]]
-    import_content(snippy, mocker, contents, IMPORT_BEATS)
-
-@pytest.fixture(scope='function', name='kafka')
-def import_kafka_solution(mocker, snippy):
-    """Import 'kafka' solution for testing purposes."""
-
-    contents = [Solution.DEFAULTS[Solution.KAFKA]]
-    import_content(snippy, mocker, contents, IMPORT_KAFKA)
-
-@pytest.fixture(scope='function', name='beats-utc')
-def create_beats_time_mock(mocker):
-    """Mock timestamps to create 'beats' solution."""
-
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_BEATS)
-
-@pytest.fixture(scope='function', name='kafka-utc')
-def create_kafka_solution_time_mock(mocker):
-    """Mock timestamps to create 'kafka' solution."""
-
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_KAFKA)
 
 @pytest.fixture(scope='function', name='edit-remove')
 def edit_remove_snippet(mocker):
@@ -223,16 +164,56 @@ def edit_remove_snippet(mocker):
 def edited_remove(mocker):
     """Mock edited remove snippet."""
 
-    editor = mocker.patch.object(Editor, 'call_editor')
+    return _editor(mocker, EDITED_REMOVE)
+
+@pytest.fixture(scope='function', name='forced')
+def import_forced_snippet(mocker, snippy):
+    """Import 'forced' snippet for testing purposes."""
+
+    contents = [Snippet.DEFAULTS[Snippet.FORCED]]
+    _import_content(snippy, mocker, contents, IMPORT_FORCED)
+
+@pytest.fixture(scope='function', name='netcat')
+def import_netcat_snippet(mocker, snippy):
+    """Import 'netcat' snippet for testing purposes."""
+
+    contents = [Snippet.DEFAULTS[Snippet.NETCAT]]
+    _import_content(snippy, mocker, contents, IMPORT_NETCAT)
+
+## Solutions
+
+@pytest.fixture(scope='function', name='default-solutions')
+def import_default_solutions(mocker, snippy):
+    """Import default soutions for testing purposes."""
+
+    contents = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]
+    _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SOLUTIONS)
+
+@pytest.fixture(scope='function', name='beats')
+def import_beats_solution(mocker, snippy):
+    """Import 'beats' solution for testing purposes."""
+
+    contents = [Solution.DEFAULTS[Solution.BEATS]]
+    _import_content(snippy, mocker, contents, IMPORT_BEATS)
+
+@pytest.fixture(scope='function', name='kafka')
+def import_kafka_solution(mocker, snippy):
+    """Import 'kafka' solution for testing purposes."""
+
+    contents = [Solution.DEFAULTS[Solution.KAFKA]]
+    _import_content(snippy, mocker, contents, IMPORT_KAFKA)
+
+@pytest.fixture(scope='function', name='beats-utc')
+def create_beats_time_mock(mocker):
+    """Mock timestamps to create 'beats' solution."""
 
     side_effects = ()
     try:
         side_effects = Config.get_utc_time.side_effect
     except AttributeError:
         pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_REMOVE*3)
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_BEATS)
 
-    return editor
 
 @pytest.fixture(scope='function', name='edit-beats')
 def edit_beats_solution(mocker):
@@ -252,16 +233,18 @@ def edit_beats_solution(mocker):
 def edited_beats(mocker):
     """Mock edited beats solution."""
 
-    editor = mocker.patch.object(Editor, 'call_editor')
+    return _editor(mocker, EDITED_BEATS)
+
+@pytest.fixture(scope='function', name='kafka-utc')
+def create_kafka_solution_time_mock(mocker):
+    """Mock timestamps to create 'kafka' solution."""
 
     side_effects = ()
     try:
         side_effects = Config.get_utc_time.side_effect
     except AttributeError:
         pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_BEATS*3)
-
-    return editor
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_KAFKA)
 
 ## Content
 
@@ -433,7 +416,7 @@ def devel_no_tests(mocker):
 
 ## Helpers
 
-def create_snippy(mocker, options):
+def _create_snippy(mocker, options):
     """Create snippy with mocks."""
 
     mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
@@ -442,7 +425,7 @@ def create_snippy(mocker, options):
 
     return snippy
 
-def import_content(snippy, mocker, contents, timestamps):
+def _import_content(snippy, mocker, contents, timestamps):
     """Import requested content."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=timestamps)
@@ -453,3 +436,17 @@ def import_content(snippy, mocker, contents, timestamps):
         cause = snippy.run_cli(['snippy', 'import', '-f', 'content.txt'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_contents()) == idx
+
+def _editor(mocker, timestamp):
+    """Mock editor."""
+
+    editor = mocker.patch.object(Editor, 'call_editor')
+
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + timestamp*3)
+
+    return editor

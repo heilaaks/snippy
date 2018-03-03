@@ -69,15 +69,15 @@ class Content(object):
                                                     mock.call(Const.NEWLINE)])
 
     @staticmethod
-    def get_api_metadata():
+    def get_api_meta():
         """Return default REST API metadata."""
 
-        metadata = {'version': __version__,
-                    'homepage': __homepage__,
-                    'docs': __docs__,
-                    'openapi': __openapi__}
+        meta = {'version': __version__,
+                'homepage': __homepage__,
+                'docs': __docs__,
+                'openapi': __openapi__}
 
-        return metadata
+        return meta
 
     @staticmethod
     def _sorter(json):

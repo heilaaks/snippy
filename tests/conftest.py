@@ -20,6 +20,7 @@
 """conftest: Fixtures for pytest."""
 
 import pytest
+import yaml
 
 from snippy.cause import Cause
 from snippy.config.config import Config
@@ -83,6 +84,9 @@ IMPORT_BEATS = (BEATS_CREATED,)*5
 IMPORT_NGINX = (NGINX_CREATED,)*5
 IMPORT_KAFKA = (KAFKA_CREATED,)*5
 EDITED_BEATS = (BEATS_CREATED,)*4
+
+# Export
+EXPORT_TIME = '2018-02-02 02:02:02'
 
 IMPORT_DEFAULT_SNIPPETS = (IMPORT_REMOVE + IMPORT_FORCED)
 IMPORT_DEFAULT_SOLUTIONS = (IMPORT_BEATS + IMPORT_NGINX)
@@ -228,6 +232,19 @@ def edit_beats_solution(mocker):
         pass
     mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_BEATS)
 
+## Content
+
+@pytest.fixture(scope='function', name='export-time')
+def export_time_mock(mocker):
+    """Mock timestamps to export any content."""
+
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + (EXPORT_TIME,))
+
 ## Templates
 
 @pytest.fixture(scope='function', name='edit-snippet-template')
@@ -273,6 +290,17 @@ def edit_unidentified_template(mocker):
         ''
     )
     mocker.patch.object(Editor, 'call_editor', return_value=template)
+
+## Yaml
+
+@pytest.fixture(scope='function', name='yaml_dump')
+def yaml_dump(mocker):
+    """Mock exporting to yaml file."""
+
+    mocker.patch.object(yaml, 'safe_dump')
+    mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
+
+    return mocker_open
 
 ## Devel
 

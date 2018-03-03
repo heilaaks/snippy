@@ -30,7 +30,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class Content(object):
     """Helper methods for content testing."""
 
-    EXPORT_TIME = ('2018-02-02 02:02:02',)
+    EXPORT_TIME = '2018-02-02 02:02:02'
 
     @staticmethod
     def ordered(json):
@@ -52,7 +52,7 @@ class Content(object):
     def verified(mocker, snippy, content):
         """Compare given content against content stored in database."""
 
-        mocker.patch.object(Config, 'get_utc_time', side_effect=Content.EXPORT_TIME*len(content))
+        mocker.patch.object(Config, 'get_utc_time', side_effect=(Content.EXPORT_TIME,)*len(content))
         assert len(Database.get_contents()) == len(content)
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open()) as mock_file:
             for digest in content:

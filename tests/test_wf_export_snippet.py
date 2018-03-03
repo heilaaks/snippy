@@ -17,23 +17,44 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_wf_export_snippet.py: Test workflows for exporting snippets."""
+"""test_cli_export_snippet: Test workflows for exporting snippets."""
 
 import json
 import mock
 import pkg_resources
+import pytest
 import yaml
 
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestWfExportSnippet(object):
     """Test workflows for exporting snippets."""
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time', 'export-time')
+    def test_cli_export_snippet_001(self, snippy, yaml_dump):
+        """Export all snippets."""
+
+        ## Brief: Export all snippets without defining target file name from
+        ##        command line.
+        content_dict = {
+            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_snippets()) == 2
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        yaml_dump.assert_called_once_with('./snippets.yaml', 'w')
 
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
@@ -47,17 +68,6 @@ class TestWfExportSnippet(object):
         mock_storage_file.return_value = Database.get_storage()
         export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
-
-        ## Brief: Export all snippets without defining target file name from command line.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_safe_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
-            mock_file.assert_called_once_with('./snippets.yaml', 'w')
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Export all snippets without defining target file name from command line.
         ##        In this case the content category is defined explicitly.

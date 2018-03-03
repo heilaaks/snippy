@@ -196,6 +196,13 @@ def import_beats_solution(mocker, snippy):
     contents = [Solution.DEFAULTS[Solution.BEATS]]
     _import_content(snippy, mocker, contents, IMPORT_BEATS)
 
+@pytest.fixture(scope='function', name='nginx')
+def import_nginx_solution(mocker, snippy):
+    """Import 'nginx' solution for testing purposes."""
+
+    contents = [Solution.DEFAULTS[Solution.NGINX]]
+    _import_content(snippy, mocker, contents, IMPORT_NGINX)
+
 @pytest.fixture(scope='function', name='kafka')
 def import_kafka_solution(mocker, snippy):
     """Import 'kafka' solution for testing purposes."""

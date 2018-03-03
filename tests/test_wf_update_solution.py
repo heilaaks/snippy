@@ -17,18 +17,39 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_wf_update_solution.py: Test workflows for updating solutions."""
+"""test_cli_update_solution: Test workflows for updating solutions."""
 
 import mock
+import pytest
 
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.source.editor import Editor
+from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfUpdateSolution(object):
+class TestCliUpdateSolution(object):
     """Test workflows for updating solutions."""
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    def test_cli_update_solution_001(self, snippy, edited_beats, mocker):
+        """Update solution with digest."""
+
+        ## Brief: Update solution based on short message digest. Only the
+        ##        content data is updated.
+        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
+        template = template.replace('## description', '## updated content description')
+        content_read = {
+            'f8ded660166ebeef': Solution.get_dictionary(template),
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
+        edited_beats.return_value = template
+        cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
+        assert cause == 'OK'
+        assert cause == Cause.ALL_OK
+        Content.verified(mocker, snippy, content_read)
 
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Config, '_storage_file')
@@ -38,21 +59,6 @@ class TestWfUpdateSolution(object):
 
         mock_storage_file.return_value = Database.get_storage()
         mock_isfile.return_value = True
-
-        ## Brief: Update solution based on short message digest. Only the content data is updated.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_defaults()
-            template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-            template = template.replace('## description', '## updated content description')
-            mock_call_editor.return_value = template
-            cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
-            assert cause == 'OK'
-            assert len(Database.get_solutions()) == 2
-            Solution.test_content(snippy, mock_file, {'f8ded660166ebeef': Solution.get_dictionary(template),
-                                                      '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Update solution based on very short message digest. This must match to a single
         ##        solution that must be updated.
@@ -209,9 +215,9 @@ class TestWfUpdateSolution(object):
             snippy = None
             Database.delete_storage()
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

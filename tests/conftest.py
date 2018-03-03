@@ -219,6 +219,21 @@ def edit_remove_snippet(mocker):
     mocker.patch.object(Editor, 'call_editor', return_value=template)
     mocker.patch.object(Config, 'get_utc_time', side_effect=EDITED_REMOVE)
 
+@pytest.fixture(scope='function', name='edited_remove')
+def edited_remove(mocker):
+    """Mock edited remove snippet."""
+
+    editor = mocker.patch.object(Editor, 'call_editor')
+
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_REMOVE*3)
+
+    return editor
+
 @pytest.fixture(scope='function', name='edit-beats')
 def edit_beats_solution(mocker):
     """Edited 'beats' solution."""
@@ -232,6 +247,21 @@ def edit_beats_solution(mocker):
     except AttributeError:
         pass
     mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_BEATS)
+
+@pytest.fixture(scope='function', name='edited_beats')
+def edited_beats(mocker):
+    """Mock edited beats solution."""
+
+    editor = mocker.patch.object(Editor, 'call_editor')
+
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_BEATS*3)
+
+    return editor
 
 ## Content
 

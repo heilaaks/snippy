@@ -17,18 +17,39 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_wf_update_snippet.py: Test workflows for updating snippets."""
+"""test_cli_update_snippet: Test workflows for updating snippets."""
 
 import mock
+import pytest
 
+from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.source.editor import Editor
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfUpdateSnippet(object):
+class TestCliUpdateSnippet(object):
     """Test workflows for updating snippets."""
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    def test_cli_update_snippet_001(self, snippy, edited_remove, mocker):
+        """Update snippet based on digest."""
+
+        ## Brief: Update snippet based on short message digest. Only the
+        ##        content data is updated.
+        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
+        content_read = {
+            'af8c89629dc1a531': Snippet.get_dictionary(template),
+            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        }
+        edited_remove.return_value = template
+        cause = snippy.run_cli(['snippy', 'update', '-d', '54e41e9b52a02b63'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_snippets()) == 2
+        Content.verified(mocker, snippy, content_read)
 
     @mock.patch.object(Editor, 'call_editor')
     @mock.patch.object(Config, '_storage_file')
@@ -38,21 +59,6 @@ class TestWfUpdateSnippet(object):
 
         mock_isfile.return_value = True
         mock_storage_file.return_value = Database.get_storage()
-
-        ## Brief: Update snippet based on short message digest. Only the content data is updated.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
-            template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-            template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-            mock_call_editor.return_value = template
-            cause = snippy.run_cli(['snippy', 'update', '-d', '54e41e9b52a02b63'])  ## workflow
-            assert cause == 'OK'
-            assert len(Database.get_snippets()) == 2
-            Snippet.test_content(snippy, mock_file, {'af8c89629dc1a531': Snippet.get_dictionary(template),
-                                                     '53908d68425c61dc': Snippet.DEFAULTS[Snippet.FORCED]})
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Update snippet based on very short message digest. This must match to a single
         ##        snippet that must be updated.
@@ -223,10 +229,9 @@ class TestWfUpdateSnippet(object):
             snippy = None
             Database.delete_storage()
 
-    # pylint: disable=duplicate-code
     @classmethod
     def teardown_class(cls):
-        """Teardown each test."""
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

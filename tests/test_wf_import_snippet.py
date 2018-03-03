@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_wf_import_snippet.py: Test workflows for importing snippets."""
+"""test_cli_import_snippet: Test workflows for importing snippets."""
 
 import re
 import copy
@@ -26,17 +26,43 @@ import json
 import yaml
 import mock
 import pkg_resources
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfImportSnippet(object):
+class TestCliImportSnippet(object):
     """Test workflows for importing snippets."""
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_snippet_001(self, snippy, yaml_load, mocker):
+        """Import all snippets."""
+
+        ## Brief: Import all snippets. File name is not defined in command
+        ##        line. This must result tool internal default file name and
+        ##        format being used.
+        content_read = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
+        }
+        import_dict = {
+            'content': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.NETCAT]
+            ]
+        }
+        yaml.safe_load.return_value = import_dict
+        cause = snippy.run_cli(['snippy', 'import'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_snippets()) == 2
+        yaml_load.assert_called_once_with('./snippets.yaml', 'r')
+        Content.verified(mocker, snippy, content_read)
 
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
@@ -52,19 +78,6 @@ class TestWfImportSnippet(object):
         mock_json_load.return_value = import_dict
         compare_content = {'54e41e9b52a02b63': import_dict['content'][0],
                            'f3fd167c64b6f97e': import_dict['content'][1]}
-
-        ## Brief: Import all snippets. File name is not defined in commmand line. This should
-        ##        result tool internal default file name ./snippets.yaml being used by default.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import'])  ## workflow
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 2
-            mock_file.assert_called_once_with('./snippets.yaml', 'r')
-            Snippet.test_content(snippy, mock_file, compare_content)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Import all snippets from yaml file. File name and format are extracted from
         ##        command line option -f|--file.

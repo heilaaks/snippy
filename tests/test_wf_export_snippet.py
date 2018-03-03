@@ -34,7 +34,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfExportSnippet(object):
+class TestCliExportSnippet(object):
     """Test workflows for exporting snippets."""
 
     @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time', 'export-time')

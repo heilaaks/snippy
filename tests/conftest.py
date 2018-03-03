@@ -91,6 +91,7 @@ EXPORT_TIME = '2018-02-02 02:02:02'
 IMPORT_DEFAULT_SNIPPETS = (IMPORT_REMOVE + IMPORT_FORCED)
 IMPORT_DEFAULT_SOLUTIONS = (IMPORT_BEATS + IMPORT_NGINX)
 
+# Snippy
 @pytest.fixture(scope='function', name='snippy')
 def mocked_snippy(mocker, request):
     """Create mocked instance from snippy."""
@@ -298,6 +299,15 @@ def yaml_dump(mocker):
     """Mock exporting to yaml file."""
 
     mocker.patch.object(yaml, 'safe_dump')
+    mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
+
+    return mocker_open
+
+@pytest.fixture(scope='function', name='yaml_load')
+def yaml_load(mocker):
+    """Mock importing from yaml file."""
+
+    mocker.patch.object(yaml, 'safe_load')
     mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
 
     return mocker_open

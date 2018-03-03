@@ -17,24 +17,50 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_wf_import_solution.py: Test workflows for importing solutions."""
+"""test_cli_import_solution: Test workflows for importing solutions."""
 
 import json
 import yaml
 import mock
 import pkg_resources
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfImportSolution(object):
+class TestCliImportSolution(object):
     """Test workflows for importing solutions."""
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_solutions_001(self, snippy, yaml_load, mocker):
+        """Import all solutions."""
+
+        ## Brief: Import all solutions. File name is not defined in command
+        ##        line. This should result tool internal default file name and
+        ##        format being used.
+        content_read = {
+            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
+            Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
+        }
+        import_dict = {
+            'content': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.KAFKA]
+            ]
+        }
+        yaml.safe_load.return_value = import_dict
+        cause = snippy.run_cli(['snippy', 'import', '--solution'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_solutions()) == 2
+        yaml_load.assert_called_once_with('./solutions.yaml', 'r')
+        Content.verified(mocker, snippy, content_read)
 
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
@@ -50,19 +76,6 @@ class TestWfImportSolution(object):
         mock_json_load.return_value = import_dict
         compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
                            'eeef5ca3ec9cd364': Solution.DEFAULTS[Solution.KAFKA]}
-
-        ## Brief: Import all solutions. File name is not defined in commmand line. This should
-        ##        result tool internal default file name ./solutions.yaml being used by default.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import', '--solution'])  ## workflow
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 2
-            mock_file.assert_called_once_with('./solutions.yaml', 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Import all solutions from yaml file. File name and format are extracted from
         ##        command line option -f|--file.

@@ -17,23 +17,45 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_wf_export_solution.py: Test workflows for exporting solutions."""
+"""test_cli_export_solution: Test workflows for exporting solutions."""
 
 import json
 import mock
 import pkg_resources
+import pytest
 import yaml
 
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestWfExportSolution(object):
+class TestCliExportSolution(object):
     """Test workflows for exporting solutions."""
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
+    def test_cli_export_solution_001(self, snippy, yaml_dump):
+        """Export all solutions."""
+
+        ## Brief: Export all solutions into file. File name or format are not
+        ##        defined in command line which must result tool default file
+        ##        and format.
+        content_dict = {
+            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '--solution'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_solutions()) == 2
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        yaml_dump.assert_called_once_with('./solutions.yaml', 'w')
 
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
@@ -48,20 +70,6 @@ class TestWfExportSolution(object):
         mock_storage_file.return_value = Database.get_storage()
         export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
-
-        ## Brief: Export all solutions into file. File name or format are not defined in command
-        ##        line which should result tool default file and format.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--solution'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./solutions.yaml', 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
-            mock_yaml_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Export all solutions into defined yaml file. File name and format are defined
         ##        in command line.

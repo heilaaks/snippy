@@ -24,6 +24,10 @@ import mock
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
+from snippy.meta import __docs__
+from snippy.meta import __homepage__
+from snippy.meta import __openapi__
+from snippy.meta import __version__
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
@@ -63,6 +67,17 @@ class Content(object):
                 file_handle = mock_file.return_value.__enter__.return_value
                 file_handle.write.assert_has_calls([mock.call(Snippet.get_template(content[digest])),
                                                     mock.call(Const.NEWLINE)])
+
+    @staticmethod
+    def get_api_metadata():
+        """Return default REST API metadata."""
+
+        metadata = {'version': __version__,
+                    'homepage': __homepage__,
+                    'docs': __docs__,
+                    'openapi': __openapi__}
+
+        return metadata
 
     @staticmethod
     def _sorter(json):

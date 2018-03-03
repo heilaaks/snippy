@@ -21,12 +21,10 @@
 
 from falcon import testing
 import falcon
-import mock
 import pytest
 
-from snippy.config.config import Config
 from snippy.snip import Snippy
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.content import Content
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
@@ -34,7 +32,7 @@ class TestApiHello(object):
     """Test hello API."""
 
     @pytest.mark.usefixtures('server', 'snippy')
-    def test_api_hello_root_001(self, snippy):
+    def test_api_hello_api_001(self, snippy):
         """Test hello API in /snippy/api/v1/."""
 
         ## Brief: Call GET /snippy/api/v1/ to get hello!
@@ -42,15 +40,15 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Snippet.get_http_metadata()}
+        result_json = {'meta': Content.get_api_metadata()}
         snippy.run_server()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')  ## apiflow
         assert result.headers == result_headers
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(result_json)
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('server', 'snippy')
-    def test_api_hello_api_001(self, snippy):
+    def test_api_hello_api_002(self, snippy):
         """Test hello API in /snippy/api/hello."""
 
         ## Brief: Call GET /snippy/api/v1/hello to get hello!
@@ -58,121 +56,145 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        result_json = {'meta': Snippet.get_http_metadata()}
+        result_json = {'meta': Content.get_api_metadata()}
         snippy.run_server()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/hello')   ## apiflow
         assert result.headers == result_header
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(result_json)
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @mock.patch('snippy.server.server.SnippyServer')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    @mock.patch.object(Config, '_storage_file')
-    def test_api_hello_server_base_path(self, mock_get_db_location, mock_isfile, _):
+    @pytest.mark.usefixtures('server')
+    def test_api_hello_api_003(self):
         """Test hello API with modified server base path configuration."""
 
-        mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
-
-        ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
-        ##        base path is changed from default and it is set in correct format.
-        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
-        body = {'meta': Snippet.get_http_metadata()}
+        ## Brief: Call GET /snippy/api/hello to get hello! In this case the
+        ##        server base path is changed from default and it is set in
+        ##        correct format.
+        result_header = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '197'
+        }
+        result_json = {'meta': Content.get_api_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api/'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')   ## apiflow
-        assert result.headers == header
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        assert result.headers == result_header
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         snippy.release()
-        snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
-        ##        base path configuration is incorrect. The server base path must
-        ##        contain trailing slash which is missing from this test. The
-        ##        configuration must be updated and the API call must work.
-        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
-        body = {'meta': Snippet.get_http_metadata()}
+    @pytest.mark.usefixtures('server')
+    def test_api_hello_api_004(self):
+        """Test hello API with modified server base path configuration."""
+
+        ## Brief: Call GET /snippy/api/hello to get hello! In this case the
+        ##        server base path configuration is incorrect. The server base
+        ##        path must contain trailing slash which is missing from this
+        ##        test. The configuration must be updated and the API call
+        ##        must work.
+        result_header = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '197'
+        }
+        result_json = {'meta': Content.get_api_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')   ## apiflow
-        assert result.headers == header
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        assert result.headers == result_header
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         snippy.release()
-        snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
-        ##        base path configuration is incorrect. The server base path must
-        ##        contain leading slash which is missing from this test. The
-        ##        configuration must be updated and the API call must work.
-        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
-        body = {'meta': Snippet.get_http_metadata()}
+    @pytest.mark.usefixtures('server')
+    def test_api_hello_api_005(self):
+        """Test hello API with modified server base path configuration."""
+
+        ## Brief: Call GET /snippy/api/hello to get hello! In this case the
+        ##        server base path configuration is incorrect. The server base
+        ##        path must contain leading slash which is missing from this
+        ##        test. The configuration must be updated and the API call
+        ##        must work.
+        result_header = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '197'
+        }
+        result_json = {'meta': Content.get_api_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api/'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')   ## apiflow
-        assert result.headers == header
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        assert result.headers == result_header
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         snippy.release()
-        snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
-        ##        base path configuration is incorrect. The server base path must
-        ##        contain leading and trailing slashes which are missing from this
-        ##        test. The configuration must be updated and the API call must work.
-        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
-        body = {'meta': Snippet.get_http_metadata()}
+    @pytest.mark.usefixtures('server')
+    def test_api_hello_api_006(self):
+        """Test hello API with modified server base path configuration."""
+
+        ## Brief: Call GET /snippy/api/hello to get hello! In this case the
+        ##        server base path configuration is incorrect. The server base
+        ##        path must contain leading and trailing slashes which are
+        ##        missing from this test. The configuration must be updated
+        ##        and the API call must work.
+        result_header = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '197'
+        }
+        result_json = {'meta': Content.get_api_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api')   ## apiflow
-        assert result.headers == header
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        assert result.headers == result_header
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         snippy.release()
-        snippy = None
         Database.delete_storage()
 
-        ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
-        ##        base path configuration is incorrect because it contains two slashes.
-        ##        In this case this misconfiguration results default base path.
-        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
-        body = {'meta': Snippet.get_http_metadata()}
+    @pytest.mark.usefixtures('server')
+    def test_api_hello_api_007(self):
+        """Test hello API with modified server base path configuration."""
+
+        ## Brief: Call GET /snippy/api/hello to get hello! In this case the
+        ##        server base path configuration is incorrect because it
+        ##        contains two slashes. In this case this misconfiguration
+        ##        results default base path.
+        result_header = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '197'
+        }
+        result_json = {'meta': Content.get_api_metadata()}
         snippy = Snippy(['snippy', '--server', '--base-path', '/snippy//api'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1')   ## apiflow
-        assert result.headers == header
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        assert result.headers == result_header
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         snippy.release()
-        snippy = None
         Database.delete_storage()
 
-    @mock.patch('snippy.server.server.SnippyServer')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    @mock.patch.object(Config, '_storage_file')
-    def test_api_hello_server_ip_port(self, mock_get_db_location, mock_isfile, _, caplog):
+    @pytest.mark.usefixtures('server')
+    def test_api_hello_api_008(self, caplog):
         """Test hello API with modified server ip and port configuration."""
 
-        mock_isfile.return_value = True
-        mock_get_db_location.return_value = Database.get_storage()
-
-        ## Brief: Call GET /snippy/api/hello to get hello! In this case the server
-        ##        base path is changed from default and it is set in correct format.
-        header = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '197'}
-        body = {'meta': Snippet.get_http_metadata()}
+        ## Brief: Call GET /snippy/api/hello to get hello! In this case the
+        ##        server base path is changed from default and it is set in
+        ##        correct format.
+        result_header = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '197'
+        }
+        result_json = {'meta': Content.get_api_metadata()}
         snippy = Snippy(['snippy', '--server', '--ip', 'localhost', '--port', '8081', '-vv'])
         snippy.run()
         result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')   ## apiflow
-        assert result.headers == header
-        assert Snippet.sorted_json(result.json) == Snippet.sorted_json(body)
+        assert result.headers == result_header
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert 'configured option server ip localhost and port 8081' in caplog.text
         snippy.release()
-        snippy = None
         Database.delete_storage()
 
     @classmethod

@@ -194,7 +194,6 @@ class TestCliSearchSolution(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-
     @pytest.mark.usefixtures('snippy', 'default-solutions')
     def test_cli_search_solution_005(self, snippy, capsys):
         """Search solution from all field sand limit the search within specific group."""

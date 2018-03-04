@@ -1,5 +1,5 @@
 ## TODO
-   - [ ] Fix printing help with 'snippy' only somehow? This prints the help in each test because they misuse the Snippy() which triggers this from Config.init().
+   - [ ] Fix printing help with 'snippy' only somehow? This prints the help in each test (e.g. failure) because they misuse the Snippy() which triggers this from Config.init().
    - [ ] Remove DELETE collection and allow it only for specific resource.
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
    - [ ] Add test with new media type for JSON API specs.
@@ -11,7 +11,8 @@
    - [ ] Change tests to use run instead of run_cli(). The run is better and the proper way to control this.
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
-   - [ ] observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.
+   - [ ] Observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.
+   - [ ] Why test_cli_import_snippet_009 requires import-remove-utc but the 001 does not?
    - [ ] Mocking text file simply refuses to work from pytest fixtures.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.

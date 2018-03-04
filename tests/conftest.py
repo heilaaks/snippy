@@ -154,6 +154,12 @@ def create_remove_snippet_time_mock(mocker):
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_REMOVE)
 
+@pytest.fixture(scope='function', name='import-remove-utc')
+def import_remove_snippet_time_mock(mocker):
+    """Mock timestamps to import 'remove' snippet."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_REMOVE)
+
 @pytest.fixture(scope='function', name='edit-remove')
 def edit_remove_snippet(mocker):
     """Edited 'remove' snippet."""
@@ -175,12 +181,24 @@ def import_forced_snippet(mocker, snippy):
     contents = [Snippet.DEFAULTS[Snippet.FORCED]]
     _import_content(snippy, mocker, contents, IMPORT_FORCED)
 
+@pytest.fixture(scope='function', name='import-forced-utc')
+def import_forced_snippet_time_mock(mocker):
+    """Mock timestamps to import 'forced' snippet."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_FORCED)
+
 @pytest.fixture(scope='function', name='netcat')
 def import_netcat_snippet(mocker, snippy):
     """Import 'netcat' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.NETCAT]]
     _import_content(snippy, mocker, contents, IMPORT_NETCAT)
+
+@pytest.fixture(scope='function', name='import-netcat-utc')
+def import_netcat_snippet_time_mock(mocker):
+    """Mock timestamps to import 'netcat' snippet."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_NETCAT)
 
 ## Solutions
 

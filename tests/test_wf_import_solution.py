@@ -49,13 +49,7 @@ class TestCliImportSolution(object):
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
         }
-        import_dict = {
-            'content': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.KAFKA]
-            ]
-        }
-        yaml.safe_load.return_value = import_dict
+        yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run_cli(['snippy', 'import', '--solution'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2

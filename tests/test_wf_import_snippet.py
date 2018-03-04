@@ -51,13 +51,7 @@ class TestCliImportSnippet(object):
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        import_dict = {
-            'content': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.NETCAT]
-            ]
-        }
-        yaml.safe_load.return_value = import_dict
+        yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run_cli(['snippy', 'import'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
@@ -74,13 +68,7 @@ class TestCliImportSnippet(object):
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        import_dict = {
-            'content': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.NETCAT]
-            ]
-        }
-        yaml.safe_load.return_value = import_dict
+        yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
@@ -97,13 +85,7 @@ class TestCliImportSnippet(object):
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        import_dict = {
-            'content': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.NETCAT]
-            ]
-        }
-        json.load.return_value = import_dict
+        json.load.return_value = Content.imported_dict(content_read)
         cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.json'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
@@ -121,17 +103,7 @@ class TestCliImportSnippet(object):
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        import_dict = {
-            'content': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.NETCAT]
-            ]
-        }
-        mocked_open = mock.mock_open(
-            read_data=Snippet.get_template(import_dict['content'][0]) +
-            Const.NEWLINE +
-            Snippet.get_template(import_dict['content'][1])
-        )
+        mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -150,17 +122,7 @@ class TestCliImportSnippet(object):
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        import_dict = {
-            'content': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.NETCAT]
-            ]
-        }
-        mocked_open = mock.mock_open(
-            read_data=Snippet.get_template(import_dict['content'][0]) +
-            Const.NEWLINE +
-            Snippet.get_template(import_dict['content'][1])
-        )
+        mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.text'])  ## workflow
             assert cause == Cause.ALL_OK

@@ -80,6 +80,22 @@ class Content(object):
         return meta
 
     @staticmethod
+    def imported_dict(content_read):
+        """Return imported dictionary from content."""
+
+        return {'content': list(content_read.values())}
+
+    @staticmethod
+    def mocked_open(content_read):
+        """Return mocked open from content."""
+
+        mocked_open = Const.EMPTY
+        for item in content_read.values():
+            mocked_open = mocked_open + Snippet.get_template(item) + Const.NEWLINE
+
+        return mock.mock_open(read_data=mocked_open)
+
+    @staticmethod
     def _sorter(json):
         """Sort nested JSON to allow comparison."""
 

@@ -11,6 +11,7 @@
    - [ ] Change tests to use run instead of run_cli(). The run is better and the proper way to control this.
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
+   - [ ] observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.
    - [ ] Mocking text file simply refuses to work from pytest fixtures.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.

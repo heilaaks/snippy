@@ -64,6 +64,123 @@ class TestCliImportSnippet(object):
         yaml_load.assert_called_once_with('./snippets.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_snippet_002(self, snippy, yaml_load, mocker):
+        """Import all snippets."""
+
+        ## Brief: Import all snippets from yaml file. File name and format
+        ##        are extracted from command line option -f|--file.
+        content_read = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
+        }
+        import_dict = {
+            'content': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.NETCAT]
+            ]
+        }
+        yaml.safe_load.return_value = import_dict
+        cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.yaml'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_snippets()) == 2
+        yaml_load.assert_called_once_with('./all-snippets.yaml', 'r')
+        Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_snippet_003(self, snippy, json_load, mocker):
+        """Import all snippets."""
+
+        ## Brief: Import all snippets from json file. File name and format
+        ##        are extracted from command line option -f|--file.
+        content_read = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
+        }
+        import_dict = {
+            'content': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.NETCAT]
+            ]
+        }
+        json.load.return_value = import_dict
+        cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.json'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_snippets()) == 2
+        json_load.assert_called_once_with('./all-snippets.json', 'r')
+        Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_snippet_004(self, snippy, mocker):
+        """Import all snippets."""
+
+        ## Brief: Import all snippets from txt file. File name and format are
+        ##        extracted from command line option -f|--file. File extension
+        ##        is '*.txt' in this case.
+        content_read = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
+        }
+        import_dict = {
+            'content': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.NETCAT]
+            ]
+        }
+        mocked_open = mock.mock_open(
+            read_data=Snippet.get_template(import_dict['content'][0]) +
+            Const.NEWLINE +
+            Snippet.get_template(import_dict['content'][1])
+        )
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 2
+            mock_file.assert_called_once_with('./all-snippets.txt', 'r')
+            Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_snippet_005(self, snippy, mocker):
+        """Import all snippets."""
+
+        ## Brief: Import all snippets from text file. File name and format are
+        ##        extracted from command line option -f|--file. File extension
+        ##        is '*.text' in this case.
+        content_read = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
+        }
+        import_dict = {
+            'content': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.NETCAT]
+            ]
+        }
+        mocked_open = mock.mock_open(
+            read_data=Snippet.get_template(import_dict['content'][0]) +
+            Const.NEWLINE +
+            Snippet.get_template(import_dict['content'][1])
+        )
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.text'])  ## workflow
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 2
+            mock_file.assert_called_once_with('./all-snippets.text', 'r')
+            Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_snippet_006(self, snippy):
+        """Import all snippets."""
+
+        ## Brief: Try to import snippet from file which file format is not
+        ##        supported. This should result error text for end user and
+        ##        no files should be read.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run_cli(['snippy', 'import', '-f', './foo.bar'])  ## workflow
+            assert cause == 'NOK: cannot identify file format for file ./foo.bar'
+            assert not Database.get_contents()
+            mock_file.assert_not_called()
+
     @mock.patch.object(json, 'load')
     @mock.patch.object(yaml, 'safe_load')
     @mock.patch.object(Config, '_storage_file')
@@ -76,79 +193,6 @@ class TestCliImportSnippet(object):
         import_dict = {'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict
-        compare_content = {'54e41e9b52a02b63': import_dict['content'][0],
-                           'f3fd167c64b6f97e': import_dict['content'][1]}
-
-        ## Brief: Import all snippets from yaml file. File name and format are extracted from
-        ##        command line option -f|--file.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.yaml'])  ## workflow
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 2
-            mock_file.assert_called_once_with('./all-snippets.yaml', 'r')
-            Snippet.test_content(snippy, mock_file, compare_content)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Import all snippets from json file. File name and format are extracted from
-        ##        command line option -f|--file.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.json'])  ## workflow
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 2
-            mock_file.assert_called_once_with('./all-snippets.json', 'r')
-            Snippet.test_content(snippy, mock_file, compare_content)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Import all snippets from txt file. File name and format are extracted from
-        ##        command line option -f|--file. File extension is '*.txt' in this case.
-        mocked_open = mock.mock_open(read_data=Snippet.get_template(import_dict['content'][0]) +
-                                     Const.NEWLINE +
-                                     Snippet.get_template(import_dict['content'][1]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 2
-            mock_file.assert_called_once_with('./all-snippets.txt', 'r')
-            Snippet.test_content(snippy, mock_file, compare_content)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Import all snippets from text file. File name and format are extracted from
-        ##        command line option -f|--file. File extension is '*.text' in this case.
-        mocked_open = mock.mock_open(read_data=Snippet.get_template(import_dict['content'][0]) +
-                                     Const.NEWLINE +
-                                     Snippet.get_template(import_dict['content'][1]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.text'])  ## workflow
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 2
-            mock_file.assert_called_once_with('./all-snippets.text', 'r')
-            Snippet.test_content(snippy, mock_file, compare_content)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Try to import snippet from file which file format is not supported. This
-        ##        should result error text for end user and no files should be read.
-        mocked_open = mock.mock_open(read_data=Snippet.get_template(import_dict['content'][0]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import', '-f', './foo.bar'])  ## workflow
-            assert cause == 'NOK: cannot identify file format for file ./foo.bar'
-            assert not Database.get_contents()
-            mock_file.assert_not_called()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Try to import snippet from file that is not existing. The file extension
         ##        is one of supported formats.

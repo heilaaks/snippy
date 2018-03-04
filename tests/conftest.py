@@ -19,6 +19,8 @@
 
 """conftest: Fixtures for pytest."""
 
+import json
+
 import pytest
 import yaml
 
@@ -314,6 +316,15 @@ def edit_unidentified_template(mocker):
 
 ## Yaml
 
+@pytest.fixture(scope='function', name='yaml_load')
+def yaml_load(mocker):
+    """Mock importing from yaml file."""
+
+    mocker.patch.object(yaml, 'safe_load')
+    mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
+
+    return mocker_open
+
 @pytest.fixture(scope='function', name='yaml_dump')
 def yaml_dump(mocker):
     """Mock exporting to yaml file."""
@@ -323,11 +334,13 @@ def yaml_dump(mocker):
 
     return mocker_open
 
-@pytest.fixture(scope='function', name='yaml_load')
-def yaml_load(mocker):
-    """Mock importing from yaml file."""
+## Json
 
-    mocker.patch.object(yaml, 'safe_load')
+@pytest.fixture(scope='function', name='json_load')
+def json_load(mocker):
+    """Mock importing from json file."""
+
+    mocker.patch.object(json, 'load')
     mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
 
     return mocker_open

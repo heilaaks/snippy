@@ -11,6 +11,7 @@
    - [ ] Change tests to use run instead of run_cli(). The run is better and the proper way to control this.
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
+   - [ ] Mocking text file simply refuses to work from pytest fixtures.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format. This affects to utc mock and digest. It is better to refactor tests to make this easier.
@@ -20,6 +21,7 @@
    - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
+   - [ ] Fix the get_template to Content().
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
    - [ ] Investigate 'I/O operation on closed file' note in SCRIBLING.md

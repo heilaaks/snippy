@@ -71,8 +71,8 @@ class TestCliExportSolution(object):
         export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
-        ## Brief: Export all solutions into defined yaml file. File name and format are defined
-        ##        in command line.
+        ## Brief: Export all solutions into defined yaml file. File name and
+        ##        format are defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -85,8 +85,8 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export all solutions into defined json file. File name and format are defined
-        ##        in command line.
+        ## Brief: Export all solutions into defined json file. File name and
+        ##        format are defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -99,8 +99,9 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export all solutions into defined text file with file extension 'txt'. File name
-        ##        and format are defined in command line.
+        ## Brief: Export all solutions into defined text file with file
+        ##        extension 'txt'. File name and format are defined in command
+        ##        line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -116,8 +117,9 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export all solutions into defined text file with file extension 'text'. File name
-        ##        and format are defined in command line.
+        ## Brief: Export all solutions into defined text file with file
+        ##        extension 'text'. File name and format are defined in
+        ##        command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -133,8 +135,9 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export all solutions into file format that is not supported. This should
-        ##        result error text for end user and no files should be created.
+        ## Brief: Try to export all solutions into file format that is not
+        ##        supported. This should result error text for end user and
+        ##        no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -147,8 +150,9 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export all content by defining the content category to --all. This is not
-        ##        supported with export operation and error cause is returned.
+        ## Brief: Try to export all content by defining the content category
+        ##        to --all. This is not supported with export operation and
+        ##        error cause is returned.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -176,8 +180,9 @@ class TestCliExportSolution(object):
         export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
-        ## Brief: Export defined solution based on message digest. File name is defined in solution
-        ##        metadata but not by command line -f|--file option.
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata but not by command line
+        ##        -f|--file option.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -191,9 +196,10 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest. File name is defined in solution
-        ##        metadata but not by command line -f|--file option. In this case the content
-        ##        category is not specified explicitly from command line.
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata but not by command line
+        ##        -f|--file option. In this case the content category is not
+        ##        specified explicitly from command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -207,9 +213,10 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest. File name is not defined in
-        ##        solution metada or by command line -f|--file option. This should result the
-        ##        file name and format defined by tool internal defaults.
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is not defined in solution metada or by command lin
+        ##        -f|--file option. This should result the file name and
+        ##        format defined by tool internal defaults.
         mocked_data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  : ')
         mocked_open = mock.mock_open(read_data=mocked_data)
@@ -231,10 +238,11 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest. File name is defined in solution
-        ##        metadata and in command line -f|--file option. This should result the file name
-        ##        and format defined by the command line option. In this case the created file
-        ##        format is yaml.
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and format
+        ##        defined by the command line option. In this case the created
+        ##        file format is yaml.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -247,8 +255,8 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest to yaml file without specifying
-        ##        the content category explicitly.
+        ## Brief: Export defined solution based on message digest to yaml file
+        ##        without specifying the content category explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -261,10 +269,11 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest. File name is defined in solution
-        ##        metadata and in command line -f|--file option. This should result the file name
-        ##        and format defined by the command line option. In this case the created file
-        ##        format is json.
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and format
+        ##        defined by the command line option. In this case the created
+        ##        file format is json.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -277,8 +286,8 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest to json file without specifying
-        ##        the content category explicitly.
+        ## Brief: Export defined solution based on message digest to json file
+        ##        without specifying the content category explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -291,10 +300,11 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest. File name is defined in solution
-        ##        metadata and in command line -f|--file option. This should result the file name
-        ##        and format defined by the command line option. In this case the text format file
-        ##        extension is 'txt'.
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and format
+        ##        defined by the command line option. In this case the text
+        ##        format file extension is 'txt'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -308,8 +318,9 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest to text file without specifying
-        ##        the content category explicitly. In this case the file extension is *.txt.
+        ## Brief: Export defined solution based on message digest to text
+        ##        file without specifying the content category explicitly.
+        ##        In this case the file extension is *.txt.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -323,10 +334,11 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest. File name is defined in solution
-        ##        metadata and in command line -f|--file option. This should result the file name
-        ##        and format defined by the command line option. In this case the text format file
-        ##        extension is 'text'.
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and format
+        ##        defined by the command line option. In this case the tex
+        ##        format file extension is 'text'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -340,8 +352,9 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest to text file without specifying
-        ##        the content category explicitly. In this case the file extension is *.text.
+        ## Brief: Export defined solution based on message digest to text
+        ##        file without specifying the content category explicitly.
+        ##        In this case the file extension is *.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -355,9 +368,9 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export defined solution based on message digest into file format that is
-        ##        not supported. This should result error string for end user and no files should
-        ##        be created.
+        ## Brief: Try to export defined solution based on message digest into
+        ##        file format that is not supported. This should result error
+        ##        string for end user and no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -370,9 +383,10 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest. File name is not defined in
-        ##        solution metadata or by command line -f|--file option. In this case there is
-        ##        no space after colon. In this case there is no space after colon.
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is not defined in solution metadata or by command line
+        ##        -f|--file option. In this case there is no space after
+        ##        colon. In this case there is no space after colon.
         mocked_data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  :')
         mocked_open = mock.mock_open(read_data=mocked_data)
@@ -394,9 +408,10 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on message digest. File name is not defined in
-        ##        solution metadata or by command line -f|--file option. In this case there are
-        ##        extra spaces around file name.
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is not defined in solution metadata or by command line
+        ##        -f|--file option. In this case there are extra spaces
+        ##        around file name.
         mocked_data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
         mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt',
                                           '## FILE  :  kubernetes-docker-log-driver-kafka.txt ')
@@ -419,8 +434,9 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export defined solution based on message digest that cannot be found.
-        ##        This should result error text for end user and no files should be created.
+        ## Brief: Try to export defined solution based on message digest that
+        ##        cannot be found. This should result error text for end user
+        ##        and no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*10 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -447,8 +463,9 @@ class TestCliExportSolution(object):
         export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS]]}
 
-        ## Brief: Export defined solution based on search keyword. File name is defined in solution
-        ##        metadata but not by command line -f|--file option.
+        ## Brief: Export defined solution based on search keyword. File name
+        ##        is defined in solution metadata but not by command line
+        ##        -f|--file option.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'beats'])  ## workflow
@@ -461,9 +478,10 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on search keyword. File name is defined in solution
-        ##        metadata and in command line -f|--file option. This should result the file name
-        ##        and yaml format defined by the command line option.
+        ## Brief: Export defined solution based on search keyword. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and yaml
+        ##        format defined by the command line option.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.yaml'])  ## workflow
@@ -475,9 +493,10 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on search keyword. File name is defined in solution
-        ##        metadata and in command line -f|--file option. This should result the file name
-        ##        and json format defined by the command line option.
+        ## Brief: Export defined solution based on search keyword. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and json
+        ##        format defined by the command line option.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.json'])  ## workflow
@@ -489,10 +508,11 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on search keyword. File name is defined in solution
-        ##        metadata and in command line -f|--file option. This should result the file name
-        ##        and format defined by the command line option. In this case the text format file
-        ##        extension is 'txt'.
+        ## Brief: Export defined solution based on search keyword. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and
+        ##        format defined by the command line option. In this case the
+        ##        text format file extension is 'txt'.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'beats', '-f' './defined-solution.txt'])  ## workflow
@@ -505,8 +525,9 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined solution based on search keyword. In this case the search keyword
-        ##        matchies to two solutions that must be exported to file defined in command line.
+        ## Brief: Export defined solution based on search keyword. In this
+        ##        case the search keyword matchies to two solutions that
+        ##        must be exported to file defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'howto', '-f' './defined-solutions.txt'])  ## workflow
@@ -521,7 +542,8 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export snippet based on search keyword that cannot befound.
+        ## Brief: Try to export snippet based on search keyword that cannot
+        ##        befound.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '--sall', 'notfound', '-f', './defined-solution.yaml'])  ## workflow
@@ -540,8 +562,8 @@ class TestCliExportSolution(object):
         mock_get_utc_time.return_value = Solution.TEMPLATE_UTC
         template = Solution.TEMPLATE
 
-        ## Brief: Export solution template. This should result file name and format based on
-        ##        tool internal settings.
+        ## Brief: Export solution template. This should result file name and
+        ##        format based on tool internal settings.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy(['snippy', 'export', '--solution', '--template'])  ## workflow
             cause = snippy.run_cli()
@@ -566,8 +588,9 @@ class TestCliExportSolution(object):
         export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
 
-        ## Brief: Export solution defaults. All solutions should be exported into predefined file
-        ##        location under tool data folder in yaml format.
+        ## Brief: Export solution defaults. All solutions should be exported
+        ##        into predefined file location under tool data folder in yaml
+        ##        format.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
             snippy = Solution.add_defaults()
@@ -581,9 +604,10 @@ class TestCliExportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export solution defaults when there are no stored solutions. No files
-        ##        should be created and OK should printed for end user. The reason is that
-        ##        processing list of zero items is considered as an OK case.
+        ## Brief: Try to export solution defaults when there are no stored
+        ##        solutions. No files should be created and OK should printed
+        ##        for end user. The reason is that processing list of zero
+        ##        items is considered as an OK case.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '--defaults'])  ## workflow
@@ -605,13 +629,14 @@ class TestCliExportSolution(object):
         mock_storage_file.return_value = Database.get_storage()
         mock_get_utc_time.return_value = '2017-10-14 19:56:31'
 
-        ## Brief: Export solution that has been updated with empty date field in the content
-        ##        data. The export operation must fill the date in text content from solution
-        ##        metadata. The import operation with content identified by message digest is
-        ##        considered as update operation. In case of update operation, the content
-        ##        metadata timestamp is set to match the update time. The date in the solution
-        ##        content data is not changes because it is considered that end user may want
-        ##        to keep it as is.
+        ## Brief: Export solution that has been updated with empty date field
+        ##        in the content data. The export operation must fill the date
+        ##        in text content from solution metadata. The import operation
+        ##        with content identified by message digest is considered as
+        ##        update operation. In case of update operation, the content
+        ##        metadata timestamp is set to match the update time. The date
+        ##        in the solution content data is not changes because it is
+        ##        considered that end user may want to keep it as is.
         mocked_data = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         original = mocked_data
         mocked_data = mocked_data.replace('## DATE  : 2017-10-20 11:11:19',

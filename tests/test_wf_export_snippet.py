@@ -69,8 +69,9 @@ class TestCliExportSnippet(object):
         export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 
-        ## Brief: Export all snippets without defining target file name from command line.
-        ##        In this case the content category is defined explicitly.
+        ## Brief: Export all snippets without defining target file name from
+        ##        command line. In this case the content category is defined
+        ##        explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--snippet'])  ## workflow
@@ -81,7 +82,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export all snippets into yaml file defined from command line.
+        ## Brief: Export all snippets into yaml file defined from command
+        ##        line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-f', './defined-snippets.yaml'])  ## workflow
@@ -92,8 +94,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export all snippets into yaml file defined from command line by explicitly defining
-        ##        the content category.
+        ## Brief: Export all snippets into yaml file defined from command line
+        ##        by explicitly defining the content category.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet'])  ## workflow
@@ -104,8 +106,9 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export all snippets into file format that is not supported. This should
-        ##        result error text for end user and no files should be created.
+        ## Brief: Try to export all snippets into file format that is not
+        ##        supported. This should result error text for end user
+        ##        and no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-f', 'foo.bar'])  ## workflow
@@ -131,8 +134,9 @@ class TestCliExportSnippet(object):
         export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
 
-        ## Brief: Export defined snippet based on message digest. File name is not defined in command
-        ##        line -f|--file option. This should result usage of default file name and format
+        ## Brief: Export defined snippet based on message digest. File name
+        ##        is not defined in command line -f|--file option. This
+        ##        should result usage of default file name and format
         ##        snippet.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
@@ -146,8 +150,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on message digest. File name is defined in command
-        ##        line as yaml file.
+        ## Brief: Export defined snippet based on message digest. File name
+        ##        is defined in command line as yaml file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.yaml'])  ## workflow
@@ -159,8 +163,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on message digest. File name is defined in command
-        ##        line as json file.
+        ## Brief: Export defined snippet based on message digest. File name
+        ##        is defined in command line as json file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.json'])  ## workflow
@@ -172,8 +176,9 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on message digest. File name is defined in command
-        ##        line. This should result file and format defined by command line option -f|--file.
+        ## Brief: Export defined snippet based on message digest. File name
+        ##        is defined in command line. This should result file and
+        ##        format defined by command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt'])  ## workflow
@@ -186,7 +191,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export defined snippet based on message digest that cannot be found.
+        ## Brief: Try to export defined snippet based on message digest
+        ##        that cannot be found.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-d', '123456789abcdef0', '-f', 'defined-snippet.txt'])  ## workflow
@@ -210,9 +216,9 @@ class TestCliExportSnippet(object):
         export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
 
-        ## Brief: Export defined snippet based on search keyword. File name is not defined in
-        ##        command line -f|--file option. This should result usage of default file name
-        #         and format snippet.text.
+        ## Brief: Export defined snippet based on search keyword. File name
+        ##        is not defined in command line -f|--file option. This should
+        ##        result usage of default file name and format snippet.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'force'])  ## workflow
@@ -225,8 +231,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on search keyword. File name is defined in
-        ##        command line as yaml file.
+        ## Brief: Export defined snippet based on search keyword. File name
+        ##        is defined in command line as yaml file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml'])  ## workflow
@@ -238,8 +244,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on search keyword. File name is defined in
-        ##        command line as json file.
+        ## Brief: Export defined snippet based on search keyword. File name
+        ##        is defined in command line as json file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json'])  ## workflow
@@ -251,8 +257,9 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on search keyword. File name is defined in
-        ##        command line as text file with *.txt file extension.
+        ## Brief: Export defined snippet based on search keyword. File name
+        ##        is defined in command line as text file with *.txt file
+        ##        extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt'])  ## workflow
@@ -265,8 +272,9 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on search keyword. File name is defined in
-        ##        command line as text file with *.text file extension.
+        ## Brief: Export defined snippet based on search keyword. File name
+        ##        is defined in command line as text file with *.text file
+        ##        extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text'])  ## workflow
@@ -279,8 +287,9 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on search keyword. In this case the search keyword
-        ##        matchies to two snippets that must be exported to file defined in command line.
+        ## Brief: Export defined snippet based on search keyword. In this case
+        ##        the search keyword matchies to two snippets that must be
+        ##        exported to file defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text'])  ## workflow
@@ -295,7 +304,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export snippet based on search keyword that cannot befound.
+        ## Brief: Try to export snippet based on search keyword that cannot
+        ##        befound.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'notfound', '-f', 'defined-snippet.yaml'])  ## workflow
@@ -319,9 +329,9 @@ class TestCliExportSnippet(object):
         export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE]]}
 
-        ## Brief: Export defined snippet based on content data. File name is not defined in
-        ##        command line -f|--file option. This should result usage of default file name
-        #         and format snippet.text.
+        ## Brief: Export defined snippet based on content data. File name is
+        ##        not defined in command line -f|--file option. This should
+        ##        result usage of default file name and format snippet.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])  ## workflow
@@ -334,8 +344,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on content data. File name is defined in
-        ##        command line as yaml file.
+        ## Brief: Export defined snippet based on content data. File name is
+        ##        defined in command line as yaml file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  ## workflow # pylint: disable=line-too-long
@@ -347,8 +357,8 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on content data. File name is defined in
-        ##        command line as json file.
+        ## Brief: Export defined snippet based on content data. File name is
+        ##        defined in command line as json file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  ## workflow # pylint: disable=line-too-long
@@ -360,8 +370,9 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export defined snippet based on content data. File name is defined in
-        ##        command line as text file with *.txt file extension.
+        ## Brief: Export defined snippet based on content data. File name is
+        ##        defined in command line as text file with *.txt file
+        ##        extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  ## workflow # pylint: disable=line-too-long
@@ -383,8 +394,8 @@ class TestCliExportSnippet(object):
         mock_get_utc_time.return_value = Snippet.UTC1
         template = Snippet.TEMPLATE
 
-        ## Brief: Export snippet template. This should result file name and format based on
-        ##        tool internal settings.
+        ## Brief: Export snippet template. This should result file name and
+        ##        format based on tool internal settings.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy(['snippy', 'export', '--template'])  ## workflow
             cause = snippy.run_cli()
@@ -396,8 +407,9 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Export snippet template by explicitly defining content category. This should
-        ##        result file name and format based on tool internal settings.
+        ## Brief: Export snippet template by explicitly defining content
+        ##        category. This should result file name and format based
+        ##        on tool internal settings.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy(['snippy', 'export', '--snippet', '--template'])  ## workflow
             cause = snippy.run_cli()
@@ -422,8 +434,9 @@ class TestCliExportSnippet(object):
         export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
                        'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 
-        ## Brief: Export snippet defaults. All snippets should be exported into predefined file
-        ##        location under tool data folder in yaml format.
+        ## Brief: Export snippet defaults. All snippets should be exported
+        ##        into predefined file location under tool data folder in
+        ##        yaml format.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--defaults'])  ## workflow
@@ -436,9 +449,10 @@ class TestCliExportSnippet(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to export snippet defaults when there are no stored snippets. No files
-        ##        should be created and OK should printed for end user. The reason is that
-        ##        processing list of zero items is considered as an OK case.
+        ## Brief: Try to export snippet defaults when there are no stored
+        ##        snippets. No files should be created and OK should printed
+        ##        for end user. The reason is that processing list of zero
+        ##        items is considered as an OK case.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'export', '--defaults'])  ## workflow

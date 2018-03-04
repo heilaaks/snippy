@@ -71,8 +71,8 @@ class TestCliImportSolution(object):
         compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
                            'eeef5ca3ec9cd364': Solution.DEFAULTS[Solution.KAFKA]}
 
-        ## Brief: Import all solutions from yaml file. File name and format are extracted from
-        ##        command line option -f|--file.
+        ## Brief: Import all solutions from yaml file. File name and format
+        ##        are extracted from command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', './all-solutions.yaml'])  ## workflow
@@ -84,8 +84,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import all solutions from yaml file without specifying the solution category.
-        ##        File name and format are extracted from command line option -f|--file.
+        ## Brief: Import all solutions from yaml file without specifying the
+        ##        solution category. File name and format are extracted from
+        ##        command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '-f', './all-solutions.yaml'])  ## workflow
@@ -98,8 +99,8 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import all solutions from json file. File name and format are extracted from
-        ##        command line option -f|--file.
+        ## Brief: Import all solutions from json file. File name and format
+        ##        are extracted from command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', './all-solutions.json'])  ## workflow
@@ -111,8 +112,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import all solutions from json file without specifying the solution category.
-        ##        File name and format are extracted from command line option -f|--file.
+        ## Brief: Import all solutions from json file without specifying the
+        ##        solution category. File name and format are extracted from
+        ##        command line option -f|--file.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '-f', './all-solutions.json'])  ## workflow
@@ -125,8 +127,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import all solutions from txt file. File name and format are extracted from
-        ##        command line option -f|--file. File extension is '*.txt' in this case.
+        ## Brief: Import all solutions from txt file. File name and format are
+        ##        extracted from command line option -f|--file. File extension
+        ##        is '*.txt' in this case.
         mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]) +
                                      Solution.get_template(Solution.DEFAULTS[Solution.KAFKA]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
@@ -140,9 +143,10 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import all solutions from txt file without specifying the solution category.
-        ##        File name and format are extracted from command line option -f|--file. File
-        ##        extension is '*.txt' in this case.
+        ## Brief: Import all solutions from txt file without specifying the
+        ##        solution category. File name and format are extracted from
+        ##        command line option -f|--file. File extension is '*.txt'
+        ##        in this case.
         mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]) +
                                      Solution.get_template(Solution.DEFAULTS[Solution.KAFKA]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
@@ -157,8 +161,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import all solutions from txt file. File name and format are extracted from
-        ##        command line option -f|--file. File extension is '*.text' in this case.
+        ## Brief: Import all solutions from txt file. File name and format are 
+        ##        extracted from command line option -f|--file. File extension
+        ##        is '*.text' in this case.
         mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]) +
                                      Const.NEWLINE +
                                      Solution.get_template(Solution.DEFAULTS[Solution.KAFKA]))
@@ -173,9 +178,10 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import all solutions from txt file without specifying the solution category.
-        ##        File name and format are extracted from command line option -f|--file. File
-        ##        extension is '*.text' in this case.
+        ## Brief: Import all solutions from txt file without specifying the
+        ##        solution category. File name and format are extracted from
+        ##        command line option -f|--file. File extension is '*.text'
+        ##        in this case.
         mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]) +
                                      Const.NEWLINE +
                                      Solution.get_template(Solution.DEFAULTS[Solution.KAFKA]))
@@ -191,9 +197,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import solutions from yaml file when all but one of the solutions in the file
-        ##        is already stored. Because one solution was stored successfully, the return
-        ##        cause is OK.
+        ## Brief: Import solutions from yaml file when all but one of the
+        ##        solutions in the file is already stored. Because one
+        ##        solution was stored successfully, the return cause is OK.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_one(Solution.BEATS)
             assert len(Database.get_solutions()) == 1
@@ -206,8 +212,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to import empty solution template. The operation will fail because
-        ##        content templates without any modifications cannot be imported.
+        ## Brief: Try to import empty solution template. The operation will
+        ##        fail because content templates without any modifications
+        ##        cannot be imported.
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
@@ -218,8 +225,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to import solution from file which file format is not supported. This
-        ##        should result error text for end user and no files should be read.
+        ## Brief: Try to import solution from file which file format is not
+        ##        supported. This should result error text for end user and
+        ##        no files should be read.
         mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.BEATS]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
@@ -257,8 +265,9 @@ class TestCliImportSolution(object):
         mock_yaml_load.return_value = import_dict
         mock_json_load.return_value = import_dict
 
-        ## Brief: Import defined solution based on message digest. File name is defined from command line as
-        ##        yaml file which contain one solution. One line in the content data was updated.
+        ## Brief: Import defined solution based on message digest. File name
+        ##        is defined from command line as yaml file which contain one
+        ##        solution. One line in the content data was updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])  ## workflow
@@ -270,8 +279,8 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import defined solution based on message digest without specifying the content
-        ##        category explicitly.
+        ## Brief: Import defined solution based on message digest without
+        ##        specifying the content category explicitly.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])  ## workflow
@@ -284,8 +293,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import defined solution based on message digest. File name is defined from command line as
-        ##        json file which contain one solution. One line in the content data was updated.
+        ## Brief: Import defined solution based on message digest. File name
+        ##        is defined from command line as json file which contain one
+        ##        solution. One line in the content data was updated.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_one(Solution.NGINX)
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.json'])  ## workflow
@@ -297,8 +307,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import defined solution based on message digest. File name is defined from command line as
-        ##        text file which contain one solution. One line in the content data was updated. The file
+        ## Brief: Import defined solution based on message digest. File name
+        ##        is defined from command line as text file which contain one
+        ##        solution. One line in the content data was updated. The file
         ##        extension is '*.txt' in this case.
         mocked_open = mock.mock_open(read_data=updated_solution)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
@@ -312,8 +323,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import defined solution based on message digest. File name is defined from command line as
-        ##        text file which contain one solution. One line in the content data was updated. The file
+        ## Brief: Import defined solution based on message digest. File name
+        ##        is defined from command line as text file which contain one
+        ##        solution. One line in the content data was updated. The file
         ##        extension is '*.text' in this case.
         mocked_open = mock.mock_open(read_data=updated_solution)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
@@ -327,8 +339,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import defined solution based on message digest. In this case the content category is
-        ##        accidentally specified as 'snippet'. This should still import the content in solution.
+        ## Brief: Import defined solution based on message digest. In this
+        ##        case the content category is accidentally specified as
+        ##        'snippet'. This should still import the content in solution.
         ##        category
         mocked_open = mock.mock_open(read_data=updated_solution)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
@@ -343,8 +356,8 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to import defined solution with message digest that cannot be found. In this
-        ##        case there is one solution stored.
+        ## Brief: Try to import defined solution with message digest that
+        ##        cannot be found. In this case there is one solution stored.
         mocked_open = mock.mock_open(read_data=updated_solution)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Solution.add_one(Solution.NGINX)
@@ -395,7 +408,8 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import new solution from text file. In this case the file extension is '*.txt'.
+        ## Brief: Import new solution from text file. In this case the file
+        ##        extension is '*.txt'.
         mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
@@ -408,8 +422,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import new solution from text file without specifying the content category
-        ##        explicitly. In this case the file extension is '*.txt'.
+        ## Brief: Import new solution from text file without specifying the
+        ##        content category explicitly. In this case the file extension
+        ##        is '*.txt'.
         mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
@@ -423,7 +438,8 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Import new solution from text file. In this case the file extension is '*.text'.
+        ## Brief: Import new solution from text file. In this case the file
+        ##        extension is '*.text'.
         mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.NGINX]))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()
@@ -449,8 +465,9 @@ class TestCliImportSolution(object):
         compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
                            '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
 
-        ## Brief: Import solution defaults. All solutions should be imported from predefined file
-        ##        location under tool data folder from yaml format.
+        ## Brief: Import solution defaults. All solutions should be imported
+        ##        from predefined file location under tool data folder from
+        ##        yaml format.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '--solution', '--defaults'])  ## workflow
@@ -463,9 +480,9 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to import solution defaults again. The second import should fail with an error
-        ##        because the content already exist. The error text must be the same for all content
-        ##        categories.
+        ## Brief: Try to import solution defaults again. The second import
+        ##        should fail with an error because the content already exist.
+        ##        The error text must be the same for all content categories.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'import', '--solution', '--defaults'])  ## workflow
@@ -487,11 +504,11 @@ class TestCliImportSolution(object):
         mock_isfile.return_value = True
         template = Const.NEWLINE.join(Solution.TEMPLATE)
 
-        ## Brief: Import solution template that does not have any changes to file header
-        ##        located at the top of content data. This tests a scenario where user
-        ##        does not bother to do any changes to header which has the solution
-        ##        metadata. Because the content was changed the import operation must
-        ##        work.
+        ## Brief: Import solution template that does not have any changes to
+        ##        file header located at the top of content data. This tests
+        ##        a scenario where user does not bother to do any changes to
+        ##        header which has the solution metadata. Because the content
+        ##        was changed the import operation must work.
         edited_template = template.replace('## description', '## description changed')
         mocked_open = mock.mock_open(read_data=edited_template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
@@ -506,9 +523,10 @@ class TestCliImportSolution(object):
             snippy = None
             Database.delete_storage()
 
-        ## Brief: Try to import solution template without any changes. This should result error
-        ##        text for end user and no files should be read. The error text must be the same
-        ##        for all content types.
+        ## Brief: Try to import solution template without any changes. This
+        ##        should result error text for end user and no files should
+        ##        be read. The error text must be the same for all content
+        ##        types.
         mocked_open = mock.mock_open(read_data=template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             snippy = Snippy()

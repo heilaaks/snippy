@@ -20,12 +20,12 @@
 """test_cli_import_snippet: Test workflows for importing snippets."""
 
 import copy
-
 import json
-import yaml
-import mock
 import pkg_resources
+
+import mock
 import pytest
+import yaml
 
 from snippy.cause import Cause
 from snippy.config.constants import Constants as Const

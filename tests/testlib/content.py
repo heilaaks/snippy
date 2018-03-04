@@ -19,6 +19,7 @@
 
 """content: Content helpers for testing."""
 
+import copy
 import mock
 
 from snippy.cause import Cause
@@ -29,6 +30,7 @@ from snippy.meta import __homepage__
 from snippy.meta import __openapi__
 from snippy.meta import __version__
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 class Content(object):
@@ -94,6 +96,18 @@ class Content(object):
             mocked_open = mocked_open + Snippet.get_template(item) + Const.NEWLINE
 
         return mock.mock_open(read_data=mocked_open)
+
+    @staticmethod
+    def updated_nginx():
+        """Return updated nginx solution."""
+
+        # Generate updated nginx solution.
+        content_read = {
+            '8eb8eaa15d745af3': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
+        }
+        content_read['8eb8eaa15d745af3']['data'] = tuple([w.replace('# Instructions how to debug nginx', '# Changed instruction set') for w in content_read['8eb8eaa15d745af3']['data']])  # pylint: disable=line-too-long
+
+        return content_read
 
     @staticmethod
     def _sorter(json):

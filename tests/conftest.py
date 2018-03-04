@@ -262,6 +262,13 @@ def edited_beats(mocker):
 
     return _editor(mocker, EDITED_BEATS)
 
+
+@pytest.fixture(scope='function', name='import-nginx-utc')
+def import_nginx_solution_time_mock(mocker):
+    """Mock timestamps to create 'nginx' solution."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_NGINX)
+
 @pytest.fixture(scope='function', name='kafka-utc')
 def create_kafka_solution_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
@@ -272,6 +279,12 @@ def create_kafka_solution_time_mock(mocker):
     except AttributeError:
         pass
     mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_KAFKA)
+
+@pytest.fixture(scope='function', name='import-kafka-utc')
+def import_kafka_solution_time_mock(mocker):
+    """Mock timestamps to create 'kafka' solution."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_KAFKA)
 
 ## Content
 

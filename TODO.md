@@ -5,6 +5,7 @@
    - [ ] Add test with new media type for JSON API specs.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Tests are failing if gunicorn is not installed.
+   - [ ] Fix help tests since it is not reading new _cli_ tests.
    - [ ] snippy.run() does not return but run_cli() does. This does not make sense. This is due to tests which use run_cli. Refactor tests to use run()
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] When server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?

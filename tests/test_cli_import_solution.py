@@ -27,9 +27,7 @@ import pytest
 import yaml
 
 from snippy.cause import Cause
-from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.snip import Snippy
 from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
@@ -367,178 +365,165 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, {Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]})
 
-    @mock.patch.object(json, 'load')
-    @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_solution(self, mock_isfile, mock_storage_file, mock_yaml_load, mock_json_load):
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_solutions_020(self, snippy, yaml_load, mocker):
         """Import solution."""
 
-        mock_storage_file.return_value = Database.get_storage()
-        mock_isfile.return_value = True
-        import_dict = {'content': [Solution.DEFAULTS[Solution.NGINX]]}
-        mock_yaml_load.return_value = import_dict
-        mock_json_load.return_value = import_dict
-
         ## Brief: Import new solution from yaml file.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.yaml'])  ## workflow
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
-            mock_file.assert_called_once_with('one-solution.yaml', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_read = {
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
+        yaml.safe_load.return_value = Content.imported_dict(content_read)
+        cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.yaml'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_solutions()) == 1
+        yaml_load.assert_called_once_with('one-solution.yaml', 'r')
+        Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_solutions_021(self, snippy, json_load, mocker):
+        """Import solution."""
 
         ## Brief: Import new solution from json file.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.json'])  ## workflow
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
-            mock_file.assert_called_once_with('one-solution.json', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_read = {
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
+        json.load.return_value = Content.imported_dict(content_read)
+        cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.json'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_solutions()) == 1
+        json_load.assert_called_once_with('one-solution.json', 'r')
+        Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_solutions_022(self, snippy, mocker):
+        """Import solution."""
 
         ## Brief: Import new solution from text file. In this case the file
         ##        extension is '*.txt'.
-        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.NGINX]))
+        content_read = {
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
+        mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.txt', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+            Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_solutions_023(self, snippy, mocker):
+        """Import solution."""
 
         ## Brief: Import new solution from text file without specifying the
         ##        content category explicitly. In this case the file extension
         ##        is '*.txt'.
-        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.NGINX]))
+        content_read = {
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
+        mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '-f', 'one-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('one-solution.txt', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+            Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_solutions_024(self, snippy, mocker):
+        """Import solution."""
 
         ## Brief: Import new solution from text file. In this case the file
         ##        extension is '*.text'.
-        mocked_open = mock.mock_open(read_data=Solution.get_template(Solution.DEFAULTS[Solution.NGINX]))
+        content_read = {
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
+        mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.text', 'r')
-            Solution.test_content(snippy, mock_file, {'61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]})
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+            Content.verified(mocker, snippy, content_read)
 
-    @mock.patch.object(yaml, 'safe_load')
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_solution_defaults(self, mock_isfile, mock_storage_file, mock_yaml_load):
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_solutions_025(self, snippy, yaml_load, mocker):
         """Import solutions defaults."""
-
-        mock_storage_file.return_value = Database.get_storage()
-        mock_isfile.return_value = True
-        import_dict = {'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
-        mock_yaml_load.return_value = import_dict
-        compare_content = {'a96accc25dd23ac0': Solution.DEFAULTS[Solution.BEATS],
-                           '61a24a156f5e9d2d': Solution.DEFAULTS[Solution.NGINX]}
 
         ## Brief: Import solution defaults. All solutions should be imported
         ##        from predefined file location under tool data folder from
         ##        yaml format.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy()
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '--defaults'])  ## workflow
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 2
-            defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
-            mock_file.assert_called_once_with(defaults_solutions, 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_read = {
+            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
+        yaml.safe_load.return_value = Content.imported_dict(content_read)
+        cause = snippy.run_cli(['snippy', 'import', '--solution', '--defaults'])  ## workflow
+        assert cause == Cause.ALL_OK
+        assert len(Database.get_solutions()) == 2
+        defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
+        yaml_load.assert_called_once_with(defaults_solutions, 'r')
+        Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'import-beats-utc', 'import-nginx-utc')
+    def test_cli_import_solutions_026(self, snippy, yaml_load, mocker):
+        """Import solutions defaults."""
 
         ## Brief: Try to import solution defaults again. The second import
         ##        should fail with an error because the content already exist.
         ##        The error text must be the same for all content categories.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '--defaults'])  ## workflow
-            assert cause == 'NOK: no content was inserted because content data already existed'
-            assert len(Database.get_solutions()) == 2
-            defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
-            mock_file.assert_called_once_with(defaults_solutions, 'r')
-            Solution.test_content(snippy, mock_file, compare_content)
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_read = {
+            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
+        yaml.safe_load.return_value = Content.imported_dict(content_read)
+        cause = snippy.run_cli(['snippy', 'import', '--solution', '--defaults'])  ## workflow
+        assert cause == 'NOK: no content was inserted because content data already existed'
+        assert len(Database.get_solutions()) == 2
+        defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
+        yaml_load.assert_called_once_with(defaults_solutions, 'r')
+        Content.verified(mocker, snippy, content_read)
 
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_import_solution_template(self, mock_isfile, mock_storage_file):
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_solutions_027(self, snippy, mocker):
         """Import solutions from text template."""
-
-        mock_storage_file.return_value = Database.get_storage()
-        mock_isfile.return_value = True
-        template = Const.NEWLINE.join(Solution.TEMPLATE)
 
         ## Brief: Import solution template that does not have any changes to
         ##        file header located at the top of content data. This tests
         ##        a scenario where user does not bother to do any changes to
         ##        header which has the solution metadata. Because the content
         ##        was changed the import operation must work.
-        edited_template = template.replace('## description', '## description changed')
-        mocked_open = mock.mock_open(read_data=edited_template)
+        template = Const.NEWLINE.join(Solution.TEMPLATE)
+        template = template.replace('## description', '## description changed')
+        content_read = {
+            '63f2007703d70c8f': Solution.get_dictionary(template)
+        }
+        mocked_open = mock.mock_open(read_data=template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '-f', './solution-template.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
-            Solution.test_content(snippy, mock_file, {'63f2007703d70c8f': Solution.get_dictionary(edited_template)})
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+            Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_import_solutions_028(self, snippy):
+        """Import solutions from text template."""
 
         ## Brief: Try to import solution template without any changes. This
         ##        should result error text for end user and no files should
         ##        be read. The error text must be the same for all content
         ##        types.
+        template = Const.NEWLINE.join(Solution.TEMPLATE)
         mocked_open = mock.mock_open(read_data=template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'import', '--solution', '--template'])  ## workflow
             assert cause == 'NOK: no content was stored because it matched to empty template'
-            assert not Database.get_solutions()
+            assert not Database.get_contents()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-    @classmethod
-    def setup_class(cls):
-        """Setup class."""
-
-        Config.init(None)
 
     @classmethod
     def teardown_class(cls):

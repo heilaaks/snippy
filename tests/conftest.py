@@ -241,6 +241,11 @@ def create_beats_time_mock(mocker):
         pass
     mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_BEATS)
 
+@pytest.fixture(scope='function', name='import-beats-utc')
+def import_beats_solution_time_mock(mocker):
+    """Mock timestamps to import 'beats' solution."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_BEATS)
 
 @pytest.fixture(scope='function', name='edit-beats')
 def edit_beats_solution(mocker):

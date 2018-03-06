@@ -37,7 +37,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing solutions."""
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_001(self, snippy, yaml_load, mocker):
+    def test_cli_import_solution_001(self, snippy, yaml_load, mocker):
         """Import all solutions."""
 
         ## Brief: Import all solutions. File name is not defined in command
@@ -55,7 +55,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_002(self, snippy, yaml_load, mocker):
+    def test_cli_import_solution_002(self, snippy, yaml_load, mocker):
         """Import all solutions."""
 
         ## Brief: Import all solutions from yaml file. File name and format
@@ -72,7 +72,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_003(self, snippy, yaml_load, mocker):
+    def test_cli_import_solution_003(self, snippy, yaml_load, mocker):
         """Import all solutions."""
 
         ## Brief: Import all solutions from yaml file without specifying the
@@ -91,7 +91,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_004(self, snippy, json_load, mocker):
+    def test_cli_import_solution_004(self, snippy, json_load, mocker):
         """Import all solutions."""
 
         ## Brief: Import all solutions from json file. File name and format
@@ -108,7 +108,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_005(self, snippy, json_load, mocker):
+    def test_cli_import_solution_005(self, snippy, json_load, mocker):
         """Import all solutions."""
 
         ## Brief: Import all solutions from json file without specifying the
@@ -127,7 +127,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_006(self, snippy, mocker):
+    def test_cli_import_solution_006(self, snippy, mocker):
         """Import all solutions."""
 
         ## Brief: Import all solutions from txt file. File name and format are
@@ -146,7 +146,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_007(self, snippy, mocker):
+    def test_cli_import_solution_007(self, snippy, mocker):
         """Import all solutions."""
 
         ## Brief: Import all solutions from txt file without specifying the
@@ -166,7 +166,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_008(self, snippy, mocker):
+    def test_cli_import_solution_008(self, snippy, mocker):
         """Import all solutions."""
 
         ## Brief: Import all solutions from txt file. File name and format are
@@ -185,7 +185,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_009(self, snippy, mocker):
+    def test_cli_import_solution_009(self, snippy, mocker):
         """Import all solutions."""
 
         ## Brief: Import all solutions from txt file without specifying the
@@ -205,7 +205,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy', 'beats', 'import-kafka-utc')
-    def test_cli_import_solutions_010(self, snippy, yaml_load, mocker):
+    def test_cli_import_solution_010(self, snippy, yaml_load, mocker):
         """Import all solutions."""
 
         ## Brief: Import solutions from yaml file when all but one of the
@@ -224,7 +224,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_011(self, snippy):
+    def test_cli_import_solution_011(self, snippy):
         """Import all solutions."""
 
         ## Brief: Try to import empty solution template. The operation will
@@ -238,7 +238,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_012(self, snippy):
+    def test_cli_import_solution_012(self, snippy):
         """Import all solutions."""
 
         ## Brief: Try to import solution from file which file format is not
@@ -251,7 +251,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_not_called()
 
     @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
-    def test_cli_import_solutions_013(self, snippy, yaml_load, mocker):
+    def test_cli_import_solution_013(self, snippy, yaml_load, mocker):
         """Import solution based on message digest."""
 
         ## Brief: Import defined solution based on message digest. File name
@@ -267,7 +267,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
-    def test_cli_import_solutions_014(self, snippy, yaml_load, mocker):
+    def test_cli_import_solution_014(self, snippy, yaml_load, mocker):
         """Import solution based on message digest."""
 
         ## Brief: Import defined solution based on message digest without
@@ -283,7 +283,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
-    def test_cli_import_solutions_015(self, snippy, json_load, mocker):
+    def test_cli_import_solution_015(self, snippy, json_load, mocker):
         """Import solution based on message digest."""
 
         ## Brief: Import defined solution based on message digest. File name
@@ -298,7 +298,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
-    def test_cli_import_solutions_016(self, snippy, mocker):
+    def test_cli_import_solution_016(self, snippy, mocker):
         """Import solution based on message digest."""
 
         ## Brief: Import defined solution based on message digest. File name
@@ -315,7 +315,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
-    def test_cli_import_solutions_017(self, snippy, mocker):
+    def test_cli_import_solution_017(self, snippy, mocker):
         """Import solution based on message digest."""
 
         ## Brief: Import defined solution based on message digest. File name
@@ -332,7 +332,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
-    def test_cli_import_solutions_018(self, snippy, mocker):
+    def test_cli_import_solution_018(self, snippy, mocker):
         """Import solution based on message digest."""
 
         ## Brief: Import defined solution based on message digest. In this
@@ -350,7 +350,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
-    def test_cli_import_solutions_019(self, snippy, mocker):
+    def test_cli_import_solution_019(self, snippy, mocker):
         """Import solution based on message digest."""
 
         ## Brief: Try to import defined solution with message digest that
@@ -366,7 +366,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, {Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]})
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_020(self, snippy, yaml_load, mocker):
+    def test_cli_import_solution_020(self, snippy, yaml_load, mocker):
         """Import solution."""
 
         ## Brief: Import new solution from yaml file.
@@ -381,7 +381,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_021(self, snippy, json_load, mocker):
+    def test_cli_import_solution_021(self, snippy, json_load, mocker):
         """Import solution."""
 
         ## Brief: Import new solution from json file.
@@ -396,7 +396,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_022(self, snippy, mocker):
+    def test_cli_import_solution_022(self, snippy, mocker):
         """Import solution."""
 
         ## Brief: Import new solution from text file. In this case the file
@@ -413,7 +413,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_023(self, snippy, mocker):
+    def test_cli_import_solution_023(self, snippy, mocker):
         """Import solution."""
 
         ## Brief: Import new solution from text file without specifying the
@@ -432,7 +432,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_024(self, snippy, mocker):
+    def test_cli_import_solution_024(self, snippy, mocker):
         """Import solution."""
 
         ## Brief: Import new solution from text file. In this case the file
@@ -449,7 +449,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_025(self, snippy, yaml_load, mocker):
+    def test_cli_import_solution_025(self, snippy, yaml_load, mocker):
         """Import solutions defaults."""
 
         ## Brief: Import solution defaults. All solutions should be imported
@@ -468,7 +468,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy', 'default-solutions', 'import-beats-utc', 'import-nginx-utc')
-    def test_cli_import_solutions_026(self, snippy, yaml_load, mocker):
+    def test_cli_import_solution_026(self, snippy, yaml_load, mocker):
         """Import solutions defaults."""
 
         ## Brief: Try to import solution defaults again. The second import
@@ -487,7 +487,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_027(self, snippy, mocker):
+    def test_cli_import_solution_027(self, snippy, mocker):
         """Import solutions from text template."""
 
         ## Brief: Import solution template that does not have any changes to
@@ -510,7 +510,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_import_solutions_028(self, snippy):
+    def test_cli_import_solution_028(self, snippy):
         """Import solutions from text template."""
 
         ## Brief: Try to import solution template without any changes. This

@@ -4,6 +4,7 @@
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
    - [ ] Add test with new media type for JSON API specs.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
+   - [ ] License is AGPLv3+ which is missing from CLI help.
    - [ ] Tests are failing if gunicorn is not installed.
    - [ ] Fix help tests since it is not reading new _cli_ tests.
    - [ ] snippy.run() does not return but run_cli() does. This does not make sense. This is due to tests which use run_cli. Refactor tests to use run()
@@ -37,7 +38,7 @@
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Update documents.
    - [ ] =============================================================
-   - [ ] Move test case brief to test case document. This cannot be done untill are cases are in new format because the documentation is lost.
+   - [ ] Move test case brief to test case document. This cannot be done untill are cases are in new format because the documentation is lost. WHen this is done, check the autodock before massive desc move.
    - [ ] Fix mocking UTC it is a mess now.
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix is there way to not to use sys.args in Cli help for examples and tests? Now the cli() help and profile are only ones using sys.argv directly.

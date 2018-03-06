@@ -381,6 +381,15 @@ def json_load(mocker):
 
     return mocker_open
 
+@pytest.fixture(scope='function', name='json_dump')
+def json_dump(mocker):
+    """Mock exporting to json file."""
+
+    mocker.patch.object(json, 'dump')
+    mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
+
+    return mocker_open
+
 ## Devel
 
 @pytest.fixture(scope='function', name='devel_file_list')

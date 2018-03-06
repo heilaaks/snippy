@@ -20,6 +20,7 @@
 """test_cli_export_solution: Test workflows for exporting solutions."""
 
 import json
+
 import mock
 import pkg_resources
 import pytest
@@ -57,54 +58,51 @@ class TestCliExportSolution(object):
         yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
         yaml_dump.assert_called_once_with('./solutions.yaml', 'w')
 
-    @mock.patch.object(json, 'dump')
-    @mock.patch.object(yaml, 'safe_dump')
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_all_solutions(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
-        """Export all solutions."""
 
-        mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Solution.UTC1
-        mock_storage_file.return_value = Database.get_storage()
-        export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
-                       'content': [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]}
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
+    def test_cli_export_solution_002(self, snippy, yaml_dump):
+        """Export all solutions."""
 
         ## Brief: Export all solutions into defined yaml file. File name and
         ##        format are defined in command line.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.yaml']) ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./all-solutions.yaml', 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
-            mock_yaml_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_dict = {
+            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.yaml']) ## workflow
+        assert cause == Cause.ALL_OK
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        yaml_dump.assert_called_once_with('./all-solutions.yaml', 'w')
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
+    def test_cli_export_solution_003(self, snippy, json_dump):
+        """Export all solutions."""
 
         ## Brief: Export all solutions into defined json file. File name and
         ##        format are defined in command line.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.json']) ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./all-solutions.json', 'w')
-            mock_json_dump.assert_called_with(export_dict, mock.ANY)
-            mock_json_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_dict = {
+            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.json']) ## workflow
+        assert cause == Cause.ALL_OK
+        json.dump.assert_called_with(content_dict, mock.ANY)
+        json_dump.assert_called_once_with('./all-solutions.json', 'w')
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
+    def test_cli_export_solution_004(self, snippy):
+        """Export all solutions."""
 
         ## Brief: Export all solutions into defined text file with file
         ##        extension 'txt'. File name and format are defined in command
         ##        line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.txt', 'w')
@@ -113,16 +111,15 @@ class TestCliExportSolution(object):
                                                 mock.call(Const.NEWLINE),
                                                 mock.call(Solution.get_template(Solution.DEFAULTS[Solution.NGINX])),
                                                 mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
+    def test_cli_export_solution_005(self, snippy):
+        """Export all solutions."""
 
         ## Brief: Export all solutions into defined text file with file
         ##        extension 'text'. File name and format are defined in
         ##        command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.text', 'w')
@@ -131,40 +128,34 @@ class TestCliExportSolution(object):
                                                 mock.call(Const.NEWLINE),
                                                 mock.call(Solution.get_template(Solution.DEFAULTS[Solution.NGINX])),
                                                 mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
+    def test_cli_export_solution_006(self, snippy):
+        """Export all solutions."""
 
         ## Brief: Try to export all solutions into file format that is not
         ##        supported. This should result error text for end user and
         ##        no files should be created.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
+    def test_cli_export_solution_007(self, snippy):
+        """Export all solutions."""
 
         ## Brief: Try to export all content by defining the content category
         ##        to --all. This is not supported with export operation and
         ##        error cause is returned.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--all'])  ## workflow
             assert cause == 'NOK: content category \'all\' is supported only with search operation'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
-            mock_yaml_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')

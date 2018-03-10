@@ -438,7 +438,6 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run_cli(['snippy', 'export', '--defaults'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
-            yaml_dump.assert_not_called()
 
     @classmethod
     def teardown_class(cls):

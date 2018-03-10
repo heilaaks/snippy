@@ -110,6 +110,19 @@ class Content(object):
         return content_read
 
     @staticmethod
+    def updated_kafka():
+        """Return updated nginx solution."""
+
+        # Generate updated kafka solution.
+        content_read = {
+            '7a5bf1bc09939f42': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
+        }
+        content_read['7a5bf1bc09939f42']['data'] = tuple([w.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  : ') for w in content_read['7a5bf1bc09939f42']['data']])  # pylint: disable=line-too-long
+        content_read['7a5bf1bc09939f42']['filename'] = Const.EMPTY
+
+        return content_read
+
+    @staticmethod
     def _sorter(json):
         """Sort nested JSON to allow comparison."""
 

@@ -35,7 +35,7 @@ from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestCliExportSolution(object):
+class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting solutions."""
 
     @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
@@ -156,6 +156,197 @@ class TestCliExportSolution(object):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_008(self, snippy):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata but not by command line
+        ##        -f|--file option.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_009(self, snippy):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata but not by command line
+        ##        -f|--file option. In this case the content category is not
+        ##        specified explicitly from command line.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0'])  ## workflow
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'kafka', 'yaml_load', 'import-kafka-utc', 'export-time')
+    def test_cli_export_solution_010(self, snippy):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest. Content
+        ##        file name is not defined in metada, solution data or in
+        ##        command line -f|--file option. This should result the file
+        ##        name and format defined by tool internal defaults.
+        content_read = Content.updated_kafka()
+        yaml.safe_load.return_value = Content.imported_dict(content_read)
+        cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', 'eeef5ca3ec9cd364', '-f', 'kafka.yaml'])
+        yaml.safe_load.return_value = Content.imported_dict(content_read)
+        assert len(Database.get_solutions()) == 3
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            print(Database.print_contents())
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', '7a5bf1bc09939f42'])  ## workflow
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('solution.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(content_read['7a5bf1bc09939f42'])),
+                                                mock.call(Const.NEWLINE)])
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_011(self, snippy, yaml_dump):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and format
+        ##        defined by the command line option. In this case the created
+        ##        file format is yaml.
+        content_dict = {
+            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Solution.DEFAULTS[Solution.BEATS]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml'])  ## workflow
+        assert cause == Cause.ALL_OK
+        yaml_dump.assert_called_once_with('./defined-solution.yaml', 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_012(self, snippy, yaml_dump):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest to yaml file
+        ##        without specifying the content category explicitly.
+        content_dict = {
+            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Solution.DEFAULTS[Solution.BEATS]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml'])  ## workflow
+        assert cause == Cause.ALL_OK
+        yaml_dump.assert_called_once_with('./defined-solution.yaml', 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_013(self, snippy, json_dump):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and format
+        ##        defined by the command line option. In this case the created
+        ##        file format is json.
+        content_dict = {
+            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Solution.DEFAULTS[Solution.BEATS]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json'])  ## workflow
+        assert cause == Cause.ALL_OK
+        json_dump.assert_called_once_with('./defined-solution.json', 'w')
+        json.dump.assert_called_with(content_dict, mock.ANY)
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_014(self, snippy, json_dump):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest to json file
+        ##        without specifying the content category explicitly.
+        content_dict = {
+            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Solution.DEFAULTS[Solution.BEATS]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json'])  ## workflow
+        assert cause == Cause.ALL_OK
+        json_dump.assert_called_once_with('./defined-solution.json', 'w')
+        json.dump.assert_called_with(content_dict, mock.ANY)
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_015(self, snippy):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and format
+        ##        defined by the command line option. In this case the text
+        ##        format file extension is 'txt'.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./defined-solution.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_016(self, snippy):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest to text
+        ##        file without specifying the content category explicitly.
+        ##        In this case the file extension is *.txt.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./defined-solution.txt', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_017(self, snippy):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest. File name
+        ##        is defined in solution metadata and in command line
+        ##        -f|--file option. This should result the file name and format
+        ##        defined by the command line option. In this case the tex
+        ##        format file extension is 'text'.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./defined-solution.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
+
+    @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time')
+    def test_cli_export_solution_018(self, snippy):
+        """Export defined solution with digest."""
+
+        ## Brief: Export defined solution based on message digest to text
+        ##        file without specifying the content category explicitly.
+        ##        In this case the file extension is *.text.
+        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
+            assert cause == Cause.ALL_OK
+            mock_file.assert_called_once_with('./defined-solution.text', 'w')
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
+                                                mock.call(Const.NEWLINE)])
+
     @mock.patch.object(json, 'dump')
     @mock.patch.object(yaml, 'safe_dump')
     @mock.patch.object(Config, 'get_utc_time')
@@ -169,194 +360,6 @@ class TestCliExportSolution(object):
         mock_storage_file.return_value = Database.get_storage()
         export_dict = {'meta': Solution.get_metadata(Solution.UTC1),
                        'content': [Solution.DEFAULTS[Solution.BEATS]]}
-
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata but not by command line
-        ##        -f|--file option.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
-                                                mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata but not by command line
-        ##        -f|--file option. In this case the content category is not
-        ##        specified explicitly from command line.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
-                                                mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is not defined in solution metada or by command lin
-        ##        -f|--file option. This should result the file name and
-        ##        format defined by tool internal defaults.
-        mocked_data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
-        mocked_data = mocked_data.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  : ')
-        mocked_open = mock.mock_open(read_data=mocked_data)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*6 + (Solution.UTC2,)*12 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'import', '-f', 'mocked_file.txt'])
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 3
-
-            mock_file.reset_mock()
-            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', '7a5bf1bc09939f42'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('solution.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(mocked_data),
-                                                mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and format
-        ##        defined by the command line option. In this case the created
-        ##        file format is yaml.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./defined-solution.yaml', 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
-            mock_yaml_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest to yaml file
-        ##        without specifying the content category explicitly.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.yaml'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./defined-solution.yaml', 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
-            mock_yaml_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and format
-        ##        defined by the command line option. In this case the created
-        ##        file format is json.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./defined-solution.json', 'w')
-            mock_json_dump.assert_called_with(export_dict, mock.ANY)
-            mock_json_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest to json file
-        ##        without specifying the content category explicitly.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.json'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./defined-solution.json', 'w')
-            mock_json_dump.assert_called_with(export_dict, mock.ANY)
-            mock_json_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and format
-        ##        defined by the command line option. In this case the text
-        ##        format file extension is 'txt'.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./defined-solution.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
-                                                mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest to text
-        ##        file without specifying the content category explicitly.
-        ##        In this case the file extension is *.txt.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./defined-solution.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
-                                                mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and format
-        ##        defined by the command line option. In this case the tex
-        ##        format file extension is 'text'.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./defined-solution.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
-                                                mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
-
-        ## Brief: Export defined solution based on message digest to text
-        ##        file without specifying the content category explicitly.
-        ##        In this case the file extension is *.text.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            mock_get_utc_time.side_effect = (Solution.UTC1,)*5 + (Solution.UTC2,)*5 + (Solution.UTC1,)*1 + (None,) # [REF_UTC]
-            snippy = Solution.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('./defined-solution.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
-                                                mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
         ## Brief: Try to export defined solution based on message digest into
         ##        file format that is not supported. This should result error

@@ -87,6 +87,9 @@ IMPORT_NGINX = (NGINX_CREATED,)*5
 IMPORT_KAFKA = (KAFKA_CREATED,)*5
 EDITED_BEATS = (BEATS_CREATED,)*4
 
+# Templates
+EXPORT_TEMPLATE = '2017-10-14 19:56:31'
+
 # Export
 EXPORT_TIME = '2018-02-02 02:02:02'
 
@@ -290,6 +293,13 @@ def import_kafka_solution_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_KAFKA)
+
+## Templates
+@pytest.fixture(scope='function', name='template-utc')
+def export_template_time_mock(mocker):
+    """Mock timestamps to export solution template."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=(EXPORT_TEMPLATE,)*2)
 
 ## Content
 

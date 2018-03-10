@@ -427,7 +427,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
     @pytest.mark.usefixtures('snippy', 'export-time')
-    def test_cli_export_snippet_025(self, snippy, yaml_dump):
+    def test_cli_export_snippet_025(self, snippy):
         """Export snippet defaults."""
 
         ## Brief: Try to export snippet defaults when there are no stored

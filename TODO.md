@@ -4,6 +4,7 @@
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
    - [ ] Add test with new media type for JSON API specs.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
+   - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field.
    - [ ] License is AGPLv3+ which is missing from CLI help.
    - [ ] Tests are failing if gunicorn is not installed.
    - [ ] Fix help tests since it is not reading new _cli_ tests.

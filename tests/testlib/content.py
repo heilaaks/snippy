@@ -110,15 +110,41 @@ class Content(object):
         return content_read
 
     @staticmethod
-    def updated_kafka():
-        """Return updated nginx solution."""
+    def updated_kafka1():
+        """Return updated kafka solution."""
 
-        # Generate updated kafka solution.
+        # Generate updated kafka solution. No FILE defined.
         content_read = {
             '7a5bf1bc09939f42': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
         }
         content_read['7a5bf1bc09939f42']['data'] = tuple([w.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  : ') for w in content_read['7a5bf1bc09939f42']['data']])  # pylint: disable=line-too-long
         content_read['7a5bf1bc09939f42']['filename'] = Const.EMPTY
+
+        return content_read
+
+    @staticmethod
+    def updated_kafka2():
+        """Return updated kafka solution."""
+
+        # Generate updated kafka solution. No space after FILE.
+        content_read = {
+            '2c4298ff3c582fe5': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
+        }
+        content_read['2c4298ff3c582fe5']['data'] = tuple([w.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  :') for w in content_read['2c4298ff3c582fe5']['data']])  # pylint: disable=line-too-long
+        content_read['2c4298ff3c582fe5']['filename'] = Const.EMPTY
+
+        return content_read
+
+    @staticmethod
+    def updated_kafka3():
+        """Return updated kafka solution."""
+
+        # Generate updated kafka solution. Spaces around filename.
+        content_read = {
+            '745c9e70eacc304b': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
+        }
+        content_read['745c9e70eacc304b']['data'] = tuple([w.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  :  kubernetes-docker-log-driver-kafka.txt ') for w in content_read['745c9e70eacc304b']['data']])  # pylint: disable=line-too-long
+        content_read['745c9e70eacc304b']['filename'] = Const.EMPTY
 
         return content_read
 

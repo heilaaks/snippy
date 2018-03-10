@@ -55,9 +55,8 @@ class TestCliExportSolution(object):
         cause = snippy.run_cli(['snippy', 'export', '--solution'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
         yaml_dump.assert_called_once_with('./solutions.yaml', 'w')
-
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
     @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_002(self, snippy, yaml_dump):
@@ -74,8 +73,8 @@ class TestCliExportSolution(object):
         }
         cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.yaml']) ## workflow
         assert cause == Cause.ALL_OK
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
         yaml_dump.assert_called_once_with('./all-solutions.yaml', 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
     @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_003(self, snippy, json_dump):
@@ -92,8 +91,8 @@ class TestCliExportSolution(object):
         }
         cause = snippy.run_cli(['snippy', 'export', '--solution', '-f', './all-solutions.json']) ## workflow
         assert cause == Cause.ALL_OK
-        json.dump.assert_called_with(content_dict, mock.ANY)
         json_dump.assert_called_once_with('./all-solutions.json', 'w')
+        json.dump.assert_called_with(content_dict, mock.ANY)
 
     @pytest.mark.usefixtures('snippy', 'default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_004(self, snippy):

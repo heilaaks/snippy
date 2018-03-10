@@ -27,15 +27,13 @@ import pytest
 import yaml
 
 from snippy.cause import Cause
-from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.snip import Snippy
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
-class TestCliExportSnippet(object):
+class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting snippets."""
 
     @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time', 'export-time')
@@ -54,8 +52,8 @@ class TestCliExportSnippet(object):
         cause = snippy.run_cli(['snippy', 'export'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
         yaml_dump.assert_called_once_with('./snippets.yaml', 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
     @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time', 'export-time')
     def test_cli_export_snippet_002(self, snippy, yaml_dump):
@@ -74,8 +72,8 @@ class TestCliExportSnippet(object):
         cause = snippy.run_cli(['snippy', 'export', '--snippet'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
         yaml_dump.assert_called_once_with('./snippets.yaml', 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
     @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time', 'export-time')
     def test_cli_export_snippet_003(self, snippy, yaml_dump):
@@ -93,8 +91,8 @@ class TestCliExportSnippet(object):
         cause = snippy.run_cli(['snippy', 'export', '-f', './defined-snippets.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
         yaml_dump.assert_called_once_with('./defined-snippets.yaml', 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
     @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time', 'export-time')
     def test_cli_export_snippet_004(self, snippy, yaml_dump):
@@ -112,8 +110,8 @@ class TestCliExportSnippet(object):
         cause = snippy.run_cli(['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
         yaml_dump.assert_called_once_with('./defined-snippets.yaml', 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
     @pytest.mark.usefixtures('snippy', 'default-snippets')
     def test_cli_export_snippet_005(self, snippy):
@@ -161,8 +159,8 @@ class TestCliExportSnippet(object):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run_cli(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.yaml'])  ## workflow
             assert cause == Cause.ALL_OK
-            yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
             mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
+            yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
     @pytest.mark.usefixtures('snippy', 'default-snippets', 'json_dump', 'export-time')
     def test_cli_export_snippet_008(self, snippy):
@@ -210,96 +208,93 @@ class TestCliExportSnippet(object):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @mock.patch.object(json, 'dump')
-    @mock.patch.object(yaml, 'safe_dump')
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_snippet_keyword(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
-        """Export defined snippet with search keyword."""
-
-        mock_isfile.return_value = True
-        mock_storage_file.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = Snippet.UTC1
-        export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
-                       'content': [Snippet.DEFAULTS[Snippet.FORCED]]}
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_011(self, snippy):
+        """Export defined snippet with digest."""
 
         ## Brief: Export defined snippet based on search keyword. File name
         ##        is not defined in command line -f|--file option. This should
         ##        result usage of default file name and format snippet.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'force'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
                                                 mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_012(self, snippy, yaml_dump):
+        """Export defined snippet with digest."""
 
         ## Brief: Export defined snippet based on search keyword. File name
         ##        is defined in command line as yaml file.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
-            mock_yaml_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_dict = {
+            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml'])  ## workflow
+        assert cause == Cause.ALL_OK
+        yaml_dump.assert_called_once_with('defined-snippet.yaml', 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_013(self, snippy, json_dump):
+        """Export defined snippet with digest."""
 
         ## Brief: Export defined snippet based on search keyword. File name
         ##        is defined in command line as json file.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json'])  ## workflow
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.json', 'w')
-            mock_json_dump.assert_called_with(export_dict, mock.ANY)
-            mock_json_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_dict = {
+            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json'])  ## workflow
+        assert cause == Cause.ALL_OK
+        json_dump.assert_called_once_with('defined-snippet.json', 'w')
+        json.dump.assert_called_with(content_dict, mock.ANY)
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_014(self, snippy):
+        """Export defined snippet with digest."""
 
         ## Brief: Export defined snippet based on search keyword. File name
         ##        is defined in command line as text file with *.txt file
         ##        extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
                                                 mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_015(self, snippy):
+        """Export defined snippet with search keyword."""
 
         ## Brief: Export defined snippet based on search keyword. File name
         ##        is defined in command line as text file with *.text file
         ##        extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
                                                 mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_016(self, snippy):
+        """Export defined snippet with search keyword."""
 
         ## Brief: Export defined snippet based on search keyword. In this case
         ##        the search keyword matchies to two snippets that must be
         ##        exported to file defined in command line.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.text', 'w')
@@ -308,169 +303,142 @@ class TestCliExportSnippet(object):
                                                 mock.call(Const.NEWLINE),
                                                 mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
                                                 mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_017(self, snippy):
+        """Export defined snippet with search keyword."""
 
         ## Brief: Try to export snippet based on search keyword that cannot
         ##        befound.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--sall', 'notfound', '-f', 'defined-snippet.yaml'])  ## workflow
             assert cause == 'NOK: cannot find content with given search criteria'
             mock_file.assert_not_called()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
-    @mock.patch.object(json, 'dump')
-    @mock.patch.object(yaml, 'safe_dump')
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_snippet_data(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump, mock_json_dump):
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_018(self, snippy):
         """Export defined snippet with content data."""
-
-        mock_isfile.return_value = True
-        mock_storage_file.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = Snippet.UTC1
-        export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
-                       'content': [Snippet.DEFAULTS[Snippet.REMOVE]]}
 
         ## Brief: Export defined snippet based on content data. File name is
         ##        not defined in command line -f|--file option. This should
         ##        result usage of default file name and format snippet.text.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('snippet.text', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])),
                                                 mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_019(self, snippy, yaml_dump):
+        """Export defined snippet with content data."""
 
         ## Brief: Export defined snippet based on content data. File name is
         ##        defined in command line as yaml file.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  ## workflow # pylint: disable=line-too-long
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
-            mock_yaml_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_dict = {
+            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  ## workflow # pylint: disable=line-too-long
+        assert cause == Cause.ALL_OK
+        yaml_dump.assert_called_once_with('defined-snippet.yaml', 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_020(self, snippy, json_dump):
+        """Export defined snippet with content data."""
 
         ## Brief: Export defined snippet based on content data. File name is
         ##        defined in command line as json file.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  ## workflow # pylint: disable=line-too-long
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.json', 'w')
-            mock_json_dump.assert_called_with(export_dict, mock.ANY)
-            mock_json_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_dict = {
+            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  ## workflow # pylint: disable=line-too-long
+        assert cause == Cause.ALL_OK
+        json_dump.assert_called_once_with('defined-snippet.json', 'w')
+        json.dump.assert_called_with(content_dict, mock.ANY)
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_021(self, snippy):
+        """Export defined snippet with content data."""
 
         ## Brief: Export defined snippet based on content data. File name is
         ##        defined in command line as text file with *.txt file
         ##        extension.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
             cause = snippy.run_cli(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  ## workflow # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('defined-snippet.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])),
                                                 mock.call(Const.NEWLINE)])
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
 
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    def test_export_snippet_template(self, mock_storage_file, mock_get_utc_time):
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_022(self, snippy):
         """Export snippet template."""
-
-        mock_storage_file.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = Snippet.UTC1
-        template = Snippet.TEMPLATE
 
         ## Brief: Export snippet template. This should result file name and
         ##        format based on tool internal settings.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy(['snippy', 'export', '--template'])  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--template'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippet-template.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(Const.NEWLINE.join(template))
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE))
+
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_023(self, snippy):
+        """Export snippet template."""
 
         ## Brief: Export snippet template by explicitly defining content
         ##        category. This should result file name and format based
         ##        on tool internal settings.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy(['snippy', 'export', '--snippet', '--template'])  ## workflow
-            cause = snippy.run_cli()
+            cause = snippy.run_cli(['snippy', 'export', '--snippet', '--template'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./snippet-template.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_called_with(Const.NEWLINE.join(template))
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+            file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE))
 
-    @mock.patch.object(yaml, 'safe_dump')
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_export_snippet_defaults(self, mock_isfile, mock_storage_file, mock_get_utc_time, mock_yaml_dump):
+    @pytest.mark.usefixtures('snippy', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_024(self, snippy, yaml_dump):
         """Export snippet defaults."""
-
-        mock_isfile.return_value = True
-        mock_storage_file.return_value = Database.get_storage()
-        mock_get_utc_time.return_value = Snippet.UTC1
-        export_dict = {'meta': Snippet.get_metadata(Snippet.UTC1),
-                       'content': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]}
 
         ## Brief: Export snippet defaults. All snippets should be exported
         ##        into predefined file location under tool data folder in
         ##        yaml format.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippet.add_defaults()
-            cause = snippy.run_cli(['snippy', 'export', '--defaults'])  ## workflow
-            assert cause == Cause.ALL_OK
-            defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
-            mock_file.assert_called_once_with(defaults_snippets, 'w')
-            mock_yaml_dump.assert_called_with(export_dict, mock.ANY, default_flow_style=mock.ANY)
-            mock_yaml_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+        content_dict = {
+            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'content': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
+        cause = snippy.run_cli(['snippy', 'export', '--defaults'])  ## workflow
+        assert cause == Cause.ALL_OK
+        defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
+        yaml_dump.assert_called_once_with(defaults_snippets, 'w')
+        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+
+    @pytest.mark.usefixtures('snippy', 'export-time')
+    def test_cli_export_snippet_025(self, snippy, yaml_dump):
+        """Export snippet defaults."""
 
         ## Brief: Try to export snippet defaults when there are no stored
         ##        snippets. No files should be created and OK should printed
         ##        for end user. The reason is that processing list of zero
         ##        items is considered as an OK case.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            snippy = Snippy()
             cause = snippy.run_cli(['snippy', 'export', '--defaults'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
-            mock_yaml_dump.assert_not_called()
-            mock_yaml_dump.reset_mock()
-            snippy.release()
-            snippy = None
-            Database.delete_storage()
+            yaml_dump.assert_not_called()
 
     @classmethod
     def teardown_class(cls):

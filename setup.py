@@ -46,7 +46,7 @@ extras_tests = (
     'codecov==2.0.15',
     'flake8==3.5.0',
     'mock==2.0.0',
-    'pytest==3.4.1',
+    'pytest==3.4.2',
     'pytest-cov==2.5.1',
     'pytest-mock==1.7.1',
     'six==1.11.0',

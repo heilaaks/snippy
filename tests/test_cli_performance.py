@@ -21,41 +21,31 @@
 
 from __future__ import print_function
 
-import sys
 import time
 
 import mock
+import pytest
 
 from snippy.cause import Cause
-from snippy.config.config import Config
-from snippy.config.constants import Constants as Const
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
-if not Const.PYTHON2:
-    from io import StringIO  # pylint: disable=import-error
-else:
-    from StringIO import StringIO  # pylint: disable=import-error
 
 
 class TestCliPerformance(object):
-    """Test tool performance."""
+    """Test CLI reference performance."""
 
-    @mock.patch.object(Config, '_storage_file')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    def test_cli_performance(self, mock_isfile, mock_storage_file):
+    @pytest.mark.usefixtures('snippy')
+    def test_cli_performance(self, snippy, capsys, caplog):
         """Test console performance."""
-
-        mock_isfile.return_value = True
-        mock_storage_file.return_value = Database.get_storage()
 
         ## Brief: Verify performance of the tool on a rough scale. The intention
         ##        is to keep a reference test that is just iterated few times and
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC:   1 loop :  0.0236 /   55 loop :  0.9222 / 100 loop : 1.6787
-        ##        Reference PC: 880 loop : 15.2350 / 1000 loop : 17.0558
+        ##        Reference PC:   1 loop :  0.0206 /   55 loop :  0.8335 / 100 loop : 1.4925
+        ##        Reference PC: 880 loop : 13.1008 / 1000 loop : 15.0400
         ##
         ##        The reference is with sqlite database in memory as with all tests.
         ##        There is naturally jitter in results and the values are as of now
@@ -67,18 +57,14 @@ class TestCliPerformance(object):
         ##        No errors should be printed and the runtime should be below 10
         ##        seconds. The runtime is intentionally set 10 times higher value
         ##        than with the reference PC.
-        real_stderr = sys.stderr
-        real_stdout = sys.stdout
-        sys.stderr = StringIO()
-        sys.stdout = StringIO()
         start = time.time()
         for _ in range(55):
-            snippy = Snippet.add_defaults()
-            snippy = Solution.add_defaults(snippy)
+            self.create_defaults(snippy)
+            assert len(Database.get_snippets()) == 2
+            assert len(Database.get_solutions()) == 2
 
-            assert len(Database.get_contents()) == 4
             # Search all content
-            cause = snippy.run_cli(['snippy', 'search', '--all', '--sall', '.'])
+            cause = snippy.run_cli(['snippy', 'search', '--all', '--sall', '.', '-vv'])
             assert cause == Cause.ALL_OK
 
             # Delete all content
@@ -92,25 +78,45 @@ class TestCliPerformance(object):
             assert cause == Cause.ALL_OK
             assert not Database.get_contents()
 
-            snippy.release()
-            snippy = None
         runtime = time.time() - start
-        result_stderr = sys.stderr.getvalue().strip()
-        result_stdout = sys.stdout.getvalue().strip()
-        sys.stderr = real_stderr
-        sys.stdout = real_stdout
+        out, err = capsys.readouterr()
         print("====================================")
         print("Runtime %.4f" % runtime)
-        print("There are %d rows in stdout" % len(result_stdout))
-        print("There are %d rows in stderr" % len(result_stderr))
+        print("There are %d rows in stdout" % len(out))
+        print("There are %d rows in stderr" % len(err))
         print("====================================")
 
-        assert not result_stderr
+        assert not err
+        assert not caplog.records[:]
         assert runtime < 10
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @staticmethod
+    def create_defaults(snippy):
+        """Add default snippets for testing purposes."""
+
+        mocked_open = mock.mock_open(read_data=Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'remove.txt'])
+            assert cause == Cause.ALL_OK
+
+        mocked_open = mock.mock_open(read_data=Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'forced.txt'])
+            assert cause == Cause.ALL_OK
+
+        mocked_open = mock.mock_open(read_data=Snippet.get_template(Solution.DEFAULTS[Solution.BEATS]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'beats.txt'])
+            assert cause == Cause.ALL_OK
+
+        mocked_open = mock.mock_open(read_data=Snippet.get_template(Solution.DEFAULTS[Solution.NGINX]))
+        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+            cause = snippy.run_cli(['snippy', 'import', '-f', 'nginx.txt'])
+            assert cause == Cause.ALL_OK
+
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

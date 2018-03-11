@@ -147,9 +147,9 @@ class TestApiPerformance(object):
         assert not result_stderr
         assert runtime < 10
 
-    # pylint: disable=duplicate-code
-    def teardown_class(self):
-        """Teardown each test."""
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
 
         Database.delete_all_contents()
         Database.delete_storage()

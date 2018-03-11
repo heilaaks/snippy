@@ -34,6 +34,7 @@
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
+   ' [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily.
    - [ ] Fix Override header: "GET requests should never change data on the server!" // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Update documents.

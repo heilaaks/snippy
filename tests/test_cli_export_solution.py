@@ -44,7 +44,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        defined in command line which must result tool default file
         ##        and format.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]
@@ -63,7 +63,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export all solutions into defined yaml file. File name and
         ##        format are defined in command line.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]
@@ -81,7 +81,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export all solutions into defined json file. File name and
         ##        format are defined in command line.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]
@@ -217,7 +217,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        defined by the command line option. In this case the created
         ##        file format is yaml.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
@@ -234,7 +234,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined solution based on message digest to yaml file
         ##        without specifying the content category explicitly.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
@@ -254,7 +254,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        defined by the command line option. In this case the created
         ##        file format is json.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
@@ -271,7 +271,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined solution based on message digest to json file
         ##        without specifying the content category explicitly.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
@@ -445,7 +445,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        -f|--file option. This should result the file name and yaml
         ##        format defined by the command line option.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
@@ -464,7 +464,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        -f|--file option. This should result the file name and json
         ##        format defined by the command line option.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
@@ -540,7 +540,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        into predefined file location under tool data folder in yaml
         ##        format.
         content_dict = {
-            'meta': Solution.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]

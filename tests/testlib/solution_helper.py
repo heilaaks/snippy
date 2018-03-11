@@ -323,18 +323,6 @@ class SolutionHelper(object):
                 '')
 
     @staticmethod
-    def get_metadata(utc):
-        """Return the default metadata for exported data."""
-
-        return Snippet.get_metadata(utc)
-
-    @staticmethod
-    def get_http_metadata():
-        """Return the default HTTP metadata."""
-
-        return Snippet.get_http_metadata()
-
-    @staticmethod
     def get_content(text=None, solution=None):
         """Transform text template to content."""
 
@@ -406,28 +394,3 @@ class SolutionHelper(object):
         """Sort list of JSONs but keep the oder of main level list containing JSONs."""
 
         return Snippet.sorted_json_list(json_data)
-
-    @staticmethod
-    def error_body(body):
-        """Make Python2 and Python3 compatible error body."""
-
-        return Snippet.error_body(body)
-
-    @staticmethod
-    def test_content(snippy, mock_file, dictionary):
-        """Compare given dictionary against content stored in database based on message digest."""
-
-        for digest in dictionary:
-            mock_file.reset_mock()
-            cause = snippy.run_cli(['snippy', 'export', '-d', digest, '-f', 'defined-content.txt'])
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-content.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(SolutionHelper.get_template(dictionary[digest])),
-                                                mock.call(Const.NEWLINE)])
-
-    @staticmethod
-    def test_content2(dictionary):
-        """Compare given dictionary against content stored in database based on message digest."""
-
-        Snippet.test_content2(dictionary)

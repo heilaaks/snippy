@@ -30,7 +30,6 @@
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
    - [ ] Investigate 'I/O operation on closed file' note in SCRIBLING.md
-   - [ ] Change tests to use Snippet.test_content2(compare_content) instaed of Snippet.test_content().
    - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?

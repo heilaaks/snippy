@@ -144,27 +144,6 @@ class SnippetHelper(object):
                 '')
 
     @staticmethod
-    def get_metadata(utc):
-        """Return the default metadata for exported data."""
-
-        metadata = {'updated': utc,
-                    'version': __version__,
-                    'homepage': __homepage__}
-
-        return metadata
-
-    @staticmethod
-    def get_http_metadata():
-        """Return the default HTTP metadata."""
-
-        metadata = {'version': __version__,
-                    'homepage': __homepage__,
-                    'docs': __docs__,
-                    'openapi': __openapi__}
-
-        return metadata
-
-    @staticmethod
     def get_content(text=None, snippet=None):
         """Transform text template to content."""
 
@@ -257,43 +236,6 @@ class SnippetHelper(object):
             return sorted(SnippetHelper.sorted_json(x) for x in json)
 
         return json
-
-    @staticmethod
-    def error_body(body):
-        """Make Python2 and Python3 compatible error body."""
-
-        for error in body['errors']:
-            error['title'] = 'not compared because of hash structure in random order inside the string'
-
-        return SnippetHelper.sorted_json_list(body)
-
-    @staticmethod
-    def test_content(snippy, mock_file, dictionary):
-        """Compare given dictionary against content stored in database based on message digest."""
-
-        for digest in dictionary:
-            mock_file.reset_mock()
-            cause = snippy.run_cli(['snippy', 'export', '-d', digest, '-f', 'defined-content.txt'])
-            assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-content.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(SnippetHelper.get_template(dictionary[digest])),
-                                                mock.call(Const.NEWLINE)])
-
-    @staticmethod
-    def test_content2(dictionary):
-        """Compare given dictionary against content stored in database based on message digest."""
-
-        snippy = Snippy()
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            for digest in dictionary:
-                mock_file.reset_mock()
-                cause = snippy.run_cli(['snippy', 'export', '-d', digest, '-f', 'defined-content.txt'])
-                assert cause == Cause.ALL_OK
-                mock_file.assert_called_once_with('defined-content.txt', 'w')
-                file_handle = mock_file.return_value.__enter__.return_value
-                file_handle.write.assert_has_calls([mock.call(SnippetHelper.get_template(dictionary[digest])),
-                                                    mock.call(Const.NEWLINE)])
 
     @staticmethod
     def compare_db(snippet, content):

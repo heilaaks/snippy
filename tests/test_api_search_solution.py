@@ -210,7 +210,7 @@ class TestApiSearchSolution(object):
         ##        name that is not existing. The sort must fall to default sorting.
         snippy = Solution.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '380'}
-        body = {'meta': Solution.get_http_metadata(),
+        body = {'meta': Content.get_api_meta(),
                 'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
                             'title': 'sort option validation failed for non existent field=notexisting'}]}
         snippy = Snippy(['snippy', '--server'])
@@ -248,7 +248,7 @@ class TestApiSearchSolution(object):
         ##        result any results.
         snippy = Solution.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '335'}
-        body = {'meta': Solution.get_http_metadata(),
+        body = {'meta': Content.get_api_meta(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find resources'}]}
         snippy = Snippy(['snippy', '--server'])
@@ -280,7 +280,7 @@ class TestApiSearchSolution(object):
         ##        not result any matches.
         snippy = Solution.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '335'}
-        body = {'meta': Solution.get_http_metadata(),
+        body = {'meta': Content.get_api_meta(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find resources'}]}
         snippy = Snippy(['snippy', '--server'])
@@ -312,7 +312,7 @@ class TestApiSearchSolution(object):
         ##        do not result any matches.
         snippy = Solution.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '335'}
-        body = {'meta': Solution.get_http_metadata(),
+        body = {'meta': Content.get_api_meta(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find resources'}]}
         snippy = Snippy(['snippy', '--server'])
@@ -363,7 +363,7 @@ class TestApiSearchSolution(object):
         ##        found.
         snippy = Solution.add_defaults()
         headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '334'}
-        body = {'meta': Solution.get_http_metadata(),
+        body = {'meta': Content.get_api_meta(),
                 'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
                             'title': 'cannot find resource'}]}
         snippy = Snippy(['snippy', '--server'])

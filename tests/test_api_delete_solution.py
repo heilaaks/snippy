@@ -85,7 +85,7 @@ class TestApiDeleteSolution(object):
             'content-length': '362'
         }
         result_json = {
-            'meta': Solution.get_http_metadata(),
+            'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
                 'statusString': '404 Not Found',

@@ -43,7 +43,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export all snippets without defining target file name from
         ##        command line.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -63,7 +63,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ##        command line. In this case the content category is defined
         ##        explicitly.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -82,7 +82,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export all snippets into yaml file defined from command
         ##        line.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -101,7 +101,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export all snippets into yaml file defined from command line
         ##        by explicitly defining the content category.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -151,7 +151,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined snippet based on message digest. File name
         ##        is defined in command line as yaml file.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
@@ -169,7 +169,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined snippet based on message digest. File name
         ##        is defined in command line as json file.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
@@ -230,7 +230,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined snippet based on search keyword. File name
         ##        is defined in command line as yaml file.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
@@ -247,7 +247,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined snippet based on search keyword. File name
         ##        is defined in command line as json file.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
@@ -337,7 +337,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined snippet based on content data. File name is
         ##        defined in command line as yaml file.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
             ]
@@ -354,7 +354,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined snippet based on content data. File name is
         ##        defined in command line as json file.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
             ]
@@ -414,7 +414,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         ##        into predefined file location under tool data folder in
         ##        yaml format.
         content_dict = {
-            'meta': Snippet.get_metadata(Content.EXPORT_TIME),
+            'meta': Content.get_cli_meta(),
             'content': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]

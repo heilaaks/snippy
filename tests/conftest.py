@@ -152,13 +152,13 @@ def import_remove_snippet(mocker, snippy):
     _import_content(snippy, mocker, contents, IMPORT_REMOVE)
 
 @pytest.fixture(scope='function', name='remove-utc')
-def create_remove_snippet_time_mock(mocker):
+def create_remove_time_mock(mocker):
     """Mock timestamps to create 'remove' snippet."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_REMOVE)
 
 @pytest.fixture(scope='function', name='import-remove-utc')
-def import_remove_snippet_time_mock(mocker):
+def import_remove_time_mock(mocker):
     """Mock timestamps to import 'remove' snippet."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_REMOVE)
@@ -184,11 +184,28 @@ def import_forced_snippet(mocker, snippy):
     contents = [Snippet.DEFAULTS[Snippet.FORCED]]
     _import_content(snippy, mocker, contents, IMPORT_FORCED)
 
+@pytest.fixture(scope='function', name='forced-utc')
+def create_forced_time_mock(mocker):
+    """Mock timestamps to create 'forced' snippet."""
+
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_FORCED)
+
 @pytest.fixture(scope='function', name='import-forced-utc')
-def import_forced_snippet_time_mock(mocker):
+def import_forced_time_mock(mocker):
     """Mock timestamps to import 'forced' snippet."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_FORCED)
+
+@pytest.fixture(scope='function', name='exited-utc')
+def create_exited_time_mock(mocker):
+    """Mock timestamps to create 'exited' solution."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_EXITED)
 
 @pytest.fixture(scope='function', name='netcat')
 def import_netcat_snippet(mocker, snippy):
@@ -198,13 +215,13 @@ def import_netcat_snippet(mocker, snippy):
     _import_content(snippy, mocker, contents, IMPORT_NETCAT)
 
 @pytest.fixture(scope='function', name='netcat-utc')
-def create_netcat_snippet_time_mock(mocker):
+def create_netcat_time_mock(mocker):
     """Mock timestamps to create 'netcat' snippet."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_NETCAT)
 
 @pytest.fixture(scope='function', name='import-netcat-utc')
-def import_netcat_snippet_time_mock(mocker):
+def import_netcat_time_mock(mocker):
     """Mock timestamps to import 'netcat' snippet."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_NETCAT)
@@ -251,7 +268,7 @@ def create_beats_time_mock(mocker):
     mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_BEATS)
 
 @pytest.fixture(scope='function', name='import-beats-utc')
-def import_beats_solution_time_mock(mocker):
+def import_beats_time_mock(mocker):
     """Mock timestamps to import 'beats' solution."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_BEATS)
@@ -278,13 +295,13 @@ def edited_beats(mocker):
 
 
 @pytest.fixture(scope='function', name='import-nginx-utc')
-def import_nginx_solution_time_mock(mocker):
+def import_nginx_time_mock(mocker):
     """Mock timestamps to create 'nginx' solution."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_NGINX)
 
 @pytest.fixture(scope='function', name='kafka-utc')
-def create_kafka_solution_time_mock(mocker):
+def create_kafka_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
 
     side_effects = ()
@@ -295,7 +312,7 @@ def create_kafka_solution_time_mock(mocker):
     mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_KAFKA)
 
 @pytest.fixture(scope='function', name='import-kafka-utc')
-def import_kafka_solution_time_mock(mocker):
+def import_kafka_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
 
     mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_KAFKA)

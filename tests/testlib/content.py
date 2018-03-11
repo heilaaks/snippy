@@ -82,10 +82,24 @@ class Content(object):
     def get_api_meta():
         """Return default REST API metadata."""
 
-        meta = {'version': __version__,
-                'homepage': __homepage__,
-                'docs': __docs__,
-                'openapi': __openapi__}
+        meta = {
+            'version': __version__,
+            'homepage': __homepage__,
+            'docs': __docs__,
+            'openapi': __openapi__
+        }
+
+        return meta
+
+    @staticmethod
+    def get_cli_meta():
+        """Return default metadata for exported data."""
+
+        meta = {
+            'updated': Content.EXPORT_TIME,
+            'version': __version__,
+            'homepage': __homepage__
+        }
 
         return meta
 

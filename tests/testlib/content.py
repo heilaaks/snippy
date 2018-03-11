@@ -42,6 +42,14 @@ class Content(object):
     def ordered(json):
         """Sort JSON in order to compare random order JSON structures."""
 
+        # API errors have special case that containes random order hash
+        # structure inside a string. This string is masked. TODO: It should
+        # be possible to sort this also.
+        if 'errors'  in json:
+            for error in json['errors']:
+                error['title'] = 'not compared because of hash structure in random order inside the string'
+
+        # Sort rest of the scenarios.
         json_list = []
         if isinstance(json, list):
             json_list = (json)

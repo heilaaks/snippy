@@ -22,22 +22,18 @@
 import copy
 import json
 
-import mock
-import falcon
 from falcon import testing
+import falcon
 import pytest
 
-from snippy.cause import Cause
-from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.snip import Snippy
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestApiUpdateSnippet(object):
-    """Test PUT /snippets/{digest] API."""
+    """Test PUT /snippets/{digest} API."""
 
     @pytest.mark.usefixtures('server', 'snippy', 'forced', 'remove-utc')
     def test_api_update_snippet_001(self, snippy, mocker):
@@ -83,130 +79,124 @@ class TestApiUpdateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
-    @mock.patch('snippy.server.server.SnippyServer')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    @mock.patch.object(Cause, '_caller')
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    def test_api_update_one_snippet(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    @pytest.mark.usefixtures('server', 'snippy', 'forced', 'caller')
+    def test_api_update_snippet_002(self, snippy):
         """Update snippet from API."""
 
-        mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
-        mock__caller.return_value = 'snippy.testing.testing:123'
-        mock_get_db_location.return_value = Database.get_storage()
-
-        ## Brief: Try to call PUT /snippy/api/v1/snippets to update snippet with
-        ##        digest that cannot be found.
-        snippy = Snippet.add_one(Snippet.FORCED)
-        snippet = {'data': {'type': 'snippet',
-                            'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                                           'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                                           'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                                           'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                                           'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '369'}
-        body = {'meta': Snippet.get_http_metadata(),
-                'errors': [{'status': '404', 'statusString': '404 Not Found', 'module': 'snippy.testing.testing:123',
-                            'title': 'cannot find content with message digest 101010101010101'}]}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/101010101010101',  ## apiflow
-                                                                    headers={'accept': 'application/json'},
-                                                                    body=json.dumps(snippet))
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        ## Brief: Try to call PUT /snippy/api/v1/snippets to update snippet
+        ##        with digest that cannot be found.
+        content_send = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+                }
+            }
+        }
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '369'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find content with message digest 101010101010101'
+            }]
+        }
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+            path='/snippy/api/v1/snippets/101010101010101',
+            headers={'accept': 'application/json'},
+            body=json.dumps(content_send))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
         assert len(Database.get_snippets()) == 1
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
-    @mock.patch('snippy.server.server.SnippyServer')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    @mock.patch.object(Cause, '_caller')
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    def test_api_update_snippet_errors(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    @pytest.mark.usefixtures('server', 'snippy', 'forced', 'caller')
+    def test_api_update_snippet_003(self, snippy):
         """Try to update snippet with malformed queries."""
 
-        mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
-        mock__caller.return_value = 'snippy.testing.testing:123'
-        mock_get_db_location.return_value = Database.get_storage()
-
-        ## Brief: Try to call PUT /snippy/api/v1/snippets to update new snippet with
-        ##        malformed JSON request.
-        snippy = Snippet.add_one(Snippet.FORCED)
-        snippet = {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                   'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                   'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                   'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                   'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}
-        headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '442'}
-        headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '443'}
-        body = {'meta': Snippet.get_http_metadata(),
-                'errors': [{'status': '400', 'statusString': '400 Bad Request', 'module': 'snippy.testing.testing:123',
-                            'title': 'not compared because of hash structure in random order inside the string'}]}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/53908d68425c61dc',  ## apiflow
-                                                                    headers={'accept': 'application/json'},
-                                                                    body=json.dumps(snippet))
-        assert result.headers == headers_p2 or result.headers == headers_p3
-        assert Snippet.error_body(result.json) == Snippet.error_body(body)
+        ## Brief: Try to call PUT /snippy/api/v1/snippets to update new
+        ##        snippet with malformed JSON request.
+        content_send = {
+            'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+            'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+            'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+            'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+            'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+        }
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '442'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '443'}
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'not compared because of hash structure in random order inside the string'
+            }]
+        }
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            headers={'accept': 'application/json'},
+            body=json.dumps(content_send))
+        assert result.headers == result_headers_p2 or result.headers == result_headers_p3
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
         assert len(Database.get_snippets()) == 1
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
-    @mock.patch('snippy.server.server.SnippyServer')
-    @mock.patch('snippy.migrate.migrate.os.path.isfile')
-    @mock.patch.object(Cause, '_caller')
-    @mock.patch.object(Config, 'get_utc_time')
-    @mock.patch.object(Config, '_storage_file')
-    def test_update_snippet_verify_updated(self, mock_get_db_location, mock_get_utc_time, mock__caller, mock_isfile, _):
+    @pytest.mark.usefixtures('server', 'snippy', 'forced', 'netcat-utc')
+    def test_api_update_snippet_004(self, snippy, mocker):
         """Updated snippet and verify created and updated timestamps."""
-
-        mock_isfile.return_value = True
-        mock_get_utc_time.return_value = Snippet.UTC1
-        mock__caller.return_value = 'snippy.testing.testing:123'
-        mock_get_db_location.return_value = Database.get_storage()
 
         ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
         ##        with specified digest. This test verifies that the created
         ##        timestamp does not change and the updated timestamp changes
         ##        when the content is updated.
-        mock_get_utc_time.side_effect = (Snippet.UTC1,)*3 + (Snippet.UTC2,)*1 + (None,) # [REF_UTC]
-        snippy = Snippet.add_one(Snippet.FORCED)
-        snippet = {'data': {'type': 'snippet',
-                            'attributes': {'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                                           'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                                           'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                                           'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                                           'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])}}}
-        compare_content = {'54e41e9b52a02b63': Snippet.DEFAULTS[Snippet.REMOVE]}
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '695'}
-        body = {'links': {'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'},
-                'data': {'type': 'snippets',
-                         'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                         'attributes': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])}}
-        body['data']['attributes']['updated'] = Snippet.UTC2
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_put(path='/snippy/api/v1/snippets/53908d68425c61dc',  ## apiflow
-                                                                    headers={'accept': 'application/json'},
-                                                                    body=json.dumps(snippet))
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        content_send = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
+                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+                }
+            }
+        }
+        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
+        result_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '695'}
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'
+            },
+            'data': {
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+            }
+        }
+        result_json['data']['attributes']['updated'] = Snippet.UTC2
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            headers={'accept': 'application/json'},
+            body=json.dumps(content_send))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_snippets()) == 1
-        Snippet.test_content2(compare_content)
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
-        Config.init(None)
+        Content.verified(mocker, snippy, content_read)
 
     @classmethod
     def teardown_class(cls):

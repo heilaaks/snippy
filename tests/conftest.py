@@ -197,6 +197,12 @@ def import_netcat_snippet(mocker, snippy):
     contents = [Snippet.DEFAULTS[Snippet.NETCAT]]
     _import_content(snippy, mocker, contents, IMPORT_NETCAT)
 
+@pytest.fixture(scope='function', name='netcat-utc')
+def create_netcat_snippet_time_mock(mocker):
+    """Mock timestamps to create 'netcat' snippet."""
+
+    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_NETCAT)
+
 @pytest.fixture(scope='function', name='import-netcat-utc')
 def import_netcat_snippet_time_mock(mocker):
     """Mock timestamps to import 'netcat' snippet."""

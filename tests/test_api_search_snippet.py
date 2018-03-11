@@ -68,6 +68,69 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
+    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'netcat', 'exited')
+    def test_api_search_snippet_002(self, snippy):
+        """Search snippets with GET."""
+
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ##        fields. The search query matches to four snippets but limit
+        ##        defined in search query results only two of them sorted by
+        ##        the brief field. The sorting must be applied before limit is
+        ##        applied.
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '1411'
+        }
+        result_json = {
+            'data': [{
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippets',
+                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+            }]
+        }
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&limit=2&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
+    def test_api_search_snippet_003(self, snippy):
+        """Search snippets with GET."""
+
+        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ##        fields. The search query matches to two snippets but only one
+        ##        of them is returned because the limit parameter was set to one.
+        ##        In this case the sort is descending and the last match must be
+        ##        returned. The resulting fields are limited only to brief and
+        ##       category.
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '188'
+        }
+        result_json = {
+            'data': [{
+                'type': 'snippets',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
+            }]
+        }
+        snippy.run_server()
+        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker&limit=1&sort=-brief&fields=brief,category')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
     @mock.patch('snippy.server.server.SnippyServer')
     @mock.patch('snippy.migrate.migrate.os.path.isfile')
     @mock.patch.object(Cause, '_caller')
@@ -80,62 +143,6 @@ class TestApiSearchSnippet(object):
         mock_get_utc_time.return_value = Snippet.UTC1
         mock__caller.return_value = 'snippy.testing.testing:123'
         mock_get_db_location.return_value = Database.get_storage()
-
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
-        ##        fields. The search query matches to four snippets but limit
-        ##        defined in search query results only two of them sorted by
-        ##        the brief field. The sorting must be applied before limit is
-        ##        applied.
-        mock_get_utc_time.side_effect = (Snippet.CREATE_REMOVE +
-                                         Snippet.CREATE_FORCED +
-                                         Snippet.CREATE_EXITED +
-                                         Snippet.CREATE_NETCAT +
-                                         Snippet.TEST_PYTHON2)
-        snippy = Snippet.add_defaults()
-        Snippet.add_one(Snippet.EXITED, snippy)
-        Snippet.add_one(Snippet.NETCAT, snippy)
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1411'}
-        body = {'data': [{'type': 'snippets',
-                          'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                          'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
-                         {'type': 'snippets',
-                          'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
-                          'attributes': Snippet.DEFAULTS[Snippet.EXITED]}]}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets',  ## apiflow
-                                                                    headers={'accept': 'application/json'},
-                                                                    query_string='sall=docker%2Cnmap&limit=2&sort=brief')
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
-
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
-        ##        fields. The search query matches to two snippets but only one
-        ##        of them is returned because the limit parameter was set to one.
-        ##        In this case the sort is descending and the last match must be
-        ##        returned. The resulting fields are limited only to brief and
-        ##       category.
-        mock_get_utc_time.side_effect = Snippet.ADD_DEFAULTS
-        snippy = Snippet.add_defaults()
-        headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '188'}
-        body = {'data': [{'type': 'snippets',
-                          'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                          'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}}]}
-        snippy = Snippy(['snippy', '--server'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get(path='/snippy/api/v1/snippets',  ## apiflow
-                                                                    headers={'accept': 'application/json'},
-                                                                    query_string='sall=docker&limit=1&sort=-brief&fields=brief,category')
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
-        assert result.status == falcon.HTTP_200
-        snippy.release()
-        snippy = None
-        Database.delete_storage()
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all fields but
         ##        return only two fields. This syntax that separates the sorted fields causes

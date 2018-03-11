@@ -8,6 +8,7 @@
    - [ ] License is AGPLv3+ which is missing from CLI help.
    - [ ] Tests are failing if gunicorn is not installed.
    - [ ] Fix help tests since it is not reading new _cli_ tests.
+   - [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily. Read https://docs.pytest.org/en/latest/example/simple.html?highlight=pytest_addoption
    - [ ] snippy.run() does not return but run_cli() does. This does not make sense. This is due to tests which use run_cli. Refactor tests to use run()
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] When server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
@@ -34,7 +35,6 @@
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
    - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
-   ' [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily.
    - [ ] Fix Override header: "GET requests should never change data on the server!" // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add more tests /api/v1/snippets.
    - [ ] Update documents.

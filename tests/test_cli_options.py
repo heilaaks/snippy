@@ -180,6 +180,19 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     def test_help_option_004(self, capsys, caplog):
+        """Test printing help from console."""
+
+        ## Brief: Suppress tool help text with quiet mode even when there are
+        ##        no other parameters and the help should be printed.
+        snippy = Snippy(['snippy', '-q'])  ## workflow
+        snippy.run()
+        out, err = capsys.readouterr()
+        assert out == Const.EMPTY
+        assert not err
+        assert not caplog.records[:]
+        Database.delete_storage()
+
+    def test_help_option_005(self, capsys, caplog):
         """Test printing examples from console."""
 
         ## Brief: Print command examples from help.
@@ -193,7 +206,7 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
-    def test_help_option_005(self, capsys, caplog):
+    def test_help_option_006(self, capsys, caplog):
         """Test printing test documentation from consoler."""
 
         ## Brief: Print example commands.
@@ -222,7 +235,7 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     @pytest.mark.usefixtures('devel_no_tests')
-    def test_help_option_006(self, capsys, caplog):
+    def test_help_option_007(self, capsys, caplog):
         """Test printing test documentation when testing package does not exist."""
 
         ## Brief: Try to print tool test case reference documentation when

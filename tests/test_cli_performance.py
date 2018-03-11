@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_cli_performance.py: Verify that there are no major impacts to performance in console usage."""
+"""test_cli_performance: Track CLI performance with reference test."""
 
 from __future__ import print_function
 
@@ -33,11 +33,11 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class TestCliPerformance(object):
-    """Test CLI reference performance."""
+    """Test CLI performance."""
 
     @pytest.mark.usefixtures('snippy')
     def test_cli_performance(self, snippy, capsys, caplog):
-        """Test console performance."""
+        """Test CLI performance."""
 
         ## Brief: Verify performance of the tool on a rough scale. The intention
         ##        is to keep a reference test that is just iterated few times and

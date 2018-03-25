@@ -34,7 +34,7 @@ class Cli(ConfigSourceBase):
     """CLI argument management."""
 
     ARGS_COPYRIGHT = (
-        'Snippy version ' + __version__ + ' - license GNU AGPLv3',
+        'Snippy version ' + __version__ + ' - license GNU AGPLv3 or later',
         'Copyright 2017-2018 Heikki Laaksonen <laaksonen.heikki.j@gmail.com>',
         'Homepage ' + __homepage__
     )

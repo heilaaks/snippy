@@ -10,7 +10,7 @@ info:
   contact:
     email: "laaksonen.heikki.j@gmail.com"
   license:
-    name: "GNU AGPLv3"
+    name: "GNU AGPLv3 or later"
     url: "https://github.com/heilaaks/snippy/blob/master/LICENSE"
 host: "snippettips.com"
 basePath: "/snippy/api/v1"

@@ -484,11 +484,11 @@ class TestApiSearchSnippet(object):
         ##        fields. The search query matches to two snippets and both of
         ##        them are returned. The search is sorted based on one field.
         ##        The limit defined in the search query is not exceeded.
-        headers = {
+        result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1275'
         }
-        body = {
+        result_json = {
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -504,8 +504,8 @@ class TestApiSearchSnippet(object):
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('server', 'snippy', 'remove', 'forced', 'exited', 'netcat')
@@ -517,11 +517,11 @@ class TestApiSearchSnippet(object):
         ##        defined in search query results only two of them sorted by
         ##        the brief field. The sorting must be applied before limit is
         ##        applied.
-        headers = {
+        result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1411'
         }
-        body = {
+        result_json = {
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -537,8 +537,8 @@ class TestApiSearchSnippet(object):
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=brief')
-        assert result.headers == headers
-        assert Snippet.sorted_json_list(result.json) == Snippet.sorted_json_list(body)
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
     @classmethod

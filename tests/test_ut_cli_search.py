@@ -17,12 +17,9 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_ut_arguments_search.py: Test command line argumens for searching snippets with keywords."""
-
-from __future__ import print_function
+"""test_ut_arguments_search: Test command line argumens for searching snippets with keywords."""
 
 from snippy.config.source.cli import Cli
-from tests.testlib.cli_helper import CliHelper
 
 
 class TestUtCliSearch(object):
@@ -76,16 +73,3 @@ class TestUtCliSearch(object):
 
         obj = Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing'])
         assert obj.sall == ('cleanup_testing', 'container-managemenet', 'dockertesting')
-
-    # pylint: disable=duplicate-code
-    @classmethod
-    def setup_class(cls):
-        """Setup class."""
-
-        CliHelper().reset()
-
-    @classmethod
-    def teardown_class(cls):
-        """Teardown class."""
-
-        CliHelper().reset()

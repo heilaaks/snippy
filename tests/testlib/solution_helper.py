@@ -17,20 +17,12 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""solution_helper.py: Helper methods for solution testing."""
+"""solution_helper: Helper methods for solution testing."""
 
-import mock
-
-from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
 from snippy.content.content import Content
-from snippy.meta import __homepage__
-from snippy.meta import __version__
 from snippy.migrate.migrate import Migrate
-from snippy.snip import Snippy
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class SolutionHelper(object):
@@ -39,20 +31,7 @@ class SolutionHelper(object):
     BEATS = 0
     NGINX = 1
     KAFKA = 2
-    BEATS_CREATED = '2017-10-20 11:11:19'
-    NGINX_CREATED = '2017-10-20 06:16:27'
-    KAFKA_CREATED = '2017-10-20 06:16:27'
-    CREATE_BEATS = (BEATS_CREATED,)*3
-    CREATE_NGINX = (NGINX_CREATED,)*3
-    CREATE_KAFKA = (KAFKA_CREATED,)*3
-    CREATE_BEATS_DEF = CREATE_BEATS*2
-    CREATE_NGINX_DEF = CREATE_NGINX*2
-    CREATE_KAFKA_DEF = CREATE_KAFKA*2
-    TEST_CONTENT = Snippet.TEST_CONTENT
-    TEST_PYTHON2 = Snippet.TEST_PYTHON2
-    UTC1 = '2017-10-20 11:11:19'
-    UTC2 = '2017-10-20 06:16:27'
-    UTC3 = '2017-10-20 06:16:27'
+
     BEATS_DIGEST = 'a96accc25dd23ac0'
     NGINX_DIGEST = '61a24a156f5e9d2d'
     KAFKA_DIGEST = 'eeef5ca3ec9cd364'
@@ -286,7 +265,6 @@ class SolutionHelper(object):
                  'updated': '2017-10-20 06:16:27',
                  'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'})
 
-    TEMPLATE_UTC = '2017-10-14 19:56:31'
     TEMPLATE = ('################################################################################',
                 '## BRIEF : ',
                 '##',
@@ -323,23 +301,10 @@ class SolutionHelper(object):
                 '')
 
     @staticmethod
-    def get_content(text=None, solution=None):
-        """Transform text template to content."""
-
-        if text:
-            contents = Parser.read_content(Content(category=Const.SOLUTION), text)
-            content = contents[0]
-            content.update_digest()
-        else:
-            content = Content.load({'content': [SolutionHelper.DEFAULTS[solution]]})[0]
-
-        return content
-
-    @staticmethod
     def get_dictionary(template):
         """Transform template to dictinary."""
 
-        content = SolutionHelper.get_content(template)
+        content = SolutionHelper._get_content(template)
         dictionary = Migrate.get_dictionary_list([content])
 
         return dictionary[0]
@@ -353,44 +318,11 @@ class SolutionHelper(object):
         return contents[0].convert_text()
 
     @staticmethod
-    def add_defaults(snippy=None):
-        """Add default solutions for testing purposes."""
+    def _get_content(text):
+        """Transform text template to content."""
 
-        if not snippy:
-            snippy = Snippy()
+        contents = Parser.read_content(Content(category=Const.SOLUTION), text)
+        content = contents[0]
+        content.update_digest()
 
-        mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[SolutionHelper.BEATS]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            cause = snippy.run_cli(['snippy', 'import', '-f', 'howto-debug-elastic-beats.txt'])
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
-
-        mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[SolutionHelper.NGINX]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            cause = snippy.run_cli(['snippy', 'import', '-f', 'howto-debug-nginx.txt'])
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 2
-
-        return snippy
-
-    @staticmethod
-    def add_one(index, snippy=None):
-        """Add one default solution for testing purposes."""
-
-        if not snippy:
-            snippy = Snippy()
-
-        mocked_open = mock.mock_open(read_data=SolutionHelper.get_template(SolutionHelper.DEFAULTS[index]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            contents = len(Database.get_solutions())
-            cause = snippy.run_cli(['snippy', 'import', '-f', 'one-solution.txt'])
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == contents + 1
-
-        return snippy
-
-    @staticmethod
-    def sorted_json_list(json_data):
-        """Sort list of JSONs but keep the oder of main level list containing JSONs."""
-
-        return Snippet.sorted_json_list(json_data)
+        return content

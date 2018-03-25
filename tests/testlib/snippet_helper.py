@@ -17,22 +17,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""snippet_helper.py: Helper methods for snippet testing."""
+"""snippet_helper: Helper methods for snippet testing."""
 
-import mock
 import six
 
-from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
 from snippy.content.content import Content
-from snippy.meta import __docs__
-from snippy.meta import __homepage__
-from snippy.meta import __openapi__
-from snippy.meta import __version__
 from snippy.migrate.migrate import Migrate
-from snippy.snip import Snippy
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 
 class SnippetHelper(object):
@@ -42,30 +34,7 @@ class SnippetHelper(object):
     FORCED = 1
     EXITED = 2
     NETCAT = 3
-    REMOVE_CREATED = '2017-10-14 19:56:31'
-    FORCED_CREATED = '2017-10-14 19:56:31'
-    EXITED_CREATED = '2017-10-20 07:08:45'
-    NETCAT_CREATED = '2017-10-20 07:08:45'
 
-    # [REF_UTC]: Each content type and way how the content is added generates different
-    #            amount calls to get UTC timestamps.  The None is required in Python 2
-    #            which behaves differently than Python 3. Python 2 requires one more
-    #            parameter after last valid call to work.
-    #
-    #            The probelem is that add_defaults and add_one call a template which
-    #            uses Snippy code that calls the get_utc_time method. That is, this
-    #            is a test function misbehaving and calling the code (due to lazyness).
-    #            This makes the amount of get_utc_time dependent on how the content
-    #            is added in test case. This makes it hard to have one constant.
-    CREATE_REMOVE = (REMOVE_CREATED,)*3
-    CREATE_FORCED = (FORCED_CREATED,)*3
-    CREATE_EXITED = (EXITED_CREATED,)*3
-    CREATE_NETCAT = (NETCAT_CREATED,)*3
-    TEST_CONTENT = ('2018-02-02 02:02:02',)
-    TEST_PYTHON2 = (None,)
-    ADD_DEFAULTS = (CREATE_REMOVE + CREATE_FORCED + TEST_PYTHON2)
-    UTC1 = '2017-10-14 19:56:31'
-    UTC2 = '2017-10-20 07:08:45'
     REMOVE_DIGEST = '54e41e9b52a02b63'
     FORCED_DIGEST = '53908d68425c61dc'
     EXITED_DIGEST = '49d6916b6711f13d'
@@ -172,70 +141,6 @@ class SnippetHelper(object):
         contents = Content.load({'content': [dictionary]})
 
         return contents[0].convert_text()
-
-    @staticmethod
-    def add_defaults(snippy=None):
-        """Add default snippets for testing purposes."""
-
-        if not snippy:
-            snippy = Snippy()
-
-        mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[SnippetHelper.REMOVE]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            cause = snippy.run_cli(['snippy', 'import', '-f', 'one-snippet.txt'])
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 1
-
-        mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[SnippetHelper.FORCED]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            cause = snippy.run_cli(['snippy', 'import', '-f', 'one-snippet.txt'])
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 2
-
-        return snippy
-
-    @staticmethod
-    def add_one(index, snippy=None):
-        """Add one default snippet for testing purposes."""
-
-        if not snippy:
-            snippy = Snippy()
-
-        mocked_open = mock.mock_open(read_data=SnippetHelper.get_template(SnippetHelper.DEFAULTS[index]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
-            contents = len(Database.get_snippets())
-            cause = snippy.run_cli(['snippy', 'import', '-f', 'one-snippet.txt'])
-            assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == contents + 1
-
-        return snippy
-
-    @staticmethod
-    def sorted_json_list(json_data):
-        """Sort list of JSONs but keep the oder of main level list containing JSONs."""
-
-        json_list = []
-        if isinstance(json_data, list):
-            json_list = (json_data)
-        else:
-            json_list.append(json_data)
-
-        jsons = []
-        for json_item in json_list:
-            jsons.append(SnippetHelper.sorted_json(json_item))
-
-        return tuple(jsons)
-
-    @staticmethod
-    def sorted_json(json):
-        """Sort nested JSON to allow comparison."""
-
-        if isinstance(json, dict):
-            return sorted((k, SnippetHelper.sorted_json(v)) for k, v in json.items())
-        if isinstance(json, (list, tuple)):
-            return sorted(SnippetHelper.sorted_json(x) for x in json)
-
-        return json
 
     @staticmethod
     def compare_db(snippet, content):

@@ -186,7 +186,7 @@ class TestApiUpdateSnippet(object):
                 'attributes': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
             }
         }
-        result_json['data']['attributes']['updated'] = Snippet.UTC2
+        result_json['data']['attributes']['updated'] = Content.NETCAT_TIME
         snippy.run_server()
         result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/snippets/53908d68425c61dc',

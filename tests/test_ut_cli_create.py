@@ -17,13 +17,10 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_ut_arguments_create.py: Test command line argumens for creating new snippets."""
-
-from __future__ import print_function
+"""test_ut_arguments_create: Test command line argumens for creating new snippets."""
 
 from snippy.config.constants import Constants as Const
 from snippy.config.source.cli import Cli
-from tests.testlib.cli_helper import CliHelper
 
 
 class TestUtCliCreate(object):
@@ -170,16 +167,3 @@ class TestUtCliCreate(object):
         assert obj.brief == brief
         assert obj.tags == ('cleanup', 'container', 'docker')
         assert obj.links == tuple(links.split())
-
-    # pylint: disable=duplicate-code
-    @classmethod
-    def setup_class(cls):
-        """Setup class."""
-
-        CliHelper().reset()
-
-    @classmethod
-    def teardown_class(cls):
-        """Teardown class."""
-
-        CliHelper().reset()

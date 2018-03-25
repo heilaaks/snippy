@@ -76,8 +76,8 @@ class TestApiUpdateSolution(object):
         #       in PUT. The PUT will override the whole content with new
         #       values and if fields are not there, default must be applied.
         result_json['data']['attributes']['filename'] = Const.EMPTY
-        result_json['data']['attributes']['created'] = Solution.BEATS_CREATED
-        result_json['data']['attributes']['updated'] = Solution.BEATS_CREATED
+        result_json['data']['attributes']['created'] = Content.BEATS_TIME
+        result_json['data']['attributes']['updated'] = Content.BEATS_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         snippy.run_server()
         result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow

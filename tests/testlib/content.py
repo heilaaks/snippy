@@ -36,7 +36,14 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class Content(object):
     """Helper methods for content testing."""
 
+    # Contents
     EXPORT_TIME = '2018-02-02 02:02:02'
+
+    # Snippets
+    NETCAT_TIME = '2017-10-20 07:08:45'
+
+    # Solutions
+    BEATS_TIME = '2017-10-20 11:11:19'
 
     @staticmethod
     def ordered(json):

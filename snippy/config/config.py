@@ -58,6 +58,8 @@ class Config(object):
         """Load dynamic configuration from source."""
 
         cls.source = source
+
+        cls._init_logs()
         cls._logger.debug('config source: %s', cls.source)
 
         # operation
@@ -126,7 +128,7 @@ class Config(object):
         # Set logging and profiling configuration.
         cls.debug_logs = True if cls.init_args and '--debug' in cls.init_args else False
         cls.very_verbose = True if cls.init_args and '-vv' in cls.init_args else False
-        cls.quiet = True if cls.init_args and '-q' in cls.init_args else False
+        cls.quiet = True if hasattr(cls, 'source') and cls.source.quiet else False
         cls.json_logs = True if cls.init_args and '--json-logs' in cls.init_args else False
         cls.profiler = True if cls.init_args and '--profile' in cls.init_args else False
         Logger.configure({'debug': cls.debug_logs,

@@ -102,8 +102,16 @@ def mocked_snippy(mocker, request):
     """Create mocked instance from snippy."""
 
     params = []
+
+    # If there are no parameters, the only parameter passed is the tool
+    # name. This creates unnecessary help text that pollutes the debug
+    # output. In order to prevent this, the quiet is set. The quiet
+    # parameter is dynamic and therefore it does not affect if the test
+    # cases decided for example run CLI without it to test tool output.    
     if hasattr(request, 'param'):
         params = request.param
+    else:
+        params.append('-q')
 
     params.insert(0, 'snippy')  # Add the tool name here to args list.
     snippy = _create_snippy(mocker, params)

@@ -1,5 +1,5 @@
 ## TODO
-   - [ ] Fix printing help with 'snippy' only somehow? This prints the help in each test (e.g. failure) because they misuse the Snippy() which triggers this from Config.init().
+   - [ ] Set also other than quiet parameters as dynamic parameters.
    - [ ] Remove DELETE collection and allow it only for specific resource.
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
    - [ ] Add test with new media type for JSON API specs.
@@ -94,6 +94,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Removed unnecessary help text in test case failures. This was achieved by using dynamic quiet parameter.
    - [x] Fixed license not to reflect AGPLv3 or later in all places referring to license.
    - [x] Added the default help message when tool is run without any parameters.
    - [x] Fixed README.rst to work also in PyPI.

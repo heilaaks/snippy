@@ -29,11 +29,11 @@ from snippy.meta import __version__
 
 extras_dev = (
     'logging_tree==1.7',
-    'openapi2jsonschema==0.7.0',
+    'openapi2jsonschema==0.7.1',
     'pyflakes==1.6.0'
 )
 extras_docs = (
-    'sphinx==1.7.1',
+    'sphinx==1.7.2',
     'sphinxcontrib-openapi==0.3.2',
     'sphinx_rtd_theme==0.2.4',
     'sphinx-autobuild==0.7.1'
@@ -47,7 +47,8 @@ extras_tests = (
     'codecov==2.0.15',
     'flake8==3.5.0',
     'mock==2.0.0',
-    'pytest==3.4.2',
+    'pylint==1.8.3',
+    'pytest==3.5.0',
     'pytest-cov==2.5.1',
     'pytest-mock==1.7.1',
     'six==1.11.0',

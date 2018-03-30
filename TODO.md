@@ -7,6 +7,7 @@
    - [ ] Fix help tests since it is not reading new _cli_ tests.
    - [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily. Read https://docs.pytest.org/en/latest/example/simple.html?highlight=pytest_addoption
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
+   - [ ] Add support to export content to markdown format.
    - [ ] When server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.

@@ -122,10 +122,23 @@ class Config(object):
         cls.debug()
 
     @classmethod
+    def get_contents(cls, content, source=None):
+        """Get content list from one of the configuration sources."""
+
+        if source is not None:
+            contents = Parser.read_content(content, source)
+        elif cls.editor:
+            contents = Editor.read_content(content)
+        else:
+            contents = cls._read_content(content)
+
+        return tuple(contents)
+
+    @classmethod
     def _init_logs(cls):
         """Initialize logging and development configuration."""
 
-        # Set logging and profiling configuration.
+        # Set logging and development configuration.
         cls.debug_logs = True if cls.init_args and '--debug' in cls.init_args else False
         cls.very_verbose = True if cls.init_args and '-vv' in cls.init_args else False
         cls.quiet = True if hasattr(cls, 'source') and cls.source.quiet else False
@@ -140,21 +153,8 @@ class Config(object):
         cls._logger.debug('config initial command line arguments: %s', cls.init_args)
 
     @classmethod
-    def get_contents(cls, content, source=None):
-        """Get list of contents configured from one of the config sources."""
-
-        if source is not None:
-            contents = Parser.read_content(content, source)
-        elif cls.editor:
-            contents = Editor.read_content(content)
-        else:
-            contents = cls._read_content(content)
-
-        return tuple(contents)
-
-    @classmethod
     def _read_content(cls, content):
-        """Read content from configuration."""
+        """Read configurared content."""
 
         contents = []
         content.set((

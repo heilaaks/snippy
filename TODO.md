@@ -1,82 +1,88 @@
-## TODO
-   - [ ] Set also other than quiet parameters as dynamic parameters.
+## WORKING
+   - [ ] Remove excessive timestamp usage. Is single timestamp for operation is enough?
+   - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed? Affects also test.
+   - [ ] Add operation timestamp to Config() that is generated once per operation? It guarantees same timestamp during one operation. Also reduces calls timestamp.
+   - [ ] Add other than quiet parameters as dynamic parameters.
+   - [ ] How to not to use sys.args in cli help for examples and tests? Now the cli() help and profile are only ones using sys.argv directly.
+   - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
+   - [ ] Move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
+
+## FEATURES
+   - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Remove DELETE collection and allow it only for specific resource.
-   - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
+   - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
+   - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
+   - [ ] Add embedded security features.
+   - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
+   - [ ] Add support to get /snippet/123123324/brief and all the fields.
+   - [ ] Add support to export content to markdown format.
+   - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
+   - [ ] Add limits to all parameters: column array size, sort array size, etc.
+   - [ ] Add support to run with runalias.
+   - [ ] Add support to add versions to version list.
+   - [ ] Add support to print only selected fields, like brief and digest for CLI text output. Hard to generalize since layout e.g. contains header with three fields.
+   - [ ] Add statistics object which tracks peak and percentile latencies with memory and CPU usage.
+   - [ ] Add support for REST API YAML responses.
+   - [ ] Add upload command like in setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
+   - [ ] How to add custom Falcon error codes? Now e.g. 500 is HTML string and it is different than normal Snippy server error code.
+   - [ ] How to add custom Falcon exception handling through snippy logger?
+
+## FIX
+   - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
+   - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
+   - [ ] Fix when server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
+   - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field. Was this some test?
+   - [ ] Fix JSON API UTC time field does not follow ISO8601 format. This affects to utc mock and digest. It is better to refactor tests to make this easier.
+   - [ ] Fix the get_template to Content(). Did this mean test helpers that uses the get_template? There is one case 
+   - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
+   - [ ] Fix the REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
+   - [ ] Fix if the sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
+   - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
+   - [ ] Why falcon.API fails but the falcon import seems not to produce ImportError when the falcon is not imported?
+   - [ ] Why 'I/O operation on closed file' is generated as in SCRIBLING.md
+   - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
+   - [ ] Why changing self._data = data in data setter in line 160 to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
+
+## REFACTOR
+   - [ ] Refactor internal class level variables and methods to start with _ prefix.
+   - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
+   - [ ] Change is_template in Content to __cmp__.
+   - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
+
+## TESTS
+   - [ ] Refactor UT tests.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
-   - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field.
-   - [ ] Fix help tests since it is not reading new _cli_ tests.
+   - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily. Read https://docs.pytest.org/en/latest/example/simple.html?highlight=pytest_addoption
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
-   - [ ] Add support to export content to markdown format.
-   - [ ] When server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
-   - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
-   - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.
    - [ ] Why test_cli_import_snippet_009 requires import-remove-utc but the 001 does not?
    - [ ] Why delete_storage requires not try/catch block for file remove when the existence is tested? This was with after server/snippy.run refactoring.
-   - [ ] Mocking text file simply refuses to work from pytest fixtures.
-   - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
-   - [ ] Tests are failing if falcon is not installed. THere is something strange when falcon is uninstalled. For example after uninstall import still works but variables not there?
-   - [ ] Why falcon.API fails but the falcon import seems not to produce ImportError when the falcon is not imported?
-   - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
-   - [ ] Fix JSON API UTC time field does not follow ISO8601 format. This affects to utc mock and digest. It is better to refactor tests to make this easier.
-   - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed? Affects also test. Refactor tests first.
-   - [ ] Make operation timestamp to Config(). This could be helpfull since it guarantees same stamp to output during one operation. Also reduces calls to get_utc_time
-   - [ ] The pytest setup and teardown are class mehotds so fix def teardown_class(self): @classmethod def teardown_class(cls):
-   - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
-   - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
-   - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
-   - [ ] Fix the get_template to Content().
-   - [ ] Add limits to all parameters: column array size, sort array size, etc.
-   - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
-   - [ ] Investigate 'I/O operation on closed file' note in SCRIBLING.md
-   - [ ] Add customer Falcon error code? now the 500 is string HTML and it is different than normal server error code.
-   - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
-   - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
-   - [ ] Fix "Make sure clients can use POST with the X-HTTP-Method-Override header to fake a PUT request, because some proxies only know GET and POST and will reject PUT requests."
-   - [ ] Fix Override header: "GET requests should never change data on the server!" // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add more tests /api/v1/snippets.
-   - [ ] Update documents.
-   - [ ] =============================================================
-   - [ ] Move test case brief to test case document. This cannot be done untill are cases are in new format because the documentation is lost. WHen this is done, check the autodock before massive desc move.
-   - [ ] Fix mocking UTC it is a mess now.
-   - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
-   - [ ] Fix is there way to not to use sys.args in Cli help for examples and tests? Now the cli() help and profile are only ones using sys.argv directly.
-   - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
-   - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
-   - [ ] Add the Falcon exception handling through snippy logger.
    - [ ] Fix api performance test failure which leaves the server running and hanging.
    - [ ] Test URL encoded REST API queries. The same problem that was with %2C may be with other formats.
-   - [ ] Add support to run with runalias.
-   - [ ] Add support to add versions to version list.
-   - [ ] Change is_template in Content to __cmp__.
-   - [ ] Fix next devel version to use 0.8.dev to separte possible git installs from released content.
-   - [ ] Add support to print only selected fields, like brief and digest for text output. Hard to generalize since layout e.g. contains header with three fields.
-   - [ ] Hide internal class level variables with _ or __ prefix. The intention is not to allow access to these.
-   - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
-   - [ ] Add to document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
    - [ ] Test manually the exception cases for example with file with Python3 and 2.7. Some exceptions may not be in Python2.7.
+   - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect' in import snippet.
+   - [ ] Fix one failing API test fails all the WF cases? The cleanup does not work?
+   - [ ] Why API performance test is so slow? Changed to http.client with 20% perf gain but still slow. Profile code next.
+   - [ ] Why tests are failing if falcon is not installed? There is something strange when falcon is uninstalled. After uninstall import still works but variables not there?
+
+## DOCUMENTS
+   - [ ] Move test case brief to test case document. This cannot be done untill are cases are in new format because the documentation is lost. WHen this is done, check the autodock before massive desc move.
+   - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
+   - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
+   - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
    - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
+   - [ ] Add to document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
+   - [ ] Update documents.
 
-## BUBBLING UNDER
-   - [ ] Try to remove few remaining cases that require unittest for specificits assets it this makes sense.
-   - [ ] Create statistics object which tracks peak and percentile latencies with memory and CPU usage.
-   - [ ] Try to move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
-   - [ ] The REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
-   - [ ] Changing self._data = data to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
-   - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json.
+## BUBLING UNDER
+   - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json. What fields to add?
    - [ ] There is a pylint bug that it does not see see Python decorators being used with underscore // https://github.com/PyCQA/pylint/issues/409
-   - [ ] See setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
    - [ ] Add setup.py longdescription from readme.rst. // https://github.com/pypa/sampleproject/blob/master/setup.py
    - [ ] Check security implications from using setup.py (runs code) // https://stackoverflow.com/questions/44878600/is-setup-cfg-deprecated
    - [ ] Add very strict validation for REST API? Even a light failure in params generate error?
-   - [ ] Now --editor always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
-   - [ ] It was noted that sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
-   - [ ] Is there a way to get logs from Python logger from stdout? Mocking stdout to StringIO does not even though the logger stream is stdout.
-   - [ ] Fix patching in specific module. E.g snippy.migrate.migrate.os.path.isfile does not patch only specified module. Find 'side_effect' in import snippet.
-   - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
-   - [ ] Add support for REST API YAML responses.
    - [ ] How to add upgrade procedure? Is this needed? What happens when there is content stored and pip upgrade is made?
    - [ ] How to sign git commits. /1/ https://help.github.com/articles/signing-commits-with-gpg/) and code n PyPI (?)
    - [ ] How to sign PyPI code? Is this feasible?

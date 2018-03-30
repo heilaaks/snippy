@@ -508,7 +508,7 @@ def devel_file_data(mocker):
         '        ##        result tool internal default file name ./snippets.yaml being used by default.',
         '        with mock.patch(\'snippy.migrate.migrate.open\', mock.mock_open(), create=True) as mock_file:',
         '            snippy = Snippy()',
-        '            cause = snippy.run_cli([\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\'])  ## workflow',
+        '            cause = snippy.run([\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\'])  ## workflow',
         '            assert cause == Cause.ALL_OK',
         '            assert len(Database.get_snippets()) == 2',
         '            mock_file.assert_called_once_with(\'./snippets.yaml\', \'r\')',

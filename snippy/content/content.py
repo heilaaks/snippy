@@ -281,60 +281,66 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         content = self.get_list()
         content[Const.DIGEST] = self.compute_digest()
-        self.content = (content[Const.DATA],
-                        content[Const.BRIEF],
-                        content[Const.GROUP],
-                        content[Const.TAGS],
-                        content[Const.LINKS],
-                        content[Const.CATEGORY],
-                        content[Const.FILENAME],
-                        content[Const.RUNALIAS],
-                        content[Const.VERSIONS],
-                        content[Const.CREATED],
-                        content[Const.UPDATED],
-                        content[Const.DIGEST],
-                        content[Const.METADATA],
-                        content[Const.KEY])
+        self.content = (
+            content[Const.DATA],
+            content[Const.BRIEF],
+            content[Const.GROUP],
+            content[Const.TAGS],
+            content[Const.LINKS],
+            content[Const.CATEGORY],
+            content[Const.FILENAME],
+            content[Const.RUNALIAS],
+            content[Const.VERSIONS],
+            content[Const.CREATED],
+            content[Const.UPDATED],
+            content[Const.DIGEST],
+            content[Const.METADATA],
+            content[Const.KEY]
+        )
 
     def update_updated(self):
         """Update content update timestamp."""
 
         content = self.get_list()
         content[Const.UPDATED] = Config.get_utc_time()
-        self.content = (content[Const.DATA],
-                        content[Const.BRIEF],
-                        content[Const.GROUP],
-                        content[Const.TAGS],
-                        content[Const.LINKS],
-                        content[Const.CATEGORY],
-                        content[Const.FILENAME],
-                        content[Const.RUNALIAS],
-                        content[Const.VERSIONS],
-                        content[Const.CREATED],
-                        content[Const.UPDATED],
-                        content[Const.DIGEST],
-                        content[Const.METADATA],
-                        content[Const.KEY])
+        self.content = (
+            content[Const.DATA],
+            content[Const.BRIEF],
+            content[Const.GROUP],
+            content[Const.TAGS],
+            content[Const.LINKS],
+            content[Const.CATEGORY],
+            content[Const.FILENAME],
+            content[Const.RUNALIAS],
+            content[Const.VERSIONS],
+            content[Const.CREATED],
+            content[Const.UPDATED],
+            content[Const.DIGEST],
+            content[Const.METADATA],
+            content[Const.KEY]
+        )
 
     def _update_category(self, category):
         """Update content categor."""
 
         content = self.get_list()
         content[Const.CATEGORY] = category
-        self.content = (content[Const.DATA],
-                        content[Const.BRIEF],
-                        content[Const.GROUP],
-                        content[Const.TAGS],
-                        content[Const.LINKS],
-                        content[Const.CATEGORY],
-                        content[Const.FILENAME],
-                        content[Const.RUNALIAS],
-                        content[Const.VERSIONS],
-                        content[Const.CREATED],
-                        content[Const.UPDATED],
-                        content[Const.DIGEST],
-                        content[Const.METADATA],
-                        content[Const.KEY])
+        self.content = (
+            content[Const.DATA],
+            content[Const.BRIEF],
+            content[Const.GROUP],
+            content[Const.TAGS],
+            content[Const.LINKS],
+            content[Const.CATEGORY],
+            content[Const.FILENAME],
+            content[Const.RUNALIAS],
+            content[Const.VERSIONS],
+            content[Const.CREATED],
+            content[Const.UPDATED],
+            content[Const.DIGEST],
+            content[Const.METADATA],
+            content[Const.KEY]
+        )
 
     def get_string(self):
         """Convert content into one string."""
@@ -354,20 +360,22 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def get_list(self):
         """Convert content into mutable list."""
 
-        content = [self.get_data(),
-                   self.get_brief(),
-                   self.get_group(),
-                   self.get_tags(),
-                   self.get_links(),
-                   self.get_category(),
-                   self.get_filename(),
-                   self.get_runalias(),
-                   self.get_versions(),
-                   self.get_created(),
-                   self.get_updated(),
-                   self.get_digest(),
-                   self.get_metadata(),
-                   self.get_key()]
+        content = [
+            self.get_data(),
+            self.get_brief(),
+            self.get_group(),
+            self.get_tags(),
+            self.get_links(),
+            self.get_category(),
+            self.get_filename(),
+            self.get_runalias(),
+            self.get_versions(),
+            self.get_created(),
+            self.get_updated(),
+            self.get_digest(),
+            self.get_metadata(),
+            self.get_key()
+        ]
 
         return content
 
@@ -388,20 +396,22 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content[Const.VERSIONS] = migrated.get_versions()
             content[Const.CREATED] = migrated.get_created()
             content[Const.UPDATED] = migrated.get_updated()
-            self.content = (content[Const.DATA],
-                            content[Const.BRIEF],
-                            content[Const.GROUP],
-                            content[Const.TAGS],
-                            content[Const.LINKS],
-                            content[Const.CATEGORY],
-                            content[Const.FILENAME],
-                            content[Const.RUNALIAS],
-                            content[Const.VERSIONS],
-                            content[Const.CREATED],
-                            content[Const.UPDATED],
-                            content[Const.DIGEST],
-                            content[Const.METADATA],
-                            content[Const.KEY])
+            self.content = (
+                content[Const.DATA],
+                content[Const.BRIEF],
+                content[Const.GROUP],
+                content[Const.TAGS],
+                content[Const.LINKS],
+                content[Const.CATEGORY],
+                content[Const.FILENAME],
+                content[Const.RUNALIAS],
+                content[Const.VERSIONS],
+                content[Const.CREATED],
+                content[Const.UPDATED],
+                content[Const.DIGEST],
+                content[Const.METADATA],
+                content[Const.KEY]
+            )
 
     @classmethod
     def sort_contents(cls, contents, column, reversed_sort):
@@ -427,20 +437,22 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """Get empty content."""
 
         timestamp = Config.get_utc_time()
-        content = (Const.EMPTY_TUPLE,
-                   Const.EMPTY,
-                   Const.DEFAULT_GROUP,
-                   Const.EMPTY_TUPLE,
-                   Const.EMPTY_TUPLE,
-                   category,
-                   Const.EMPTY,
-                   Const.EMPTY,
-                   Const.EMPTY,
-                   timestamp,  # created
-                   timestamp,  # updated
-                   None,  # digest
-                   None,  # metadata
-                   None)  # key
+        content = (
+            Const.EMPTY_TUPLE,
+            Const.EMPTY,
+            Const.DEFAULT_GROUP,
+            Const.EMPTY_TUPLE,
+            Const.EMPTY_TUPLE,
+            category,
+            Const.EMPTY,
+            Const.EMPTY,
+            Const.EMPTY,
+            timestamp,  # created
+            timestamp,  # updated
+            None,  # digest
+            None,  # metadata
+            None   # key
+        )
 
         return Content(content)
 
@@ -458,19 +470,21 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def _get_content(dictionary):
         """Convert single dictionary entry into Content object."""
 
-        content = Content([dictionary['data'],
-                           dictionary['brief'],
-                           dictionary['group'],
-                           dictionary['tags'],
-                           dictionary['links'],
-                           dictionary['category'],
-                           dictionary['filename'],
-                           dictionary['runalias'],
-                           dictionary['versions'],
-                           dictionary['created'],
-                           dictionary['updated'],
-                           dictionary['digest'],
-                           None,   # metadata
-                           None])  # key
+        content = Content([
+            dictionary['data'],
+            dictionary['brief'],
+            dictionary['group'],
+            dictionary['tags'],
+            dictionary['links'],
+            dictionary['category'],
+            dictionary['filename'],
+            dictionary['runalias'],
+            dictionary['versions'],
+            dictionary['created'],
+            dictionary['updated'],
+            dictionary['digest'],
+            None,  # metadata
+            None   # key
+        ])
 
         return content

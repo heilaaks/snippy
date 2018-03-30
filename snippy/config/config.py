@@ -131,10 +131,12 @@ class Config(object):
         cls.quiet = True if hasattr(cls, 'source') and cls.source.quiet else False
         cls.json_logs = True if cls.init_args and '--json-logs' in cls.init_args else False
         cls.profiler = True if cls.init_args and '--profile' in cls.init_args else False
-        Logger.configure({'debug': cls.debug_logs,
-                          'very_verbose': cls.very_verbose,
-                          'quiet': cls.quiet,
-                          'json_logs': cls.json_logs})
+        Logger.configure({
+            'debug': cls.debug_logs,
+            'very_verbose': cls.very_verbose,
+            'quiet': cls.quiet,
+            'json_logs': cls.json_logs
+        })
         cls._logger.debug('config initial command line arguments: %s', cls.init_args)
 
     @classmethod
@@ -155,20 +157,22 @@ class Config(object):
         """Read content from configuration."""
 
         contents = []
-        content.set((cls.content_data,
-                     cls.content_brief,
-                     cls.content_group,
-                     cls.content_tags,
-                     cls.content_links,
-                     content.get_category(),
-                     cls.content_filename,
-                     content.get_runalias(),
-                     content.get_versions(),
-                     content.get_created(),
-                     content.get_updated(),
-                     content.get_digest(),
-                     content.get_metadata(),
-                     content.get_key()))
+        content.set((
+            cls.content_data,
+            cls.content_brief,
+            cls.content_group,
+            cls.content_tags,
+            cls.content_links,
+            content.get_category(),
+            cls.content_filename,
+            content.get_runalias(),
+            content.get_versions(),
+            content.get_created(),
+            content.get_updated(),
+            content.get_digest(),
+            content.get_metadata(),
+            content.get_key()
+        ))
         contents.append(content)
 
         return contents

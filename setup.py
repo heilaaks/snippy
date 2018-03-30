@@ -87,11 +87,12 @@ setup(
     keywords='command solution snippet manager console',
     packages=find_packages(exclude=['tests', 'tests.testlib']),
     package_dir={'snippy': 'snippy'},
-    package_data={'snippy': [
-        'data/config/*',
-        'data/default/*',
-        'data/storage/*',
-        'data/template/*'
+    package_data={
+        'snippy': [
+            'data/config/*',
+            'data/default/*',
+            'data/storage/*',
+            'data/template/*'
         ]
     },
     zip_safe=False,

@@ -55,12 +55,14 @@ class Solution(object):
         """Search solutions."""
 
         self._logger.debug('searching solutions')
-        solutions = self.storage.search(Const.SOLUTION,
-                                        sall=Config.search_all_kws,
-                                        stag=Config.search_tag_kws,
-                                        sgrp=Config.search_grp_kws,
-                                        digest=Config.operation_digest,
-                                        data=Config.content_data)
+        solutions = self.storage.search(
+            Const.SOLUTION,
+            sall=Config.search_all_kws,
+            stag=Config.search_tag_kws,
+            sgrp=Config.search_grp_kws,
+            digest=Config.operation_digest,
+            data=Config.content_data
+        )
         solutions = Migrate.content(solutions, self.content_type)
 
         return solutions
@@ -68,12 +70,14 @@ class Solution(object):
     def update(self):
         """Update existing solution."""
 
-        solutions = self.storage.search(Const.SOLUTION,
-                                        sall=Config.search_all_kws,
-                                        stag=Config.search_tag_kws,
-                                        sgrp=Config.search_grp_kws,
-                                        digest=Config.operation_digest,
-                                        data=Config.content_data)
+        solutions = self.storage.search(
+            Const.SOLUTION,
+            sall=Config.search_all_kws,
+            stag=Config.search_tag_kws,
+            sgrp=Config.search_grp_kws,
+            digest=Config.operation_digest,
+            data=Config.content_data
+        )
         if len(solutions) == 1:
             self._logger.debug('updating solution with digest %.16s', solutions[0].get_digest())
             solutions = Config.get_contents(content=solutions[0])
@@ -89,12 +93,14 @@ class Solution(object):
     def delete(self):
         """Delete solutions."""
 
-        solutions = self.storage.search(Const.SOLUTION,
-                                        sall=Config.search_all_kws,
-                                        stag=Config.search_tag_kws,
-                                        sgrp=Config.search_grp_kws,
-                                        digest=Config.operation_digest,
-                                        data=Config.content_data)
+        solutions = self.storage.search(
+            Const.SOLUTION,
+            sall=Config.search_all_kws,
+            stag=Config.search_tag_kws,
+            sgrp=Config.search_grp_kws,
+            digest=Config.operation_digest,
+            data=Config.content_data
+        )
         if len(solutions) == 1:
             self._logger.debug('deleting solution with digest %.16s', solutions[0].get_digest())
             self.storage.delete(solutions[0].get_digest())
@@ -110,12 +116,14 @@ class Solution(object):
             Migrate.dump_template(Content(category=Const.SOLUTION))
         elif Config.is_search_criteria():
             self._logger.debug('exporting solutions based on search criteria')
-            solutions = self.storage.search(Const.SOLUTION,
-                                            sall=Config.search_all_kws,
-                                            stag=Config.search_tag_kws,
-                                            sgrp=Config.search_grp_kws,
-                                            digest=Config.operation_digest,
-                                            data=Config.content_data)
+            solutions = self.storage.search(
+                Const.SOLUTION,
+                sall=Config.search_all_kws,
+                stag=Config.search_tag_kws,
+                sgrp=Config.search_grp_kws,
+                digest=Config.operation_digest,
+                data=Config.content_data
+            )
             if len(solutions) == 1:
                 filename = Config.get_operation_file(content_filename=solutions[0].get_filename())
             elif not solutions:

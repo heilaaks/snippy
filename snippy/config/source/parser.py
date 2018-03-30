@@ -61,20 +61,22 @@ class Parser(object):
 
         for item in data:
             content_copy = copy.copy(content)
-            content_copy.set((Parser.content_data(category, item),
-                              Parser.content_brief(category, item),
-                              Parser.content_group(category, item),
-                              Parser.content_tags(category, item),
-                              Parser.content_links(category, item),
-                              category,
-                              Parser.content_filename(category, item),
-                              content_copy.get_runalias(),
-                              content_copy.get_versions(),
-                              content_copy.get_created(),
-                              content_copy.get_updated(),
-                              content_copy.get_digest(),
-                              content_copy.get_metadata(),
-                              content_copy.get_key()))
+            content_copy.set((
+                Parser.content_data(category, item),
+                Parser.content_brief(category, item),
+                Parser.content_group(category, item),
+                Parser.content_tags(category, item),
+                Parser.content_links(category, item),
+                category,
+                Parser.content_filename(category, item),
+                content_copy.get_runalias(),
+                content_copy.get_versions(),
+                content_copy.get_created(),
+                content_copy.get_updated(),
+                content_copy.get_digest(),
+                content_copy.get_metadata(),
+                content_copy.get_key()
+            ))
             content_copy.update_digest()
             if content_copy.is_template(edited=item):
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because it matched to empty template')

@@ -95,10 +95,12 @@ class Cause(object):
         if status not in Cause.OK_STATUS_LIST:
             caller = cls._caller()
         cls._logger.info('status %s with message %s from %s', status, message, caller)
-        cls._list['errors'].append({'status': int(status.split()[0]),
-                                    'status_string': status,
-                                    'module': caller,
-                                    'title': message})
+        cls._list['errors'].append({
+            'status': int(status.split()[0]),
+            'status_string': status,
+            'module': caller,
+            'title': message
+        })
 
     @classmethod
     def is_ok(cls):
@@ -129,10 +131,12 @@ class Cause(object):
         """Return errors in JSON data structure."""
 
         response = cls._list
-        response['meta'] = {'version': __version__,
-                            'homepage': __homepage__,
-                            'docs': __docs__,
-                            'openapi': __openapi__}
+        response['meta'] = {
+            'version': __version__,
+            'homepage': __homepage__,
+            'docs': __docs__,
+            'openapi': __openapi__
+        }
 
         return response
 

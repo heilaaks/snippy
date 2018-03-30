@@ -41,20 +41,22 @@ class Editor(object):
         source = cls.call_editor(template)
         category = Parser.content_category(source)
         if category == Const.SNIPPET or category == Const.SOLUTION:
-            content.set((Parser.content_data(category, source),
-                         Parser.content_brief(category, source),
-                         Parser.content_group(category, source),
-                         Parser.content_tags(category, source),
-                         Parser.content_links(category, source),
-                         content.get_category(),
-                         Parser.content_filename(category, source),
-                         content.get_runalias(),
-                         content.get_versions(),
-                         content.get_created(),
-                         content.get_updated(),
-                         content.get_digest(),
-                         content.get_metadata(),
-                         content.get_key()))
+            content.set((
+                Parser.content_data(category, source),
+                Parser.content_brief(category, source),
+                Parser.content_group(category, source),
+                Parser.content_tags(category, source),
+                Parser.content_links(category, source),
+                content.get_category(),
+                Parser.content_filename(category, source),
+                content.get_runalias(),
+                content.get_versions(),
+                content.get_created(),
+                content.get_updated(),
+                content.get_digest(),
+                content.get_metadata(),
+                content.get_key()
+            ))
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
 

@@ -37,10 +37,14 @@ class ApiHello(object):  # pylint: disable=too-few-public-methods
     def on_get(_, response):
         """Get Hello!"""
 
-        hello = {'meta': {'version': __version__,
-                          'homepage': __homepage__,
-                          'docs': __docs__,
-                          'openapi': __openapi__}}
+        hello = {
+            'meta': {
+                'version': __version__,
+                'homepage': __homepage__,
+                'docs': __docs__,
+                'openapi': __openapi__
+            }
+        }
         response.content_type = Const.MEDIA_JSON_API
         response.body = json.dumps(hello)
         response.status = falcon.HTTP_200

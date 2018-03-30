@@ -27,6 +27,8 @@ from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
+pytest.importorskip('gunicorn')
+
 
 class TestApiSearchSolution(object):
     """Test GET /snippy/api/solutions API."""

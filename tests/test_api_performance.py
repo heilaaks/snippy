@@ -24,9 +24,10 @@ from __future__ import print_function
 import json
 import sys
 import time
-
 from subprocess import call
 from subprocess import Popen
+
+import pytest
 
 from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
@@ -39,6 +40,8 @@ if not Const.PYTHON2:
 else:
     import httplib  # pylint: disable=import-error
     from StringIO import StringIO  # pylint: disable=import-error
+
+pytest.importorskip('gunicorn')
 
 
 class TestApiPerformance(object):

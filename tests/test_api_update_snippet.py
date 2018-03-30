@@ -31,6 +31,8 @@ from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
+pytest.importorskip('gunicorn')
+
 
 class TestApiUpdateSnippet(object):
     """Test PUT /snippets/{digest} API."""

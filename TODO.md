@@ -4,7 +4,6 @@
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field.
-   - [ ] Tests are failing if gunicorn is not installed.
    - [ ] Fix help tests since it is not reading new _cli_ tests.
    - [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily. Read https://docs.pytest.org/en/latest/example/simple.html?highlight=pytest_addoption
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
@@ -16,6 +15,7 @@
    - [ ] Why delete_storage requires not try/catch block for file remove when the existence is tested? This was with after server/snippy.run refactoring.
    - [ ] Mocking text file simply refuses to work from pytest fixtures.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
+   - [ ] Tests are failing if falcon is not installed. THere is something strange when falcon is uninstalled. For example after uninstall import still works but variables not there?
    - [ ] Why falcon.API fails but the falcon import seems not to produce ImportError when the falcon is not imported?
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format. This affects to utc mock and digest. It is better to refactor tests to make this easier.

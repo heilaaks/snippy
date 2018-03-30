@@ -21,12 +21,12 @@
 
 from __future__ import print_function
 
-from functools import wraps
-from random import getrandbits
-from signal import signal, getsignal, SIGPIPE, SIG_DFL
 import logging
 import sys
 import time
+from functools import wraps
+from random import getrandbits
+from signal import signal, getsignal, SIGPIPE, SIG_DFL
 
 import json
 
@@ -258,10 +258,12 @@ class CustomFilter(logging.Filter):  # pylint: disable=too-few-public-methods
         return True
 
 
-class CustomGunicornLogger(GunicornLogger):
+class CustomGunicornLogger(GunicornLogger):  # pylint: disable=too-few-public-methods
     """Custom logger for Gunicorn HTTP server."""
 
     def setup(self, cfg):
+        """Custom setup."""
+
         super(CustomGunicornLogger, self).setup(cfg)
 
         # Disable all handlers under 'gunicorn' namespace and prevent log

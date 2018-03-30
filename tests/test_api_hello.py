@@ -27,6 +27,8 @@ from snippy.snip import Snippy
 from tests.testlib.content import Content
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
+pytest.importorskip('gunicorn')
+
 
 class TestApiHello(object):
     """Test hello API."""

@@ -147,8 +147,14 @@ class Cause(object):
         return cause
 
     @classmethod
+    def print_message(cls):
+        """Print cause message."""
+
+        Logger.print_cause(cls.get_message())
+
+    @classmethod
     def print_failure(cls):
-        """Print failure cause in case of failure."""
+        """Print only failure message."""
 
         if not cls.is_ok():
             Logger.print_cause(cls.get_message())

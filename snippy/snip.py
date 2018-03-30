@@ -74,7 +74,7 @@ class Snippy(object):
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'content category \'all\' is supported only with search operation')
 
-        Logger.print_cause(Cause.get_message())
+        Cause.print_message()
 
     def _run_server(self):
         """Run API server."""
@@ -86,7 +86,7 @@ class Snippy(object):
             self.server.run()
         except ImportError:
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'install snippy as server in order to run api server')
-            Logger.print_cause(Cause.get_message())
+            Cause.print_message()
 
 
 def main():

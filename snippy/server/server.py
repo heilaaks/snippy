@@ -53,7 +53,10 @@ class Server(object):  # pylint: disable=too-few-public-methods
             'logger_class': CustomGunicornLogger
         }
         self._logger.debug('run server with base path: %s', Config.base_path)
-        self.api = falcon.API(media_type='application/vnd.api+json')
+        try:
+            self.api = falcon.API(media_type='application/vnd.api+json')
+        except AttributeError:
+            raise ImportError
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.add_route('/snippy', ApiHello())

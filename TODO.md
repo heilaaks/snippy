@@ -2,7 +2,6 @@
    - [ ] Set also other than quiet parameters as dynamic parameters.
    - [ ] Remove DELETE collection and allow it only for specific resource.
    - [ ] Wheel seem so create PyPI package that cannot access the defaults? This was working with sdist.
-   - [ ] Add test with new media type for JSON API specs.
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field.
    - [ ] Tests are failing if gunicorn is not installed.
@@ -94,6 +93,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added tests to verify the correct JSON API v1.0 media type application/vnd.api+json including charset=UTF-8.
    - [x] Changed test to use snippy.run instead of run_cli or run_server which are now internal methods.
    - [x] Removed unnecessary help text in test case failures. This was achieved by using dynamic quiet parameter.
    - [x] Fixed license not to reflect AGPLv3 or later in all places referring to license.

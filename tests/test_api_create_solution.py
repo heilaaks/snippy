@@ -58,7 +58,7 @@ class TestApiCreateSolution(object):
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/solutions',
-            headers={'accept': 'application/json'},
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(content_send))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)

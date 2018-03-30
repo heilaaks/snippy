@@ -58,7 +58,7 @@ class TestApiSearchSnippet(object):
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
-            headers={'accept': 'application/json'},
+            headers={'accept': 'application/vnd.api+json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)

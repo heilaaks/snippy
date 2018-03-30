@@ -71,7 +71,7 @@ class TestApiUpdateSnippet(object):
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/snippets/53908d68425c61dc',
-            headers={'accept': 'application/json'},
+            headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(content_send))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)

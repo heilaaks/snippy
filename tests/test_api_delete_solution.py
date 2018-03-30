@@ -46,7 +46,7 @@ class TestApiDeleteSolution(object):
         assert len(Database.get_contents()) == 3
         result = testing.TestClient(server.server.api).simulate_delete(  ## apiflow
             path='/snippy/api/v1/solutions',
-            headers={'accept': 'application/json'},
+            headers={'accept': 'application/vnd.api+json'},
             query_string='digest=eeef5ca3ec9cd36')
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204

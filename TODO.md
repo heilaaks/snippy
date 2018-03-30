@@ -8,7 +8,6 @@
    - [ ] Tests are failing if gunicorn is not installed.
    - [ ] Fix help tests since it is not reading new _cli_ tests.
    - [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily. Read https://docs.pytest.org/en/latest/example/simple.html?highlight=pytest_addoption
-   - [ ] snippy.run() does not return but run_cli() does. This does not make sense. This is due to tests which use run_cli. Refactor tests to use run()
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] When server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?

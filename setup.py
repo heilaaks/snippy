@@ -17,6 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import io
 from setuptools import setup, find_packages
 
 from snippy.meta import __author__
@@ -54,7 +55,7 @@ extras_tests = (
 )
 
 def readme():
-    with open('README.rst') as f:
+    with io.open('README.rst', encoding='utf-8') as f:
         return f.read()
 
 setup(

@@ -27,6 +27,10 @@ import time
 from functools import wraps
 from random import getrandbits
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
+try:
+    from collections import OrderedDict
+except ImportError:
+    pass
 
 import json
 
@@ -34,11 +38,6 @@ try:
     from gunicorn.glogging import Logger as GunicornLogger
 except ImportError:
     GunicornLogger = object
-
-try:
-    from collections import OrderedDict
-except ImportError:
-    pass
 
 
 class Logger(object):

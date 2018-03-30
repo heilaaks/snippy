@@ -20,6 +20,7 @@
 """profiler: Profiler wrapper."""
 
 from __future__ import print_function
+
 import cProfile
 import pstats
 import sys
@@ -39,8 +40,7 @@ class Profiler(object):
 
     @classmethod
     def enable(cls):
-        """The profiler enabling is read directly from the system arguments because
-        the value is needed before the Config() object gets initialized."""
+        """Enable profiler."""
 
         if '--profile' in sys.argv:
             cls.profiler = cProfile.Profile()
@@ -49,7 +49,7 @@ class Profiler(object):
 
     @classmethod
     def disable(cls):
-        """Disable the profiler and print the results."""
+        """Disable profiler."""
 
         if cls.is_enabled:
             cls.profiler.disable()

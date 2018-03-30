@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Add tests to update logging config. This goes to new Logger UT tests?
    - [ ] Remove excessive timestamp usage. Is single timestamp for operation is enough?
    - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed? Affects also test.
    - [ ] Add operation timestamp to Config() that is generated once per operation? It guarantees same timestamp during one operation. Also reduces calls timestamp.
@@ -50,9 +51,10 @@
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
-   - [ ] Refactor UT tests.
-   - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
+   - [ ] Add unit test for Cause.debug().
+   - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
+   - [ ] Refactor UT tests.
    - [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily. Read https://docs.pytest.org/en/latest/example/simple.html?highlight=pytest_addoption
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] Observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.

@@ -42,8 +42,10 @@ class Config(object):
     def init(cls, args):
         """Initialize global configuration."""
 
+        if args is None:
+            args = []
         cls.init_args = args
-        cls._init_logs()
+        cls._init_logger()
 
         # Set static configuration.
         cls.storage_schema = cls._storage_schema()
@@ -59,7 +61,7 @@ class Config(object):
 
         cls.source = source
 
-        cls._init_logs()
+        cls._update_logger()
         cls._logger.debug('config source: %s', cls.source)
 
         # operation
@@ -135,15 +137,14 @@ class Config(object):
         return tuple(contents)
 
     @classmethod
-    def _init_logs(cls):
-        """Initialize logging and development configuration."""
+    def _init_logger(cls):
+        """Init logger configuration."""
 
-        # Set logging and development configuration.
-        cls.debug_logs = True if cls.init_args and '--debug' in cls.init_args else False
-        cls.very_verbose = True if cls.init_args and '-vv' in cls.init_args else False
-        cls.quiet = True if hasattr(cls, 'source') and cls.source.quiet else False
-        cls.json_logs = True if cls.init_args and '--json-logs' in cls.init_args else False
-        cls.profiler = True if cls.init_args and '--profile' in cls.init_args else False
+        cls.debug_logs = True if '--debug' in cls.init_args else False
+        cls.very_verbose = True if '-vv' in cls.init_args else False
+        cls.quiet = True if '-q' in cls.init_args else False
+        cls.json_logs = True if '--json-logs' in cls.init_args else False
+        cls.profiler = True if '--profile' in cls.init_args else False
         Logger.configure({
             'debug': cls.debug_logs,
             'very_verbose': cls.very_verbose,
@@ -151,6 +152,22 @@ class Config(object):
             'json_logs': cls.json_logs
         })
         cls._logger.debug('config initial command line arguments: %s', cls.init_args)
+
+    @classmethod
+    def _update_logger(cls):
+        """Update logger configuration."""
+
+        cls.debug_logs = True if cls.source.debug else False
+        cls.very_verbose = True if cls.source.very_verbose else False
+        cls.quiet = True if cls.source.quiet else False
+        cls.json_logs = True if cls.source.json_logs else False
+        cls.profiler = True if cls.source.profiler else False
+        Logger.configure({
+            'debug': cls.debug_logs,
+            'very_verbose': cls.very_verbose,
+            'quiet': cls.quiet,
+            'json_logs': cls.json_logs
+        })
 
     @classmethod
     def _read_content(cls, content):

@@ -62,7 +62,7 @@ class TestCliPerformance(object):
             assert len(Database.get_solutions()) == 2
 
             # Search all content
-            cause = snippy.run(['snippy', 'search', '--all', '--sall', '.', '-vv'])
+            cause = snippy.run(['snippy', 'search', '--all', '--sall', '.'])
             assert cause == Cause.ALL_OK
 
             # Delete all content

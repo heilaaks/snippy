@@ -107,7 +107,7 @@ def mocked_snippy(mocker, request):
     # name. This creates unnecessary help text that pollutes the debug
     # output. In order to prevent this, the quiet is set. The quiet
     # parameter is dynamic and therefore it does not affect if the test
-    # cases decided for example run CLI without it to test tool output.    
+    # cases decided for example run CLI without it to test tool output.
     if hasattr(request, 'param'):
         params = request.param
     else:
@@ -125,8 +125,25 @@ def mocked_snippy(mocker, request):
     return snippy
 
 @pytest.fixture(scope='function', name='server')
-def server(mocker):
+def server(mocker, request):
     """Run mocked server for testing purposes."""
+
+    params = ['snippy', '--server', '-q']
+    snippy = _create_snippy(mocker, params)
+    def fin():
+        """Clear the resources at the end."""
+
+        snippy.release()
+        Database.delete_storage()
+    request.addfinalizer(fin)
+
+    mocker.patch('snippy.server.server.SnippyServer')
+
+    return snippy
+
+@pytest.fixture(scope='function', name='mock-server')
+def server_mock(mocker):
+    """Mock Snippy server for testing purposes."""
 
     mocker.patch('snippy.server.server.SnippyServer')
 
@@ -539,7 +556,7 @@ def _import_content(snippy, mocker, contents, timestamps):
     for idx, content in enumerate(contents, start=start):
         mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
         mocker.patch('snippy.migrate.migrate.open', mocked_open, create=True)
-        cause = snippy.run_cli(['snippy', 'import', '-f', 'content.txt'])
+        cause = snippy.run(['snippy', 'import', '-f', 'content.txt'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_contents()) == idx
 

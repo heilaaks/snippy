@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_update_solution.py: Test PUT /solutions API."""
+"""test_api_update_solution: Test PUT /solutions API."""
 
 import copy
 import json
@@ -35,8 +35,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiUpdateSolution(object):
     """Test PUT /solutions/{digest} API."""
 
-    @pytest.mark.usefixtures('server', 'snippy', 'beats', 'beats-utc')
-    def test_api_update_solution_001(self, snippy, mocker):
+    @pytest.mark.usefixtures('beats', 'beats-utc')
+    def test_api_update_solution_001(self, server, mocker):
         """Update one solution with PUT."""
 
         ## Brief: Call PUT /snippy/api/v1/solutions to update existing
@@ -79,8 +79,8 @@ class TestApiUpdateSolution(object):
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
         result_json['data']['attributes']['updated'] = Content.BEATS_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -88,10 +88,10 @@ class TestApiUpdateSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_solutions()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'beats', 'caller')
-    def test_api_update_solution_002(self, snippy, mocker):
+    @pytest.mark.usefixtures('beats', 'caller')
+    def test_api_update_solution_002(self, server, mocker):
         """Update one solution with PUT."""
 
         ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution
@@ -120,8 +120,8 @@ class TestApiUpdateSolution(object):
                 'title': 'cannot find content with message digest 101010101010101'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/solutions/101010101010101',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -129,10 +129,10 @@ class TestApiUpdateSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
         assert len(Database.get_solutions()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'beats', 'caller')
-    def test_api_update_solution_003(self, snippy):
+    @pytest.mark.usefixtures('beats', 'caller')
+    def test_api_update_solution_003(self, server):
         """Try to update solution with malformed queries."""
 
         ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution
@@ -155,8 +155,8 @@ class TestApiUpdateSolution(object):
                 'title': 'not compared because of hash structure in random order inside the string'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -165,8 +165,8 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_400
         assert len(Database.get_solutions()) == 1
 
-    @pytest.mark.usefixtures('server', 'snippy', 'beats', 'caller')
-    def test_api_update_solution_004(self, snippy):
+    @pytest.mark.usefixtures('beats', 'caller')
+    def test_api_update_solution_004(self, server):
         """Try to update solution with malformed queries."""
 
         ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with
@@ -195,8 +195,8 @@ class TestApiUpdateSolution(object):
                 'title': 'client generated resource id is not supported, remove member data.id'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -205,8 +205,8 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_403
         assert len(Database.get_solutions()) == 1
 
-    @pytest.mark.usefixtures('server', 'snippy', 'beats', 'caller')
-    def test_api_update_solution_005(self, snippy):
+    @pytest.mark.usefixtures('beats', 'caller')
+    def test_api_update_solution_005(self, server):
         """Try to update solution with malformed queries."""
 
         ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution
@@ -232,8 +232,8 @@ class TestApiUpdateSolution(object):
                 'title': 'client generated resource id is not supported, remove member data.id'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))

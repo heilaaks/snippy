@@ -30,7 +30,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestCliUpdateSnippet(object):
     """Test workflows for updating snippets."""
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_001(self, snippy, edited_remove, mocker):
         """Update snippet based on digest."""
 
@@ -43,12 +43,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-d', '54e41e9b52a02b63'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_002(self, snippy, edited_remove, mocker):
         """Update snippet based on digest."""
 
@@ -61,12 +61,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-d', '54e41'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-d', '54e41'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_003(self, snippy, edited_remove, mocker):
         """Update snippet based on digest."""
 
@@ -79,12 +79,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_004(self, snippy, edited_remove, mocker):
         """Update snippet based on digest."""
 
@@ -97,12 +97,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--snippet', '-d', '54e41e9b52a02b63'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--snippet', '-d', '54e41e9b52a02b63'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_005(self, snippy, edited_remove, mocker):
         """Update snippet based on digest."""
 
@@ -116,12 +116,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_006(self, snippy, edited_remove, mocker):
         """Update snippet based on digest."""
 
@@ -134,12 +134,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-d', '123456789abcdef0'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-d', '123456789abcdef0'])  ## workflow
         assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_007(self, snippy, edited_remove, mocker):
         """Update snippet based on digest."""
 
@@ -154,12 +154,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-d', ''])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-d', ''])  ## workflow
         assert cause == 'NOK: cannot use empty message digest to update content'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_008(self, snippy, edited_remove, mocker):
         """Update snippet based on digest."""
 
@@ -174,12 +174,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-d', '5'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-d', '5'])  ## workflow
         assert cause == 'NOK: given digest 5 matches (2) more than once preventing the operation'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_009(self, snippy, edited_remove, mocker):
         """Update snippet based on content data."""
 
@@ -191,12 +191,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_010(self, snippy, edited_remove, mocker):
         """Update snippet based on content data."""
 
@@ -209,12 +209,12 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-c', 'snippet not existing'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-c', 'snippet not existing'])  ## workflow
         assert cause == 'NOK: cannot find content with content data \'snippet not existing\''
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_update_snippet_011(self, snippy, edited_remove, mocker):
         """Update snippet based on content data."""
 
@@ -228,7 +228,7 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-c', ''])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-c', ''])  ## workflow
         assert cause == 'NOK: cannot use empty content data to update content'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)

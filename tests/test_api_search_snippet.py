@@ -31,8 +31,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiSearchSnippet(object):
     """Test GET /snippy/api/snippets API."""
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
-    def test_api_search_snippet_001(self, snippy):
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_001(self, server):
         """Search snippets with GET."""
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from
@@ -55,8 +55,8 @@ class TestApiSearchSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
@@ -64,8 +64,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'netcat', 'exited')
-    def test_api_search_snippet_002(self, snippy):
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    def test_api_search_snippet_002(self, server):
         """Search snippets with GET."""
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
@@ -88,8 +88,8 @@ class TestApiSearchSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=brief')
@@ -97,8 +97,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
-    def test_api_search_snippet_003(self, snippy):
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_003(self, server):
         """Search snippets with GET."""
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
@@ -118,8 +118,8 @@ class TestApiSearchSnippet(object):
                 'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief,category')
@@ -127,8 +127,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
-    def test_api_search_snippet_004(self, snippy):
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_004(self, server):
         """Search snippets with GET."""
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from
@@ -147,8 +147,8 @@ class TestApiSearchSnippet(object):
                 'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief%2Ccategory')
@@ -156,8 +156,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'netcat', 'exited')
-    def test_api_search_snippet_005(self, snippy):
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    def test_api_search_snippet_005(self, server):
         """Search snippets with GET."""
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from
@@ -179,8 +179,8 @@ class TestApiSearchSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created,-brief')
@@ -188,8 +188,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'netcat', 'exited')
-    def test_api_search_snippet_006(self, snippy):
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    def test_api_search_snippet_006(self, server):
         """Search snippets with GET."""
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from
@@ -211,8 +211,8 @@ class TestApiSearchSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
@@ -220,8 +220,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'caller')
-    def test_api_search_snippet_007(self, snippy):
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_snippet_007(self, server):
         """Search snippets with GET."""
 
         ## Brief: Try to call GET /snippy/api/v1/snippets with sort parameter
@@ -239,8 +239,8 @@ class TestApiSearchSnippet(object):
                 'title': 'sort option validation failed for non existent field=notexisting'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
@@ -248,8 +248,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
-    def test_api_search_snippet_008(self, snippy):
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_008(self, server):
         """Search snippets with GET."""
 
         ## Brief: Call GET /snippy/api/v1/snippets to return only defined
@@ -266,8 +266,8 @@ class TestApiSearchSnippet(object):
                 'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief&fields=category')
@@ -275,8 +275,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'caller')
-    def test_api_search_snippet_009(self, snippy):
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_snippet_009(self, server):
         """Search snippets with GET."""
 
         ## Brief: Try to call GET /snippy/api/v1/snippets with search keywords
@@ -294,8 +294,8 @@ class TestApiSearchSnippet(object):
                 'title': 'cannot find resources'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
@@ -303,8 +303,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'caller')
-    def test_api_search_snippet_010(self, snippy):
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_snippet_010(self, server):
         """Search snippets with GET from tag fields."""
 
         ## Brief: Try to call GET /snippy/api/v1/snippets with search tag
@@ -322,8 +322,8 @@ class TestApiSearchSnippet(object):
                 'title': 'cannot find resources'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
@@ -331,8 +331,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'caller')
-    def test_api_search_snippet_011(self, snippy):
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_snippet_011(self, server):
         """Search snippet from group fields."""
 
         ## Brief: Call GET /snippy/api/v1/snippets with search group keywords
@@ -350,8 +350,8 @@ class TestApiSearchSnippet(object):
                 'title': 'cannot find resources'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
@@ -359,8 +359,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
-    def test_api_search_snippet_012(self, snippy):
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_012(self, server):
         """Search snippet with digets."""
 
         ## Brief: Call GET /snippy/api/v1/snippets/{digest} to get explicit
@@ -381,16 +381,16 @@ class TestApiSearchSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets/54e41e9b52a02b6',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'caller')
-    def test_api_search_snippet_013(self, snippy):
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_snippet_013(self, server):
         """Search snippet with digets."""
 
         ## Brief: Try to call GET /snippy/api/v1/snippets/{digest} with digest
@@ -409,16 +409,16 @@ class TestApiSearchSnippet(object):
                 'title': 'cannot find resource'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets/101010101010101',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
-    def test_api_search_snippet_014(self, snippy):
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_014(self, server):
         """Search snippet without search parameters."""
 
         ## Brief: Call GET /snippy/api/v1/snippets without defining search
@@ -439,8 +439,8 @@ class TestApiSearchSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
@@ -448,8 +448,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
-    def test_api_search_snippet_015(self, snippy):
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_015(self, server):
         """Search snippet without search parameters."""
 
         ## Brief: Call GET /snippy/api/v1/snippets without defining search
@@ -467,8 +467,8 @@ class TestApiSearchSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')
@@ -476,8 +476,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets')
-    def test_pytest_fixtures(self, snippy):
+    @pytest.mark.usefixtures('default-snippets')
+    def test_pytest_fixtures(self, server):
         """Test pytest fixtures with pytest specific mocking."""
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
@@ -499,8 +499,8 @@ class TestApiSearchSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
@@ -508,8 +508,8 @@ class TestApiSearchSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'remove', 'forced', 'exited', 'netcat')
-    def test_pytest_fixtures2(self, snippy):
+    @pytest.mark.usefixtures('remove', 'forced', 'exited', 'netcat')
+    def test_pytest_fixtures2(self, server):
         """Test pytest fixtures with pytest specific mocking."""
 
         ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
@@ -532,8 +532,8 @@ class TestApiSearchSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=brief')

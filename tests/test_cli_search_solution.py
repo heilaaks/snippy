@@ -29,7 +29,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestCliSearchSolution(object):
     """Test workflows for searching solutions."""
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_001(self, snippy, capsys):
         """Search solution from all fields."""
 
@@ -87,25 +87,25 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--solution', '--sall', 'filebeat', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--sall', 'filebeat', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_002(self, snippy, capsys):
         """Search solution from all fields."""
 
         ## Brief: Try to search solutions with keyword that cannot be found.
         output = 'NOK: cannot find content with given search criteria' + Const.NEWLINE
-        cause = snippy.run_cli(['snippy', 'search', '--solution', '--sall', 'notfound', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--sall', 'notfound', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_003(self, snippy, capsys):
         """Search solution with regexp."""
 
@@ -125,13 +125,13 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\\$\\s.*)'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\\$\\s.*)'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_004(self, snippy, capsys):
         """Search solution with --digest option."""
 
@@ -188,13 +188,13 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--solution', '--digest', 'a96accc25dd23ac0', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--digest', 'a96accc25dd23ac0', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_005(self, snippy, capsys):
         """Search solution from all field sand limit the search within specific group."""
 
@@ -254,7 +254,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--solution', '--sall', '.', '--sgrp', 'beats', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--sgrp', 'beats', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)

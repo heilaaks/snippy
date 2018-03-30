@@ -31,8 +31,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiDeleteSolution(object):
     """Test DELETE solutions API."""
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'kafka')
-    def test_api_delete_solution_001(self, snippy, mocker):
+    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    def test_api_delete_solution_001(self, server, mocker):
         """Delete solution with DELETE."""
 
         ## Brief: Call DELETE /snippy/api/v1/solutions with digest parameter
@@ -42,19 +42,19 @@ class TestApiDeleteSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         result_headers = {}
-        snippy.run_server()
+        server.run()
         assert len(Database.get_contents()) == 3
-        result = testing.TestClient(snippy.server.api).simulate_delete(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_delete(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='digest=eeef5ca3ec9cd36')
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
         assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'kafka')
-    def test_api_delete_solution_002(self, snippy, mocker):
+    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    def test_api_delete_solution_002(self, server, mocker):
         """Delete solution with digest."""
 
         ## Brief: Call DELETE /snippy/api/v1/solutions/f3fd167c64b6f97e that
@@ -64,18 +64,18 @@ class TestApiDeleteSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         result_headers = {}
-        snippy.run_server()
+        server.run()
         assert len(Database.get_solutions()) == 3
-        result = testing.TestClient(snippy.server.api).simulate_delete(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_delete(  ## apiflow
             path='/snippy/api/v1/solutions/eeef5ca3ec9cd36',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
         assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'kafka', 'caller')
-    def test_api_delete_solution_003(self, snippy):
+    @pytest.mark.usefixtures('default-solutions', 'kafka', 'caller')
+    def test_api_delete_solution_003(self, server):
         """Delete solution with digest."""
 
         ## Brief: Try to DELETE solution with resource location that does
@@ -93,9 +93,9 @@ class TestApiDeleteSolution(object):
                 'title': 'cannot find content with message digest beefbeef'
             }]
         }
-        snippy.run_server()
+        server.run()
         assert len(Database.get_solutions()) == 3
-        result = testing.TestClient(snippy.server.api).simulate_delete(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_delete(  ## apiflow
             path='/snippy/api/v1/solutions/beefbeef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers

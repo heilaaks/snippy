@@ -33,8 +33,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiCreateSolution(object):
     """Test POST solutions collection API."""
 
-    @pytest.mark.usefixtures('server', 'snippy', 'beats-utc')
-    def test_api_create_solution_001(self, snippy, mocker):
+    @pytest.mark.usefixtures('beats-utc')
+    def test_api_create_solution_001(self, server, mocker):
         """Create one solution from API."""
 
         ## Brief: Call POST /snippy/api/v1/solutions to create new solution.
@@ -55,8 +55,8 @@ class TestApiCreateSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -64,10 +64,10 @@ class TestApiCreateSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_solutions()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'beats-utc', 'kafka-utc')
-    def test_api_create_solutions_002(self, snippy, mocker):
+    @pytest.mark.usefixtures('beats-utc', 'kafka-utc')
+    def test_api_create_solutions_002(self, server, mocker):
         """Create multiple solutions from API."""
 
         ## Brief: Call POST /snippy/api/v1/solutions in list context to create
@@ -98,8 +98,8 @@ class TestApiCreateSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -107,7 +107,7 @@ class TestApiCreateSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
     @classmethod
     def teardown_class(cls):

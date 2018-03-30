@@ -31,8 +31,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiSearchSolution(object):
     """Test GET /snippy/api/solutions API."""
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions')
-    def test_api_search_solution_001(self, snippy):
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_001(self, server):
         """Search solution with GET."""
 
         ## Brief: Call GET /snippy/api/v1/solutions and search keywords from
@@ -55,8 +55,8 @@ class TestApiSearchSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=nginx%2CElastic&limit=20&sort=brief')
@@ -64,8 +64,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'kafka')
-    def test_api_search_solution_002(self, snippy):
+    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    def test_api_search_solution_002(self, server):
         """Search solution with GET."""
 
         ## Brief: Call GET /snippy/api/v1/solutions and search keywords from
@@ -91,8 +91,8 @@ class TestApiSearchSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug%2Ctesting&limit=2&sort=brief')
@@ -100,8 +100,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions')
-    def test_api_search_solution_003(self, snippy):
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_003(self, server):
         """Search solution with GET."""
 
         ## Brief: Call GET /snippy/api/v1/solutions and search keywords from
@@ -121,8 +121,8 @@ class TestApiSearchSolution(object):
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief,category')
@@ -130,8 +130,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions')
-    def test_api_search_solution_004(self, snippy):
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_004(self, server):
         """Search solution with GET."""
 
         ## Brief: Call GET /snippy/api/v1/solutions and search keywords from
@@ -150,8 +150,8 @@ class TestApiSearchSolution(object):
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief%2Ccategory')
@@ -159,8 +159,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'kafka')
-    def test_api_search_solution_005(self, snippy):
+    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    def test_api_search_solution_005(self, server):
         """Search solution with GET."""
 
         ## Brief: Call GET /snippy/api/v1/solutions and search keywords from
@@ -183,8 +183,8 @@ class TestApiSearchSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created,-brief')
@@ -192,8 +192,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'kafka')
-    def test_api_search_solution_006(self, snippy):
+    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    def test_api_search_solution_006(self, server):
         """Search solution with GET."""
 
         ## Brief: Call GET /snippy/api/v1/solutions and search keywords from
@@ -216,8 +216,8 @@ class TestApiSearchSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
@@ -225,8 +225,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'caller')
-    def test_api_search_solution_007(self, snippy):
+    @pytest.mark.usefixtures('default-solutions', 'caller')
+    def test_api_search_solution_007(self, server):
         """Search solution with GET."""
 
         ## Brief: Try to call GET /snippy/api/v1/solutions with sort parameter
@@ -245,8 +245,8 @@ class TestApiSearchSolution(object):
                 'title': 'sort option validation failed for non existent field=notexisting'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
@@ -255,8 +255,8 @@ class TestApiSearchSolution(object):
         assert result.status == falcon.HTTP_400
 
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions')
-    def test_api_search_solution_008(self, snippy):
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_008(self, server):
         """Search solution with GET."""
 
         ## Brief: Call GET /snippy/api/v1/solutions to return only defined
@@ -273,8 +273,8 @@ class TestApiSearchSolution(object):
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief&fields=category')
@@ -282,8 +282,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'caller')
-    def test_api_search_solution_009(self, snippy):
+    @pytest.mark.usefixtures('default-solutions', 'caller')
+    def test_api_search_solution_009(self, server):
         """Search solution with GET."""
 
         ## Brief: Try to call GET /snippy/api/v1/solutions with search
@@ -301,8 +301,8 @@ class TestApiSearchSolution(object):
                 'title': 'cannot find resources'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
@@ -310,8 +310,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'caller')
-    def test_api_search_solution_010(self, snippy):
+    @pytest.mark.usefixtures('default-solutions', 'caller')
+    def test_api_search_solution_010(self, server):
         """Search solution from tag fields."""
 
         ## Brief: Try to call GET /snippy/api/v1/solutions with search tag
@@ -329,8 +329,8 @@ class TestApiSearchSolution(object):
                 'title': 'cannot find resources'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
@@ -338,8 +338,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'caller')
-    def test_api_search_solution_011(self, snippy):
+    @pytest.mark.usefixtures('default-solutions', 'caller')
+    def test_api_search_solution_011(self, server):
         """Search solution from group fields."""
 
         ## Brief: Try to call GET /snippy/api/v1/solutions with search group
@@ -357,8 +357,8 @@ class TestApiSearchSolution(object):
                 'title': 'cannot find resources'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
@@ -366,8 +366,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions')
-    def test_api_search_solution_012(self, snippy):
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_012(self, server):
         """Search solution with digets."""
 
         ## Brief: Call GET /snippy/api/v1/solutions/{digest} to get explicit
@@ -387,16 +387,16 @@ class TestApiSearchSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions', 'caller')
-    def test_api_search_solution_013(self, snippy):
+    @pytest.mark.usefixtures('default-solutions', 'caller')
+    def test_api_search_solution_013(self, server):
         """Search solution with digets."""
 
         ## Brief: Try to call GET /snippy/api/v1/solutions/{digest} with
@@ -414,16 +414,16 @@ class TestApiSearchSolution(object):
                 'title': 'cannot find resource'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/solutions/101010101010101',  ## apiflow
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions')
-    def test_api_search_solution_014(self, snippy):
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_014(self, server):
         """Search solution without search parameters."""
 
         ## Brief: Call GET /snippy/api/v1/solutions without defining search
@@ -441,8 +441,8 @@ class TestApiSearchSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
@@ -450,8 +450,8 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-solutions')
-    def test_api_search_solution_015(self, snippy):
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_015(self, server):
         """Search solution without search parameters."""
 
         ## Brief: Call GET /snippy/api/v1/solutions without defining search
@@ -469,8 +469,8 @@ class TestApiSearchSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')

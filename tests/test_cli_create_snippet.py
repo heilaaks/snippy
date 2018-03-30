@@ -31,7 +31,6 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestCliCreateSnippet(object):
     """Test workflows for creating snippets."""
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_create_snippet_001(self, snippy, mocker):
         """Create snippet from CLI."""
 
@@ -43,12 +42,11 @@ class TestCliCreateSnippet(object):
         group = Snippet.DEFAULTS[Snippet.REMOVE]['group']
         tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
-        cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_create_snippet_002(self, snippy, mocker):
         """Create snippet from CLI."""
 
@@ -62,12 +60,11 @@ class TestCliCreateSnippet(object):
         group = Snippet.DEFAULTS[Snippet.REMOVE]['group']
         tags = Snippet.DEFAULTS[Snippet.REMOVE]['tags'][0]
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
-        cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_create_snippet_003(self, snippy):
         """Try to create snippet from CLI."""
 
@@ -77,11 +74,11 @@ class TestCliCreateSnippet(object):
         group = Snippet.DEFAULTS[Snippet.REMOVE]['group']
         tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
-        cause = snippy.run_cli(['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
+        cause = snippy.run(['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
         assert cause == 'NOK: mandatory snippet data not defined'
         assert not Database.get_snippets()
 
-    @pytest.mark.usefixtures('snippy', 'edit-snippet-template')
+    @pytest.mark.usefixtures('edit-snippet-template')
     def test_cli_create_snippet_004(self, snippy):
         """Try to create snippet from CLI."""
 
@@ -89,22 +86,22 @@ class TestCliCreateSnippet(object):
         ##        template. In case of snippets, the error cause is always
         ##        complaining about missing content data even when no changes
         ##        are made to template.
-        cause = snippy.run_cli(['snippy', 'create', '--editor'])  ## workflow
+        cause = snippy.run(['snippy', 'create', '--editor'])  ## workflow
         assert cause == 'NOK: mandatory snippet data not defined'
         assert not Database.get_snippets()
 
-    @pytest.mark.usefixtures('snippy', 'edit-empty')
+    @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_snippet_005(self, snippy):
         """Try to create snippet from CLI."""
 
         ## Brief: Try to create new snippet with empty data. In this case the
         ##        whole template is deleted and the edited solution is an
         ##        empty string.
-        cause = snippy.run_cli(['snippy', 'create', '--editor'])  ## workflow
+        cause = snippy.run(['snippy', 'create', '--editor'])  ## workflow
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
         assert not Database.get_snippets()
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'edit-remove')
+    @pytest.mark.usefixtures('default-snippets', 'edit-remove')
     def test_cli_create_snippet_006(self, snippy, mocker):
         """Try to create snippet from CLI."""
 
@@ -119,7 +116,7 @@ class TestCliCreateSnippet(object):
         group = Snippet.DEFAULTS[Snippet.REMOVE]['group']
         tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
-        cause = snippy.run_cli(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
         assert cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)

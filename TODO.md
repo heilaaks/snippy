@@ -11,11 +11,11 @@
    - [ ] snippy.run() does not return but run_cli() does. This does not make sense. This is due to tests which use run_cli. Refactor tests to use run()
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] When server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
-   - [ ] Change tests to use run instead of run_cli(). The run is better and the proper way to control this.
    - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.
    - [ ] Why test_cli_import_snippet_009 requires import-remove-utc but the 001 does not?
+   - [ ] Why delete_storage requires not try/catch block for file remove when the existence is tested? This was with after server/snippy.run refactoring.
    - [ ] Mocking text file simply refuses to work from pytest fixtures.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
@@ -94,6 +94,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Changed test to use snippy.run instead of run_cli or run_server which are now internal methods.
    - [x] Removed unnecessary help text in test case failures. This was achieved by using dynamic quiet parameter.
    - [x] Fixed license not to reflect AGPLv3 or later in all places referring to license.
    - [x] Added the default help message when tool is run without any parameters.

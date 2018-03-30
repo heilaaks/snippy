@@ -30,7 +30,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestCliUpdateSolution(object):
     """Test workflows for updating solutions."""
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_001(self, snippy, edited_beats, mocker):
         """Update solution with digest."""
 
@@ -43,12 +43,12 @@ class TestCliUpdateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_002(self, snippy, edited_beats, mocker):
         """Update solution with digest."""
 
@@ -61,13 +61,13 @@ class TestCliUpdateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--solution', '--digest', 'a96ac'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--solution', '--digest', 'a96ac'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_003(self, snippy, edited_beats, mocker):
         """Update solution with digest."""
 
@@ -80,12 +80,12 @@ class TestCliUpdateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'])  ## workflow # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'])  ## workflow # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_004(self, snippy, edited_beats, mocker):
         """Update solution with digest."""
 
@@ -100,12 +100,12 @@ class TestCliUpdateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--snippet', '-d', 'a96accc25dd23ac0'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--snippet', '-d', 'a96accc25dd23ac0'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_005(self, snippy, edited_beats, mocker):
         """Update solution with digest."""
 
@@ -121,12 +121,12 @@ class TestCliUpdateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '-d', 'a96accc25dd23ac0'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '-d', 'a96accc25dd23ac0'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_006(self, snippy, edited_beats, mocker):
         """Update solution with digest."""
 
@@ -139,12 +139,12 @@ class TestCliUpdateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', '123456789abcdef0'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', '123456789abcdef0'])  ## workflow
         assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_007(self, snippy, edited_beats, mocker):
         """Update solution with digest."""
 
@@ -159,12 +159,12 @@ class TestCliUpdateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--solution', '-d', ''])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', ''])  ## workflow
         assert cause == 'NOK: cannot use empty message digest to update content'
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_008(self, snippy, edited_beats, mocker):
         """Update solution with data."""
 
@@ -177,12 +177,12 @@ class TestCliUpdateSolution(object):
         }
         edited_beats.return_value = template
         data = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        cause = snippy.run_cli(['snippy', 'update', '--solution', '-c', data])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--solution', '-c', data])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_009(self, snippy, edited_beats, mocker):
         """Update solution with data."""
 
@@ -195,12 +195,12 @@ class TestCliUpdateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--solution', '--content', 'solution not existing'])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--solution', '--content', 'solution not existing'])  ## workflow
         assert cause == 'NOK: cannot find content with content data \'solution not existing\''
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions')
+    @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_010(self, snippy, edited_beats, mocker):
         """Update solution with data."""
 
@@ -214,7 +214,7 @@ class TestCliUpdateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run_cli(['snippy', 'update', '--solution', '-c', ''])  ## workflow
+        cause = snippy.run(['snippy', 'update', '--solution', '-c', ''])  ## workflow
         assert cause == 'NOK: cannot use empty content data to update content'
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)

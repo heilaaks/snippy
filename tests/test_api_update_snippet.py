@@ -35,8 +35,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiUpdateSnippet(object):
     """Test PUT /snippets/{digest} API."""
 
-    @pytest.mark.usefixtures('server', 'snippy', 'forced', 'remove-utc')
-    def test_api_update_snippet_001(self, snippy, mocker):
+    @pytest.mark.usefixtures('forced', 'remove-utc')
+    def test_api_update_snippet_001(self, server, mocker):
         """Update one snippet with PUT."""
 
         ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
@@ -68,8 +68,8 @@ class TestApiUpdateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -77,10 +77,10 @@ class TestApiUpdateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'forced', 'caller')
-    def test_api_update_snippet_002(self, snippy):
+    @pytest.mark.usefixtures('forced', 'caller')
+    def test_api_update_snippet_002(self, server):
         """Update snippet from API."""
 
         ## Brief: Try to call PUT /snippy/api/v1/snippets to update snippet
@@ -110,8 +110,8 @@ class TestApiUpdateSnippet(object):
                 'title': 'cannot find content with message digest 101010101010101'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/snippets/101010101010101',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -120,8 +120,8 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_404
         assert len(Database.get_snippets()) == 1
 
-    @pytest.mark.usefixtures('server', 'snippy', 'forced', 'caller')
-    def test_api_update_snippet_003(self, snippy):
+    @pytest.mark.usefixtures('forced', 'caller')
+    def test_api_update_snippet_003(self, server):
         """Try to update snippet with malformed queries."""
 
         ## Brief: Try to call PUT /snippy/api/v1/snippets to update new
@@ -144,8 +144,8 @@ class TestApiUpdateSnippet(object):
                 'title': 'not compared because of hash structure in random order inside the string'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -154,8 +154,8 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_400
         assert len(Database.get_snippets()) == 1
 
-    @pytest.mark.usefixtures('server', 'snippy', 'forced', 'netcat-utc')
-    def test_api_update_snippet_004(self, snippy, mocker):
+    @pytest.mark.usefixtures('forced', 'netcat-utc')
+    def test_api_update_snippet_004(self, server, mocker):
         """Updated snippet and verify created and updated timestamps."""
 
         ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
@@ -187,8 +187,8 @@ class TestApiUpdateSnippet(object):
             }
         }
         result_json['data']['attributes']['updated'] = Content.NETCAT_TIME
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_put(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -196,7 +196,7 @@ class TestApiUpdateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
     @classmethod
     def teardown_class(cls):

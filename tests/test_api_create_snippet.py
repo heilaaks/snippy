@@ -34,8 +34,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiCreateSnippet(object):
     """Test POST snippets collection API."""
 
-    @pytest.mark.usefixtures('server', 'snippy', 'remove-utc')
-    def test_api_create_snippet_001(self, snippy, mocker):
+    @pytest.mark.usefixtures('remove-utc')
+    def test_api_create_snippet_001(self, server, mocker):
         """Create one snippet with POST."""
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet.
@@ -57,8 +57,8 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -66,10 +66,10 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'remove-utc')
-    def test_api_create_snippet_002(self, snippy, mocker):
+    @pytest.mark.usefixtures('remove-utc')
+    def test_api_create_snippet_002(self, server, mocker):
         """Create one snippet with POST."""
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In
@@ -101,8 +101,8 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -110,10 +110,10 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'exited-utc')
-    def test_api_create_snippet_003(self, snippy, mocker):
+    @pytest.mark.usefixtures('exited-utc')
+    def test_api_create_snippet_003(self, server, mocker):
         """Create one snippet with POST."""
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In
@@ -143,8 +143,8 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -152,10 +152,10 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'exited-utc')
-    def test_api_create_snippet_004(self, snippy, mocker):
+    @pytest.mark.usefixtures('exited-utc')
+    def test_api_create_snippet_004(self, server, mocker):
         """Create one snippet with POST."""
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet. In
@@ -188,8 +188,8 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -197,10 +197,10 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'remove-utc')
-    def test_api_create_snippet_005(self, snippy, mocker):
+    @pytest.mark.usefixtures('remove-utc')
+    def test_api_create_snippet_005(self, server, mocker):
         """Create one snippet with POST."""
 
         ## Brief: Call POST /snippy/api/v1/snippets to create new snippet with
@@ -239,8 +239,8 @@ class TestApiCreateSnippet(object):
             }]
         }
         content_read = {'3d855210284302d5': result_json['data'][0]['attributes']}
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -248,10 +248,10 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'remove-utc', 'forced-utc')
-    def test_api_create_snippet_006(self, snippy, mocker):
+    @pytest.mark.usefixtures('remove-utc', 'forced-utc')
+    def test_api_create_snippet_006(self, server, mocker):
         """Create list of snippets from API."""
 
         ## Brief: Call POST /api/v1/snippets in list context to create new
@@ -284,8 +284,8 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -293,11 +293,11 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
 
-    @pytest.mark.usefixtures('server', 'snippy', 'caller')
-    def test_api_create_snippet_007(self, snippy):
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_snippet_007(self, server):
         """Try to create snippet with malformed queries."""
 
         ## Brief: Try to call POST /snippy/api/v1/snippets to create new
@@ -315,8 +315,8 @@ class TestApiCreateSnippet(object):
                 'title': 'not compared because of hash structure in random order inside the string'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -324,8 +324,8 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
-    @pytest.mark.usefixtures('server', 'snippy', 'caller')
-    def test_api_create_snippet_008(self, snippy):
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_snippet_008(self, server):
         """Try to create snippet with malformed queries."""
 
         ## Brief: Try to call POST /snippy/api/v1/snippets to create new
@@ -361,8 +361,8 @@ class TestApiCreateSnippet(object):
                 'title': "json media validation failed: top level data object type must be 'snippet' or 'solution'"
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -370,8 +370,8 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
-    @pytest.mark.usefixtures('server', 'snippy', 'caller')
-    def test_api_create_snippet_009(self, snippy):
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_snippet_009(self, server):
         """Try to create snippet with malformed queries."""
 
         ## Brief: Try to call POST /snippy/api/v1/snippets to create new
@@ -397,8 +397,8 @@ class TestApiCreateSnippet(object):
                 'title': 'client generated resource id is not supported, remove member data.id'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -406,8 +406,8 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_403
 
-    @pytest.mark.usefixtures('server', 'snippy', 'caller')
-    def test_api_create_snippet_010(self, snippy):
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_snippet_010(self, server):
         """Try to create snippet with malformed queries."""
 
         ## Brief: Try to call POST /snippy/api/v1/snippets to create two
@@ -435,8 +435,8 @@ class TestApiCreateSnippet(object):
                 'title': 'not compared because of hash structure in random order inside the string'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -445,8 +445,8 @@ class TestApiCreateSnippet(object):
         assert result.status == falcon.HTTP_400
         assert not Database.get_snippets()
 
-    @pytest.mark.usefixtures('server', 'snippy', 'caller')
-    def test_api_create_snippet_011(self, snippy):
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_snippet_011(self, server):
         """Try to create snippet with malformed queries."""
 
         ## Brief: Try to call POST /snippy/api/v1/snippets to create two
@@ -477,8 +477,8 @@ class TestApiCreateSnippet(object):
                 'title': 'client generated resource id is not supported, remove member data.id'
             }]
         }
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_post(  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))

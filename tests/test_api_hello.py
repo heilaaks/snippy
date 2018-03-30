@@ -31,8 +31,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiHello(object):
     """Test hello API."""
 
-    @pytest.mark.usefixtures('server', 'snippy')
-    def test_api_hello_api_001(self, snippy):
+    def test_api_hello_api_001(self, server):
         """Test hello API in /snippy/api/v1/."""
 
         ## Brief: Call GET /snippy/api/v1/ to get hello!
@@ -41,14 +40,13 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api/v1/')  ## apiflow
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server', 'snippy')
-    def test_api_hello_api_002(self, snippy):
+    def test_api_hello_api_002(self, server):
         """Test hello API in /snippy/api/hello."""
 
         ## Brief: Call GET /snippy/api/v1/hello to get hello!
@@ -57,13 +55,13 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        snippy.run_server()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/hello')  ## apiflow
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api/v1/hello')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('server')
+    @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_003(self):
         """Test hello API with modified server base path configuration."""
 
@@ -75,16 +73,16 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api/'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')  ## apiflow
+        server = Snippy(['snippy', '--server', '--base-path', '/snippy/api/'])
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api/')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        snippy.release()
+        server.release()
         Database.delete_storage()
 
-    @pytest.mark.usefixtures('server')
+    @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_004(self):
         """Test hello API with modified server base path configuration."""
 
@@ -98,16 +96,16 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        snippy = Snippy(['snippy', '--server', '--base-path', '/snippy/api'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')  ## apiflow
+        server = Snippy(['snippy', '--server', '--base-path', '/snippy/api'])
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api/')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        snippy.release()
+        server.release()
         Database.delete_storage()
 
-    @pytest.mark.usefixtures('server')
+    @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_005(self):
         """Test hello API with modified server base path configuration."""
 
@@ -121,16 +119,16 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api/'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/')  ## apiflow
+        server = Snippy(['snippy', '--server', '--base-path', 'snippy/api/'])
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api/')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        snippy.release()
+        server.release()
         Database.delete_storage()
 
-    @pytest.mark.usefixtures('server')
+    @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_006(self):
         """Test hello API with modified server base path configuration."""
 
@@ -144,16 +142,16 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        snippy = Snippy(['snippy', '--server', '--base-path', 'snippy/api'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api')  ## apiflow
+        server = Snippy(['snippy', '--server', '--base-path', 'snippy/api'])
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        snippy.release()
+        server.release()
         Database.delete_storage()
 
-    @pytest.mark.usefixtures('server')
+    @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_007(self):
         """Test hello API with modified server base path configuration."""
 
@@ -166,16 +164,16 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        snippy = Snippy(['snippy', '--server', '--base-path', '/snippy//api'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1')  ## apiflow
+        server = Snippy(['snippy', '--server', '--base-path', '/snippy//api'])
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api/v1')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        snippy.release()
+        server.release()
         Database.delete_storage()
 
-    @pytest.mark.usefixtures('server')
+    @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_008(self, caplog):
         """Test hello API with modified server ip and port configuration."""
 
@@ -187,14 +185,14 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        snippy = Snippy(['snippy', '--server', '--ip', 'localhost', '--port', '8081', '-vv'])
-        snippy.run()
-        result = testing.TestClient(snippy.server.api).simulate_get('/snippy/api/v1/')  ## apiflow
+        server = Snippy(['snippy', '--server', '--ip', 'localhost', '--port', '8081', '-vv'])
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get('/snippy/api/v1/')  ## apiflow
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert 'configured option server ip localhost and port 8081' in caplog.text
-        snippy.release()
+        server.release()
         Database.delete_storage()
 
     @classmethod

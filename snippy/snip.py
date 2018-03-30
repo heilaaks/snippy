@@ -40,20 +40,29 @@ class Snippy(object):
         self.storage = Storage()
         self.server = None
 
-    def run(self):
+    def run(self, args=None):
         """Run Snippy."""
 
+        args = Config.init_args if args is None else args
         if Config.server:
-            self.run_server()
+            self._run_server()
         elif Config.cli:
-            self.run_cli()
+            self._run_cli(args)
         else:
-            self.release()
+            Cause.print_failure()
 
-    def run_cli(self, args=None):
+        return Cause.reset()
+
+    def release(self):
+        """Release session."""
+
+        self.storage.disconnect()
+        Cause.reset()
+        Logger.reset()
+
+    def _run_cli(self, args):
         """Run command line session."""
 
-        args = Config.init_args if args is None else args
         Config.load(Cli(args))
         if Config.is_category_snippet:
             Snippet(self.storage).run()
@@ -67,9 +76,7 @@ class Snippy(object):
 
         Logger.print_cause(Cause.get_message())
 
-        return Cause.reset()
-
-    def run_server(self):
+    def _run_server(self):
         """Run API server."""
 
         try:
@@ -80,13 +87,6 @@ class Snippy(object):
         except ImportError:
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'install snippy as server in order to run api server')
             Logger.print_cause(Cause.get_message())
-
-    def release(self):
-        """Release session."""
-
-        self.storage.disconnect()
-        Cause.reset()
-        Logger.reset()
 
 
 def main():

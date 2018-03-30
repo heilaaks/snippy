@@ -31,8 +31,8 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestApiDeleteSnippet(object):
     """Test DELETE snippets API."""
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'netcat')
-    def test_api_delete_snippet_001(self, snippy, mocker):
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    def test_api_delete_snippet_001(self, server, mocker):
         """Delete snippet with DELETE."""
 
         ## Brief: Call DELETE /snippy/api/v1/snippets with digest parameter
@@ -42,19 +42,19 @@ class TestApiDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         result_headers = {}
-        snippy.run_server()
+        server.run()
         assert len(Database.get_contents()) == 3
-        result = testing.TestClient(snippy.server.api).simulate_delete(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_delete(  ## apiflow
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='digest=f3fd167c64b6f97e')
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
         assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'netcat')
-    def test_api_delete_snippet_002(self, snippy, mocker):
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    def test_api_delete_snippet_002(self, server, mocker):
         """Delete snippet with digest."""
 
         ## Brief: Call DELETE /snippy/api/v1/snippets/f3fd167c64b6f97e that
@@ -64,18 +64,18 @@ class TestApiDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         result_headers = {}
-        snippy.run_server()
+        server.run()
         assert len(Database.get_snippets()) == 3
-        result = testing.TestClient(snippy.server.api).simulate_delete(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_delete(  ## apiflow
             path='/snippy/api/v1/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
         assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('server', 'snippy', 'default-snippets', 'netcat', 'caller')
-    def test_api_delete_snippet_003(self, snippy):
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'caller')
+    def test_api_delete_snippet_003(self, server):
         """Delete snippet with digest."""
 
         ## Brief: Try to DELETE snippet with resource location that does not
@@ -93,9 +93,9 @@ class TestApiDeleteSnippet(object):
                 'title': 'cannot find content with message digest beefbeef'
             }]
         }
-        snippy.run_server()
+        server.run()
         assert len(Database.get_snippets()) == 3
-        result = testing.TestClient(snippy.server.api).simulate_delete(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_delete(  ## apiflow
             path='/snippy/api/v1/snippets/beefbeef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers

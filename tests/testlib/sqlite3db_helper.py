@@ -132,7 +132,10 @@ class Sqlite3DbHelper(object):
         if Const.PYTHON2:
             filename = Sqlite3DbHelper.get_storage()
             if os.path.isfile(filename):
-                os.remove(filename)
+                try:
+                    os.remove(filename)
+                except OSError:
+                    pass
 
     @staticmethod
     def select_all_snippets():

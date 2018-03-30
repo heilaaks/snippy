@@ -19,6 +19,8 @@
 
 """cause: Cause code services."""
 
+from __future__ import print_function
+
 import inspect
 import sys
 
@@ -143,6 +145,24 @@ class Cause(object):
             cause = 'NOK: ' + cls._list['errors'][0]['title']
 
         return cause
+
+    @classmethod
+    def print_failure(cls):
+        """Print failure cause in case of failure."""
+
+        if not cls.is_ok():
+            Logger.print_cause(cls.get_message())
+
+    @classmethod
+    def debug(cls):
+        """Debug Cause."""
+
+        for idx, cause in enumerate(cls._list['errors']):
+            print('cause[%d]:' % idx)
+            print('  status : %s\n'
+                  '  string : %s\n'
+                  '  module : %s\n'
+                  '  title  : %s\n' % (cause['status'], cause['status_string'], cause['module'], cause['title']))
 
     @staticmethod
     def _caller():

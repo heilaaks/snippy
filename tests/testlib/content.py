@@ -78,7 +78,7 @@ class Content(object):
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open()) as mock_file:
             for digest in content:
                 mock_file.reset_mock()
-                cause = snippy.run_cli(['snippy', 'export', '-d', digest, '-f', 'content.txt'])
+                cause = snippy.run(['snippy', 'export', '-d', digest, '-f', 'content.txt'])
                 assert cause == Cause.ALL_OK
                 mock_file.assert_called_once_with('content.txt', 'w')
                 file_handle = mock_file.return_value.__enter__.return_value

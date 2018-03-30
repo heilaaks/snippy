@@ -36,7 +36,6 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing solutions."""
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_001(self, snippy, yaml_load, mocker):
         """Import all solutions."""
 
@@ -48,13 +47,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--solution'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--solution'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         yaml_load.assert_called_once_with('./solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_002(self, snippy, yaml_load, mocker):
         """Import all solutions."""
 
@@ -65,13 +63,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', './all-solutions.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         yaml_load.assert_called_once_with('./all-solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_003(self, snippy, yaml_load, mocker):
         """Import all solutions."""
 
@@ -83,14 +80,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '-f', './all-solutions.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-f', './all-solutions.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         assert not Database.get_snippets()
         yaml_load.assert_called_once_with('./all-solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_004(self, snippy, json_load, mocker):
         """Import all solutions."""
 
@@ -101,13 +97,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
         }
         json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', './all-solutions.json'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.json'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         json_load.assert_called_once_with('./all-solutions.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_005(self, snippy, json_load, mocker):
         """Import all solutions."""
 
@@ -119,14 +114,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
         }
         json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '-f', './all-solutions.json'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-f', './all-solutions.json'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         assert not Database.get_snippets()
         json_load.assert_called_once_with('./all-solutions.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_006(self, snippy, mocker):
         """Import all solutions."""
 
@@ -139,13 +133,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', './all-solutions.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_007(self, snippy, mocker):
         """Import all solutions."""
 
@@ -159,13 +152,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-f', './all-solutions.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './all-solutions.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_008(self, snippy, mocker):
         """Import all solutions."""
 
@@ -178,13 +170,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', './all-solutions.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_009(self, snippy, mocker):
         """Import all solutions."""
 
@@ -198,13 +189,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-f', './all-solutions.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './all-solutions.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'beats', 'import-kafka-utc')
+    @pytest.mark.usefixtures('beats', 'import-kafka-utc')
     def test_cli_import_solution_010(self, snippy, yaml_load, mocker):
         """Import all solutions."""
 
@@ -217,13 +208,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         assert len(Database.get_solutions()) == 1
-        cause = snippy.run_cli(['snippy', 'import', '--solution', '--file', './all-solutions.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--solution', '--file', './all-solutions.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         yaml_load.assert_called_once_with('./all-solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_011(self, snippy):
         """Import all solutions."""
 
@@ -232,12 +222,11 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         ##        cannot be imported.
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', './solution-template.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '-f', './solution-template.txt'])  ## workflow
             assert cause == 'NOK: no content was stored because it matched to empty template'
             assert not Database.get_contents()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_012(self, snippy):
         """Import all solutions."""
 
@@ -245,12 +234,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         ##        supported. This should result error text for end user and
         ##        no files should be read.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', './foo.bar'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             assert not Database.get_contents()
             mock_file.assert_not_called()
 
-    @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('nginx', 'import-nginx-utc')
     def test_cli_import_solution_013(self, snippy, yaml_load, mocker):
         """Import solution based on message digest."""
 
@@ -259,14 +248,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         ##        solution. One line in the solution data was updated.
         content_read = Content.updated_nginx()
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])  ## workflow
-        print(Database.print_contents())
+        cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         yaml_load.assert_called_once_with('one-solution.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('nginx', 'import-nginx-utc')
     def test_cli_import_solution_014(self, snippy, yaml_load, mocker):
         """Import solution based on message digest."""
 
@@ -275,14 +263,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         ##        the solution data was updated.
         content_read = Content.updated_nginx()
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         assert not Database.get_snippets()
         yaml_load.assert_called_once_with('one-solution.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('nginx', 'import-nginx-utc')
     def test_cli_import_solution_015(self, snippy, json_load, mocker):
         """Import solution based on message digest."""
 
@@ -291,13 +279,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         ##        solution. One line in the content data was updated.
         content_read = Content.updated_nginx()
         json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.json'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.json'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         json_load.assert_called_once_with('one-solution.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('nginx', 'import-nginx-utc')
     def test_cli_import_solution_016(self, snippy, mocker):
         """Import solution based on message digest."""
 
@@ -308,13 +296,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content_read = Content.updated_nginx()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('nginx', 'import-nginx-utc')
     def test_cli_import_solution_017(self, snippy, mocker):
         """Import solution based on message digest."""
 
@@ -325,13 +313,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content_read = Content.updated_nginx()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('nginx', 'import-nginx-utc')
     def test_cli_import_solution_018(self, snippy, mocker):
         """Import solution based on message digest."""
 
@@ -342,14 +330,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content_read = Content.updated_nginx()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--snippet', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--snippet', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('one-solution.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('nginx', 'import-nginx-utc')
     def test_cli_import_solution_019(self, snippy, mocker):
         """Import solution based on message digest."""
 
@@ -358,14 +346,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content_read = Content.updated_nginx()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-d', '123456789abcdef0', '-f', 'one-solution.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '-d', '123456789abcdef0', '-f', 'one-solution.text'])  ## workflow
             assert cause == 'NOK: cannot find solution identified with digest 123456789abcdef0'
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, {Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]})
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_020(self, snippy, yaml_load, mocker):
         """Import solution."""
 
@@ -374,13 +361,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         yaml_load.assert_called_once_with('one-solution.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_021(self, snippy, json_load, mocker):
         """Import solution."""
 
@@ -389,13 +375,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.json'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.json'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         json_load.assert_called_once_with('one-solution.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_022(self, snippy, mocker):
         """Import solution."""
 
@@ -406,13 +391,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_023(self, snippy, mocker):
         """Import solution."""
 
@@ -424,14 +408,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-f', 'one-solution.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', 'one-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_024(self, snippy, mocker):
         """Import solution."""
 
@@ -442,13 +425,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '-f', 'one-solution.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_025(self, snippy, yaml_load, mocker):
         """Import solutions defaults."""
 
@@ -460,14 +442,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--solution', '--defaults'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--solution', '--defaults'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 2
         defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
         yaml_load.assert_called_once_with(defaults_solutions, 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-solutions', 'import-beats-utc', 'import-nginx-utc')
+    @pytest.mark.usefixtures('default-solutions', 'import-beats-utc', 'import-nginx-utc')
     def test_cli_import_solution_026(self, snippy, yaml_load, mocker):
         """Import solutions defaults."""
 
@@ -479,14 +461,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--solution', '--defaults'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--solution', '--defaults'])  ## workflow
         assert cause == 'NOK: no content was inserted because content data already existed'
         assert len(Database.get_solutions()) == 2
         defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
         yaml_load.assert_called_once_with(defaults_solutions, 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_027(self, snippy, mocker):
         """Import solutions from text template."""
 
@@ -502,14 +483,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         }
         mocked_open = mock.mock_open(read_data=template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-f', './solution-template.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './solution-template.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_solution_028(self, snippy):
         """Import solutions from text template."""
 
@@ -520,7 +500,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         template = Const.NEWLINE.join(Solution.TEMPLATE)
         mocked_open = mock.mock_open(read_data=template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--solution', '--template'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--solution', '--template'])  ## workflow
             assert cause == 'NOK: no content was stored because it matched to empty template'
             assert not Database.get_contents()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')

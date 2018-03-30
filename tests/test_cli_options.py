@@ -242,7 +242,7 @@ class TestCliOptions(object):
         ##        tests are not packaged with the release.
         sys.argv = ['snippy', '--help', 'tests']
         snippy = Snippy(['snippy', '--help', 'tests'])  ## workflow
-        cause = snippy.run_cli()
+        cause = snippy.run()
         out, err = capsys.readouterr()
         assert cause == 'NOK: test cases are not packaged with release No module named \'tests\''
         assert out == 'NOK: test cases are not packaged with release No module named \'tests\'' + Const.NEWLINE
@@ -260,7 +260,7 @@ class TestCliOptions(object):
         ##        in order to avoid matching logs explicitly. Nothing must
         ##        be printed to stderr. TODO: Why the stdout container few
         ##        lines in this test and stderr the Logger exception logs?
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
         _, _ = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         #assert not out
@@ -310,7 +310,7 @@ class TestCliOptions(object):
             '   ! metadata : None',
             '   ! key      : 2'
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])  ## workflow
         out, _ = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert Const.NEWLINE.join(output) in out
@@ -323,7 +323,7 @@ class TestCliOptions(object):
 
         ## Brief: Disable all logging and output to terminal. Only the printed
         ##        content is displayed on the screen.
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '-q'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '-q'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert not out

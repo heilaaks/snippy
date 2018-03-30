@@ -37,7 +37,6 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestCliImportSnippet(object):
     """Test workflows for importing snippets."""
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_001(self, snippy, yaml_load, mocker):
         """Import all snippets."""
 
@@ -49,13 +48,12 @@ class TestCliImportSnippet(object):
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import'])  ## workflow
+        cause = snippy.run(['snippy', 'import'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         yaml_load.assert_called_once_with('./snippets.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_002(self, snippy, yaml_load, mocker):
         """Import all snippets."""
 
@@ -66,13 +64,12 @@ class TestCliImportSnippet(object):
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-f', './all-snippets.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         yaml_load.assert_called_once_with('./all-snippets.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_003(self, snippy, json_load, mocker):
         """Import all snippets."""
 
@@ -83,13 +80,12 @@ class TestCliImportSnippet(object):
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
         json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.json'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-f', './all-snippets.json'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         json_load.assert_called_once_with('./all-snippets.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_004(self, snippy, mocker):
         """Import all snippets."""
 
@@ -102,13 +98,12 @@ class TestCliImportSnippet(object):
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_005(self, snippy, mocker):
         """Import all snippets."""
 
@@ -121,13 +116,12 @@ class TestCliImportSnippet(object):
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_006(self, snippy):
         """Import all snippets."""
 
@@ -135,35 +129,33 @@ class TestCliImportSnippet(object):
         ##        supported. This should result error text for end user and
         ##        no files should be read.
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-f', './foo.bar'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             assert not Database.get_contents()
             mock_file.assert_not_called()
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_007(self, snippy):
         """Import all snippets."""
 
         ## Brief: Try to import snippet from file that is not existing. The
         ##        file extension is one of the supported file formats.
         with mock.patch('snippy.migrate.migrate.os.path.isfile', return_value=False):
-            cause = snippy.run_cli(['snippy', 'import', '-f', './foo.yaml'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './foo.yaml'])  ## workflow
             assert cause == 'NOK: cannot read file ./foo.yaml'
             assert not Database.get_contents()
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_008(self, snippy):
         """Import all snippets."""
 
         ## Brief: Try to import snippet from text file that is empty.
         mocked_open = mock.mock_open(read_data=Const.EMPTY)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
             assert cause == 'NOK: could not identify text template content category'
             assert not Database.get_contents()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
-    @pytest.mark.usefixtures('snippy', 'remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('remove', 'import-remove-utc')
     def test_cli_import_snippet_009(self, snippy, yaml_load, mocker):
         """Import defined snippet."""
 
@@ -174,13 +166,13 @@ class TestCliImportSnippet(object):
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('remove', 'import-remove-utc')
     def test_cli_import_snippet_010(self, snippy, yaml_load, mocker):
         """Import defined snippet."""
 
@@ -192,13 +184,13 @@ class TestCliImportSnippet(object):
         }
         content_read['4525613eaecd5297']['tags'] = ('new', 'tags', 'set')
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('remove', 'import-remove-utc')
     def test_cli_import_snippet_011(self, snippy, json_load, mocker):
         """Import defined snippet."""
 
@@ -210,13 +202,13 @@ class TestCliImportSnippet(object):
         }
         content_read['f07547e7c692741a']['brief'] = 'Updated brief description'
         json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         json_load.assert_called_once_with('one-snippet.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('remove', 'import-remove-utc')
     def test_cli_import_snippet_012(self, snippy, mocker):
         """Import defined snippet."""
 
@@ -230,13 +222,13 @@ class TestCliImportSnippet(object):
         content_read['7681559ca5c001e2']['links'] = ('https://new.link', )
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('remove', 'import-remove-utc')
     def test_cli_import_snippet_013(self, snippy, mocker):
         """Import defined snippet."""
 
@@ -250,13 +242,13 @@ class TestCliImportSnippet(object):
         content_read['7681559ca5c001e2']['links'] = ('https://new.link', )
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'remove')
+    @pytest.mark.usefixtures('remove')
     def test_cli_import_snippet_014(self, snippy, mocker):
         """Import defined snippet."""
 
@@ -267,13 +259,12 @@ class TestCliImportSnippet(object):
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])  ## workflow
             assert cause == 'NOK: cannot find snippet identified with digest 123456789abcdef0'
             assert len(Database.get_snippets()) == 1
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_015(self, snippy, yaml_load, mocker):
         """Import snippet defaults."""
 
@@ -285,14 +276,14 @@ class TestCliImportSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--defaults'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--defaults'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
         yaml_load.assert_called_once_with(defaults_snippets, 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'import-remove-utc', 'import-forced-utc')
+    @pytest.mark.usefixtures('default-snippets', 'import-remove-utc', 'import-forced-utc')
     def test_cli_import_snippet_016(self, snippy, yaml_load, mocker):
         """Import snippet defaults."""
 
@@ -305,14 +296,13 @@ class TestCliImportSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run_cli(['snippy', 'import', '--defaults'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--defaults'])  ## workflow
         assert cause == 'NOK: no content was inserted because content data already existed'
         assert len(Database.get_snippets()) == 2
         defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
         yaml_load.assert_called_once_with(defaults_snippets, 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('snippy')
     def test_cli_import_snippet_017(self, snippy):
         """Import defined snippet."""
 
@@ -322,12 +312,12 @@ class TestCliImportSnippet(object):
         ##        types.
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Snippet.TEMPLATE))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run_cli(['snippy', 'import', '--template'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--template'])  ## workflow
             assert cause == 'NOK: no content was stored because it matched to empty template'
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'import-remove-utc', 'import-netcat-utc')
+    @pytest.mark.usefixtures('default-snippets', 'import-remove-utc', 'import-netcat-utc')
     def test_cli_import_snippet_018(self, snippy, yaml_load, mocker):
         """Import snippets already existing."""
 
@@ -343,7 +333,7 @@ class TestCliImportSnippet(object):
         }
         yaml.safe_load.return_value = copy.deepcopy(Content.imported_dict(content_read))
         content_read[Snippet.FORCED_DIGEST] = Snippet.DEFAULTS[Snippet.FORCED]
-        cause = snippy.run_cli(['snippy', 'import', '-f', './snippets.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-f', './snippets.yaml'])  ## workflow
         assert cause == Cause.ALL_OK
         assert len(Database.get_contents()) == 3
         yaml_load.assert_called_once_with('./snippets.yaml', 'r')

@@ -29,7 +29,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
     """Test workflows for searching snippets."""
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_001(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -46,13 +46,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', 'redis', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'redis', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_002(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -68,13 +68,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', 'all', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'all', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_003(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -97,13 +97,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', 'docker', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'docker', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_004(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -126,13 +126,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', 'moby', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'moby', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_005(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -149,13 +149,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', 'tutorials', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'tutorials', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_006(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -172,13 +172,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_007(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -202,13 +202,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', 'redis,--quiet', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'redis,--quiet', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
     def test_cli_search_snippet_008(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -232,13 +232,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', 'netcat --quiet all', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'netcat --quiet all', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_009(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -261,13 +261,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_010(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -291,13 +291,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_011(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -320,7 +320,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -334,25 +334,25 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         ##        The used search keyword matches to 'match any' that tries
         ##        to list all the content.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_013(self, snippy, capsys):
         """Search snippet from all fields."""
 
         ## Brief: Try to search snippets with keyword that cannot be found.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run_cli(['snippy', 'search', '--sall', 'not-found', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'not-found', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
     def test_cli_search_snippet_014(self, snippy, capsys):
         """Search snippet from tag field."""
 
@@ -369,25 +369,25 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--stag', 'netcat', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', 'netcat', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
     def test_cli_search_snippet_015(self, snippy, capsys):
         """Search snippet from tag field."""
 
         ## Brief: Search snippets from tag field. No matches are made.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run_cli(['snippy', 'search', '--stag', 'not-found', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', 'not-found', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_016(self, snippy, capsys):
         """Search snippet from tag field."""
 
@@ -410,14 +410,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--stag', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
     def test_cli_search_snippet_017(self, snippy, capsys):
         """Search snippet from group field."""
 
@@ -433,25 +433,25 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sgrp', 'linux', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sgrp', 'linux', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
     def test_cli_search_snippet_018(self, snippy, capsys):
         """Search snippet from group field."""
 
         ## Brief: Search snippets from group field. No matches are made.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run_cli(['snippy', 'search', '--sgrp', 'not-found', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sgrp', 'not-found', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_019(self, snippy, capsys):
         """Search snippet from group field."""
 
@@ -474,13 +474,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sgrp', '', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sgrp', '', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'default-solutions', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'netcat')
     def test_cli_search_snippet_020(self, snippy, capsys):
         """Search snippet with regexp."""
 
@@ -496,13 +496,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--filter', '.*(\\$\\s.*)'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', '.*(\\$\\s.*)'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'default-solutions', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'netcat')
     def test_cli_search_snippet_021(self, snippy, capsys):
         """Search snippet with regexp."""
 
@@ -527,25 +527,25 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--all', '--sall', '.', '--filter', '\\.*(\\$\\s.*)'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--all', '--sall', '.', '--filter', '\\.*(\\$\\s.*)'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'default-solutions', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'netcat')
     def test_cli_search_snippet_022(self, snippy, capsys):
         """Search snippet with regexp."""
 
         ## Brief: Search all content with regexp filter. There are no matches.
         output = 'OK\n'
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--filter', 'not-found'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', 'not-found'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == output
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'default-solutions')
+    @pytest.mark.usefixtures('default-snippets', 'default-solutions')
     def test_cli_search_snippet_023(self, snippy, capsys):
         """Search snippet with regexp."""
 
@@ -568,13 +568,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'NOK: listing matching content without filter because it was not syntactically correct regular expression',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--filter', '[invalid(regexp', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', '[invalid(regexp', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: listing matching content without filter because it was not syntactically correct regular expression'
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_024(self, snippy, capsys):
         """Search snippets with --content option."""
 
@@ -589,13 +589,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--content', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--content', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_025(self, snippy, capsys):
         """Search snippets with --content option."""
 
@@ -611,13 +611,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--content', 'docker rm --volumes', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--content', 'docker rm --volumes', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_026(self, snippy, capsys):
         """Search snippets with --content option."""
 
@@ -633,13 +633,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--content', 'volumes', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--content', 'volumes', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_027(self, snippy, capsys):
         """Search snippet with --digest option."""
 
@@ -655,13 +655,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_028(self, snippy, capsys):
         """Search snippet with --digest option."""
 
@@ -677,13 +677,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--digest', '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5', '--no-ansi'])  ## workflow  pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'search', '--digest', '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5', '--no-ansi'])  ## workflow  pylint: disable=line-too-long
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_029(self, snippy, capsys):
         """Search snippet with --digest option."""
 
@@ -706,13 +706,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--digest', '5', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--digest', '5', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_030(self, snippy, capsys):
         """Search snippet with --digest option."""
 
@@ -735,13 +735,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--digest', '', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--digest', '', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
     def test_cli_search_snippet_031(self, snippy, capsys):
         """Search snippet from all fields and limit the search within specific group."""
 
@@ -765,13 +765,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--sgrp', 'docker', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--sgrp', 'docker', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
     def test_cli_search_snippet_032(self, snippy, capsys):
         """Search snippet from all fields and limit the search within specific group."""
 
@@ -800,13 +800,13 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--sall', '.', '--sgrp', 'docker,linux', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--sgrp', 'docker,linux', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
     def test_cli_search_snippet_033(self, snippy, capsys):
         """Search snippet from tag fields and limit the search within specific group."""
 
@@ -830,38 +830,38 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run_cli(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'docker', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'docker', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
     def test_cli_search_snippet_034(self, snippy, capsys):
         """Search snippet from tag fields and limit the search within specific group."""
 
         ## Brief: Try to search snippets based on tag fields of specific
         ##        group. In this case there are no matches made.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run_cli(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'linux', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'linux', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_035(self, snippy, capsys):
         """Search snippets with special failures."""
 
         ## Brief: Try to search snippets without defining any search criteria.
         output = 'NOK: please define keyword, digest or content data as search criteria\n'
-        cause = snippy.run_cli(['snippy', 'search'])  ## workflow
+        cause = snippy.run(['snippy', 'search'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: please define keyword, digest or content data as search criteria'
         assert out == output
         assert not err
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_036(self, snippy, capsys):
         """Search snippets with special failures."""
 
@@ -869,7 +869,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         ##        criteria. In this case the filter cannot be applied because
         ##        no search criteria is applied.
         output = 'NOK: please define keyword, digest or content data as search criteria\n'
-        cause = snippy.run_cli(['snippy', 'search', '--filter', '.*(\\$\\s.*)'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--filter', '.*(\\$\\s.*)'])  ## workflow
         out, err = capsys.readouterr()
         assert cause == 'NOK: please define keyword, digest or content data as search criteria'
         assert out == output

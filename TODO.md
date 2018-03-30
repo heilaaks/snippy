@@ -18,6 +18,7 @@
    - [ ] Why delete_storage requires not try/catch block for file remove when the existence is tested? This was with after server/snippy.run refactoring.
    - [ ] Mocking text file simply refuses to work from pytest fixtures.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
+   - [ ] Why falcon.API fails but the falcon import seems not to produce ImportError when the falcon is not imported?
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
    - [ ] Fix JSON API UTC time field does not follow ISO8601 format. This affects to utc mock and digest. It is better to refactor tests to make this easier.
    - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed? Affects also test. Refactor tests first.

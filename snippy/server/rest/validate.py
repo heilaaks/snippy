@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""validate.py - Validate REST API input."""
+"""validate: Validate REST API input."""
 
 from schema import Schema, And, Or
 from schema import SchemaError

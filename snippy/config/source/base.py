@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""base.py: Base class for configuration sources."""
+"""base: Base class for configuration sources."""
 
 import re
 

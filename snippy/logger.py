@@ -120,7 +120,6 @@ class Logger(object):
     def refresh_oid(cls):
         """Refresh operation ID (OID).
 
-
         The OID is used to separate logs within one operation. The helps
         post-processing of the logs by allowing for example querying all
         the logs in failing operatoion.

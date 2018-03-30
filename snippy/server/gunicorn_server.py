@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""gunicorn_server.py - Gunicorn WSGI HTTP server."""
+"""gunicorn_server: Gunicorn WSGI HTTP server."""
 
 import gunicorn.app.base
 from gunicorn.six import iteritems

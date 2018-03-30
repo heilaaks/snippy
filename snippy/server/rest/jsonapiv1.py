@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""jsonapiv10.py - Format to JSON API v1.0."""
+"""jsonapiv10: Format to JSON API v1.0."""
 
 import json
 try:

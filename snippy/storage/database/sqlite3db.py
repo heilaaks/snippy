@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""sqlite3db.py: Database management."""
+"""sqlite3db: Database management."""
 
 import re
 import os.path

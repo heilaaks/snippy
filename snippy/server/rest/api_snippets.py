@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""api_snippets.py - JSON REST API for Snippets."""
+"""api_snippets: JSON REST API for Snippets."""
 
 from snippy.cause import Cause
 from snippy.config.config import Config

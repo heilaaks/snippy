@@ -213,14 +213,14 @@ class Cli(ConfigSourceBase):
         # tool to exit in controlled manner and release pending resources.
         try:
             parameters = vars(parser.parse_args(args))
-            parameters['exit'] = False
+            parameters['failure'] = False
         except SystemExit:
-            parameters['exit'] = True
+            parameters['failure'] = True
 
         # In case no parameters are provided, print the default help text.
         if not args:
             parser.print_help(sys.stdout)
-            parameters['exit'] = True
+            parameters['failure'] = True
 
         return parameters
 
@@ -228,7 +228,7 @@ class Cli(ConfigSourceBase):
     def _set_editor(parameters):
         """Enforce editor usage for some operations for better usability."""
 
-        if parameters['exit']:
+        if parameters['failure']:
             return
 
         if parameters['category'] == Const.SNIPPET and parameters['operation'] == Cli.UPDATE:

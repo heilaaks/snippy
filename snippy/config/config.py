@@ -91,7 +91,7 @@ class Config(object):
         # options
         cls.editor = cls.source.editor
         cls.use_ansi = not cls.source.no_ansi
-        cls.cli = not cls.source.exit
+        cls.failure = cls.source.failure
 
         # server
         cls.base_path = cls.source.base_path

@@ -43,13 +43,16 @@ class Snippy(object):
     def run(self, args=None):
         """Run Snippy."""
 
+        if Config.failure:
+            Cause.print_failure()
+
+            return Cause.reset()
+
         args = Config.init_args if args is None else args
         if Config.server:
             self._run_server()
-        elif Config.cli:
-            self._run_cli(args)
         else:
-            Cause.print_failure()
+            self._run_cli(args)
 
         return Cause.reset()
 

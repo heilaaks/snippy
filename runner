@@ -1,7 +1,9 @@
-# This file is intended for development purpose to
-# run the tool from main level of the package.
+"""
+Run Snippy.
+"""
+
+import sys
 
 import snippy.snip
 
-snippy.snip.main()
-
+snippy.snip.main(sys.argv)

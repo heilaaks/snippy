@@ -155,9 +155,9 @@ class Reference(object):
         # The regexp below must not match to console help test case that
         # contains example test case.
         #
-        # Example 1: sys.argv = ['snippy', 'search', '--sall', '.', '--profile']  ## workflow
+        # Example 1: main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
         # Example 2: Snippy(['snippy', 'search', '--sall', '.', '-q'])  ## workflow
-        # Example 3: snippy.run_cli(['snippy', 'search'])  ## workflow
+        # Example 3: snippy.run(['snippy', 'search'])  ## workflow
         match = re.search(r'\[(.*)\][\)\s]+##\s+workflow', line)
         if match:
             command = match.group(1).strip()

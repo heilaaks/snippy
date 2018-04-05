@@ -17,48 +17,41 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""profiler: Profiler wrapper."""
+"""profiler: Profile code."""
 
 from __future__ import print_function
 
 import cProfile
 import pstats
-import sys
-from signal import signal, getsignal, SIGPIPE, SIG_DFL
-from snippy.config.constants import Constants as Const
-if not Const.PYTHON2:
-    from io import StringIO  # pylint: disable=import-error
-else:
-    from StringIO import StringIO  # pylint: disable=import-error
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
 
 
 class Profiler(object):
-    """Profiler wrapper."""
+    """Profile code."""
 
-    profiler = None
-    is_enabled = False
+    _profiler = None
+    _is_enabled = False
 
     @classmethod
-    def enable(cls):
+    def enable(cls, profiled):
         """Enable profiler."""
 
-        if '--profile' in sys.argv:
-            cls.profiler = cProfile.Profile()
-            cls.profiler.enable()
-            cls.is_enabled = True
+        if profiled:
+            cls._profiler = cProfile.Profile()
+            cls._profiler.enable()
+            cls._is_enabled = True
 
     @classmethod
     def disable(cls):
         """Disable profiler."""
 
-        if cls.is_enabled:
-            cls.profiler.disable()
+        if cls._is_enabled:
+            cls._profiler.disable()
             output_string = StringIO()
-            cls.profiler = pstats.Stats(cls.profiler, stream=output_string).sort_stats('cumulative')
-            cls.profiler.print_stats()
-            cls.is_enabled = False
-            signal_sigpipe = getsignal(SIGPIPE)
-            signal(SIGPIPE, SIG_DFL)
+            cls._profiler = pstats.Stats(cls._profiler, stream=output_string).sort_stats('cumulative')
+            cls._profiler.print_stats()
+            cls._is_enabled = False
             print(output_string.getvalue())
-            sys.stdout.flush()
-            signal(SIGPIPE, signal_sigpipe)

@@ -365,8 +365,7 @@ class TestCliOptions(object):
         ##        there is more than randomly picked largish number of rows.
         ##        This just verifies that the profile option prints lots for
         ##        data.
-        sys.argv = ['snippy', 'search', '--sall', '.', '--profile']  ## workflow
-        main()
+        main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
         out, err = capsys.readouterr()
         assert 'Ordered by: cumulative time' in out
         assert not err

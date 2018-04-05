@@ -26,7 +26,6 @@ from snippy.config.config import Config
 from snippy.config.source.cli import Cli
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
-from snippy.devel.profiler import Profiler
 from snippy.logger import Logger
 from snippy.storage.storage import Storage
 
@@ -60,6 +59,7 @@ class Snippy(object):
 
         self.storage.disconnect()
         Cause.reset()
+        Config.reset()
         Logger.reset()
 
     def _run_cli(self, args):
@@ -93,15 +93,13 @@ class Snippy(object):
             Cause.print_message()
 
 
-def main():
-    """Main"""
+def main(args):
+    """Run Snippy."""
 
-    Profiler.enable()
-    snippy = Snippy(sys.argv)
+    snippy = Snippy(args)
     snippy.run()
     snippy.release()
-    Profiler.disable()
 
 
 if __name__ == "__main__":
-    main()
+    main(sys.argv)

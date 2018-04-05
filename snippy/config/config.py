@@ -30,6 +30,7 @@ from snippy.config.constants import Constants as Const
 from snippy.config.source.cli import Cli
 from snippy.config.source.editor import Editor
 from snippy.config.source.parser import Parser
+from snippy.devel.profiler import Profiler
 from snippy.logger import Logger
 
 
@@ -44,15 +45,16 @@ class Config(object):
 
         if args is None:
             args = []
-        cls.init_args = args
-        cls._init_logger()
 
-        # Set static configuration.
+        # Set logger and development configuration.
+        cls._init_logger(args)
+
+        # Set tool static configuration.
         cls.storage_schema = cls._storage_schema()
         cls.snippet_template = cls._content_template('snippet-template.txt')
         cls.solution_template = cls._content_template('solution-template.txt')
 
-        # Set dynamic configuration.
+        # Set tool dynamic configuration.
         cls.load(Cli(args))
 
     @classmethod
@@ -124,6 +126,12 @@ class Config(object):
         cls.debug()
 
     @classmethod
+    def reset(cls):
+        """Reset configuration."""
+
+        Profiler.disable()
+
+    @classmethod
     def get_contents(cls, content, source=None):
         """Get content list from one of the configuration sources."""
 
@@ -137,21 +145,26 @@ class Config(object):
         return tuple(contents)
 
     @classmethod
-    def _init_logger(cls):
-        """Init logger configuration."""
+    def _init_logger(cls, args):
+        """Init logger and development configuration."""
 
-        cls.debug_logs = True if '--debug' in cls.init_args else False
-        cls.very_verbose = True if '-vv' in cls.init_args else False
-        cls.quiet = True if '-q' in cls.init_args else False
-        cls.json_logs = True if '--json-logs' in cls.init_args else False
-        cls.profiler = True if '--profile' in cls.init_args else False
+        cls.debug_logs = True if '--debug' in args else False
+        cls.very_verbose = True if '-vv' in args else False
+        cls.quiet = True if '-q' in args else False
+        cls.json_logs = True if '--json-logs' in args else False
+        cls.profiler = True if '--profile' in args else False
+
+        # Profile code.
+        Profiler.enable(cls.profiler)
+
+        # Configure logger.
         Logger.configure({
             'debug': cls.debug_logs,
             'very_verbose': cls.very_verbose,
             'quiet': cls.quiet,
             'json_logs': cls.json_logs
         })
-        cls._logger.debug('config initial command line arguments: %s', cls.init_args)
+        cls._logger.debug('config initial command line arguments: %s', args)
 
     @classmethod
     def _update_logger(cls):

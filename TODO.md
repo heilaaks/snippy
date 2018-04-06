@@ -4,9 +4,6 @@
    - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed? Affects also test.
    - [ ] Add operation timestamp to Config() that is generated once per operation? It guarantees same timestamp during one operation. Also reduces calls timestamp.
    - [ ] Add other than quiet parameters as dynamic parameters.
-   - [ ] How to not to use sys.args in cli help for examples and tests? Now the cli() help and profile are only ones using sys.argv directly.
-   - [ ] Move profile a bit later to use Config.profiler? The logger could use config but not good to add because of depencies?
-   - [ ] Move the Config.debug to staticmethods and make them available immediately so they can be used e.g. from Logger.
 
 ## FEATURES
    - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
@@ -29,6 +26,7 @@
    - [ ] How to add custom Falcon exception handling through snippy logger?
 
 ## FIX
+   - [ ] Fix updating the logger debug level. The server logs are printed only from one operation because the log level gets set to default which is off. API to change?
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
@@ -56,6 +54,7 @@
    - [ ] Add unit test for Cause.debug().
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Refactor UT tests.
+   - [ ] Add test to verify that there are no string logs when json-logs are used.
    - [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily. Read https://docs.pytest.org/en/latest/example/simple.html?highlight=pytest_addoption
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] Observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.
@@ -103,6 +102,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Removed direct access to sys.argv from the code. Now the sys.argv is passed only from the main level.
    - [x] Added tests to verify the correct JSON API v1.0 media type application/vnd.api+json including charset=UTF-8.
    - [x] Changed test to use snippy.run instead of run_cli or run_server which are now internal methods.
    - [x] Removed unnecessary help text in test case failures. This was achieved by using dynamic quiet parameter.

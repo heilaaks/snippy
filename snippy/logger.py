@@ -43,8 +43,13 @@ except ImportError:
 class Logger(object):
     """Logging services."""
 
-    # Logger configuration.
-    CONFIG = {}
+    # Global logger configuration.
+    CONFIG = {
+        'debug': False,
+        'very_verbose': False,
+        'quiet': False,
+        'json_logs': False
+    }
 
     # Unique operation ID that identifies logs for each operation.
     SERVER_OID = format(getrandbits(32), "08x")
@@ -121,7 +126,7 @@ class Logger(object):
 
         The OID is used to separate logs within one operation. The helps
         post-processing of the logs by allowing for example querying all
-        the logs in failing operatoion.
+        the logs in failing operation.
         """
 
         cls.SERVER_OID = format(getrandbits(32), "08x")
@@ -190,20 +195,17 @@ class CustomFormatter(logging.Formatter):
     """Custom log formatting."""
 
     MAX_MSG = 150
-    gmttime = True if '--json-logs' in sys.argv else False
-    converter = time.gmtime if gmttime else time.localtime
-    dateformat = '%Y-%m-%dT%H:%M:%S' if gmttime else '%Y-%m-%d %H:%M:%S'
 
     def format(self, record):
         """Format log string."""
 
-        # Debug option prints logs "as is" in full-length. Very verbose
-        # option truncates logs and guarantees only one log per line
-        # with all lower case characters.
-        if '--json-logs' in sys.argv:
+        # Debug option prints logs "as is" in full-length. Very verbose option
+        # truncates logs and tries to guarantee one log per line with all lower
+        # case characters.
+        if Logger.CONFIG['json_logs']:
             log_string = super(CustomFormatter, self).format(record)
             log_string = self._jsonify(record)
-        elif '-vv' in sys.argv:
+        elif Logger.CONFIG['very_verbose']:
             log_string = super(CustomFormatter, self).format(record).lower()
             log_string = log_string.replace('\n', ' ').replace('\r', '')
             log_string = log_string[:CustomFormatter.MAX_MSG] + (log_string[CustomFormatter.MAX_MSG:] and '...')
@@ -217,12 +219,12 @@ class CustomFormatter(logging.Formatter):
 
         # JSON logs are printed in ISO8601 format with UTC timestamps. All
         # other logs are printed in local time with space between date and
-        # time instead of 'T' that is required by ISO8601.
-        created = self.converter(record.created)
-        timstamp = time.strftime(self.dateformat, created)
-        if self.gmttime:
+        # time instead of 'T' because of better readability.
+        if Logger.CONFIG['json_logs']:
+            timstamp = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(record.created))
             time_string = '%s.%03dZ' % (timstamp, record.msecs)
         else:
+            timstamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(record.created))
             time_string = '%s.%03d' % (timstamp, record.msecs)
 
         return time_string
@@ -240,7 +242,7 @@ class CustomFormatter(logging.Formatter):
         for field in fields:
             log[field] = record.__dict__.get(field)
 
-        if '-vv' in sys.argv:
+        if Logger.CONFIG['very_verbose']:
             log['message'] = log['message'][:CustomFormatter.MAX_MSG] + (log['message'][CustomFormatter.MAX_MSG:] and '...')
 
         return json.dumps(log)

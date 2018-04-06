@@ -205,10 +205,10 @@ class TestCliOptions(object):
 
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
     def test_help_option_006(self, capsys, caplog):
-        """Test printing test documentation from consoler."""
+        """Test printing test documentation from console."""
 
-        ## Brief: Print test cases. Note that the --no-ansi option must be
-        #         before --help option to work.
+        ## Brief: Print test cases. The --no-ansi option must be work when set
+        #         before the --help option.
         output = (
             'test case reference list:',
             '',
@@ -232,8 +232,37 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Database.delete_storage()
 
-    @pytest.mark.usefixtures('devel_no_tests')
+    @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
     def test_help_option_007(self, capsys, caplog):
+        """Test printing test documentation from console."""
+
+        ## Brief: Print test cases. The --no-ansi option must work when set
+        #         after the --help option.
+        output = (
+            'test case reference list:',
+            '',
+            '   $ snippy import --filter .*(\\$\\s.*)',
+            '   # Import all snippets. File name is not defined in commmand line.',
+            '   # This should result tool internal default file name',
+            '   # ./snippets.yaml being used by default.',
+            '',
+            '   $ snippy import --filter .*(\\$\\s.*)',
+            '   # Import all snippets. File name is not defined in commmand line.',
+            '   # This should result tool internal default file name',
+            '   # ./snippets.yaml being used by default.',
+            '',
+            ''
+        )
+        snippy = Snippy(['snippy', '--help', 'tests', '--no-ansi'])  ## workflow
+        snippy.run()
+        out, err = capsys.readouterr()
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+        assert not caplog.records[:]
+        Database.delete_storage()
+
+    @pytest.mark.usefixtures('devel_no_tests')
+    def test_help_option_008(self, capsys, caplog):
         """Test printing test documentation when testing package does not exist."""
 
         ## Brief: Try to print tool test case reference documentation when

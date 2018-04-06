@@ -144,15 +144,13 @@ class Cli(ConfigSourceBase):
         """Parse command line arguments."""
 
         parameters = {}
-        parser = argparse.ArgumentParser(prog='snippy',
-                                         add_help=False,
-                                         usage=Cli.ARGS_USAGE,
-                                         epilog=Const.NEWLINE.join(Cli.ARGS_EPILOG),
-                                         formatter_class=argparse.RawTextHelpFormatter)
-
-        # positional arguments
-        operations = ('create', 'search', 'update', 'delete', 'export', 'import')
-        parser.add_argument('operation', nargs='?', choices=operations, metavar='  {create,search,update,delete,export,import}')
+        parser = argparse.ArgumentParser(
+            prog='snippy',
+            add_help=False,
+            usage=Cli.ARGS_USAGE,
+            epilog=Const.NEWLINE.join(Cli.ARGS_EPILOG),
+            formatter_class=argparse.RawTextHelpFormatter
+        )
 
         # content options
         content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGORY))
@@ -189,7 +187,6 @@ class Cli(ConfigSourceBase):
 
         # support options
         support = parser.add_argument_group(title='support options')
-        support.add_argument('-h', '--help', nargs='?', action=CustomHelpAction, help=argparse.SUPPRESS)
         support.add_argument('-v', '--version', nargs=0, action=CustomVersionAction, help=argparse.SUPPRESS)
         support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
@@ -208,10 +205,26 @@ class Cli(ConfigSourceBase):
         # storage options
         server.add_argument('--storage-path', type=str, dest='storage_path', default=Const.EMPTY, help=argparse.SUPPRESS)
 
-        # Argparse will exit with support options --help or --version and when
-        # the argument parsing fails. Catching the exception here allows the
-        # tool to release pending resources and exit in a controlled manner.
+        # The argparse module will exit with support options help or version
+        # and when argument parsing fails. The --no-ansi flag is needed before
+        # custom help action. Because of this, help and positional arguments
+        # are not included when the first set of options is parsed.
+        #
+        # Positional arguments are not included into the first parsing in
+        # order to get the --help <option> combination to work. The <option>
+        # after the --help would be parsed as positional argument and that
+        # would fail the parsing.
         try:
+            parameters, _ = parser.parse_known_args(args)
+            parameters = vars(parameters)
+
+            # positional arguments
+            operations = ('create', 'search', 'update', 'delete', 'export', 'import')
+            parser.add_argument('operation', nargs='?', choices=operations, metavar='  {create,search,update,delete,export,import}')
+
+            # support options
+            support.add_argument('-h', '--help', nargs='?', action=CustomHelpAction, no_ansi=parameters['no_ansi'], help=argparse.SUPPRESS)
+
             parameters = vars(parser.parse_args(args))
             parameters['failure'] = False
         except SystemExit:
@@ -241,6 +254,10 @@ class Cli(ConfigSourceBase):
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """Customised help action."""
 
+    def __init__(self, option_strings, dest, no_ansi, *args, **kwargs):
+        self._no_ansi = no_ansi
+        super(CustomHelpAction, self).__init__(option_strings=option_strings, dest=dest, *args, **kwargs)
+
     def __call__(self, parser, namespace, values, option_string=None):
         """Customised help."""
 
@@ -249,12 +266,7 @@ class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-metho
         elif values == 'tests':
             from snippy.devel.reference import Reference
 
-            # The argparse module stops parsing options immediately when the
-            # help option is met. Because of this, the --no-ansi option works
-            # only when it is set before the --help option. This code logic
-            # avoids using sys.argv and it forces usage of arguments always
-            # through the argparse module.
-            ansi = not namespace.no_ansi
+            ansi = not self._no_ansi
             test = Reference()
             test.print_tests(ansi)
         else:

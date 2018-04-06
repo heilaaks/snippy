@@ -44,6 +44,7 @@
    - [ ] Why 'I/O operation on closed file' is generated as in SCRIBLING.md
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
    - [ ] Why changing self._data = data in data setter in line 160 to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
+   - [ ] Is it possible to get the --no-ansi option to work after --help? Current implementation avoids usage of sys.argv peek. Argparse stops parsing args when --help is met.
 
 ## REFACTOR
    - [ ] Refactor internal class level variables and methods to start with _ prefix.

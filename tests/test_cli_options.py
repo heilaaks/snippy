@@ -22,7 +22,6 @@
 from __future__ import print_function
 
 import re
-import sys
 
 import pytest
 
@@ -196,7 +195,6 @@ class TestCliOptions(object):
         """Test printing examples from console."""
 
         ## Brief: Print command examples from help.
-        sys.argv = ['snippy', '--help', 'examples']
         snippy = Snippy(['snippy', '--help', 'examples'])  ## workflow
         snippy.run()
         out, err = capsys.readouterr()
@@ -209,7 +207,8 @@ class TestCliOptions(object):
     def test_help_option_006(self, capsys, caplog):
         """Test printing test documentation from consoler."""
 
-        ## Brief: Print example commands.
+        ## Brief: Print test cases. Note that the --no-ansi option must be
+        #         before --help option to work.
         output = (
             'test case reference list:',
             '',
@@ -225,8 +224,7 @@ class TestCliOptions(object):
             '',
             ''
         )
-        sys.argv = ['snippy', '--help', 'tests', '--no-ansi']
-        snippy = Snippy(['snippy', '--help', 'tests', '--no-ansi'])  ## workflow
+        snippy = Snippy(['snippy', '--no-ansi', '--help', 'tests'])  ## workflow
         snippy.run()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(output)
@@ -240,7 +238,6 @@ class TestCliOptions(object):
 
         ## Brief: Try to print tool test case reference documentation when
         ##        tests are not packaged with the release.
-        sys.argv = ['snippy', '--help', 'tests']
         snippy = Snippy(['snippy', '--help', 'tests'])  ## workflow
         cause = snippy.run()
         out, err = capsys.readouterr()

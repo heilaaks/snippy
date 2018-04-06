@@ -39,7 +39,7 @@ class Cli(ConfigSourceBase):
         'Homepage ' + __homepage__
     )
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')
-    ARGS_CATEGO = (
+    ARGS_CATEGORY = (
         '  --snippet                     operate snippets (default)',
         '  --solution                    operate solutions',
         '  --all                         operate all content (search only)'
@@ -60,7 +60,7 @@ class Cli(ConfigSourceBase):
         '  --filter REGEXP               filter search output with regexp',
         '  --no-ansi                     remove ANSI characters from output'
     )
-    ARGS_MIGRAT = (
+    ARGS_MIGRATE = (
         '  -f, --file FILE               define file for operation',
         '  --defaults                    migrate category specific defaults',
         '  --template                    migrate category specific template',
@@ -155,7 +155,7 @@ class Cli(ConfigSourceBase):
         parser.add_argument('operation', nargs='?', choices=operations, metavar='  {create,search,update,delete,export,import}')
 
         # content options
-        content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGO))
+        content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGORY))
         content_meg = content.add_mutually_exclusive_group()
         content_meg.add_argument('--snippet', action='store_const', dest='category', const='snippet', help=argparse.SUPPRESS)
         content_meg.add_argument('--solution', action='store_const', dest='category', const='solution', help=argparse.SUPPRESS)
@@ -181,7 +181,7 @@ class Cli(ConfigSourceBase):
         search.add_argument('--filter', type=str, dest='regexp', default=Const.EMPTY, help=argparse.SUPPRESS)
 
         # migration options
-        migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Cli.ARGS_MIGRAT))
+        migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Cli.ARGS_MIGRATE))
         migrat_meg = migrat.add_mutually_exclusive_group()
         migrat_meg.add_argument('-f', '--file', type=str, dest='filename', default='', help=argparse.SUPPRESS)
         migrat_meg.add_argument('--defaults', action='store_true', default=False, help=argparse.SUPPRESS)
@@ -189,7 +189,7 @@ class Cli(ConfigSourceBase):
 
         # support options
         support = parser.add_argument_group(title='support options')
-        support.add_argument('-h', '--help', nargs=0, action=CustomHelpAction, help=argparse.SUPPRESS)
+        support.add_argument('-h', '--help', nargs='?', action=CustomHelpAction, help=argparse.SUPPRESS)
         support.add_argument('-v', '--version', nargs=0, action=CustomVersionAction, help=argparse.SUPPRESS)
         support.add_argument('-vv', dest='very_verbose', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('-q', dest='quiet', action='store_true', default=False, help=argparse.SUPPRESS)
@@ -208,16 +208,16 @@ class Cli(ConfigSourceBase):
         # storage options
         server.add_argument('--storage-path', type=str, dest='storage_path', default=Const.EMPTY, help=argparse.SUPPRESS)
 
-        # Argparse will exit with support options like --help or --version and
-        # when argument parsing fails. Catching the exception here allows the
-        # tool to exit in controlled manner and release pending resources.
+        # Argparse will exit with support options --help or --version and when
+        # the argument parsing fails. Catching the exception here allows the
+        # tool to release pending resources and exit in a controlled manner.
         try:
             parameters = vars(parser.parse_args(args))
             parameters['failure'] = False
         except SystemExit:
             parameters['failure'] = True
 
-        # In case no parameters are provided, print the default help text.
+        # Print help if no parameters are provided at all.
         if not args:
             parser.print_help(sys.stdout)
             parameters['failure'] = True
@@ -239,16 +239,22 @@ class Cli(ConfigSourceBase):
 
 
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
-    """Customised argparse help to print examples."""
+    """Customised help action."""
 
     def __call__(self, parser, namespace, values, option_string=None):
-        """Customised example printing to override positional arguments."""
+        """Customised help."""
 
-        if 'examples' in sys.argv:
+        if values == 'examples':
             print(Const.NEWLINE.join(Cli.ARGS_EXAMPLES))
-        elif 'tests' in sys.argv:
+        elif values == 'tests':
             from snippy.devel.reference import Reference
-            ansi = True if '--no-ansi' not in sys.argv else False
+
+            # The argparse module stops parsing options immediately when the
+            # help option is met. Because of this, the --no-ansi option works
+            # only when it is set before the --help option. This code logic
+            # avoids using sys.argv and it forces usage of arguments always
+            # through the argparse module.
+            ansi = not namespace.no_ansi
             test = Reference()
             test.print_tests(ansi)
         else:
@@ -258,14 +264,14 @@ class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-metho
 
 
 class CustomVersionAction(argparse.Action):  # pylint: disable=too-few-public-methods
-    """Customised argparse action class to print version always to stdout."""
+    """Customised version action."""
 
     def __call__(self, parser, namespace, values, option_string=None):
-        """Customised printing"""
+        """Customised version"""
 
-        # Argparse and Python versions below 3.4 print to stderr. In order
-        # to have consistent functionality between supported Python versions,
-        # the version must be explicitly printed to stdout.
+        # Argparse and Python versions below 3.4 print to stderr. In order to
+        # have consistent functionality between supported Python versions, the
+        # version must be explicitly printed into stdout.
         print(__version__)
 
         parser.exit()

@@ -254,9 +254,9 @@ class Cli(ConfigSourceBase):
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """Customised help action."""
 
-    def __init__(self, option_strings, dest, no_ansi, *args, **kwargs):
-        self._no_ansi = no_ansi
-        super(CustomHelpAction, self).__init__(option_strings=option_strings, dest=dest, *args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        self._no_ansi = kwargs.pop('no_ansi', False)
+        super(CustomHelpAction, self).__init__(*args, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
         """Customised help."""

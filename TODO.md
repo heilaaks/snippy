@@ -3,7 +3,6 @@
    - [ ] Remove excessive timestamp usage. Is single timestamp for operation is enough?
    - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed? Affects also test.
    - [ ] Add operation timestamp to Config() that is generated once per operation? It guarantees same timestamp during one operation. Also reduces calls timestamp.
-   - [ ] Add other than quiet parameters as dynamic parameters.
 
 ## FEATURES
    - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
@@ -24,7 +23,7 @@
    - [ ] Add upload command like in setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
    - [ ] How to add custom Falcon error codes? Now e.g. 500 is HTML string and it is different than normal Snippy server error code.
    - [ ] How to add custom Falcon exception handling through snippy logger?
-   - [ ] Add server startup indicator like 'server running in 127.0.0.1:8080' or 'OK'. This can be used in api performance test to see when the server is up.
+   - [ ] Add server startup indicator like 'server running in 127.0.0.1:8080' or 'OK' (suppress with -q). This can be used in api performance test to see when the server is up.
 
 ## FIX
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow

@@ -100,12 +100,12 @@ class Sqlite3Db(object):
         for content in contents:
             if not content.has_data():
                 cause = (Cause.HTTP_BAD_REQUEST, 'no content was inserted due to missing mandatory content data')
-                self.logger.info(cause[1])
+                self.logger.debug(cause[1])
 
                 continue
             if content.is_template():
                 cause = (Cause.HTTP_BAD_REQUEST, 'no content was stored because the content data is matching to empty template')
-                self.logger.info(cause[1])
+                self.logger.debug(cause[1])
 
                 continue
 
@@ -119,7 +119,7 @@ class Sqlite3Db(object):
                 self.insert_content(content, digest, bulk_insert=True)
             else:
                 cause = (Cause.HTTP_CONFLICT, 'no content was inserted because content data already existed')
-                self.logger.info(cause[1])
+                self.logger.debug(cause[1])
 
         self.logger.debug('inserted %d out of %d content', inserted, len(contents))
 
@@ -272,7 +272,7 @@ class Sqlite3Db(object):
                     elif cursor.rowcount == 0:
                         Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content to be deleted with digest {:.16}'.format(digest))
                     else:
-                        self.logger.info('unexpected row count %d while deleting with digest %s', cursor.rowcount, digest)
+                        self.logger.debug('unexpected row count %d while deleting with digest %s', cursor.rowcount, digest)
             except sqlite3.Error as exception:
                 Cause.push(Cause.HTTP_500, 'deleting from database failed with exception {}'.format(exception))
         else:

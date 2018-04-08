@@ -24,9 +24,9 @@
    - [ ] Add upload command like in setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
    - [ ] How to add custom Falcon error codes? Now e.g. 500 is HTML string and it is different than normal Snippy server error code.
    - [ ] How to add custom Falcon exception handling through snippy logger?
+   - [ ] Add server startup indicator like 'server running in 127.0.0.1:8080' or 'OK'. This can be used in api performance test to see when the server is up.
 
 ## FIX
-   - [ ] Fix updating the logger debug level. The server logs are printed only from one operation because the log level gets set to default which is off. API to change?
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
@@ -102,6 +102,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Fixed server log settings that worked only for the first operation.
    - [x] Removed direct access to sys.argv from the code. Now the sys.argv is passed only from the main level.
    - [x] Added tests to verify the correct JSON API v1.0 media type application/vnd.api+json including charset=UTF-8.
    - [x] Changed test to use snippy.run instead of run_cli or run_server which are now internal methods.

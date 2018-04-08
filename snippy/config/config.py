@@ -47,7 +47,7 @@ class Config(object):
             args = []
 
         # Set logger and development configuration.
-        cls._init_logger(args)
+        cls._init_logs(args)
 
         # Set tool static configuration.
         cls.storage_schema = cls._storage_schema()
@@ -63,6 +63,13 @@ class Config(object):
 
         cls.source = source
 
+        # logger: Only quiet flag is updated. If all logging configuration
+        # would be updated, the server would print logs only from the first
+        # operation. The reason to update quiet flag is to be able to prevent
+        # test cases to print unnecessary help dialog when test creates the
+        # Snippy() object. This allows the first creation to be silent but
+        # allows further configuration from tests with snippy.run().
+        cls.quiet = True if cls.source.quiet else False
         cls._update_logger()
         cls._logger.debug('config source: %s', cls.source)
 
@@ -145,7 +152,7 @@ class Config(object):
         return tuple(contents)
 
     @classmethod
-    def _init_logger(cls, args):
+    def _init_logs(cls, args):
         """Init logger and development configuration."""
 
         cls.debug_logs = True if '--debug' in args else False
@@ -157,24 +164,13 @@ class Config(object):
         # Profile code.
         Profiler.enable(cls.profiler)
 
-        # Configure logger.
-        Logger.configure({
-            'debug': cls.debug_logs,
-            'very_verbose': cls.very_verbose,
-            'quiet': cls.quiet,
-            'json_logs': cls.json_logs
-        })
+        cls._update_logger()
         cls._logger.debug('config initial command line arguments: %s', args)
 
     @classmethod
     def _update_logger(cls):
         """Update logger configuration."""
 
-        cls.debug_logs = True if cls.source.debug else False
-        cls.very_verbose = True if cls.source.very_verbose else False
-        cls.quiet = True if cls.source.quiet else False
-        cls.json_logs = True if cls.source.json_logs else False
-        cls.profiler = True if cls.source.profiler else False
         Logger.configure({
             'debug': cls.debug_logs,
             'very_verbose': cls.very_verbose,

@@ -17,29 +17,26 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_performance.py: Verify that there are no major impacts to performance in API usage."""
+"""test_api_performance: Verify API server."""
 
 from __future__ import print_function
 
 import json
-import sys
 import time
 from subprocess import call
 from subprocess import Popen
+from subprocess import PIPE
 
 import pytest
 
 from snippy.cause import Cause
-from snippy.config.constants import Constants as Const
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
-if not Const.PYTHON2:
-    import http.client as httplib # pylint: disable=import-error
-    from io import StringIO  # pylint: disable=import-error
-else:
-    import httplib  # pylint: disable=import-error
-    from StringIO import StringIO  # pylint: disable=import-error
+try:
+    import http.client as httplib
+except ImportError:
+    import httplib
 
 pytest.importorskip('gunicorn')
 
@@ -47,13 +44,13 @@ pytest.importorskip('gunicorn')
 class TestApiPerformance(object):
     """Test tool performance."""
 
-    def test_api_performance(self):
-        """Test API performance."""
+    def test_server_performance(self):
+        """Test API server performance."""
 
         # Clear the real database and run the real server.
         call(['make', 'clean-db'])
-        server = Popen(['python', './runner', '--server'])
-        time.sleep(1)  # Wait untill server up. TODO: Get some indicator for this.
+        server = Popen(['python', './runner', '--server'], stdout=PIPE, stderr=PIPE)
+        time.sleep(1)  # Wait untill server up.
         snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]},
@@ -85,10 +82,6 @@ class TestApiPerformance(object):
         ##        seconds. The runtime is intentionally set 10 times higher value
         ##        than with the reference PC.
         conn = httplib.HTTPConnection('localhost', port=8080)
-        real_stderr = sys.stderr
-        real_stdout = sys.stdout
-        sys.stderr = StringIO()
-        sys.stdout = StringIO()
         start = time.time()
         for _ in range(10):
 
@@ -99,7 +92,6 @@ class TestApiPerformance(object):
                          {'content-type':'application/json; charset=UTF-8'})
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_201_CREATED
-
             assert len(json.loads(resp.read().decode())['data']) == 4
 
             # GET maximum of two snippets from whole snippet collection.
@@ -137,17 +129,60 @@ class TestApiPerformance(object):
 
         runtime = time.time() - start
         server.terminate()
-        result_stderr = sys.stderr.getvalue().strip()
-        result_stdout = sys.stdout.getvalue().strip()
-        sys.stderr = real_stderr
-        sys.stdout = real_stdout
+        server.wait()
+        out = server.stdout.readlines()
+        err = server.stderr.readlines()
         print("====================================")
         print("Runtime %.4f" % runtime)
-        print("There are %d rows in stdout" % len(result_stdout))
-        print("There are %d rows in stderr" % len(result_stderr))
+        print("There are %d rows in stdout" % len(out))
+        print("There are %d rows in stderr" % len(err))
         print("====================================")
 
-        assert not result_stderr
+        assert not out
+        assert not err
+        assert runtime < 10
+
+    def test_server_logging(self):
+        """Test server log configuration.
+
+        Test that server initial log configuration is used for whole the whole
+        server lifetime. The log configuration must not get reset after the
+        first operation.
+        """
+
+        # Clear the real database and run the real server.
+        call(['make', 'clean-db'])
+        server = Popen(['python', './runner', '--server', '-vv'], stdout=PIPE, stderr=PIPE)
+        time.sleep(1)  # Wait untill server up.
+        snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
+                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]},
+                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]},
+                             {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]}]}
+        conn = httplib.HTTPConnection('localhost', port=8080)
+        start = time.time()
+
+        # POST four snippets.
+        conn.request('POST',
+                     '/snippy/api/v1/snippets',
+                     json.dumps(snippets),
+                     {'content-type':'application/json; charset=UTF-8'})
+        resp = conn.getresponse()
+        assert resp.status == Cause.HTTP_201_CREATED
+        assert len(json.loads(resp.read().decode())['data']) == 4
+
+        runtime = time.time() - start
+        server.terminate()
+        server.wait()
+        out = server.stdout.readlines()
+        err = server.stderr.readlines()
+        print("====================================")
+        print("Runtime %.4f" % runtime)
+        print("There are %d rows in stdout" % len(out))
+        print("There are %d rows in stderr" % len(err))
+        print("====================================")
+
+        assert sum('creating new snippet' in str(s) for s in out) == 4
+        assert not err
         assert runtime < 10
 
     @classmethod

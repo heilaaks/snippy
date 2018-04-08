@@ -186,12 +186,7 @@ def create_remove_time_mock(mocker):
 def import_remove_time_mock(mocker):
     """Mock timestamps to import 'remove' snippet."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_REMOVE)
+    _add_utc_time(mocker, IMPORT_REMOVE)
 
 @pytest.fixture(scope='function', name='edit-remove')
 def edit_remove_snippet(mocker):
@@ -218,23 +213,13 @@ def import_forced_snippet(mocker, snippy):
 def create_forced_time_mock(mocker):
     """Mock timestamps to create 'forced' snippet."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_FORCED)
+    _add_utc_time(mocker, CREATE_FORCED)
 
 @pytest.fixture(scope='function', name='import-forced-utc')
 def import_forced_time_mock(mocker):
     """Mock timestamps to import 'forced' snippet."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_FORCED)
+    _add_utc_time(mocker, IMPORT_FORCED)
 
 @pytest.fixture(scope='function', name='exited-utc')
 def create_exited_time_mock(mocker):
@@ -259,12 +244,7 @@ def create_netcat_time_mock(mocker):
 def import_netcat_time_mock(mocker):
     """Mock timestamps to import 'netcat' snippet."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_NETCAT)
+    _add_utc_time(mocker, IMPORT_NETCAT)
 
 ## Solutions
 
@@ -300,23 +280,13 @@ def import_kafka_solution(mocker, snippy):
 def create_beats_time_mock(mocker):
     """Mock timestamps to create 'beats' solution."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_BEATS)
+    _add_utc_time(mocker, CREATE_BEATS)
 
 @pytest.fixture(scope='function', name='import-beats-utc')
 def import_beats_time_mock(mocker):
     """Mock timestamps to import 'beats' solution."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_BEATS)
+    _add_utc_time(mocker, IMPORT_BEATS)
 
 @pytest.fixture(scope='function', name='edit-beats')
 def edit_beats_solution(mocker):
@@ -324,13 +294,7 @@ def edit_beats_solution(mocker):
 
     template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
     mocker.patch.object(Editor, 'call_editor', return_value=template)
-
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + EDITED_BEATS)
+    _add_utc_time(mocker, EDITED_BEATS)
 
 @pytest.fixture(scope='function', name='edited_beats')
 def edited_beats(mocker):
@@ -338,39 +302,23 @@ def edited_beats(mocker):
 
     return _editor(mocker, EDITED_BEATS)
 
-
 @pytest.fixture(scope='function', name='import-nginx-utc')
 def import_nginx_time_mock(mocker):
     """Mock timestamps to create 'nginx' solution."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_NGINX)
+    _add_utc_time(mocker, IMPORT_NGINX)
 
 @pytest.fixture(scope='function', name='kafka-utc')
 def create_kafka_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + CREATE_KAFKA)
+    _add_utc_time(mocker, CREATE_KAFKA)
 
 @pytest.fixture(scope='function', name='import-kafka-utc')
 def import_kafka_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_KAFKA)
+    _add_utc_time(mocker, IMPORT_KAFKA)
 
 ## Templates
 @pytest.fixture(scope='function', name='template-utc')
@@ -385,12 +333,7 @@ def export_template_time_mock(mocker):
 def export_time_mock(mocker):
     """Mock timestamps to export any content."""
 
-    side_effects = ()
-    try:
-        side_effects = Config.get_utc_time.side_effect
-    except AttributeError:
-        pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + (EXPORT_TIME,))
+    _add_utc_time(mocker, (EXPORT_TIME,))
 
 ## Templates
 
@@ -590,16 +533,20 @@ def _import_content(snippy, mocker, contents, timestamps):
         assert cause == Cause.ALL_OK
         assert len(Database.get_contents()) == idx
 
-def _editor(mocker, timestamp):
-    """Mock editor."""
-
-    editor = mocker.patch.object(Editor, 'call_editor')
+def _add_utc_time(mocker, timestamps):
+    """Add UTC time mock as side effect."""
 
     side_effects = ()
     try:
         side_effects = Config.get_utc_time.side_effect
     except AttributeError:
         pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + timestamp*3)
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + timestamps)
+
+def _editor(mocker, timestamp):
+    """Mock editor."""
+
+    editor = mocker.patch.object(Editor, 'call_editor')
+    _add_utc_time(mocker, timestamp*3)
 
     return editor

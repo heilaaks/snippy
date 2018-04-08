@@ -69,10 +69,10 @@ CREATE_REMOVE = (REMOVE_CREATED,)*1
 CREATE_FORCED = (FORCED_CREATED,)*1
 CREATE_EXITED = (EXITED_CREATED,)*1
 CREATE_NETCAT = (NETCAT_CREATED,)*1
-IMPORT_REMOVE = (REMOVE_CREATED,)*3
-IMPORT_FORCED = (FORCED_CREATED,)*3
-IMPORT_EXITED = (EXITED_CREATED,)*3
-IMPORT_NETCAT = (NETCAT_CREATED,)*3
+IMPORT_REMOVE = (REMOVE_CREATED,)*2
+IMPORT_FORCED = (FORCED_CREATED,)*2
+IMPORT_EXITED = (EXITED_CREATED,)*2
+IMPORT_NETCAT = (NETCAT_CREATED,)*2
 EDITED_REMOVE = (REMOVE_CREATED,)*1
 
 # Solutions
@@ -82,9 +82,9 @@ KAFKA_CREATED = '2017-10-20 06:16:27'
 CREATE_BEATS = (BEATS_CREATED,)*3
 CREATE_NGINX = (NGINX_CREATED,)*3
 CREATE_KAFKA = (KAFKA_CREATED,)*3
-IMPORT_BEATS = (BEATS_CREATED,)*5
-IMPORT_NGINX = (NGINX_CREATED,)*5
-IMPORT_KAFKA = (KAFKA_CREATED,)*5
+IMPORT_BEATS = (BEATS_CREATED,)*3
+IMPORT_NGINX = (NGINX_CREATED,)*3
+IMPORT_KAFKA = (KAFKA_CREATED,)*3
 EDITED_BEATS = (BEATS_CREATED,)*4
 
 # Templates
@@ -186,7 +186,12 @@ def create_remove_time_mock(mocker):
 def import_remove_time_mock(mocker):
     """Mock timestamps to import 'remove' snippet."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_REMOVE)
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_REMOVE)
 
 @pytest.fixture(scope='function', name='edit-remove')
 def edit_remove_snippet(mocker):
@@ -224,7 +229,12 @@ def create_forced_time_mock(mocker):
 def import_forced_time_mock(mocker):
     """Mock timestamps to import 'forced' snippet."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_FORCED)
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_FORCED)
 
 @pytest.fixture(scope='function', name='exited-utc')
 def create_exited_time_mock(mocker):
@@ -249,7 +259,12 @@ def create_netcat_time_mock(mocker):
 def import_netcat_time_mock(mocker):
     """Mock timestamps to import 'netcat' snippet."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_NETCAT)
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_NETCAT)
 
 ## Solutions
 
@@ -296,7 +311,12 @@ def create_beats_time_mock(mocker):
 def import_beats_time_mock(mocker):
     """Mock timestamps to import 'beats' solution."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_BEATS)
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_BEATS)
 
 @pytest.fixture(scope='function', name='edit-beats')
 def edit_beats_solution(mocker):
@@ -323,7 +343,12 @@ def edited_beats(mocker):
 def import_nginx_time_mock(mocker):
     """Mock timestamps to create 'nginx' solution."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_NGINX)
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_NGINX)
 
 @pytest.fixture(scope='function', name='kafka-utc')
 def create_kafka_time_mock(mocker):
@@ -340,7 +365,12 @@ def create_kafka_time_mock(mocker):
 def import_kafka_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=IMPORT_KAFKA)
+    side_effects = ()
+    try:
+        side_effects = Config.get_utc_time.side_effect
+    except AttributeError:
+        pass
+    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + IMPORT_KAFKA)
 
 ## Templates
 @pytest.fixture(scope='function', name='template-utc')

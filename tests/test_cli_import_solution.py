@@ -195,7 +195,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('beats', 'import-kafka-utc')
+    @pytest.mark.usefixtures('beats', 'import-beats-utc', 'import-kafka-utc')
     def test_cli_import_solution_010(self, snippy, yaml_load, mocker):
         """Import all solutions."""
 
@@ -223,7 +223,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE))
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './solution-template.txt'])  ## workflow
-            assert cause == 'NOK: no content was stored because it matched to empty template'
+            assert cause == 'NOK: content was not stored because it was matching to an empty template'
             assert not Database.get_contents()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
@@ -501,7 +501,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         mocked_open = mock.mock_open(read_data=template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '--template'])  ## workflow
-            assert cause == 'NOK: no content was stored because it matched to empty template'
+            assert cause == 'NOK: content was not stored because it was matching to an empty template'
             assert not Database.get_contents()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 

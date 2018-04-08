@@ -92,31 +92,32 @@ class Sqlite3Db(object):
         """Insert multiple contents into database."""
 
         # Common failure cases:
-        # 1. User imports default content again. In this case there is a list of contents.
-        # 2. User imports content from template. In this case there is a single failing content.
+        # 1. User imports content from template.
+        # 2. User imports default content again.
 
         inserted = 0
         cause = (Cause.HTTP_OK, Const.EMPTY)
         for content in contents:
-            if not content.has_data():
-                cause = (Cause.HTTP_BAD_REQUEST, 'no content was inserted due to missing mandatory content data')
-                self.logger.debug(cause[1])
-
-                continue
             if content.is_template():
-                cause = (Cause.HTTP_BAD_REQUEST, 'no content was stored because the content data is matching to empty template')
+                cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
                 self.logger.debug(cause[1])
 
                 continue
 
-            digest = content.get_digest()
+            if not content.has_data():
+                cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content data was missing')
+                self.logger.debug(cause[1])
+
+                continue
+
             if not self._select_content_data(content.get_data()):
+                digest = content.get_digest()
                 if digest != content.compute_digest():
-                    self.logger.debug('invalid digest found and updated while importing content "%s"', content.get_data())
+                    self.logger.debug('invalid digest found and updated while storing content data: "%s"', content.get_data())
                     digest = content.compute_digest()
 
-                inserted = inserted + 1
                 self.insert_content(content, digest, bulk_insert=True)
+                inserted = inserted + 1
             else:
                 cause = (Cause.HTTP_CONFLICT, 'no content was inserted because content data already existed')
                 self.logger.debug(cause[1])

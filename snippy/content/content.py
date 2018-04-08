@@ -70,17 +70,14 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         return template
 
-    def is_template(self, edited=None):
+    def is_template(self):
         """Test if content data is empty template."""
 
         # Date and group fields are masked out. The date can change and the tool
         # enforces default group only after the content is saved and user did not
         # give change the group field value in template.
         template = Content.get_empty(self.get_category()).convert_text()
-        if not edited:
-            content = self.get_data(form=Const.STRING_CONTENT)
-        else:
-            content = edited
+        content = self.convert_text()
         template = re.sub(r'## DATE  :.*', '## DATE  : ', template)
         content = re.sub(r'## DATE  :.*', '## DATE  : ', content)
         content = re.sub(r'## GROUP :.*', '## GROUP : ', content)

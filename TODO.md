@@ -1,7 +1,6 @@
 ## WORKING
    - [ ] Add tests to update logging config. This goes to new Logger UT tests?
    - [ ] Remove excessive timestamp usage. Is single timestamp for operation is enough?
-   - [ ] Are 1) if content_copy.is_template(edited=item): and 2) if content.is_template(): redundant and only later needed? Affects also test.
    - [ ] Add operation timestamp to Config() that is generated once per operation? It guarantees same timestamp during one operation. Also reduces calls timestamp.
 
 ## FEATURES
@@ -101,6 +100,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Removed unnecessary conntent template check when content was parsed. The check is made before insert.
    - [x] Fixed server log settings that worked only for the first operation.
    - [x] Removed direct access to sys.argv from the code. Now the sys.argv is passed only from the main level.
    - [x] Added tests to verify the correct JSON API v1.0 media type application/vnd.api+json including charset=UTF-8.

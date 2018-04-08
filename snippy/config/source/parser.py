@@ -78,9 +78,6 @@ class Parser(object):
                 content_copy.get_key()
             ))
             content_copy.update_digest()
-            if content_copy.is_template(edited=item):
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because it matched to empty template')
-
             contents.append(content_copy)
 
         return contents

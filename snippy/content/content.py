@@ -124,8 +124,11 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def _add_date(self, template):
         """Add content date to template."""
 
+        # Only solution template contains the date field. When the field is
+        # replaced with a timestamp, the template has been just created and
+        # thus the creation date can be used.
         if '<SNIPPY_DATE>' in template:
-            template = template.replace('<SNIPPY_DATE>', Config.get_utc_time())
+            template = template.replace('<SNIPPY_DATE>', self.get_created())
         else:
             match = re.search(r'(## DATE  :\s*?$)', template, re.MULTILINE)
             if match and self.get_created():

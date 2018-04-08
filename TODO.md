@@ -26,6 +26,7 @@
    - [ ] Add server startup indicator like 'server running in 127.0.0.1:8080' or 'OK' (suppress with -q). This can be used in api performance test to see when the server is up.
 
 ## FIX
+   - [ ] Fix new cause with digest. This is caused from random order hash. The comparison to defaults (two snippets) causes random order and only the first cause is set.
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
@@ -41,6 +42,7 @@
    - [ ] Why 'I/O operation on closed file' is generated as in SCRIBLING.md
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
    - [ ] Why changing self._data = data in data setter in line 160 to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
+   - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
@@ -49,6 +51,7 @@
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
+   - [ ] Add test to import solution without date (check if exist first).
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Add unit test for Cause.debug().
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.

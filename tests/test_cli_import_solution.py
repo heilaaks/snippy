@@ -463,7 +463,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '--defaults'])  ## workflow
         print(Database.print_contents())
-        assert cause == 'NOK: content data already exist with digest 61a24a156f5e9d2d'
+        assert cause == 'NOK: content data already exist with digest 61a24a156f5e9d2d'  # TODO: Code causes random order comparison.
         assert len(Database.get_solutions()) == 2
         defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
         yaml_load.assert_called_once_with(defaults_solutions, 'r')

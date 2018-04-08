@@ -1513,23 +1513,3 @@ Description:	Ubuntu 14.04.5 LTS
 Release:	14.04
 Codename:	trusty
 
-=====
-Random failures with checksums
-
-# Python 3.4 (run 1): Python 3.5 was ok in this run.
-E       AssertionError: assert 'NOK: content...41e9b52a02b63' == 'NOK: content ...08d68425c61dc'
-E         Skipping 35 identical leading characters in diff, use -v to show
-E         - h digest 54e41e9b52a02b63
-E         + h digest 53908d68425c61dc
-
-# Python 3.5 (run 2): Python 3.4 was ok in this case.
-E       AssertionError: assert 'NOK: content...accc25dd23ac0' == 'NOK: content ...24a156f5e9d2d'
-E         Skipping 34 identical leading characters in diff, use -v to show
-E         - th digest a96accc25dd23ac0
-E         + th digest 61a24a156f5e9d2d
-
-
-E       AssertionError: assert 'NOK: content...accc25dd23ac0' == 'NOK: content ...24a156f5e9d2d'
-E         Skipping 34 identical leading characters in diff, use -v to show
-E         - th digest a96accc25dd23ac0
-E         + th digest 61a24a156f5e9d2d

@@ -58,39 +58,44 @@ class Sqlite3Db(object):
         """Insert content into database."""
 
         cause = self._test_content(content)
-        if self.connection:
-            if cause[0] == Cause.HTTP_OK:
-                query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, ' +
-                         'runalias, versions, created, updated, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
-                self.logger.debug('insert "%s" with digest %.16s', content.get_brief(), digest)
-                try:
-                    with closing(self.connection.cursor()) as cursor:
-                        cursor.execute(query, (content.get_data(Const.STRING_CONTENT),
-                                               content.get_brief(Const.STRING_CONTENT),
-                                               content.get_group(Const.STRING_CONTENT),
-                                               content.get_tags(Const.STRING_CONTENT),
-                                               content.get_links(Const.STRING_CONTENT),
-                                               content.get_category(Const.STRING_CONTENT),
-                                               content.get_filename(Const.STRING_CONTENT),
-                                               content.get_runalias(Const.STRING_CONTENT),
-                                               content.get_versions(Const.STRING_CONTENT),
-                                               content.get_created(Const.STRING_CONTENT),
-                                               content.get_updated(Const.STRING_CONTENT),
-                                               digest,
-                                               metadata))
-                        self.connection.commit()
-                        if not bulk_insert:
-                            Cause.push(Cause.HTTP_CREATED, 'content created')
-
-                except sqlite3.IntegrityError as exception:
-                    Cause.push(Cause.HTTP_CONFLICT,
-                               'content data already exist with digest {:.16}'.format(self._get_db_digest(content)))
-                except sqlite3.Error as exception:
-                    Cause.push(Cause.HTTP_500, 'inserting into database failed with exception {}'.format(exception))
-            else:
+        if cause[0] != Cause.HTTP_OK:
+            if not bulk_insert:
                 Cause.push(cause[0], cause[1])
+
+            return cause
+
+        if self.connection:
+            query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, ' +
+                     'runalias, versions, created, updated, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
+            self.logger.debug('insert "%s" with digest %.16s', content.get_brief(), digest)
+            try:
+                with closing(self.connection.cursor()) as cursor:
+                    cursor.execute(query, (content.get_data(Const.STRING_CONTENT),
+                                           content.get_brief(Const.STRING_CONTENT),
+                                           content.get_group(Const.STRING_CONTENT),
+                                           content.get_tags(Const.STRING_CONTENT),
+                                           content.get_links(Const.STRING_CONTENT),
+                                           content.get_category(Const.STRING_CONTENT),
+                                           content.get_filename(Const.STRING_CONTENT),
+                                           content.get_runalias(Const.STRING_CONTENT),
+                                           content.get_versions(Const.STRING_CONTENT),
+                                           content.get_created(Const.STRING_CONTENT),
+                                           content.get_updated(Const.STRING_CONTENT),
+                                           digest,
+                                           metadata))
+                    self.connection.commit()
+                    if not bulk_insert:
+                        Cause.push(Cause.HTTP_CREATED, 'content created')
+
+            except sqlite3.IntegrityError as exception:
+                Cause.push(Cause.HTTP_CONFLICT,
+                           'content data already exist with digest {:.16}'.format(self._get_db_digest(content)))
+            except sqlite3.Error as exception:
+                Cause.push(Cause.HTTP_500, 'inserting into database failed with exception {}'.format(exception))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented inserting into database')
+
+        return cause
 
     def bulk_insert_content(self, contents):
         """Insert multiple contents into database."""
@@ -98,14 +103,13 @@ class Sqlite3Db(object):
         inserted = 0
         cause = (Cause.HTTP_OK, Const.EMPTY)
         for content in contents:
-            cause = self._test_content(content)
-            if cause[0] == Cause.HTTP_OK:
-                digest = content.get_digest()
-                if digest != content.compute_digest():
-                    self.logger.debug('invalid digest found and updated while storing content data: "%s"', content.get_data())
-                    digest = content.compute_digest()
+            digest = content.get_digest()
+            if digest != content.compute_digest():
+                self.logger.debug('invalid digest found and updated while storing content data: "%s"', content.get_data())
+                digest = content.compute_digest()
 
-                self.insert_content(content, digest, bulk_insert=True)
+            cause = self.insert_content(content, digest, bulk_insert=True)
+            if cause[0] == Cause.HTTP_OK:
                 inserted = inserted + 1
 
         self.logger.debug('inserted %d out of %d content', inserted, len(contents))

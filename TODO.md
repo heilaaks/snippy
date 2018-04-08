@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] Use always the bulk_insert? This might be easier. Now the code there is bit awkward.
+   - [ ] Fix new cause with digest. This is caused from random order hash. The comparison to defaults (two snippets) causes random order. # TODO: Code causes random order comparison.
    - [ ] Add tests to update logging config. This goes to new Logger UT tests?
    - [ ] Remove excessive timestamp usage. Is single timestamp for operation is enough?
    - [ ] Add operation timestamp to Config() that is generated once per operation? It guarantees same timestamp during one operation. Also reduces calls timestamp.
@@ -26,7 +28,6 @@
    - [ ] Add server startup indicator like 'server running in 127.0.0.1:8080' or 'OK' (suppress with -q). This can be used in api performance test to see when the server is up.
 
 ## FIX
-   - [ ] Fix new cause with digest. This is caused from random order hash. The comparison to defaults (two snippets) causes random order and only the first cause is set.
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
@@ -47,10 +48,12 @@
 ## REFACTOR
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
+   - [ ] Read storage schema directly to config() like the content templates. 
    - [ ] Change is_template in Content to __cmp__.
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
+   - [ ] Is tested? import first content that already exist but second is new? Should result OK. Check test_cli_import_snippet_018-> Is the order this?
    - [ ] Add test to import solution without date (check if exist first).
    - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Add unit test for Cause.debug().

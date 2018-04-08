@@ -40,22 +40,23 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 #
 # Snippet importing and get_utc_time():
 #
-#   1) Create empty content.
-#   2) Comparing content against template calls implicitly empty content creation in Parser.
-#   3) Comparing content against template calls implicitly empty content creation in Storage.
+#   1) Create one empty content to be copied among all imported contents.
+#   2) Compare created content against content template before content is stored.
 #
 # Solution creation and get_utc_time():
 #
 #   1) Creating empty content.
-#   2) Comparing against content template (create empty).
-#   3) Comparing against content template (make timestamp).
+#   2) Compare created content against content template before content is stored.
+#
+# Solution importing and get_utc_time():
+#
+#   1) Create one empty content to be copied among all imported contents.
+#   2) Compare created content against content template before content is stored.
 #
 # Editing solution and get_utc_time():
 #
 #   1) Creating empty content.
-#   2) converting text in Editor()
-#   3) Comparing against content template (create empty).
-#   4) Comparing against content template (make timestamp).
+#   2) Compare created content against content template before content is stored.
 #
 # Snippet or solution exporting and get_utc_time():
 #
@@ -70,10 +71,10 @@ CREATE_REMOVE = (REMOVE_CREATED,)*2
 CREATE_FORCED = (FORCED_CREATED,)*2
 CREATE_EXITED = (EXITED_CREATED,)*2
 CREATE_NETCAT = (NETCAT_CREATED,)*2
-IMPORT_REMOVE = (REMOVE_CREATED,)*3
-IMPORT_FORCED = (FORCED_CREATED,)*3
-IMPORT_EXITED = (EXITED_CREATED,)*3
-IMPORT_NETCAT = (NETCAT_CREATED,)*3
+IMPORT_REMOVE = (REMOVE_CREATED,)*2
+IMPORT_FORCED = (FORCED_CREATED,)*2
+IMPORT_EXITED = (EXITED_CREATED,)*2
+IMPORT_NETCAT = (NETCAT_CREATED,)*2
 EDITED_REMOVE = (REMOVE_CREATED,)*2
 
 # Solutions
@@ -83,9 +84,9 @@ KAFKA_CREATED = '2017-10-20 06:16:27'
 CREATE_BEATS = (BEATS_CREATED,)*2
 CREATE_NGINX = (NGINX_CREATED,)*2
 CREATE_KAFKA = (KAFKA_CREATED,)*2
-IMPORT_BEATS = (BEATS_CREATED,)*3
-IMPORT_NGINX = (NGINX_CREATED,)*3
-IMPORT_KAFKA = (KAFKA_CREATED,)*3
+IMPORT_BEATS = (BEATS_CREATED,)*2
+IMPORT_NGINX = (NGINX_CREATED,)*2
+IMPORT_KAFKA = (KAFKA_CREATED,)*2
 EDITED_BEATS = (BEATS_CREATED,)*2
 
 # Templates

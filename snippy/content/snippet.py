@@ -40,12 +40,9 @@ class Snippet(object):
 
         self._logger.debug('creating new snippet')
         snippets = Config.get_contents(Content(category=Const.SNIPPET))
-        if not snippets[0].has_data():
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory snippet data not defined')
-        else:
-            content_digest = self.storage.create(snippets[0])
-            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
-            snippets = Migrate.content(snippets, self.content_type)
+        content_digest = self.storage.create(snippets[0])
+        snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
+        snippets = Migrate.content(snippets, self.content_type)
 
         return snippets
 

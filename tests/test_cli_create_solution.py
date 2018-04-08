@@ -70,7 +70,7 @@ class TestCliCreateSolution(object):
 
         ## Brief: Try to create new solution without any changes to template.
         cause = snippy.run(['snippy', 'create', '--solution'])  ## workflow
-        assert cause == 'NOK: no content was stored because solution is an empty template'
+        assert cause == 'NOK: content was not stored because it was matching to an empty template'
         assert not Database.get_solutions()
 
     @pytest.mark.usefixtures('edit-empty')

@@ -33,15 +33,16 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
+# Snippet creation and get_utc_time():
+#
+#   1) Creating empty content.
+#   2) Comparing content against template calls implicitly empty content creation in Storage.
+#
 # Snippet importing and get_utc_time():
 #
 #   1) Create empty content.
 #   2) Comparing content against template calls implicitly empty content creation in Parser.
 #   3) Comparing content against template calls implicitly empty content creation in Storage.
-#
-# Snippet creation and get_utc_time():
-#
-#   1) Creating empty content.
 #
 # Solution creation and get_utc_time():
 #
@@ -65,15 +66,15 @@ REMOVE_CREATED = '2017-10-14 19:56:31'
 FORCED_CREATED = '2017-10-14 19:56:31'
 EXITED_CREATED = '2017-10-20 07:08:45'
 NETCAT_CREATED = '2017-10-20 07:08:45'
-CREATE_REMOVE = (REMOVE_CREATED,)*1
-CREATE_FORCED = (FORCED_CREATED,)*1
-CREATE_EXITED = (EXITED_CREATED,)*1
-CREATE_NETCAT = (NETCAT_CREATED,)*1
-IMPORT_REMOVE = (REMOVE_CREATED,)*2
-IMPORT_FORCED = (FORCED_CREATED,)*2
-IMPORT_EXITED = (EXITED_CREATED,)*2
-IMPORT_NETCAT = (NETCAT_CREATED,)*2
-EDITED_REMOVE = (REMOVE_CREATED,)*1
+CREATE_REMOVE = (REMOVE_CREATED,)*2
+CREATE_FORCED = (FORCED_CREATED,)*2
+CREATE_EXITED = (EXITED_CREATED,)*2
+CREATE_NETCAT = (NETCAT_CREATED,)*2
+IMPORT_REMOVE = (REMOVE_CREATED,)*3
+IMPORT_FORCED = (FORCED_CREATED,)*3
+IMPORT_EXITED = (EXITED_CREATED,)*3
+IMPORT_NETCAT = (NETCAT_CREATED,)*3
+EDITED_REMOVE = (REMOVE_CREATED,)*2
 
 # Solutions
 BEATS_CREATED = '2017-10-20 11:11:19'
@@ -82,9 +83,9 @@ KAFKA_CREATED = '2017-10-20 06:16:27'
 CREATE_BEATS = (BEATS_CREATED,)*3
 CREATE_NGINX = (NGINX_CREATED,)*3
 CREATE_KAFKA = (KAFKA_CREATED,)*3
-IMPORT_BEATS = (BEATS_CREATED,)*3
-IMPORT_NGINX = (NGINX_CREATED,)*3
-IMPORT_KAFKA = (KAFKA_CREATED,)*3
+IMPORT_BEATS = (BEATS_CREATED,)*5
+IMPORT_NGINX = (NGINX_CREATED,)*5
+IMPORT_KAFKA = (KAFKA_CREATED,)*5
 EDITED_BEATS = (BEATS_CREATED,)*4
 
 # Templates

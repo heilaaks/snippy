@@ -297,7 +297,7 @@ class TestCliImportSnippet(object):
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--defaults'])  ## workflow
-        assert cause == 'NOK: no content was inserted because content data already existed'
+        assert cause == 'NOK: content data already exist with digest 53908d68425c61dc'
         assert len(Database.get_snippets()) == 2
         defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
         yaml_load.assert_called_once_with(defaults_snippets, 'r')

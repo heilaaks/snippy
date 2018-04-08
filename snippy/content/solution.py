@@ -40,14 +40,9 @@ class Solution(object):
 
         self._logger.debug('creating new solution')
         solutions = Config.get_contents(Content(category=Const.SOLUTION))
-        if not solutions[0].has_data():
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'mandatory solution data not defined')
-        elif solutions[0].is_template():
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'no content was stored because solution is an empty template')
-        else:
-            content_digest = self.storage.create(solutions[0])
-            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
-            solutions = Migrate.content(solutions, self.content_type)
+        content_digest = self.storage.create(solutions[0])
+        solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
+        solutions = Migrate.content(solutions, self.content_type)
 
         return solutions
 

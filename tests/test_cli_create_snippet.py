@@ -75,7 +75,7 @@ class TestCliCreateSnippet(object):
         tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow
-        assert cause == 'NOK: mandatory snippet data not defined'
+        assert cause == 'NOK: content was not stored because mandatory content data was missing'
         assert not Database.get_snippets()
 
     @pytest.mark.usefixtures('edit-snippet-template')
@@ -83,11 +83,9 @@ class TestCliCreateSnippet(object):
         """Try to create snippet from CLI."""
 
         ## Brief: Try to create new snippet without any changes to snippet
-        ##        template. In case of snippets, the error cause is always
-        ##        complaining about missing content data even when no changes
-        ##        are made to template.
+        ##        template.
         cause = snippy.run(['snippy', 'create', '--editor'])  ## workflow
-        assert cause == 'NOK: mandatory snippet data not defined'
+        assert cause == 'NOK: content was not stored because it was matching to an empty template'
         assert not Database.get_snippets()
 
     @pytest.mark.usefixtures('edit-empty')

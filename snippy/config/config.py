@@ -20,6 +20,7 @@
 """config: Global configuration."""
 
 import datetime
+import io
 import os.path
 import sys
 
@@ -219,10 +220,14 @@ class Config(object):
     def _content_template(cls, template):
         """Get defined content template installed with the tool."""
 
-        template = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), template)
-        if not os.path.isfile(template):
-            Logger.print_cause('NOK: cannot run because content template path is not accessible: {}'.format(template))
+        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), template)
+        if not os.path.isfile(filename):
+            Logger.print_cause('NOK: cannot run because content template path is not accessible: {}'.format(filename))
             sys.exit(1)
+
+        template = Const.EMPTY
+        with io.open(filename, encoding='utf-8') as infile:
+            template = infile.read()
 
         return template
 

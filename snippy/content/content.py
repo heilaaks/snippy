@@ -73,9 +73,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def is_template(self):
         """Test if content data is empty template."""
 
-        # Date and group fields are masked out. The date can change and the tool
-        # enforces default group only after the content is saved and user did not
-        # give change the group field value in template.
+        # Date and group fields are masked out. The date can change and the
+        # tool enforces default group only after the content is saved and
+        # user did not give change the group field value in template.
         template = Content.get_empty(self.get_category()).convert_text()
         content = self.convert_text()
         template = re.sub(r'## DATE  :.*', '## DATE  : ', template)
@@ -93,12 +93,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         template = Const.EMPTY
         if category == Const.SNIPPET:
-            filename = Config.snippet_template
+            template = Config.snippet_template
         else:
-            filename = Config.solution_template
-
-        with open(filename, 'r') as infile:
-            template = infile.read()
+            template = Config.solution_template
 
         return template
 

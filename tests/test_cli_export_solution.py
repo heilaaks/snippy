@@ -190,7 +190,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         """Export defined solution with digest."""
 
         ## Brief: Export defined solution based on message digest. Content
-        ##        file name is not defined in metada, solution data or in
+        ##        file name is not defined in metadata, solution data or in
         ##        command line -f|--file option. This should result the file
         ##        name and format defined by tool internal defaults.
         content_read = Content.updated_kafka1()

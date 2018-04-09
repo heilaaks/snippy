@@ -74,10 +74,11 @@ class Snippet(object):
             data=Config.content_data
         )
         if len(snippets) == 1:
-            self._logger.debug('updating snippet with digest %.16s', snippets[0].get_digest())
-            snippets = Config.get_contents(content=snippets[0])
-            content_digest = self.storage.update(snippets[0])
-            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
+            digest = snippets[0].get_digest()
+            self._logger.debug('updating snippet with digest %.16s', digest)
+            contents = Config.get_contents(content=snippets[0])
+            self.storage.update(contents[0], digest)
+            snippets = self.storage.search(Const.SNIPPET, digest=contents[0].get_digest())
         else:
             Config.validate_search_context(snippets, 'update')
 
@@ -136,10 +137,12 @@ class Snippet(object):
         if content_digest:
             snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
             if len(snippets) == 1:
+                digest = snippets[0].get_digest()
+                self._logger.debug('importing solution with digest %.16s', digest)
                 dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SNIPPET))
                 contents = Content.load(dictionary)
                 snippets[0].migrate_edited(contents)
-                self.storage.update(snippets[0])
+                self.storage.update(snippets[0], digest)
             elif not snippets:
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find snippet identified with digest {:.16}'.format(content_digest))
             else:

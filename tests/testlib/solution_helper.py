@@ -323,6 +323,5 @@ class SolutionHelper(object):
 
         contents = Parser.read_content(Content(category=Const.SOLUTION), text)
         content = contents[0]
-        content.update_digest()
 
         return content

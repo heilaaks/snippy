@@ -74,10 +74,11 @@ class Solution(object):
             data=Config.content_data
         )
         if len(solutions) == 1:
-            self._logger.debug('updating solution with digest %.16s', solutions[0].get_digest())
-            solutions = Config.get_contents(content=solutions[0])
-            content_digest = self.storage.update(solutions[0])
-            solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
+            digest = solutions[0].get_digest()
+            self._logger.debug('updating solution with digest %.16s', digest)
+            contents = Config.get_contents(content=solutions[0])
+            self.storage.update(contents[0], digest)
+            solutions = self.storage.search(Const.SNIPPET, digest=contents[0].get_digest())
         else:
             Config.validate_search_context(solutions, 'update')
 
@@ -136,10 +137,12 @@ class Solution(object):
         if content_digest:
             solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
             if len(solutions) == 1:
+                digest = solutions[0].get_digest()
+                self._logger.debug('importing solution with digest %.16s', digest)
                 dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SOLUTION))
                 contents = Content.load(dictionary)
                 solutions[0].migrate_edited(contents)
-                self.storage.update(solutions[0])
+                self.storage.update(solutions[0], digest)
             elif not solutions:
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find solution identified with digest {:.16}'.format(content_digest))
             else:

@@ -239,9 +239,9 @@ class Sqlite3Db(object):
                                            content.get_versions(Const.STRING_CONTENT),
                                            content.get_created(Const.STRING_CONTENT),
                                            content.get_updated(Const.STRING_CONTENT),
-                                           digest,
+                                           content.get_digest(Const.STRING_CONTENT),
                                            metadata,
-                                           content.get_digest(Const.STRING_CONTENT)))
+                                           digest))
                     self.connection.commit()
             except sqlite3.Error as exception:
                 Cause.push(Cause.HTTP_500, 'updating database failed with exception {}'.format(exception))

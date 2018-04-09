@@ -49,14 +49,11 @@ class Storage(object):
 
         return contents
 
-    def update(self, content):
+    def update(self, content, digest):
         """Update content."""
 
         content.update_updated()
-        digest = content.compute_digest()
         self._database.update_content(content, digest)
-
-        return digest
 
     def delete(self, digest):
         """Delete content."""

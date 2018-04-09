@@ -34,7 +34,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         if content is None:
             self.content = tuple(Content.get_empty(category).get_list())
         else:
-            self.content = content
+            self.set(content)
 
         if category:
             self._update_category(category)
@@ -55,6 +55,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """Set content."""
 
         self.content = content
+        self._update_digest()
 
     def convert_text(self):
         """Content content to text."""
@@ -273,7 +274,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         return digest
 
-    def update_digest(self):
+    def _update_digest(self):
         """Update content message digest."""
 
         content = self.get_list()
@@ -298,6 +299,8 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def update_updated(self):
         """Update content update timestamp."""
 
+        # Does not require recalculation of digest because the time is not
+        # part of it.
         content = self.get_list()
         content[Const.UPDATED] = Config.get_utc_time()
         self.content = (
@@ -379,7 +382,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def migrate_edited(self, contents):
         """Migrate edited content."""
 
-        # Only the content that can be directly modified by user is migrated.
+        # The content that can be directly modified by user is migrated.
+        # Also the migrated content contains correct digest that has to
+        # be set from the migrated content.
         if contents:
             migrated = contents[0]
             content = self.get_list()
@@ -393,6 +398,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content[Const.VERSIONS] = migrated.get_versions()
             content[Const.CREATED] = migrated.get_created()
             content[Const.UPDATED] = migrated.get_updated()
+            content[Const.DIGEST] = migrated.get_digest()
             self.content = (
                 content[Const.DATA],
                 content[Const.BRIEF],

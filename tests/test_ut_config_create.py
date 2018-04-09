@@ -39,7 +39,7 @@ class TestUtConfigCreate(unittest.TestCase):
         mock_get_utc_time.return_value = '2018-02-17 13:23:43'
 
         snippet = ((), '', Const.DEFAULT_GROUP, (), (), Const.SNIPPET, '', '', '', '2018-02-17 13:23:43',
-                   '2018-02-17 13:23:43', None, None, None)
+                   '2018-02-17 13:23:43', 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc', None, None)
         Config.init(None)
         Config.load(Cli(['snippy', 'create']))
         assert isinstance(Config.content_category, str)

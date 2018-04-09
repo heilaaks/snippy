@@ -119,7 +119,6 @@ class SnippetHelper(object):
         if text:
             contents = Parser.read_content(Content(category=Const.SNIPPET), text)
             content = contents[0]
-            content.update_digest()
         else:
             content = Content.load({'content': [SnippetHelper.DEFAULTS[snippet]]})[0]
 

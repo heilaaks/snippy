@@ -77,7 +77,6 @@ class Parser(object):
                 content_copy.get_metadata(),
                 content_copy.get_key()
             ))
-            content_copy.update_digest()
             contents.append(content_copy)
 
         return contents

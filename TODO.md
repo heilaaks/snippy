@@ -1,7 +1,6 @@
 ## WORKING
-   - [ ] Use always the bulk_insert? This might be easier. Now the code there is bit awkward.
-   - [ ] Fix new cause with digest. This is caused from random order hash. The comparison to defaults (two snippets) causes random order. # TODO: Code causes random order comparison.
    - [ ] Add tests to update logging config. This goes to new Logger UT tests?
+   - [ ] Change is_template that does not use get_utc. The template comparison never needs the time since it is masked anyways.
    - [ ] Remove excessive timestamp usage. Is single timestamp for operation is enough?
    - [ ] Add operation timestamp to Config() that is generated once per operation? It guarantees same timestamp during one operation. Also reduces calls timestamp.
 
@@ -40,6 +39,7 @@
    - [ ] Fix if the sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
    - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
    - [ ] Why falcon.API fails but the falcon import seems not to produce ImportError when the falcon is not imported?
+   - [ ] Why enabling debug logs in pytest fixture for server does not show the logs from mocked REST API call? It only shows fixture imports.
    - [ ] Why 'I/O operation on closed file' is generated as in SCRIBLING.md
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
    - [ ] Why changing self._data = data in data setter in line 160 to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.

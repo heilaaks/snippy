@@ -290,6 +290,8 @@ class TestCliImportSnippet(object):
         ## Brief: Try to import snippet defaults again. The second import
         ##        should fail with an error because the content already exist.
         ##        The error text must be the same for all content categories.
+        ##        Because of random order dictionary in the code, the reported
+        ##        digest can vary if there are multiple failures.
         ##        TODO: The UTC time mocking is likely incorrect here.
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
@@ -297,8 +299,8 @@ class TestCliImportSnippet(object):
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--defaults'])  ## workflow
-        print(Database.print_contents())
-        assert cause == 'NOK: content data already exist with digest 53908d68425c61dc'  # TODO: Code causes random order comparison.
+        assert cause == 'NOK: content data already exist with digest 53908d68425c61dc' or \
+               cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
         assert len(Database.get_snippets()) == 2
         defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
         yaml_load.assert_called_once_with(defaults_snippets, 'r')

@@ -33,13 +33,10 @@ class Storage(object):
         self._database = Database()
         self._database.init()
 
-    def create(self, content):
+    def create(self, contents):
         """Create content."""
 
-        digest = content.compute_digest()
-        self._database.insert_content(content, digest)
-
-        return digest
+        self._database.insert_content(contents)
 
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content."""
@@ -71,7 +68,7 @@ class Storage(object):
     def import_content(self, contents):
         """Import contents."""
 
-        return self._database.bulk_insert_content(contents)
+        return self._database.insert_content(contents)
 
     def disconnect(self):
         """Disconnect storage."""

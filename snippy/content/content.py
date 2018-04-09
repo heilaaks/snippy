@@ -55,7 +55,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """Set content."""
 
         self.content = content
-        self._update_digest()
+        self.update_digest()
 
     def convert_text(self):
         """Content content to text."""
@@ -274,7 +274,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         return digest
 
-    def _update_digest(self):
+    def update_digest(self):
         """Update content message digest."""
 
         content = self.get_list()

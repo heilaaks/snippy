@@ -54,20 +54,43 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_content(self, content, digest, metadata=None, bulk_insert=False):
-        """Insert content into database."""
+    def insert_content(self, contents):
+        """Insert contents into database."""
+
+        inserted = 0
+        cause = (Cause.HTTP_OK, Const.EMPTY)
+        for content in contents:
+            digest = content.get_digest()
+            if digest != content.compute_digest():
+                self.logger.debug('invalid digest found and updated while storing content data: "%s"', content.get_data())
+                content.update_digest()
+
+            cause = self._insert_content(content)
+            if cause[0] == Cause.HTTP_OK:
+                inserted = inserted + 1
+
+        self.logger.debug('inserted %d out of %d content', inserted, len(contents))
+
+        if not contents:
+            cause = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
+        elif inserted == len(contents):
+            Cause.push(Cause.HTTP_CREATED, 'content created')
+
+        if not inserted and cause[1]:
+            Cause.push(cause[0], cause[1])
+
+    def _insert_content(self, content):
+        """Insert content."""
 
         cause = self._test_content(content)
         if cause[0] != Cause.HTTP_OK:
-            if not bulk_insert:
-                Cause.push(cause[0], cause[1])
 
             return cause
 
         if self.connection:
             query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, ' +
                      'runalias, versions, created, updated, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
-            self.logger.debug('insert "%s" with digest %.16s', content.get_brief(), digest)
+            self.logger.debug('insert "%s" with digest %.16s', content.get_brief(), content.get_digest())
             try:
                 with closing(self.connection.cursor()) as cursor:
                     cursor.execute(query, (content.get_data(Const.STRING_CONTENT),
@@ -81,11 +104,9 @@ class Sqlite3Db(object):
                                            content.get_versions(Const.STRING_CONTENT),
                                            content.get_created(Const.STRING_CONTENT),
                                            content.get_updated(Const.STRING_CONTENT),
-                                           digest,
-                                           metadata))
+                                           content.get_digest(Const.STRING_CONTENT),
+                                           content.get_metadata(Const.STRING_CONTENT)))
                     self.connection.commit()
-                    if not bulk_insert:
-                        Cause.push(Cause.HTTP_CREATED, 'content created')
 
             except sqlite3.IntegrityError as exception:
                 Cause.push(Cause.HTTP_CONFLICT,
@@ -96,31 +117,6 @@ class Sqlite3Db(object):
             Cause.push(Cause.HTTP_500, 'internal error prevented inserting into database')
 
         return cause
-
-    def bulk_insert_content(self, contents):
-        """Insert multiple contents into database."""
-
-        inserted = 0
-        cause = (Cause.HTTP_OK, Const.EMPTY)
-        for content in contents:
-            digest = content.get_digest()
-            if digest != content.compute_digest():
-                self.logger.debug('invalid digest found and updated while storing content data: "%s"', content.get_data())
-                digest = content.compute_digest()
-
-            cause = self.insert_content(content, digest, bulk_insert=True)
-            if cause[0] == Cause.HTTP_OK:
-                inserted = inserted + 1
-
-        self.logger.debug('inserted %d out of %d content', inserted, len(contents))
-
-        if not contents:
-            cause = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
-        elif inserted == len(contents):
-            Cause.push(Cause.HTTP_CREATED, 'content created')
-
-        if not inserted and cause[1]:
-            Cause.push(cause[0], cause[1])
 
     def select_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Select content."""

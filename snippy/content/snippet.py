@@ -40,8 +40,8 @@ class Snippet(object):
 
         self._logger.debug('creating new snippet')
         snippets = Config.get_contents(Content(category=Const.SNIPPET))
-        content_digest = self.storage.create(snippets[0])
-        snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
+        self.storage.create(snippets)
+        snippets = self.storage.search(Const.SNIPPET, digest=snippets[0].get_digest())
         snippets = Migrate.content(snippets, self.content_type)
 
         return snippets

@@ -46,7 +46,7 @@ class TestUtSqlite3dbSelect(object):
         ##        case th last keyword matches to links column.
         content = Snippet.get_content(snippet=Snippet.FORCED)
         keywords = ['foo', 'bar', 'digitalocean']
-        sqlite.insert_content(content, content.get_digest(), content.get_metadata())
+        sqlite.insert_content([content])
         mock_cause_push.reset_mock()
         Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content)
         assert len(sqlite.select_content(Const.SNIPPET, keywords)) == 1

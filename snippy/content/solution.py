@@ -40,8 +40,8 @@ class Solution(object):
 
         self._logger.debug('creating new solution')
         solutions = Config.get_contents(Content(category=Const.SOLUTION))
-        content_digest = self.storage.create(solutions[0])
-        solutions = self.storage.search(Const.SOLUTION, digest=content_digest)
+        self.storage.create(solutions)
+        solutions = self.storage.search(Const.SOLUTION, digest=solutions[0].get_digest())
         solutions = Migrate.content(solutions, self.content_type)
 
         return solutions

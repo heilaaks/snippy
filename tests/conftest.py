@@ -33,32 +33,27 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
-# Snippet creation and get_utc_time():
+# Calls to get_utc_time()
+# =======================
 #
-#   1) Creating empty content.
-#   2) Comparing content against template calls implicitly empty content creation in Storage.
+# Content creation:
 #
-# Snippet importing and get_utc_time():
+#   1) Create empty content and set created and updated timestamps to same value.
 #
-#   1) Create one empty content to be copied among all imported contents.
-#   2) Compare created content against content template before content is stored.
-#
-# Solution creation and get_utc_time():
-#
-#   1) Creating empty content.
-#   2) Compare created content against content template before content is stored.
-#
-# Solution importing and get_utc_time():
+# Content importing from file:
 #
 #   1) Create one empty content to be copied among all imported contents.
-#   2) Compare created content against content template before content is stored.
 #
-# Editing solution and get_utc_time():
+# Content importing (=update) based on digest:
+#
+#   1) Create one empty content to be copied among all imported contents.
+#   2) Update 'updated' timestamp(s)
+#
+# Content editing:
 #
 #   1) Creating empty content.
-#   2) Compare created content against content template before content is stored.
 #
-# Snippet or solution exporting and get_utc_time():
+# Content exporting:
 #
 #   1) Creating metadata with export timestamp.
 
@@ -67,27 +62,27 @@ REMOVE_CREATED = '2017-10-14 19:56:31'
 FORCED_CREATED = '2017-10-14 19:56:31'
 EXITED_CREATED = '2017-10-20 07:08:45'
 NETCAT_CREATED = '2017-10-20 07:08:45'
-CREATE_REMOVE = (REMOVE_CREATED,)*2
-CREATE_FORCED = (FORCED_CREATED,)*2
-CREATE_EXITED = (EXITED_CREATED,)*2
-CREATE_NETCAT = (NETCAT_CREATED,)*2
+CREATE_REMOVE = (REMOVE_CREATED,)*1
+CREATE_FORCED = (FORCED_CREATED,)*1
+CREATE_EXITED = (EXITED_CREATED,)*1
+CREATE_NETCAT = (NETCAT_CREATED,)*1
 IMPORT_REMOVE = (REMOVE_CREATED,)*2
 IMPORT_FORCED = (FORCED_CREATED,)*2
 IMPORT_EXITED = (EXITED_CREATED,)*2
 IMPORT_NETCAT = (NETCAT_CREATED,)*2
-EDITED_REMOVE = (REMOVE_CREATED,)*2
+EDITED_REMOVE = (REMOVE_CREATED,)*1
 
 # Solutions
 BEATS_CREATED = '2017-10-20 11:11:19'
 NGINX_CREATED = '2017-10-20 06:16:27'
 KAFKA_CREATED = '2017-10-20 06:16:27'
-CREATE_BEATS = (BEATS_CREATED,)*2
-CREATE_NGINX = (NGINX_CREATED,)*2
-CREATE_KAFKA = (KAFKA_CREATED,)*2
-IMPORT_BEATS = (BEATS_CREATED,)*2
+CREATE_BEATS = (BEATS_CREATED,)*1
+CREATE_NGINX = (NGINX_CREATED,)*1
+CREATE_KAFKA = (KAFKA_CREATED,)*1
+IMPORT_BEATS = (BEATS_CREATED,)*1
 IMPORT_NGINX = (NGINX_CREATED,)*2
 IMPORT_KAFKA = (KAFKA_CREATED,)*2
-EDITED_BEATS = (BEATS_CREATED,)*2
+EDITED_BEATS = (BEATS_CREATED,)*1
 
 # Templates
 EXPORT_TEMPLATE = '2017-10-14 19:56:31'
@@ -95,8 +90,8 @@ EXPORT_TEMPLATE = '2017-10-14 19:56:31'
 # Export
 EXPORT_TIME = '2018-02-02 02:02:02'
 
-IMPORT_DEFAULT_SNIPPETS = (IMPORT_REMOVE + IMPORT_FORCED)
-IMPORT_DEFAULT_SOLUTIONS = (IMPORT_BEATS + IMPORT_NGINX)
+IMPORT_DEFAULT_SNIPPETS = ((REMOVE_CREATED,) + (FORCED_CREATED,))
+IMPORT_DEFAULT_SOLUTIONS = ((BEATS_CREATED,) + (NGINX_CREATED,))
 
 # Snippy
 @pytest.fixture(scope='function', name='snippy')

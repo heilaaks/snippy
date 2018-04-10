@@ -77,7 +77,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         # Date and group fields are masked out. The date can change and the
         # tool enforces default group only after the content is saved and
         # user did not give change the group field value in template.
-        template = Content.get_empty(self.get_category()).convert_text()
+        template = Content.get_empty(self.get_category(), mask=True).convert_text()
         content = self.convert_text()
         template = re.sub(r'## DATE  :.*', '## DATE  : ', template)
         content = re.sub(r'## DATE  :.*', '## DATE  : ', content)
@@ -436,10 +436,13 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return contents
 
     @classmethod
-    def get_empty(cls, category):
+    def get_empty(cls, category, mask=False):
         """Get empty content."""
 
-        timestamp = Config.get_utc_time()
+        if mask:
+            timestamp = Const.EMPTY
+        else:
+            timestamp = Config.get_utc_time()
         content = (
             Const.EMPTY_TUPLE,
             Const.EMPTY,

@@ -1,8 +1,5 @@
 ## WORKING
    - [ ] Add tests to update logging config. This goes to new Logger UT tests?
-   - [ ] Change is_template that does not use get_utc. The template comparison never needs the time since it is masked anyways.
-   - [ ] Remove excessive timestamp usage. Is single timestamp for operation is enough?
-   - [ ] Add operation timestamp to Config() that is generated once per operation? It guarantees same timestamp during one operation. Also reduces calls timestamp.
 
 ## FEATURES
    - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
@@ -49,7 +46,7 @@
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
    - [ ] Read storage schema directly to config() like the content templates. 
-   - [ ] Change is_template in Content to __cmp__.
+   - [ ] Change is_template in Content to __cmp__?
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
@@ -75,7 +72,7 @@
    - [ ] Why tests are failing if falcon is not installed? There is something strange when falcon is uninstalled. After uninstall import still works but variables not there?
 
 ## DOCUMENTS
-   - [ ] Move test case brief to test case document. This cannot be done untill are cases are in new format because the documentation is lost. WHen this is done, check the autodock before massive desc move.
+   - [ ] Move test case brief to test case document. This cannot be done untill are cases are in new format because the documentation is lost. When this is done, check the autodock before massive desc move.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
@@ -107,6 +104,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Optimized calls to system time.
    - [x] Removed unnecessary conntent template check when content was parsed. The check is made before insert.
    - [x] Fixed server log settings that worked only for the first operation.
    - [x] Removed direct access to sys.argv from the code. Now the sys.argv is passed only from the main level.

@@ -38,6 +38,7 @@
    - [ ] Why falcon.API fails but the falcon import seems not to produce ImportError when the falcon is not imported?
    - [ ] Why enabling debug logs in pytest fixture for server does not show the logs from mocked REST API call? It only shows fixture imports.
    - [ ] Why 'I/O operation on closed file' is generated as in SCRIBLING.md
+   - [ ] Why Logger() UT tests produce out to capsys when the logger Pytest fixture is not used? The logger fixture hides something?
    - [ ] How to use double hyphen with Snippy search queries? Like in: search --sall '--all'
    - [ ] Why changing self._data = data in data setter in line 160 to self.data = data in config base seems to cause core. This can be used to set the Travis gdb parameters.
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?

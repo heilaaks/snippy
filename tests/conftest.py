@@ -144,6 +144,26 @@ def server_mock(mocker):
 
     mocker.patch('snippy.server.server.SnippyServer')
 
+# Logging
+@pytest.fixture(scope='function', name='logger')
+def logger_wrapper(request):
+    """Create logger."""
+
+    from snippy.logger import Logger
+
+    # Previous test may have configured the logger and therefore
+    # the logger must be always reset before test.
+    Logger.remove()
+    Logger.reset()
+    logger = Logger('snippy.' + __name__).logger
+    def fin():
+        """Clear the resources at the end."""
+
+        Logger.remove()
+    request.addfinalizer(fin)
+
+    return logger
+
 @pytest.fixture(scope='function', name='caller')
 def caller(mocker):
     """Mock _caller() used to mark code module and line in logs."""

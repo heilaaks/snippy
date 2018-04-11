@@ -164,6 +164,22 @@ class Logger(object):
         logging.getLogger('snippy').setLevel(logging.WARNING)
 
     @staticmethod
+    def remove():
+        """Delete all logger handlers."""
+
+        # Remove all handlers. This is needed for testing. This is related
+        # to defining the stdout stream handler and to the way how pytest
+        # uses stdout when capsys is being used /1/. More information from
+        # Python issue /2/.
+        #
+        # /1/ https://github.com/pytest-dev/pytest/issues/14
+        # /2/ https://bugs.python.org/issue6333
+        items = list(logging.root.manager.loggerDict.items())
+        for name, logger in items:
+            if 'snippy' in name:
+                logger.handlers = []
+
+    @staticmethod
     def timeit(method):
         """Time method by measuring it latency.
 

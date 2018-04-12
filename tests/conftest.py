@@ -153,7 +153,6 @@ def logger_wrapper(request):
 
     # Previous test may have configured the logger and therefore
     # the logger must be always reset before test.
-    Logger.remove()
     Logger.reset()
     logger = Logger('snippy.' + __name__).logger
     def fin():

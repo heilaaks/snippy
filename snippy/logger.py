@@ -43,12 +43,16 @@ except ImportError:
 class Logger(object):
     """Logging services."""
 
+    # Maximum length of log message.
+    MSG_MAX = 80
+
     # Global logger configuration.
     CONFIG = {
         'debug': False,
-        'very_verbose': False,
+        'json_logs': False,
+        'msg_max': MSG_MAX,
         'quiet': False,
-        'json_logs': False
+        'very_verbose': False
     }
 
     # Unique operation ID that identifies logs for each operation.
@@ -95,12 +99,16 @@ class Logger(object):
         Examples
         --------
         >>> Logger.configure({'debug': True,
-        >>>                   'very_verbose': False,
+        >>>                   'json_logs': True,
         >>>                   'quiet': False,
-        >>>                   'json_logs': True})
+        >>>                   'very_verbose': False})
         """
 
-        cls.CONFIG = config
+        cls.CONFIG['debug'] = config['debug']
+        cls.CONFIG['json_logs'] = config['json_logs']
+        cls.CONFIG['msg_max'] = Logger.MSG_MAX
+        cls.CONFIG['quiet'] = config['quiet']
+        cls.CONFIG['very_verbose'] = config['very_verbose']
 
         # Set the effective log level for all the loggers created under
         # 'snippy' logger namespace. This relies on that the module level
@@ -210,7 +218,9 @@ class Logger(object):
 class CustomFormatter(logging.Formatter):
     """Custom log formatting."""
 
-    MAX_MSG = 150
+    # Truncated message tail.
+    MSG_END = '...'
+    MSG_MAX = Logger.CONFIG['msg_max'] - len(MSG_END)
 
     def format(self, record):
         """Format log string."""
@@ -218,13 +228,17 @@ class CustomFormatter(logging.Formatter):
         # Debug option prints logs "as is" in full-length. Very verbose option
         # truncates logs and tries to guarantee one log per line with all lower
         # case characters.
+        if Logger.CONFIG['very_verbose']:
+            if record.args:
+                record.msg = record.msg % record.args
+                record.args = None
+            record.msg = record.msg.replace('\n', ' ').replace('\r', '')
+            record.msg = record.msg[:self.MSG_MAX] + (record.msg[self.MSG_MAX:] and self.MSG_END)
         if Logger.CONFIG['json_logs']:
             log_string = super(CustomFormatter, self).format(record)
             log_string = self._jsonify(record)
         elif Logger.CONFIG['very_verbose']:
             log_string = super(CustomFormatter, self).format(record).lower()
-            log_string = log_string.replace('\n', ' ').replace('\r', '')
-            log_string = log_string[:CustomFormatter.MAX_MSG] + (log_string[CustomFormatter.MAX_MSG:] and '...')
         else:
             log_string = super(CustomFormatter, self).format(record)
 
@@ -257,9 +271,6 @@ class CustomFormatter(logging.Formatter):
         fields = ['asctime', 'appname', 'process', 'oid', 'levelno', 'levelname', 'name', 'lineno', 'thread', 'message']
         for field in fields:
             log[field] = record.__dict__.get(field)
-
-        if Logger.CONFIG['very_verbose']:
-            log['message'] = log['message'][:CustomFormatter.MAX_MSG] + (log['message'][CustomFormatter.MAX_MSG:] and '...')
 
         return json.dumps(log)
 

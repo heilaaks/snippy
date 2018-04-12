@@ -96,34 +96,28 @@ class TestUtLogger(object):
         with pytest.raises(Exception):
             json.loads(out)
 
-#    def test_logger_003(self, capfd, logger):
-#        """Test logger basic usage.
-#
-#        Test case verifies that very verbose option works for text logs.
-#        """
-#
-#        #Logger.debug()
-#        Logger.configure({
-#            'debug': False,
-#            'very_verbose': True,
-#            'quiet': False,
-#            'json_logs': False
-#        })
-#        #Logger.debug()
-#        # Log length
-#        logger.warning('abcdefghij'*100)
-#
-#        out, err = capfd.readouterr()
-#        print("START")
-#        print(out)
-#        print("==")
-#        print(err)
-#        print("===")
-#        print(caplog.text)
-#        assert not out
-#        assert not err
-#        #assert len(caplog.records[:]) == 1
-#        #assert max(caplog.text.split(), key=len) == 'abcdefghij'*14
-#        print(out)
-#        assert 0
- 
+    def test_logger_003(self, capsys, caplog):
+        """Test logger basic usage.
+
+        Test case verifies that very verbose option works for text logs.
+        """
+
+        Logger.reset()
+        Logger.configure({
+            'debug': False,
+            'very_verbose': True,
+            'quiet': False,
+            'json_logs': False
+        })
+        logger = Logger('snippy.' + __name__).logger
+
+        # Log length
+        logger.warning('abcdefghij'*100)
+        logger.warning('variable %s' % ('abcdefghij'*100))
+
+        out, err = capsys.readouterr()
+        assert not err
+        assert 'abcdefghijabcdefg...' in out
+        assert 'abcdefghijabcdefgh..' in out
+        assert len(caplog.records[0].msg) == Logger.MSG_MAX
+        assert len(caplog.records[1].msg) == Logger.MSG_MAX

@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Add test for Logger() that includes parameters. The lenght formatting must obey the parameters.
    - [ ] Add tests to update logging config. This goes to new Logger UT tests?
 
 ## FEATURES
@@ -45,6 +46,7 @@
 
 ## REFACTOR
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
+   - [ ] The very_verbose is confusing since it only dictates log message (msg) max lenght. It could be e.g. --debug --log-msg-len 150 (also change --log-json)
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
    - [ ] Read storage schema directly to config() like the content templates. 
    - [ ] Change is_template in Content to __cmp__?

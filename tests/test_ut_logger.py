@@ -24,13 +24,14 @@ import json
 import pytest
 
 from snippy.logger import Logger
+from tests.testlib.content import Field
 
 
 class TestUtLogger(object):
     """Test Logger() class."""
 
     def test_logger_001(self, logger, caplog, capsys):
-        """Test logger basic usage.
+        """Test logger basic usage
 
         Test case verifies that default log configuration is working.
         By default only log level warning and levels above are printed.
@@ -59,7 +60,7 @@ class TestUtLogger(object):
             json.loads(out)
 
     def test_logger_002(self, logger, caplog, capsys):
-        """Test logger basic usage.
+        """Test logger basic usage
 
         Test case verifies that debug configuration is working. In
         this case the debug level should be applied that must produce
@@ -97,12 +98,12 @@ class TestUtLogger(object):
             json.loads(out)
 
     def test_logger_003(self, capsys, caplog):
-        """Test logger basic usage.
+        """Test logger basic usage
 
         Test case verifies that very verbose option works for text logs.
         """
 
-        Logger.reset()
+        Logger.remove()
         Logger.configure({
             'debug': False,
             'very_verbose': True,
@@ -113,11 +114,91 @@ class TestUtLogger(object):
 
         # Log length
         logger.warning('abcdefghij'*100)
-        logger.warning('variable %s' % ('abcdefghij'*100))
+        logger.warning('variable %s', ('abcdefghij'*100))
 
         out, err = capsys.readouterr()
         assert not err
         assert 'abcdefghijabcdefg...' in out
-        assert 'abcdefghijabcdefgh..' in out
+        assert 'abcdefghijabcdefgh...' in out
         assert len(caplog.records[0].msg) == Logger.MSG_MAX
         assert len(caplog.records[1].msg) == Logger.MSG_MAX
+
+    def test_logger_004(self, capsys, caplog):
+        """Test logger basic usage
+
+        Test case verifies that debug option works with json logs.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': True,
+            'very_verbose': False,
+            'quiet': False,
+            'json_logs': True
+        })
+        logger = Logger('snippy.' + __name__).logger
+
+        # Log length
+        logger.warning('abcdefghij'*100)
+        logger.warning('variable %s', ('abcdefghij'*100))
+
+        out, err = capsys.readouterr()
+        assert not err
+        assert json.loads(out.splitlines()[0])['message'] == 'abcdefghij'*100
+        assert json.loads(out.splitlines()[1])['message'] == 'variable %s' % ('abcdefghij'*100)
+        assert caplog.records[0].msg == 'abcdefghij'*100
+        assert caplog.records[1].msg == 'variable %s' % ('abcdefghij'*100)
+        assert Field.is_iso8601(json.loads(out.splitlines()[0])['asctime'])
+        assert Field.is_iso8601(json.loads(out.splitlines()[1])['asctime'])
+
+    def test_logger_005(self, capsys, caplog):
+        """Test logger basic usage.
+
+        Test case verifies that very verbose option works with json logs.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': False,
+            'very_verbose': True,
+            'quiet': False,
+            'json_logs': True
+        })
+        logger = Logger('snippy.' + __name__).logger
+
+        # Log length
+        logger.warning('abcdefghij'*100)
+        logger.warning('variable %s', ('abcdefghij'*100))
+
+        out, err = capsys.readouterr()
+        assert not err
+        assert len(json.loads(out.splitlines()[0])['message']) == Logger.MSG_MAX
+        assert len(json.loads(out.splitlines()[1])['message']) == Logger.MSG_MAX
+        assert len(caplog.records[0].msg) == Logger.MSG_MAX
+        assert len(caplog.records[1].msg) == Logger.MSG_MAX
+        assert Field.is_iso8601(json.loads(out.splitlines()[0])['asctime'])
+        assert Field.is_iso8601(json.loads(out.splitlines()[1])['asctime'])
+
+    def test_logger_006(self, capsys):
+        """Test operation ID (OID)
+
+        Test case verifies that operation ID (OID) refresh works.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': True,
+            'very_verbose': False,
+            'quiet': False,
+            'json_logs': True
+        })
+        logger = Logger('snippy.' + __name__).logger
+
+        # Log length
+        logger.warning('first message')
+        Logger.refresh_oid()
+        logger.warning('second message')
+
+        out, err = capsys.readouterr()
+        assert not err
+        assert json.loads(out.splitlines()[0])['oid'] != json.loads(out.splitlines()[1])['oid']

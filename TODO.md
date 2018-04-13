@@ -1,6 +1,6 @@
 ## WORKING
-   - [ ] Add test for Logger() that includes parameters. The lenght formatting must obey the parameters.
    - [ ] Add tests to update logging config. This goes to new Logger UT tests?
+   - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
 
 ## FEATURES
    - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
@@ -55,7 +55,6 @@
 ## TESTS
    - [ ] Is tested? import first content that already exist but second is new? Should result OK. Check test_cli_import_snippet_018-> Is the order this?
    - [ ] Add test to import solution without date (check if exist first).
-   - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
    - [ ] Add unit test for Cause.debug().
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
    - [ ] Refactor UT tests.

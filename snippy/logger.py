@@ -176,9 +176,9 @@ class Logger(object):
         """Delete all logger handlers."""
 
         # Remove all handlers. This is needed for testing. This is related
-        # to defining the stdout stream handler and to the way how pytest
-        # uses stdout when capsys is being used /1/. More information from
-        # Python issue /2/.
+        # to defining the stdout for StreamHandler and to the way how Pytest
+        # uses stdout when capsys is used /1/. More information from Python
+        # issue /2/.
         #
         # /1/ https://github.com/pytest-dev/pytest/issues/14
         # /2/ https://bugs.python.org/issue6333
@@ -228,12 +228,13 @@ class CustomFormatter(logging.Formatter):
         # Debug option prints logs "as is" in full-length. Very verbose option
         # truncates logs and tries to guarantee one log per line with all lower
         # case characters.
+        if record.args:
+            record.msg = record.msg % record.args
+            record.args = None
         if Logger.CONFIG['very_verbose']:
-            if record.args:
-                record.msg = record.msg % record.args
-                record.args = None
             record.msg = record.msg.replace('\n', ' ').replace('\r', '')
             record.msg = record.msg[:self.MSG_MAX] + (record.msg[self.MSG_MAX:] and self.MSG_END)
+
         if Logger.CONFIG['json_logs']:
             log_string = super(CustomFormatter, self).format(record)
             log_string = self._jsonify(record)
@@ -252,7 +253,7 @@ class CustomFormatter(logging.Formatter):
         # time instead of 'T' because of better readability.
         if Logger.CONFIG['json_logs']:
             timstamp = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(record.created))
-            time_string = '%s.%03dZ' % (timstamp, record.msecs)
+            time_string = '%s.%03d+0000' % (timstamp, record.msecs)
         else:
             timstamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(record.created))
             time_string = '%s.%03d' % (timstamp, record.msecs)

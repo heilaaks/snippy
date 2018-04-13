@@ -20,6 +20,7 @@
 """content: Content helpers for testing."""
 
 import copy
+import datetime
 import mock
 
 from snippy.cause import Cause
@@ -187,3 +188,18 @@ class Content(object):
             return sorted(Content._sorter(x) for x in json)
 
         return json
+
+
+class Field(object):  # pylint: disable=too-few-public-methods
+    """Helper methods for content field testing."""
+
+    @staticmethod
+    def is_iso8601(timestamp):
+        """Test if timestamp is in ISO8601 format."""
+
+        try:
+            datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f%z')
+        except ValueError:
+            return False
+
+        return True

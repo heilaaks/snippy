@@ -251,9 +251,14 @@ class CustomFormatter(logging.Formatter):
         # JSON logs are printed in ISO8601 format with UTC timestamps. All
         # other logs are printed in local time with space between date and
         # time instead of 'T' because of better readability.
+        #
+        # The JSON timestamp is set in microseconds even when the current
+        # minimum supported granularity is one millisecond. This is done
+        # in order to avoid changes in end user code when the microsecond
+        # accuracy is avaialble.
         if Logger.CONFIG['json_logs']:
             timstamp = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(record.created))
-            time_string = '%s.%03d+0000' % (timstamp, record.msecs)
+            time_string = '%s.%06d+0000' % (timstamp, record.msecs)
         else:
             timstamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(record.created))
             time_string = '%s.%03d' % (timstamp, record.msecs)

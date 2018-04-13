@@ -197,9 +197,19 @@ class Field(object):  # pylint: disable=too-few-public-methods
     def is_iso8601(timestamp):
         """Test if timestamp is in ISO8601 format."""
 
-        try:
-            datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f%z')
-        except ValueError:
-            return False
+        # Python 2 does not support timezone parsin. The %z directive is available
+        # only from Python 3.2 and onwards.
+        print(timestamp)
+        if not Const.PYTHON2:
+            try:
+                datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f%z')
+            except ValueError:
+                return False
+        else:
+            timestamp = timestamp[:-6]
+            try:
+                datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f')
+            except ValueError:
+                return False
 
         return True

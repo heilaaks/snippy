@@ -24,13 +24,10 @@ from __future__ import print_function
 import logging
 import sys
 import time
+from collections import OrderedDict
 from functools import wraps
 from random import getrandbits
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
-try:
-    from collections import OrderedDict
-except ImportError:
-    pass
 
 import json
 
@@ -226,7 +223,8 @@ class CustomFormatter(logging.Formatter):
         """Format log string."""
 
         # Debug option prints logs "as is" in full-length. Very verbose option
-        # truncates logs and tries to guarantee one log per line with all lower
+        # truncates logs in order to try to guarantee one log per line. In case
+        # of the very verbose option, log message is printed fully with lower
         # case characters.
         if record.args:
             record.msg = record.msg % record.args
@@ -234,12 +232,11 @@ class CustomFormatter(logging.Formatter):
         if Logger.CONFIG['very_verbose']:
             record.msg = record.msg.replace('\n', ' ').replace('\r', '')
             record.msg = record.msg[:self.MSG_MAX] + (record.msg[self.MSG_MAX:] and self.MSG_END)
+            record.msg = record.msg.lower()
 
         if Logger.CONFIG['json_logs']:
             log_string = super(CustomFormatter, self).format(record)
             log_string = self._jsonify(record)
-        elif Logger.CONFIG['very_verbose']:
-            log_string = super(CustomFormatter, self).format(record).lower()
         else:
             log_string = super(CustomFormatter, self).format(record)
 
@@ -252,13 +249,13 @@ class CustomFormatter(logging.Formatter):
         # other logs are printed in local time with space between date and
         # time instead of 'T' because of better readability.
         #
-        # The JSON timestamp is set in microseconds even when the current
-        # minimum supported granularity is one millisecond. This is done
-        # in order to avoid changes in end user code when the microsecond
-        # accuracy is avaialble.
+        # The ISO8601 formatted JSON timestamp is set in microseconds. It
+        # seems that the msecs field of the logging record contains mseconds
+        # as floating point number. It is assumed that the microseconds can
+        # be read by reading three significat digits after point.
         if Logger.CONFIG['json_logs']:
             timstamp = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(record.created))
-            time_string = '%s.%06d+0000' % (timstamp, record.msecs)
+            time_string = '%s.%d+0000' % (timstamp, int(str(record.msecs).replace('.', '')[:6]))
         else:
             timstamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(record.created))
             time_string = '%s.%03d' % (timstamp, record.msecs)
@@ -269,10 +266,7 @@ class CustomFormatter(logging.Formatter):
     def _jsonify(record):
         """Create JSON string from log record."""
 
-        try:
-            log = OrderedDict()
-        except NameError:
-            log = {}
+        log = OrderedDict()
 
         fields = ['asctime', 'appname', 'process', 'oid', 'levelno', 'levelname', 'name', 'lineno', 'thread', 'message']
         for field in fields:

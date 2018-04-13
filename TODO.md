@@ -1,6 +1,5 @@
 ## WORKING
-   - [ ] Add tests to update logging config. This goes to new Logger UT tests?
-   - [ ] Add unit test for logger: 1) TZ with json-logs and others, 2) JSON-logs and other with --debug 3) JSON-logs and others with -vv, 4) OID change.
+   - [ ] The very_verbose is confusing since it only dictates log message (msg) max lenght. It could be e.g. --debug --log-msg-len 150 (also change --log-json)
 
 ## FEATURES
    - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
@@ -46,19 +45,18 @@
 
 ## REFACTOR
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
-   - [ ] The very_verbose is confusing since it only dictates log message (msg) max lenght. It could be e.g. --debug --log-msg-len 150 (also change --log-json)
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
    - [ ] Read storage schema directly to config() like the content templates. 
    - [ ] Change is_template in Content to __cmp__?
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
+   - [ ] How to test case where required Python module is missing? Tests can be skipped when module is missing but how to simulate this? Try with Logger and gunicorn.
    - [ ] Is tested? import first content that already exist but second is new? Should result OK. Check test_cli_import_snippet_018-> Is the order this?
    - [ ] Add test to import solution without date (check if exist first).
    - [ ] Add unit test for Cause.debug().
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
-   - [ ] Refactor UT tests.
-   - [ ] Add test to verify that there are no string logs when json-logs are used.
+   - [ ] Refactor UT tests for sqlite DB module.
    - [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily. Read https://docs.pytest.org/en/latest/example/simple.html?highlight=pytest_addoption
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] Observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.

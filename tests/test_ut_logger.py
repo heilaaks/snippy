@@ -101,6 +101,8 @@ class TestUtLogger(object):
         """Test logger basic usage
 
         Test case verifies that very verbose option works for text logs.
+        In this case the lenght of the log message must be truncated and
+        the message must be in all lower case characters.
         """
 
         Logger.remove()
@@ -112,16 +114,18 @@ class TestUtLogger(object):
         })
         logger = Logger('snippy.' + __name__).logger
 
-        # Log length
         logger.warning('abcdefghij'*100)
-        logger.warning('variable %s', ('abcdefghij'*100))
+        logger.warning('VARIABLE %s', ('ABCDEFGHIJ'*100))
 
         out, err = capsys.readouterr()
         assert not err
         assert 'abcdefghijabcdefg...' in out
         assert 'abcdefghijabcdefgh...' in out
+        assert 'variable abcdefghij' in out
         assert len(caplog.records[0].msg) == Logger.MSG_MAX
         assert len(caplog.records[1].msg) == Logger.MSG_MAX
+        assert caplog.records[0].msg.islower()
+        assert caplog.records[1].msg.islower()
 
     def test_logger_004(self, capsys, caplog):
         """Test logger basic usage
@@ -138,7 +142,6 @@ class TestUtLogger(object):
         })
         logger = Logger('snippy.' + __name__).logger
 
-        # Log length
         logger.warning('abcdefghij'*100)
         logger.warning('variable %s', ('abcdefghij'*100))
 
@@ -166,7 +169,6 @@ class TestUtLogger(object):
         })
         logger = Logger('snippy.' + __name__).logger
 
-        # Log length
         logger.warning('abcdefghij'*100)
         logger.warning('variable %s', ('abcdefghij'*100))
 
@@ -194,7 +196,6 @@ class TestUtLogger(object):
         })
         logger = Logger('snippy.' + __name__).logger
 
-        # Log length
         logger.warning('first message')
         Logger.refresh_oid()
         logger.warning('second message')
@@ -202,3 +203,23 @@ class TestUtLogger(object):
         out, err = capsys.readouterr()
         assert not err
         assert json.loads(out.splitlines()[0])['oid'] != json.loads(out.splitlines()[1])['oid']
+
+    def test_logger_007(self, capsys):
+        """Test Logger debugging
+
+        Test case verifies that debug methods works.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': True,
+            'very_verbose': False,
+            'quiet': False,
+            'json_logs': True
+        })
+        logger = Logger('snippy.' + __name__).logger
+        logger.warning('testing logger debug')
+        Logger.debug()
+        out, err = capsys.readouterr()
+        assert not err
+        assert 'snippy.tests.test_ut_logger' in out

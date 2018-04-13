@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] Test that logger.remove() does not delete other than snippy loggers.
+   - [ ] Test quiet option for Logger.
    - [ ] The very_verbose is confusing since it only dictates log message (msg) max lenght. It could be e.g. --debug --log-msg-len 150 (also change --log-json)
 
 ## FEATURES

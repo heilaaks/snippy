@@ -28,7 +28,6 @@ from snippy.meta import __version__
 
 
 extras_dev = (
-    'logging_tree==1.7',
     'openapi2jsonschema==0.7.1',
     'pyflakes==1.6.0'
 )
@@ -46,6 +45,7 @@ extras_server = (
 extras_tests = (
     'codecov==2.0.15',
     'flake8==3.5.0',
+    'logging_tree==1.7',
     'mock==2.0.0',
     'pylint==1.8.3',
     'pytest==3.5.0',

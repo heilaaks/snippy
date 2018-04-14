@@ -157,10 +157,10 @@ class Config(object):
         """Init logger and development configuration."""
 
         cls.debug_logs = True if '--debug' in args else False
-        cls.very_verbose = True if '-vv' in args else False
-        cls.quiet = True if '-q' in args else False
-        cls.json_logs = True if '--json-logs' in args else False
+        cls.log_json = True if '--log-json' in args else False
         cls.profiler = True if '--profile' in args else False
+        cls.quiet = True if '-q' in args else False
+        cls.very_verbose = True if '-vv' in args else False
 
         # Profile code.
         Profiler.enable(cls.profiler)
@@ -174,9 +174,9 @@ class Config(object):
 
         Logger.configure({
             'debug': cls.debug_logs,
-            'very_verbose': cls.very_verbose,
+            'log_json': cls.log_json,
             'quiet': cls.quiet,
-            'json_logs': cls.json_logs
+            'very_verbose': cls.very_verbose
         })
 
     @classmethod

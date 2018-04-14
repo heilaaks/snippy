@@ -46,7 +46,7 @@ class Logger(object):
     # Global logger configuration.
     CONFIG = {
         'debug': False,
-        'json_logs': False,
+        'log_json': False,
         'msg_max': MSG_MAX,
         'quiet': False,
         'very_verbose': False
@@ -96,13 +96,13 @@ class Logger(object):
         Examples
         --------
         >>> Logger.configure({'debug': True,
-        >>>                   'json_logs': True,
+        >>>                   'log_json': True,
         >>>                   'quiet': False,
         >>>                   'very_verbose': False})
         """
 
         cls.CONFIG['debug'] = config['debug']
-        cls.CONFIG['json_logs'] = config['json_logs']
+        cls.CONFIG['log_json'] = config['log_json']
         cls.CONFIG['msg_max'] = Logger.MSG_MAX
         cls.CONFIG['quiet'] = config['quiet']
         cls.CONFIG['very_verbose'] = config['very_verbose']
@@ -236,7 +236,7 @@ class CustomFormatter(logging.Formatter):
             record.msg = record.msg[:self.MSG_MAX] + (record.msg[self.MSG_MAX:] and self.MSG_END)
             record.msg = record.msg.lower()
 
-        if Logger.CONFIG['json_logs']:
+        if Logger.CONFIG['log_json']:
             log_string = super(CustomFormatter, self).format(record)
             log_string = self._jsonify(record)
         else:
@@ -255,7 +255,7 @@ class CustomFormatter(logging.Formatter):
         # seems that the msecs field of the logging record contains mseconds
         # as floating point number. It is assumed that the microseconds can
         # be read by reading three significat digits after point.
-        if Logger.CONFIG['json_logs']:
+        if Logger.CONFIG['log_json']:
             timstamp = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(record.created))
             time_string = '%s.%d+0000' % (timstamp, int(str(record.msecs).replace('.', '')[:6]))
         else:

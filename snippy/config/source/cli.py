@@ -193,7 +193,7 @@ class Cli(ConfigSourceBase):
         support.add_argument('--debug', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--profile', dest='profiler', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--no-ansi', dest='no_ansi', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('--json-logs', dest='json_logs', action='store_true', default=False, help=argparse.SUPPRESS)
+        support.add_argument('--log-json', dest='log_json', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # server options
         server = parser.add_argument_group(title='server options')

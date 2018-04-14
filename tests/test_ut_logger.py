@@ -69,9 +69,9 @@ class TestUtLogger(object):
 
         Logger.configure({
             'debug': True,
-            'very_verbose': False,
+            'log_json': False,
             'quiet': False,
-            'json_logs': False
+            'very_verbose': False
         })
 
         # Log levels
@@ -108,9 +108,9 @@ class TestUtLogger(object):
         Logger.remove()
         Logger.configure({
             'debug': False,
-            'very_verbose': True,
+            'log_json': False,
             'quiet': False,
-            'json_logs': False
+            'very_verbose': True
         })
         logger = Logger('snippy.' + __name__).logger
 
@@ -136,9 +136,9 @@ class TestUtLogger(object):
         Logger.remove()
         Logger.configure({
             'debug': True,
-            'very_verbose': False,
+            'log_json': True,
             'quiet': False,
-            'json_logs': True
+            'very_verbose': False
         })
         logger = Logger('snippy.' + __name__).logger
 
@@ -163,9 +163,9 @@ class TestUtLogger(object):
         Logger.remove()
         Logger.configure({
             'debug': False,
-            'very_verbose': True,
+            'log_json': True,
             'quiet': False,
-            'json_logs': True
+            'very_verbose': True
         })
         logger = Logger('snippy.' + __name__).logger
 
@@ -196,9 +196,9 @@ class TestUtLogger(object):
         caplog.clear()
         Logger.configure({
             'debug': False,
-            'very_verbose': False,
+            'log_json': False,
             'quiet': False,
-            'json_logs': False
+            'very_verbose': False
         })
         Logger.print_cause('NOK: exit cause')
         out, err = capsys.readouterr()
@@ -210,9 +210,9 @@ class TestUtLogger(object):
         caplog.clear()
         Logger.configure({
             'debug': False,
-            'very_verbose': False,
+            'log_json': False,
             'quiet': True,
-            'json_logs': False
+            'very_verbose': False
         })
         Logger.print_cause('NOK: exit cause')
         out, err = capsys.readouterr()
@@ -225,9 +225,9 @@ class TestUtLogger(object):
         caplog.clear()
         Logger.configure({
             'debug': False,
-            'very_verbose': True,
+            'log_json': False,
             'quiet': False,
-            'json_logs': False
+            'very_verbose': True
         })
         Logger.print_cause('NOK: exit cause')
         out, err = capsys.readouterr()
@@ -240,9 +240,9 @@ class TestUtLogger(object):
         caplog.clear()
         Logger.configure({
             'debug': True,
-            'very_verbose': False,
+            'log_json': False,
             'quiet': True,
-            'json_logs': False
+            'very_verbose': False
         })
         Logger.print_cause('NOK: exit cause')
         out, err = capsys.readouterr()
@@ -259,9 +259,9 @@ class TestUtLogger(object):
         Logger.remove()
         Logger.configure({
             'debug': True,
-            'very_verbose': False,
+            'log_json': True,
             'quiet': False,
-            'json_logs': True
+            'very_verbose': False
         })
         logger = Logger('snippy.' + __name__).logger
 
@@ -282,9 +282,9 @@ class TestUtLogger(object):
         Logger.remove()
         Logger.configure({
             'debug': True,
-            'very_verbose': False,
+            'log_json': True,
             'quiet': False,
-            'json_logs': True
+            'very_verbose': False
         })
         logger = Logger('snippy.' + __name__).logger
         logger.warning('testing logger debug')
@@ -303,9 +303,9 @@ class TestUtLogger(object):
         Logger.remove()
         Logger.configure({
             'debug': True,
-            'very_verbose': False,
+            'log_json': True,
             'quiet': False,
-            'json_logs': True
+            'very_verbose': False
         })
         _ = Logger('other.package').logger
         Logger.remove()

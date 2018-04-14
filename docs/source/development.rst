@@ -93,7 +93,7 @@ without filters with the --debug option. The -vv (very verbose) option prints
 limited length log messages in lower case letters.
 
 There are two formats for logs: text (default) and JSON. JSON logs can be enabled
-with --json-logs option. A JSON log has more information fields than text formatted
+with --log-json option. A JSON log has more information fields than text formatted
 log. When -vv option is used with JSON logs, it truncates log message in the same
 way as with text logs.
 

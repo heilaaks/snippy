@@ -135,14 +135,14 @@
    - [x] Changed meta in helloAPI and error response. Meta is now synchronized and has links to docs and oas.
    - [x] Updated OpenAPI and Swagger specifications to follow the JSON API v1.0 defintions that are used.
    - [x] Added configurable server base path.
-   - [x] Fixed --json-logs option with command line interface.
+   - [x] Fixed --log-json option with command line interface.
    - [x] Changed tests to use pytest and correct teardown class.
    - [x] Added support for /api/v1/solutions.
    - [x] Fixed incorrect digest in self link being returned if the operation updated resource.
    - [x] Optimized unnecessary JSON conversion when generating content response to JSON API.
    - [x] Changed REST API base bath to /snippy/api/v1.
    - [x] Added GMT time and ISO8601 format to JSON logs.
-   - [x] Added JSON formatted log output to stdout with --json-logs option.
+   - [x] Added JSON formatted log output to stdout with --log-json option.
    - [x] Removed unused logging handlers under gunicorn namespace and quaranteed one line logs with -vv option.
    - [x] Added Gunicorn custom logger that routes the logs via Snippy.Logger.
    - [x] Fixed regular expression default. Empty string is valid regexp but accidetal empty tuple is not.

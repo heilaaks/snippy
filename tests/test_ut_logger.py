@@ -70,6 +70,7 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': True,
             'log_json': False,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': False,
             'very_verbose': False
         })
@@ -85,8 +86,14 @@ class TestUtLogger(object):
         logger.warning('abcdefghij'*100)
 
         out, err = capsys.readouterr()
-        assert not out
+        print(out)
         assert not err
+        assert len(out.splitlines()) == 6
+        assert 'testing critical level' in out
+        assert 'testing error level' in out
+        assert 'testing warning level' in out
+        assert 'testing info level' in out
+        assert 'testing debug level' in out
         assert len(caplog.records[:]) == 6
         assert 'testing critical level' in caplog.text
         assert 'testing error level' in caplog.text
@@ -109,6 +116,7 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': False,
             'log_json': False,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': False,
             'very_verbose': True
         })
@@ -122,8 +130,8 @@ class TestUtLogger(object):
         assert 'abcdefghijabcdefg...' in out
         assert 'abcdefghijabcdefgh...' in out
         assert 'variable abcdefghij' in out
-        assert len(caplog.records[0].msg) == Logger.MSG_MAX
-        assert len(caplog.records[1].msg) == Logger.MSG_MAX
+        assert len(caplog.records[0].msg) == Logger.DEFAULT_LOG_MSG_MAX
+        assert len(caplog.records[1].msg) == Logger.DEFAULT_LOG_MSG_MAX
         assert caplog.records[0].msg.islower()
         assert caplog.records[1].msg.islower()
 
@@ -137,6 +145,7 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': True,
             'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': False,
             'very_verbose': False
         })
@@ -164,6 +173,7 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': False,
             'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': False,
             'very_verbose': True
         })
@@ -174,10 +184,10 @@ class TestUtLogger(object):
 
         out, err = capsys.readouterr()
         assert not err
-        assert len(json.loads(out.splitlines()[0])['message']) == Logger.MSG_MAX
-        assert len(json.loads(out.splitlines()[1])['message']) == Logger.MSG_MAX
-        assert len(caplog.records[0].msg) == Logger.MSG_MAX
-        assert len(caplog.records[1].msg) == Logger.MSG_MAX
+        assert len(json.loads(out.splitlines()[0])['message']) == Logger.DEFAULT_LOG_MSG_MAX
+        assert len(json.loads(out.splitlines()[1])['message']) == Logger.DEFAULT_LOG_MSG_MAX
+        assert len(caplog.records[0].msg) == Logger.DEFAULT_LOG_MSG_MAX
+        assert len(caplog.records[1].msg) == Logger.DEFAULT_LOG_MSG_MAX
         assert Field.is_iso8601(json.loads(out.splitlines()[0])['asctime'])
         assert Field.is_iso8601(json.loads(out.splitlines()[1])['asctime'])
 
@@ -197,6 +207,7 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': False,
             'log_json': False,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': False,
             'very_verbose': False
         })
@@ -211,6 +222,7 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': False,
             'log_json': False,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': True,
             'very_verbose': False
         })
@@ -226,6 +238,7 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': False,
             'log_json': False,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': False,
             'very_verbose': True
         })
@@ -241,6 +254,7 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': True,
             'log_json': False,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': True,
             'very_verbose': False
         })
@@ -260,6 +274,7 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': True,
             'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': False,
             'very_verbose': False
         })
@@ -283,12 +298,14 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': True,
             'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': False,
             'very_verbose': False
         })
         logger = Logger('snippy.' + __name__).logger
         logger.warning('testing logger debug')
         Logger.debug()
+
         out, err = capsys.readouterr()
         assert not err
         assert 'snippy.tests.test_ut_logger' in out
@@ -304,12 +321,66 @@ class TestUtLogger(object):
         Logger.configure({
             'debug': True,
             'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
             'quiet': False,
             'very_verbose': False
         })
         _ = Logger('other.package').logger
-        Logger.remove()
-        Logger.debug()
+
+        Logger.remove()  # Part of the test.
+        Logger.debug()   # Part of the test.
+
         out, err = capsys.readouterr()
         assert not err
         assert 'Handler Stream' in out
+
+    def test_logger_010(self, capsys, caplog):
+        """Test logger advanced configuration
+
+        Test case verifies that log maximum message lenght can be configred
+        and that the configuration can be changed. The case also verifies that
+        static logger fields are not changed when logger is reconfigured.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': False,
+            'log_json': False,
+            'log_msg_max': 120,
+            'quiet': False,
+            'very_verbose': True
+        })
+        logger = Logger('snippy.' + __name__).logger
+
+        logger.warning('abcdefghij'*100)
+        logger.warning('VARIABLE %s', ('ABCDEFGHIJ'*100))
+
+        out, err = capsys.readouterr()
+        assert not err
+        assert 'abcdefghijabcdefg...' in out
+        assert 'abcdefghijabcdefgh...' in out
+        assert 'variable abcdefghij' in out
+        assert len(caplog.records[0].msg) == 120
+        assert len(caplog.records[1].msg) == 120
+        assert caplog.records[0].appname == 'snippy'
+        assert caplog.records[1].appname == 'snippy'
+
+        caplog.clear()
+        Logger.configure({
+            'debug': False,
+            'log_json': True,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': False,
+            'very_verbose': True
+        })
+        logger.warning('abcdefghij'*100)
+        logger.warning('VARIABLE %s', ('ABCDEFGHIJ'*100))
+        out, err = capsys.readouterr()
+        assert not err
+        assert 'abcdefghijabcdefg...' in out
+        assert 'abcdefghijabcdefgh...' in out
+        assert 'variable abcdefghij' in out
+        assert len(caplog.records[0].msg) == Logger.DEFAULT_LOG_MSG_MAX
+        assert len(caplog.records[1].msg) == Logger.DEFAULT_LOG_MSG_MAX
+        assert caplog.records[0].appname == 'snippy'
+        assert caplog.records[1].appname == 'snippy'

@@ -40,20 +40,23 @@ except ImportError:
 class Logger(object):
     """Logging services."""
 
-    # Maximum length of log message.
-    MSG_MAX = 80
+    # Default maximum length of log message.
+    DEFAULT_LOG_MSG_MAX = 80
+
+    # Unique operation ID that identifies logs for each operation.
+    SERVER_OID = format(getrandbits(32), "08x")
+
+    # Custom log format
+    LOG_FORMAT = '%(asctime)s %(appname)s[%(process)04d] [%(levelname).1s] [%(oid)s]: %(message)s'
 
     # Global logger configuration.
     CONFIG = {
         'debug': False,
         'log_json': False,
-        'msg_max': MSG_MAX,
+        'log_msg_max': DEFAULT_LOG_MSG_MAX,
         'quiet': False,
         'very_verbose': False
     }
-
-    # Unique operation ID that identifies logs for each operation.
-    SERVER_OID = format(getrandbits(32), "08x")
 
     def __init__(self, module):
         """
@@ -74,10 +77,9 @@ class Logger(object):
         logging.addLevelName(logging.WARNING, 'warning')
         logging.addLevelName(logging.INFO, 'info')
         logging.addLevelName(logging.DEBUG, 'debug')
-        log_format = '%(asctime)s %(appname)s[%(process)04d] [%(levelname).1s] [%(oid)s]: %(message)s'
         self.logger = logging.getLogger(module)
         if not self.logger.handlers:
-            formatter = CustomFormatter(log_format)
+            formatter = CustomFormatter(Logger.LOG_FORMAT)
             handler = logging.StreamHandler(stream=sys.stdout)
             handler.setFormatter(formatter)
             handler.addFilter(CustomFilter())
@@ -86,7 +88,7 @@ class Logger(object):
 
     @classmethod
     def configure(cls, config):
-        """Set logger configuration.
+        """Set and update logger configuration.
 
         Parameters
         ----------
@@ -97,13 +99,14 @@ class Logger(object):
         --------
         >>> Logger.configure({'debug': True,
         >>>                   'log_json': True,
+        >>>                   'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
         >>>                   'quiet': False,
         >>>                   'very_verbose': False})
         """
 
         cls.CONFIG['debug'] = config['debug']
         cls.CONFIG['log_json'] = config['log_json']
-        cls.CONFIG['msg_max'] = Logger.MSG_MAX
+        cls.CONFIG['log_msg_max'] = config['log_msg_max']
         cls.CONFIG['quiet'] = config['quiet']
         cls.CONFIG['very_verbose'] = config['very_verbose']
 
@@ -124,6 +127,31 @@ class Logger(object):
         if cls.CONFIG['debug'] or config['very_verbose']:
             logging.getLogger('snippy').disabled = False
             logging.getLogger('snippy').setLevel(logging.DEBUG)
+
+        Logger._update()
+
+    @staticmethod
+    def reset():
+        """Reset log level to default."""
+
+        logging.getLogger('snippy').disabled = True
+        logging.getLogger('snippy').setLevel(logging.WARNING)
+
+    @staticmethod
+    def remove():
+        """Delete all logger handlers."""
+
+        # Remove all handlers. This is needed for testing. This is related
+        # to defining the stdout for StreamHandler and to the way how Pytest
+        # uses stdout when capsys is used /1/. More information from Python
+        # issue /2/.
+        #
+        # /1/ https://github.com/pytest-dev/pytest/issues/14
+        # /2/ https://bugs.python.org/issue6333
+        items = list(logging.root.manager.loggerDict.items())
+        for name, logger in items:
+            if 'snippy' in name:
+                logger.handlers = []
 
     @classmethod
     def refresh_oid(cls):
@@ -164,29 +192,6 @@ class Logger(object):
             signal(SIGPIPE, signal_sigpipe)
 
     @staticmethod
-    def reset():
-        """Reset log level to default."""
-
-        logging.getLogger('snippy').disabled = True
-        logging.getLogger('snippy').setLevel(logging.WARNING)
-
-    @staticmethod
-    def remove():
-        """Delete all logger handlers."""
-
-        # Remove all handlers. This is needed for testing. This is related
-        # to defining the stdout for StreamHandler and to the way how Pytest
-        # uses stdout when capsys is used /1/. More information from Python
-        # issue /2/.
-        #
-        # /1/ https://github.com/pytest-dev/pytest/issues/14
-        # /2/ https://bugs.python.org/issue6333
-        items = list(logging.root.manager.loggerDict.items())
-        for name, logger in items:
-            if 'snippy' in name:
-                logger.handlers = []
-
-    @staticmethod
     def timeit(method):
         """Time method by measuring it latency.
 
@@ -213,13 +218,28 @@ class Logger(object):
         from logging_tree import printout
         printout()
 
+    @classmethod
+    def _update(cls):
+        """Update logger configuration."""
+
+        items = list(logging.root.manager.loggerDict.items())
+        for _, logger in items:
+            for handler in getattr(logger, 'handlers', ()):
+                logger.removeHandler(handler)
+                formatter = CustomFormatter(Logger.LOG_FORMAT)
+                handler = logging.StreamHandler(stream=sys.stdout)
+                handler.setFormatter(formatter)
+                handler.addFilter(CustomFilter())
+                logger.addHandler(handler)
+
 
 class CustomFormatter(logging.Formatter):
     """Custom log formatting."""
 
-    # Truncated message tail.
-    MSG_END = '...'
-    MSG_MAX = Logger.CONFIG['msg_max'] - len(MSG_END)
+    def __init__(self, *args, **kwargs):
+        self._snippy_msg_end = '...'
+        self._snippy_msg_max = Logger.CONFIG['log_msg_max'] - len(self._snippy_msg_end)
+        super(CustomFormatter, self).__init__(*args, **kwargs)
 
     def format(self, record):
         """Format log string."""
@@ -233,7 +253,7 @@ class CustomFormatter(logging.Formatter):
             record.args = None
         if Logger.CONFIG['very_verbose']:
             record.msg = record.msg.replace('\n', ' ').replace('\r', '')
-            record.msg = record.msg[:self.MSG_MAX] + (record.msg[self.MSG_MAX:] and self.MSG_END)
+            record.msg = record.msg[:self._snippy_msg_max] + (record.msg[self._snippy_msg_max:] and self._snippy_msg_end)
             record.msg = record.msg.lower()
 
         if Logger.CONFIG['log_json']:

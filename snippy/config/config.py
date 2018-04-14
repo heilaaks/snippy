@@ -158,6 +158,7 @@ class Config(object):
 
         cls.debug_logs = True if '--debug' in args else False
         cls.log_json = True if '--log-json' in args else False
+        cls.log_msg_max = Logger.DEFAULT_LOG_MSG_MAX
         cls.profiler = True if '--profile' in args else False
         cls.quiet = True if '-q' in args else False
         cls.very_verbose = True if '-vv' in args else False
@@ -175,6 +176,7 @@ class Config(object):
         Logger.configure({
             'debug': cls.debug_logs,
             'log_json': cls.log_json,
+            'log_msg_max': cls.log_msg_max,
             'quiet': cls.quiet,
             'very_verbose': cls.very_verbose
         })

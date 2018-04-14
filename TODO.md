@@ -44,6 +44,7 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
+   - [ ] Logger __init__ is confusing since it is not objec but global class. Should be like Logger(__NAME__).api
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
    - [ ] Read storage schema directly to config() like the content templates. 

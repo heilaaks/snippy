@@ -120,6 +120,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.limit = parameters.get('limit', self.LIMIT_DEFAULT)
         self.links = parameters.get('links', ())
         self.log_json = parameters.get('log_json', False)
+        self.log_msg_max = parameters.get('log_msg_max', Logger.DEFAULT_LOG_MSG_MAX)
         self.no_ansi = parameters.get('no_ansi', False)
         self.operation = parameters.get('operation')
         self.profiler = parameters.get('profiler', False)

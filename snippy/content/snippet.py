@@ -157,7 +157,6 @@ class Snippet(object):
         """Run the snippet management operation."""
 
         snippets = ()
-
         self._logger.debug('managing snippet')
         Config.content_category = Const.SNIPPET
         if Config.is_operation_create:

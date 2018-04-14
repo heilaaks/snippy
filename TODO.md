@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Remove DELETE collection and allow it only for specific resource.
    - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
 
@@ -21,6 +20,7 @@
    - [ ] How to add custom Falcon error codes? Now e.g. 500 is HTML string and it is different than normal Snippy server error code.
    - [ ] How to add custom Falcon exception handling through snippy logger?
    - [ ] Add server startup indicator like 'server running in 127.0.0.1:8080' or 'OK' (suppress with -q). This can be used in api performance test to see when the server is up.
+   - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## FIX
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
@@ -104,6 +104,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Removed delete operation on collections. Delete is allowed only with resource parameter in URL.
    - [x] Added unit tests for Logger module.
    - [x] Optimized calls to system time.
    - [x] Removed unnecessary conntent template check when content was parsed. The check is made before insert.

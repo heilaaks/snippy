@@ -82,19 +82,14 @@ class ApiSnippets(object):
         self._logger.debug('end get /snippy/api/v1/snippets')
 
     @Logger.timeit
-    def on_delete(self, request, response):
-        """Delete snippet based on query parameters."""
+    def on_delete(self, _, response):
+        """Deleting snippets without resource is not supported."""
 
         self._logger.debug('run delete /snippy/api/v1/snippets')
-        api = Api(Const.SNIPPET, Api.DELETE, request.params)
-        Config.load(api)
-        Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if Cause.is_ok():
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
+        Cause.push(Cause.HTTP_NOT_FOUND, 'cannot delete snippets without identified resource')
+        response.content_type = Const.MEDIA_JSON_API
+        response.body = JsonApiV1.error(Cause.json_message())
+        response.status = Cause.http_status()
 
         Cause.reset()
         self._logger.debug('end delete /snippy/api/v1/snippets')

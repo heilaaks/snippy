@@ -84,19 +84,14 @@ class ApiSolutions(object):
         self._logger.debug('end get /snippy/api/v1/solutions')
 
     @Logger.timeit
-    def on_delete(self, request, response):
-        """Delete solution based on query parameters."""
+    def on_delete(self, _, response):
+        """Deleting solutions without resource is not supported."""
 
         self._logger.debug('run delete /snippy/api/v1/solutions')
-        api = Api(Const.SOLUTION, Api.DELETE, request.params)
-        Config.load(api)
-        Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if Cause.is_ok():
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
+        Cause.push(Cause.HTTP_NOT_FOUND, 'cannot delete solutions without identified resource')
+        response.content_type = Const.MEDIA_JSON_API
+        response.body = JsonApiV1.error(Cause.json_message())
+        response.status = Cause.http_status()
 
         Cause.reset()
         self._logger.debug('end delete /snippy/api/v1/solutions')

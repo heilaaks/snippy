@@ -79,34 +79,6 @@ paths:
             $ref: '#/definitions/Errors'
         500:
           description: "Internal server error"
-    delete:
-      tags:
-      - "snippet"
-      summary: "Delete snippets"
-      description: ""
-      parameters:
-        - $ref: '#/parameters/sall'
-        - $ref: '#/parameters/stag'
-        - $ref: '#/parameters/sgrp'
-        - $ref: '#/parameters/digest'
-        - $ref: '#/parameters/data'
-      responses:
-        204:
-          description: "Snippet deleted"
-        400:
-          description: "Request not syntactically correct"
-          schema:
-            $ref: '#/definitions/Errors'
-        404:
-          description: "Snippet not found"
-          schema:
-            $ref: '#/definitions/Errors'
-        409:
-          description: "More than one snippet found"
-          schema:
-            $ref: '#/definitions/Errors'
-        500:
-          description: "Internal server error"
   /snippets/{digest}:
     put:
       tags:

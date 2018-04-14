@@ -31,7 +31,7 @@ class TestUtLogger(object):
     """Test Logger() class."""
 
     def test_logger_001(self, logger, caplog, capsys):
-        """Test logger basic usage
+        """Test logger basic usage.
 
         Test case verifies that default log configuration is working.
         By default only log level warning and levels above are printed.
@@ -60,7 +60,7 @@ class TestUtLogger(object):
             json.loads(out)
 
     def test_logger_002(self, logger, caplog, capsys):
-        """Test logger basic usage
+        """Test logger basic usage.
 
         Test case verifies that debug configuration is working. In
         this case the debug level should be applied that must produce
@@ -104,7 +104,7 @@ class TestUtLogger(object):
             json.loads(out)
 
     def test_logger_003(self, capsys, caplog):
-        """Test logger basic usage
+        """Test logger basic usage.
 
         Test case verifies that very verbose option works for text logs.
         In this case the lenght of the log message must be truncated and
@@ -135,7 +135,7 @@ class TestUtLogger(object):
         assert caplog.records[1].msg.islower()
 
     def test_logger_004(self, capsys, caplog):
-        """Test logger basic usage
+        """Test logger basic usage.
 
         Test case verifies that debug option works with json logs.
         """
@@ -264,7 +264,7 @@ class TestUtLogger(object):
         assert caplog.records[0].msg == 'exiting with cause NOK: exit cause'
 
     def test_logger_007(self, capsys):
-        """Test operation ID (OID)
+        """Test operation ID (OID).
 
         Test case verifies that operation ID (OID) refresh works.
         """
@@ -288,7 +288,7 @@ class TestUtLogger(object):
         assert json.loads(out.splitlines()[0])['oid'] != json.loads(out.splitlines()[1])['oid']
 
     def test_logger_008(self, capsys):
-        """Test Logger debugging
+        """Test Logger debugging.
 
         Test case verifies that debug methods works.
         """
@@ -310,7 +310,7 @@ class TestUtLogger(object):
         assert 'snippy.tests.test_ut_logger' in out
 
     def test_logger_009(self, capsys):
-        """Test removing snippy Logger handlers
+        """Test removing snippy Logger handlers.
 
         Test case verifies that Logger.remove() does not delete other than
         snippy packages logging handlers.
@@ -334,7 +334,7 @@ class TestUtLogger(object):
         assert 'Handler Stream' in out
 
     def test_logger_010(self, capsys, caplog):
-        """Test logger advanced configuration
+        """Test logger advanced configuration.
 
         Test case verifies that log maximum message lenght can be configred
         and that the configuration can be changed. The case also verifies that

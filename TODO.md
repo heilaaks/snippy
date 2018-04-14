@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Test that logger.remove() does not delete other than snippy loggers.
-   - [ ] Test quiet option for Logger.
    - [ ] The very_verbose is confusing since it only dictates log message (msg) max lenght. It could be e.g. --debug --log-msg-len 150 (also change --log-json)
 
 ## FEATURES
@@ -106,6 +104,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added unit tests for Logger module.
    - [x] Optimized calls to system time.
    - [x] Removed unnecessary conntent template check when content was parsed. The check is made before insert.
    - [x] Fixed server log settings that worked only for the first operation.

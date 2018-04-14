@@ -181,7 +181,76 @@ class TestUtLogger(object):
         assert Field.is_iso8601(json.loads(out.splitlines()[0])['asctime'])
         assert Field.is_iso8601(json.loads(out.splitlines()[1])['asctime'])
 
-    def test_logger_006(self, capsys):
+    def test_logger_006(self, capsys, caplog):
+        """Test logger basic usage.
+
+        Test case verifies that quiet option works with different logger
+        configuration combinations. This also verifies that the logger
+        settings can be changed programmatically.
+        """
+
+        Logger.remove()
+
+        # Cause is printed normally to stdout as is when log printing
+        # is not activated by debug or very verbose options.
+        caplog.clear()
+        Logger.configure({
+            'debug': False,
+            'very_verbose': False,
+            'quiet': False,
+            'json_logs': False
+        })
+        Logger.print_cause('NOK: exit cause')
+        out, err = capsys.readouterr()
+        assert not err
+        assert out == 'NOK: exit cause\n'
+        assert not caplog.records[:]
+
+        # The quiet option prevents printing the cause as is to stdout.
+        caplog.clear()
+        Logger.configure({
+            'debug': False,
+            'very_verbose': False,
+            'quiet': True,
+            'json_logs': False
+        })
+        Logger.print_cause('NOK: exit cause')
+        out, err = capsys.readouterr()
+        assert not err
+        assert not out
+        assert not caplog.records[:]
+
+        # Because the very verbose log printing is enabled, the cause is
+        # printed only in the log string with all lower case letters.
+        caplog.clear()
+        Logger.configure({
+            'debug': False,
+            'very_verbose': True,
+            'quiet': False,
+            'json_logs': False
+        })
+        Logger.print_cause('NOK: exit cause')
+        out, err = capsys.readouterr()
+        assert not err
+        assert 'exiting with cause nok: exit cause' in out
+        assert caplog.records[0].msg == 'exiting with cause nok: exit cause'
+
+        # Because the debug log printing is enabled, the cause is printed
+        # only in the log string exactly the same as provided.
+        caplog.clear()
+        Logger.configure({
+            'debug': True,
+            'very_verbose': False,
+            'quiet': True,
+            'json_logs': False
+        })
+        Logger.print_cause('NOK: exit cause')
+        out, err = capsys.readouterr()
+        assert not err
+        assert 'exiting with cause NOK: exit cause' in out
+        assert caplog.records[0].msg == 'exiting with cause NOK: exit cause'
+
+    def test_logger_007(self, capsys):
         """Test operation ID (OID)
 
         Test case verifies that operation ID (OID) refresh works.
@@ -204,7 +273,7 @@ class TestUtLogger(object):
         assert not err
         assert json.loads(out.splitlines()[0])['oid'] != json.loads(out.splitlines()[1])['oid']
 
-    def test_logger_007(self, capsys):
+    def test_logger_008(self, capsys):
         """Test Logger debugging
 
         Test case verifies that debug methods works.
@@ -223,3 +292,24 @@ class TestUtLogger(object):
         out, err = capsys.readouterr()
         assert not err
         assert 'snippy.tests.test_ut_logger' in out
+
+    def test_logger_009(self, capsys):
+        """Test removing snippy Logger handlers
+
+        Test case verifies that Logger.remove() does not delete other than
+        snippy packages logging handlers.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': True,
+            'very_verbose': False,
+            'quiet': False,
+            'json_logs': True
+        })
+        _ = Logger('other.package').logger
+        Logger.remove()
+        Logger.debug()
+        out, err = capsys.readouterr()
+        assert not err
+        assert 'Handler Stream' in out

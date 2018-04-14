@@ -153,7 +153,9 @@ class Logger(object):
         # /1/ https://stackoverflow.com/a/16865106
         # /2/ https://stackoverflow.com/a/26738736
         if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
-            Logger(__name__).logger.info('exiting with cause %s', cause.lower())
+            if cls.CONFIG['very_verbose']:
+                cause.lower()
+            Logger(__name__).logger.info('exiting with cause %s', cause)
         elif not cls.CONFIG['quiet']:
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)

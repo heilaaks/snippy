@@ -42,6 +42,9 @@ class Snippy(object):
     def run(self, args=None):
         """Run Snippy."""
 
+        if args:
+            Config.load(Cli(args))
+
         if Config.failure:
             Cause.print_failure()
 
@@ -50,7 +53,7 @@ class Snippy(object):
         if Config.server:
             self._run_server()
         else:
-            self._run_cli(args)
+            self._run_cli()
 
         return Cause.reset()
 
@@ -62,11 +65,8 @@ class Snippy(object):
         Config.reset()
         Logger.reset()
 
-    def _run_cli(self, args):
+    def _run_cli(self):
         """Run command line session."""
-
-        if args:
-            Config.load(Cli(args))
 
         if Config.is_category_snippet:
             Snippet(self.storage).run()

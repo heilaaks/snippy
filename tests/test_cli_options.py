@@ -284,12 +284,29 @@ class TestCliOptions(object):
         ## Brief: Enable verbose logging with -vv option. Test checks that
         ##        there is more than randomly picked largish number of logs
         ##        in order to avoid matching logs explicitly. Nothing must
-        ##        be printed to stderr. TODO: Why the stdout container few
+        ##        be printed to stderr. TODO: Why the stdout contains few
         ##        lines in this test and stderr the Logger exception logs?
         cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
         _, _ = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         #assert not out
+        #assert not err
+        assert len(caplog.records[:]) > 30
+
+    @pytest.mark.parametrize('snippy', [['-vv', '--log-msg-max', '200']], indirect=True)
+    def test_very_verbose_option_002(self, snippy, caplog, capsys):
+        """Test printing logs with the very verbose option."""
+
+        ## Brief: Enable verbose logging with -vv option. In this case the
+        ##        message lenght is defined from command line. Test checks
+        ##        that there is more than randomly picked largish number of
+        #         logs in order to avoid matching logs explicitly. Nothing
+        ##        must be printed to stderr. TODO: Why the stdout contains
+        #         few lines in this test and stderr the Logger exception logs?
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
+        out, _ = capsys.readouterr()
+        assert cause == 'NOK: cannot find content with given search criteria'
+        assert 'msg max: 200' in out
         #assert not err
         assert len(caplog.records[:]) > 30
 
@@ -300,7 +317,7 @@ class TestCliOptions(object):
 
         ## Brief: Enable full logging with --debug option. In this case the
         ##        debug option must print all fields from stored snippets.
-        ##        TODO: Why the stderr container log exceptions with 'I/O
+        ##        TODO: Why the stderr contains log exceptions with 'I/O
         ##        operation on closed file'?
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',

@@ -1,14 +1,13 @@
 ## WORKING
-   - [ ] The very_verbose is confusing since it only dictates log message (msg) max lenght. It could be e.g. --debug --log-msg-len 150 (also change --log-json)
+   - [ ] Remove DELETE collection and allow it only for specific resource.
+   - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
+   - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
 
 ## FEATURES
-   - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
-   - [ ] Remove DELETE collection and allow it only for specific resource.
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
    - [ ] Add embedded security features.
    - [ ] Add /snippy/admin/v1/ API endpoint to manage server log configuration.
-   - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
    - [ ] Add support to get /snippet/123123324/brief and all the fields.
    - [ ] Add support to export content to markdown format.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.

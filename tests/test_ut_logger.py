@@ -86,7 +86,6 @@ class TestUtLogger(object):
         logger.warning('abcdefghij'*100)
 
         out, err = capsys.readouterr()
-        print(out)
         assert not err
         assert len(out.splitlines()) == 6
         assert 'testing critical level' in out

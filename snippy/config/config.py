@@ -156,9 +156,21 @@ class Config(object):
     def _init_logs(cls, args):
         """Init logger and development configuration."""
 
+        # Parse log configuration manually in order to init the logger as
+        # early as possible. The same parameters are read by the argparse.
+        # which will make more through option checking. The value is always
+        # following the parameter name.
+        log_msg_max = Logger.DEFAULT_LOG_MSG_MAX
+        try:
+            value = int(args[args.index('--log-msg-max') + 1])
+            if isinstance(value, int) and value > 0:
+                log_msg_max = int(args[args.index('--log-msg-max') + 1])
+        except (IndexError, ValueError):
+            pass
+
         cls.debug_logs = True if '--debug' in args else False
         cls.log_json = True if '--log-json' in args else False
-        cls.log_msg_max = Logger.DEFAULT_LOG_MSG_MAX
+        cls.log_msg_max = log_msg_max
         cls.profiler = True if '--profile' in args else False
         cls.quiet = True if '-q' in args else False
         cls.very_verbose = True if '-vv' in args else False
@@ -180,6 +192,15 @@ class Config(object):
             'quiet': cls.quiet,
             'very_verbose': cls.very_verbose
         })
+
+        cls._logger.debug(
+            'config source debug: %s, very verbose: %s, quiet: %s, json: %s msg max: %d',
+            cls.debug_logs,
+            cls.very_verbose,
+            cls.quiet,
+            cls.log_json,
+            cls.log_msg_max
+        )
 
     @classmethod
     def _read_content(cls, content):

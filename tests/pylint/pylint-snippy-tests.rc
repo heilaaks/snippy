@@ -131,7 +131,7 @@ ignore-docstrings=yes
 ignore-imports=no
 
 # Minimum lines number of a similarity.
-min-similarity-lines=17
+min-similarity-lines=36
 
 
 [SPELLING]

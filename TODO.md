@@ -1,6 +1,7 @@
 ## WORKING
-   - [ ] Add X-HTTP-Method-Override support for PUT, PATCH or DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
+   - [ ] Add X-HTTP-Method-Override support for DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
+   - [ ] Fix PUT to change whole content
 
 ## FEATURES
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.

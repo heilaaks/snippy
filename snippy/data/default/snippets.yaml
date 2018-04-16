@@ -1,6 +1,7 @@
 content:
 - brief: Remove all docker containers with volumes
   category: snippet
+  created: '2017-10-12 11:52:11'
   data:
   - docker rm --volumes $(docker ps --all --quiet)
   digest: 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
@@ -15,11 +16,11 @@ content:
   - docker
   - docker-ce
   - moby
-  created: '2017-10-12 11:52:11'
   updated: '2017-10-12 11:52:11'
   versions: ''
 - brief: Find pattern from files
   category: snippet
+  created: '2017-10-16 12:09:34'
   data:
   - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
   - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'
@@ -34,11 +35,11 @@ content:
   tags:
   - linux
   - search
-  created: '2017-10-16 12:09:34'
   updated: '2017-10-16 12:09:34'
   versions: ''
 - brief: Remove all exited containers and dangling images
   category: snippet
+  created: '2017-10-24 07:07:05'
   data:
   - docker rm $(docker ps --all -q -f status=exited)
   - docker images -q --filter dangling=true | xargs docker rmi
@@ -58,11 +59,11 @@ content:
   - image
   - moby
   - prune
-  created: '2017-10-24 07:07:05'
   updated: '2017-10-24 07:07:05'
   versions: ''
 - brief: Stop and delete all running containers and images
   category: snippet
+  created: '2017-10-16 12:06:07'
   data:
   - docker stop $(docker ps -aq)
   - docker rm $(docker ps -a -q)
@@ -83,11 +84,11 @@ content:
   - docker-ce
   - moby
   - stop
-  created: '2017-10-16 12:06:07'
   updated: '2017-10-16 12:06:07'
   versions: ''
 - brief: Build docker containers
   category: snippet
+  created: '2017-10-16 19:42:19'
   data:
   - docker build -t heilaaks/snippy .
   - docker build --no-cache -t heilaaks/snippy .
@@ -105,11 +106,11 @@ content:
   - docker
   - docker-ce
   - moby
-  created: '2017-10-16 19:42:19'
   updated: '2017-10-16 19:42:19'
   versions: ''
 - brief: Run containers and connect to them
   category: snippet
+  created: '2017-10-16 12:43:15'
   data:
   - docker run -td heilaaks/snippy tail -f /dev/null
   - docker exec -it 9782f882ab34 /bin/bash
@@ -129,11 +130,11 @@ content:
   - lingering
   - moby
   - run
-  created: '2017-10-16 12:43:15'
   updated: '2017-10-16 12:43:15'
   versions: ''
 - brief: Compile with screen window manager
   category: snippet
+  created: '2017-10-16 19:10:55'
   data:
   - screen -h 10000
   - screen -X sessionname snippy.compile
@@ -152,11 +153,11 @@ content:
   - linux
   - screen
   - terminal
-  created: '2017-10-16 19:10:55'
   updated: '2017-10-16 19:10:55'
   versions: ''
 - brief: Install docker compose
   category: snippet
+  created: '2017-10-19 10:25:26'
   data:
   - curl -L "https://github.com/docker/compose/releases/download/1.16.1/docker-compose-$(uname
     -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -176,11 +177,11 @@ content:
   - docker-ce
   - install
   - moby
-  created: '2017-10-19 10:25:26'
   updated: '2017-10-19 10:25:26'
   versions: ''
 - brief: Install docker-ce on RHEL
   category: snippet
+  created: '2017-12-04 11:30:21'
   data:
   - yum remove docker-engine
   - yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -208,11 +209,11 @@ content:
   - moby
   - rhel
   - rpm
-  created: '2017-12-04 11:30:21'
   updated: '2017-12-04 11:30:21'
   versions: ''
 - brief: Initialize, deploy and remove docker swarm
   category: snippet
+  created: '2017-10-19 10:55:01'
   data:
   - docker swarm init
   - docker stack deploy --compose-file docker-compose.yml devstack
@@ -239,11 +240,11 @@ content:
   - docker-ce
   - moby
   - swarm
-  created: '2017-10-19 10:55:01'
   updated: '2017-10-19 10:55:01'
   versions: ''
 - brief: Solve docker networking 'has active endpoints' problem
   category: snippet
+  created: '2017-10-19 11:02:06'
   data:
   - docker network ls
   - docker network inspect y0fdm2xoyuca
@@ -264,11 +265,11 @@ content:
   - remove
   - solution
   - swarm
-  created: '2017-10-19 11:02:06'
   updated: '2017-10-19 11:02:06'
   versions: ''
 - brief: Print Elasticsearch basic information
   category: snippet
+  created: '2017-12-12 18:17:26'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/health?v"
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
@@ -289,11 +290,11 @@ content:
   - elasticsearch
   - rest
   - security
-  created: '2017-12-12 18:17:26'
   updated: '2017-12-12 18:17:26'
   versions: ''
 - brief: Print logs from Kubernetes pods
   category: snippet
+  created: '2017-10-19 11:17:37'
   data:
   - kubectl get pods
   - kubectl logs nginx-3107262526-k01hd
@@ -310,11 +311,11 @@ content:
   - kubernetes
   - logginig
   - moby
-  created: '2017-10-19 11:17:37'
   updated: '2017-10-19 11:17:37'
   versions: ''
 - brief: List, dump and delete Elasticsearch indices
   category: snippet
+  created: '2017-12-11 17:34:40'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
   - curl -XGET -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
@@ -338,11 +339,11 @@ content:
   - list
   - rest
   - security
-  created: '2017-12-11 17:34:40'
   updated: '2017-12-11 17:34:40'
   versions: ''
 - brief: Debug TLS/SSL connection
   category: snippet
+  created: '2017-10-20 05:42:26'
   data:
   - openssl s_client -debug -connect 10.183.19.189:443
   - openssl s_client -debug -connect kafka:9093 -tls1
@@ -359,11 +360,11 @@ content:
   - security
   - ssl
   - tls
-  created: '2017-10-20 05:42:26'
   updated: '2017-10-20 05:42:26'
   versions: ''
 - brief: Test if specific port is open
   category: snippet
+  created: '2017-10-20 07:08:45'
   data:
   - nc -v 10.183.19.189 443
   - nmap 10.183.19.189
@@ -378,11 +379,11 @@ content:
   - netcat
   - networking
   - port
-  created: '2017-10-20 07:08:45'
   updated: '2017-10-20 07:08:45'
   versions: ''
 - brief: Manage Elasticsearch templates
   category: snippet
+  created: '2017-12-11 17:34:23'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/*" | python
     -m json.tool
@@ -414,11 +415,11 @@ content:
   - security
   - template
   - update
-  created: '2017-12-11 17:34:23'
   updated: '2017-12-11 17:34:23'
   versions: ''
 - brief: Perform recursive git pull on subdirectories
   category: snippet
+  created: '2017-11-07 07:58:46'
   data:
   - find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull" \;
   digest: ca12adbd62ce818e05ef6d48b5396ba04eaf0b485ffa6c7386d980bf01e408bc
@@ -431,11 +432,11 @@ content:
   tags:
   - git
   - pull
-  created: '2017-11-07 07:58:46'
   updated: '2017-11-07 07:58:46'
   versions: ''
 - brief: List git commit log headers
   category: snippet
+  created: '2017-11-12 09:54:23'
   data:
   - git log --pretty=oneline --abbrev-commit
   digest: 888b1e827db42889b35373f04260304c41b03125d2c1ce0581f0d05b7adb59ed
@@ -449,11 +450,11 @@ content:
   tags:
   - git
   - log
-  created: '2017-11-12 09:54:23'
   updated: '2017-11-12 09:54:23'
   versions: ''
 - brief: Install docker-ce on Fedora
   category: snippet
+  created: '2017-12-07 10:27:57'
   data:
   - dnf remove docker docker-common docker-selinux docker-engine-selinux docker-engine
   - dnf -y install dnf-plugins-core
@@ -480,11 +481,11 @@ content:
   - install
   - moby
   - rpm
-  created: '2017-12-07 10:27:57'
   updated: '2017-12-07 10:27:57'
   versions: ''
 - brief: Set single node Elasticsearch cluster to green state
   category: snippet
+  created: '2017-12-05 06:48:05'
   data:
   - curl -XPUT -u elastic:changeme "http://${HOSTNAME}:9200/*/_settings" -d '{"number_of_replicas":0}'
   digest: 91ec1e62b12bc1a67716c9ecb6e2be873e506c50a6a8ecf72e78ed76a44764f4
@@ -503,11 +504,11 @@ content:
   - rest
   - settings
   - shards
-  created: '2017-12-05 06:48:05'
   updated: '2017-12-05 06:48:05'
   versions: ''
 - brief: Manage Elasticsearch x-pack watches
   category: snippet
+  created: '2017-12-05 06:48:50'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack" | python -m json.tool
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher" | python
@@ -536,11 +537,11 @@ content:
   - rest
   - watcher
   - x-pack
-  created: '2017-12-05 06:48:50'
   updated: '2017-12-05 06:48:50'
   versions: ''
 - brief: Manage Elasticsearch plugins
   category: snippet
+  created: '2017-12-05 06:49:47'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/plugins"
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_nodes/plugins?filter_path=**.plugins.name&pretty"
@@ -557,11 +558,11 @@ content:
   - plugin
   - rest
   - x-pack
-  created: '2017-12-05 06:49:47'
   updated: '2017-12-05 06:49:47'
   versions: ''
 - brief: Perform recursive git status on subdirectories
   category: snippet
+  created: '2018-01-11 07:59:46'
   data:
   - find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e
     \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
@@ -574,10 +575,27 @@ content:
   tags:
   - git
   - status
-  created: '2018-01-11 07:59:46'
   updated: '2018-01-11 07:59:46'
+  versions: ''
+- brief: Kill zombie processes
+  category: snippet
+  created: '2018-02-28 10:47:08'
+  data:
+  - kill - 9 $(ps -A -ostat,ppid | awk '/[zZ]/ && !a[$2]++ {print $2}')
+  - ps aux | grep -w Z
+  digest: 35e39c6477a22de08aeae392f8b1e816bc2d676e0e05c0127e69bd85efc0d548
+  filename: ''
+  group: linux
+  links:
+  - https://stackoverflow.com/a/16944931
+  runalias: ''
+  tags:
+  - kill
+  - linux
+  - zombie
+  updated: '2018-02-28 10:47:08'
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2018-01-11 08:00:33'
-  version: 0.7.0
+  updated: '2018-02-28 10:48:29'
+  version: 0.8.d

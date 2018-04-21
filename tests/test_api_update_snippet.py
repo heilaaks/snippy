@@ -39,10 +39,12 @@ class TestApiUpdateSnippet(object):
 
     @pytest.mark.usefixtures('forced', 'remove-utc')
     def test_api_update_snippet_001(self, server, mocker):
-        """Update one snippet with PUT."""
+        """Update one snippet with PUT.
 
-        ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
-        ##        with specified digest.
+        Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
+        specified digest. All fields that can be modified are sent in request.
+        """
+
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         content_send = {
             'data': {
@@ -71,7 +73,68 @@ class TestApiUpdateSnippet(object):
             }
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_put(
+            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            headers={'accept': 'application/vnd.api+json'},
+            body=json.dumps(content_send))
+        print(result.json)
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+        assert len(Database.get_snippets()) == 1
+        Content.verified(mocker, server, content_read)
+
+    @pytest.mark.usefixtures('forced', 'remove-utc')
+    def test_api_update_snippet_002(self, server, mocker):
+        """Update one snippet with PUT.
+
+        Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
+        specified digest. Only partial set of fields that can be modified are
+        sent in request. The fields that are not present and which can be
+        modified must be returned with default values.
+        """
+
+        content = {
+            'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
+            'brief': '',
+            'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+            'tags': [],
+            'links': Snippet.DEFAULTS[Snippet.REMOVE]['links'],
+            'category': 'snippet',
+            'filename': '',
+            'runalias': '',
+            'versions': '',
+            'created': Content.REMOVE_TIME,
+            'updated': Content.REMOVE_TIME,
+            'digest': 'e56c2183edcc3a67cab99e6064439495a8af8a1d0b78bc538acd6079c841f27f'
+        }
+        content_read = {'e56c2183edcc3a67': content}
+        content_send = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+                }
+            }
+        }
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '601'
+        }
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets/e56c2183edcc3a67'
+            },
+            'data': {
+                'type': 'snippets',
+                'id': 'e56c2183edcc3a67cab99e6064439495a8af8a1d0b78bc538acd6079c841f27f',
+                'attributes': content
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(content_send))
@@ -82,11 +145,13 @@ class TestApiUpdateSnippet(object):
         Content.verified(mocker, server, content_read)
 
     @pytest.mark.usefixtures('forced', 'caller')
-    def test_api_update_snippet_002(self, server):
-        """Update snippet from API."""
+    def test_api_update_snippet_003(self, server):
+        """Update snippet from API.
 
-        ## Brief: Try to call PUT /snippy/api/v1/snippets to update snippet
-        ##        with digest that cannot be found.
+        Try to call PUT /v1/snippets/101010101010101 to update snippet with
+        digest that cannot be found.
+        """
+
         content_send = {
             'data': {
                 'type': 'snippet',
@@ -113,7 +178,7 @@ class TestApiUpdateSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/snippets/101010101010101',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -123,11 +188,13 @@ class TestApiUpdateSnippet(object):
         assert len(Database.get_snippets()) == 1
 
     @pytest.mark.usefixtures('forced', 'caller')
-    def test_api_update_snippet_003(self, server):
-        """Try to update snippet with malformed queries."""
+    def test_api_update_snippet_004(self, server):
+        """Try to update snippet with malformed queries.
 
-        ## Brief: Try to call PUT /snippy/api/v1/snippets to update new
-        ##        snippet with malformed JSON request.
+        Try to call PUT /v1/snippets/53908d68425c61dc to update new snippet
+        with malformed JSON request.
+        """
+
         content_send = {
             'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
             'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
@@ -147,7 +214,7 @@ class TestApiUpdateSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -157,13 +224,15 @@ class TestApiUpdateSnippet(object):
         assert len(Database.get_snippets()) == 1
 
     @pytest.mark.usefixtures('forced', 'netcat-utc')
-    def test_api_update_snippet_004(self, server, mocker):
-        """Updated snippet and verify created and updated timestamps."""
+    def test_api_update_snippet_005(self, server, mocker):
+        """Updated snippet and verify created and updated timestamps.
 
-        ## Brief: Call PUT /snippy/api/v1/snippets to update existing snippet
-        ##        with specified digest. This test verifies that the created
-        ##        timestamp does not change and the updated timestamp changes
-        ##        when the content is updated.
+        Call PUT /v1/snippets/53908d68425c61dc to update existing snippet
+        with specified digest. This test verifies that the created timestamp
+        does not change and the updated timestamp changes when the content is
+        updated.
+        """
+
         content_send = {
             'data': {
                 'type': 'snippet',
@@ -190,7 +259,7 @@ class TestApiUpdateSnippet(object):
         }
         result_json['data']['attributes']['updated'] = Content.NETCAT_TIME
         server.run()
-        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))

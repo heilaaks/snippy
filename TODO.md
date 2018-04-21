@@ -6,6 +6,8 @@
 ## FEATURES
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
+   - [ ] Add OPTIONS method.
+   - [ ] Add pretty print response by default. How?
    - [ ] Add embedded security features.
    - [ ] Add /snippy/api/admin/v1/settings for log config. Change snippy api to /snippy/api/app/v1. Add /snippy/api/auth/v1 for login. These have same base /snippy/api/
    - [ ] Add support to get /snippet/123123324/brief and all the fields.

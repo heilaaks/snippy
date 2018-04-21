@@ -41,6 +41,7 @@ class Content(object):
     EXPORT_TIME = '2018-02-02 02:02:02'
 
     # Snippets
+    REMOVE_TIME = '2017-10-14 19:56:31'
     NETCAT_TIME = '2017-10-20 07:08:45'
 
     # Solutions

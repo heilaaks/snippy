@@ -318,6 +318,13 @@ def edited_beats(mocker):
 
     return _editor(mocker, EDITED_BEATS)
 
+
+@pytest.fixture(scope='function', name='nginx-utc')
+def create_nginx_time_mock(mocker):
+    """Mock timestamps to create 'nginx' solution."""
+
+    _add_utc_time(mocker, CREATE_NGINX)
+
 @pytest.fixture(scope='function', name='import-nginx-utc')
 def import_nginx_time_mock(mocker):
     """Mock timestamps to create 'nginx' solution."""

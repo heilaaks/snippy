@@ -39,14 +39,12 @@ class TestApiUpdateSolution(object):
 
     @pytest.mark.usefixtures('beats', 'beats-utc')
     def test_api_update_solution_001(self, server, mocker):
-        """Update one solution with PUT."""
+        """Update one solution with PUT.
 
-        ## Brief: Call PUT /snippy/api/v1/solutions to update existing
-        ##        solution. In this case when fields like UTC and filename
-        ##        are not provided, the empty fields override the content
-        ##        because it was updated with PUT. TODO: This is not working
-        ##        correctly because fields not defined in update keep their
-        ##        original values. A PATCH should behave like in this case.
+        Call PUT /v1/solutions/a96accc25dd23ac0 to update existing solution.
+        All fields that can be modified are sent in request.
+        """
+
         content_read = {'2cd0e794244a07f': Solution.DEFAULTS[Solution.NGINX]}
         content_send = {
             'data': {
@@ -74,15 +72,70 @@ class TestApiUpdateSolution(object):
                 'attributes': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
             }
         }
-        # TODO: These fields should be empty because these are not defined
-        #       in PUT. The PUT will override the whole content with new
-        #       values and if fields are not there, default must be applied.
         result_json['data']['attributes']['filename'] = Const.EMPTY
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
         result_json['data']['attributes']['updated'] = Content.BEATS_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         server.run()
-        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_put(
+            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(content_send))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+        assert len(Database.get_solutions()) == 1
+        Content.verified(mocker, server, content_read)
+
+    @pytest.mark.usefixtures('beats', 'beats-utc')
+    def test_api_update_solution_002(self, server, mocker):
+        """Update one solution with PUT.
+
+        Call PUT /v1/solutions/a96accc25dd23ac0 to update existing solution.
+        Only partial set of fields that can be modified are sent in request.
+        The fields that are not present and which can be modified must be
+        returned with default values.
+        """
+
+        content = {
+            'data': Solution.DEFAULTS[Solution.NGINX]['data'],
+            'brief': '',
+            'group': 'default',
+            'tags': [],
+            'links': [],
+            'category': 'solution',
+            'filename': '',
+            'runalias': '',
+            'versions': '',
+            'created': Content.BEATS_TIME,
+            'updated': Content.BEATS_TIME,
+            'digest': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b'
+        }
+        content_read = {'8d400d39568354f9': content}
+        content_send = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                }
+            }
+        }
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '2871'
+        }
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/solutions/8d400d39568354f9'
+            },
+            'data': {
+                'type': 'solutions',
+                'id': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b',
+                'attributes': content
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(content_send))
@@ -93,11 +146,13 @@ class TestApiUpdateSolution(object):
         Content.verified(mocker, server, content_read)
 
     @pytest.mark.usefixtures('beats', 'caller')
-    def test_api_update_solution_002(self, server, mocker):
-        """Update one solution with PUT."""
+    def test_api_update_solution_003(self, server, mocker):
+        """Update one solution with PUT.
 
-        ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution
-        ##        with digest that cannot be found.
+        Try to call PUT /v1/solutions/101010101010101 to update solution with
+        digest that cannot be found.
+        """
+
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
         content_send = {
             'data': {
@@ -123,7 +178,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/solutions/101010101010101',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -134,11 +189,13 @@ class TestApiUpdateSolution(object):
         Content.verified(mocker, server, content_read)
 
     @pytest.mark.usefixtures('beats', 'caller')
-    def test_api_update_solution_003(self, server):
-        """Try to update solution with malformed queries."""
+    def test_api_update_solution_004(self, server):
+        """Try to update solution with malformed queries.
 
-        ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution
-        ##        with malformed JSON request.
+        Try to call PUT /v1/solutions/a96accc25dd23ac0 to update solution with
+        malformed JSON request.
+        """
+
         content_send = {
             'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
             'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
@@ -158,7 +215,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -168,12 +225,14 @@ class TestApiUpdateSolution(object):
         assert len(Database.get_solutions()) == 1
 
     @pytest.mark.usefixtures('beats', 'caller')
-    def test_api_update_solution_004(self, server):
-        """Try to update solution with malformed queries."""
+    def test_api_update_solution_005(self, server):
+        """Try to update solution with malformed queries.
 
-        ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution with
-        ##        client generated resource ID. In this case the ID looks like a
-        ##        valid message digest.
+        Try to call PUT /v1/solutions/a96accc25dd23ac0 to update solution with
+        client generated resource ID. In this case the ID looks like a valid
+        message digest.
+        """
+
         content_send = {
             'data': {
                 'type': 'snippet',
@@ -198,7 +257,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))
@@ -208,12 +267,14 @@ class TestApiUpdateSolution(object):
         assert len(Database.get_solutions()) == 1
 
     @pytest.mark.usefixtures('beats', 'caller')
-    def test_api_update_solution_005(self, server):
-        """Try to update solution with malformed queries."""
+    def test_api_update_solution_006(self, server):
+        """Try to update solution with malformed queries.
 
-        ## Brief: Try to call PUT /snippy/api/v1/solutions to update solution
-        ##        with client generated resource ID. In this case the ID is
-        ##        empty string.
+        Try to call PUT //v1/solutions/a96accc25dd23ac0 to update solution
+        with client generated resource ID. In this case the ID is empty
+        string.
+        """
+
         content_send = {
             'data': {
                 'type': 'snippet',
@@ -235,7 +296,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_put(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(content_send))

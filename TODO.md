@@ -1,7 +1,8 @@
 ## WORKING
    - [ ] Add X-HTTP-Method-Override support for DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
-   - [ ] Add support for PATCH: "If you want partial updates, use PATCH instead."
-   - [ ] Fix PUT to change whole content
+   - [ ] Add PATCH to swagger definitions.
+   - [ ] Refactor to content to use migrate or merge. Try to remove copy.copy from config. The Content cannot be imported to Config now due to circular dependencies.
+   - [ ] Fix PUT/PATCH: only data, brief, tags and links behave like in PUT/PATCH. Rest is kind of metadata. Put _created, _updated or move to meta?
 
 ## FEATURES
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
@@ -54,6 +55,7 @@
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
+   - [ ] Refactor API tests based on update tests.
    - [ ] How to test case where required Python module is missing? Tests can be skipped when module is missing but how to simulate this? Try with Logger and gunicorn.
    - [ ] Is tested? import first content that already exist but second is new? Should result OK. Check test_cli_import_snippet_018-> Is the order this?
    - [ ] Add test to import solution without date (check if exist first).

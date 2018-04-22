@@ -42,6 +42,7 @@ class Content(object):
 
     # Snippets
     REMOVE_TIME = '2017-10-14 19:56:31'
+    FORCED_TIME = '2017-10-14 19:56:31'
     NETCAT_TIME = '2017-10-20 07:08:45'
 
     # Solutions

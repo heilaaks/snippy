@@ -51,38 +51,41 @@ class Validate(object):
     _logger = Logger(__name__).logger
 
     @classmethod
-    def collection(cls, media):
+    def collection(cls, request):
         """Return media as collection of content."""
 
         collection = []
-        if JsonSchema.validate(JsonSchema.COLLECTION, media):
-            if isinstance(media['data'], (list, tuple)):
-                for data in media['data']:
+        if JsonSchema.validate(JsonSchema.COLLECTION, request.media):
+            if isinstance(request.media['data'], (list, tuple)):
+                for data in request.media['data']:
                     if cls.is_valid_data(data):
                         collection.append(data['attributes'])
                     else:
                         collection = []
                         break
-            elif isinstance(media['data'], dict):
-                if cls.is_valid_data(media['data']):
-                    collection.append(media['data']['attributes'])
+            elif isinstance(request.media['data'], dict):
+                if cls.is_valid_data(request.media['data']):
+                    collection.append(request.media['data']['attributes'])
             else:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(media['data'])))  # noqa: E501 # pylint: disable=line-too-long
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(request.media['data'])))  # noqa: E501 # pylint: disable=line-too-long
 
         return tuple(collection)
 
     @classmethod
-    def resource(cls, media, digest):
+    def resource(cls, request, digest):
         """Return media as specific resource with digest."""
 
         resource_ = {}
-        if JsonSchema.validate(JsonSchema.RESOURCE, media):
-            if isinstance(media['data'], dict):
-                if cls.is_valid_data(media['data']):
-                    resource_ = media['data']['attributes']
+        if JsonSchema.validate(JsonSchema.RESOURCE, request.media):
+            if isinstance(request.media['data'], dict):
+                if cls.is_valid_data(request.media['data']):
+                    resource_ = request.media['data']['attributes']
                     resource_['digest'] = digest
             else:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(media['data'])))  # noqa: E501 # pylint: disable=line-too-long
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(request.media['data'])))  # noqa: E501 # pylint: disable=line-too-long
+
+        if request.method.lower() == 'patch':
+            resource_['merge'] = True
 
         return resource_
 

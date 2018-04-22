@@ -379,14 +379,18 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         return content
 
-    def migrate_edited(self, contents):
-        """Migrate edited content."""
+    def migrate(self, sources):
+        """Migrate content.
 
-        # The content that can be directly modified by user is migrated.
-        # Also the migrated content contains correct digest that has to
-        # be set from the migrated content.
-        if contents:
-            migrated = contents[0]
+        Content fields that can be directly modified by user are migrated.
+        The 'created' and 'updated' timestamps are read from the migrated
+        source.
+
+        This overrides always the original content field.
+        """
+
+        if sources:
+            migrated = sources[0]
             content = self.get_list()
             content[Const.DATA] = migrated.get_data()
             content[Const.BRIEF] = migrated.get_brief()
@@ -398,8 +402,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content[Const.VERSIONS] = migrated.get_versions()
             content[Const.CREATED] = migrated.get_created()
             content[Const.UPDATED] = migrated.get_updated()
-            content[Const.DIGEST] = migrated.get_digest()
-            self.content = (
+            self.set((
                 content[Const.DATA],
                 content[Const.BRIEF],
                 content[Const.GROUP],
@@ -414,7 +417,43 @@ class Content(object):  # pylint: disable=too-many-public-methods
                 content[Const.DIGEST],
                 content[Const.METADATA],
                 content[Const.KEY]
-            )
+            ))
+
+    def merge(self, source):
+        """Merge content.
+
+        Content fields that can be directly modified by user are merged.
+
+        This overrides original content field only if the merged source does
+        not exist.
+        """
+
+        if source:
+            content = self.get_list()
+            if source.get_data():
+                content[Const.DATA] = source.get_data()
+            if source.get_brief():
+                content[Const.BRIEF] = source.get_brief()
+            if source.get_tags():
+                content[Const.TAGS] = source.get_tags()
+            if source.get_links():
+                content[Const.LINKS] = source.get_links()
+            self.set((
+                content[Const.DATA],
+                content[Const.BRIEF],
+                content[Const.GROUP],
+                content[Const.TAGS],
+                content[Const.LINKS],
+                content[Const.CATEGORY],
+                content[Const.FILENAME],
+                content[Const.RUNALIAS],
+                content[Const.VERSIONS],
+                content[Const.CREATED],
+                content[Const.UPDATED],
+                content[Const.DIGEST],
+                content[Const.METADATA],
+                content[Const.KEY]
+            ))
 
     @classmethod
     def sort_contents(cls, contents, column, reversed_sort):

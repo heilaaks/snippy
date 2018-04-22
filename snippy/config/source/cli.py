@@ -170,6 +170,7 @@ class Cli(ConfigSourceBase):
         options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-l', '--links', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-d', '--digest', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        options.add_argument('--merge', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # search options
         search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Cli.ARGS_SEARCH))

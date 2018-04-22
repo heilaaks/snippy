@@ -19,6 +19,7 @@
 
 """config: Global configuration."""
 
+import copy
 import datetime
 import io
 import os.path
@@ -77,6 +78,7 @@ class Config(object):
         # operation
         cls.operation = cls.source.operation
         cls.operation_digest = cls.source.digest
+        cls.merge = cls.source.merge
 
         # content
         cls.content_category = cls.source.category
@@ -207,7 +209,8 @@ class Config(object):
         """Read configurared content."""
 
         contents = []
-        content.set((
+        source = copy.copy(content)
+        source.set((
             cls.content_data,
             cls.content_brief,
             cls.content_group,
@@ -223,7 +226,12 @@ class Config(object):
             content.get_metadata(),
             content.get_key()
         ))
-        contents.append(content)
+
+        if Config.merge:
+            content.merge(source)
+            contents.append(content)
+        else:
+            contents.append(source)
 
         return contents
 

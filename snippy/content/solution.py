@@ -141,7 +141,7 @@ class Solution(object):
                 self._logger.debug('importing solution with digest %.16s', digest)
                 dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SOLUTION))
                 contents = Content.load(dictionary)
-                solutions[0].migrate_edited(contents)
+                solutions[0].migrate(contents)
                 self.storage.update(solutions[0], digest)
             elif not solutions:
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find solution identified with digest {:.16}'.format(content_digest))

@@ -44,7 +44,7 @@ class ApiSolutions(object):
 
         contents = []
         self._logger.debug('run post /snippy/api/v1/solutions')
-        collection = Validate.collection(request.media)
+        collection = Validate.collection(request)
         for member in collection:
             api = Api(Const.SOLUTION, Api.CREATE, member)
             Config.load(api)
@@ -106,10 +106,10 @@ class ApiSolutionsDigest(object):
 
     @Logger.timeit
     def on_put(self, request, response, digest):
-        """Update solution based on digest."""
+        """Update whole solution based on digest."""
 
         self._logger.debug('run put /snippy/api/v1/solutions/%s', digest)
-        resource_ = Validate.resource(request.media, digest)
+        resource_ = Validate.resource(request, digest)
         if resource_:
             api = Api(Const.SOLUTION, Api.UPDATE, resource_)
             Config.load(api)
@@ -125,6 +125,15 @@ class ApiSolutionsDigest(object):
 
         Cause.reset()
         self._logger.debug('end put /snippy/api/v1/solutions/%s', digest)
+
+    @Logger.timeit
+    def on_patch(self, request, response, digest):
+        """Update partial solution based on digest."""
+
+        self._logger.debug('run patch /snippy/api/v1/solutions/%s', digest)
+        self.on_put(request, response, digest)
+        Cause.reset()
+        self._logger.debug('end patch /snippy/api/v1/solutions/%s', digest)
 
     @Logger.timeit
     def on_get(self, request, response, digest):

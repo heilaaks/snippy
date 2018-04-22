@@ -39,14 +39,13 @@ class TestApiUpdateSnippet(object):
 
     @pytest.mark.usefixtures('forced', 'remove-utc')
     def test_api_update_snippet_001(self, server, mocker):
-        """Update one snippet with PUT.
+        """Update one snippet with PUT request.
 
         Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
         specified digest. All fields that can be modified are sent in request.
         """
 
-        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        content_send = {
+        request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
@@ -58,6 +57,8 @@ class TestApiUpdateSnippet(object):
                 }
             }
         }
+        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '695'
@@ -69,24 +70,23 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': content_read
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
-            body=json.dumps(content_send))
-        print(result.json)
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('forced', 'remove-utc')
     def test_api_update_snippet_002(self, server, mocker):
-        """Update one snippet with PUT.
+        """Update one snippet with PUT request.
 
         Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
         specified digest. Only partial set of fields that can be modified are
@@ -94,7 +94,17 @@ class TestApiUpdateSnippet(object):
         modified must be returned with default values.
         """
 
-        content = {
+        request_body = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+                }
+            }
+        }
+        content_read = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': '',
             'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
@@ -108,17 +118,7 @@ class TestApiUpdateSnippet(object):
             'updated': Content.REMOVE_TIME,
             'digest': 'e56c2183edcc3a67cab99e6064439495a8af8a1d0b78bc538acd6079c841f27f'
         }
-        content_read = {'e56c2183edcc3a67': content}
-        content_send = {
-            'data': {
-                'type': 'snippet',
-                'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
-                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
-                }
-            }
-        }
+        content = {'e56c2183edcc3a67': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '601'
@@ -130,29 +130,86 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippets',
                 'id': 'e56c2183edcc3a67cab99e6064439495a8af8a1d0b78bc538acd6079c841f27f',
-                'attributes': content
+                'attributes': content_read
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
+
+    @pytest.mark.usefixtures('forced', 'remove-utc')
+    def test_api_update_snippet_003(self, server, mocker):
+        """Update one snippet with PUT request.
+
+        Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
+        specified digest. The PUT request contains only mandatory data field.
+        All other fields that can be updated must be set to default value.
+        """
+
+        request_body = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                }
+            }
+        }
+        content_read = {
+            'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
+            'brief': '',
+            'group': 'default',
+            'tags': [],
+            'links': [],
+            'category': 'snippet',
+            'filename': '',
+            'runalias': '',
+            'versions': '',
+            'created': Content.REMOVE_TIME,
+            'updated': Content.REMOVE_TIME,
+            'digest': '26128ea95707a3a2623bb2613a17f50e29a5ab5232b8ba7ca7f1c96cb1ea5c58'
+        }
+        content = {'26128ea95707a3a26': content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '544'
+        }
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets/26128ea95707a3a2'
+            },
+            'data': {
+                'type': 'snippets',
+                'id': '26128ea95707a3a2623bb2613a17f50e29a5ab5232b8ba7ca7f1c96cb1ea5c58',
+                'attributes': content_read
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_put(
+            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            headers={'accept': 'application/vnd.api+json'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+        assert len(Database.get_snippets()) == 1
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('forced', 'caller')
-    def test_api_update_snippet_003(self, server):
-        """Update snippet from API.
+    def test_api_update_snippet_004(self, server):
+        """Try to update snippet with malformed request.
 
         Try to call PUT /v1/snippets/101010101010101 to update snippet with
         digest that cannot be found.
         """
 
-        content_send = {
+        request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
@@ -181,21 +238,21 @@ class TestApiUpdateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/snippets/101010101010101',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
         assert len(Database.get_snippets()) == 1
 
     @pytest.mark.usefixtures('forced', 'caller')
-    def test_api_update_snippet_004(self, server):
-        """Try to update snippet with malformed queries.
+    def test_api_update_snippet_005(self, server):
+        """Try to update snippet with malformed request.
 
         Try to call PUT /v1/snippets/53908d68425c61dc to update new snippet
         with malformed JSON request.
         """
 
-        content_send = {
+        request_body = {
             'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
             'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
             'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
@@ -217,14 +274,14 @@ class TestApiUpdateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
         assert len(Database.get_snippets()) == 1
 
     @pytest.mark.usefixtures('forced', 'netcat-utc')
-    def test_api_update_snippet_005(self, server, mocker):
+    def test_api_update_snippet_006(self, server, mocker):
         """Updated snippet and verify created and updated timestamps.
 
         Call PUT /v1/snippets/53908d68425c61dc to update existing snippet
@@ -233,7 +290,7 @@ class TestApiUpdateSnippet(object):
         updated.
         """
 
-        content_send = {
+        request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
@@ -262,12 +319,70 @@ class TestApiUpdateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content_read)
+
+    @pytest.mark.usefixtures('forced', 'forced-utc')
+    def test_api_update_snippet_007(self, server, mocker):
+        """Update one snippet with PATCH request.
+
+        Call PATCH /v1/snippets/53908d68425c61dc to update existing snippet
+        with specified digest. The PATCH request contains only mandatory data
+        field. All other fields that can be updated must be returned with
+        their previously set values.
+        """
+
+        request_body = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                }
+            }
+        }
+        content_read = {
+            'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
+            'brief': Snippet.DEFAULTS[Snippet.FORCED]['brief'],
+            'group': Snippet.DEFAULTS[Snippet.FORCED]['group'],
+            'tags': Snippet.DEFAULTS[Snippet.FORCED]['tags'],
+            'links': Snippet.DEFAULTS[Snippet.FORCED]['links'],
+            'category': 'snippet',
+            'filename': Snippet.DEFAULTS[Snippet.FORCED]['filename'],
+            'runalias': Snippet.DEFAULTS[Snippet.FORCED]['runalias'],
+            'versions': Snippet.DEFAULTS[Snippet.FORCED]['versions'],
+            'created': Content.FORCED_TIME,
+            'updated': Content.FORCED_TIME,
+            'digest': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
+        }
+        content = {'a9e137c08aee0985': content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '787'
+        }
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets/a9e137c08aee0985'
+            },
+            'data': {
+                'type': 'snippets',
+                'id': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2',
+                'attributes': content_read
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_patch(
+            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            headers={'accept': 'application/vnd.api+json'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+        assert len(Database.get_snippets()) == 1
+        Content.verified(mocker, server, content)
 
     @classmethod
     def teardown_class(cls):

@@ -13,6 +13,10 @@
       "type": "string", 
       "description": "Automatically assigned content category."
     }, 
+    "updated": {
+      "type": "string", 
+      "description": "Optional UTC timestamp for the last update time in ISO 8601 format that is automatically assigned."
+    }, 
     "group": {
       "default": "default", 
       "type": "string", 
@@ -29,16 +33,16 @@
       "type": "array", 
       "description": "Optional list of refrence links."
     }, 
-    "versions": {
-      "type": "string", 
-      "description": "Optional list of services and versions related to the snippet."
-    }, 
     "tags": {
       "items": {
         "type": "string"
       }, 
       "type": "array", 
       "description": "Optional list of tags."
+    }, 
+    "versions": {
+      "type": "string", 
+      "description": "Optional list of services and versions related to the snippet."
     }, 
     "brief": {
       "type": "string", 
@@ -50,7 +54,7 @@
     }, 
     "created": {
       "type": "string", 
-      "description": "Optional UTC timestamp for creation time in ISO 8601 format that is automatically assigned if left out."
+      "description": "Optional UTC timestamp for creation time in ISO 8601 format that is automatically assigned."
     }, 
     "data": {
       "items": {

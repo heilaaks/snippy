@@ -182,6 +182,10 @@
           "type": "string", 
           "description": "Automatically assigned content category."
         }, 
+        "updated": {
+          "type": "string", 
+          "description": "Optional UTC timestamp for the last update time in ISO 8601 format that is automatically assigned."
+        }, 
         "group": {
           "default": "default", 
           "type": "string", 
@@ -219,7 +223,7 @@
         }, 
         "created": {
           "type": "string", 
-          "description": "Optional UTC timestamp for creation time in ISO 8601 format that is automatically assigned if left out."
+          "description": "Optional UTC timestamp for creation time in ISO 8601 format that is automatically assigned."
         }, 
         "data": {
           "items": {

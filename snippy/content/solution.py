@@ -39,7 +39,7 @@ class Solution(object):
         """Create new solution."""
 
         self._logger.debug('creating new solution')
-        solutions = Config.get_contents(Content(category=Const.SOLUTION))
+        solutions = Config.get_contents(Content(category=Const.SOLUTION, timestamp=Config.get_utc_time()))
         self.storage.create(solutions)
         solutions = self.storage.search(Const.SOLUTION, digest=solutions[0].get_digest())
         solutions = Migrate.content(solutions, self.content_type)
@@ -109,7 +109,7 @@ class Solution(object):
         filename = Config.get_operation_file()
         if Config.template:
             self._logger.debug('exporting solution template %s', Config.get_operation_file())
-            Migrate.dump_template(Content(category=Const.SOLUTION))
+            Migrate.dump_template(Content(category=Const.SOLUTION, timestamp=Config.get_utc_time()))
         elif Config.is_search_criteria():
             self._logger.debug('exporting solutions based on search criteria')
             solutions = self.storage.search(
@@ -139,9 +139,10 @@ class Solution(object):
             if len(solutions) == 1:
                 digest = solutions[0].get_digest()
                 self._logger.debug('importing solution with digest %.16s', digest)
-                dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SOLUTION))
+                content = Content(category=Const.SOLUTION, timestamp=Config.get_utc_time())
+                dictionary = Migrate.load(Config.get_operation_file(), content)
                 contents = Content.load(dictionary)
-                solutions[0].migrate(contents)
+                solutions[0].migrate(contents[0])
                 self.storage.update(solutions[0], digest)
             elif not solutions:
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find solution identified with digest {:.16}'.format(content_digest))
@@ -149,7 +150,8 @@ class Solution(object):
                 Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple solutions with same digest {:.16}'.format(content_digest))
         else:
             self._logger.debug('importing solutions %s', Config.get_operation_file())
-            dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SOLUTION))
+            content = Content(category=Const.SOLUTION, timestamp=Config.get_utc_time())
+            dictionary = Migrate.load(Config.get_operation_file(), content)
             solutions = Content.load(dictionary)
             self.storage.import_content(solutions)
 

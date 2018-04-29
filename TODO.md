@@ -2,6 +2,7 @@
    - [ ] Add X-HTTP-Method-Override support for DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Refactor to content to use migrate or merge. Try to remove copy.copy from config. The Content cannot be imported to Config now due to circular dependencies.
    - [ ] Fix PUT/PATCH: only data, brief, tags and links behave like in PUT/PATCH. Rest is kind of metadata. Put _created, _updated or move to meta?
+   - [ ] Test Content qe and ne.
 
 ## FEATURES
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.

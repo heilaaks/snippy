@@ -55,7 +55,7 @@ class TestUtConfigCreate(unittest.TestCase):
         assert isinstance(Config.search_grp_kws, tuple)
         assert isinstance(Config.search_filter, str)
         assert isinstance(Config.get_operation_file(), str)
-        assert Config.get_contents(Content(category=Const.SNIPPET))[0].item == snippet
+        assert Config.get_contents(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))[0].item == snippet
         assert Config.is_operation_create
         assert not Config.is_operation_search
         assert not Config.is_operation_update

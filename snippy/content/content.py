@@ -21,6 +21,7 @@
 
 import re
 import hashlib
+
 from snippy.config.constants import Constants as Const
 from snippy.config.config import Config
 from snippy.logger import Logger
@@ -29,9 +30,9 @@ from snippy.logger import Logger
 class Content(object):  # pylint: disable=too-many-public-methods
     """Store content."""
 
-    def __init__(self, content=None, category=None):
+    def __init__(self, content=None, category=None, timestamp=Const.EMPTY):
         self._logger = Logger(__name__).logger
-        self._item = self._init_item(content, category)
+        self._item = self._init_item(content, category, timestamp)
 
     def __str__(self):
         """Format string from the class object."""
@@ -40,12 +41,29 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         return Migrate.get_terminal_text((self,), ansi=True, debug=True)
 
+    def __eq__(self, content):
+        """Compare Contents if they are equal."""
+
+        # See [1] and [2] for details how to override comparisons.
+        #
+        # [1] https://stackoverflow.com/a/30676267
+        # [2] https://stackoverflow.com/a/390640
+        if type(content) is type(self):
+            return self.item == content.item
+
+        return False
+
+    def __ne__(self, content):
+        """Compare Contents if they are not equl."""
+
+        return not self.item == content.item
+
     @staticmethod
-    def _init_item(content, category):
+    def _init_item(content, category, timestamp):
         """Initialize content item."""
 
         if not content:
-            content = Content._get_empty(category).item
+            content = Content._create(category, timestamp).item
 
         if category:
             content[Const.CATEGORY] = category
@@ -68,13 +86,81 @@ class Content(object):  # pylint: disable=too-many-public-methods
         self._item = value
         self.update_digest()
 
+    def migrate(self, source):
+        """Migrate content.
+
+        Content fields that can be directly modified by user are migrated.
+        The 'created' and 'updated' timestamps are read from the migrated
+        source. This overrides always the original content field.
+        """
+
+        if source:
+            self.item[Const.DATA] = source.get_data()
+            self.item[Const.BRIEF] = source.get_brief()
+            self.item[Const.GROUP] = source.get_group()
+            self.item[Const.TAGS] = source.get_tags()
+            self.item[Const.LINKS] = source.get_links()
+            self.item[Const.FILENAME] = source.get_filename()
+            self.item[Const.RUNALIAS] = source.get_runalias()
+            self.item[Const.VERSIONS] = source.get_versions()
+            self.item[Const.CREATED] = source.get_created()
+            self.item[Const.UPDATED] = source.get_updated()
+            self.update_digest()
+
+    def merge(self, source):
+        """Merge content.
+
+        Content fields that can be directly modified by user are merged. This
+        overrides original content field only if the merged source does not
+        exist.
+        """
+
+        if source:
+            if source.get_data():
+                self.item[Const.DATA] = source.get_data()
+            if source.get_brief():
+                self.item[Const.BRIEF] = source.get_brief()
+            if source.get_tags():
+                self.item[Const.TAGS] = source.get_tags()
+            if source.get_links():
+                self.item[Const.LINKS] = source.get_links()
+            self.update_digest()
+
+    def compute_digest(self):
+        """Compute digest from the content."""
+
+        content_str = self.get_data(Const.STRING_CONTENT)
+        content_str = content_str + self.get_brief(Const.STRING_CONTENT)
+        content_str = content_str + self.get_group(Const.STRING_CONTENT)
+        content_str = content_str + self.get_tags(Const.STRING_CONTENT)
+        content_str = content_str + self.get_links(Const.STRING_CONTENT)
+        content_str = content_str + self.get_category(Const.STRING_CONTENT)
+        content_str = content_str + self.get_filename(Const.STRING_CONTENT)
+        content_str = content_str + self.get_runalias(Const.STRING_CONTENT)
+        content_str = content_str + self.get_versions(Const.STRING_CONTENT)
+        digest = hashlib.sha256(content_str.encode('UTF-8')).hexdigest()
+
+        return digest
+
+    def update_digest(self):
+        """Update content message digest."""
+
+        self.item[Const.DIGEST] = self.compute_digest()
+
+    def update_updated(self):
+        """Update content update timestamp."""
+
+        self.item[Const.UPDATED] = Config.get_utc_time()
+        self.update_digest()
+
     def is_template(self):
         """Test if content data is empty template."""
 
-        # Date and group fields are masked out. The date can change and the
-        # tool enforces default group only after the content is saved and
-        # user did not give change the group field value in template.
-        template = Content._get_empty(self.get_category(), mask=True).convert_text()
+        # Date and group fields are masked out. The date is visible in the
+        # solution template data field. Tool enforces default group only after
+        # the content is saved and user did not change the group field value
+        # in template.
+        template = Content._create(self.get_category(), Const.EMPTY).convert_text()
         content = self.convert_text()
         template = re.sub(r'## DATE  :.*', '## DATE  : ', template)
         content = re.sub(r'## DATE  :.*', '## DATE  : ', content)
@@ -96,7 +182,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return False if not self.item[Const.DATA] or not any(self.item[Const.DATA]) else True
 
     def convert_text(self):
-        """Content content to text."""
+        """Convert content to text."""
 
         template = self._content_template(self.get_category())
         template = self._add_data(template)
@@ -118,77 +204,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
             template = Config.snippet_template
         else:
             template = Config.solution_template
-
-        return template
-
-    def _add_data(self, template):
-        """Add content data to template."""
-
-        data = self.get_data(Const.STRING_CONTENT)
-        if data:
-            if self.is_snippet():
-                template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
-            else:
-                template = data
-        else:
-            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
-
-        return template
-
-    def _add_brief(self, template):
-        """Add content brief to template."""
-
-        brief = self.get_brief(Const.STRING_CONTENT)
-        template = template.replace('<SNIPPY_BRIEF>', brief)
-
-        return template
-
-    def _add_date(self, template):
-        """Add content date to template."""
-
-        # Only solution template contains the date field. When the field is
-        # replaced with a timestamp, the template has been just created and
-        # thus the creation date can be used.
-        if '<SNIPPY_DATE>' in template:
-            template = template.replace('<SNIPPY_DATE>', self.get_created())
-        else:
-            match = re.search(r'(## DATE  :\s*?$)', template, re.MULTILINE)
-            if match and self.get_created():
-                match.group(1).rstrip()
-                template = template.replace(match.group(1), match.group(1) + Const.SPACE + self.get_created())
-
-        return template
-
-    def _add_group(self, template):
-        """Add content group to template."""
-
-        group = self.get_group(Const.STRING_CONTENT)
-        template = template.replace('<SNIPPY_GROUP>', group)
-
-        return template
-
-    def _add_tags(self, template):
-        """Add content tags to template."""
-
-        tags = self.get_tags(Const.STRING_CONTENT)
-        template = template.replace('<SNIPPY_TAGS>', tags)
-
-        return template
-
-    def _add_links(self, template):
-        """Add content links to template."""
-
-        links = self.get_links(Const.STRING_CONTENT)
-        links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
-        template = template.replace('<SNIPPY_LINKS>', links)
-
-        return template
-
-    def _add_filename(self, template):
-        """Add content filename to template."""
-
-        filename = self.get_filename(Const.STRING_CONTENT)
-        template = template.replace('<SNIPPY_FILE>', filename)
 
         return template
 
@@ -277,76 +292,76 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         return self.item[Const.KEY]
 
-    def compute_digest(self):
-        """Compute digest from the content."""
+    def _add_data(self, template):
+        """Add content data to template."""
 
-        content_str = self.get_data(Const.STRING_CONTENT)
-        content_str = content_str + self.get_brief(Const.STRING_CONTENT)
-        content_str = content_str + self.get_group(Const.STRING_CONTENT)
-        content_str = content_str + self.get_tags(Const.STRING_CONTENT)
-        content_str = content_str + self.get_links(Const.STRING_CONTENT)
-        content_str = content_str + self.get_category(Const.STRING_CONTENT)
-        content_str = content_str + self.get_filename(Const.STRING_CONTENT)
-        content_str = content_str + self.get_runalias(Const.STRING_CONTENT)
-        content_str = content_str + self.get_versions(Const.STRING_CONTENT)
-        digest = hashlib.sha256(content_str.encode('UTF-8')).hexdigest()
+        data = self.get_data(Const.STRING_CONTENT)
+        if data:
+            if self.is_snippet():
+                template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
+            else:
+                template = data
+        else:
+            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
 
-        return digest
+        return template
 
-    def update_digest(self):
-        """Update content message digest."""
+    def _add_brief(self, template):
+        """Add content brief to template."""
 
-        self.item[Const.DIGEST] = self.compute_digest()
+        brief = self.get_brief(Const.STRING_CONTENT)
+        template = template.replace('<SNIPPY_BRIEF>', brief)
 
-    def update_updated(self):
-        """Update content update timestamp."""
+        return template
 
-        self.item[Const.UPDATED] = Config.get_utc_time()
-        self.update_digest()
+    def _add_date(self, template):
+        """Add content date to template."""
 
-    def migrate(self, sources):
-        """Migrate content.
+        # Only solution template contains the date field. When the field is
+        # replaced with a timestamp, the template has been just created and
+        # thus the creation date can be used.
+        if '<SNIPPY_DATE>' in template:
+            template = template.replace('<SNIPPY_DATE>', self.get_created())
+        else:
+            match = re.search(r'(## DATE  :\s*?$)', template, re.MULTILINE)
+            if match and self.get_created():
+                match.group(1).rstrip()
+                template = template.replace(match.group(1), match.group(1) + Const.SPACE + self.get_created())
 
-        Content fields that can be directly modified by user are migrated.
-        The 'created' and 'updated' timestamps are read from the migrated
-        source.
+        return template
 
-        This overrides always the original content field.
-        """
+    def _add_group(self, template):
+        """Add content group to template."""
 
-        if sources:
-            migrated = sources[0]
-            self.item[Const.DATA] = migrated.get_data()
-            self.item[Const.BRIEF] = migrated.get_brief()
-            self.item[Const.GROUP] = migrated.get_group()
-            self.item[Const.TAGS] = migrated.get_tags()
-            self.item[Const.LINKS] = migrated.get_links()
-            self.item[Const.FILENAME] = migrated.get_filename()
-            self.item[Const.RUNALIAS] = migrated.get_runalias()
-            self.item[Const.VERSIONS] = migrated.get_versions()
-            self.item[Const.CREATED] = migrated.get_created()
-            self.item[Const.UPDATED] = migrated.get_updated()
-            self.update_digest()
+        group = self.get_group(Const.STRING_CONTENT)
+        template = template.replace('<SNIPPY_GROUP>', group)
 
-    def merge(self, source):
-        """Merge content.
+        return template
 
-        Content fields that can be directly modified by user are merged.
+    def _add_tags(self, template):
+        """Add content tags to template."""
 
-        This overrides original content field only if the merged source does
-        not exist.
-        """
+        tags = self.get_tags(Const.STRING_CONTENT)
+        template = template.replace('<SNIPPY_TAGS>', tags)
 
-        if source:
-            if source.get_data():
-                self.item[Const.DATA] = source.get_data()
-            if source.get_brief():
-                self.item[Const.BRIEF] = source.get_brief()
-            if source.get_tags():
-                self.item[Const.TAGS] = source.get_tags()
-            if source.get_links():
-                self.item[Const.LINKS] = source.get_links()
-            self.update_digest()
+        return template
+
+    def _add_links(self, template):
+        """Add content links to template."""
+
+        links = self.get_links(Const.STRING_CONTENT)
+        links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
+        template = template.replace('<SNIPPY_LINKS>', links)
+
+        return template
+
+    def _add_filename(self, template):
+        """Add content filename to template."""
+
+        filename = self.get_filename(Const.STRING_CONTENT)
+        template = template.replace('<SNIPPY_FILE>', filename)
+
+        return template
 
     @classmethod
     def sort_contents(cls, contents, column, reversed_sort):
@@ -368,13 +383,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return contents
 
     @classmethod
-    def _get_empty(cls, category, mask=False):
-        """Get empty content."""
+    def _create(cls, category, timestamp):
+        """Create empty content."""
 
-        if mask:
-            timestamp = Const.EMPTY
-        else:
-            timestamp = Config.get_utc_time()
         content = [
             Const.EMPTY_TUPLE,
             Const.EMPTY,

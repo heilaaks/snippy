@@ -39,7 +39,7 @@ class Snippet(object):
         """Create new snippet."""
 
         self._logger.debug('creating new snippet')
-        snippets = Config.get_contents(Content(category=Const.SNIPPET))
+        snippets = Config.get_contents(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))
         self.storage.create(snippets)
         snippets = self.storage.search(Const.SNIPPET, digest=snippets[0].get_digest())
         snippets = Migrate.content(snippets, self.content_type)
@@ -109,7 +109,7 @@ class Snippet(object):
         filename = Config.get_operation_file()
         if Config.template:
             self._logger.debug('exporting snippet template %s', Config.get_operation_file())
-            Migrate.dump_template(Content(category=Const.SNIPPET))
+            Migrate.dump_template(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))
         elif Config.is_search_criteria():
             self._logger.debug('exporting snippets based on search criteria')
             snippets = self.storage.search(
@@ -139,9 +139,10 @@ class Snippet(object):
             if len(snippets) == 1:
                 digest = snippets[0].get_digest()
                 self._logger.debug('importing solution with digest %.16s', digest)
-                dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SNIPPET))
+                content = Content(category=Const.SNIPPET, timestamp=Config.get_utc_time())
+                dictionary = Migrate.load(Config.get_operation_file(), content)
                 contents = Content.load(dictionary)
-                snippets[0].migrate(contents)
+                snippets[0].migrate(contents[0])
                 self.storage.update(snippets[0], digest)
             elif not snippets:
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find snippet identified with digest {:.16}'.format(content_digest))
@@ -149,7 +150,8 @@ class Snippet(object):
                 Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple snippets with same digest {:.16}'.format(content_digest))
         else:
             self._logger.debug('importing snippets %s', Config.get_operation_file())
-            dictionary = Migrate.load(Config.get_operation_file(), Content(category=Const.SNIPPET))
+            content = Content(category=Const.SNIPPET, timestamp=Config.get_utc_time())
+            dictionary = Migrate.load(Config.get_operation_file(), content)
             snippets = Content.load(dictionary)
             self.storage.import_content(snippets)
 

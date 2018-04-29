@@ -180,7 +180,6 @@ class ApiSolutionsDigest(object):
     @Logger.timeit
     def on_post(self, request, response, digest):
         """Update solution."""
-        print("HERE")
 
         self._logger.debug('run post /snippy/api/v1/solutions/%s', digest)
         if request.get_header('x-http-method-override', default='post').lower() == 'put':

@@ -91,7 +91,7 @@ class Storage(object):
     def _convert(row):
         """Convert single row from database into content."""
 
-        content = Content((tuple(row[Const.DATA].split(Const.DELIMITER_DATA)),
+        content = Content([tuple(row[Const.DATA].split(Const.DELIMITER_DATA)),
                            row[Const.BRIEF],
                            row[Const.GROUP],
                            tuple(row[Const.TAGS].split(Const.DELIMITER_TAGS) if row[Const.TAGS] else []),
@@ -104,6 +104,6 @@ class Storage(object):
                            row[Const.UPDATED],
                            row[Const.DIGEST],
                            row[Const.METADATA],
-                           row[Const.KEY]))
+                           row[Const.KEY]])
 
         return content

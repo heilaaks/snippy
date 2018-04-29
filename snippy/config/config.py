@@ -210,7 +210,7 @@ class Config(object):
 
         contents = []
         source = copy.copy(content)
-        source.set((
+        source.item = [
             cls.content_data,
             cls.content_brief,
             cls.content_group,
@@ -225,7 +225,7 @@ class Config(object):
             content.get_digest(),
             content.get_metadata(),
             content.get_key()
-        ))
+        ]
 
         if Config.merge:
             content.merge(source)

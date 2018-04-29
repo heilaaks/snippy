@@ -61,7 +61,7 @@ class Parser(object):
 
         for item in data:
             content_copy = copy.copy(content)
-            content_copy.set((
+            content_copy.item = [
                 Parser.content_data(category, item),
                 Parser.content_brief(category, item),
                 Parser.content_group(category, item),
@@ -76,7 +76,7 @@ class Parser(object):
                 content_copy.get_digest(),
                 content_copy.get_metadata(),
                 content_copy.get_key()
-            ))
+            ]
             contents.append(content_copy)
 
         return contents

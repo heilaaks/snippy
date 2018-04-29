@@ -1,6 +1,5 @@
 ## WORKING
    - [ ] Add X-HTTP-Method-Override support for DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
-   - [ ] Add PATCH to swagger definitions.
    - [ ] Refactor to content to use migrate or merge. Try to remove copy.copy from config. The Content cannot be imported to Config now due to circular dependencies.
    - [ ] Fix PUT/PATCH: only data, brief, tags and links behave like in PUT/PATCH. Rest is kind of metadata. Put _created, _updated or move to meta?
 
@@ -27,6 +26,7 @@
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## FIX
+   - [ ] Fix failing tests print the help. Something was broken.
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
@@ -109,6 +109,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added PATCH support for partial updates.
    - [x] Removed delete operation on collections. Delete is allowed only with resource parameter in URL.
    - [x] Added unit tests for Logger module.
    - [x] Optimized calls to system time.

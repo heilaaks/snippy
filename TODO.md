@@ -2,6 +2,7 @@
    - [ ] Add X-HTTP-Method-Override support for DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
    - [ ] Refactor to content to use migrate or merge. Try to remove copy.copy from config. The Content cannot be imported to Config now due to circular dependencies.
    - [ ] Fix PUT/PATCH: only data, brief, tags and links behave like in PUT/PATCH. Rest is kind of metadata. Put _created, _updated or move to meta?
+   - [ ] Fix the PUT that maintains e.g. filename with old value. How to fix? At least the timestamps should always be set? --> reset timestamps (feels good)?
    - [ ] Test Content qe and ne.
 
 ## FEATURES
@@ -16,7 +17,7 @@
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add support to run with runalias.
-   - [ ] Add support to add versions to version list.
+   - [ ] Add support to add versions to version list.   
    - [ ] Add support to print only selected fields, like brief and digest for CLI text output. Hard to generalize since layout e.g. contains header with three fields.
    - [ ] Add statistics object which tracks peak and percentile latencies with memory and CPU usage.
    - [ ] Add support for REST API YAML responses.
@@ -56,6 +57,7 @@
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
+   - [ ] Add tests that tries to sort based on non existent field. Is there already such case - migth be?
    - [ ] Refactor API tests based on update tests.
    - [ ] How to test case where required Python module is missing? Tests can be skipped when module is missing but how to simulate this? Try with Logger and gunicorn.
    - [ ] Is tested? import first content that already exist but second is new? Should result OK. Check test_cli_import_snippet_018-> Is the order this?

@@ -340,7 +340,7 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
                 }
             }
         }

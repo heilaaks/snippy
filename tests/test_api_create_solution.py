@@ -41,16 +41,17 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_001(self, server, mocker):
         """Create one solution from API.
 
-        Call POST /snippy/api/v1/solutions to create new solution.
+        Call POST /v1/solutions to create new solution.
         """
 
-        content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }]
         }
+        content_read = Solution.DEFAULTS[Solution.BEATS]
+        content = {Solution.BEATS_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2363'}
@@ -58,38 +59,37 @@ class TestApiCreateSolution(object):
             'data': [{
                 'type': 'solutions',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'attributes': content_read
             }]
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_solutions()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('beats-utc', 'kafka-utc')
     def test_api_create_solutions_002(self, server, mocker):
         """Create multiple solutions from API.
 
-        Call POST /snippy/api/v1/solutions in list context to create new
-        solutions.
+        Call POST /v1/solutions in list context to create new solutions.
         """
 
-        content_read = {
-            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
-            'eeef5ca': Solution.DEFAULTS[Solution.KAFKA]
-        }
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
+        }
+        content = {
+            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
+            'eeef5ca': Solution.DEFAULTS[Solution.KAFKA]
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -110,26 +110,23 @@ class TestApiCreateSolution(object):
         result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('beats', 'beats-utc')
     def test_api_create_solutions_003(self, server, mocker):
-        """Update solution with POST.
+        """Update solution with POST that maps to PUT.
 
-        Call POST /solutions/a96accc25dd23ac0 to update existing solution with
-        X-HTTP-Method-Override header that overrides the operation as PUT.
-        TODO: This is not working correctly because fields not defined in
-        update keep their original values. A PATCH should behave like in this
-        case.
+        Call POST /v1/solutions/a96accc25dd23ac0 to update existing solution
+        with X-HTTP-Method-Override header that overrides the operation as
+        PUT.
         """
 
-        content_read = {'2cd0e794244a07f': Solution.DEFAULTS[Solution.NGINX]}
-        content_send = {
+        request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
@@ -141,6 +138,8 @@ class TestApiCreateSolution(object):
                 }
             }
         }
+        content_read = copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
+        content = {'2cd0e794244a07f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2972'
@@ -152,12 +151,14 @@ class TestApiCreateSolution(object):
             'data': {
                 'type': 'solutions',
                 'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
-                'attributes': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
+                'attributes': content_read
             }
         }
         # TODO: These fields should be empty because these are not defined
         #       in PUT. The PUT will override the whole content with new
         #       values and if fields are not there, default must be applied.
+        #       But does this make sense? At least the timestamps should be
+        #       always there.
         result_json['data']['attributes']['filename'] = Const.EMPTY
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
         result_json['data']['attributes']['updated'] = Content.BEATS_TIME
@@ -166,23 +167,80 @@ class TestApiCreateSolution(object):
         result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_solutions()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
+
+    @pytest.mark.usefixtures('beats', 'beats-utc')
+    def test_api_create_solutions_004(self, server, mocker):
+        """Update solution with POST that maps to PATCH.
+
+        Call POST /v1/solutions/a96accc25dd23ac0 to update existing solution
+        with X-HTTP-Method-Override header that overrides the operation as
+        PATCH.
+        """
+
+        request_body = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                }
+            }
+        }
+        content_read = {
+            'data': Solution.DEFAULTS[Solution.NGINX]['data'],
+            'brief': Solution.DEFAULTS[Solution.BEATS]['brief'],
+            'group': Solution.DEFAULTS[Solution.BEATS]['group'],
+            'tags': Solution.DEFAULTS[Solution.BEATS]['tags'],
+            'links': Solution.DEFAULTS[Solution.BEATS]['links'],
+            'category': Solution.DEFAULTS[Solution.BEATS]['category'],
+            'filename': Solution.DEFAULTS[Solution.BEATS]['filename'],
+            'runalias': Solution.DEFAULTS[Solution.BEATS]['runalias'],
+            'versions': Solution.DEFAULTS[Solution.BEATS]['versions'],
+            'created': Content.BEATS_TIME,
+            'updated': Content.BEATS_TIME,
+            'digest': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0'
+        }
+        content = {'21c737e704b97226': content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '3055'
+        }
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/solutions/21c737e704b97226'
+            },
+            'data': {
+                'type': 'solutions',
+                'id': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0',
+                'attributes': content_read
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
+            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+        assert len(Database.get_solutions()) == 1
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_solutions_004(self, server):
+    def test_api_create_solutions_005(self, server):
         """Try to create solution with resource id.
 
-        Try to call POST /solutions/53908d68425c61dc to create new solution
+        Try to call POST /v1/solutions/53908d68425c61dc to create new solution
         with resource ID in URL. The POST method is not overriden with custom
         X-HTTP-Method-Override header.
         """
 
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
@@ -205,7 +263,7 @@ class TestApiCreateSolution(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/solutions/53908d68425c61dc',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400

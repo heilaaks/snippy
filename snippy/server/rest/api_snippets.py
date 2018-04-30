@@ -182,6 +182,8 @@ class ApiSnippetsDigest(object):
         self._logger.debug('run post /snippy/api/v1/snippets/%s', digest)
         if request.get_header('x-http-method-override', default='post').lower() == 'put':
             self.on_put(request, response, digest)
+        elif request.get_header('x-http-method-override', default='post').lower() == 'patch':
+            self.on_patch(request, response, digest)
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot create snippet with resource, use x-http-method-override to override post method')
             response.content_type = Const.MEDIA_JSON_API

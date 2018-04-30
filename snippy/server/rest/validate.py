@@ -84,7 +84,7 @@ class Validate(object):
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(request.media['data'])))  # noqa: E501 # pylint: disable=line-too-long
 
-        if request.method.lower() == 'patch':
+        if request.method.lower() == 'patch' or request.get_header('x-http-method-override', default='post').lower() == 'patch':
             resource_['merge'] = True
 
         return resource_

@@ -40,16 +40,17 @@ class TestApiCreateSnippet(object):
     def test_api_create_snippet_001(self, server, mocker):
         """Create one snippet with POST.
 
-        Call POST /snippy/api/v1/snippets to create new snippet.
+        Call POST /v1/snippets to create new snippet.
         """
 
-        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }]
         }
+        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '608'
@@ -58,32 +59,31 @@ class TestApiCreateSnippet(object):
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': content_read
             }]
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('remove-utc')
     def test_api_create_snippet_002(self, server, mocker):
         """Create one snippet with POST.
 
-        Call POST /snippy/api/v1/snippets to create new snippet. In this case
-        the links and list are defined as list in the JSON message. Note that
-        the default input for tags and links from Snippet.REMOVE maps to a
-        string but the syntax in this case maps to lists with multiple items.
+        Call POST /v1/snippets to create new snippet. In this case the links
+        and list are defined as list in the JSON message. Note that the
+        default input for tags and links from Snippet.REMOVE maps to a string
+        but the syntax in this case maps to lists with multiple items.
         """
 
-        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': {
@@ -95,6 +95,8 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
+        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '608'
@@ -103,31 +105,30 @@ class TestApiCreateSnippet(object):
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': content_read
             }]
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('exited-utc')
     def test_api_create_snippet_003(self, server, mocker):
         """Create one snippet with POST.
 
-        Call POST /snippy/api/v1/snippets to create new snippet. In this case
-        the content data is defined in string context where each line is
-        separated with a newline.
+        Call POST /v1/snippets to create new snippet. In this case the content
+        data is defined in string context where each line is separated with a
+        newline.
         """
 
-        content_read = {Snippet.EXITED_DIGEST: Snippet.DEFAULTS[Snippet.EXITED]}
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': {
@@ -139,6 +140,8 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
+        content_read = Snippet.DEFAULTS[Snippet.EXITED]
+        content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '813'
@@ -154,24 +157,22 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('exited-utc')
     def test_api_create_snippet_004(self, server, mocker):
         """Create one snippet with POST.
 
-        Call POST /snippy/api/v1/snippets to create new snippet. In this case
-        the content data is defined in list context where each line is an item
-        in a list.
+        Call POST /v1/snippets to create new snippet. In this case the content
+        data is defined in list context where each line is an item in a list.
         """
 
-        content_read = {Snippet.EXITED_DIGEST: Snippet.DEFAULTS[Snippet.EXITED]}
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': {
@@ -186,6 +187,8 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
+        content_read = Snippet.DEFAULTS[Snippet.EXITED]
+        content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '813'
@@ -201,22 +204,21 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('remove-utc')
     def test_api_create_snippet_005(self, server, mocker):
         """Create one snippet with POST.
 
-        Call POST /snippy/api/v1/snippets to create new snippet with only
-        data.
+        Call POST /v1/snippets to create new snippet with only data.
         """
 
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': {
@@ -224,6 +226,22 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
+        content_read = {
+            'data': ['docker rm $(docker ps --all -q -f status=exited)'],
+            'brief': '',
+            'group':
+            'default',
+            'tags': [],
+            'links': [],
+            'category': 'snippet',
+            'filename': '',
+            'runalias': '',
+            'versions': '',
+            'created': '2017-10-14 19:56:31',
+            'updated': '2017-10-14 19:56:31',
+            'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
+        }
+        content = {'3d855210284302d5': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '459'
@@ -232,47 +250,28 @@ class TestApiCreateSnippet(object):
             'data': [{
                 'type': 'snippets',
                 'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
-                'attributes': {
-                    'data': ['docker rm $(docker ps --all -q -f status=exited)'],
-                    'brief': '',
-                    'group':
-                    'default',
-                    'tags': [],
-                    'links': [],
-                    'category': 'snippet',
-                    'filename': '',
-                    'runalias': '',
-                    'versions': '',
-                    'created': '2017-10-14 19:56:31',
-                    'updated': '2017-10-14 19:56:31',
-                    'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
-                }
+                'attributes': content_read
             }]
         }
-        content_read = {'3d855210284302d5': result_json['data'][0]['attributes']}
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('remove-utc', 'forced-utc')
     def test_api_create_snippet_006(self, server, mocker):
         """Create list of snippets from API.
 
-        Call POST /api/v1/snippets in list context to create new snippets.
+        Call POST /v1/snippets in list context to create new snippets.
         """
 
-        content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
-        }
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
@@ -280,6 +279,10 @@ class TestApiCreateSnippet(object):
                 'type': 'snippet',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
+        }
+        content = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -300,24 +303,22 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, server, content_read)
-
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_007(self, server):
         """Try to create snippet with malformed queries.
 
-        Try to call POST /snippy/api/v1/snippets to create new snippet with
-        malformed JSON request. In this case the top level json object is
-        incorrect.
+        Try to call POST /v1/snippets to create new snippet with malformed
+        JSON request. In this case the top level json object is incorrect.
         """
 
-        content_send = Snippet.DEFAULTS[Snippet.REMOVE]
+        request_body = Snippet.DEFAULTS[Snippet.REMOVE]
         result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '656'}
         result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '652'}
         result_json = {
@@ -333,7 +334,7 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
@@ -341,12 +342,13 @@ class TestApiCreateSnippet(object):
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_008(self, server):
         """Try to create snippet with malformed queries.
-        Try to call POST /snippy/api/v1/snippets to create new snippet with
-        malformed JSON request. In this case the top level data JSON object
-        type is not 'snippet' or 'solution'.
+
+        Try to call POST /v1/snippets to create new snippet with malformed
+        JSON request. In this case the top level data JSON object type is
+        not 'snippet' or 'solution'.
         """
 
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippe',
                 'id': '1',
@@ -380,7 +382,7 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
@@ -389,11 +391,11 @@ class TestApiCreateSnippet(object):
     def test_api_create_snippet_009(self, server):
         """Try to create snippet with malformed queries.
 
-        Try to call POST /snippy/api/v1/snippets to create new snippet with
-        client generated ID. This is not supported and it will generate error.
+        Try to call POST /v1/snippets to create new snippet with client
+        generated ID. This is not supported and it will generate error.
         """
 
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
@@ -417,7 +419,7 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_403
@@ -426,13 +428,13 @@ class TestApiCreateSnippet(object):
     def test_api_create_snippet_010(self, server):
         """Try to create snippet with malformed queries.
 
-        Try to call POST /snippy/api/v1/snippets to create two snippets. First
-        one is correctly defind but the second one contains error in JSON
-        strcutre. This must not create any resources and the whole request
-        must be considered erronous.
+        Try to call POST /v1/snippets to create two snippets. First one is
+        correctly defind but the second one contains error in JSON structure.
+        This must not create any resources and the whole request must be
+        considered erronous.
         """
 
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
@@ -456,7 +458,7 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
@@ -466,14 +468,14 @@ class TestApiCreateSnippet(object):
     def test_api_create_snippet_011(self, server):
         """Try to create snippet with malformed queries.
 
-        Try to call POST /snippy/api/v1/snippets to create two snippets. First
-        one is correctly defind but the second one contains error in JSON
-        strcutre. The error is the client generated ID which is not supported.
-        This must not create any resources and the whole request must be
-        considered erronous.
+        Try to call POST /v1/snippets to create two snippets. First one is
+        correctly defind but the second one contains error in JSON structure.
+        The error is the client generated ID which is not supported. This must
+        not create any resources and the whole request must be considered
+        erronous request.
         """
 
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
@@ -499,7 +501,7 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_403
@@ -507,14 +509,13 @@ class TestApiCreateSnippet(object):
 
     @pytest.mark.usefixtures('forced', 'remove-utc')
     def test_api_create_snippet_012(self, server, mocker):
-        """Update snippet with POST.
+        """Update snippet with POST that maps to PUT.
 
-        Call POST /snippets with X-HTTP-Method-Override header to update
+        Call POST /v1/snippets with X-HTTP-Method-Override header to update
         snippet. In this case the resource exists and the content is updated.
         """
 
-        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        content_send = {
+        request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
@@ -526,6 +527,8 @@ class TestApiCreateSnippet(object):
                 }
             }
         }
+        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '695'
@@ -537,30 +540,86 @@ class TestApiCreateSnippet(object):
             'data': {
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': content_read
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PUT'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content_read)
+        Content.verified(mocker, server, content)
+
+    @pytest.mark.usefixtures('forced', 'forced-utc')
+    def test_api_create_snippet_013(self, server, mocker):
+        """Update snippet with POST that maps to PATCH.
+
+        Call POST /v1/snippets with X-HTTP-Method-Override header to update
+        snippet. In this case the resource exists and the content is updated.
+        """
+
+        request_body = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
+                }
+            }
+        }
+        content_read = {
+            'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
+            'brief': Snippet.DEFAULTS[Snippet.FORCED]['brief'],
+            'group': Snippet.DEFAULTS[Snippet.FORCED]['group'],
+            'tags': Snippet.DEFAULTS[Snippet.FORCED]['tags'],
+            'links': Snippet.DEFAULTS[Snippet.FORCED]['links'],
+            'category': 'snippet',
+            'filename': Snippet.DEFAULTS[Snippet.FORCED]['filename'],
+            'runalias': Snippet.DEFAULTS[Snippet.FORCED]['runalias'],
+            'versions': Snippet.DEFAULTS[Snippet.FORCED]['versions'],
+            'created': Content.FORCED_TIME,
+            'updated': Content.FORCED_TIME,
+            'digest': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
+        }
+        content = {'a9e137c08aee0985': content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '787'
+        }
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets/a9e137c08aee0985'
+            },
+            'data': {
+                'type': 'snippets',
+                'id': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2',
+                'attributes': content_read
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+        assert len(Database.get_snippets()) == 1
+        Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_013(self, server):
+    def test_api_create_snippet_014(self, server):
         """Try to create snippet with resource id.
 
-        Try to call POST /snippets/53908d68425c61dc to create new snippet
+        Try to call POST /v1/snippets/53908d68425c61dc to create new snippet
         with resource ID in URL. The POST method is not overriden with custom
         X-HTTP-Method-Override header.
         """
 
-        content_send = {
+        request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
@@ -583,7 +642,7 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
-            body=json.dumps(content_send))
+            body=json.dumps(request_body))
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400

@@ -35,13 +35,14 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_001(self, server):
-        """Search snippets with GET."""
+        """Search snippets with GET.
 
-        ## Brief: Call GET /v1/snippets and search keywords from
-        ##        all fields. The search query matches to two snippets and
-        ##        both of them are returned. The search is sorted based on
-        ##        one field. The limit defined in the search query is not
-        ##        exceeded.
+        Call GET /v1/snippets and search keywords from all fields. The search
+        query matches to two snippets and both of them are returned. The
+        search is sorted based on one field. The limit defined in the search
+        query is not exceeded.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1275'
@@ -68,13 +69,14 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
     def test_api_search_snippet_002(self, server):
-        """Search snippets with GET."""
+        """Search snippets with GET.
 
-        ## Brief: Call GET /v1/snippets and search keywords from all
-        ##        fields. The search query matches to four snippets but limit
-        ##        defined in search query results only two of them sorted by
-        ##        the brief field. The sorting must be applied before limit is
-        ##        applied.
+        Call GET /v1/snippets and search keywords from all fields. The search
+        query matches to four snippets but limit defined in search query
+        results only two of them sorted by the brief field. The sorting must
+        be applied before limit is applied.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1411'
@@ -101,14 +103,15 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_003(self, server):
-        """Search snippets with GET."""
+        """Search snippets with GET.
 
-        ## Brief: Call GET /v1/snippets and search keywords from all
-        ##        fields. The search query matches to two snippets but only one
-        ##        of them is returned because the limit parameter was set to one.
-        ##        In this case the sort is descending and the last match must be
-        ##        returned. The resulting fields are limited only to brief and
-        ##       category.
+        Call GET /v1/snippets and search keywords from all fields. The search
+        query matches to two snippets but only one of them is returned
+        because the limit parameter was set to one. In this case the sort is
+        descending and the last match must be returned. The resulting fields
+        are limited only to brief and category.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '188'
@@ -131,13 +134,14 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_004(self, server):
-        """Search snippets with GET."""
+        """Search snippets with GET.
 
-        ## Brief: Call GET /v1/snippets and search keywords from
-        ##        all fields but return only two fields. This syntax that
-        ##        separates the sorted fields causes the parameter to be
-        ##        processed in string context which must handle multiple
-        ##        fields.
+        Call GET /v1/snippets and search keywords from all fields but return
+        only two fields. This syntax that separates the sorted fields causes
+        the parameter to be processed in string context which must handle
+        multiple fields.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '188'
@@ -160,12 +164,13 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
     def test_api_search_snippet_005(self, server):
-        """Search snippets with GET."""
+        """Search snippets with GET.
 
-        ## Brief: Call GET /v1/snippets and search keywords from
-        ##        all fields. The search query matches to four snippets but
-        ##        limit defined in search query results only two of them
-        ##        sorted by the utc field in descending order.
+        Call GET /v1/snippets and search keywords from all fields. The search
+        query matches to four snippets but limit defined in search query
+        results only two of them sorted by the utc field in descending order.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1379'
@@ -192,12 +197,14 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
     def test_api_search_snippet_006(self, server):
-        """Search snippets with GET."""
+        """Search snippets with GET.
 
-        ## Brief: Call GET /v1/snippets and search keywords from
-        ##        all fields sorted with two fields. This syntax that separates
-        ##        the sorted fields causes the parameter to be processed in
-        ##        string context which must handle multiple fields.
+        Call GET /v1/snippets and search keywords from all fields sorted with
+        two fields. This syntax that separates the sorted fields causes the
+        parameter to be processed in string context which must handle multiple
+        fields.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1379'
@@ -224,11 +231,13 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_007(self, server):
-        """Search snippets with GET."""
+        """Search snippets with GET.
 
-        ## Brief: Try to call GET /v1/snippets with sort parameter
-        ##        set to field name that does not exist. In this case sorting
-        ##        must fall to default sorting.
+        Try to call GET /v1/snippets with sort parameter set to field name
+        that does not exist. In this case sorting must fall to default
+        sorting.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '380'}
@@ -252,11 +261,12 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_008(self, server):
-        """Search snippets with GET."""
+        """Search snippets with GET.
 
-        ## Brief: Call GET /v1/snippets to return only defined
-        ##        fields. In this case the fields are defined by setting
-        ##        the 'fields' parameter multiple times.
+        Call GET /v1/snippets to return only defined fields. In this case the
+        fields are defined by setting the 'fields' parameter multiple times.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '188'
@@ -279,10 +289,12 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_009(self, server):
-        """Search snippets with GET."""
+        """Search snippets with GET.
 
-        ## Brief: Try to call GET /v1/snippets with search keywords
-        ##        that do not result any matches.
+        Try to call GET /v1/snippets with search keywords that do not result
+        any matches.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
@@ -307,10 +319,12 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_010(self, server):
-        """Search snippets with GET from tag fields."""
+        """Search snippets with GET from tag fields.
 
-        ## Brief: Try to call GET /v1/snippets with search tag
-        ##        keywords that do not result any matches.
+        Try to call GET /v1/snippets with search tag keywords that do not
+        result any matches.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
@@ -335,10 +349,12 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_011(self, server):
-        """Search snippet from group fields."""
+        """Search snippet from group fields.
 
-        ## Brief: Call GET /v1/snippets with search group keywords
-        ##        that do not result any matches.
+        Call GET /v1/snippets with search group keywords that do not result
+        any matches.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
@@ -363,12 +379,14 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_012(self, server):
-        """Search snippet with digets."""
+        """Search snippet with digets.
 
-        ## Brief: Call GET /v1/snippets/{digest} to get explicit
-        ##        snippet based on digest. In this case the snippet is found.
-        ##        In this case the URI path contains 15 digit digest. The
-        ##        returned self link must contain the default 16 digit digest.
+        Call GET /v1/snippets/{digest} to get explicit snippet based on
+        digest. In this case the snippet is found. In this case the URI
+        path contains 15 digit digest. The returned self link must contain
+        the default 16 digit digest.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '695'
@@ -393,11 +411,12 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_013(self, server):
-        """Search snippet with digets."""
+        """Search snippet with digets.
 
-        ## Brief: Try to call GET /v1/snippets/{digest} with digest
-        ##        that cannot be found. In this case the JSON 'null' is
-        ##        converted to Python None.
+        Try to call GET /v1/snippets/{digest} with digest that cannot be
+        found. In this case the JSON 'null' is converted to Python None.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '334'
@@ -421,11 +440,12 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_014(self, server):
-        """Search snippet without search parameters."""
+        """Search snippet without search parameters.
 
-        ## Brief: Call GET /v1/snippets without defining search
-        ##        parameters. In this case all content should be returned
-        ##        based on filtering parameters.
+        Call GET /v1/snippets without defining search parameters. In this
+        case all content should be returned based on filtering parameters.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1275'
@@ -452,12 +472,14 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_015(self, server):
-        """Search snippet without search parameters."""
+        """Search snippet without search parameters.
 
-        ## Brief: Call GET /v1/snippets without defining search
-        ##        parameters. In this case only one snippet must be returned
-        ##        because the limit is set to one. Also the sorting based on
-        ##        brief field causes the last snippet to be returned.
+        Call GET /v1/snippets without defining search parameters. In this
+        case only one snippet must be returned because the limit is set to
+        one. Also the sorting based on brief field causes the last snippet
+        to be returned.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '677'
@@ -514,12 +536,14 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_pytest_fixtures(self, server):
-        """Test pytest fixtures with pytest specific mocking."""
+        """Test pytest fixtures with pytest specific mocking.
 
-        ## Brief: Call GET /v1/snippets and search keywords from all
-        ##        fields. The search query matches to two snippets and both of
-        ##        them are returned. The search is sorted based on one field.
-        ##        The limit defined in the search query is not exceeded.
+        Call GET /v1/snippets and search keywords from all fields. The search
+        query matches to two snippets and both of them are returned. The
+        search is sorted based on one field. The limit defined in the search
+        query is not exceeded.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1275'
@@ -546,13 +570,14 @@ class TestApiSearchSnippet(object):
 
     @pytest.mark.usefixtures('remove', 'forced', 'exited', 'netcat')
     def test_pytest_fixtures2(self, server):
-        """Test pytest fixtures with pytest specific mocking."""
+        """Test pytest fixtures with pytest specific mocking.
 
-        ## Brief: Call GET /v1/snippets and search keywords from all
-        ##        fields. The search query matches to four snippets but limit
-        ##        defined in search query results only two of them sorted by
-        ##        the brief field. The sorting must be applied before limit is
-        ##        applied.
+        Call GET /v1/snippets and search keywords from all fields. The search
+        query matches to four snippets but limit defined in search query
+        results only two of them sorted by the brief field. The sorting must
+        be applied before limit is applied.
+        """
+
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1411'

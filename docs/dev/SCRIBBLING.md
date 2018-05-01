@@ -747,6 +747,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     
     attribute : Field that is part of the content.
     category  : Defines content category which can be 'snippet' or 'solution'
+    parameter : Parameter in URL that defines for example filtering criteria for HTTP request.
 
 
     STRANGER THINGS

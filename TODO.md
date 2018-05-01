@@ -1,8 +1,5 @@
 ## WORKING
    - [ ] Add X-HTTP-Method-Override support for DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
-   - [ ] Refactor to content to use migrate or merge. Try to remove copy.copy from config. The Content cannot be imported to Config now due to circular dependencies.
-   - [ ] Fix PUT/PATCH: only data, brief, tags and links behave like in PUT/PATCH. Rest is kind of metadata. Put _created, _updated or move to meta?
-   - [ ] Fix the PUT that maintains e.g. filename with old value. How to fix? At least the timestamps should always be set? --> reset timestamps (feels good)?
    - [ ] Test Content qe and ne.
 
 ## FEATURES
@@ -28,7 +25,7 @@
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## FIX
-   - [ ] Fix failing tests print the help. Something was broken.
+   - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases?
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
@@ -49,6 +46,7 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
+   - [ ] Refactor parser and editor to use merge? The Config uses merge and migrate but can the parser and editor do the same? They cannot include Config (easily).
    - [ ] Logger __init__ is confusing since it is not objec but global class. Should be like Logger(__NAME__).api
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
    - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
@@ -112,6 +110,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Documented content attributes and how they behave when created and updated with POST, PUT and PATCH.
    - [x] Added PATCH support for partial updates.
    - [x] Removed delete operation on collections. Delete is allowed only with resource parameter in URL.
    - [x] Added unit tests for Logger module.

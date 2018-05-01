@@ -37,12 +37,13 @@ pytest.importorskip('gunicorn')
 class TestApiUpdateSolution(object):
     """Test PUT /solutions/{digest} API."""
 
-    @pytest.mark.usefixtures('beats', 'beats-utc')
+    @pytest.mark.usefixtures('beats', 'nginx-utc')
     def test_api_update_solution_001(self, server, mocker):
         """Update one solution with PUT request.
 
-        Call PUT /v1/solutions/a96accc25dd23ac0 to update existing solution.
-        All fields that can be modified are sent in request.
+        Call PUT /v1/solutions/a96accc25dd23ac0 to update existing solution
+        with specified digest. See 'updating content attributes' for the
+        attribute list that can be changed by user.
         """
 
         request_body = {
@@ -75,7 +76,7 @@ class TestApiUpdateSolution(object):
         }
         result_json['data']['attributes']['filename'] = Const.EMPTY
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
-        result_json['data']['attributes']['updated'] = Content.BEATS_TIME
+        result_json['data']['attributes']['updated'] = Content.NGINX_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
@@ -93,9 +94,8 @@ class TestApiUpdateSolution(object):
         """Update one solution with PUT request.
 
         Call PUT /v1/solutions/a96accc25dd23ac0 to update existing solution.
-        Only partial set of fields that can be modified are sent in request.
-        The fields that are not present and which can be modified must be
-        returned with default values.
+        The PUT request contains only the mandatory data attribute. All other
+        attributes must be set to their default values.
         """
 
         request_body = {
@@ -313,8 +313,8 @@ class TestApiUpdateSolution(object):
 
         Call PATCH /v1/solutions/53908d68425c61dc to update existing snippet
         with specified digest. The PATCH request contains only mandatory data
-        field. All other fields that can be updated must be returned with
-        their previously set values.
+        attribute. All other attributes that can be updated must be returned
+        with their previous values.
         """
 
         request_body = {

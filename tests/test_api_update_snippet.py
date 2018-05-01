@@ -42,7 +42,8 @@ class TestApiUpdateSnippet(object):
         """Update one snippet with PUT request.
 
         Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
-        specified digest. All fields that can be modified are sent in request.
+        specified digest. See 'updating content attributes' for the attribute
+        list that can be changed by user.
         """
 
         request_body = {
@@ -89,9 +90,8 @@ class TestApiUpdateSnippet(object):
         """Update one snippet with PUT request.
 
         Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
-        specified digest. Only partial set of fields that can be modified are
-        sent in request. The fields that are not present and which can be
-        modified must be returned with default values.
+        specified digest. Only partial set of attributes that can be modified
+        is sent in request.
         """
 
         request_body = {
@@ -149,8 +149,8 @@ class TestApiUpdateSnippet(object):
         """Update one snippet with PUT request.
 
         Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
-        specified digest. The PUT request contains only mandatory data field.
-        All other fields that can be updated must be set to default value.
+        specified digest. The PUT request contains only the mandatory data
+        attribute. All other attributes must be set to their default values.
         """
 
         request_body = {
@@ -332,8 +332,8 @@ class TestApiUpdateSnippet(object):
 
         Call PATCH /v1/snippets/53908d68425c61dc to update existing snippet
         with specified digest. The PATCH request contains only mandatory data
-        field. All other fields that can be updated must be returned with
-        their previously set values.
+        attribute. All other attributes must be returned with their previous
+        values.
         """
 
         request_body = {

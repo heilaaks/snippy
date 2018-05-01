@@ -47,7 +47,7 @@ class Parser(object):
 
     @staticmethod
     def read_content(content, source):
-        """Read content from text source."""
+        """Read contents from text source."""
 
         data = []
         contents = []

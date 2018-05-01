@@ -47,6 +47,7 @@ class Content(object):
 
     # Solutions
     BEATS_TIME = '2017-10-20 11:11:19'
+    NGINX_TIME = '2017-10-20 06:16:27'
 
     @staticmethod
     def ordered(json):

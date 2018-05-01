@@ -743,6 +743,12 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 ## Design decisions
 #######################################
 
+    TERMS
+    
+    attribute : Field that is part of the content.
+    category  : Defines content category which can be 'snippet' or 'solution'
+
+
     STRANGER THINGS
     
     1. 'I/O operation on closed file'
@@ -962,6 +968,46 @@ git update-index --no-assume-unchanged FILE_NAME # change back
          case is from Javascript that uses CamelCase.
 
        /1/ http://jsonapi.org/
+
+    UPDATING CONTENT ATTRIBUTES
+    
+    1. Attributes that can be updated
+    
+       Following attributes can be freely modified by user withing the limits
+       of attribute definitions:
+       
+       - data
+       - brief
+       - group
+       - tags
+       - links
+       - filename
+       - versions
+    
+    2. Attributes that cannot be changed by user
+    
+       A) Category
+       
+          The category is defined when the content is created. After this,
+          it cannot be changed by updating it. The only way to change this
+          attribute is to delete and create the content again.
+       
+       B) Created
+       
+          The created timestamp is set when the content is created and user
+          cannot modify. The only way to change this attribute is to delete
+          and create the content again.
+
+       B) Updated
+       
+          The updated timestamp is set when the content is updated and user
+          cannot modify.
+
+       C) Digest
+       
+          The content digest field is always set by the tool based on sha256
+          hash algorithm. The digest is automatically updated when content
+          is changed.
 
 #######################################
 ## Command line design

@@ -110,9 +110,8 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def merge(self, source):
         """Merge content.
 
-        Content fields that can be directly modified by user are merged. This
-        overrides original content field only if the merged source does not
-        exist.
+        Content fields that can be modified by user are merged. This overrides
+        original content field only if the merged source does not exist.
         """
 
         if source:

@@ -117,13 +117,14 @@ class TestApiCreateSolution(object):
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('beats', 'beats-utc')
+    @pytest.mark.usefixtures('beats', 'nginx-utc')
     def test_api_create_solutions_003(self, server, mocker):
         """Update solution with POST that maps to PUT.
 
         Call POST /v1/solutions/a96accc25dd23ac0 to update existing solution
         with X-HTTP-Method-Override header that overrides the operation as
-        PUT.
+        PUT. In this case the created timestamp must remain in initial value
+        and the updated timestamp must be updated to reflect the update time.
         """
 
         request_body = {
@@ -154,14 +155,9 @@ class TestApiCreateSolution(object):
                 'attributes': content_read
             }
         }
-        # TODO: These fields should be empty because these are not defined
-        #       in PUT. The PUT will override the whole content with new
-        #       values and if fields are not there, default must be applied.
-        #       But does this make sense? At least the timestamps should be
-        #       always there.
         result_json['data']['attributes']['filename'] = Const.EMPTY
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
-        result_json['data']['attributes']['updated'] = Content.BEATS_TIME
+        result_json['data']['attributes']['updated'] = Content.NGINX_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(  ## apiflow

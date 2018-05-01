@@ -229,9 +229,9 @@ class Config(object):
 
         if Config.merge:
             content.merge(source)
-            contents.append(content)
         else:
-            contents.append(source)
+            content.migrate(source)
+        contents.append(content)
 
         return contents
 

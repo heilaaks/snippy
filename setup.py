@@ -52,7 +52,7 @@ extras_tests = (
     'pytest-cov==2.5.1',
     'pytest-mock==1.9.0',
     'six==1.11.0',
-    'tox==2.9.1'
+    'tox==3.0.0'
 )
 
 def readme():

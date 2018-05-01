@@ -204,6 +204,7 @@ class Cli(ConfigSourceBase):
         server.add_argument('--base-path', type=str, dest='base_path', default=Cli.BASE_PATH, help=argparse.SUPPRESS)
         server.add_argument('--ip', type=str, dest='server_ip', default=Cli.SERVER_IP, help=argparse.SUPPRESS)
         server.add_argument('--port', type=str, dest='server_port', default=Cli.SERVER_PORT, help=argparse.SUPPRESS)
+        server.add_argument('--compact-json', dest='compact_json', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # storage options
         server.add_argument('--storage-path', type=str, dest='storage_path', default=Const.EMPTY, help=argparse.SUPPRESS)

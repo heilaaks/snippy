@@ -53,7 +53,7 @@ class JsonApiV1(object):
         if not resource_['data']:
             resource_ = json.loads('{"links": {"self": "' + uri + '"}, "data": null}')
 
-        return json.dumps(resource_)
+        return cls.dumps(resource_)
 
     @classmethod
     def collection(cls, category, contents):
@@ -69,7 +69,7 @@ class JsonApiV1(object):
                                        'id': digest,
                                        'attributes': content})
 
-        return json.dumps(collection)
+        return cls.dumps(collection)
 
     @classmethod
     def error(cls, causes):
@@ -90,4 +90,17 @@ class JsonApiV1(object):
                                   'title': 'Internal errors not found when error detected.'}]}
         errors['meta'] = causes['meta']
 
-        return json.dumps(errors)
+        return cls.dumps(errors)
+
+    @staticmethod
+    def dumps(response):
+        """Create string from json structure."""
+
+        # Python 2 and Python 3 have different defaults for separators and
+        # thus they have to be defined here. In case of Python 2, there is
+        # whitespace after the comma which is not there with the Python 3.
+        kwargs = {'indent': 4, 'sort_keys': True, 'separators': (',', ': ')}
+        if Config.compact_json:
+            kwargs = {}
+
+        return json.dumps(response, **kwargs)

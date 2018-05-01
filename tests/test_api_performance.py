@@ -49,7 +49,7 @@ class TestApiPerformance(object):
 
         # Clear the real database and run the real server.
         call(['make', 'clean-db'])
-        server = Popen(['python', './runner', '--server'], stdout=PIPE, stderr=PIPE)
+        server = Popen(['python', './runner', '--server', '--compact-json'], stdout=PIPE, stderr=PIPE)
         time.sleep(1)  # Wait untill server up.
         snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]},

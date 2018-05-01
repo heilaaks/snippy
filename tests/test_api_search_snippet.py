@@ -37,7 +37,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_001(self, server):
         """Search snippets with GET."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from
+        ## Brief: Call GET /v1/snippets and search keywords from
         ##        all fields. The search query matches to two snippets and
         ##        both of them are returned. The search is sorted based on
         ##        one field. The limit defined in the search query is not
@@ -58,7 +58,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
@@ -70,7 +70,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_002(self, server):
         """Search snippets with GET."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ## Brief: Call GET /v1/snippets and search keywords from all
         ##        fields. The search query matches to four snippets but limit
         ##        defined in search query results only two of them sorted by
         ##        the brief field. The sorting must be applied before limit is
@@ -91,7 +91,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=brief')
@@ -103,7 +103,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_003(self, server):
         """Search snippets with GET."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ## Brief: Call GET /v1/snippets and search keywords from all
         ##        fields. The search query matches to two snippets but only one
         ##        of them is returned because the limit parameter was set to one.
         ##        In this case the sort is descending and the last match must be
@@ -121,7 +121,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief,category')
@@ -133,7 +133,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_004(self, server):
         """Search snippets with GET."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from
+        ## Brief: Call GET /v1/snippets and search keywords from
         ##        all fields but return only two fields. This syntax that
         ##        separates the sorted fields causes the parameter to be
         ##        processed in string context which must handle multiple
@@ -150,7 +150,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief%2Ccategory')
@@ -162,7 +162,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_005(self, server):
         """Search snippets with GET."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from
+        ## Brief: Call GET /v1/snippets and search keywords from
         ##        all fields. The search query matches to four snippets but
         ##        limit defined in search query results only two of them
         ##        sorted by the utc field in descending order.
@@ -182,7 +182,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created,-brief')
@@ -194,7 +194,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_006(self, server):
         """Search snippets with GET."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from
+        ## Brief: Call GET /v1/snippets and search keywords from
         ##        all fields sorted with two fields. This syntax that separates
         ##        the sorted fields causes the parameter to be processed in
         ##        string context which must handle multiple fields.
@@ -214,7 +214,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
@@ -226,7 +226,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_007(self, server):
         """Search snippets with GET."""
 
-        ## Brief: Try to call GET /snippy/api/v1/snippets with sort parameter
+        ## Brief: Try to call GET /v1/snippets with sort parameter
         ##        set to field name that does not exist. In this case sorting
         ##        must fall to default sorting.
         result_headers = {
@@ -242,7 +242,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
@@ -254,7 +254,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_008(self, server):
         """Search snippets with GET."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets to return only defined
+        ## Brief: Call GET /v1/snippets to return only defined
         ##        fields. In this case the fields are defined by setting
         ##        the 'fields' parameter multiple times.
         result_headers = {
@@ -269,7 +269,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief&fields=category')
@@ -281,7 +281,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_009(self, server):
         """Search snippets with GET."""
 
-        ## Brief: Try to call GET /snippy/api/v1/snippets with search keywords
+        ## Brief: Try to call GET /v1/snippets with search keywords
         ##        that do not result any matches.
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -297,7 +297,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
@@ -309,7 +309,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_010(self, server):
         """Search snippets with GET from tag fields."""
 
-        ## Brief: Try to call GET /snippy/api/v1/snippets with search tag
+        ## Brief: Try to call GET /v1/snippets with search tag
         ##        keywords that do not result any matches.
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -325,7 +325,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
@@ -337,7 +337,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_011(self, server):
         """Search snippet from group fields."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets with search group keywords
+        ## Brief: Call GET /v1/snippets with search group keywords
         ##        that do not result any matches.
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -353,7 +353,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
@@ -365,7 +365,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_012(self, server):
         """Search snippet with digets."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets/{digest} to get explicit
+        ## Brief: Call GET /v1/snippets/{digest} to get explicit
         ##        snippet based on digest. In this case the snippet is found.
         ##        In this case the URI path contains 15 digit digest. The
         ##        returned self link must contain the default 16 digit digest.
@@ -384,7 +384,7 @@ class TestApiSearchSnippet(object):
             }
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets/54e41e9b52a02b6',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
@@ -395,7 +395,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_013(self, server):
         """Search snippet with digets."""
 
-        ## Brief: Try to call GET /snippy/api/v1/snippets/{digest} with digest
+        ## Brief: Try to call GET /v1/snippets/{digest} with digest
         ##        that cannot be found. In this case the JSON 'null' is
         ##        converted to Python None.
         result_headers = {
@@ -412,7 +412,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets/101010101010101',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
@@ -423,7 +423,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_014(self, server):
         """Search snippet without search parameters."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets without defining search
+        ## Brief: Call GET /v1/snippets without defining search
         ##        parameters. In this case all content should be returned
         ##        based on filtering parameters.
         result_headers = {
@@ -442,7 +442,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
@@ -454,7 +454,7 @@ class TestApiSearchSnippet(object):
     def test_api_search_snippet_015(self, server):
         """Search snippet without search parameters."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets without defining search
+        ## Brief: Call GET /v1/snippets without defining search
         ##        parameters. In this case only one snippet must be returned
         ##        because the limit is set to one. Also the sorting based on
         ##        brief field causes the last snippet to be returned.
@@ -470,10 +470,44 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.parametrize('server', [['--server', '-q']], indirect=True)
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_016(self, server):
+        """Search snippets with GET.
+
+        Call GET /v1/snippets and search keywords from all attributes. The
+        search query matches to two snippets and both of them are returned.
+        The response JSON is sent as pretty printed.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '2215'
+        }
+        result_json = {
+            'data': [{
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippets',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/vnd.api+json'},
+            query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -482,7 +516,7 @@ class TestApiSearchSnippet(object):
     def test_pytest_fixtures(self, server):
         """Test pytest fixtures with pytest specific mocking."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ## Brief: Call GET /v1/snippets and search keywords from all
         ##        fields. The search query matches to two snippets and both of
         ##        them are returned. The search is sorted based on one field.
         ##        The limit defined in the search query is not exceeded.
@@ -502,7 +536,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
@@ -514,7 +548,7 @@ class TestApiSearchSnippet(object):
     def test_pytest_fixtures2(self, server):
         """Test pytest fixtures with pytest specific mocking."""
 
-        ## Brief: Call GET /snippy/api/v1/snippets and search keywords from all
+        ## Brief: Call GET /v1/snippets and search keywords from all
         ##        fields. The search query matches to four snippets but limit
         ##        defined in search query results only two of them sorted by
         ##        the brief field. The sorting must be applied before limit is
@@ -535,7 +569,7 @@ class TestApiSearchSnippet(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_get(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=brief')

@@ -51,13 +51,24 @@ class Config(object):
         # Set logger and development configuration.
         cls._init_logs(args)
 
-        # Set tool static configuration.
+        source = Cli(args)
+
+        # Static storage configuration.
         cls.storage_schema = cls._storage_schema()
         cls.snippet_template = cls._content_template('snippet-template.txt')
         cls.solution_template = cls._content_template('solution-template.txt')
+        cls.storage_path = source.storage_path
+        cls.storage_file = cls._storage_file()
 
-        # Set tool dynamic configuration.
-        cls.load(Cli(args))
+        # Static server configuration.
+        cls.base_path = source.base_path
+        cls.compact_json = source.compact_json
+        cls.server = source.server
+        cls.server_ip = source.server_ip
+        cls.server_port = source.server_port
+
+        # Dynamic configuration.
+        cls.load(source)
 
     @classmethod
     def load(cls, source):
@@ -107,14 +118,8 @@ class Config(object):
         cls.use_ansi = not cls.source.no_ansi
         cls.failure = cls.source.failure
 
-        # server
-        cls.base_path = cls.source.base_path
+        # Server must be updated again because only the first init starts the server.
         cls.server = cls.source.server
-        cls.server_ip = cls.source.server_ip
-        cls.server_port = cls.source.server_port
-
-        # storage
-        cls.storage_path = cls.source.storage_path
 
         # Parsed from defined configuration.
         cls.is_operation_create = True if cls.operation == 'create' else False
@@ -131,7 +136,6 @@ class Config(object):
         cls.is_operation_file_json = True if cls.operation_filetype == Const.CONTENT_TYPE_JSON else False
         cls.is_operation_file_text = True if cls.operation_filetype == Const.CONTENT_TYPE_TEXT else False
         cls.is_operation_file_yaml = True if cls.operation_filetype == Const.CONTENT_TYPE_YAML else False
-        cls.storage_file = cls._storage_file()
 
         cls.debug()
 
@@ -461,3 +465,4 @@ class Config(object):
         cls._logger.debug('configured option server: %s', cls.server)
         cls._logger.debug('configured option server api base path: %s', cls.base_path)
         cls._logger.debug('configured option server ip %s and port %s', cls.server_ip, cls.server_port)
+        cls._logger.debug('configured option server compact json: %s', cls.compact_json)

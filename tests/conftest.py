@@ -125,7 +125,13 @@ def mocked_snippy(mocker, request):
 def server(mocker, request):
     """Run mocked server for testing purposes."""
 
-    params = ['snippy', '--server', '-q']
+    params = []
+    if hasattr(request, 'param'):
+        params = request.param
+    else:
+        params.extend(['--server', '--compact-json', '-q'])
+
+    params.insert(0, 'snippy')  # Add the tool name here to args list.
     snippy = _create_snippy(mocker, params)
     def fin():
         """Clear the resources at the end."""

@@ -1,13 +1,12 @@
 ## WORKING
    - [ ] Add X-HTTP-Method-Override support for DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
-   - [ ] Test Content qe and ne.
 
 ## FEATURES
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
    - [ ] Add OPTIONS method.
-   - [ ] Add pretty print response by default. How?
    - [ ] Add embedded security features.
+   - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
    - [ ] Add /snippy/api/admin/v1/settings for log config. Change snippy api to /snippy/api/app/v1. Add /snippy/api/auth/v1 for login. These have same base /snippy/api/
    - [ ] Add support to get /snippet/123123324/brief and all the fields.
    - [ ] Add support to export content to markdown format.
@@ -55,6 +54,7 @@
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
+   - [ ] Test Content() qe and ne - probably UT test to be added for Content().
    - [ ] Add tests that tries to sort based on non existent field. Is there already such case - migth be?
    - [ ] Refactor API tests based on update tests.
    - [ ] How to test case where required Python module is missing? Tests can be skipped when module is missing but how to simulate this? Try with Logger and gunicorn.
@@ -110,7 +110,8 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
-   - [x] Documented content attributes and how they behave when created and updated with POST, PUT and PATCH.
+   - [x] Added pretty print response by default. Configurable with --compact-json option for server.
+   - [x] Added documentation for content attributes how they behave when created and updated with POST, PUT and PATCH.
    - [x] Added PATCH support for partial updates.
    - [x] Removed delete operation on collections. Delete is allowed only with resource parameter in URL.
    - [x] Added unit tests for Logger module.

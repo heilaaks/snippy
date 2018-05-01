@@ -106,6 +106,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.base_path = parameters.get('base_path', ConfigSourceBase.BASE_PATH)
         self.brief = parameters.get('brief', Const.EMPTY)
         self.category = parameters.get('category')
+        self.compact_json = parameters.get('compact_json', False)
         self.data = parameters.get('data', None)
         self.debug = parameters.get('debug', False)
         self.defaults = parameters.get('defaults', False)

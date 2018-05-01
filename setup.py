@@ -32,14 +32,14 @@ extras_dev = (
     'pyflakes==1.6.0'
 )
 extras_docs = (
-    'sphinx==1.7.2',
+    'sphinx==1.7.4',
     'sphinxcontrib-openapi==0.3.2',
-    'sphinx_rtd_theme==0.2.4',
+    'sphinx_rtd_theme==0.3.0',
     'sphinx-autobuild==0.7.1'
 )
 extras_server = (
     'falcon==1.3.0',
-    'gunicorn==19.7.1',
+    'gunicorn==19.8.1',
     'schema==0.6.7'
 )
 extras_tests = (
@@ -47,10 +47,10 @@ extras_tests = (
     'flake8==3.5.0',
     'logging_tree==1.7',
     'mock==2.0.0',
-    'pylint==1.8.3',
-    'pytest==3.5.0',
+    'pylint==1.8.4',
+    'pytest==3.5.1',
     'pytest-cov==2.5.1',
-    'pytest-mock==1.7.1',
+    'pytest-mock==1.9.0',
     'six==1.11.0',
     'tox==2.9.1'
 )

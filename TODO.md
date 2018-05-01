@@ -23,6 +23,7 @@
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## FIX
+   - [ ] Fix validating empty data in JSON request: {'data': []} : _main = {'data': And(list, lambda n: len(n) > 0)} : Schema(_main, ignore_extra_keys=True)
    - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases?
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?

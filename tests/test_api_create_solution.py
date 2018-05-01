@@ -46,7 +46,7 @@ class TestApiCreateSolution(object):
 
         request_body = {
             'data': [{
-                'type': 'snippet',
+                'type': 'solution',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }]
         }
@@ -74,7 +74,7 @@ class TestApiCreateSolution(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('beats-utc', 'kafka-utc')
-    def test_api_create_solutions_002(self, server, mocker):
+    def test_api_create_solution_002(self, server, mocker):
         """Create multiple solutions from API.
 
         Call POST /v1/solutions in list context to create new solutions.
@@ -82,9 +82,9 @@ class TestApiCreateSolution(object):
 
         request_body = {
             'data': [{
-                'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'type': 'solution', 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
-                'type': 'snippet', 'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'type': 'solution', 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
         content = {
@@ -118,7 +118,7 @@ class TestApiCreateSolution(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('beats', 'nginx-utc')
-    def test_api_create_solutions_003(self, server, mocker):
+    def test_api_create_solution_003(self, server, mocker):
         """Update solution with POST that maps to PUT.
 
         Call POST /v1/solutions/a96accc25dd23ac0 to update existing solution
@@ -129,7 +129,7 @@ class TestApiCreateSolution(object):
 
         request_body = {
             'data': {
-                'type': 'snippet',
+                'type': 'solution',
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
@@ -171,7 +171,7 @@ class TestApiCreateSolution(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('beats', 'beats-utc')
-    def test_api_create_solutions_004(self, server, mocker):
+    def test_api_create_solution_004(self, server, mocker):
         """Update solution with POST that maps to PATCH.
 
         Call POST /v1/solutions/a96accc25dd23ac0 to update existing solution
@@ -181,7 +181,7 @@ class TestApiCreateSolution(object):
 
         request_body = {
             'data': {
-                'type': 'snippet',
+                'type': 'solution',
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                 }
@@ -228,11 +228,11 @@ class TestApiCreateSolution(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('default-solutions', 'kafka')
-    def test_api_create_solutions_005(self, server, mocker):
+    def test_api_create_solution_005(self, server, mocker):
         """Update solution with POST that maps to DELETE.
 
-        Call POST /v1/snippets with X-HTTP-Method-Override header to delete
-        snippet. In this case the resource exists and the content is deleted.
+        Call POST /v1/solutions with X-HTTP-Method-Override header to delete
+        solution. In this case the resource exists and the content is deleted.
         """
 
         content = {
@@ -242,9 +242,9 @@ class TestApiCreateSolution(object):
         result_headers = {}
         server.run()
         assert len(Database.get_solutions()) == 3
-        result = testing.TestClient(server.server.api).simulate_delete(
+        result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/solutions/eeef5ca3ec9cd36',
-            headers={'accept': 'application/json'})
+            headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.headers == result_headers
         assert not result.text
         assert result.status == falcon.HTTP_204
@@ -252,7 +252,7 @@ class TestApiCreateSolution(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_solutions_006(self, server):
+    def test_api_create_solution_006(self, server):
         """Try to create solution with resource id.
 
         Try to call POST /v1/solutions/53908d68425c61dc to create new solution
@@ -262,7 +262,7 @@ class TestApiCreateSolution(object):
 
         request_body = {
             'data': [{
-                'type': 'snippet',
+                'type': 'solution',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -285,6 +285,42 @@ class TestApiCreateSolution(object):
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
+
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_solution_007(self, server):
+        """Try to create solution with malformed queries.
+
+        Try to call POST /v1/solutions to create new csolution with malformed
+        JSON request. In this case the top level json object is incorrect.
+        """
+
+        request_body = {
+            'data': [{
+                'typ': 'solution',
+            }]
+        }
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '580'}
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'not compared because of hash structure in random order inside the string'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/v1/solutions',
+            headers={'accept': 'application/json'},
+            body=json.dumps(request_body))
+        print(result.text)
+        print(result.headers)
+        print(result.status)
+        assert result.headers == result_headers_p2 or result.headers == result_headers_p3
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 

@@ -610,8 +610,32 @@ class TestApiCreateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
+    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    def test_api_create_snippet_014(self, server, mocker):
+        """Update snippet with POST that maps to DELETE.
+
+        Call POST /v1/snippets with X-HTTP-Method-Override header to delete
+        snippet. In this case the resource exists and the content is deleted.
+        """
+
+        content = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        }
+        result_headers = {}
+        server.run()
+        assert len(Database.get_snippets()) == 3
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/v1/snippets/f3fd167c64b6f97e',
+            headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
+        assert result.headers == result_headers
+        assert not result.text
+        assert result.status == falcon.HTTP_204
+        assert len(Database.get_snippets()) == 2
+        Content.verified(mocker, server, content)
+
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_014(self, server):
+    def test_api_create_snippet_015(self, server):
         """Try to create snippet with resource id.
 
         Try to call POST /v1/snippets/53908d68425c61dc to create new snippet
@@ -627,7 +651,7 @@ class TestApiCreateSnippet(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '403'
+            'content-length': '398'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -635,7 +659,7 @@ class TestApiCreateSnippet(object):
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot create snippet with resource, use x-http-method-override to override post method'
+                'title': 'cannot create resource with id, use x-http-method-override to override the request'
             }]
         }
         server.run()

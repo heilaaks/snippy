@@ -18,20 +18,20 @@ paths:
   /snippets:
     post:
       tags:
-      - "snippet"
+        - "snippet"
       summary: "Add new snippets"
       description: ""
       consumes:
-      - "application/vnd.api+json; charset=UTF-8"
+        - "application/vnd.api+json; charset=UTF-8"
       produces:
-      - "application/vnd.api+json; charset=UTF-8"
+        - "application/vnd.api+json; charset=UTF-8"
       parameters:
-      - name: snippet
-        in: body
-        description: "New snippet to be created"
-        required: true
-        schema:
-          $ref: "#/definitions/RequestCollection"
+        - name: snippet
+          in: body
+          description: "New snippet to be created"
+          required: true
+          schema:
+            $ref: "#/definitions/RequestCollection"
       responses:
         201:
           description: "Snippet created"
@@ -49,11 +49,11 @@ paths:
           description: "Internal server error"
     get:
       tags:
-      - "snippet"
+        - "snippet"
       summary: "Search snippets"
       description: ""
       produces:
-      - "application/vnd.api+json; charset=UTF-8"
+        - "application/vnd.api+json; charset=UTF-8"
       parameters:
         - $ref: '#/parameters/sall'
         - $ref: '#/parameters/stag'
@@ -80,15 +80,67 @@ paths:
         500:
           description: "Internal server error"
   /snippets/{digest}:
+    post:
+      tags:
+        - "snippet"
+      summary: "Override POST with PUT, PATCH or DELETE"
+      description: ""
+      consumes:
+        - "application/vnd.api+json; charset=UTF-8"
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - name: digest
+          in: path
+          type: string
+          required: true
+          description: "Unique snippet identified by message digest."
+          x-example: 6dc4b06991780012
+        - name: X-HTTP-Method-Override
+          in: header
+          description: "Override POST method."
+          type: string
+          enum:
+            - PUT
+            - PATCH
+            - DELETE
+          required: true
+        - name: snippet
+          in: body
+          description: "New snippet to be created"
+          required: true
+          schema:
+            $ref: "#/definitions/RequestCollection"
+      responses:
+        200:
+          description: "Snippet updated"
+          schema:
+            $ref: "#/definitions/ResponseResource"
+        204:
+          description: "Snippet deleted"
+        400:
+          description: "Request not syntactically correct"
+          schema:
+            $ref: '#/definitions/Errors'
+        404:
+          description: "Snippet not found"
+          schema:
+            $ref: '#/definitions/Errors'
+        403:
+          description: "Using client generated ID is not supported"
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: "Internal server error"
     put:
       tags:
-      - "snippet"
+        - "snippet"
       summary: "Update defined snippet based on digest"
       description: ""
       consumes:
-      - "application/vnd.api+json; charset=UTF-8"
+        - "application/vnd.api+json; charset=UTF-8"
       produces:
-      - "application/vnd.api+json; charset=UTF-8"
+        - "application/vnd.api+json; charset=UTF-8"
       parameters:
         - name: digest
           in: path
@@ -123,13 +175,13 @@ paths:
           description: "Internal server error"
     patch:
       tags:
-      - "snippet"
+        - "snippet"
       summary: "Update defined snippet based on digest"
       description: ""
       consumes:
-      - "application/vnd.api+json; charset=UTF-8"
+        - "application/vnd.api+json; charset=UTF-8"
       produces:
-      - "application/vnd.api+json; charset=UTF-8"
+        - "application/vnd.api+json; charset=UTF-8"
       parameters:
         - name: digest
           in: path
@@ -164,11 +216,11 @@ paths:
           description: "Internal server error"
     get:
       tags:
-      - "snippet"
+        - "snippet"
       summary: "Search defined snippet based on digest"
       description: ""
       produces:
-      - "application/vnd.api+json; charset=UTF-8"
+        - "application/vnd.api+json; charset=UTF-8"
       parameters:
         - name: digest
           in: path

@@ -37,9 +37,10 @@ class TestApiDeleteSnippet(object):
     def test_api_delete_snippet_001(self, server, mocker):
         """Delete snippet with digest.
 
-        Call DELETE /snippets/f3fd167c64b6f97e that matches one snippet that
-        is deleted.
+        Call DELETE /v1/snippets/f3fd167c64b6f97e that matches one snippet
+        that is deleted.
         """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]

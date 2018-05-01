@@ -184,8 +184,10 @@ class ApiSnippetsDigest(object):
             self.on_put(request, response, digest)
         elif request.get_header('x-http-method-override', default='post').lower() == 'patch':
             self.on_patch(request, response, digest)
+        elif request.get_header('x-http-method-override', default='post').lower() == 'delete':
+            self.on_delete(request, response, digest)
         else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot create snippet with resource, use x-http-method-override to override post method')
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot create resource with id, use x-http-method-override to override the request')
             response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.error(Cause.json_message())
             response.status = Cause.http_status()

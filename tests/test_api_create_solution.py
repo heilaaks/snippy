@@ -227,8 +227,32 @@ class TestApiCreateSolution(object):
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
+    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    def test_api_create_solutions_005(self, server, mocker):
+        """Update solution with POST that maps to DELETE.
+
+        Call POST /v1/snippets with X-HTTP-Method-Override header to delete
+        snippet. In this case the resource exists and the content is deleted.
+        """
+
+        content = {
+            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        }
+        result_headers = {}
+        server.run()
+        assert len(Database.get_solutions()) == 3
+        result = testing.TestClient(server.server.api).simulate_delete(
+            path='/snippy/api/v1/solutions/eeef5ca3ec9cd36',
+            headers={'accept': 'application/json'})
+        assert result.headers == result_headers
+        assert not result.text
+        assert result.status == falcon.HTTP_204
+        assert len(Database.get_solutions()) == 2
+        Content.verified(mocker, server, content)
+
     @pytest.mark.usefixtures('caller')
-    def test_api_create_solutions_005(self, server):
+    def test_api_create_solutions_006(self, server):
         """Try to create solution with resource id.
 
         Try to call POST /v1/solutions/53908d68425c61dc to create new solution
@@ -244,7 +268,7 @@ class TestApiCreateSolution(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '404'
+            'content-length': '398'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -252,7 +276,7 @@ class TestApiCreateSolution(object):
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot create solution with resource, use x-http-method-override to override post method'
+                'title': 'cannot create resource with id, use x-http-method-override to override the request'
             }]
         }
         server.run()

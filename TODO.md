@@ -1,9 +1,8 @@
 ## WORKING
-   - [ ] Add X-HTTP-Method-Override support for DELETE. GET must not change data // http://www.vinaysahni.com/best-practices-for-a-pragmatic-restful-api
-
-## FEATURES
    - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
    - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
+
+## FEATURES
    - [ ] Add OPTIONS method.
    - [ ] Add embedded security features.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
@@ -110,6 +109,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Add X-HTTP-Method-Override header support for POST to map it to PUT, PATCH and DELETE.
    - [x] Added pretty print response by default. Configurable with --compact-json option for server.
    - [x] Added documentation for content attributes how they behave when created and updated with POST, PUT and PATCH.
    - [x] Added PATCH support for partial updates.

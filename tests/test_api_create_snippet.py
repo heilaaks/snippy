@@ -319,8 +319,8 @@ class TestApiCreateSnippet(object):
         """
 
         request_body = Snippet.DEFAULTS[Snippet.REMOVE]
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '656'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '652'}
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1039'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1041'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -365,10 +365,8 @@ class TestApiCreateSnippet(object):
                     'versions': '',
                     'utc': '2017-10-14 19:56:31',
                     'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
-        result_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '404'
-        }
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '572'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '574'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -383,7 +381,7 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
+        assert result.headers == result_headers_p2 or result.headers == result_headers_p3
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
@@ -443,8 +441,8 @@ class TestApiCreateSnippet(object):
                 'attributes': {'brief': ''}
             }]
         }
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '624'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '623'}
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '700'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '702'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{

@@ -292,23 +292,18 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_007(self, server):
         """Try to create solution with malformed queries.
 
-        Try to call POST /v1/solutions to create new csolution with malformed
-        JSON request. In this case the top level json object is incorrect.
+        Try to call POST /v1/solutions to create new solution with malformed
+        JSON request. In this case the top level json object is incorrect
+        because it does not contains empty content list.
         """
 
         request_body = {
-            'data': [{
-                'typ': 'solution',
-            }]
+            'data': [{}]
         }
-        #request_body = {'data': [{}]}
-        #request_body = {
-        #    'data': [{
-        #        'type': 'solution',
-        #    }]
-        #}
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '580'}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '954'
+        }
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -323,10 +318,7 @@ class TestApiCreateSolution(object):
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        print(result.headers)
-        print(result.text)
-        print(result.status)
-        assert result.headers == result_headers_p2 or result.headers == result_headers_p3
+        assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 

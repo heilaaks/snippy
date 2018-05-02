@@ -17,16 +17,13 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""validate: Validate REST API input."""
+"""validate: Validate REST API request."""
 
-from schema import Schema, And, Or
-from schema import SchemaError
-#from jsonschema import validate
-#from jsonschema.exceptions import ValidationError
-#from jsonschema.exceptions import SchemaError
+from jsonschema import validate
+from jsonschema.exceptions import ValidationError
+from jsonschema.exceptions import SchemaError
 
 from snippy.cause import Cause
-from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
 
 
@@ -36,8 +33,8 @@ class Validate(object):
     Description
     ===========
 
-    This class validates JSON REST API content. The validattion rules are
-    from JSON API v1.0 specification.
+    This class validates JSON REST API request. The validattion rules are
+    from the JSON API v1.0 specification.
 
     Implemented Rules
     =================
@@ -46,9 +43,9 @@ class Validate(object):
        simplify error logic and amount of code.
 
     2. "A server MUST return 403 Forbidden in response to an unsupported
-        request to create a resource with a client-generated ID." /1/
+        request to create a resource with a client-generated ID." [1]
 
-    /1/ http://jsonapi.org/format/
+    [1] http://jsonapi.org/format/
     """
 
     _logger = Logger(__name__).logger
@@ -105,92 +102,55 @@ class Validate(object):
 
 
 class JsonSchema(object):  # pylint: disable=too-few-public-methods
-    """Validate JSON again schema."""
+    """Validate JSON media against schema."""
 
-    # Strings are either unicode or str depending on Python version. The
-    # hack below makes it possible to have single version from Schema that
-    # works with Python 2 or Python 3.
-    if not Const.PYTHON2:
-        string_ = str
-    else:
-        string_ = unicode  # noqa: F821 # pylint: disable=undefined-variable
+    DATA = {
+        "type": "object",
+        "properties": {
+            "type": {"enum": ["snippet", "solution"]},
+            "attributes": {
+                "type": "object",
+                "properties": {
+                    "data": {"type": ["string", "array"]},
+                    "brief": {"type": "string"}
+                },
+                "required": ["data"]
+            }
+        },
+        "required": ["type"]
+    }
 
-    _data = {'type': And(string_,
-                         lambda s: s in ('snippet', 'solution'),
-                         error='top level data object type must be \'snippet\' or \'solution\''),
-             'attributes': {'data': And(Or(list, string_))}}
-    RESOURCE = Schema({'data': _data}, ignore_extra_keys=True)
-    COLLECTION = Schema({'data': [_data]}, ignore_extra_keys=True)
-
-    #RESOURCE = {
-    #    "type": "object",
-    #    "properties": {
-    #        "data": {
-    #            "type": "object",
-    #            "properties": {
-    #                "type": {"type": "string"},
-    #                "required": ["type"]
-    #            }
-    #        }
-    #    },
-    #    "required": ["data"]
-    #}
-    #COLLECTION = {
-    #    "type": "object",
-    #    "properties": {
-    #        "data": {
-    #            "type": "array",
-    #            "items": {
-    #                "type": "object",
-    #                "properties": {
-    #                    "type": {"type": "string"}
-    #                },
-    #                "required": ["item"]
-    #            },
-    #            "minItems": 1,
-    #            "maxItems": 10
-    #        }
-    #    },
-    #    "required": ["data"]
-    #}
+    RESOURCE = {
+        "type": "object",
+        "properties": {
+            "data": DATA
+        },
+        "required": ["data"]
+    }
+    COLLECTION = {
+        "type": "object",
+        "properties": {
+            "data": {
+                "type": "array",
+                "items": DATA,
+                "minItems": 1,
+                "maxItems": 100
+            }
+        },
+        "required": ["data"]
+    }
 
     @classmethod
     def validate(cls, schema, media):
         """Validate media against JSON schema."""
 
-        #schema2 = {
-        #    "type" : "object",
-        #    "properties" : {
-        #        "data": {
-        #            "type": "array",
-        #            "items": {
-        #                "type": "object",
-        #                "properties" : {
-        #                    "type": {"type": "string"}
-        #                },
-        #                "required": ["item"]
-        #            },
-        #            "minItems": 1,
-        #            "maxItems": 10
-        #        }
-        #    },
-        #    "required": ["data"]
-        #}
-        #print(media)
-        #print(schema2)
         validated = False
-        #try:
-        #    validate(media, schema)
-        #    validated = True
-        #    print("pass")
-        #except ValidationError as exception:
-        #    Cause.push(Cause.HTTP_BAD_REQUEST, 'json media validation failed: {}'.format(exception))
-        #except SchemaError as exception:
-        #    Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'json media validation failed: {}'.format(exception))
         try:
-            Schema(schema).validate(media)
+            validate(media, schema)
             validated = True
-        except SchemaError as exception:
+        except ValidationError as exception:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'json media validation failed: {}'.format(exception))
+        except SchemaError as exception:
+            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'json schema failure: {}'.format(exception))
 
         return validated

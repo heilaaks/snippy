@@ -40,7 +40,7 @@ extras_docs = (
 extras_server = (
     'falcon==1.3.0',
     'gunicorn==19.8.1',
-    'schema==0.6.7'
+    'jsonschema==2.6.0'
 )
 extras_tests = (
     'codecov==2.0.15',

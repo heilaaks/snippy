@@ -205,8 +205,8 @@ class TestApiUpdateSolution(object):
             'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
             'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
         }
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2707'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '2708'}
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '6121'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5559'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{

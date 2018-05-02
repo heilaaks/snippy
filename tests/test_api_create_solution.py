@@ -63,7 +63,7 @@ class TestApiCreateSolution(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
@@ -107,7 +107,7 @@ class TestApiCreateSolution(object):
             }]
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
@@ -160,7 +160,7 @@ class TestApiCreateSolution(object):
         result_json['data']['attributes']['updated'] = Content.NGINX_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         server.run()
-        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
@@ -217,7 +217,7 @@ class TestApiCreateSolution(object):
             }
         }
         server.run()
-        result = testing.TestClient(server.server.api).simulate_post(  ## apiflow
+        result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
@@ -290,11 +290,11 @@ class TestApiCreateSolution(object):
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_solution_007(self, server):
-        """Try to create solution with malformed queries.
+        """Try to create solution with malformed JSON request.
 
         Try to call POST /v1/solutions to create new solution with malformed
         JSON request. In this case the top level json object is incorrect
-        because it does not contains empty content list.
+        because it contains only an empty list.
         """
 
         request_body = {

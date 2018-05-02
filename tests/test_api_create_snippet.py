@@ -312,7 +312,7 @@ class TestApiCreateSnippet(object):
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_007(self, server):
-        """Try to create snippet with malformed queries.
+        """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create new snippet with malformed
         JSON request. In this case the top level json object is incorrect.
@@ -341,7 +341,7 @@ class TestApiCreateSnippet(object):
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_008(self, server):
-        """Try to create snippet with malformed queries.
+        """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create new snippet with malformed
         JSON request. In this case the top level data JSON object type is
@@ -387,7 +387,7 @@ class TestApiCreateSnippet(object):
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_009(self, server):
-        """Try to create snippet with malformed queries.
+        """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create new snippet with client
         generated ID. This is not supported and it will generate error.
@@ -424,7 +424,7 @@ class TestApiCreateSnippet(object):
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_010(self, server):
-        """Try to create snippet with malformed queries.
+        """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create two snippets. First one is
         correctly defind but the second one contains error in JSON structure.
@@ -464,7 +464,7 @@ class TestApiCreateSnippet(object):
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_011(self, server):
-        """Try to create snippet with malformed queries.
+        """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create two snippets. First one is
         correctly defind but the second one contains error in JSON structure.

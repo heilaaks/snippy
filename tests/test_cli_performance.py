@@ -42,8 +42,8 @@ class TestCliPerformance(object):
         ##        the time consumed is measured. This is more for manual analysis
         ##        than automation as of now.
         ##
-        ##        Reference PC:   1 loop :  0.0206 /   55 loop :  0.8335 / 100 loop : 1.4925
-        ##        Reference PC: 880 loop : 13.1008 / 1000 loop : 15.0400
+        ##        Reference PC:   1 loop :  0.0255 /   55 loop :  0.8974 / 100 loop : 1.6226
+        ##        Reference PC: 880 loop : 14.2279 / 1000 loop : 16.2293
         ##
         ##        The reference is with sqlite database in memory as with all tests.
         ##        There is naturally jitter in results and the values are as of now

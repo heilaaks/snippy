@@ -21,6 +21,9 @@
 
 from schema import Schema, And, Or
 from schema import SchemaError
+#from jsonschema import validate
+#from jsonschema.exceptions import ValidationError
+#from jsonschema.exceptions import SchemaError
 
 from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
@@ -119,11 +122,71 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
     RESOURCE = Schema({'data': _data}, ignore_extra_keys=True)
     COLLECTION = Schema({'data': [_data]}, ignore_extra_keys=True)
 
+    #RESOURCE = {
+    #    "type": "object",
+    #    "properties": {
+    #        "data": {
+    #            "type": "object",
+    #            "properties": {
+    #                "type": {"type": "string"},
+    #                "required": ["type"]
+    #            }
+    #        }
+    #    },
+    #    "required": ["data"]
+    #}
+    #COLLECTION = {
+    #    "type": "object",
+    #    "properties": {
+    #        "data": {
+    #            "type": "array",
+    #            "items": {
+    #                "type": "object",
+    #                "properties": {
+    #                    "type": {"type": "string"}
+    #                },
+    #                "required": ["item"]
+    #            },
+    #            "minItems": 1,
+    #            "maxItems": 10
+    #        }
+    #    },
+    #    "required": ["data"]
+    #}
+
     @classmethod
     def validate(cls, schema, media):
         """Validate media against JSON schema."""
 
+        #schema2 = {
+        #    "type" : "object",
+        #    "properties" : {
+        #        "data": {
+        #            "type": "array",
+        #            "items": {
+        #                "type": "object",
+        #                "properties" : {
+        #                    "type": {"type": "string"}
+        #                },
+        #                "required": ["item"]
+        #            },
+        #            "minItems": 1,
+        #            "maxItems": 10
+        #        }
+        #    },
+        #    "required": ["data"]
+        #}
+        #print(media)
+        #print(schema2)
         validated = False
+        #try:
+        #    validate(media, schema)
+        #    validated = True
+        #    print("pass")
+        #except ValidationError as exception:
+        #    Cause.push(Cause.HTTP_BAD_REQUEST, 'json media validation failed: {}'.format(exception))
+        #except SchemaError as exception:
+        #    Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'json media validation failed: {}'.format(exception))
         try:
             Schema(schema).validate(media)
             validated = True

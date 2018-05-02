@@ -301,6 +301,12 @@ class TestApiCreateSolution(object):
                 'typ': 'solution',
             }]
         }
+        #request_body = {'data': [{}]}
+        #request_body = {
+        #    'data': [{
+        #        'type': 'solution',
+        #    }]
+        #}
         result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
         result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '580'}
         result_json = {
@@ -317,8 +323,8 @@ class TestApiCreateSolution(object):
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        print(result.text)
         print(result.headers)
+        print(result.text)
         print(result.status)
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
         assert Content.ordered(result.json) == Content.ordered(result_json)

@@ -104,7 +104,7 @@ class Validate(object):
 class JsonSchema(object):  # pylint: disable=too-few-public-methods
     """Validate JSON media against schema."""
 
-    DATA = {
+    CONTENT = {
         "type": "object",
         "properties": {
             "type": {"enum": ["snippet", "solution"]},
@@ -123,7 +123,7 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
     RESOURCE = {
         "type": "object",
         "properties": {
-            "data": DATA
+            "data": CONTENT
         },
         "required": ["data"]
     }
@@ -132,7 +132,7 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
         "properties": {
             "data": {
                 "type": "array",
-                "items": DATA,
+                "items": CONTENT,
                 "minItems": 1,
                 "maxItems": 100
             }

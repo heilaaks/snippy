@@ -63,7 +63,7 @@ class JsonApiV1(object):
         for content in contents:
             type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
             digest = content['digest']
-            if 'digest' in Config.remove_fields:
+            if 'digest' in Config.filter_fields:
                 content.pop('digest', None)
             collection['data'].append({'type': type_,
                                        'id': digest,

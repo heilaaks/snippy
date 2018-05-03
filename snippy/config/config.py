@@ -106,8 +106,8 @@ class Config(object):
         cls.search_grp_kws = cls.source.sgrp
         cls.search_filter = cls.source.regexp
         cls.search_limit = cls.source.limit
-        cls.remove_fields = cls.source.rfields
-        cls.sorted_fields = cls.source.sfields
+        cls.filter_fields = cls.source.filter_fields
+        cls.sort_fields = cls.source.sfields
 
         # migrate
         cls.defaults = cls.source.defaults
@@ -456,8 +456,8 @@ class Config(object):
         cls._logger.debug('configured search group keywords: %s', cls.search_grp_kws)
         cls._logger.debug('configured search result filter: %s', cls.search_filter)
         cls._logger.debug('configured search result limit: %s', cls.search_limit)
-        cls._logger.debug('configured search result sorted field: %s', cls.sorted_fields)
-        cls._logger.debug('configured search result removed fields: %s', cls.remove_fields)
+        cls._logger.debug('configured search result filter fields: %s', cls.filter_fields)
+        cls._logger.debug('configured search result sort fields: %s', cls.sort_fields)
         cls._logger.debug('configured option editor: %s', cls.editor)
         cls._logger.debug('configured option use_ansi: %s', cls.use_ansi)
         cls._logger.debug('configured option defaults: %s', cls.defaults)

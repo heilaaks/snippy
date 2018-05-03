@@ -63,7 +63,7 @@ class Migrate(object):
 
         regexp = Config.search_filter
         limit = Config.search_limit
-        sorting = Config.sorted_fields
+        sorting = Config.sort_fields
 
         # The design is that the first regexp query is applied to reduce the
         # content list. Then the remaining contents are first sorted and then
@@ -404,8 +404,7 @@ class Migrate(object):
         # Digest is always needed when JSON REST API response is constructed.
         # Because of this, the digest is not removed in here but just before
         # constructing the JSON API response.
-        fields = Config.remove_fields
-        for field in fields:
+        for field in Config.filter_fields:
             if field != 'digest':
                 dictionary.pop(field, None)
 

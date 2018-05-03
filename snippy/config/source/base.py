@@ -41,7 +41,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     IMPORT = 'import'
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
-    # Fields
+    # Attributes
     DATA = 'data'
     BRIEF = 'brief'
     GROUP = 'group'
@@ -55,7 +55,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     CREATED = 'updated'
     DIGEST = 'digest'
     KEY = 'key'
-    ALL_FIELDS = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
+    ATTRIBUTES = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
                   'runalias', 'versions', 'created', 'updated', 'digest', 'key')
 
     # Defaults
@@ -115,6 +115,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.editor = parameters.get('editor', False)
         self.failure = parameters.get('failure', False)
         self.filename = parameters.get('filename', Const.EMPTY)
+        self.filter_fields = parameters.get('fields', self.ATTRIBUTES)
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
         self.server_ip = parameters.get('server_ip', ConfigSourceBase.SERVER_IP)
         self.server_port = parameters.get('server_port', ConfigSourceBase.SERVER_PORT)
@@ -129,11 +130,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.profiler = parameters.get('profiler', False)
         self.quiet = parameters.get('quiet', False)
         self.regexp = parameters.get('regexp', Const.EMPTY)
-        self.rfields = parameters.get('fields', self.ALL_FIELDS)
         self.sall = parameters.get('sall', None)
         self.server = parameters.get('server', False)
         self.sfields = parameters.get('sort', ('brief'))
         self.sgrp = parameters.get('sgrp', None)
+        #self.sort_fields = parameters.get('sort', ('brief'))
         self.stag = parameters.get('stag', None)
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
@@ -274,52 +275,61 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         was received must be persisted. Otherwise the sort does not work
         correctly."""
 
-        #sort = OrderedDict()
-        #fields = Parser.keywords(value, sort_=False)
-        #rexp = re.compile(r'(-)(\s+)', re.IGNORECASE)
-        #for field in fields:
-        #    print("field (%s)" % field)
-        #    match = rexp.match(field)
-        #    if match:
-        #        print("%s and %s" % (match.group(0), match.group(1)))
-        #    else:
-        #       print("no match")
-
-        sorted_dict = {} 
+        sorted_dict = {}
         sorted_dict['order'] = []
         sorted_dict['value'] = {}
         fields = Parser.keywords(value, sort_=False)
         for field in fields:
             try:
                 if field[0].startswith('-'):
-                    index_ = self.ALL_FIELDS.index(field[1:])
+                    index_ = self.ATTRIBUTES.index(field[1:])
                     sorted_dict['order'].append(index_)
                     sorted_dict['value'][index_] = True
                 else:
-                    index_ = self.ALL_FIELDS.index(field)
+                    index_ = self.ATTRIBUTES.index(field)
                     sorted_dict['order'].append(index_)
                     sorted_dict['value'][index_] = False
             except ValueError:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
         self._logger.debug('config source sorted fields: %s', fields)
-        #self._logger.debug('config source internal formmat for sorted fields in order: %s', sort)
-        #self._sfields = sort  # pylint: disable=attribute-defined-outside-init
+        self._logger.debug('config source internal format for sorted fields in order: %s', sorted_dict)
         self._sfields = sorted_dict  # pylint: disable=attribute-defined-outside-init
 
     @property
-    def rfields(self):
-        """Get removed fields."""
+    def sort_fields(self):
+        """Get sorted fields."""
 
-        return self._rfields
+        return self._sort_fields
+    @sort_fields.setter
+    def sort_fields(self, value):
+        """Sorted fields are stored in internal presentation."""
 
-    @rfields.setter
-    def rfields(self, value):
-        """Removed fields are presented as tuple and they are converted
+        parsed = OrderedDict()
+        fields = Parser.keywords(value, sort_=False)
+        for field in fields:
+            match = re.match(r'(?P<direction>-?)(?P<field>\S+)', field, re.IGNORECASE)
+            if match.group('field') and match.group('field') in self.ATTRIBUTES:
+                parsed[match.group('field')] = 'DESC' if match.group('direction') == '-' else 'ASC'
+            else:
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
+        self._logger.debug('config source sorted fields parsed from user: %s', fields)
+        self._logger.debug('config source sorted fields parsed in sort order: %s', parsed)
+        self._sort_fields = parsed  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def filter_fields(self):
+        """Get filtered fields."""
+
+        return self._filter_fields
+
+    @filter_fields.setter
+    def filter_fields(self, value):
+        """Filtered fields are presented as tuple and they are converted
         from requested fields."""
 
         requested_fields = Parser.keywords(value)
-        self._rfields = tuple(set(self.ALL_FIELDS) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
-        self._logger.debug('config source content fields that are removed from response: %s', self._rfields)
+        self._filter_fields = tuple(set(self.ATTRIBUTES) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
+        self._logger.debug('config source content fields that are removed from response: %s', self._filter_fields)
 
     @property
     def base_path(self):

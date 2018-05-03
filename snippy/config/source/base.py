@@ -20,6 +20,7 @@
 """base: Base class for configuration sources."""
 
 import re
+from collections import OrderedDict
 
 from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
@@ -273,7 +274,18 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         was received must be persisted. Otherwise the sort does not work
         correctly."""
 
-        sorted_dict = {}
+        #sort = OrderedDict()
+        #fields = Parser.keywords(value, sort_=False)
+        #rexp = re.compile(r'(-)(\s+)', re.IGNORECASE)
+        #for field in fields:
+        #    print("field (%s)" % field)
+        #    match = rexp.match(field)
+        #    if match:
+        #        print("%s and %s" % (match.group(0), match.group(1)))
+        #    else:
+        #       print("no match")
+
+        sorted_dict = {} 
         sorted_dict['order'] = []
         sorted_dict['value'] = {}
         fields = Parser.keywords(value, sort_=False)
@@ -290,7 +302,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             except ValueError:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
         self._logger.debug('config source sorted fields: %s', fields)
-        self._logger.debug('config source internal format for sorted fields: %s', sorted_dict)
+        #self._logger.debug('config source internal formmat for sorted fields in order: %s', sort)
+        #self._sfields = sort  # pylint: disable=attribute-defined-outside-init
         self._sfields = sorted_dict  # pylint: disable=attribute-defined-outside-init
 
     @property

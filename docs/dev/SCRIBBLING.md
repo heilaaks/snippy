@@ -1560,3 +1560,51 @@ Description:	Ubuntu 14.04.5 LTS
 Release:	14.04
 Codename:	trusty
 
+
+####
+2018-05-03 10:15:51.361 snippy[11276] [d] [352ebe6a]: config source sorted fields: ('brief', '-created')
+2018-05-03 10:15:51.361 snippy[11276] [d] [352ebe6a]: config source internal format for sorted fields: {'order': [1, 9], 'value': {1: False, 9: True}}
+
+DESC --> '-'
+ASC  --> ''
+
+sort = OrderedDict()
+
+{'brief': DESC,
+ 'created': ASC}
+
+
+¿/defects?offset=5&limit=5	# 	Returns defects 6..10.
+¿/defects?offset=10	Returns defects 11..36 (the default number of the returned defects is 25).
+
+1. You can request ¿/defects?limit=0 to get just metadata, without defect data.
+2. When the response doesn¿t contain a link to the next page of results, you know that you¿ve reached the end. 
+
+# From start
+"meta": {
+    "count":  5,
+    "offset":10,
+    "limit":  5,
+    "total": 32
+},
+
+# Mixed offset and count for prev
+"meta": {
+    "count": 10,
+    "offset": 5,
+    "limit": 10,
+    "total": 32
+},
+"data": {},
+"links": {
+    "self": "http://example.com/articles?limit=5&offset=10",
+    "first": "http://example.com/articles?limit=5&offset=0",
+    "prev": "http://example.com/articles?limit=5&offset=5",
+    "next": "http://example.com/articles?limit=5&offset=15",
+    "last": "http://example.com/articles?limit=5&offset=30",
+}
+
+# SQL
+https://stackoverflow.com/a/5742289
+ORDER BY rating DESC, name ASC
+

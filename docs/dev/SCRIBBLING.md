@@ -1611,3 +1611,5 @@ ORDER BY rating DESC, name ASC
 LIMIT <count> OFFSET <skip>
 
 ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
+
+"links":{"self":"URL?limit=5&offset=10","first":"URL?limit=5&offset=0","prev":"URL?limit=5&offset=5","next":"URL?limit=5&offset=15","last":"URL?limit=5&offset=30",}

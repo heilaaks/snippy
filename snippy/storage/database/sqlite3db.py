@@ -369,6 +369,9 @@ class Sqlite3Db(object):
         else:
             query = query + 'ORDER BY created ASC'
 
+        # Add limit and offset.
+        query = query + ' LIMIT ' + str(Config.search_limit) + ' OFFSET ' + str(Config.search_offset)
+
         return (query, query_args)
 
     def _get_db_digest(self, content):

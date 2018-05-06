@@ -193,7 +193,7 @@ class TestApiHello(object):
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert 'configured option server ip localhost and port 8081' in caplog.text
+        assert 'configured option server ip: localhost and port: 8081' in caplog.text
         server.release()
         Database.delete_storage()
 

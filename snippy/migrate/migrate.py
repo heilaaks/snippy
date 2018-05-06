@@ -59,18 +59,12 @@ class Migrate(object):
 
     @classmethod
     def apply_filters(cls, contents):
-        """Apply filter and limites to content."""
+        """Apply regexp filter to content."""
 
         regexp = Config.search_filter
-        limit = Config.search_limit
 
-        # The design is that the first regexp query is applied to reduce the
-        # content list. Then the remaining content is limited.
         if regexp and contents:
             cls._logger.debug('apply regexp filter to query response: %s', regexp)
-        if limit and contents:
-            cls._logger.debug('apply limit of resources in query response: %s', limit)
-            contents = contents[:limit]
 
         return contents
 

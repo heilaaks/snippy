@@ -105,7 +105,8 @@ class Config(object):
         cls.search_tag_kws = cls.source.stag
         cls.search_grp_kws = cls.source.sgrp
         cls.search_filter = cls.source.regexp
-        cls.search_limit = cls.source.limit
+        cls.search_limit = cls.source.search_limit
+        cls.search_offset = cls.source.search_offset
         cls.filter_fields = cls.source.filter_fields
         cls.sort_fields = cls.source.sort_fields
 
@@ -454,15 +455,15 @@ class Config(object):
         cls._logger.debug('configured search all keywords: %s', cls.search_all_kws)
         cls._logger.debug('configured search tag keywords: %s', cls.search_tag_kws)
         cls._logger.debug('configured search group keywords: %s', cls.search_grp_kws)
-        cls._logger.debug('configured search result filter: %s', cls.search_filter)
-        cls._logger.debug('configured search result limit: %s', cls.search_limit)
+        cls._logger.debug('configured search result regexp filter: %s', cls.search_filter)
+        cls._logger.debug('configured search result limit: %s and offset: %s', cls.search_limit, cls.search_offset)
         cls._logger.debug('configured search result filter fields: %s', cls.filter_fields)
-        cls._logger.debug('configured search result sort fields: %s', cls.sort_fields)
+        cls._logger.debug('configured search result sorted fields: %s', cls.sort_fields)
         cls._logger.debug('configured option editor: %s', cls.editor)
-        cls._logger.debug('configured option use_ansi: %s', cls.use_ansi)
+        cls._logger.debug('configured option use ansi characters in text output: %s', cls.use_ansi)
         cls._logger.debug('configured option defaults: %s', cls.defaults)
         cls._logger.debug('configured option template: %s', cls.template)
         cls._logger.debug('configured option server: %s', cls.server)
         cls._logger.debug('configured option server api base path: %s', cls.base_path)
-        cls._logger.debug('configured option server ip %s and port %s', cls.server_ip, cls.server_port)
+        cls._logger.debug('configured option server ip: %s and port: %s', cls.server_ip, cls.server_port)
         cls._logger.debug('configured option server compact json: %s', cls.compact_json)

@@ -1,6 +1,6 @@
 ## WORKING
-   - [ ] Add total number of resources in meta like in http://jsonapi.org/examples/.
-   - [ ] Add paginations and offsets to JSON API. Add 'offset' and it could work so that result is list where user points. Needs the total.
+   - [ ] Add "meta": {"count":5,"offset":10,"limit": 5,"total":32} and "links":{"self":"URL","first":"URL","prev":"URL","next":"URL","last":"URL",} to REST
+   - [ ] Add tests for pagination.
 
 ## FEATURES
    - [ ] Add OPTIONS method.
@@ -23,6 +23,9 @@
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## FIX
+   - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
+   - [ ] Fix negative offset (and limit?) do not fail the query when they should.
+   - [ ] Fix limit=0 returns 404 and cannot find resources. What this should do? OK?
    - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases?
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?

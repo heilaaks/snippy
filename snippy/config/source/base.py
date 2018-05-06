@@ -59,8 +59,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
                   'runalias', 'versions', 'created', 'updated', 'digest', 'key')
 
     # Defaults
-    LIMIT_DEFAULT = 20
     BASE_PATH = '/snippy/api/v1/'
+    LIMIT_DEFAULT = 20
+    OFFSET_DEFAULT = 0
     SERVER_IP = '127.0.0.1'
     SERVER_PORT = '8080'
 
@@ -104,7 +105,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         # error logic must know if value was defined at all. This kind of
         # parameters must be set to None by default. All other parameters
         # must have default value like empty list or string that makes sense.
-        self.base_path = parameters.get('base_path', ConfigSourceBase.BASE_PATH)
+        self.base_path = parameters.get('base_path', self.BASE_PATH)
         self.brief = parameters.get('brief', Const.EMPTY)
         self.category = parameters.get('category')
         self.compact_json = parameters.get('compact_json', False)
@@ -117,10 +118,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.filename = parameters.get('filename', Const.EMPTY)
         self.filter_fields = parameters.get('fields', self.ATTRIBUTES)
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
-        self.server_ip = parameters.get('server_ip', ConfigSourceBase.SERVER_IP)
-        self.server_port = parameters.get('server_port', ConfigSourceBase.SERVER_PORT)
+        self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT)
+        self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
+        self.server_ip = parameters.get('server_ip', self.SERVER_IP)
+        self.server_port = parameters.get('server_port', self.SERVER_PORT)
         self.storage_path = parameters.get('storage_path', Const.EMPTY)
-        self.limit = parameters.get('limit', self.LIMIT_DEFAULT)
         self.links = parameters.get('links', ())
         self.log_json = parameters.get('log_json', False)
         self.log_msg_max = parameters.get('log_msg_max', Logger.DEFAULT_LOG_MSG_MAX)
@@ -245,20 +247,37 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
                        'listing matching content without filter because it was not syntactically correct regular expression')
 
     @property
-    def limit(self):
+    def search_limit(self):
         """Get search result limit."""
 
-        return self._limit
+        return self._search_limit
 
-    @limit.setter
-    def limit(self, value):
-        """Search result limit."""
+    @search_limit.setter
+    def search_limit(self, value):
+        """Search result limit defines maximum amount of search results."""
 
-        self._limit = self.LIMIT_DEFAULT  # pylint: disable=attribute-defined-outside-init
+        self._search_limit = self.LIMIT_DEFAULT  # pylint: disable=attribute-defined-outside-init
         try:
-            self._limit = int(value)  # pylint: disable=attribute-defined-outside-init
+            self._search_limit = int(value)  # pylint: disable=attribute-defined-outside-init
         except ValueError:
-            self._logger.info('search result limit is not a number and thus default used: %d', self._limit)
+            self._logger.info('search result limit is not a number and thus default used: %d', self._search_limit)
+
+    @property
+    def search_offset(self):
+        """Get search offset from start."""
+
+        return self._search_offset
+
+    @search_offset.setter
+    def search_offset(self, value):
+        """Search offset defines how many entries are skippet from the
+        beginning of search results."""
+
+        self._search_offset = self.OFFSET_DEFAULT  # pylint: disable=attribute-defined-outside-init
+        try:
+            self._search_offset = int(value)  # pylint: disable=attribute-defined-outside-init
+        except ValueError:
+            self._logger.info('search result offset is not a number and thus default used: %d', self._search_offset)
 
     @property
     def sort_fields(self):
@@ -321,6 +340,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         # just a portion of checks for possible failure cases.
         if '//' in value:
             self._logger.debug('config source uses default base path because invalid configuration: %s', value)
-            value = ConfigSourceBase.BASE_PATH
+            value = self.BASE_PATH
 
         self._base_path = value  # pylint: disable=attribute-defined-outside-init

@@ -62,6 +62,7 @@ paths:
         - $ref: '#/parameters/data'
         - $ref: '#/parameters/filter'
         - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
         - $ref: '#/parameters/sort'
         - $ref: '#/parameters/fields'
       responses:
@@ -495,11 +496,18 @@ parameters:
     in: query
     required: false
     description: "Limit query result list."
+  offset:
+    name: offset
+    type: string
+    default: 0
+    in: query
+    required: false
+    description: "Offset from the beginning of search results."
   sort:
     name: sort
     type: string
     default: brief
-    enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, digest]
+    enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, updated, digest]
     in: query
     required: false
     description: "Sort based on defined field."
@@ -508,7 +516,7 @@ parameters:
     type: array
     items:
       type: string
-      enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, digest]
+      enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, updated, digest]
     in: query
     required: false
     description: "Limit fields that are returned in result list."

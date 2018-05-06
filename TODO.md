@@ -47,7 +47,6 @@
    - [ ] Refactor parser and editor to use merge? The Config uses merge and migrate but can the parser and editor do the same? They cannot include Config (easily).
    - [ ] Logger __init__ is confusing since it is not objec but global class. Should be like Logger(__NAME__).api
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
-   - [ ] Move the sfields internal setting to Config and keep the clear sort fields tuple in Base?
    - [ ] Read storage schema directly to config() like the content templates. 
    - [ ] Change is_template in Content to __cmp__?
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.

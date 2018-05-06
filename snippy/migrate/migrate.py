@@ -59,29 +59,15 @@ class Migrate(object):
 
     @classmethod
     def apply_filters(cls, contents):
-        """Apply filter, limit and sorting parameters to content."""
+        """Apply filter and limites to content."""
 
         regexp = Config.search_filter
         limit = Config.search_limit
-        sorting = Config.sort_fields
 
         # The design is that the first regexp query is applied to reduce the
-        # content list. Then the remaining contents are first sorted and then
-        # limited. That is, all the content reduction parameters are applied
-        # first, then sort and the limit is always the last.
-        #
-        # Sorting with multiple parameters is complicated and not fully understood.
-        # Based on /1/ the logic is to reverse the order of parameters given by
-        # user and then run the sort for each column in reversed order. This seems
-        # to work but currently cannot be guaranteed to be 100% correct.
-        #
-        # /1/ https://stackoverflow.com/a/4233482
+        # content list. Then the remaining content is limited.
         if regexp and contents:
             cls._logger.debug('apply regexp filter to query response: %s', regexp)
-        if sorting and contents:
-            cls._logger.debug('apply field sort to query response: %s', sorting)
-            for sort_column in reversed(sorting['order']):
-                contents = contents[0].sort_contents(contents, sort_column, sorting['value'][sort_column])
         if limit and contents:
             cls._logger.debug('apply limit of resources in query response: %s', limit)
             contents = contents[:limit]

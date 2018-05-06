@@ -359,7 +359,15 @@ class Sqlite3Db(object):
             query = query + search + 'OR '
             query_args = query_args + [token] * len(columns) + list(groups) + [category]  # Tokens for each search keyword.
         query = query[:-3]  # Remove last 'OR ' added by the loop.
-        query = query + 'ORDER BY id ASC'
+
+        # Add sort order.
+        if Config.sort_fields:
+            query = query + 'ORDER BY '
+            for field in Config.sort_fields:
+                query = query + field + ' ' + Config.sort_fields[field].upper() + ', '
+            query = query[:-2]  # Remove last ', ' added by the loop.
+        else:
+            query = query + 'ORDER BY created ASC'
 
         return (query, query_args)
 

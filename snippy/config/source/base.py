@@ -132,9 +132,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.regexp = parameters.get('regexp', Const.EMPTY)
         self.sall = parameters.get('sall', None)
         self.server = parameters.get('server', False)
-        self.sfields = parameters.get('sort', ('brief'))
         self.sgrp = parameters.get('sgrp', None)
-        #self.sort_fields = parameters.get('sort', ('brief'))
+        self.sort_fields = parameters.get('sort', ('brief'))
         self.stag = parameters.get('stag', None)
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
@@ -262,44 +261,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             self._logger.info('search result limit is not a number and thus default used: %d', self._limit)
 
     @property
-    def sfields(self):
-        """Get sorted fields in internal presentation."""
-
-        return self._sfields
-
-    @sfields.setter
-    def sfields(self, value):
-        """Sorted fields are stored in internal presentation from given
-        value. The internal format contains field index that matches to
-        database column index. The order where the sorted column names
-        was received must be persisted. Otherwise the sort does not work
-        correctly."""
-
-        sorted_dict = {}
-        sorted_dict['order'] = []
-        sorted_dict['value'] = {}
-        fields = Parser.keywords(value, sort_=False)
-        for field in fields:
-            try:
-                if field[0].startswith('-'):
-                    index_ = self.ATTRIBUTES.index(field[1:])
-                    sorted_dict['order'].append(index_)
-                    sorted_dict['value'][index_] = True
-                else:
-                    index_ = self.ATTRIBUTES.index(field)
-                    sorted_dict['order'].append(index_)
-                    sorted_dict['value'][index_] = False
-            except ValueError:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'sort option validation failed for non existent field={}'.format(field))
-        self._logger.debug('config source sorted fields: %s', fields)
-        self._logger.debug('config source internal format for sorted fields in order: %s', sorted_dict)
-        self._sfields = sorted_dict  # pylint: disable=attribute-defined-outside-init
-
-    @property
     def sort_fields(self):
         """Get sorted fields."""
 
         return self._sort_fields
+
     @sort_fields.setter
     def sort_fields(self, value):
         """Sorted fields are stored in internal presentation."""

@@ -1608,4 +1608,6 @@ sort = OrderedDict()
 # SQL
 https://stackoverflow.com/a/5742289
 ORDER BY rating DESC, name ASC
+LIMIT <count> OFFSET <skip>
 
+ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>

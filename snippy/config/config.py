@@ -107,7 +107,7 @@ class Config(object):
         cls.search_filter = cls.source.regexp
         cls.search_limit = cls.source.limit
         cls.filter_fields = cls.source.filter_fields
-        cls.sort_fields = cls.source.sfields
+        cls.sort_fields = cls.source.sort_fields
 
         # migrate
         cls.defaults = cls.source.defaults

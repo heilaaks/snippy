@@ -363,14 +363,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return template
 
     @classmethod
-    def sort_contents(cls, contents, column, reversed_sort):
-        """Sort all contents by defined column."""
-
-        sorted_contents = sorted(contents, key=lambda x: x.item[column], reverse=reversed_sort)
-
-        return sorted_contents
-
-    @classmethod
     def load(cls, dictionary):
         """Load contents from dictionary."""
 

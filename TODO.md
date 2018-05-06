@@ -111,7 +111,8 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
-   - [x] Add X-HTTP-Method-Override header support for POST to map it to PUT, PATCH and DELETE.
+   - [x] Added offset to enable GET pagination with limit.
+   - [x] Added X-HTTP-Method-Override header support for POST to map it to PUT, PATCH and DELETE.
    - [x] Added pretty print response by default. Configurable with --compact-json option for server.
    - [x] Added documentation for content attributes how they behave when created and updated with POST, PUT and PATCH.
    - [x] Added PATCH support for partial updates.

@@ -595,7 +595,49 @@ content:
   - zombie
   updated: '2018-02-28 10:47:08'
   versions: ''
+- brief: Umount a busy device
+  category: snippet
+  created: '2018-05-07 11:11:55'
+  data:
+  - lsof | grep '/tmp/overlayfs/overlay'
+  - kill <pid>
+  - umount /tmp/overlayfs/overlay
+  digest: 490c913cf941a0bedc14e3d390894958b3db4220dc2b1b856454403c888df17f
+  filename: ''
+  group: linux
+  links:
+  - https://stackoverflow.com/a/7878763
+  runalias: ''
+  tags:
+  - device
+  - linux
+  - umount
+  updated: '2018-05-07 11:11:55'
+  versions: ''
+- brief: Manipulate compressed tar files
+  category: snippet
+  created: '2018-05-07 11:13:17'
+  data:
+  - 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./ # Compress folder excluding
+    the tar.'
+  - 'tar tvf mytar.tar.gz                              # List content of compressed
+    tar.'
+  - 'tar xfO mytar.tar.gz manifest.json                # Cat file in compressed tar.'
+  - 'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz" # Extract and exclude one file.'
+  - 'tar -xf mytar.tar.gz manifest.json                # Extract only one file.'
+  digest: b3841d9a5785952168c4300d60658b1b8028c48a7d120ef4dcca084008217fe3
+  filename: ''
+  group: linux
+  links: []
+  runalias: ''
+  tags:
+  - howto
+  - linux
+  - tar
+  - untar
+  updated: '2018-05-07 11:13:17'
+  versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2018-02-28 10:48:29'
+  updated: '2018-05-07 11:18:45'
   version: 0.8.d

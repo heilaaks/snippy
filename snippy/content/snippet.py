@@ -41,16 +41,16 @@ class Snippet(object):
         self._logger.debug('creating new snippet')
         snippets = Config.get_contents(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))
         self.storage.create(snippets)
-        snippets = self.storage.search(Const.SNIPPET, digest=snippets[0].get_digest())
+        snippets, total = self.storage.search(Const.SNIPPET, digest=snippets[0].get_digest())
         snippets = Migrate.content(snippets, self.content_type)
 
-        return snippets
+        return self._get_content(snippets, total)
 
     def search(self):
         """Search snippets."""
 
         self._logger.debug('searching snippets')
-        snippets = self.storage.search(
+        snippets, total = self.storage.search(
             Const.SNIPPET,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -60,12 +60,13 @@ class Snippet(object):
         )
         snippets = Migrate.content(snippets, self.content_type)
 
-        return snippets
+        return self._get_content(snippets, total)
 
     def update(self):
         """Update snippet."""
 
-        snippets = self.storage.search(
+        total = 0
+        snippets, total = self.storage.search(
             Const.SNIPPET,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -78,18 +79,18 @@ class Snippet(object):
             self._logger.debug('updating snippet with digest %.16s', digest)
             contents = Config.get_contents(content=snippets[0])
             self.storage.update(contents[0], digest)
-            snippets = self.storage.search(Const.SNIPPET, digest=contents[0].get_digest())
+            snippets, total = self.storage.search(Const.SNIPPET, digest=contents[0].get_digest())
         else:
             Config.validate_search_context(snippets, 'update')
 
         snippets = Migrate.content(snippets, self.content_type)
 
-        return snippets
+        return self._get_content(snippets, total)
 
     def delete(self):
         """Delete snippet."""
 
-        snippets = self.storage.search(
+        snippets, _ = self.storage.search(
             Const.SNIPPET,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -112,7 +113,7 @@ class Snippet(object):
             Migrate.dump_template(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))
         elif Config.is_search_criteria():
             self._logger.debug('exporting snippets based on search criteria')
-            snippets = self.storage.search(
+            snippets, _ = self.storage.search(
                 Const.SNIPPET,
                 sall=Config.search_all_kws,
                 stag=Config.search_tag_kws,
@@ -135,7 +136,7 @@ class Snippet(object):
 
         content_digest = Config.operation_digest
         if content_digest:
-            snippets = self.storage.search(Const.SNIPPET, digest=content_digest)
+            snippets, _ = self.storage.search(Const.SNIPPET, digest=content_digest)
             if len(snippets) == 1:
                 digest = snippets[0].get_digest()
                 self._logger.debug('importing solution with digest %.16s', digest)
@@ -158,15 +159,16 @@ class Snippet(object):
     def run(self):
         """Run the snippet management operation."""
 
-        snippets = ()
+        content = self._get_content(None, 0)
+
         self._logger.debug('managing snippet')
         Config.content_category = Const.SNIPPET
         if Config.is_operation_create:
-            snippets = self.create()
+            content = self.create()
         elif Config.is_operation_search:
-            snippets = self.search()
+            content = self.search()
         elif Config.is_operation_update:
-            snippets = self.update()
+            content = self.update()
         elif Config.is_operation_delete:
             self.delete()
         elif Config.is_operation_export:
@@ -176,4 +178,20 @@ class Snippet(object):
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for snippet')
 
-        return snippets
+        return content
+
+    @staticmethod
+    def _get_content(contents, total):
+        """Format content with data and metadata."""
+
+        if contents is None:
+            contents = ()
+
+        content = {
+            'data': contents,
+            'meta': {
+                'total': total,
+            }
+        }
+
+        return content

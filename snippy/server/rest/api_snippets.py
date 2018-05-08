@@ -40,13 +40,19 @@ class ApiSnippets(object):
     def on_post(self, request, response):
         """Create new snippets."""
 
-        contents = []
+        contents = {
+            'data': [],
+            'meta': {
+                'total': 0
+            }
+        }
         self._logger.debug('run post /snippy/api/v1/snippets')
         collection = Validate.collection(request)
         for member in collection:
             api = Api(Const.SNIPPET, Api.CREATE, member)
             Config.load(api)
-            contents.extend(Snippet(self.storage, Const.CONTENT_TYPE_JSON).run())
+            content = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
+            contents['data'].extend(content['data'])
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.collection(Const.SNIPPET, contents)
@@ -67,7 +73,7 @@ class ApiSnippets(object):
         api = Api(Const.SNIPPET, Api.SEARCH, request.params)
         Config.load(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents:
+        if not contents['data']:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -142,7 +148,7 @@ class ApiSnippetsDigest(object):
         api = Api(Const.SNIPPET, Api.SEARCH, local_params)
         Config.load(api)
         contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents:
+        if not contents['data']:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API

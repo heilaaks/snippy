@@ -41,10 +41,10 @@ class Storage(object):
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content."""
 
-        rows = self._database.select_content(category, sall, stag, sgrp, digest, data)
+        rows, total = self._database.select_content(category, sall, stag, sgrp, digest, data)
         contents = Storage._get_contents(rows)
 
-        return contents
+        return contents, total
 
     def update(self, content, digest):
         """Update content."""

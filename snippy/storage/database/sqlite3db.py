@@ -122,6 +122,7 @@ class Sqlite3Db(object):
         """Select content."""
 
         rows = ()
+        total = 0
         if self.connection:
             # The regex based queries contain the same amount of regex queries than there are
             # keywords. The reason is that each keyword (one keyword) must be searched from all
@@ -141,23 +142,25 @@ class Sqlite3Db(object):
             qargs = []
             if sall and Config.search_all_kws:
                 columns = ['data', 'brief', 'groups', 'tags', 'links', 'digest']
-                query, qargs = Sqlite3Db._make_regexp_query(sall, columns, sgrp, category)
+                query, count, qargs = Sqlite3Db._make_regexp_query(sall, columns, sgrp, category)
             elif stag and Config.search_tag_kws:
                 columns = ['tags']
-                query, qargs = Sqlite3Db._make_regexp_query(stag, columns, sgrp, category)
+                query, count, qargs = Sqlite3Db._make_regexp_query(stag, columns, sgrp, category)
             elif sgrp and Config.search_grp_kws:
                 columns = ['groups']
-                query, qargs = Sqlite3Db._make_regexp_query(sgrp, columns, (), category)
+                query, count, qargs = Sqlite3Db._make_regexp_query(sgrp, columns, (), category)
             elif Config.is_content_digest() or digest:  # The later condition is for tool internal search based on digest.
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
+                count = query
                 qargs = [digest+'%']
             elif Config.content_data:
                 query = ('SELECT * FROM contents WHERE data LIKE ?')
+                count = query
                 qargs = ['%'+Const.DELIMITER_DATA.join(map(str, data))+'%']
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'please define keyword, digest or content data as search criteria')
 
-                return rows
+                return rows, total
 
             self.logger.debug('running select query "%s"', query)
             self.logger.debug('running select query with arguments "%s"', qargs)
@@ -165,6 +168,10 @@ class Sqlite3Db(object):
                 with closing(self.connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
+                    cursor.execute(count, qargs)
+                    total = cursor.fetchone()
+                    if total:
+                        total = total[0]
             except sqlite3.Error as exception:
                 Cause.push(Cause.HTTP_500, 'selecting from database failed with exception {}'.format(exception))
         else:
@@ -172,7 +179,7 @@ class Sqlite3Db(object):
 
         self.logger.debug('selected %d rows %s', len(rows), rows)
 
-        return rows
+        return rows, total
 
     def _select_content_data(self, data):
         """Select content based on data."""
@@ -360,6 +367,10 @@ class Sqlite3Db(object):
             query_args = query_args + [token] * len(columns) + list(groups) + [category]  # Tokens for each search keyword.
         query = query[:-3]  # Remove last 'OR ' added by the loop.
 
+        # Make query that returns total amount of hits from query.
+        count = query
+        count = count.replace('SELECT *', 'SELECT count(*)')
+
         # Add sort order.
         if Config.sort_fields:
             query = query + 'ORDER BY '
@@ -372,7 +383,7 @@ class Sqlite3Db(object):
         # Add limit and offset.
         query = query + ' LIMIT ' + str(Config.search_limit) + ' OFFSET ' + str(Config.search_offset)
 
-        return (query, query_args)
+        return (query, count, query_args)
 
     def _get_db_digest(self, content):
         """Return digest of given content from database."""

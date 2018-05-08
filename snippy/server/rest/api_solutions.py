@@ -42,13 +42,19 @@ class ApiSolutions(object):
     def on_post(self, request, response):
         """Create new solution."""
 
-        contents = []
+        contents = {
+            'data': [],
+            'meta': {
+                'total': 0
+            }
+        }
         self._logger.debug('run post /snippy/api/v1/solutions')
         collection = Validate.collection(request)
         for member in collection:
             api = Api(Const.SOLUTION, Api.CREATE, member)
             Config.load(api)
-            contents.extend(Solution(self.storage, Const.CONTENT_TYPE_JSON).run())
+            content = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+            contents['data'].extend(content['data'])
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
             response.body = JsonApiV1.collection(Const.SOLUTION, contents)
@@ -69,7 +75,7 @@ class ApiSolutions(object):
         api = Api(Const.SOLUTION, Api.SEARCH, request.params)
         Config.load(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents:
+        if not contents['data']:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -144,7 +150,7 @@ class ApiSolutionsDigest(object):
         api = Api(Const.SOLUTION, Api.SEARCH, local_params)
         Config.load(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents:
+        if not contents['data']:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API

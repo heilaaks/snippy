@@ -52,13 +52,13 @@ class TestUtSqlite3dbDelete(object):
         sqlite.insert_content([content2])
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[1], content2)
+        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0][0], content1)
+        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0][1], content2)
         assert len(Database.select_all_snippets()) == 2
         sqlite.delete_content('53908d68425c61dc')
         mock_cause_push.assert_called_once_with('204 No Content', 'content deleted successfully')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
+        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0][0], content1)
         assert len(Database.select_all_snippets()) == 1
         sqlite.disconnect()
         Database.delete_all_contents()
@@ -84,13 +84,13 @@ class TestUtSqlite3dbDelete(object):
         sqlite.insert_content([content2])
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[1], content2)
+        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0][0], content1)
+        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0][1], content2)
         assert len(Database.select_all_snippets()) == 2
         sqlite.delete_content('53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5')
         mock_cause_push.assert_called_once_with('204 No Content', 'content deleted successfully')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
+        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0][0], content1)
         assert len(Database.select_all_snippets()) == 1
         sqlite.disconnect()
         Database.delete_all_contents()

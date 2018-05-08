@@ -48,8 +48,8 @@ class TestUtSqlite3dbSelect(object):
         keywords = ['foo', 'bar', 'digitalocean']
         sqlite.insert_content([content])
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content)
-        assert len(sqlite.select_content(Const.SNIPPET, keywords)) == 1
+        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0][0], content)
+        assert len(sqlite.select_content(Const.SNIPPET, keywords)[0]) == 1
         mock_cause_push.assert_not_called()
         sqlite.disconnect()
         Database.delete_all_contents()

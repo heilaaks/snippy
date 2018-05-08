@@ -40,7 +40,7 @@ class JsonApiV1(object):
         """Format JSON API v1.0 resource from content."""
 
         resource_ = {'links': {}, 'data': {}}
-        for content in contents:
+        for content in contents['data']:
             if 'digest' in content:
                 uri = urljoin(uri, content['digest'][:16])
                 resource_['links'] = {'self': uri}
@@ -60,7 +60,7 @@ class JsonApiV1(object):
         """Format JSON API v1.0 collection from content."""
 
         collection = {'data': []}
-        for content in contents:
+        for content in contents['data']:
             type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
             digest = content['digest']
             if 'digest' in Config.filter_fields:

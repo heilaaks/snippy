@@ -1,6 +1,7 @@
 ## WORKING
    - [ ] Add "meta": {"count":5,"offset":10,"limit": 5,"total":32} and "links":{"self":"URL","first":"URL","prev":"URL","next":"URL","last":"URL",} to REST
    - [ ] Add tests for pagination.
+   - [ ] Refactor the new content return that includes the meta. The default is in four places (snippet, solution and apis)
 
 ## FEATURES
    - [ ] Add OPTIONS method.

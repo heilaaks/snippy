@@ -41,7 +41,8 @@ class Storage(object):
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content."""
 
-        rows, total = self._database.select_content(category, sall, stag, sgrp, digest, data)
+        rows = self._database.select_content(category, sall, stag, sgrp, digest, data)
+        total = self._database.count_content(category, sall, stag, sgrp, digest, data)
         contents = Storage._get_contents(rows)
 
         return contents, total

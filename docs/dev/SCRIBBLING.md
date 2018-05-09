@@ -146,6 +146,12 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Print tree
+   $ dnf install tree
+   $ tree snippy | grep -Ev '*.pyc|*.json|*.txt|*.yml|*.yaml|*.db|*.md'
+   ```
+
+   ```
    ## Programming style guide.
    # Commit log
    > http://keepachangelog.com/en/1.0.0/

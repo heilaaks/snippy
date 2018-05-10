@@ -31,15 +31,18 @@ from snippy.logger import Logger
 
 
 class JsonApiV1(object):
-    """Format to JSON API v1.0."""
+    """Format according to JSON API v1.0 specifications."""
 
     _logger = Logger(__name__).logger
 
     @classmethod
-    def resource(cls, category, contents, uri):
-        """Format JSON API v1.0 resource from content."""
+    def resource(cls, category, contents, uri, add_meta=False):
+        """Format JSON API v1.0 resource from content list."""
 
-        resource_ = {'links': {}, 'data': {}}
+        resource_ = {
+            'data': {},
+            'links': {}
+        }
         for content in contents['data']:
             if 'digest' in content:
                 uri = urljoin(uri, content['digest'][:16])
@@ -50,16 +53,25 @@ class JsonApiV1(object):
                                  'attributes': content}
             break
 
+        if add_meta:
+            resource_['meta'] = {}
+            resource_['meta']['count'] = 1  # There is always one resource.
+            resource_['meta']['limit'] = Config.search_limit
+            resource_['meta']['offset'] = Config.search_offset
+            resource_['meta']['total'] = contents['meta']['total']
+
         if not resource_['data']:
             resource_ = json.loads('{"links": {"self": "' + uri + '"}, "data": null}')
 
         return cls.dumps(resource_)
 
     @classmethod
-    def collection(cls, category, contents):
-        """Format JSON API v1.0 collection from content."""
+    def collection(cls, category, contents, add_meta=False):
+        """Format JSON API v1.0 collection from content list."""
 
-        collection = {'data': []}
+        collection = {
+            'data': []
+        }
         for content in contents['data']:
             type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
             digest = content['digest']
@@ -68,6 +80,12 @@ class JsonApiV1(object):
             collection['data'].append({'type': type_,
                                        'id': digest,
                                        'attributes': content})
+        if add_meta:
+            collection['meta'] = {}
+            collection['meta']['count'] = len(collection['data'])
+            collection['meta']['limit'] = Config.search_limit
+            collection['meta']['offset'] = Config.search_offset
+            collection['meta']['total'] = contents['meta']['total']
 
         return cls.dumps(collection)
 
@@ -77,7 +95,10 @@ class JsonApiV1(object):
 
         # Follow CamelCase in field names because expected usage is from
         # Javascript that uses CamelCase.
-        errors = {'errors': [], 'meta': {}}
+        errors = {
+            'errors': [],
+            'meta': {}
+        }
         for cause in causes['errors']:
             errors['errors'].append({'status': str(cause['status']),
                                      'statusString': cause['status_string'],

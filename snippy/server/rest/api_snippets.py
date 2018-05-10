@@ -72,7 +72,7 @@ class ApiSnippets(object):
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(Const.SNIPPET, contents)
+            response.body = JsonApiV1.collection(Const.SNIPPET, contents, add_meta=True)
             response.status = Cause.http_status()
         else:
             response.content_type = Const.MEDIA_JSON_API
@@ -147,7 +147,7 @@ class ApiSnippetsDigest(object):
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(Const.SNIPPET, contents, request.uri)
+            response.body = JsonApiV1.resource(Const.SNIPPET, contents, request.uri, add_meta=True)
             response.status = Cause.http_status()
         else:
             response.content_type = Const.MEDIA_JSON_API

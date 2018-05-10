@@ -329,9 +329,7 @@ class Sqlite3Db(object):
 
         query = ()
         qargs = []
-        if query_type == Sqlite3Db.QUERY_TYPE_REGEX:
-            query_pointer = self._query_regex
-        elif query_type == Sqlite3Db.QUERY_TYPE_TOTAL:
+        if query_type == Sqlite3Db.QUERY_TYPE_TOTAL:
             query_pointer = self._query_count
         else:
             query_pointer = self._query_regex
@@ -345,10 +343,16 @@ class Sqlite3Db(object):
             columns = ['groups']
             query, qargs = query_pointer(sgrp, columns, (), category)
         elif Config.is_content_digest() or digest:  # The later condition is for tool internal search based on digest.
-            query = ('SELECT * FROM contents WHERE digest LIKE ?')
+            if query_type == Sqlite3Db.QUERY_TYPE_TOTAL:
+                query = ('SELECT count(*) FROM contents WHERE digest LIKE ?')
+            else:
+                query = ('SELECT * FROM contents WHERE digest LIKE ?')
             qargs = [digest+'%']
         elif Config.content_data:
-            query = ('SELECT * FROM contents WHERE data LIKE ?')
+            if query_type == Sqlite3Db.QUERY_TYPE_TOTAL:
+                query = ('SELECT count(*) FROM contents WHERE data LIKE ?')
+            else:
+                query = ('SELECT * FROM contents WHERE data LIKE ?')
             qargs = ['%'+Const.DELIMITER_DATA.join(map(str, data))+'%']
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'please define keyword, digest or content data as search criteria')

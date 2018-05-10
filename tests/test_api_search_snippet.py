@@ -45,9 +45,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1275'
+            'content-length': '1335'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -79,9 +85,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1411'
+            'content-length': '1470'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 2,
+                'offset': 0,
+                'total': 4
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -114,9 +126,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '188'
+            'content-length': '247'
         }
         result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 1,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
@@ -144,9 +162,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '188'
+            'content-length': '247'
         }
         result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 1,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
@@ -173,9 +197,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1379'
+            'content-length': '1438'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 2,
+                'offset': 0,
+                'total': 4
+            },
             'data': [{
                 'type': 'snippets',
                 'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
@@ -207,9 +237,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1379'
+            'content-length': '1438'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 2,
+                'offset': 0,
+                'total': 4
+            },
             'data': [{
                 'type': 'snippets',
                 'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
@@ -269,9 +305,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '188'
+            'content-length': '247'
         }
         result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 1,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
@@ -389,16 +431,22 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '695'
+            'content-length': '755'
         }
         result_json = {
-            'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'
+            'meta': {
+                'count': 1,
+                'limit': 20,
+                'offset': 0,
+                'total': 1
             },
             'data': {
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'
             }
         }
         server.run()
@@ -448,9 +496,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1275'
+            'content-length': '1335'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -482,9 +536,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '677'
+            'content-length': '736'
         }
         result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 1,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
@@ -512,9 +572,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2215'
+            'content-length': '2317'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -546,9 +612,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1275'
+            'content-length': '1335'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -580,9 +652,15 @@ class TestApiSearchSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1411'
+            'content-length': '1470'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 2,
+                'offset': 0,
+                'total': 4
+            },
             'data': [{
                 'type': 'snippets',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',

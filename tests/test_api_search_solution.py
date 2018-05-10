@@ -45,9 +45,15 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5258'
+            'content-length': '5318'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'solutions',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
@@ -82,9 +88,15 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5258'
+            'content-length': '5317'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 2,
+                'offset': 0,
+                'total': 3
+            },
             'data': [{
                 'type': 'solutions',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
@@ -117,9 +129,15 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '175'
+            'content-length': '234'
         }
         result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 1,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'solutions',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
@@ -147,9 +165,15 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '175'
+            'content-length': '234'
         }
         result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 1,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'solutions',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
@@ -171,31 +195,37 @@ class TestApiSearchSolution(object):
 
         Call GET /v1/solutions and search keywords from all attributes. The
         search query matches to three solutions but limit defined in search
-        query results only two of them sorted by the utc attribute in
-        descending order and then based on brief attribute in descending
+        query results only two of them sorted by the created attribute in
+        descending order and then based on brief attribute also in descending
         order.
         """
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7468'
+            'content-length': '6985'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 2,
+                'offset': 0,
+                'total': 3
+            },
             'data': [{
+                'type': 'solutions',
+                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'attributes': Solution.DEFAULTS[Solution.BEATS]
+            }, {
                 'type': 'solutions',
                 'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
-            }, {
-                'type': 'solutions',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
-                'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/v1/solutions',
             headers={'accept': 'application/json'},
-            query_string='sall=docker%2Cnmap&limit=2&sort=-created,-brief')
+            query_string='sall=docker,beats%2Cnmap&limit=2&sort=-created,-brief')
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -207,14 +237,21 @@ class TestApiSearchSolution(object):
         Call GET /v1/solutions and search keywords from all attributes sorted
         with two fields. This syntax that separates the sorted fields causes
         the parameter to be processed in string context which must handle
-        multiple attributes.
+        multiple attributes. In this case the search query matches only to
+        two fields.
         """
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7468'
+            'content-length': '7527'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 2,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'solutions',
                 'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
@@ -276,9 +313,15 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '175'
+            'content-length': '234'
         }
         result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 1,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'solutions',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
@@ -394,16 +437,22 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2451'
+            'content-length': '2511'
         }
         result_json = {
-            'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/solutions/a96accc25dd23ac0'
+            'meta': {
+                'count': 1,
+                'limit': 20,
+                'offset': 0,
+                'total': 1
             },
             'data': {
                 'type': 'solutions',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/solutions/a96accc25dd23ac0'
             }
         }
         server.run()
@@ -453,9 +502,15 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5258'
+            'content-length': '5318'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'solutions',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
@@ -487,9 +542,15 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2905'
+            'content-length': '2964'
         }
         result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 1,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'solutions',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
@@ -517,9 +578,15 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '8198'
+            'content-length': '8300'
         }
         result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
             'data': [{
                 'type': 'solutions',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',

@@ -74,7 +74,7 @@ class ApiSolutions(object):
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(Const.SOLUTION, contents)
+            response.body = JsonApiV1.collection(Const.SOLUTION, contents, add_meta=True)
             response.status = Cause.http_status()
         else:
             response.content_type = Const.MEDIA_JSON_API
@@ -149,7 +149,7 @@ class ApiSolutionsDigest(object):
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request.uri)
+            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request.uri, add_meta=True)
             response.status = Cause.http_status()
         else:
             response.content_type = Const.MEDIA_JSON_API

@@ -1,10 +1,11 @@
 ## WORKING
-   - [ ] Add "meta": {"count":5,"offset":10,"limit": 5,"total":32} and "links":{"self":"URL","first":"URL","prev":"URL","next":"URL","last":"URL",} to REST
+   - [ ] Add "links":{"self":"URL","first":"URL","prev":"URL","next":"URL","last":"URL",} to GET
    - [ ] Add tests for pagination.
 
 ## FEATURES
    - [ ] Add OPTIONS method.
    - [ ] Add embedded security features.
+   - [ ] Add primary key to content database table.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
    - [ ] Add /snippy/api/admin/v1/settings for log config. Change snippy api to /snippy/api/app/v1. Add /snippy/api/auth/v1 for login. These have same base /snippy/api/
    - [ ] Add support to get /snippet/123123324/brief and all the fields.
@@ -47,6 +48,7 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
+   - [ ] API modules have: contents['data'].extend(content['data']). Can he content with meta be done with hash.update(another hash) ?
    - [ ] Storage create() supports only one content. Maybe this could be a loop of list but the meta needs more work to combine.
    - [ ] Storage update() supports only one content and this is not in line with create(). Update should also take list instead of one.
    - [ ] Refactor parser and editor to use merge? The Config uses merge and migrate but can the parser and editor do the same? They cannot include Config (easily).
@@ -113,6 +115,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added meta field for pagination purposes to HTTP GET responses.
    - [x] Added offset to enable GET pagination with limit.
    - [x] Added X-HTTP-Method-Override header support for POST to map it to PUT, PATCH and DELETE.
    - [x] Added pretty print response by default. Configurable with --compact-json option for server.

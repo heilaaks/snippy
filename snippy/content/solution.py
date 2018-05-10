@@ -36,15 +36,14 @@ class Solution(object):
         self.content_type = content_type
 
     def create(self):
-        """Create new solution."""
+        """Create new solutions."""
 
         self._logger.debug('creating new solution')
         solutions = Config.get_contents(Content(category=Const.SOLUTION, timestamp=Config.get_utc_time()))
-        self.storage.create(solutions)
-        solutions, total = self.storage.search(Const.SOLUTION, digest=solutions[0].get_digest())
-        solutions = Migrate.content(solutions, self.content_type)
+        contents = self.storage.create(solutions)
+        contents['data'] = Migrate.content(contents['data'], self.content_type)
 
-        return self._get_content(solutions, total)
+        return contents
 
     def search(self):
         """Search solutions."""
@@ -60,13 +59,13 @@ class Solution(object):
         )
         solutions = Migrate.content(solutions, self.content_type)
 
-        return self._get_content(solutions, total)
+        return self.storage.get_contents(solutions, total)
 
     def update(self):
-        """Update existing solution."""
+        """Update solutions."""
 
-        total = 0
-        solutions, total = self.storage.search(
+        contents = self.storage.get_contents(None)
+        solutions, _ = self.storage.search(
             Const.SOLUTION,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -77,15 +76,13 @@ class Solution(object):
         if len(solutions) == 1:
             digest = solutions[0].get_digest()
             self._logger.debug('updating solution with digest %.16s', digest)
-            contents = Config.get_contents(content=solutions[0])
-            self.storage.update(contents[0], digest)
-            solutions, total = self.storage.search(Const.SNIPPET, digest=contents[0].get_digest())
+            solutions = Config.get_contents(content=solutions[0])
+            contents = self.storage.update(solutions[0], digest)
+            contents['data'] = Migrate.content(contents['data'], self.content_type)
         else:
             Config.validate_search_context(solutions, 'update')
 
-        solutions = Migrate.content(solutions, self.content_type)
-
-        return self._get_content(solutions, total)
+        return contents
 
     def delete(self):
         """Delete solutions."""
@@ -159,7 +156,7 @@ class Solution(object):
     def run(self):
         """Run the solution management operation."""
 
-        content = self._get_content(None, 0)
+        content = self.storage.get_contents(None)
 
         self._logger.debug('managing solution')
         Config.content_category = Const.SOLUTION
@@ -177,21 +174,5 @@ class Solution(object):
             self.import_all()
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for solution')
-
-        return content
-
-    @staticmethod
-    def _get_content(contents, total):
-        """Format content with data and metadata."""
-
-        if contents is None:
-            contents = ()
-
-        content = {
-            'data': contents,
-            'meta': {
-                'total': total,
-            }
-        }
 
         return content

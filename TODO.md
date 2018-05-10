@@ -1,7 +1,6 @@
 ## WORKING
    - [ ] Add "meta": {"count":5,"offset":10,"limit": 5,"total":32} and "links":{"self":"URL","first":"URL","prev":"URL","next":"URL","last":"URL",} to REST
    - [ ] Add tests for pagination.
-   - [ ] Refactor the new content return that includes the meta. The default is in four places (snippet, solution and apis)
 
 ## FEATURES
    - [ ] Add OPTIONS method.
@@ -48,6 +47,8 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
+   - [ ] Storage create() supports only one content. Maybe this could be a loop of list but the meta needs more work to combine.
+   - [ ] Storage update() supports only one content and this is not in line with create(). Update should also take list instead of one.
    - [ ] Refactor parser and editor to use merge? The Config uses merge and migrate but can the parser and editor do the same? They cannot include Config (easily).
    - [ ] Logger __init__ is confusing since it is not objec but global class. Should be like Logger(__NAME__).api
    - [ ] Refactor internal class level variables and methods to start with _ prefix.

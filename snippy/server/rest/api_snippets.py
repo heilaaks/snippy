@@ -40,12 +40,7 @@ class ApiSnippets(object):
     def on_post(self, request, response):
         """Create new snippets."""
 
-        contents = {
-            'data': [],
-            'meta': {
-                'total': 0
-            }
-        }
+        contents = self.storage.get_contents(None)
         self._logger.debug('run post /snippy/api/v1/snippets')
         collection = Validate.collection(request)
         for member in collection:

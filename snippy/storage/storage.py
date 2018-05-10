@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""storage: Storage management."""
+"""storage: Storage management for content."""
 
 from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
@@ -26,7 +26,7 @@ from snippy.storage.database.sqlite3db import Sqlite3Db as Database
 
 
 class Storage(object):
-    """Storage management for all types of content."""
+    """Storage management for content."""
 
     def __init__(self):
         self._logger = Logger(__name__).logger
@@ -34,9 +34,13 @@ class Storage(object):
         self._database.init()
 
     def create(self, contents):
-        """Create content."""
+        """Create new content."""
 
         self._database.insert_content(contents)
+        rows = self._database.select_content(contents[0].get_category(), digest=contents[0].get_digest())
+        contents = Storage._get_contents(rows)
+
+        return self._meta_content(contents)
 
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content."""
@@ -52,6 +56,10 @@ class Storage(object):
 
         content.update_updated()
         self._database.update_content(content, digest)
+        rows = self._database.select_content(content.get_category(), digest=content.get_digest())
+        contents = Storage._get_contents(rows)
+
+        return self._meta_content(contents)
 
     def delete(self, digest):
         """Delete content."""
@@ -67,7 +75,7 @@ class Storage(object):
         return contents
 
     def import_content(self, contents):
-        """Import contents."""
+        """Import content."""
 
         return self._database.insert_content(contents)
 
@@ -78,9 +86,14 @@ class Storage(object):
             self._database.disconnect()
             self._database = None
 
+    def get_contents(self, contents=None, total=None):
+        """Get content."""
+
+        return self._meta_content(contents, total)
+
     @staticmethod
     def _get_contents(rows):
-        """Convert database rows to tuple of contents."""
+        """Convert database rows to tuple of Content()."""
 
         contents = []
         for row in rows:
@@ -108,3 +121,19 @@ class Storage(object):
                            row[Const.KEY]])
 
         return content
+
+    @staticmethod
+    def _meta_content(contents=None, total=None):
+        """Wrap content with metadata."""
+
+        if contents is None:
+            contents = []
+
+        meta_content = {
+            'data': contents,
+            'meta': {
+                'total': len(contents) if total is None else total,
+            }
+        }
+
+        return meta_content

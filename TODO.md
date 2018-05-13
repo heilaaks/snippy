@@ -1,6 +1,8 @@
 ## WORKING
    - [ ] Add "links":{"self":"URL","first":"URL","prev":"URL","next":"URL","last":"URL",} to GET
    - [ ] Add tests for pagination.
+   - [ ] Refactor link setting.
+   - [ ] Add meta and links to swagger specs.
 
 ## FEATURES
    - [ ] Add OPTIONS method.
@@ -48,6 +50,7 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
+   - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
    - [ ] API modules have: contents['data'].extend(content['data']). Can he content with meta be done with hash.update(another hash) ?
    - [ ] Storage create() supports only one content. Maybe this could be a loop of list but the meta needs more work to combine.
    - [ ] Storage update() supports only one content and this is not in line with create(). Update should also take list instead of one.

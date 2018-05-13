@@ -20,10 +20,14 @@
 """jsonapiv10: Format to JSON API v1.0."""
 
 import json
+import re
+from collections import OrderedDict
 try:
     from urllib.parse import urljoin
+    from urllib.parse import quote_plus
 except ImportError:
     from urlparse import urljoin
+    from urllib import quote_plus  # pylint: disable=ungrouped-imports
 
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
@@ -36,8 +40,11 @@ class JsonApiV1(object):
     _logger = Logger(__name__).logger
 
     @classmethod
-    def resource(cls, category, contents, uri, add_meta=False):
-        """Format JSON API v1.0 resource from content list."""
+    def resource(cls, category, contents, request, pagination=False):
+        """Format JSON API v1.0 resource from content list.
+
+        The contents is a list but there can be only one resources.
+        """
 
         resource_ = {
             'data': {},
@@ -45,7 +52,7 @@ class JsonApiV1(object):
         }
         for content in contents['data']:
             if 'digest' in content:
-                uri = urljoin(uri, content['digest'][:16])
+                uri = urljoin(request.uri, content['digest'][:16])
                 resource_['links'] = {'self': uri}
             type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
             resource_['data'] = {'type': type_,
@@ -53,9 +60,9 @@ class JsonApiV1(object):
                                  'attributes': content}
             break
 
-        if add_meta:
+        if pagination:
             resource_['meta'] = {}
-            resource_['meta']['count'] = 1  # There is always one resource.
+            resource_['meta']['count'] = 1
             resource_['meta']['limit'] = Config.search_limit
             resource_['meta']['offset'] = Config.search_offset
             resource_['meta']['total'] = contents['meta']['total']
@@ -66,7 +73,7 @@ class JsonApiV1(object):
         return cls.dumps(resource_)
 
     @classmethod
-    def collection(cls, category, contents, add_meta=False):
+    def collection(cls, category, contents, request, pagination=False):  # pylint: disable=too-many-locals
         """Format JSON API v1.0 collection from content list."""
 
         collection = {
@@ -80,12 +87,54 @@ class JsonApiV1(object):
             collection['data'].append({'type': type_,
                                        'id': digest,
                                        'attributes': content})
-        if add_meta:
+        if pagination:
             collection['meta'] = {}
             collection['meta']['count'] = len(collection['data'])
             collection['meta']['limit'] = Config.search_limit
             collection['meta']['offset'] = Config.search_offset
             collection['meta']['total'] = contents['meta']['total']
+
+            # Rules
+            #
+            # 1. No need for pagination: add only self, first and last which are all same.
+            # 2. First page with offset zero: do not add prev link.
+            # 3. Last page: do not add next link.
+            # 4. Sort resulted uri query string in links to get deterministic results for testing.
+            # 5. Add links only when offset parameter is defined
+            if request.get_param('offset', default=None):
+                collection['links'] = {}
+                self_offset = Config.search_offset
+
+                # Sort query parameter in URL to have deterministic URL for testing.
+                query_params = OrderedDict(sorted(request.params.items()))
+                url = re.sub(request.query_string, Const.EMPTY, request.uri)
+                for param in query_params:
+                    url = url + param + '=' + quote_plus(request.get_param(param)) + '&'
+                url = url[:-1]  # Remove last ambersand.
+
+                # Set offset of links.
+                if Config.search_offset == 0 and Config.search_limit >= contents['meta']['total']:
+                    last_offset = self_offset
+                    first_offset = self_offset
+                else:
+                    if Config.search_offset != 0:
+                        prev_offset = Config.search_offset-Config.search_limit if Config.search_offset-Config.search_limit < 0 else 0
+                        prev_link = re.sub(r'offset=\d+', 'offset='+str(prev_offset), url)
+                        collection['links']['prev'] = prev_link
+
+                    if Config.search_offset + Config.search_limit < contents['meta']['total']:
+                        next_offset = max(Config.search_offset+Config.search_limit, contents['meta']['total']-Config.search_limit)
+                        next_link = re.sub(r'offset=\d+', 'offset='+str(next_offset), url)
+                        collection['links']['next'] = next_link
+                    last_offset = max(int(contents['meta']['total']/Config.search_limit), contents['meta']['total']-Config.search_limit)
+                    first_offset = 0
+
+                self_link = re.sub(r'offset=\d+', 'offset='+str(self_offset), url)
+                first_link = re.sub(r'offset=\d+', 'offset='+str(first_offset), url)
+                last_link = re.sub(r'offset=\d+', 'offset='+str(last_offset), url)
+                collection['links']['self'] = self_link
+                collection['links']['first'] = first_link
+                collection['links']['last'] = last_link
 
         return cls.dumps(collection)
 

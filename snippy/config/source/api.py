@@ -28,13 +28,14 @@ class Api(ConfigSourceBase):
 
     def __init__(self, category, operation, parameters):
         super(Api, self).__init__()
-        parameters['category'] = category
-        parameters['operation'] = operation
-        parameters['editor'] = False  # Never use text editor with API server.
+        params = dict(parameters)
+        params['category'] = category
+        params['operation'] = operation
+        params['editor'] = False  # Never use text editor with API server.
 
-        Api._validate(parameters)
-        self._set_sall(parameters)
-        self.set_conf(parameters)
+        Api._validate(params)
+        self._set_sall(params)
+        self.set_conf(params)
 
     @staticmethod
     def _set_sall(parameters):

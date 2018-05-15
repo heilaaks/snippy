@@ -43,7 +43,10 @@ class Content(object):
     # Snippets
     REMOVE_TIME = '2017-10-14 19:56:31'
     FORCED_TIME = '2017-10-14 19:56:31'
+    EXITED_TIME = '2017-10-20 07:08:45'
     NETCAT_TIME = '2017-10-20 07:08:45'
+    UMOUNT_TIME = '2018-05-07 11:11:55'
+    
 
     # Solutions
     BEATS_TIME = '2017-10-20 11:11:19'

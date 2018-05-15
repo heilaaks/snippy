@@ -20,6 +20,7 @@
 """jsonapiv10: Format to JSON API v1.0."""
 
 import json
+import math
 import re
 from collections import OrderedDict
 try:
@@ -118,15 +119,36 @@ class JsonApiV1(object):
                     first_offset = self_offset
                 else:
                     if Config.search_offset != 0:
-                        prev_offset = Config.search_offset-Config.search_limit if Config.search_offset-Config.search_limit < 0 else 0
+                        # prev: o-l>=0           ==> o=o-l
+                        # prev: o-l <0           ==> o=0
+                        prev_offset = Config.search_offset-Config.search_limit if Config.search_offset-Config.search_limit > 0 else 0
                         prev_link = re.sub(r'offset=\d+', 'offset='+str(prev_offset), url)
                         collection['links']['prev'] = prev_link
 
                     if Config.search_offset + Config.search_limit < contents['meta']['total']:
-                        next_offset = max(Config.search_offset+Config.search_limit, contents['meta']['total']-Config.search_limit)
+                        # next: o+l=t            ==> o=t-l  (even)
+                        # next: o+l<t-l && o+l<t ==> o=o+l  (last)
+                        # next: o+l>t            ==> NP     (over)
+                        next_offset = contents['meta']['total'] - Config.search_limit if Config.search_offset+Config.search_limit==contents['meta']['total'] else Config.search_offset+Config.search_limit
                         next_link = re.sub(r'offset=\d+', 'offset='+str(next_offset), url)
                         collection['links']['next'] = next_link
-                    last_offset = max(int(contents['meta']['total']/Config.search_limit), contents['meta']['total']-Config.search_limit)
+                    # Compare uneven and even pagination and select the highest offeset.
+                    # last: o+l=t                ==> o=o             (even)
+                    # last: o+l<t-l              ==> o=ceil(t/l)xl-l (less)
+                    # last: o+l<t-l || o+l<t+l   ==> o=o+l           (last)
+                    # last: o+l>t                ==> o=t-l           (over)
+                    if Config.search_offset+Config.search_limit == contents['meta']['total']:
+                        last_offset=self_offset
+                    elif Config.search_offset+Config.search_limit < contents['meta']['total']-Config.search_limit:
+                        last_offset=math.ceil(contents['meta']['total']/Config.search_limit)*Config.search_limit-Config.search_limit
+                    #elif contents['meta']['total']-Config.search_limit < Config.search_offset+Config.search_limit < contents['meta']['total']+Config.search_limit:
+                    elif contents['meta']['total']-Config.search_limit < Config.search_offset+Config.search_limit < contents['meta']['total']:
+                        print("here3")
+                        last_offset=Config.search_offset+Config.search_limit
+                    else:
+                        print("here4")
+                        last_offset=contents['meta']['total']-Config.search_limit
+                        #last_offset=self_offset
                     first_offset = 0
 
                 self_link = re.sub(r'offset=\d+', 'offset='+str(self_offset), url)

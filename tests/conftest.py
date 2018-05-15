@@ -62,14 +62,17 @@ REMOVE_CREATED = '2017-10-14 19:56:31'
 FORCED_CREATED = '2017-10-14 19:56:31'
 EXITED_CREATED = '2017-10-20 07:08:45'
 NETCAT_CREATED = '2017-10-20 07:08:45'
+UMOUNT_CREATED = '2018-05-07 11:11:55'
 CREATE_REMOVE = (REMOVE_CREATED,)*1
 CREATE_FORCED = (FORCED_CREATED,)*1
 CREATE_EXITED = (EXITED_CREATED,)*1
 CREATE_NETCAT = (NETCAT_CREATED,)*1
+CREATE_UMOUNT = (UMOUNT_CREATED,)*1
 IMPORT_REMOVE = (REMOVE_CREATED,)*2
 IMPORT_FORCED = (FORCED_CREATED,)*2
 IMPORT_EXITED = (EXITED_CREATED,)*2
 IMPORT_NETCAT = (NETCAT_CREATED,)*2
+IMPORT_UMOUNT = (UMOUNT_CREATED,)*2
 EDITED_REMOVE = (REMOVE_CREATED,)*1
 
 # Solutions
@@ -267,6 +270,13 @@ def import_netcat_time_mock(mocker):
     """Mock timestamps to import 'netcat' snippet."""
 
     _add_utc_time(mocker, IMPORT_NETCAT)
+
+@pytest.fixture(scope='function', name='umount')
+def import_umount_snippet(mocker, snippy):
+    """Import 'umount' snippet for testing purposes."""
+
+    contents = [Snippet.DEFAULTS[Snippet.UMOUNT]]
+    _import_content(snippy, mocker, contents, IMPORT_UMOUNT)
 
 ## Solutions
 

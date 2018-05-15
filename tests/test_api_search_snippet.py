@@ -745,6 +745,187 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    def test_api_search_snippet_020(self, server):
+        """Search snippets with GET.
+
+        Call GET /v1/snippets so that pagination is applied. The offset is
+        non zero and second page is requested. The requested second page is
+        not the last page. In this case the last page has as many hits that
+        will fit into one page (even last page). All pagination links must
+        be set.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '1424'
+        }
+        result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 1,
+                'offset': 1,
+                'total': 4
+            },
+            'data': [{
+                'type': 'snippets',
+                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+            }],
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=1&sall=docker%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=0&sall=docker%2Cnmap&sort=brief',
+                'next': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=2&sall=docker%2Cnmap&sort=brief',
+                'prev': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=0&sall=docker%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=3&sall=docker%2Cnmap&sort=brief'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&offset=1&limit=1&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    def test_api_search_snippet_021(self, server):
+        """Search snippets with GET.
+
+        Call GET /v1/snippets so that pagination is applied. The offset is
+        non zero and second page is requested. The requested second page is
+        not the last page. In this case the last page has less items than
+        will fit to last page (uneven last page). Also the first page is
+        not even and must be correctly set to zero. All pagination links must
+        be set.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '2091'
+        }
+        result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 2,
+                'offset': 1,
+                'total': 4
+            },
+            'data': [{
+                'type': 'snippets',
+                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+            }, {
+                'type': 'snippets',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+            }],
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=1&sall=docker%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'next': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief',
+                'prev': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&offset=1&limit=2&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.skip(reason='fix test')
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    def test_api_search_snippet_022(self, server):
+        """Search snippets with GET.
+
+        Call GET /v1/snippets so that pagination is applied. The offset is
+        non zero and the last page is requested. This is a continuation to
+        case 21. Because the original request was not started with offset
+        zero, the first and prev pages are not having offset based on limit.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '1079'
+        }
+        result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 2,
+                'offset': 3,
+                'total': 4
+            },
+            'data': [{
+                'type': 'snippets',
+                'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
+                'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
+            }],
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'prev': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=1&sall=docker%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&offset=3&limit=2&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'umount')
+    def test_api_search_snippet_023(self, server):
+        """Search snippets with GET.
+
+        Call GET /v1/snippets so that pagination is applied. The offset and
+        limit are set so that the last page contains less hits than the limit
+        and the requested page is not the last or the second last page.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '1950'
+        }
+        result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 2,
+                'offset': 0,
+                'total': 5
+            },
+            'data': [{
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippets',
+                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+            }],
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cumount%2Cnmap&sort=brief',
+                'next': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=2&sall=docker%2Cumount%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cumount%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=4&sall=docker%2Cumount%2Cnmap&sort=brief'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cumount%2Cnmap&offset=0&limit=2&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
     @pytest.mark.usefixtures('default-snippets')
     def test_pytest_fixtures(self, server):
         """Test pytest fixtures with pytest specific mocking.

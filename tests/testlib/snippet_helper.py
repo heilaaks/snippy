@@ -34,11 +34,13 @@ class SnippetHelper(object):
     FORCED = 1
     EXITED = 2
     NETCAT = 3
+    UMOUNT = 4
 
     REMOVE_DIGEST = '54e41e9b52a02b63'
     FORCED_DIGEST = '53908d68425c61dc'
     EXITED_DIGEST = '49d6916b6711f13d'
     NETCAT_DIGEST = 'f3fd167c64b6f97e'
+    UMOUNT_DIGEST = '490c913cf941a0be'
     DEFAULTS = ({'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
                  'brief': 'Remove all docker containers with volumes',
                  'group': 'docker',
@@ -92,6 +94,20 @@ class SnippetHelper(object):
                  'versions': '',
                  'created': '2017-10-20 07:08:45',
                  'updated': '2017-10-20 07:08:45',
+                 'digest': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'},
+                {'data': ('lsof | grep \'/tmp/overlayfs/overlay\'',
+                          'kill <pid>',
+                          'umount /tmp/overlayfs/overlay'),
+                 'brief': 'Umount a busy device',
+                 'group': 'linux',
+                 'tags': ('device', 'linux', 'umount'),
+                 'links': ('https://stackoverflow.com/a/7878763',),
+                 'category': 'snippet',
+                 'filename': '',
+                 'runalias': '',
+                 'versions': '',
+                 'created': '2018-05-07 11:11:55',
+                 'updated': '2018-05-07 11:11:55',
                  'digest': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'})
 
     TEMPLATE = ('# Commented lines will be ignored.',

@@ -74,7 +74,7 @@ class JsonApiV1(object):
         return cls.dumps(resource_)
 
     @classmethod
-    def collection(cls, category, contents, request, pagination=False):  # pylint: disable=too-many-locals
+    def collection(cls, category, contents, request, pagination=False):  # pylint: disable=too-many-locals,too-many-branches
         """Format JSON API v1.0 collection from content list."""
 
         collection = {
@@ -97,12 +97,13 @@ class JsonApiV1(object):
 
             # Rules
             #
-            # 1. No need for pagination: add only self, first and last which are all same.
-            # 2. First page with offset zero: do not add prev link.
+            # 1. No pagination needed: add only self, first and last which are all the same.
+            # 2. First page with offset zero: do not add previous link.
             # 3. Last page: do not add next link.
             # 4. Sort resulted uri query string in links to get deterministic results for testing.
-            # 5. Add links only when offset parameter is defined
-            if request.get_param('offset', default=None):
+            # 5. Add links only when offset parameter is defined. Pagination makes sense only with offset.
+            # 6. In case search limit is zero, only meta is requested and no links are needed.
+            if request.get_param('offset', default=None) and Config.search_limit:
                 collection['links'] = {}
                 self_offset = Config.search_offset
 
@@ -119,6 +120,7 @@ class JsonApiV1(object):
                     first_offset = self_offset
                 else:
                     if Config.search_offset != 0:
+                        # prev: o-l <0           ==> o=0    (less)
                         # prev: o-l>=0           ==> o=o-l
                         # prev: o-l <0           ==> o=0
                         prev_offset = Config.search_offset-Config.search_limit if Config.search_offset-Config.search_limit > 0 else 0
@@ -126,29 +128,27 @@ class JsonApiV1(object):
                         collection['links']['prev'] = prev_link
 
                     if Config.search_offset + Config.search_limit < contents['meta']['total']:
-                        # next: o+l=t            ==> o=t-l  (even)
+                        # next: o+l<t            ==> o=o+l  (less)
                         # next: o+l<t-l && o+l<t ==> o=o+l  (last)
-                        # next: o+l>t            ==> NP     (over)
-                        next_offset = contents['meta']['total'] - Config.search_limit if Config.search_offset+Config.search_limit==contents['meta']['total'] else Config.search_offset+Config.search_limit
+                        # next: o+l=t            ==> N/A    (even)
+                        # next: o+l>t            ==> N/A    (over)
+                        next_offset = Config.search_offset+Config.search_limit
                         next_link = re.sub(r'offset=\d+', 'offset='+str(next_offset), url)
                         collection['links']['next'] = next_link
-                    # Compare uneven and even pagination and select the highest offeset.
+                    # last: o+l<=t-l             ==> o=ceil(t/l)xl-l (less)
+                    # last: o+l<t-l && o+l<t     ==> o=o+l           (last)
                     # last: o+l=t                ==> o=o             (even)
-                    # last: o+l<t-l              ==> o=ceil(t/l)xl-l (less)
-                    # last: o+l<t-l || o+l<t+l   ==> o=o+l           (last)
                     # last: o+l>t                ==> o=t-l           (over)
-                    if Config.search_offset+Config.search_limit == contents['meta']['total']:
-                        last_offset=self_offset
-                    elif Config.search_offset+Config.search_limit < contents['meta']['total']-Config.search_limit:
-                        last_offset=math.ceil(contents['meta']['total']/Config.search_limit)*Config.search_limit-Config.search_limit
-                    #elif contents['meta']['total']-Config.search_limit < Config.search_offset+Config.search_limit < contents['meta']['total']+Config.search_limit:
-                    elif contents['meta']['total']-Config.search_limit < Config.search_offset+Config.search_limit < contents['meta']['total']:
-                        print("here3")
-                        last_offset=Config.search_offset+Config.search_limit
+                    if Config.search_offset+Config.search_limit <= contents['meta']['total']-Config.search_limit:
+                        # Explicit float casting is needed for Python 2.7 to
+                        # get floating point result for ceil.
+                        last_offset = int(math.ceil(float(contents['meta']['total'])/float(Config.search_limit))*Config.search_limit-Config.search_limit)  # noqa: E501 # pylint: disable=line-too-long
+                    elif contents['meta']['total']-Config.search_limit < Config.search_offset+Config.search_limit < contents['meta']['total']:  # noqa: E501 # pylint: disable=line-too-long
+                        last_offset = Config.search_offset+Config.search_limit
+                    elif Config.search_offset+Config.search_limit == contents['meta']['total']:
+                        last_offset = self_offset
                     else:
-                        print("here4")
-                        last_offset=contents['meta']['total']-Config.search_limit
-                        #last_offset=self_offset
+                        last_offset = self_offset
                     first_offset = 0
 
                 self_link = re.sub(r'offset=\d+', 'offset='+str(self_offset), url)

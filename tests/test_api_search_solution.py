@@ -606,6 +606,40 @@ class TestApiSearchSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
+    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    def test_api_search_solution_paginate_001(self, server):
+        """Search solution with GET.
+
+        Call GET /v1/solution so that pagination is applied with limit zero.
+        This is a special case that returns the metadata but the data list
+        is empty. This query uses sall parameter with regexp filter . (dot)
+        which matches to all solutions. The non-zero offset does not affect
+        to the total count of query result and it is just returned in the
+        meta as it was provided.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '71'
+        }
+        result_json = {
+            'meta': {
+                'count': 0,
+                'limit': 0,
+                'offset': 4,
+                'total': 3
+            },
+            'data': [],
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/solutions',
+            headers={'accept': 'application/json'},
+            query_string='sall=.&offset=4&limit=0&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

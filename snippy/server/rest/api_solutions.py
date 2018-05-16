@@ -70,7 +70,7 @@ class ApiSolutions(object):
         api = Api(Const.SOLUTION, Api.SEARCH, request.params)
         Config.load(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents['data']:
+        if not contents['data'] and Config.search_limit != 0:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API

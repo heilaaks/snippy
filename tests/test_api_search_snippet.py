@@ -601,7 +601,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
-    def test_api_search_snippet_017(self, server):
+    def test_api_search_snippet_paginate_001(self, server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -655,7 +655,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
-    def test_api_search_snippet_018(self, server):
+    def test_api_search_snippet_paginate_002(self, server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -701,7 +701,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
-    def test_api_search_snippet_019(self, server):
+    def test_api_search_snippet_paginate_003(self, server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -746,7 +746,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
-    def test_api_search_snippet_020(self, server):
+    def test_api_search_snippet_paginate_004(self, server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -790,7 +790,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
-    def test_api_search_snippet_021(self, server):
+    def test_api_search_snippet_paginate_005(self, server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
@@ -838,15 +838,15 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.skip(reason='fix test')
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
-    def test_api_search_snippet_022(self, server):
+    def test_api_search_snippet_paginate_006(self, server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset is
-        non zero and the last page is requested. This is a continuation to
-        case 21. Because the original request was not started with offset
-        zero, the first and prev pages are not having offset based on limit.
+        non zero and the last page is requested. Because original request
+        was not started with  offset zero, the first and prev pages are not
+        having offset based on limit. In here the offset is also exactly
+        the same as total amount of hits.
         """
 
         result_headers = {
@@ -882,7 +882,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'umount')
-    def test_api_search_snippet_023(self, server):
+    def test_api_search_snippet_paginate_007(self, server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied. The offset and
@@ -925,6 +925,164 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
+    def test_api_search_snippet_paginate_008(self, server):
+        """Search snippets with GET.
+
+        Try to call GET /v1/snippets with pagination offset that is bigger
+        than the maximum amount of hits.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '335'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&offset=4&limit=2&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    def test_api_search_snippet_paginate_009(self, server):
+        """Search snippets with GET.
+
+        Call GET /v1/snippets so that pagination is applied with limit zero.
+        This is a special case that returns the metadata but the data list
+        is empty.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '71'
+        }
+        result_json = {
+            'meta': {
+                'count': 0,
+                'limit': 0,
+                'offset': 0,
+                'total': 4
+            },
+            'data': [],
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&offset=0&limit=0&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
+    def test_api_search_snippet_paginate_010(self, server):
+        """Search snippets with GET.
+
+        Try to call GET /v1/snippets with negative offset.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '359'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'search result limit is not a positive integer: -4'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&offset=-4&limit=2&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
+
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
+    def test_api_search_snippet_paginate_011(self, server):
+        """Search snippets with GET.
+
+        Try to call GET /v1/snippets with negative offset and limit.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '515'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'search result limit is not a positive integer: -2'
+            }, {
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'search offset is not a positive integer: -4'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&offset=-4&limit=-2&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
+
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
+    def test_api_search_snippet_paginate_012(self, server):
+        """Search snippets with GET.
+
+        Try to call GET /v1/snippets when offset and limit are not numbers.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '528'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'search result limit is not a positive integer: 0xdeadbeef'
+            }, {
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'search offset is not a positive integer: ABCDEFG'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&offset=ABCDEFG&limit=0xdeadbeef&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
 
     @pytest.mark.usefixtures('default-snippets')
     def test_pytest_fixtures(self, server):

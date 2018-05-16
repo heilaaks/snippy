@@ -1,7 +1,6 @@
 ## WORKING
+   - [ ] Refactor link and meta for GET response.
    - [ ] Add "links":{"self":"URL","first":"URL","prev":"URL","next":"URL","last":"URL",} to GET
-   - [ ] Add tests for pagination.
-   - [ ] Refactor link setting.
    - [ ] Add meta and links to swagger specs.
 
 ## FEATURES
@@ -26,9 +25,10 @@
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## FIX
+   - [ ] Fix 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH'' It seems Python 2.7 does not support PATCH somewhere?
+   - [ ] Fix add paranoid security level to define maximum printed variables from user to REST responses and logs.
+   - [ ] Fix testing error titles. Some contain the hash which now prevent all checks for title. Some titles should be checked.
    - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
-   - [ ] Fix negative offset (and limit?) do not fail the query when they should.
-   - [ ] Fix limit=0 returns 404 and cannot find resources. What this should do? OK?
    - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases?
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
@@ -118,6 +118,9 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Fixed check that forces search limit and offset to be positive integers.
+   - [x] Added search limit=0 as special case that returns metadata in GET response.
+   - [x] Added pagination links to GET responses.
    - [x] Added meta field for pagination purposes to HTTP GET responses.
    - [x] Added offset to enable GET pagination with limit.
    - [x] Added X-HTTP-Method-Override header support for POST to map it to PUT, PATCH and DELETE.

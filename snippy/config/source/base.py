@@ -258,9 +258,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         self._search_limit = self.LIMIT_DEFAULT  # pylint: disable=attribute-defined-outside-init
         try:
-            self._search_limit = int(value)  # pylint: disable=attribute-defined-outside-init
+            value = int(value)
+            if value >= 0:
+                self._search_limit = value  # pylint: disable=attribute-defined-outside-init
+            else:
+                raise ValueError
         except ValueError:
-            self._logger.info('search result limit is not a number and thus default used: %d', self._search_limit)
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'search result limit is not a positive integer: {}'.format(value))
 
     @property
     def search_offset(self):
@@ -275,9 +279,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         self._search_offset = self.OFFSET_DEFAULT  # pylint: disable=attribute-defined-outside-init
         try:
-            self._search_offset = int(value)  # pylint: disable=attribute-defined-outside-init
+            value = int(value)
+            if value >= 0:
+                self._search_offset = value  # pylint: disable=attribute-defined-outside-init
+            else:
+                raise ValueError
         except ValueError:
-            self._logger.info('search result offset is not a number and thus default used: %d', self._search_offset)
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'search offset is not a positive integer: {}'.format(value))
 
     @property
     def sort_fields(self):

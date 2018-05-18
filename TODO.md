@@ -22,8 +22,7 @@
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## SECURITY
-   - [ ] Add check for maximum size of printed string. Someone may try to push large strings to be printed.
-   - [ ] Remove server name and version from HTTP responses.
+   - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
    - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv
@@ -52,6 +51,7 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
+   - [ ] Make Logger use super(logging) somehow? https://stackoverflow.com/a/28050837 and https://stackoverflow.com/a/22586200
    - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
    - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
    - [ ] Make solution template and UTC time readon to follow timestamp without microseconds?
@@ -123,6 +123,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added safety and security check to limit extremely large log messages.
    - [x] Changed REST API default base bath to /snippy/api/app/v1 to prepare auth and admin paths.
    - [x] Fixed JSON API UTC time to follow ISO8601 format with micsecond accuracy.
    - [x] Fixed check that forces search limit and offset to be positive integers.

@@ -847,6 +847,20 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        than for the 'The tool configuration is global and shared with all instances
        of Snippy()'.
 
+    SECURITY HARDENING
+
+    1. Logger has own security log level
+    
+       All suspected security related events are printed to logs with 'security'
+       level.
+    
+    2. Hard maximum on log messages
+    
+       There is a hard maximum 'Logger.SECURITY_LOG_MSG_MAX' for log messages for
+       safety and security reasons. This tries to prevent extremely long log messages
+       which may cause problems for the server.
+
+
     LOGGING
 
     1. There are no logs printed to user
@@ -931,7 +945,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
          5. 'Deprecat' a soon-to-be removed features.
          6. 'Security' in case of vulnerabilities.
          7. 'Refactor' code without external changes.
-         8. 'Edit' for typo and layout fixes
+         8. 'Edit' small fixes like typo and layout fixes.
 
        The rule must be applied so that the logs are written for humans. This means
        that the commit log must tell the reasons and design decisions behind the

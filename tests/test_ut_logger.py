@@ -39,6 +39,7 @@ class TestUtLogger(object):
         """
 
         # Log levels
+        logger.security('testing security level')
         logger.critical('testing critical level')
         logger.error('testing error level')
         logger.warning('testing warning level')
@@ -51,7 +52,7 @@ class TestUtLogger(object):
         out, err = capsys.readouterr()
         assert not err
         assert not out
-        assert len(caplog.records[:]) == 4
+        assert len(caplog.records[:]) == 5
         assert 'testing critical level' in caplog.text
         assert 'testing error level' in caplog.text
         assert 'testing warning level' in caplog.text
@@ -76,6 +77,7 @@ class TestUtLogger(object):
         })
 
         # Log levels
+        logger.security('testing security level')
         logger.critical('testing critical level')
         logger.error('testing error level')
         logger.warning('testing warning level')
@@ -87,13 +89,13 @@ class TestUtLogger(object):
 
         out, err = capsys.readouterr()
         assert not err
-        assert len(out.splitlines()) == 6
+        assert len(out.splitlines()) == 7
         assert 'testing critical level' in out
         assert 'testing error level' in out
         assert 'testing warning level' in out
         assert 'testing info level' in out
         assert 'testing debug level' in out
-        assert len(caplog.records[:]) == 6
+        assert len(caplog.records[:]) == 7
         assert 'testing critical level' in caplog.text
         assert 'testing error level' in caplog.text
         assert 'testing warning level' in caplog.text
@@ -107,7 +109,7 @@ class TestUtLogger(object):
         """Test logger basic usage.
 
         Test case verifies that very verbose option works for text logs.
-        In this case the lenght of the log message must be truncated and
+        In this case the length of the log message must be truncated and
         the message must be in all lower case characters.
         """
 
@@ -123,6 +125,7 @@ class TestUtLogger(object):
 
         logger.warning('abcdefghij'*100)
         logger.warning('VARIABLE %s', ('ABCDEFGHIJ'*100))
+        logger.security('SECURITY %s', ('ABCDEFGHIJ'*100))
 
         out, err = capsys.readouterr()
         assert not err
@@ -131,8 +134,10 @@ class TestUtLogger(object):
         assert 'variable abcdefghij' in out
         assert len(caplog.records[0].msg) == Logger.DEFAULT_LOG_MSG_MAX
         assert len(caplog.records[1].msg) == Logger.DEFAULT_LOG_MSG_MAX
+        assert len(caplog.records[2].msg) == Logger.DEFAULT_LOG_MSG_MAX
         assert caplog.records[0].msg.islower()
         assert caplog.records[1].msg.islower()
+        assert caplog.records[2].msg.islower()
 
     def test_logger_004(self, capsys, caplog):
         """Test logger basic usage.
@@ -383,3 +388,56 @@ class TestUtLogger(object):
         assert len(caplog.records[1].msg) == Logger.DEFAULT_LOG_MSG_MAX
         assert caplog.records[0].appname == 'snippy'
         assert caplog.records[1].appname == 'snippy'
+
+    def test_logger_011(self, logger, caplog, capsys):
+        """Test logger security.
+
+        Test case verifies that debug configuration is not printing extremely
+        long logs. These are prevented for safety and security reasons. There
+        must be a security event logged.
+        """
+
+        Logger.configure({
+            'debug': True,
+            'log_json': False,
+            'log_msg_max': Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': False,
+            'very_verbose': False
+        })
+
+        logger.debug('variable%s', ('a'*(Logger.SECURITY_LOG_MSG_MAX+1000)))
+        out, err = capsys.readouterr()
+        print(err)
+        assert not err
+        assert len(out.splitlines()) == 2
+        assert len(caplog.records[:]) == 2
+        assert 'long log message detected and truncated' in caplog.text
+        assert 'variableaaaaaaaa' in out
+        assert len(max(caplog.text.split(), key=len)) == len('variable' + 'a'*Logger.SECURITY_LOG_MSG_MAX) - len('variable')
+
+    def test_logger_012(self, capsys, caplog):
+        """Test custom security level.
+
+        Test case verifies that custom security level is working.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': False,
+            'log_json': False,
+            'log_msg_max': 120,
+            'quiet': False,
+            'very_verbose': True
+        })
+        logger = Logger('snippy.' + __name__).logger
+
+        logger.security('SECURITY %s', ('ABCDEFGHIJ'*100))
+
+        out, err = capsys.readouterr()
+        assert not err
+        assert 'security abcdefghij' in out
+        assert len(caplog.records[0].msg) == 120
+        assert caplog.records[0].appname == 'snippy'
+        assert caplog.records[0].levelname == 'security'
+        assert caplog.records[0].levelno == Logger.SECURITY
+        assert hasattr(caplog.records[0], 'oid')

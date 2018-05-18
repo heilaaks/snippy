@@ -43,6 +43,12 @@ class Logger(object):
     # Default maximum length of log message.
     DEFAULT_LOG_MSG_MAX = 80
 
+    # Maximum length of log message for safety and security reasons.
+    SECURITY_LOG_MSG_MAX = 100000
+
+    # Custom security log level which is a next free level from RFC 5424.
+    SECURITY = 60
+
     # Unique operation ID that identifies logs for each operation.
     SERVER_OID = format(getrandbits(32), "08x")
 
@@ -71,12 +77,16 @@ class Logger(object):
         # printed with one letter when debug logs are in text mode. In
         # JSON format logs contain full length severity level name.
         #
+        # The security level is a custom level.
+        #
         # /1/ https://en.wikipedia.org/wiki/Syslog#Severity_level
+        logging.SECURITY = Logger.SECURITY
         logging.addLevelName(logging.CRITICAL, 'crit')
         logging.addLevelName(logging.ERROR, 'err')
         logging.addLevelName(logging.WARNING, 'warning')
         logging.addLevelName(logging.INFO, 'info')
         logging.addLevelName(logging.DEBUG, 'debug')
+        logging.addLevelName(logging.SECURITY, 'security')
         self.logger = logging.getLogger(module)
         if not self.logger.handlers:
             formatter = CustomFormatter(Logger.LOG_FORMAT)
@@ -84,7 +94,7 @@ class Logger(object):
             handler.setFormatter(formatter)
             handler.addFilter(CustomFilter())
             self.logger.addHandler(handler)
-        self.logger = logging.LoggerAdapter(self.logger, {'appname': 'snippy', 'oid': Logger.SERVER_OID})
+        self.logger = CustomLoggerAdapter(self.logger, {'appname': 'snippy', 'oid': Logger.SERVER_OID})
 
     @classmethod
     def configure(cls, config):
@@ -109,6 +119,11 @@ class Logger(object):
         cls.CONFIG['log_msg_max'] = config['log_msg_max']
         cls.CONFIG['quiet'] = config['quiet']
         cls.CONFIG['very_verbose'] = config['very_verbose']
+
+        if cls.CONFIG['log_msg_max'] > Logger.SECURITY_LOG_MSG_MAX:
+            cls.CONFIG['log_msg_max'] = Logger.DEFAULT_LOG_MSG_MAX
+            Logger(__name__).logger.debug('log messages cannot extend over security level: %s %s',
+                                          cls.CONFIG['log_msg_max'], Logger.DEFAULT_LOG_MSG_MAX)
 
         # Set the effective log level for all the loggers created under
         # 'snippy' logger namespace. This relies on that the module level
@@ -233,23 +248,47 @@ class Logger(object):
                 logger.addHandler(handler)
 
 
+class CustomLoggerAdapter(logging.LoggerAdapter):  # pylint: disable=too-few-public-methods
+    """Custom logger adapter.
+
+    The logging.LoggerAdapter does not support custom log levels.
+    """
+
+    def __init__(self, logger, extra):
+        logging.LoggerAdapter.__init__(self, logger, extra)
+        self.logger = logger
+        logging.addLevelName(logging.SECURITY, 'security')
+
+    def security(self, msg, *args, **kwargs):
+        """customer log level."""
+
+        self.log(logging.SECURITY, msg, *args, **kwargs)
+
+
 class CustomFormatter(logging.Formatter):
     """Custom log formatting."""
 
     def __init__(self, *args, **kwargs):
         self._snippy_msg_end = '...'
         self._snippy_msg_max = Logger.CONFIG['log_msg_max'] - len(self._snippy_msg_end)
+        self._snippy_msg_max_security = Logger.SECURITY_LOG_MSG_MAX - len(self._snippy_msg_end)
         super(CustomFormatter, self).__init__(*args, **kwargs)
 
     def format(self, record):
         """Format log string."""
 
-        # Debug option prints logs "as is" in full-length. Very verbose option
-        # truncates logs in order to try to guarantee one log per line. In case
-        # of the very verbose option, log message is printed fully with lower
-        # case characters.
+        # Debug option tries to print logs "as is" in full length. There is a
+        # maximum limitation for logs for safety and security reasons. Very
+        # verbose option truncates logs in order to try to guarantee one log
+        # per line. In case of the very verbose option, log message is printed
+        # fully with lower case characters.
         if record.args:
             record.msg = record.msg % record.args
+            if len(record.msg) > Logger.SECURITY_LOG_MSG_MAX:
+                Logger(__name__).logger.security('long log message detected and truncated: {0}, {1:.{2}}'.format(
+                    len(record.msg), record.msg, Logger.DEFAULT_LOG_MSG_MAX))
+                record.msg = record.msg[:self._snippy_msg_max_security] + (record.msg[self._snippy_msg_max_security:] and
+                                                                           self._snippy_msg_end)
             record.args = None
         if Logger.CONFIG['very_verbose']:
             record.msg = record.msg.replace('\n', ' ').replace('\r', '')

@@ -46,8 +46,8 @@ class Logger(object):
     # Maximum length of log message for safety and security reasons.
     SECURITY_LOG_MSG_MAX = 100000
 
-    # Custom security log level which is a next free level from RFC 5424.
-    SECURITY = 60
+    # Custom security log level.
+    SECURITY = logging.CRITICAL + 10
 
     # Unique operation ID that identifies logs for each operation.
     SERVER_OID = format(getrandbits(32), "08x")
@@ -64,37 +64,49 @@ class Logger(object):
         'very_verbose': False
     }
 
-    def __init__(self, module):
+    # Use severity level names from RFC 5424 /1/. The level name is printed
+    # with one letter when debug logs are in text mode. In JSON format logs
+    # contain full length severity level name.
+    #
+    # The security level is a custom log level only for security events.
+    #
+    # /1/ https://en.wikipedia.org/wiki/Syslog#Severity_level
+    logging.SECURITY = SECURITY
+    logging.addLevelName(logging.SECURITY, 'security')
+    logging.addLevelName(logging.CRITICAL, 'crit')
+    logging.addLevelName(logging.ERROR, 'err')
+    logging.addLevelName(logging.WARNING, 'warning')
+    logging.addLevelName(logging.INFO, 'info')
+    logging.addLevelName(logging.DEBUG, 'debug')
+
+    def __init__(self, name=__name__):
         """
 
         Parameters
         ----------
         Args:
-           module (str): Name of the module that requests a Logger.
+           name (str): Name of the module that requests a Logger.
         """
 
-        # Use severity level names from RFC 5424 /1/. The level name is
-        # printed with one letter when debug logs are in text mode. In
-        # JSON format logs contain full length severity level name.
-        #
-        # The security level is a custom level.
-        #
-        # /1/ https://en.wikipedia.org/wiki/Syslog#Severity_level
-        logging.SECURITY = Logger.SECURITY
-        logging.addLevelName(logging.CRITICAL, 'crit')
-        logging.addLevelName(logging.ERROR, 'err')
-        logging.addLevelName(logging.WARNING, 'warning')
-        logging.addLevelName(logging.INFO, 'info')
-        logging.addLevelName(logging.DEBUG, 'debug')
-        logging.addLevelName(logging.SECURITY, 'security')
-        self.logger = logging.getLogger(module)
-        if not self.logger.handlers:
+        self._name = name
+
+    def get_logger(self):
+        """Get logger.
+
+        A custom logger adapater is returned to support custom level with
+        additional logging parameters.
+        """
+
+        logger = logging.getLogger(self._name)
+        if not logger.handlers:
             formatter = CustomFormatter(Logger.LOG_FORMAT)
             handler = logging.StreamHandler(stream=sys.stdout)
             handler.setFormatter(formatter)
             handler.addFilter(CustomFilter())
-            self.logger.addHandler(handler)
-        self.logger = CustomLoggerAdapter(self.logger, {'appname': 'snippy', 'oid': Logger.SERVER_OID})
+            logger.addHandler(handler)
+        logger = CustomLoggerAdapter(logger, {'appname': 'snippy', 'oid': Logger.SERVER_OID})
+
+        return logger
 
     @classmethod
     def configure(cls, config):
@@ -122,8 +134,8 @@ class Logger(object):
 
         if cls.CONFIG['log_msg_max'] > Logger.SECURITY_LOG_MSG_MAX:
             cls.CONFIG['log_msg_max'] = Logger.DEFAULT_LOG_MSG_MAX
-            Logger(__name__).logger.debug('log messages cannot extend over security level: %s %s',
-                                          cls.CONFIG['log_msg_max'], Logger.DEFAULT_LOG_MSG_MAX)
+            Logger().get_logger().debug('log messages cannot extend over security level: %s %s',
+                                        cls.CONFIG['log_msg_max'], Logger.DEFAULT_LOG_MSG_MAX)
 
         # Set the effective log level for all the loggers created under
         # 'snippy' logger namespace. This relies on that the module level
@@ -198,7 +210,7 @@ class Logger(object):
         if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
             if cls.CONFIG['very_verbose']:
                 cause.lower()
-            Logger(__name__).logger.info('exiting with cause %s', cause)
+            Logger().get_logger().info('exiting with cause %s', cause)
         elif not cls.CONFIG['quiet']:
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
@@ -219,7 +231,7 @@ class Logger(object):
 
             start = time.time()
             result = method(*args, **kw)
-            Logger(__name__).logger.debug('operation duration: %.6fs', (time.time() - start))
+            Logger().get_logger().debug('operation duration: %.6fs', (time.time() - start))
             Logger.refresh_oid()
 
             return result
@@ -256,8 +268,6 @@ class CustomLoggerAdapter(logging.LoggerAdapter):  # pylint: disable=too-few-pub
 
     def __init__(self, logger, extra):
         logging.LoggerAdapter.__init__(self, logger, extra)
-        self.logger = logger
-        logging.addLevelName(logging.SECURITY, 'security')
 
     def security(self, msg, *args, **kwargs):
         """customer log level."""
@@ -285,7 +295,7 @@ class CustomFormatter(logging.Formatter):
         if record.args:
             record.msg = record.msg % record.args
             if len(record.msg) > Logger.SECURITY_LOG_MSG_MAX:
-                Logger(__name__).logger.security('long log message detected and truncated: {0}, {1:.{2}}'.format(
+                Logger().get_logger().security('long log message detected and truncated: {0}, {1:.{2}}'.format(
                     len(record.msg), record.msg, Logger.DEFAULT_LOG_MSG_MAX))
                 record.msg = record.msg[:self._snippy_msg_max_security] + (record.msg[self._snippy_msg_max_security:] and
                                                                            self._snippy_msg_end)
@@ -362,8 +372,8 @@ class CustomGunicornLogger(GunicornLogger):  # pylint: disable=too-few-public-me
         self._remove_handlers(self.access_log)
         logging.getLogger('gunicorn').propagate = False
 
-        self.error_log = Logger('snippy.server.gunicorn.error').logger
-        self.access_log = Logger('snippy.server.gunicorn.access').logger
+        self.error_log = Logger('snippy.server.gunicorn.error').get_logger()
+        self.access_log = Logger('snippy.server.gunicorn.access').get_logger()
 
     @staticmethod
     def _remove_handlers(logger):

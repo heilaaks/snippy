@@ -43,7 +43,7 @@ class Parser(object):
     LINKS_HEAD = '# Add optional links below one link per line.\n'
     LINKS_TAIL = '.'
 
-    _logger = Logger(__name__).logger
+    _logger = Logger(__name__).get_logger()
 
     @staticmethod
     def read_content(content, source):

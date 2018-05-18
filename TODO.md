@@ -5,7 +5,7 @@
    - [ ] Add embedded security features.
    - [ ] Add primary key to content database table.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
-   - [ ] Add /snippy/api/admin/v1/settings for log config. Change snippy api to /snippy/api/app/v1. Add /snippy/api/auth/v1 for login. These have same base /snippy/api/
+   - [ ] Add /snippy/api/admin/v1/settings for log config. Add /snippy/api/auth/v1 for login. These have same base /snippy/api/
    - [ ] Add support to get /snippet/123123324/brief and all the fields.
    - [ ] Add support to export content to markdown format.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
@@ -51,7 +51,6 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
-   - [ ] Make Logger use super(logging) somehow? https://stackoverflow.com/a/28050837 and https://stackoverflow.com/a/22586200
    - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
    - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
    - [ ] Make solution template and UTC time readon to follow timestamp without microseconds?
@@ -123,7 +122,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
-   - [x] Added safety and security check to limit extremely large log messages.
+   - [x] Added safety check and security event based on log message length.
    - [x] Changed REST API default base bath to /snippy/api/app/v1 to prepare auth and admin paths.
    - [x] Fixed JSON API UTC time to follow ISO8601 format with micsecond accuracy.
    - [x] Fixed check that forces search limit and offset to be positive integers.

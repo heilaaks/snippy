@@ -62,7 +62,7 @@ class Cause(object):
     HTTP_404_NOT_FOUND = 404
 
     _list = {'errors': []}
-    _logger = Logger(__name__).logger
+    _logger = Logger(__name__).get_logger()
 
     @classmethod
     def reset(cls):

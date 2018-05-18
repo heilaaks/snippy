@@ -30,7 +30,7 @@ from snippy.logger import Logger
 class Editor(object):
     """Text editor based content management."""
 
-    _logger = Logger(__name__).logger
+    _logger = Logger(__name__).get_logger()
 
     @classmethod
     def read_content(cls, content):

@@ -121,7 +121,7 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': True
         })
-        logger = Logger('snippy.' + __name__).logger
+        logger = Logger('snippy.' + __name__).get_logger()
 
         logger.warning('abcdefghij'*100)
         logger.warning('VARIABLE %s', ('ABCDEFGHIJ'*100))
@@ -153,7 +153,7 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': False
         })
-        logger = Logger('snippy.' + __name__).logger
+        logger = Logger('snippy.' + __name__).get_logger()
 
         logger.warning('abcdefghij'*100)
         logger.warning('variable %s', ('abcdefghij'*100))
@@ -181,7 +181,7 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': True
         })
-        logger = Logger('snippy.' + __name__).logger
+        logger = Logger('snippy.' + __name__).get_logger()
 
         logger.warning('abcdefghij'*100)
         logger.warning('variable %s', ('abcdefghij'*100))
@@ -282,7 +282,7 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': False
         })
-        logger = Logger('snippy.' + __name__).logger
+        logger = Logger('snippy.' + __name__).get_logger()
 
         logger.warning('first message')
         Logger.refresh_oid()
@@ -306,7 +306,7 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': False
         })
-        logger = Logger('snippy.' + __name__).logger
+        logger = Logger('snippy.' + __name__).get_logger()
         logger.warning('testing logger debug')
         Logger.debug()
 
@@ -329,7 +329,7 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': False
         })
-        _ = Logger('other.package').logger
+        _ = Logger('other.package').get_logger()
 
         Logger.remove()  # Part of the test.
         Logger.debug()   # Part of the test.
@@ -354,7 +354,7 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': True
         })
-        logger = Logger('snippy.' + __name__).logger
+        logger = Logger('snippy.' + __name__).get_logger()
 
         logger.warning('abcdefghij'*100)
         logger.warning('VARIABLE %s', ('ABCDEFGHIJ'*100))
@@ -429,7 +429,7 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': True
         })
-        logger = Logger('snippy.' + __name__).logger
+        logger = Logger('snippy.' + __name__).get_logger()
 
         logger.security('SECURITY %s', ('ABCDEFGHIJ'*100))
 

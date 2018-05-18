@@ -39,7 +39,7 @@ from snippy.logger import Logger
 class Config(object):
     """Global configuration object."""
 
-    _logger = Logger(__name__).logger
+    _logger = Logger(__name__).get_logger()
 
     @classmethod
     def init(cls, args):

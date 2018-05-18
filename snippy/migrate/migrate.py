@@ -40,7 +40,7 @@ from snippy.meta import __version__
 class Migrate(object):
     """Import and export management."""
 
-    _logger = Logger(__name__).logger
+    _logger = Logger(__name__).get_logger()
 
     @classmethod
     def content(cls, contents, content_type):

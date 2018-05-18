@@ -39,7 +39,7 @@ class Reference(object):
     TEST_SEPARATOR = ' <WF_SEPARATOR> '
 
     def __init__(self):
-        self._logger = Logger(__name__).logger
+        self._logger = Logger(__name__).get_logger()
         self.tests = []
 
     def print_tests(self, ansi=True):

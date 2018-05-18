@@ -37,25 +37,25 @@ class Sqlite3Db(object):
     QUERY_TYPE_TOTAL = 'total'
 
     def __init__(self):
-        self.logger = Logger(__name__).logger
-        self.connection = None
+        self._logger = Logger(__name__).logger
+        self._connection = None
 
     def init(self):
         """Initialize database."""
 
-        if not self.connection:
-            self.connection = self._create_db()
+        if not self._connection:
+            self._connection = self._create_db()
 
     def disconnect(self):
         """Close database connection."""
 
-        if self.connection:
+        if self._connection:
             try:
-                self.connection.close()
-                self.connection = None
-                self.logger.debug('closed sqlite3 database')
+                self._connection.close()
+                self._connection = None
+                self._logger.debug('closed sqlite3 database')
             except sqlite3.Error as exception:
-                self.logger.exception('closing sqlite3 database failed with exception "%s"', exception)
+                self._logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
     def insert_content(self, contents):
         """Insert contents into database."""
@@ -65,14 +65,14 @@ class Sqlite3Db(object):
         for content in contents:
             digest = content.get_digest()
             if digest != content.compute_digest():
-                self.logger.debug('invalid digest found and updated while storing content data: "%s"', content.get_data())
+                self._logger.debug('invalid digest found and updated while storing content data: "%s"', content.get_data())
                 content.update_digest()
 
             cause = self._insert_content(content)
             if cause[0] == Cause.HTTP_OK:
                 inserted = inserted + 1
 
-        self.logger.debug('inserted %d out of %d content', inserted, len(contents))
+        self._logger.debug('inserted %d out of %d content', inserted, len(contents))
 
         if not contents:
             cause = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
@@ -120,7 +120,7 @@ class Sqlite3Db(object):
         query, qargs = self._get_query(category, sall, stag, sgrp, digest, data, Sqlite3Db.QUERY_TYPE_REGEX)
         if query:
             rows = self._get_db(query, qargs)
-        self.logger.debug('selected %d rows %s', len(rows), rows)
+        self._logger.debug('selected %d rows %s', len(rows), rows)
 
         return rows
 
@@ -128,12 +128,12 @@ class Sqlite3Db(object):
         """Select content based on data."""
 
         rows = ()
-        if self.connection:
+        if self._connection:
             query = ('SELECT * FROM contents WHERE data=?')
             qargs = [Const.DELIMITER_DATA.join(map(str, data))]
-            self.logger.debug('running select query "%s"', query)
+            self._logger.debug('running select query "%s"', query)
             try:
-                with closing(self.connection.cursor()) as cursor:
+                with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
             except sqlite3.Error as exception:
@@ -141,7 +141,7 @@ class Sqlite3Db(object):
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
 
-        self.logger.debug('selected rows %s', rows)
+        self._logger.debug('selected rows %s', rows)
 
         return rows
 
@@ -149,12 +149,12 @@ class Sqlite3Db(object):
         """Select all content."""
 
         rows = ()
-        if self.connection:
-            self.logger.debug('select all contents from category %s', category)
+        if self._connection:
+            self._logger.debug('select all contents from category %s', category)
             query = ('SELECT * FROM contents WHERE category=?')
             qargs = [category]
             try:
-                with closing(self.connection.cursor()) as cursor:
+                with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
             except sqlite3.Error as exception:
@@ -202,19 +202,19 @@ class Sqlite3Db(object):
     def delete_content(self, digest):
         """Delete single content based on given digest."""
 
-        if self.connection:
+        if self._connection:
             query = ('DELETE FROM contents WHERE digest LIKE ?')
-            self.logger.debug('delete content with digest %s', digest)
+            self._logger.debug('delete content with digest %s', digest)
             try:
-                with closing(self.connection.cursor()) as cursor:
+                with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, (digest+'%',))
                     if cursor.rowcount == 1:
-                        self.connection.commit()
+                        self._connection.commit()
                         Cause.push(Cause.HTTP_NO_CONTENT, 'content deleted successfully')
                     elif cursor.rowcount == 0:
                         Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content to be deleted with digest {:.16}'.format(digest))
                     else:
-                        self.logger.debug('unexpected row count %d while deleting with digest %s', cursor.rowcount, digest)
+                        self._logger.debug('unexpected row count %d while deleting with digest %s', cursor.rowcount, digest)
             except sqlite3.Error as exception:
                 Cause.push(Cause.HTTP_500, 'deleting from database failed with exception {}'.format(exception))
         else:
@@ -240,7 +240,7 @@ class Sqlite3Db(object):
             connection.create_function('REGEXP', 2, Sqlite3Db._regexp)
             with closing(connection.cursor()) as cursor:
                 cursor.execute(schema)
-            self.logger.debug('sqlite3 database persisted in %s', location)
+            self._logger.debug('sqlite3 database persisted in %s', location)
         except sqlite3.Error as exception:
             Cause.push(Cause.HTTP_500, 'creating database failed with exception {}'.format(exception))
 
@@ -262,19 +262,19 @@ class Sqlite3Db(object):
         cause = (Cause.HTTP_OK, Const.EMPTY)
         if content.is_template():
             cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
-            self.logger.debug(cause[1])
+            self._logger.debug(cause[1])
 
             return cause
 
         if not content.has_data():
             cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content data was missing')
-            self.logger.debug(cause[1])
+            self._logger.debug(cause[1])
 
             return cause
 
         if self._select_content_data(content.get_data()):
             cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest {:.16}'.format(self._get_db_digest(content)))
-            self.logger.debug(cause[1])
+            self._logger.debug(cause[1])
 
             return cause
 
@@ -289,7 +289,7 @@ class Sqlite3Db(object):
         if len(contents) == 1:
             digest = contents[0][Const.DIGEST]
         else:
-            self.logger.debug('unexpected number %d of %s received while searching', len(contents), category)
+            self._logger.debug('unexpected number %d of %s received while searching', len(contents), category)
 
         return digest
 
@@ -297,9 +297,9 @@ class Sqlite3Db(object):
         """Run generic query to get data."""
 
         rows = ()
-        if self.connection:
+        if self._connection:
             try:
-                with closing(self.connection.cursor()) as cursor:
+                with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
             except sqlite3.Error as exception:
@@ -312,11 +312,11 @@ class Sqlite3Db(object):
     def _put_db(self, query, qargs):
         """Run generic query for insert or update."""
 
-        if self.connection:
+        if self._connection:
             try:
-                with closing(self.connection.cursor()) as cursor:
+                with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
-                    self.connection.commit()
+                    self._connection.commit()
             except sqlite3.IntegrityError:
                 raise sqlite3.IntegrityError
             except sqlite3.Error as exception:

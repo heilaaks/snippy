@@ -61,7 +61,7 @@ class Config(object):
         cls.storage_file = cls._storage_file()
 
         # Static server configuration.
-        cls.base_path = source.base_path
+        cls.base_path_app = source.base_path_app
         cls.compact_json = source.compact_json
         cls.server = source.server
         cls.server_ip = source.server_ip
@@ -464,6 +464,6 @@ class Config(object):
         cls._logger.debug('configured option defaults: %s', cls.defaults)
         cls._logger.debug('configured option template: %s', cls.template)
         cls._logger.debug('configured option server: %s', cls.server)
-        cls._logger.debug('configured option server api base path: %s', cls.base_path)
+        cls._logger.debug('configured option server app base path: %s', cls.base_path_app)
         cls._logger.debug('configured option server ip: %s and port: %s', cls.server_ip, cls.server_port)
         cls._logger.debug('configured option server compact json: %s', cls.compact_json)

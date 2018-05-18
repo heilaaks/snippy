@@ -43,7 +43,7 @@ class ApiSolutions(object):
         """Create new solution."""
 
         contents = self.storage.get_contents(None)
-        self._logger.debug('run post /snippy/api/v1/solutions')
+        self._logger.debug('run post /snippy/api/app/v1/solutions')
         collection = Validate.collection(request)
         for member in collection:
             api = Api(Const.SOLUTION, Api.CREATE, member)
@@ -60,13 +60,13 @@ class ApiSolutions(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end post /snippy/api/v1/solutions')
+        self._logger.debug('end post /snippy/api/app/v1/solutions')
 
     @Logger.timeit
     def on_get(self, request, response):
         """Search solutions based on query parameters."""
 
-        self._logger.debug('run get /snippy/api/v1/solutions')
+        self._logger.debug('run get /snippy/api/app/v1/solutions')
         api = Api(Const.SOLUTION, Api.SEARCH, request.params)
         Config.load(api)
         contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
@@ -82,20 +82,20 @@ class ApiSolutions(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end get /snippy/api/v1/solutions')
+        self._logger.debug('end get /snippy/api/app/v1/solutions')
 
     @Logger.timeit
     def on_delete(self, _, response):
         """Deleting solutions without resource is not supported."""
 
-        self._logger.debug('run delete /snippy/api/v1/solutions')
+        self._logger.debug('run delete /snippy/api/app/v1/solutions')
         Cause.push(Cause.HTTP_NOT_FOUND, 'cannot delete solutions without identified resource')
         response.content_type = Const.MEDIA_JSON_API
         response.body = JsonApiV1.error(Cause.json_message())
         response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end delete /snippy/api/v1/solutions')
+        self._logger.debug('end delete /snippy/api/app/v1/solutions')
 
 
 class ApiSolutionsDigest(object):
@@ -109,7 +109,7 @@ class ApiSolutionsDigest(object):
     def on_put(self, request, response, digest):
         """Update whole solution based on digest."""
 
-        self._logger.debug('run put /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('run put /snippy/api/app/v1/solutions/%s', digest)
         resource_ = Validate.resource(request, digest)
         if resource_:
             api = Api(Const.SOLUTION, Api.UPDATE, resource_)
@@ -125,22 +125,22 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end put /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('end put /snippy/api/app/v1/solutions/%s', digest)
 
     @Logger.timeit
     def on_patch(self, request, response, digest):
         """Update partial solution based on digest."""
 
-        self._logger.debug('run patch /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('run patch /snippy/api/app/v1/solutions/%s', digest)
         self.on_put(request, response, digest)
         Cause.reset()
-        self._logger.debug('end patch /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('end patch /snippy/api/app/v1/solutions/%s', digest)
 
     @Logger.timeit
     def on_get(self, request, response, digest):
         """Search solutions based on digest."""
 
-        self._logger.debug('run get /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('run get /snippy/api/app/v1/solutions/%s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SOLUTION, Api.SEARCH, local_params)
         Config.load(api)
@@ -157,13 +157,13 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end get /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('end get /snippy/api/app/v1/solutions/%s', digest)
 
     @Logger.timeit
     def on_delete(self, _, response, digest):
         """Delete solution based on digest."""
 
-        self._logger.debug('run delete /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('run delete /snippy/api/app/v1/solutions/%s', digest)
         local_params = {'digest': digest}
         api = Api(Const.SOLUTION, Api.DELETE, local_params)
         Config.load(api)
@@ -176,13 +176,13 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end delete /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('end delete /snippy/api/app/v1/solutions/%s', digest)
 
     @Logger.timeit
     def on_post(self, request, response, digest):
         """Update solution."""
 
-        self._logger.debug('run post /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('run post /snippy/api/app/v1/solutions/%s', digest)
         if request.get_header('x-http-method-override', default='post').lower() == 'put':
             self.on_put(request, response, digest)
         elif request.get_header('x-http-method-override', default='post').lower() == 'patch':
@@ -196,4 +196,4 @@ class ApiSolutionsDigest(object):
             response.status = Cause.http_status()
 
         Cause.reset()
-        self._logger.debug('end post /snippy/api/v1/solutions/%s', digest)
+        self._logger.debug('end post /snippy/api/app/v1/solutions/%s', digest)

@@ -62,11 +62,11 @@ class TestApiUpdateSolution(object):
         content = {'2cd0e794244a07f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2996'
+            'content-length': '3000'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/solutions/2cd0e794244a07f8'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/2cd0e794244a07f8'
             },
             'data': {
                 'type': 'solutions',
@@ -80,7 +80,7 @@ class TestApiUpdateSolution(object):
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -123,11 +123,11 @@ class TestApiUpdateSolution(object):
         content = {'8d400d39568354f9': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2895'
+            'content-length': '2899'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/solutions/8d400d39568354f9'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/8d400d39568354f9'
             },
             'data': {
                 'type': 'solutions',
@@ -137,7 +137,7 @@ class TestApiUpdateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -181,7 +181,7 @@ class TestApiUpdateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/solutions/101010101010101',
+            path='/snippy/api/app/v1/solutions/101010101010101',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -218,7 +218,7 @@ class TestApiUpdateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
@@ -248,7 +248,10 @@ class TestApiUpdateSolution(object):
                 }
             }
         }
-        result_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '382'}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '382'
+        }
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -260,7 +263,7 @@ class TestApiUpdateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -287,7 +290,10 @@ class TestApiUpdateSolution(object):
                     'group': Solution.DEFAULTS[Solution.NGINX]['group'],
                     'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
-        result_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '382'}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '382'
+        }
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -299,7 +305,7 @@ class TestApiUpdateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -342,11 +348,11 @@ class TestApiUpdateSolution(object):
         content = {'21c737e704b97226': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3079'
+            'content-length': '3083'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/solutions/21c737e704b97226'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21c737e704b97226'
             },
             'data': {
                 'type': 'solutions',
@@ -356,7 +362,7 @@ class TestApiUpdateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_patch(
-            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.headers == result_headers

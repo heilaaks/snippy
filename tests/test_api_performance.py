@@ -87,7 +87,7 @@ class TestApiPerformance(object):
 
             # POST four snippets in list context.
             conn.request('POST',
-                         '/snippy/api/v1/snippets',
+                         '/snippy/api/app/v1/snippets',
                          json.dumps(snippets),
                          {'content-type':'application/json; charset=UTF-8'})
             resp = conn.getresponse()
@@ -96,34 +96,34 @@ class TestApiPerformance(object):
 
             # GET maximum of two snippets from whole snippet collection.
             conn.request('GET',
-                         '/snippy/api/v1/snippets?limit=2&sort=-brief')
+                         '/snippy/api/app/v1/snippets?limit=2&sort=-brief')
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_200_OK
             assert len(json.loads(resp.read().decode())['data']) == 2
 
             ## GET maximum of four snippets from whole snippet collection with sall search.
             conn.request('GET',
-                         '/snippy/api/v1/snippets?sall=docker,swarm&limit=4&sort=brief')
+                         '/snippy/api/app/v1/snippets?sall=docker,swarm&limit=4&sort=brief')
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_200_OK
             assert len(json.loads(resp.read().decode())['data']) == 3
 
             ## DELETE all snippets one by one by first requesting only digests.
             conn.request('GET',
-                         '/snippy/api/v1/snippets?limit=100&fields=digest')
+                         '/snippy/api/app/v1/snippets?limit=100&fields=digest')
             resp = conn.getresponse()
             body = json.loads(resp.read().decode())
             assert resp.status == Cause.HTTP_200_OK
             assert len(body['data']) == 4
             for resource_ in body['data']:
                 conn.request('DELETE',
-                             'http://localhost:8080/snippy/api/v1/snippets/' + resource_['attributes']['digest'])
+                             'http://localhost:8080/snippy/api/app/v1/snippets/' + resource_['attributes']['digest'])
                 resp = conn.getresponse()
                 assert resp.status == Cause.HTTP_204_NO_CONTENT
 
             # GET all snippets to make sure that all are deleted
             conn.request('GET',
-                         '/snippy/api/v1/snippets?limit=100')
+                         '/snippy/api/app/v1/snippets?limit=100')
             resp = conn.getresponse()
             assert resp.status == Cause.HTTP_404_NOT_FOUND
 
@@ -163,7 +163,7 @@ class TestApiPerformance(object):
 
         # POST four snippets.
         conn.request('POST',
-                     '/snippy/api/v1/snippets',
+                     '/snippy/api/app/v1/snippets',
                      json.dumps(snippets),
                      {'content-type':'application/json; charset=UTF-8'})
         resp = conn.getresponse()

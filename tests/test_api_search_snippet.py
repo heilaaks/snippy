@@ -66,7 +66,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == result_headers
@@ -106,7 +106,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=brief')
         assert result.headers == result_headers
@@ -143,7 +143,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief,category')
         assert result.headers == result_headers
@@ -179,7 +179,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief%2Ccategory')
         assert result.headers == result_headers
@@ -218,7 +218,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created,-brief')
         assert result.headers == result_headers
@@ -258,7 +258,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
         assert result.headers == result_headers
@@ -288,7 +288,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
         assert result.headers == result_headers
@@ -322,7 +322,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief&fields=category')
         assert result.headers == result_headers
@@ -352,7 +352,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.headers == result_headers
@@ -382,7 +382,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.headers == result_headers
@@ -412,7 +412,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.headers == result_headers
@@ -431,7 +431,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '779'
+            'content-length': '783'
         }
         result_json = {
             'meta': {
@@ -446,12 +446,12 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets/54e41e9b52a02b6',
+            path='/snippy/api/app/v1/snippets/54e41e9b52a02b6',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -480,7 +480,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets/101010101010101',
+            path='/snippy/api/app/v1/snippets/101010101010101',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -517,7 +517,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
         assert result.headers == result_headers
@@ -553,7 +553,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')
         assert result.headers == result_headers
@@ -593,7 +593,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == result_headers
@@ -613,7 +613,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3139'
+            'content-length': '3151'
         }
         result_json = {
             'meta': {
@@ -640,14 +640,14 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }],
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=10&offset=0&sall=docker%2Cnmap&sort=brief',
-                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=10&offset=0&sall=docker%2Cnmap&sort=brief',
-                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=10&offset=0&sall=docker%2Cnmap&sort=brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=10&offset=0&sall=docker%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=10&offset=0&sall=docker%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=10&offset=0&sall=docker%2Cnmap&sort=brief'
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=0&limit=10&sort=brief')
         assert result.headers == result_headers
@@ -666,7 +666,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1962'
+            'content-length': '1978'
         }
         result_json = {
             'meta': {
@@ -685,15 +685,15 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }],
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
-                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
-                'next': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=2&sall=docker%2Cnmap&sort=brief',
-                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=2&sall=docker%2Cnmap&sort=brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'next': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=2&sall=docker%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=2&sall=docker%2Cnmap&sort=brief'
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=0&limit=2&sort=brief')
         assert result.headers == result_headers
@@ -711,7 +711,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1794'
+            'content-length': '1810'
         }
         result_json = {
             'meta': {
@@ -730,15 +730,15 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }],
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=2&sall=docker%2Cnmap&sort=brief',
-                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
-                'prev': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
-                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=2&sall=docker%2Cnmap&sort=brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=2&sall=docker%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'prev': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=2&sall=docker%2Cnmap&sort=brief'
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=2&limit=2&sort=brief')
         assert result.headers == result_headers
@@ -758,7 +758,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1448'
+            'content-length': '1468'
         }
         result_json = {
             'meta': {
@@ -773,16 +773,16 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }],
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=1&sall=docker%2Cnmap&sort=brief',
-                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=0&sall=docker%2Cnmap&sort=brief',
-                'next': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=2&sall=docker%2Cnmap&sort=brief',
-                'prev': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=0&sall=docker%2Cnmap&sort=brief',
-                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=1&offset=3&sall=docker%2Cnmap&sort=brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=1&offset=1&sall=docker%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=1&offset=0&sall=docker%2Cnmap&sort=brief',
+                'next': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=1&offset=2&sall=docker%2Cnmap&sort=brief',
+                'prev': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=1&offset=0&sall=docker%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=1&offset=3&sall=docker%2Cnmap&sort=brief'
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=1&limit=1&sort=brief')
         assert result.headers == result_headers
@@ -803,7 +803,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2139'
+            'content-length': '2159'
         }
         result_json = {
             'meta': {
@@ -822,16 +822,16 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }],
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=1&sall=docker%2Cnmap&sort=brief',
-                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
-                'next': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief',
-                'prev': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
-                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=1&sall=docker%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'next': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief',
+                'prev': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief'
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=1&limit=2&sort=brief')
         assert result.headers == result_headers
@@ -851,7 +851,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1103'
+            'content-length': '1119'
         }
         result_json = {
             'meta': {
@@ -866,15 +866,15 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }],
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief',
-                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
-                'prev': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=1&sall=docker%2Cnmap&sort=brief',
-                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
+                'prev': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=1&sall=docker%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief'
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=3&limit=2&sort=brief')
         assert result.headers == result_headers
@@ -892,7 +892,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1998'
+            'content-length': '2014'
         }
         result_json = {
             'meta': {
@@ -911,15 +911,15 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }],
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cumount%2Cnmap&sort=brief',
-                'next': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=2&sall=docker%2Cumount%2Cnmap&sort=brief',
-                'first': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=0&sall=docker%2Cumount%2Cnmap&sort=brief',
-                'last': 'http://falconframework.org/snippy/api/v1/snippets?limit=2&offset=4&sall=docker%2Cumount%2Cnmap&sort=brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cumount%2Cnmap&sort=brief',
+                'next': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=2&sall=docker%2Cumount%2Cnmap&sort=brief',
+                'first': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cumount%2Cnmap&sort=brief',
+                'last': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=4&sall=docker%2Cumount%2Cnmap&sort=brief'
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cumount%2Cnmap&offset=0&limit=2&sort=brief')
         assert result.headers == result_headers
@@ -949,7 +949,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=4&limit=2&sort=brief')
         assert result.headers == result_headers
@@ -979,7 +979,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=10&limit=10&sort=brief')
         assert result.headers == result_headers
@@ -1010,7 +1010,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=0&limit=0&sort=brief')
         assert result.headers == result_headers
@@ -1039,7 +1039,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=-4&limit=2&sort=brief')
         assert result.headers == result_headers
@@ -1073,7 +1073,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=-4&limit=-2&sort=brief')
         assert result.headers == result_headers
@@ -1107,7 +1107,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=ABCDEFG&limit=0xdeadbeef&sort=brief')
         assert result.headers == result_headers
@@ -1147,7 +1147,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
         assert result.headers == result_headers
@@ -1187,7 +1187,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=brief')
         assert result.headers == result_headers

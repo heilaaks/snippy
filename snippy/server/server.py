@@ -52,7 +52,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
             'workers': 1,
             'logger_class': CustomGunicornLogger
         }
-        self._logger.debug('run server with base path: %s', Config.base_path)
+        self._logger.debug('run rest api server application with base path: %s', Config.base_path_app)
         try:
             self.api = falcon.API(media_type='application/vnd.api+json')
         except AttributeError:
@@ -60,10 +60,10 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.add_route('/snippy', ApiHello())
-        self.api.add_route(Config.base_path.rstrip('/'), ApiHello())
-        self.api.add_route(urljoin(Config.base_path, 'hello'), ApiHello())
-        self.api.add_route(urljoin(Config.base_path, 'snippets'), ApiSnippets(self.storage))
-        self.api.add_route(urljoin(Config.base_path, 'snippets/{digest}'), ApiSnippetsDigest(self.storage))
-        self.api.add_route(urljoin(Config.base_path, 'solutions'), ApiSolutions(self.storage))
-        self.api.add_route(urljoin(Config.base_path, 'solutions/{digest}'), ApiSolutionsDigest(self.storage))
+        self.api.add_route(Config.base_path_app.rstrip('/'), ApiHello())
+        self.api.add_route(urljoin(Config.base_path_app, 'hello'), ApiHello())
+        self.api.add_route(urljoin(Config.base_path_app, 'snippets'), ApiSnippets(self.storage))
+        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}'), ApiSnippetsDigest(self.storage))
+        self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(self.storage))
+        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(self.storage))
         SnippyServer(self.api, options).run()

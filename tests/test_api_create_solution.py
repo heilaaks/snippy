@@ -64,7 +64,7 @@ class TestApiCreateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -108,7 +108,7 @@ class TestApiCreateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -143,11 +143,11 @@ class TestApiCreateSolution(object):
         content = {'2cd0e794244a07f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2996'
+            'content-length': '3000'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/solutions/2cd0e794244a07f8'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/2cd0e794244a07f8'
             },
             'data': {
                 'type': 'solutions',
@@ -161,7 +161,7 @@ class TestApiCreateSolution(object):
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -204,11 +204,11 @@ class TestApiCreateSolution(object):
         content = {'21c737e704b97226': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3079'
+            'content-length': '3083'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/solutions/21c737e704b97226'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21c737e704b97226'
             },
             'data': {
                 'type': 'solutions',
@@ -218,7 +218,7 @@ class TestApiCreateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -243,7 +243,7 @@ class TestApiCreateSolution(object):
         server.run()
         assert len(Database.get_solutions()) == 3
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/solutions/eeef5ca3ec9cd36',
+            path='/snippy/api/app/v1/solutions/eeef5ca3ec9cd36',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.headers == result_headers
         assert not result.text
@@ -281,7 +281,7 @@ class TestApiCreateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/solutions/53908d68425c61dc',
+            path='/snippy/api/app/v1/solutions/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -315,7 +315,7 @@ class TestApiCreateSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers

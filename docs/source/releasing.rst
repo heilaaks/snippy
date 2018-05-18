@@ -29,7 +29,7 @@ Releasing
       snippy import --defaults --storage-path ${HOME}/devel/temp
       snippy import --defaults --solution --storage-path ${HOME}/devel/temp
       snippy --server --storage-path ${HOME}/devel/temp --port 8080 --ip 127.0.0.1 -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
 #. Test with PyPI
 
@@ -63,9 +63,9 @@ Releasing
       docker run snippy --help
       docker run snippy search --sall docker
       docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
       docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
 #. Make tag
 
@@ -119,9 +119,9 @@ Releasing
       docker run snippy --help
       docker run snippy search --sall docker
       docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
       docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
 #. Release news
 

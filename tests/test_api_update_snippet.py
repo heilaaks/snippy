@@ -62,11 +62,11 @@ class TestApiUpdateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '719'
+            'content-length': '723'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
             },
             'data': {
                 'type': 'snippets',
@@ -76,7 +76,7 @@ class TestApiUpdateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -121,11 +121,11 @@ class TestApiUpdateSnippet(object):
         content = {'e56c2183edcc3a67': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '625'
+            'content-length': '629'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets/e56c2183edcc3a67'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/e56c2183edcc3a67'
             },
             'data': {
                 'type': 'snippets',
@@ -135,7 +135,7 @@ class TestApiUpdateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -178,11 +178,11 @@ class TestApiUpdateSnippet(object):
         content = {'26128ea95707a3a26': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '568'
+            'content-length': '572'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets/26128ea95707a3a2'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/26128ea95707a3a2'
             },
             'data': {
                 'type': 'snippets',
@@ -192,7 +192,7 @@ class TestApiUpdateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -236,7 +236,7 @@ class TestApiUpdateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/snippets/101010101010101',
+            path='/snippy/api/app/v1/snippets/101010101010101',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -272,7 +272,7 @@ class TestApiUpdateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
@@ -303,10 +303,13 @@ class TestApiUpdateSnippet(object):
             }
         }
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        result_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '719'}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '723'
+        }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
             },
             'data': {
                 'type': 'snippets',
@@ -317,7 +320,7 @@ class TestApiUpdateSnippet(object):
         result_json['data']['attributes']['updated'] = Content.NETCAT_TIME
         server.run()
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -361,11 +364,11 @@ class TestApiUpdateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '811'
+            'content-length': '815'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets/a9e137c08aee0985'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
             },
             'data': {
                 'type': 'snippets',
@@ -375,7 +378,7 @@ class TestApiUpdateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_patch(
-            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers

@@ -258,8 +258,8 @@ be expected. The API is documented in Swagger Hub `OpenAPI definitions`_.
 .. code-block:: text
 
    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv
-   curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
-   curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+   curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
 You can change the port and IP address by defining them from the command
 line. Remember to remove the stopped container before starting it with new
@@ -269,7 +269,7 @@ perameters.
 
    docker rm -f snippy
    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
-   curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
 You can see the logs from the server from the default Docker log. If you do
 not want to read JSON logs, remove the ``--log-json`` parameter from the

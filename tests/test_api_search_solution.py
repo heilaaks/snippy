@@ -66,7 +66,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=nginx%2CElastic&limit=20&sort=brief')
         assert result.headers == result_headers
@@ -109,7 +109,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug%2Ctesting&limit=2&sort=brief')
         assert result.headers == result_headers
@@ -146,7 +146,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief,category')
         assert result.headers == result_headers
@@ -182,7 +182,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief%2Ccategory')
         assert result.headers == result_headers
@@ -223,7 +223,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker,beats%2Cnmap&limit=2&sort=-created,-brief')
         assert result.headers == result_headers
@@ -264,7 +264,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
         assert result.headers == result_headers
@@ -294,7 +294,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
         assert result.headers == result_headers
@@ -330,7 +330,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief&fields=category')
         assert result.headers == result_headers
@@ -360,7 +360,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.headers == result_headers
@@ -390,7 +390,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.headers == result_headers
@@ -420,7 +420,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
         assert result.headers == result_headers
@@ -431,13 +431,13 @@ class TestApiSearchSolution(object):
     def test_api_search_solution_012(self, server):
         """Search solution with digets.
 
-        Call GET /snippy/api/v1/solutions/{digest} to get explicit solution
+        Call GET /snippy/api/app/v1/solutions/{digest} to get explicit solution
         based on digest. In this case the solution is found.
         """
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2535'
+            'content-length': '2539'
         }
         result_json = {
             'meta': {
@@ -452,12 +452,12 @@ class TestApiSearchSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/solutions/a96accc25dd23ac0'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0'
             }
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -486,7 +486,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions/101010101010101',
+            path='/snippy/api/app/v1/solutions/101010101010101',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -523,7 +523,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
         assert result.headers == result_headers
@@ -559,7 +559,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')
         assert result.headers == result_headers
@@ -599,7 +599,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=nginx%2CElastic&limit=20&sort=brief')
         assert result.headers == result_headers
@@ -633,7 +633,7 @@ class TestApiSearchSolution(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/v1/solutions',
+            path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=.&offset=4&limit=0&sort=brief')
         assert result.headers == result_headers

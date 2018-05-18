@@ -37,15 +37,15 @@ Docker Hub or directly from the source code.
    # container with new options set.
    docker rm -f snippy
    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv
-   curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
-   curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+   curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
    # Start the server and define the port and IP address when the network is
    # shared between the container and host. Generate full length logs with
    # the --debug option.
    docker rm -f snippy
    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json --debug
-   curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
    # Run the server with string logs.
    docker rm -f snippy

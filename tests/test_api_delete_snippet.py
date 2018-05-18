@@ -49,7 +49,7 @@ class TestApiDeleteSnippet(object):
         server.run()
         assert len(Database.get_snippets()) == 3
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/v1/snippets/f3fd167c64b6f97e',
+            path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
@@ -79,7 +79,7 @@ class TestApiDeleteSnippet(object):
         server.run()
         assert len(Database.get_snippets()) == 3
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/v1/snippets/beefbeef',
+            path='/snippy/api/app/v1/snippets/beefbeef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -114,7 +114,7 @@ class TestApiDeleteSnippet(object):
         server.run()
         assert len(Database.get_contents()) == 2
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)

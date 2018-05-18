@@ -13,7 +13,7 @@ info:
     name: "GNU AGPLv3 or later"
     url: "https://github.com/heilaaks/snippy/blob/master/LICENSE"
 host: "snippettips.com"
-basePath: "/snippy/api/v1"
+basePath: "/snippy/api/app/v1"
 paths:
   /snippets:
     post:

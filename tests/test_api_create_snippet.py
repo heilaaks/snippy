@@ -64,7 +64,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -110,7 +110,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -155,7 +155,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -202,7 +202,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -255,7 +255,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -301,7 +301,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -332,7 +332,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
@@ -378,7 +378,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
@@ -415,7 +415,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -454,7 +454,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
@@ -497,7 +497,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets',
+            path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -529,11 +529,11 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '719'
+            'content-length': '723'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
             },
             'data': {
                 'type': 'snippets',
@@ -543,7 +543,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -585,11 +585,11 @@ class TestApiCreateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '811'
+            'content-length': '815'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/v1/snippets/a9e137c08aee0985'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
             },
             'data': {
                 'type': 'snippets',
@@ -599,7 +599,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -624,7 +624,7 @@ class TestApiCreateSnippet(object):
         server.run()
         assert len(Database.get_snippets()) == 3
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets/f3fd167c64b6f97e',
+            path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.headers == result_headers
         assert not result.text
@@ -662,7 +662,7 @@ class TestApiCreateSnippet(object):
         }
         server.run()
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/v1/snippets/53908d68425c61dc',
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers

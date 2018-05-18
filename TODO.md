@@ -26,7 +26,6 @@
    - [ ] Remove server name and version from HTTP responses.
 
 ## FIX
-   - [ ] Fix solution template and UTC time reading.
    - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv
    - [ ] Fix all post responses to have link to created resource. Why this is not always included? Only in updates but not in create?
    - [ ] Fix 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH'' It seems Python 2.7 does not support PATCH somewhere?
@@ -53,11 +52,13 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
-   - [ ] Refactor link and meta for GET response.
    - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
+   - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
+   - [ ] Make solution template and UTC time readon to follow timestamp without microseconds?
    - [ ] API modules have: contents['data'].extend(content['data']). Can he content with meta be done with hash.update(another hash) ?
    - [ ] Storage create() supports only one content. Maybe this could be a loop of list but the meta needs more work to combine.
    - [ ] Storage update() supports only one content and this is not in line with create(). Update should also take list instead of one.
+   - [ ] Offset based pagination is slow with large data sets (how large?).
    - [ ] Refactor parser and editor to use merge? The Config uses merge and migrate but can the parser and editor do the same? They cannot include Config (easily).
    - [ ] Logger __init__ is confusing since it is not objec but global class. Should be like Logger(__NAME__).api
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
@@ -122,6 +123,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Changed REST API default base bath to /snippy/api/app/v1 to prepare auth and admin paths.
    - [x] Fixed JSON API UTC time to follow ISO8601 format with micsecond accuracy.
    - [x] Fixed check that forces search limit and offset to be positive integers.
    - [x] Added search limit=0 as special case that returns metadata in GET response.

@@ -22,7 +22,6 @@
 import json
 import math
 import re
-from collections import OrderedDict
 try:
     from urllib.parse import urljoin
     from urllib.parse import quote_plus
@@ -107,10 +106,10 @@ class JsonApiV1(object):
                 collection['links'] = {}
                 self_offset = Config.search_offset
 
-                # Sort query parameter in URL to have deterministic URL for testing.
-                query_params = OrderedDict(sorted(request.params.items()))
+                # Sort query parameter in link URL to have deterministic URL
+                # for testing.
                 url = re.sub(request.query_string, Const.EMPTY, request.uri)
-                for param in query_params:
+                for param in sorted(request.params):
                     url = url + param + '=' + quote_plus(request.get_param(param)) + '&'
                 url = url[:-1]  # Remove last ambersand.
 
@@ -121,8 +120,8 @@ class JsonApiV1(object):
                 else:
                     if Config.search_offset != 0:
                         # prev: o-l <0           ==> o=0    (less)
-                        # prev: o-l>=0           ==> o=o-l
-                        # prev: o-l <0           ==> o=0
+                        # prev: o-l>=0           ==> o=o-l  (over)
+                        # prev: o-l >t           ==> o=t-l  (over) (N/P)
                         prev_offset = Config.search_offset-Config.search_limit if Config.search_offset-Config.search_limit > 0 else 0
                         prev_link = re.sub(r'offset=\d+', 'offset='+str(prev_offset), url)
                         collection['links']['prev'] = prev_link

@@ -930,8 +930,8 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_paginate_008(self, server):
         """Search snippets with GET.
 
-        Try to call GET /v1/snippets with pagination offset that is bigger
-        than the maximum amount of hits.
+        Try to call GET /v1/snippets with pagination offset that is the same
+        as the amount of snippets stored into the database.
         """
 
         result_headers = {
@@ -956,8 +956,38 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
     def test_api_search_snippet_paginate_009(self, server):
+        """Search snippets with GET.
+
+        Try to call GET /v1/snippets with pagination offset that is one bigger
+        than the maximum amount of hits.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '335'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/v1/snippets',
+            headers={'accept': 'application/json'},
+            query_string='sall=docker%2Cnmap&offset=10&limit=10&sort=brief')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    def test_api_search_snippet_paginate_010(self, server):
         """Search snippets with GET.
 
         Call GET /v1/snippets so that pagination is applied with limit zero.
@@ -988,7 +1018,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
-    def test_api_search_snippet_paginate_010(self, server):
+    def test_api_search_snippet_paginate_011(self, server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets with negative offset.
@@ -1017,7 +1047,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_400
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
-    def test_api_search_snippet_paginate_011(self, server):
+    def test_api_search_snippet_paginate_012(self, server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets with negative offset and limit.
@@ -1051,7 +1081,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_400
 
     @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
-    def test_api_search_snippet_paginate_012(self, server):
+    def test_api_search_snippet_paginate_013(self, server):
         """Search snippets with GET.
 
         Try to call GET /v1/snippets when offset and limit are not numbers.

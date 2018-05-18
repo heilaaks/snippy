@@ -916,16 +916,18 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     1. Git commit logs follows rules from Chris Beams with explicit change types
 
        The commit logs follow seven rules from Chris Beams /1/ with explicit list
-       of change types from /2/.
+       of change types from listed below derived from /2/ and /3/.
 
-       The explicit change types in commit log header are from /2/:
+       The explicit change types in commit log header are from:
 
-         1. 'Add' for new features.
-         2. 'Change' for changes in existing functionality.
-         3. 'Deprecat' for soon-to-be removed features.
-         4. 'Remove' for now removed features.
-         5. 'Fix' for any bug fixes.
+         1. 'Add' new external features.
+         2. 'Change' external behavior in existing functionality.
+         3. 'Fix' bugs. Use 'Edit' for typo and layout corrections.
+         4. 'Remove' external feature.
+         5. 'Deprecat' a soon-to-be removed features.
          6. 'Security' in case of vulnerabilities.
+         7. 'Refactor' code without external changes.
+         8. 'Edit' for typo and layout fixes
 
        The rule must be applied so that the logs are written for humans. This means
        that the commit log must tell the reasons and design decisions behind the
@@ -934,7 +936,8 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        This rule tries to force common look and feel for the commit logs.
 
        /1/ https://chris.beams.io/posts/git-commit/
-       /2/ http://keepachangelog.com/en/1.0.0/
+       /2/ https://writingfordevelopers.substack.com/p/how-to-write-commit-messages
+       /3/ http://keepachangelog.com/en/1.0.0/
 
     CONTENT
 

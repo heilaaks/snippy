@@ -1,6 +1,5 @@
 ## WORKING
    - [ ] Refactor link and meta for GET response.
-   - [ ] Add "links":{"self":"URL","first":"URL","prev":"URL","next":"URL","last":"URL",} to GET
    - [ ] Add meta and links to swagger specs.
 
 ## FEATURES
@@ -23,6 +22,10 @@
    - [ ] How to add custom Falcon exception handling through snippy logger?
    - [ ] Add server startup indicator like 'server running in 127.0.0.1:8080' or 'OK' (suppress with -q). This can be used in api performance test to see when the server is up.
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
+
+## SECURITY
+   - [ ] Add check for maximum size of printed string. Someone may try to push large strings to be printed.
+   - [ ] Remove server name and version from HTTP responses.
 
 ## FIX
    - [ ] Fix 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH'' It seems Python 2.7 does not support PATCH somewhere?

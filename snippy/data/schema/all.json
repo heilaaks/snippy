@@ -16,7 +16,13 @@
       "$ref": "_definitions.json#/definitions/ResponseResource"
     }, 
     {
-      "$ref": "_definitions.json#/definitions/ResponseCollection"
+      "$ref": "_definitions.json#/definitions/ResponseMeta"
+    }, 
+    {
+      "$ref": "_definitions.json#/definitions/ResponseCollectionPost"
+    }, 
+    {
+      "$ref": "_definitions.json#/definitions/ResponseLinks"
     }, 
     {
       "$ref": "_definitions.json#/definitions/RequestData"
@@ -26,6 +32,9 @@
     }, 
     {
       "$ref": "_definitions.json#/definitions/RequestResource"
+    }, 
+    {
+      "$ref": "_definitions.json#/definitions/ResponseCollectionGet"
     }, 
     {
       "$ref": "_definitions.json#/definitions/Error"

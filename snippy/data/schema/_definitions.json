@@ -77,7 +77,34 @@
         }
       }
     }, 
-    "ResponseCollection": {
+    "ResponseMeta": {
+      "required": [
+        "count", 
+        "limit", 
+        "offset", 
+        "total"
+      ], 
+      "type": "object", 
+      "properties": {
+        "count": {
+          "type": "string", 
+          "description": "Number of content items in data list."
+        }, 
+        "total": {
+          "type": "string", 
+          "description": "Total number of search results without limit being applied."
+        }, 
+        "limit": {
+          "type": "string", 
+          "description": "The search limit used in request."
+        }, 
+        "offset": {
+          "type": "string", 
+          "description": "The search offset used in request."
+        }
+      }
+    }, 
+    "ResponseCollectionPost": {
       "required": [
         "data"
       ], 
@@ -88,6 +115,41 @@
             "$ref": "#/definitions/ResponseData"
           }, 
           "type": "array"
+        }
+      }
+    }, 
+    "ResponseLinks": {
+      "required": [
+        "self", 
+        "first", 
+        "last"
+      ], 
+      "type": "object", 
+      "properties": {
+        "self": {
+          "type": "string", 
+          "description": "Pagination link to this page.", 
+          "format": "uri"
+        }, 
+        "prev": {
+          "type": "string", 
+          "description": "Pagination link to previous page.", 
+          "format": "uri"
+        }, 
+        "last": {
+          "type": "string", 
+          "description": "Pagination link to last page.", 
+          "format": "uri"
+        }, 
+        "first": {
+          "type": "string", 
+          "description": "Pagination link to first page.", 
+          "format": "uri"
+        }, 
+        "next": {
+          "type": "string", 
+          "description": "Pagination link to next page.", 
+          "format": "uri"
         }
       }
     }, 
@@ -138,6 +200,27 @@
         }, 
         "links": {
           "$ref": "#/definitions/Links"
+        }
+      }
+    }, 
+    "ResponseCollectionGet": {
+      "required": [
+        "meta", 
+        "data"
+      ], 
+      "type": "object", 
+      "properties": {
+        "meta": {
+          "$ref": "#/definitions/ResponseMeta"
+        }, 
+        "data": {
+          "items": {
+            "$ref": "#/definitions/ResponseData"
+          }, 
+          "type": "array"
+        }, 
+        "links": {
+          "$ref": "#/definitions/ResponseLinks"
         }
       }
     }, 

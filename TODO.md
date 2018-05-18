@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Refactor link and meta for GET response.
-   - [ ] Add meta and links to swagger specs.
 
 ## FEATURES
    - [ ] Add OPTIONS method.
@@ -28,6 +26,7 @@
    - [ ] Remove server name and version from HTTP responses.
 
 ## FIX
+   - [ ] Fix all post responses to have link to created resource. Why this is not always included? Only in updates but not in create?
    - [ ] Fix 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH'' It seems Python 2.7 does not support PATCH somewhere?
    - [ ] Fix add paranoid security level to define maximum printed variables from user to REST responses and logs.
    - [ ] Fix testing error titles. Some contain the hash which now prevent all checks for title. Some titles should be checked.
@@ -53,6 +52,7 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
+   - [ ] Refactor link and meta for GET response.
    - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
    - [ ] API modules have: contents['data'].extend(content['data']). Can he content with meta be done with hash.update(another hash) ?
    - [ ] Storage create() supports only one content. Maybe this could be a loop of list but the meta needs more work to combine.

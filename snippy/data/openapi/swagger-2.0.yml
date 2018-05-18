@@ -36,7 +36,7 @@ paths:
         201:
           description: "Snippet created"
           schema:
-            $ref: "#/definitions/ResponseCollection"
+            $ref: "#/definitions/ResponseCollectionPost"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -69,7 +69,7 @@ paths:
         200:
           description: "OK"
           schema:
-            $ref: "#/definitions/ResponseCollection"
+            $ref: "#/definitions/ResponseCollectionGet"
         400:
           description: "Request not syntactically correct"
           schema:
@@ -286,10 +286,10 @@ definitions:
   ResponseResource:
     type: object
     properties:
-      links:
-        $ref: '#/definitions/Links'
       data:
         $ref: '#/definitions/ResponseData'
+      links:
+        $ref: '#/definitions/Links'
     required:
       - data
   RequestCollection:
@@ -301,7 +301,7 @@ definitions:
           $ref: '#/definitions/RequestData'
     required:
       - data
-  ResponseCollection:
+  ResponseCollectionPost:
     type: object
     properties:
       data:
@@ -309,6 +309,20 @@ definitions:
         items:
           $ref: '#/definitions/ResponseData'
     required:
+      - data
+  ResponseCollectionGet:
+    type: object
+    properties:
+      meta:
+        $ref: '#/definitions/ResponseMeta'
+      data:
+        type: array
+        items:
+          $ref: '#/definitions/ResponseData'
+      links:
+        $ref: '#/definitions/ResponseLinks'
+    required:
+      - meta
       - data
   Links:
     type: object
@@ -329,6 +343,26 @@ definitions:
     required:
       - type
       - attributes
+  ResponseMeta:
+    type: object
+    properties:
+      count:
+        type: string
+        description: "Number of content items in data list."
+      limit:
+        type: string
+        description: "The search limit used in request."
+      offset:
+        type: string
+        description: "The search offset used in request."
+      total:
+        type: string
+        description: "Total number of search results without limit being applied."
+    required:
+      - count
+      - limit
+      - offset
+      - total
   ResponseData:
     type: object
     properties:
@@ -344,6 +378,33 @@ definitions:
     required:
       - type
       - attributes
+  ResponseLinks:
+    type: object
+    properties:
+      self:
+        type: string
+        format: uri
+        description: "Pagination link to this page."
+      first:
+        type: string
+        format: uri
+        description: "Pagination link to first page."
+      next:
+        type: string
+        format: uri
+        description: "Pagination link to next page."
+      prev:
+        type: string
+        format: uri
+        description: "Pagination link to previous page."
+      last:
+        type: string
+        format: uri
+        description: "Pagination link to last page."
+    required:
+      - self
+      - first
+      - last
   Attributes:
     type: object
     properties:

@@ -31,7 +31,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
     """Store content."""
 
     def __init__(self, content=None, category=None, timestamp=Const.EMPTY):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self._item = self._init_item(content, category, timestamp)
 
     def __str__(self):

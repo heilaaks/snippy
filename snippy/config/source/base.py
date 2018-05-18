@@ -69,7 +69,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     SERVER_PORT = '8080'
 
     def __init__(self, parameters=None):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self._repr = self._get_repr()
         self.set_conf(parameters)
 

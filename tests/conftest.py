@@ -163,7 +163,7 @@ def logger_wrapper(request):
     # Previous test may have configured the logger and therefore
     # the logger must be always reset before test.
     Logger.reset()
-    logger = Logger('snippy.' + __name__).get_logger()
+    logger = Logger.get_logger('snippy.' + __name__)
     def fin():
         """Clear the resources at the end."""
 

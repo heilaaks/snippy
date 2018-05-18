@@ -31,7 +31,7 @@ class Solution(object):
     """Solution management."""
 
     def __init__(self, storage, content_type=Const.CONTENT_TYPE_TEXT):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self._storage = storage
         self._content_type = content_type
 

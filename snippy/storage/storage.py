@@ -29,7 +29,7 @@ class Storage(object):
     """Storage management for content."""
 
     def __init__(self):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self._database = Database()
         self._database.init()
 

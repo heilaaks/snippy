@@ -35,7 +35,7 @@ class Snippy(object):
 
     def __init__(self, args=None):
         Config.init(args)
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self.storage = Storage()
         self.server = None
 

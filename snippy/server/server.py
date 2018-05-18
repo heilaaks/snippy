@@ -40,7 +40,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
     """REST API Server."""
 
     def __init__(self, storage):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self.api = None
         self.storage = storage
 

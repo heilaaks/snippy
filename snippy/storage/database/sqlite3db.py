@@ -37,7 +37,7 @@ class Sqlite3Db(object):
     QUERY_TYPE_TOTAL = 'total'
 
     def __init__(self):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self._connection = None
 
     def init(self):

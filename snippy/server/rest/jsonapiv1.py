@@ -37,7 +37,7 @@ from snippy.logger import Logger
 class JsonApiV1(object):
     """Format according to JSON API v1.0 specifications."""
 
-    _logger = Logger(__name__).get_logger()
+    _logger = Logger.get_logger(__name__)
 
     @classmethod
     def resource(cls, category, contents, request, pagination=False):

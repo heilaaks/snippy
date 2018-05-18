@@ -48,7 +48,7 @@ class Validate(object):
     [1] http://jsonapi.org/format/
     """
 
-    _logger = Logger(__name__).get_logger()
+    _logger = Logger.get_logger(__name__)
 
     @classmethod
     def collection(cls, request):

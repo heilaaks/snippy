@@ -35,7 +35,7 @@ class ApiSolutions(object):
     """Process solution collections"""
 
     def __init__(self, storage):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self.storage = storage
 
     @Logger.timeit
@@ -102,7 +102,7 @@ class ApiSolutionsDigest(object):
     """Process solutions based on digest resource ID."""
 
     def __init__(self, storage):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self.storage = storage
 
     @Logger.timeit

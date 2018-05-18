@@ -33,7 +33,7 @@ class ApiSnippets(object):
     """Process snippet collections."""
 
     def __init__(self, storage):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self.storage = storage
 
     @Logger.timeit
@@ -100,7 +100,7 @@ class ApiSnippetsDigest(object):
     """Process snippet based on digest resource ID."""
 
     def __init__(self, storage):
-        self._logger = Logger(__name__).get_logger()
+        self._logger = Logger.get_logger(__name__)
         self.storage = storage
 
     @Logger.timeit

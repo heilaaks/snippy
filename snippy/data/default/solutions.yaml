@@ -110,8 +110,8 @@ content:
   - logs2kafka
   - moby
   - plugin
-  created: '2017-10-30 08:24:28'
-  updated: '2017-10-30 08:24:28'
+  created: '2017-10-30T08:24:28.000001+0000'
+  updated: '2017-10-30T08:24:28.000001+0000'
   versions: ''
 - brief: Debugging nginx
   category: solution
@@ -339,8 +339,8 @@ content:
   - howto
   - logging
   - nginx
-  created: '2018-01-11 11:00:32'
-  updated: '2018-01-11 11:00:32'
+  created: '2018-01-11T11:00:32.000001+0000'
+  updated: '2018-01-11T11:00:32.000001+0000'
   versions: ''
 - brief: Debugging Elastic Beats
   category: solution
@@ -470,8 +470,8 @@ content:
   - debug
   - filebeat
   - howto
-  created: '2017-10-30 08:21:40'
-  updated: '2017-10-30 08:21:40'
+  created: '2017-10-30T08:21:40.000001+0000'
+  updated: '2017-10-30T08:21:40.000001+0000'
   versions: ''
 - brief: Debugging Docker
   category: solution
@@ -640,8 +640,8 @@ content:
   - docker
   - howto
   - swarm
-  created: '2018-01-11 10:59:24'
-  updated: '2018-01-11 10:59:24'
+  created: '2018-01-11T10:59:24.000001+0000'
+  updated: '2018-01-11T10:59:24.000001+0000'
   versions: ''
 - brief: Debugging Kubernetes
   category: solution
@@ -819,8 +819,8 @@ content:
   - howto
   - kubernetes
   - moby
-  created: '2018-02-15 13:49:38'
-  updated: '2018-02-15 13:49:38'
+  created: '2018-02-15T13:49:38.000001+0000'
+  updated: '2018-02-15T13:49:38.000001+0000'
   versions: ''
 - brief: Debugging Kafka
   category: solution
@@ -886,8 +886,8 @@ content:
   - howto
   - kafka
   - zookeeper
-  created: '2018-01-10 07:29:35'
-  updated: '2018-01-10 07:29:35'
+  created: '2018-01-10T07:29:35.000001+0000'
+  updated: '2018-01-10T07:29:35.000001+0000'
   versions: ''
 - brief: Debugging Elasticsearch
   category: solution
@@ -1006,8 +1006,8 @@ content:
   - elastic
   - elasticsearch
   - howto
-  created: '2017-10-20 11:11:19'
-  updated: '2017-10-20 11:11:19'
+  created: '2017-10-20T11:11:19.000001+0000'
+  updated: '2017-10-20T11:11:19.000001+0000'
   versions: ''
 - brief: Debugging LXC containers
   category: solution
@@ -1118,10 +1118,10 @@ content:
   - debug
   - howto
   - lxc
-  created: '2017-01-29 12:31:00'
-  updated: '2017-01-29 12:31:00'
+  created: '2017-01-29T12:31:00.000001+0000'
+  updated: '2017-01-29T12:31:00.000001+0000'
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2018-02-15 13:51:10'
+  updated: '2018-02-15T13:51:10.000001+0000'
   version: 0.7.0

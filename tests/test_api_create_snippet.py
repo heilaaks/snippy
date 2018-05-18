@@ -53,7 +53,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '608'
+            'content-length': '632'
         }
         result_json = {
             'data': [{
@@ -99,7 +99,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '608'
+            'content-length': '632'
         }
         result_json = {
             'data': [{
@@ -144,7 +144,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '813'
+            'content-length': '837'
         }
         result_json = {
             'data': [{
@@ -191,7 +191,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '813'
+            'content-length': '837'
         }
         result_json = {
             'data': [{
@@ -237,14 +237,14 @@ class TestApiCreateSnippet(object):
             'filename': '',
             'runalias': '',
             'versions': '',
-            'created': '2017-10-14 19:56:31',
-            'updated': '2017-10-14 19:56:31',
+            'created': '2017-10-14T19:56:31.000001+0000',
+            'updated': '2017-10-14T19:56:31.000001+0000',
             'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
         }
         content = {'3d855210284302d5': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '459'
+            'content-length': '483'
         }
         result_json = {
             'data': [{
@@ -286,7 +286,7 @@ class TestApiCreateSnippet(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1275'
+            'content-length': '1323'
         }
         result_json = {
             'data': [{
@@ -363,7 +363,7 @@ class TestApiCreateSnippet(object):
                     'filename': '',
                     'runalias': '',
                     'versions': '',
-                    'utc': '2017-10-14 19:56:31',
+                    'utc': '2017-10-14T19:56:31.000001+0000',
                     'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
         result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '572'}
         result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '574'}
@@ -529,7 +529,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '695'
+            'content-length': '719'
         }
         result_json = {
             'links': {
@@ -585,7 +585,7 @@ class TestApiCreateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '787'
+            'content-length': '811'
         }
         result_json = {
             'links': {

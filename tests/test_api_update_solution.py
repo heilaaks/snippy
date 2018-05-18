@@ -62,7 +62,7 @@ class TestApiUpdateSolution(object):
         content = {'2cd0e794244a07f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2972'
+            'content-length': '2996'
         }
         result_json = {
             'links': {
@@ -123,7 +123,7 @@ class TestApiUpdateSolution(object):
         content = {'8d400d39568354f9': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2871'
+            'content-length': '2895'
         }
         result_json = {
             'links': {
@@ -342,7 +342,7 @@ class TestApiUpdateSolution(object):
         content = {'21c737e704b97226': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3055'
+            'content-length': '3079'
         }
         result_json = {
             'links': {

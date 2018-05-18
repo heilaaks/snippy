@@ -45,7 +45,7 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5318'
+            'content-length': '5366'
         }
         result_json = {
             'meta': {
@@ -88,7 +88,7 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5317'
+            'content-length': '5365'
         }
         result_json = {
             'meta': {
@@ -202,7 +202,7 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6985'
+            'content-length': '7033'
         }
         result_json = {
             'meta': {
@@ -243,7 +243,7 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7527'
+            'content-length': '7575'
         }
         result_json = {
             'meta': {
@@ -437,7 +437,7 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2511'
+            'content-length': '2535'
         }
         result_json = {
             'meta': {
@@ -502,7 +502,7 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5318'
+            'content-length': '5366'
         }
         result_json = {
             'meta': {
@@ -542,7 +542,7 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2964'
+            'content-length': '2988'
         }
         result_json = {
             'meta': {
@@ -578,7 +578,7 @@ class TestApiSearchSolution(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '8300'
+            'content-length': '8348'
         }
         result_json = {
             'meta': {

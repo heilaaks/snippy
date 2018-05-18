@@ -62,7 +62,7 @@ class TestApiUpdateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '695'
+            'content-length': '719'
         }
         result_json = {
             'links': {
@@ -121,7 +121,7 @@ class TestApiUpdateSnippet(object):
         content = {'e56c2183edcc3a67': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '601'
+            'content-length': '625'
         }
         result_json = {
             'links': {
@@ -178,7 +178,7 @@ class TestApiUpdateSnippet(object):
         content = {'26128ea95707a3a26': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '544'
+            'content-length': '568'
         }
         result_json = {
             'links': {
@@ -303,7 +303,7 @@ class TestApiUpdateSnippet(object):
             }
         }
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        result_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '695'}
+        result_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '719'}
         result_json = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/v1/snippets/54e41e9b52a02b63'
@@ -361,7 +361,7 @@ class TestApiUpdateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '787'
+            'content-length': '811'
         }
         result_json = {
             'links': {

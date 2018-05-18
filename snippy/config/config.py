@@ -429,11 +429,11 @@ class Config(object):
 
     @staticmethod
     def get_utc_time():
-        """Get UTC time."""
+        """Get UTC time stamp in ISO8601 format."""
 
         utc = datetime.datetime.utcnow()
 
-        return utc.strftime("%Y-%m-%d %H:%M:%S")
+        return utc.strftime('%Y-%m-%dT%H:%M:%S.%f+0000')
 
     @classmethod
     def debug(cls):

@@ -26,6 +26,8 @@
    - [ ] Remove server name and version from HTTP responses.
 
 ## FIX
+   - [ ] Fix solution template and UTC time reading.
+   - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv
    - [ ] Fix all post responses to have link to created resource. Why this is not always included? Only in updates but not in create?
    - [ ] Fix 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH'' It seems Python 2.7 does not support PATCH somewhere?
    - [ ] Fix add paranoid security level to define maximum printed variables from user to REST responses and logs.
@@ -37,7 +39,6 @@
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
    - [ ] Fix when server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
    - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field. Was this some test?
-   - [ ] Fix JSON API UTC time field does not follow ISO8601 format. This affects to utc mock and digest. It is better to refactor tests to make this easier.
    - [ ] Fix the get_template to Content(). Did this mean test helpers that uses the get_template? There is one case 
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix the REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
@@ -121,6 +122,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Fixed JSON API UTC time to follow ISO8601 format with micsecond accuracy.
    - [x] Fixed check that forces search limit and offset to be positive integers.
    - [x] Added search limit=0 as special case that returns metadata in GET response.
    - [x] Added pagination links to GET responses.

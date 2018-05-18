@@ -305,6 +305,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets/a516e2d6f8aa5c6f" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=2" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20&sort=-created" -H "accept: application/json"
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-created" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
@@ -321,6 +322,9 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ dredd snippy/data/openapi/swagger.yml http://127.0.0.1:8080 --dry-run
 
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/v1/snippets" -H "Content-Type: application/json" -d '{}'
+    $ curl -X POST "http://127.0.0.1:8080/snippy/api/v1/snippets" -H "Content-Type: application/json" -d '{"data":["row1","row2"]}'
+    $ curl -X POST "http://127.0.0.1:8080/snippy/api/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["row1", "row2"]}}]}'
+    $ curl -X POST "http://127.0.0.1:8080/snippy/api/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H  "Content-Type: application/vnd.api+json; charset=UTF-8" -d "{  \"data\": [    {      \"type\": \"snippet\",      \"attributes\": {        \"data\": [          \"string\"        ],        \"brief\": \"string\",        \"group\": \"string\",        \"tags\": [          \"string\"        ],        \"links\": [          \"string\"        ],        \"category\": \"snippet\",        \"filename\": \"string\",        \"runalias\": \"string\",        \"versions\": \"string\",        \"created\": \"string\",        \"updated\": \"string\",        \"digest\": \"string\"      }    }  ]}"
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/v1/snippets" -H "Content-Type: application/json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/v1/snippets" -H "Content-Type: application/vnd.api+json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
 

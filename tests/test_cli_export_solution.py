@@ -582,15 +582,15 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        user.
         original = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         import_data = original
-        import_data = import_data.replace('## DATE  : 2017-10-20 11:11:19', '## DATE  : ')
+        import_data = import_data.replace('## DATE  : 2017-10-20T11:11:19.000001+0000', '## DATE  : ')
         mocked_open = mock.mock_open(read_data=import_data)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', 'mocked_file.txt', '-d', 'a96accc25dd23ac0'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
-            original = original.replace('## DATE  : 2017-10-20 11:11:19', '## DATE  :  2017-10-20 06:16:27')
-            cause = snippy.run(['snippy', 'export', '--solution', '-d', '2b4428c3c022abff'])  ## workflow
+            original = original.replace('## DATE  : 2017-10-20T11:11:19.000001+0000', '## DATE  :  2017-10-20T06:16:27.000001+0000')
+            cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value

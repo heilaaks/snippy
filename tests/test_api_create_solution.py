@@ -54,7 +54,7 @@ class TestApiCreateSolution(object):
         content = {Solution.BEATS_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2363'}
+            'content-length': '2387'}
         result_json = {
             'data': [{
                 'type': 'solutions',
@@ -93,7 +93,7 @@ class TestApiCreateSolution(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6926'
+            'content-length': '6974'
         }
         result_json = {
             'data': [{
@@ -143,7 +143,7 @@ class TestApiCreateSolution(object):
         content = {'2cd0e794244a07f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2972'
+            'content-length': '2996'
         }
         result_json = {
             'links': {
@@ -204,7 +204,7 @@ class TestApiCreateSolution(object):
         content = {'21c737e704b97226': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3055'
+            'content-length': '3079'
         }
         result_json = {
             'links': {

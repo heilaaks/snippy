@@ -1,6 +1,7 @@
 ## WORKING
    - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
    - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
+   - [ ] Add test that verifies that OID is not changing in one operation.
 
 ## FEATURES
    - [ ] Add OPTIONS method.
@@ -36,6 +37,7 @@
    - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
    - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases?
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
+   - [ ] Fix OID refresh not done for the first operation. Only at the first one refreshed at the end. This cannot be in wrapper start since that misses one log from Falcon.
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
    - [ ] Fix make test if pytest cover leaves hanging files like .coverage.localhost.localdomain.4727.176219. Add --cover-erase in commmand? // https://bitbucket.org/ned/coveragepy/issues/476/coverageexception-cant-add-arcs-to

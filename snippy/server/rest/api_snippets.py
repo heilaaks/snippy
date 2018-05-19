@@ -41,7 +41,7 @@ class ApiSnippetsDigest(object):
         self._logger = Logger.get_logger(__name__)
         self.storage = storage
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_put(self, request, response, digest):
         """Update whole snippet based on digest."""
 
@@ -63,7 +63,7 @@ class ApiSnippetsDigest(object):
         Cause.reset()
         self._logger.debug('end put %ssnippets/%s', Config.base_path_app, digest)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_patch(self, request, response, digest):
         """Update partial snippet based on digest."""
 
@@ -72,7 +72,7 @@ class ApiSnippetsDigest(object):
         Cause.reset()
         self._logger.debug('end patch %ssnippets/%s', Config.base_path_app, digest)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest):
         """Search snippet based on digest."""
 
@@ -95,7 +95,7 @@ class ApiSnippetsDigest(object):
         Cause.reset()
         self._logger.debug('end get %ssnippets/%s', Config.base_path_app, digest)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_delete(self, _, response, digest):
         """Delete snippet based on digest."""
 
@@ -114,7 +114,7 @@ class ApiSnippetsDigest(object):
         Cause.reset()
         self._logger.debug('end delete %ssnippets/%s', Config.base_path_app, digest)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_post(self, request, response, digest):
         """Update snippet."""
 
@@ -142,7 +142,7 @@ class ApiSnippetsField(object):  # pylint: disable=too-few-public-methods
         self._logger = Logger.get_logger(__name__)
         self.storage = storage
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest, field):
         """Get defined snippet field based on digest."""
 

@@ -215,24 +215,32 @@ class Logger(object):
             signal(SIGPIPE, signal_sigpipe)
 
     @staticmethod
-    def timeit(method):
+    def timeit(method=None, refresh_oid=False):
         """Time method by measuring it latency.
 
-        The operation ID (OID) is refreshed automatically at the end.
+        The operation ID (OID) is refreshed at the end.
         """
 
-        @wraps(method)
-        def timed(*args, **kw):
-            """Wrapper to measure latency."""
+        def _timeit(method):
 
-            start = time.time()
-            result = method(*args, **kw)
-            Logger.get_logger().debug('operation duration: %.6fs', (time.time() - start))
-            Logger.refresh_oid()
+            @wraps(method)
+            def timed(*args, **kwargs):
+                """Wrapper to measure latency."""
 
-            return result
+                start = time.time()
+                result = method(*args, **kwargs)
+                Logger.get_logger().debug('operation duration: %.6fs', (time.time() - start))
+                if refresh_oid:
+                    Logger.refresh_oid()
 
-        return timed
+                return result
+
+            return timed
+
+        if method:
+            return _timeit(method)
+
+        return _timeit
 
     @staticmethod
     def debug():

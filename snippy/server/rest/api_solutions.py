@@ -43,7 +43,7 @@ class ApiSolutionsDigest(object):
         self._logger = Logger.get_logger(__name__)
         self.storage = storage
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_put(self, request, response, digest):
         """Update whole solution based on digest."""
 
@@ -65,7 +65,7 @@ class ApiSolutionsDigest(object):
         Cause.reset()
         self._logger.debug('end put %ssolutions/%s', Config.base_path_app, digest)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_patch(self, request, response, digest):
         """Update partial solution based on digest."""
 
@@ -74,7 +74,7 @@ class ApiSolutionsDigest(object):
         Cause.reset()
         self._logger.debug('end patch %ssolutions/%s', Config.base_path_app, digest)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest):
         """Search solutions based on digest."""
 
@@ -97,7 +97,7 @@ class ApiSolutionsDigest(object):
         Cause.reset()
         self._logger.debug('end get %ssolutions/%s', Config.base_path_app, digest)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_delete(self, _, response, digest):
         """Delete solution based on digest."""
 
@@ -116,7 +116,7 @@ class ApiSolutionsDigest(object):
         Cause.reset()
         self._logger.debug('end delete %ssolutions/%s', Config.base_path_app, digest)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_post(self, request, response, digest):
         """Update solution."""
 
@@ -144,7 +144,7 @@ class ApiSolutionsField(object):  # pylint: disable=too-few-public-methods
         self._logger = Logger.get_logger(__name__)
         self.storage = storage
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest, field):
         """Get defined solution field based on digest."""
 

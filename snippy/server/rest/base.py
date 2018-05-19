@@ -35,7 +35,7 @@ class ContentApiBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger = Logger.get_logger(__name__)
         self._content = content
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_post(self, request, response):
         """Create new content."""
 
@@ -59,7 +59,7 @@ class ContentApiBase(object):  # pylint: disable=too-many-instance-attributes
         Cause.reset()
         self._logger.debug('end post %s', request.uri)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response):
         """Search content based on query parameters."""
 
@@ -81,7 +81,7 @@ class ContentApiBase(object):  # pylint: disable=too-many-instance-attributes
         Cause.reset()
         self._logger.debug('end get %s', request.uri)
 
-    @Logger.timeit
+    @Logger.timeit(refresh_oid=True)
     def on_delete(self, request, response):
         """Deleting content without resource is not supported."""
 

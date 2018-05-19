@@ -38,6 +38,7 @@
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
+   - [ ] Fix make test if pytest cover leaves hanging files like .coverage.localhost.localdomain.4727.176219. Add --cover-erase in commmand? // https://bitbucket.org/ned/coveragepy/issues/476/coverageexception-cant-add-arcs-to
    - [ ] Fix when server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
    - [ ] Fix OpenAPI specs. The ResponseData and the attributes contain mandatory 'data' field. This is not true if resouce field like brief is requirested.
    - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field. Was this some test?

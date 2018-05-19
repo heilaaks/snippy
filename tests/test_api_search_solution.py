@@ -824,6 +824,40 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
+    @pytest.mark.usefixtures('default-solutions', 'caller')
+    def test_api_search_solution_field_007(self, server):
+        """Get specific solution field.
+
+        Try to call GET /v1/snippets/0101010101/notexist for non existing
+        snippet with invalid field.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '480'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'resource field does not exist: notexist'
+            }, {
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/solutions/0101010101/notexist',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

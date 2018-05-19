@@ -1301,6 +1301,35 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_snippet_field_007(self, server):
+        """Get specific snippet field.
+
+        Try to call GET /v1/snippets/0101010101/brief for non existing
+        snippet with valid field
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '334'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/0101010101/brief',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
     @pytest.mark.usefixtures('default-snippets')
     def test_pytest_fixtures(self, server):
         """Test pytest fixtures with pytest specific mocking.

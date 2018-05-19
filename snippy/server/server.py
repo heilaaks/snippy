@@ -32,8 +32,10 @@ from snippy.server.gunicorn_server import GunicornServer as SnippyServer
 from snippy.server.rest.api_hello import ApiHello
 from snippy.server.rest.api_snippets import ApiSnippets
 from snippy.server.rest.api_snippets import ApiSnippetsDigest
+from snippy.server.rest.api_snippets import ApiSnippetsField
 from snippy.server.rest.api_solutions import ApiSolutions
 from snippy.server.rest.api_solutions import ApiSolutionsDigest
+from snippy.server.rest.api_solutions import ApiSolutionsField
 
 
 class Server(object):  # pylint: disable=too-few-public-methods
@@ -64,6 +66,8 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'hello'), ApiHello())
         self.api.add_route(urljoin(Config.base_path_app, 'snippets'), ApiSnippets(self.storage))
         self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}'), ApiSnippetsDigest(self.storage))
+        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}/{field}'), ApiSnippetsField(self.storage))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(self.storage))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(self.storage))
+        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}/{field}'), ApiSolutionsField(self.storage))
         SnippyServer(self.api, options).run()

@@ -324,7 +324,15 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         from requested fields."""
 
         requested_fields = Parser.keywords(value)
-        self._filter_fields = tuple(set(self.ATTRIBUTES) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
+        valid = True
+        for field in requested_fields:
+            if field not in self.ATTRIBUTES:
+                valid = False
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'resource field does not exist: {}'.format(field))
+
+        if valid:
+            self._filter_fields = tuple(set(self.ATTRIBUTES) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
+
         self._logger.debug('config source content fields that are removed from response: %s', self._filter_fields)
 
     @property

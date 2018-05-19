@@ -847,6 +847,15 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        than for the 'The tool configuration is global and shared with all instances
        of Snippy()'.
 
+    2. Variables printed in causes are seprated with colon
+
+       When variables are printed in cause, they must be separated with colon
+       like in the example output below:
+
+         > ... cannot find resource field: not-exist
+
+       This follows the same rule as printing variables in logs.
+
     SECURITY HARDENING
 
     1. Logger has own security log level

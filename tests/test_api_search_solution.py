@@ -30,7 +30,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 pytest.importorskip('gunicorn')
 
 
-class TestApiSearchSolution(object):
+class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     """Test GET /snippy/api/solutions API."""
 
     @pytest.mark.usefixtures('default-solutions')
@@ -639,6 +639,190 @@ class TestApiSearchSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_field_001(self, server):
+        """Get specific solution field.
+
+        Call GET /v1/solutions/<digest>/data for existing solution.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '2000'
+        }
+        result_json = {
+            'data': {
+                'type': 'solutions',
+                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'attributes': {
+                    'data': Solution.DEFAULTS[Solution.BEATS]['data']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/data'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/data',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_field_002(self, server):
+        """Get specific solution field.
+
+        Call GET /v1/solutions/<digest>/brief for existing solution.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '257'
+        }
+        result_json = {
+            'data': {
+                'type': 'solutions',
+                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'attributes': {
+                    'brief': Solution.DEFAULTS[Solution.BEATS]['brief']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/brief'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/brief',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_field_003(self, server):
+        """Get specific solution field.
+
+        Call GET /v1/solutions/<digest>/group for existing solution.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '239'
+        }
+        result_json = {
+            'data': {
+                'type': 'solutions',
+                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'attributes': {
+                    'group': Solution.DEFAULTS[Solution.BEATS]['group']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/group'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/group',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_field_004(self, server):
+        """Get specific solution field.
+
+        Call GET /v1/solutions/<digest>/tags for existing solution.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '280'
+        }
+        result_json = {
+            'data': {
+                'type': 'solutions',
+                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'attributes': {
+                    'tags': Solution.DEFAULTS[Solution.BEATS]['tags']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/tags'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/tags',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-solutions')
+    def test_api_search_solution_field_005(self, server):
+        """Get specific solution field.
+
+        Call GET /v1/solutions/<digest>/lnks for existing solution.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '320'
+        }
+        result_json = {
+            'data': {
+                'type': 'solutions',
+                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'attributes': {
+                    'links': Solution.DEFAULTS[Solution.BEATS]['links']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/links'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/links',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-solutions', 'caller')
+    def test_api_search_solution_field_006(self, server):
+        """Get specific solution field.
+
+        Try to call GET /v1/solutions/<digest>/notexist for existing solution.
+        In this case the field name does not exist.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '355'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'resource field does not exist: notexist'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/notexist',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
 
     @classmethod
     def teardown_class(cls):

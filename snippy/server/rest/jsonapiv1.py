@@ -24,9 +24,10 @@ import math
 import re
 try:
     from urllib.parse import urljoin
+    from urllib.parse import urlparse, urlunparse
     from urllib.parse import quote_plus
 except ImportError:
-    from urlparse import urljoin
+    from urlparse import urljoin, urlparse, urlunparse
     from urllib import quote_plus  # pylint: disable=ungrouped-imports
 
 from snippy.config.config import Config
@@ -40,7 +41,7 @@ class JsonApiV1(object):
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def resource(cls, category, contents, request, pagination=False):
+    def resource(cls, category, contents, request, digest, field=Const.EMPTY, pagination=False):
         """Format JSON API v1.0 resource from content list.
 
         The contents is a list but there can be only one resources.
@@ -51,13 +52,23 @@ class JsonApiV1(object):
             'links': {}
         }
         for content in contents['data']:
+            # Digest must be always the 16 octet digest, not the one provided
+            # by user in URL. User may have used digest with any length.
             if 'digest' in content:
-                uri = urljoin(request.uri, content['digest'][:16])
+                uri = list(urlparse(request.uri)[:])
+                uri[2] = uri[2][:uri[2].index(digest)]  # Remove all after digest.
+                uri = urlunparse(uri)
+                uri = urljoin(uri, content['digest'][:16])
+                if field:
+                    uri = urljoin(uri + '/', field)
                 resource_['links'] = {'self': uri}
             type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
             resource_['data'] = {'type': type_,
                                  'id': content['digest'],
                                  'attributes': content}
+            if 'digest' in Config.filter_fields:
+                content.pop('digest', None)
+
             break
 
         if pagination:

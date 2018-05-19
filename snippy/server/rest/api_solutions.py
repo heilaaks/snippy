@@ -117,7 +117,7 @@ class ApiSolutionsDigest(object):
             contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request)
+            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request, digest)
             response.status = Cause.http_status()
         else:
             response.content_type = Const.MEDIA_JSON_API
@@ -149,7 +149,7 @@ class ApiSolutionsDigest(object):
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request, pagination=True)
+            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request, digest, pagination=True)
             response.status = Cause.http_status()
         else:
             response.content_type = Const.MEDIA_JSON_API
@@ -197,3 +197,34 @@ class ApiSolutionsDigest(object):
 
         Cause.reset()
         self._logger.debug('end post %ssolutions/%s', Config.base_path_app, digest)
+
+
+class ApiSolutionsField(object):  # pylint: disable=too-few-public-methods
+    """Process solution based on digest resource ID and specified field."""
+
+    def __init__(self, storage):
+        self._logger = Logger.get_logger(__name__)
+        self.storage = storage
+
+    @Logger.timeit
+    def on_get(self, request, response, digest, field):
+        """Get defined solution field based on digest."""
+
+        self._logger.debug('run get %ssolutions/%s/field', Config.base_path_app, digest, field)
+        local_params = {'digest': digest, 'fields': field}
+        api = Api(Const.SOLUTION, Api.SEARCH, local_params)
+        Config.load(api)
+        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
+        if not contents['data']:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
+        if Cause.is_ok():
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request, digest, field=field, pagination=False)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        self._logger.debug('end get %ssolutions/%s/field', Config.base_path_app, digest, field)

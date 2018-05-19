@@ -2,16 +2,15 @@
 
 ## FEATURES
    - [ ] Add OPTIONS method.
-   - [ ] Add embedded security features.
    - [ ] Add primary key to content database table.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
-   - [ ] Add /snippy/api/admin/v1/settings for log config. Add /snippy/api/auth/v1 for login. These have same base /snippy/api/
-   - [ ] Add support to get /snippet/123123324/brief and all the fields.
+   - [ ] Add /snippy/api/admin/v1/settings for log config. Same base /snippy/api/ for all routes.
    - [ ] Add support to export content to markdown format.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add support to run with runalias.
-   - [ ] Add support to add versions to version list.   
+   - [ ] Add support to add versions to version list.
+   - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
    - [ ] Add support to print only selected fields, like brief and digest for CLI text output. Hard to generalize since layout e.g. contains header with three fields.
    - [ ] Add statistics object which tracks peak and percentile latencies with memory and CPU usage.
    - [ ] Add support for REST API YAML responses.
@@ -22,6 +21,8 @@
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## SECURITY
+   - [ ] Add embedded security features.
+   - [ ] Add /snippy/api/auth/v1 for login. Same base /snippy/api/ for all routes.
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
@@ -36,8 +37,9 @@
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
    - [ ] Fix when server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
+   - [ ] Fix OpenAPI specs. The ResponseData and the attributes contain mandatory 'data' field. This is not true if resouce field like brief is requirested.
    - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field. Was this some test?
-   - [ ] Fix the get_template to Content(). Did this mean test helpers that uses the get_template? There is one case 
+   - [ ] Fix the get_template to Content(). Did this mean test helpers that uses the get_template? There is one case
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix the REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
    - [ ] Fix if the sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
@@ -61,7 +63,7 @@
    - [ ] Refactor parser and editor to use merge? The Config uses merge and migrate but can the parser and editor do the same? They cannot include Config (easily).
    - [ ] Logger __init__ is confusing since it is not objec but global class. Should be like Logger(__NAME__).api
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
-   - [ ] Read storage schema directly to config() like the content templates. 
+   - [ ] Read storage schema directly to config() like the content templates.
    - [ ] Change is_template in Content to __cmp__?
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
@@ -122,6 +124,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added support to GET resource fields with URI's like /snippets/54e41e9b52/brief.
    - [x] Added safety check and security event based on log message length.
    - [x] Changed REST API default base bath to /snippy/api/app/v1 to prepare auth and admin paths.
    - [x] Fixed JSON API UTC time to follow ISO8601 format with micsecond accuracy.
@@ -150,7 +153,7 @@
    - [x] Added proper prints for all cases where the tool exists because of internal failure in the startup.
    - [x] Changed exported yaml and json to use 'meta' instead of 'metadata'.
    - [x] Added created and updated fields into content.
-   - [x] Added simple statistics to time each API transaction latency. The output is in debug logs. 
+   - [x] Added simple statistics to time each API transaction latency. The output is in debug logs.
    - [x] Fixed resource or collection not found to return 404. In Cli the response is ok but now in API it is 404.
    - [x] Noted that JSON API specification does not forbid sending data.links.self when GET does not return resource.
    - [x] Changed OpenAPI definitions to exclude the data.id member from POST and PUT requests.

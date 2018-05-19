@@ -1115,6 +1115,193 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_400
 
     @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_field_001(self, server):
+        """Get specific snippet field.
+
+        Call GET /v1/snippets/<digest>/data for existing snippet.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '278'
+        }
+        result_json = {
+            'data': {
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': {
+                    'data': Snippet.DEFAULTS[Snippet.REMOVE]['data']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/data'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/54e41e9b52a02b63/data',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_field_002(self, server):
+        """Get specific snippet field.
+
+        Call GET /v1/snippets/<digest>/brief for existing snippet. In this
+        case the URI digest is only 10 octets. The returned link must contain
+        16 octet digest in the link.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '273'
+        }
+        result_json = {
+            'data': {
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': {
+                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/brief'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/54e41e9b52/brief',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_field_003(self, server):
+        """Get specific snippet field.
+
+        Call GET /v1/snippets/<digest>/group for existing snippet.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '238'
+        }
+        result_json = {
+            'data': {
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': {
+                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/group'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/54e41e9b52/group',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_field_004(self, server):
+        """Get specific snippet field.
+
+        Call GET /v1/snippets/<digest>/tags for existing snippet.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '283'
+        }
+        result_json = {
+            'data': {
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': {
+                    'tags': Snippet.DEFAULTS[Snippet.REMOVE]['tags']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/tags'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/54e41e9b52/tags',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets')
+    def test_api_search_snippet_field_005(self, server):
+        """Get specific snippet field.
+
+        Call GET /v1/snippets/<digest>/links for existing snippet.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '290'
+        }
+        result_json = {
+            'data': {
+                'type': 'snippets',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': {
+                    'links': Snippet.DEFAULTS[Snippet.REMOVE]['links']
+                }
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/links'
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/54e41e9b52/links',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+
+    @pytest.mark.usefixtures('default-snippets', 'caller')
+    def test_api_search_snippet_field_006(self, server):
+        """Get specific snippet field.
+
+        Try to call GET /v1/snippets/<digest>/notexist for existing snippet.
+        In this case the field name does not exist.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '355'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'resource field does not exist: notexist'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets/54e41e9b52/notexist',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
+
+    @pytest.mark.usefixtures('default-snippets')
     def test_pytest_fixtures(self, server):
         """Test pytest fixtures with pytest specific mocking.
 

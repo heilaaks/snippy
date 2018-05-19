@@ -273,6 +273,42 @@ paths:
             $ref: '#/definitions/Errors'
         500:
           description: "Internal server error"
+  /snippets/{digest}/{field}:
+    get:
+      tags:
+        - "snippet"
+      summary: "Search defined snippet based on digest"
+      description: ""
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - name: digest
+          in: path
+          type: string
+          required: true
+          description: "Unique snippet identified by message digest."
+          x-example: 44afdd0c59e17159
+        - name: field
+          in: path
+          type: string
+          enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, updated, digest]
+          required: true
+          description: "One of the resource field attributes."
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: "#/definitions/ResponseResource"
+        400:
+          description: "Request not syntactically correct"
+          schema:
+            $ref: '#/definitions/Errors'
+        404:
+          description: "Snippet not found"
+          schema:
+            $ref: '#/definitions/Errors'
+        500:
+          description: "Internal server error"
 definitions:
   RequestResource:
     type: object

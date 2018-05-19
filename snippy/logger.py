@@ -126,18 +126,15 @@ class Logger(object):
         cls.CONFIG['log_msg_max'] = config['log_msg_max']
         cls.CONFIG['quiet'] = config['quiet']
         cls.CONFIG['very_verbose'] = config['very_verbose']
-
         if cls.CONFIG['log_msg_max'] > Logger.SECURITY_LOG_MSG_MAX:
             cls.CONFIG['log_msg_max'] = Logger.DEFAULT_LOG_MSG_MAX
-            Logger.get_logger().debug('log messages cannot extend over security level: %s %s',
-                                      cls.CONFIG['log_msg_max'], Logger.DEFAULT_LOG_MSG_MAX)
 
-        # Set the effective log level for all the loggers created under
-        # 'snippy' logger namespace. This relies on that the module level
-        # logger does not set the level and it remains as NOTSET. This
-        # causes module level logger to propagate the log record to parent
-        # logger where it eventually reaches the 'snippy' level that is
-        # just below the 'root' level logger.
+        # Set the effective log level for all the loggers created under the
+        # 'snippy' namespace. This relies on that the module level logger
+        # does not set the level and it remains as NOTSET. This causes
+        # module level logger to propagate the log record to parent logger
+        # where it eventually reaches the 'snippy' level that is just below
+        # the 'root' level logger.
         #
         # The 'disabled' flag prevents also the critical level logs.
         #
@@ -149,6 +146,10 @@ class Logger(object):
         if cls.CONFIG['debug'] or config['very_verbose']:
             logging.getLogger('snippy').disabled = False
             logging.getLogger('snippy').setLevel(logging.DEBUG)
+
+        if config['log_msg_max'] > Logger.SECURITY_LOG_MSG_MAX:
+            Logger.get_logger().debug('log messages cannot extend over security level: %s, %s',
+                                      config['log_msg_max'], Logger.DEFAULT_LOG_MSG_MAX)
 
         Logger._update()
 

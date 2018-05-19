@@ -407,7 +407,6 @@ class TestUtLogger(object):
 
         logger.debug('variable%s', ('a'*(Logger.SECURITY_LOG_MSG_MAX+1000)))
         out, err = capsys.readouterr()
-        print(err)
         assert not err
         assert len(out.splitlines()) == 2
         assert len(caplog.records[:]) == 2
@@ -441,3 +440,39 @@ class TestUtLogger(object):
         assert caplog.records[0].levelname == 'security'
         assert caplog.records[0].levelno == Logger.SECURITY
         assert hasattr(caplog.records[0], 'oid')
+
+    def test_logger_013(self, capsys, caplog):
+        """Test failure handling.
+
+        Test case verifies that log message length cannot exceed safety limits
+        that are defined for security reasons. Because the very verbose mode
+        is used, the log messages are limited to default length.
+        """
+
+        Logger.remove()
+        Logger.configure({
+            'debug': False,
+            'log_json': False,
+            'log_msg_max': Logger.SECURITY_LOG_MSG_MAX + Logger.DEFAULT_LOG_MSG_MAX,
+            'quiet': False,
+            'very_verbose': True
+        })
+        logger = Logger.get_logger('snippy.' +  __name__)
+
+        logger.warning('abcdefghij'*100)
+        logger.warning('VARIABLE %s', ('ABCDEFGHIJ'*100))
+        logger.security('SECURITY %s', ('ABCDEFGHIJ'*100))
+
+        out, err = capsys.readouterr()
+        assert not err
+        assert 'abcdefghijabcdefg...' in out
+        assert 'abcdefghijabcdefgh...' in out
+        assert 'variable abcdefghij' in out
+        assert 'log messages cannot extend over security level' in caplog.text
+        assert len(caplog.records[1].msg) == Logger.DEFAULT_LOG_MSG_MAX
+        assert len(caplog.records[2].msg) == Logger.DEFAULT_LOG_MSG_MAX
+        assert len(caplog.records[3].msg) == Logger.DEFAULT_LOG_MSG_MAX
+        assert caplog.records[0].msg.islower()
+        assert caplog.records[1].msg.islower()
+        assert caplog.records[2].msg.islower()
+        assert caplog.records[3].msg.islower()

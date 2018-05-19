@@ -1,8 +1,10 @@
 ## WORKING
+   - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
+   - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
 
 ## FEATURES
    - [ ] Add OPTIONS method.
-   - [ ] Add primary key to content database table.
+   - [ ] Add uuid primary key to content database table.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
    - [ ] Add /snippy/api/admin/v1/settings for log config. Same base /snippy/api/ for all routes.
    - [ ] Add support to export content to markdown format.
@@ -53,8 +55,6 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
-   - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
-   - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
    - [ ] Make solution template and UTC time readon to follow timestamp without microseconds?
    - [ ] API modules have: contents['data'].extend(content['data']). Can he content with meta be done with hash.update(another hash) ?
    - [ ] Storage create() supports only one content. Maybe this could be a loop of list but the meta needs more work to combine.
@@ -119,7 +119,7 @@
 
 ## FOLLOW EXTERNAL BUGS/ISSUES
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
-   - [ ] Python logging is not following ISO8601 format and it cannot have timezone.
+   - [ ] Python logging is not following ISO8601 format and it cannot have timezone. Workaround done for Logger().
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 

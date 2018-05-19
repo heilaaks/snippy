@@ -25,75 +25,13 @@ from snippy.config.constants import Constants as Const
 from snippy.config.source.api import Api
 from snippy.content.snippet import Snippet
 from snippy.logger import Logger
+from snippy.server.rest.base import ContentApiBase
 from snippy.server.rest.jsonapiv1 import JsonApiV1
 from snippy.server.rest.validate import Validate
 
 
-class ApiSnippets(object):
+class ApiSnippets(ContentApiBase):
     """Process snippet collections."""
-
-    def __init__(self, storage):
-        self._logger = Logger.get_logger(__name__)
-        self.storage = storage
-
-    @Logger.timeit
-    def on_post(self, request, response):
-        """Create new snippets."""
-
-        contents = self.storage.get_contents(None)
-        self._logger.debug('run post %ssnippets', Config.base_path_app)
-        collection = Validate.collection(request)
-        for member in collection:
-            api = Api(Const.SNIPPET, Api.CREATE, member)
-            Config.load(api)
-            content = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-            contents['data'].extend(content['data'])
-        if Cause.is_ok():
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(Const.SNIPPET, contents, request)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end post %ssnippets', Config.base_path_app)
-
-    @Logger.timeit
-    def on_get(self, request, response):
-        """Search snippets based on query parameters."""
-
-        self._logger.debug('run get %ssnippets', Config.base_path_app)
-        api = Api(Const.SNIPPET, Api.SEARCH, request.params)
-        Config.load(api)
-        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents['data'] and Config.search_limit != 0:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
-        if Cause.is_ok():
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(Const.SNIPPET, contents, request, pagination=True)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end get %ssnippets', Config.base_path_app)
-
-    @Logger.timeit
-    def on_delete(self, _, response):
-        """Deleting snippets without resource is not supported."""
-
-        self._logger.debug('run delete %ssnippets', Config.base_path_app)
-        Cause.push(Cause.HTTP_NOT_FOUND, 'cannot delete snippets without identified resource')
-        response.content_type = Const.MEDIA_JSON_API
-        response.body = JsonApiV1.error(Cause.json_message())
-        response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end delete %ssnippets', Config.base_path_app)
 
 
 class ApiSnippetsDigest(object):

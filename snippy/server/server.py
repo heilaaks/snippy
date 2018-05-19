@@ -26,6 +26,9 @@ except ImportError:
     from urlparse import urljoin
 
 from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
+from snippy.content.snippet import Snippet
+from snippy.content.solution import Solution
 from snippy.logger import CustomGunicornLogger
 from snippy.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
@@ -64,10 +67,10 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route('/snippy', ApiHello())
         self.api.add_route(Config.base_path_app.rstrip('/'), ApiHello())
         self.api.add_route(urljoin(Config.base_path_app, 'hello'), ApiHello())
-        self.api.add_route(urljoin(Config.base_path_app, 'snippets'), ApiSnippets(self.storage))
+        self.api.add_route(urljoin(Config.base_path_app, 'snippets'), ApiSnippets(Snippet(self.storage, Const.CONTENT_TYPE_JSON)))
         self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}'), ApiSnippetsDigest(self.storage))
         self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}/{field}'), ApiSnippetsField(self.storage))
-        self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(self.storage))
+        self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(Solution(self.storage, Const.CONTENT_TYPE_JSON)))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(self.storage))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}/{field}'), ApiSolutionsField(self.storage))
         SnippyServer(self.api, options).run()

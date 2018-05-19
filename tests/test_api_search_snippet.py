@@ -1306,7 +1306,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         """Get specific snippet field.
 
         Try to call GET /v1/snippets/0101010101/brief for non existing
-        snippet with valid field
+        snippet with valid field.
         """
 
         result_headers = {

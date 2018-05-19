@@ -32,15 +32,16 @@ class Solution(object):
 
     def __init__(self, storage, content_type=Const.CONTENT_TYPE_TEXT):
         self._logger = Logger.get_logger(__name__)
-        self._storage = storage
         self._content_type = content_type
+        self.category = Const.SOLUTION
+        self.storage = storage
 
     def create(self):
         """Create new solutions."""
 
         self._logger.debug('creating new solution')
         solutions = Config.get_contents(Content(category=Const.SOLUTION, timestamp=Config.get_utc_time()))
-        contents = self._storage.create(solutions)
+        contents = self.storage.create(solutions)
         contents['data'] = Migrate.content(contents['data'], self._content_type)
 
         return contents
@@ -49,7 +50,7 @@ class Solution(object):
         """Search solutions."""
 
         self._logger.debug('searching solutions')
-        solutions, total = self._storage.search(
+        solutions, total = self.storage.search(
             Const.SOLUTION,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -59,13 +60,13 @@ class Solution(object):
         )
         solutions = Migrate.content(solutions, self._content_type)
 
-        return self._storage.get_contents(solutions, total)
+        return self.storage.get_contents(solutions, total)
 
     def update(self):
         """Update solutions."""
 
-        contents = self._storage.get_contents(None)
-        solutions, _ = self._storage.search(
+        contents = self.storage.get_contents(None)
+        solutions, _ = self.storage.search(
             Const.SOLUTION,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -77,7 +78,7 @@ class Solution(object):
             digest = solutions[0].get_digest()
             self._logger.debug('updating solution with digest %.16s', digest)
             solutions = Config.get_contents(content=solutions[0])
-            contents = self._storage.update(solutions[0], digest)
+            contents = self.storage.update(solutions[0], digest)
             contents['data'] = Migrate.content(contents['data'], self._content_type)
         else:
             Config.validate_search_context(solutions, 'update')
@@ -87,7 +88,7 @@ class Solution(object):
     def delete(self):
         """Delete solutions."""
 
-        solutions, _ = self._storage.search(
+        solutions, _ = self.storage.search(
             Const.SOLUTION,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -97,7 +98,7 @@ class Solution(object):
         )
         if len(solutions) == 1:
             self._logger.debug('deleting solution with digest %.16s', solutions[0].get_digest())
-            self._storage.delete(solutions[0].get_digest())
+            self.storage.delete(solutions[0].get_digest())
         else:
             Config.validate_search_context(solutions, 'delete')
 
@@ -110,7 +111,7 @@ class Solution(object):
             Migrate.dump_template(Content(category=Const.SOLUTION, timestamp=Config.get_utc_time()))
         elif Config.is_search_criteria():
             self._logger.debug('exporting solutions based on search criteria')
-            solutions, _ = self._storage.search(
+            solutions, _ = self.storage.search(
                 Const.SOLUTION,
                 sall=Config.search_all_kws,
                 stag=Config.search_tag_kws,
@@ -125,7 +126,7 @@ class Solution(object):
             Migrate.dump(solutions, filename)
         else:
             self._logger.debug('exporting all solutions %s', filename)
-            solutions = self._storage.export_content(Const.SOLUTION)
+            solutions = self.storage.export_content(Const.SOLUTION)
             Migrate.dump(solutions, filename)
 
     def import_all(self):
@@ -133,7 +134,7 @@ class Solution(object):
 
         content_digest = Config.operation_digest
         if content_digest:
-            solutions, _ = self._storage.search(Const.SOLUTION, digest=content_digest)
+            solutions, _ = self.storage.search(Const.SOLUTION, digest=content_digest)
             if len(solutions) == 1:
                 digest = solutions[0].get_digest()
                 self._logger.debug('importing solution with digest %.16s', digest)
@@ -141,7 +142,7 @@ class Solution(object):
                 dictionary = Migrate.load(Config.get_operation_file(), content)
                 contents = Content.load(dictionary)
                 solutions[0].migrate(contents[0])
-                self._storage.update(solutions[0], digest)
+                self.storage.update(solutions[0], digest)
             elif not solutions:
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find solution identified with digest {:.16}'.format(content_digest))
             else:
@@ -151,15 +152,14 @@ class Solution(object):
             content = Content(category=Const.SOLUTION, timestamp=Config.get_utc_time())
             dictionary = Migrate.load(Config.get_operation_file(), content)
             solutions = Content.load(dictionary)
-            self._storage.import_content(solutions)
+            self.storage.import_content(solutions)
 
     @Logger.timeit
     def run(self):
-        """Run the solution management operation."""
+        """Run operation for solution."""
 
-        content = self._storage.get_contents(None)
-
-        self._logger.debug('managing solution')
+        self._logger.debug('run solution')
+        content = self.storage.get_contents(None)
         Config.content_category = Const.SOLUTION
         if Config.is_operation_create:
             content = self.create()
@@ -175,5 +175,7 @@ class Solution(object):
             self.import_all()
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for solution')
+
+        self._logger.debug('end solution')
 
         return content

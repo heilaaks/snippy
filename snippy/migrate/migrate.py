@@ -47,6 +47,7 @@ class Migrate(object):
         """Migrate content into requested format."""
 
         migrated = Const.EMPTY
+        cls._logger.debug('migrate content: %s', content_type)
         filtered = Migrate.apply_filters(contents)
         if content_type == Const.CONTENT_TYPE_TEXT:
             migrated = Migrate.terminal(filtered)

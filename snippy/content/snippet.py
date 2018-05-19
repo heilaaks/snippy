@@ -32,15 +32,16 @@ class Snippet(object):
 
     def __init__(self, storage, content_type=Const.CONTENT_TYPE_TEXT):
         self._logger = Logger.get_logger(__name__)
-        self._storage = storage
         self._content_type = content_type
+        self.category = Const.SNIPPET
+        self.storage = storage
 
     def create(self):
         """Create new snippets."""
 
         self._logger.debug('creating new snippet')
         snippets = Config.get_contents(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))
-        contents = self._storage.create(snippets)
+        contents = self.storage.create(snippets)
         contents['data'] = Migrate.content(contents['data'], self._content_type)
 
         return contents
@@ -49,7 +50,7 @@ class Snippet(object):
         """Search snippets."""
 
         self._logger.debug('searching snippets')
-        snippets, total = self._storage.search(
+        snippets, total = self.storage.search(
             Const.SNIPPET,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -59,13 +60,13 @@ class Snippet(object):
         )
         snippets = Migrate.content(snippets, self._content_type)
 
-        return self._storage.get_contents(snippets, total)
+        return self.storage.get_contents(snippets, total)
 
     def update(self):
         """Update snippets."""
 
-        contents = self._storage.get_contents(None)
-        snippets, _ = self._storage.search(
+        contents = self.storage.get_contents(None)
+        snippets, _ = self.storage.search(
             Const.SNIPPET,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -77,7 +78,7 @@ class Snippet(object):
             digest = snippets[0].get_digest()
             self._logger.debug('updating snippet with digest %.16s', digest)
             snippets = Config.get_contents(content=snippets[0])
-            contents = self._storage.update(snippets[0], digest)
+            contents = self.storage.update(snippets[0], digest)
             contents['data'] = Migrate.content(contents['data'], self._content_type)
         else:
             Config.validate_search_context(snippets, 'update')
@@ -87,7 +88,7 @@ class Snippet(object):
     def delete(self):
         """Delete snippet."""
 
-        snippets, _ = self._storage.search(
+        snippets, _ = self.storage.search(
             Const.SNIPPET,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -97,7 +98,7 @@ class Snippet(object):
         )
         if len(snippets) == 1:
             self._logger.debug('deleting snippet with digest %.16s', snippets[0].get_digest())
-            self._storage.delete(snippets[0].get_digest())
+            self.storage.delete(snippets[0].get_digest())
         else:
             Config.validate_search_context(snippets, 'delete')
 
@@ -110,7 +111,7 @@ class Snippet(object):
             Migrate.dump_template(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))
         elif Config.is_search_criteria():
             self._logger.debug('exporting snippets based on search criteria')
-            snippets, _ = self._storage.search(
+            snippets, _ = self.storage.search(
                 Const.SNIPPET,
                 sall=Config.search_all_kws,
                 stag=Config.search_tag_kws,
@@ -125,7 +126,7 @@ class Snippet(object):
             Migrate.dump(snippets, filename)
         else:
             self._logger.debug('exporting all snippets %s', filename)
-            snippets = self._storage.export_content(Const.SNIPPET)
+            snippets = self.storage.export_content(Const.SNIPPET)
             Migrate.dump(snippets, filename)
 
     def import_all(self):
@@ -133,7 +134,7 @@ class Snippet(object):
 
         content_digest = Config.operation_digest
         if content_digest:
-            snippets, _ = self._storage.search(Const.SNIPPET, digest=content_digest)
+            snippets, _ = self.storage.search(Const.SNIPPET, digest=content_digest)
             if len(snippets) == 1:
                 digest = snippets[0].get_digest()
                 self._logger.debug('importing solution with digest %.16s', digest)
@@ -141,7 +142,7 @@ class Snippet(object):
                 dictionary = Migrate.load(Config.get_operation_file(), content)
                 contents = Content.load(dictionary)
                 snippets[0].migrate(contents[0])
-                self._storage.update(snippets[0], digest)
+                self.storage.update(snippets[0], digest)
             elif not snippets:
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find snippet identified with digest {:.16}'.format(content_digest))
             else:
@@ -151,15 +152,14 @@ class Snippet(object):
             content = Content(category=Const.SNIPPET, timestamp=Config.get_utc_time())
             dictionary = Migrate.load(Config.get_operation_file(), content)
             snippets = Content.load(dictionary)
-            self._storage.import_content(snippets)
+            self.storage.import_content(snippets)
 
     @Logger.timeit
     def run(self):
-        """Run the snippet management operation."""
+        """Run operation for snippet."""
 
-        content = self._storage.get_contents(None)
-
-        self._logger.debug('managing snippet')
+        self._logger.debug('run snippet content')
+        content = self.storage.get_contents(None)
         Config.content_category = Const.SNIPPET
         if Config.is_operation_create:
             content = self.create()
@@ -175,5 +175,7 @@ class Snippet(object):
             self.import_all()
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for snippet')
+
+        self._logger.debug('end snippet content')
 
         return content

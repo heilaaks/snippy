@@ -27,75 +27,13 @@ from snippy.config.constants import Constants as Const
 from snippy.config.source.api import Api
 from snippy.content.solution import Solution
 from snippy.logger import Logger
+from snippy.server.rest.base import ContentApiBase
 from snippy.server.rest.jsonapiv1 import JsonApiV1
 from snippy.server.rest.validate import Validate
 
 
-class ApiSolutions(object):
+class ApiSolutions(ContentApiBase):
     """Process solution collections"""
-
-    def __init__(self, storage):
-        self._logger = Logger.get_logger(__name__)
-        self.storage = storage
-
-    @Logger.timeit
-    def on_post(self, request, response):
-        """Create new solution."""
-
-        contents = self.storage.get_contents(None)
-        self._logger.debug('run post %ssolutions', Config.base_path_app)
-        collection = Validate.collection(request)
-        for member in collection:
-            api = Api(Const.SOLUTION, Api.CREATE, member)
-            Config.load(api)
-            content = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-            contents['data'].extend(content['data'])
-        if Cause.is_ok():
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(Const.SOLUTION, contents, request)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end post %ssolutions', Config.base_path_app)
-
-    @Logger.timeit
-    def on_get(self, request, response):
-        """Search solutions based on query parameters."""
-
-        self._logger.debug('run get %ssolutions', Config.base_path_app)
-        api = Api(Const.SOLUTION, Api.SEARCH, request.params)
-        Config.load(api)
-        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents['data'] and Config.search_limit != 0:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
-        if Cause.is_ok():
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(Const.SOLUTION, contents, request, pagination=True)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end get %ssolutions', Config.base_path_app)
-
-    @Logger.timeit
-    def on_delete(self, _, response):
-        """Deleting solutions without resource is not supported."""
-
-        self._logger.debug('run delete %ssolutions', Config.base_path_app)
-        Cause.push(Cause.HTTP_NOT_FOUND, 'cannot delete solutions without identified resource')
-        response.content_type = Const.MEDIA_JSON_API
-        response.body = JsonApiV1.error(Cause.json_message())
-        response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end delete %ssolutions', Config.base_path_app)
 
 
 class ApiSolutionsDigest(object):

@@ -71,11 +71,11 @@ class Sqlite3Db(object):
             if cause[0] == Cause.HTTP_OK:
                 inserted = inserted + 1
 
-        self._logger.debug('inserted %d out of %d content', inserted, collection.size())
+        self._logger.debug('inserted %d out of %d content', inserted, collection.count())
 
         if not collection:
             cause = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
-        elif inserted == collection.size():
+        elif inserted == collection.count():
             Cause.push(Cause.HTTP_CREATED, 'content created')
 
         if not inserted and cause[1]:
@@ -97,7 +97,7 @@ class Sqlite3Db(object):
 
         query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, ' +
                  'runalias, versions, created, updated, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
-        qargs = resource.convert_qargs()
+        qargs = resource.dump_qargs()
 
         try:
             self._put_db(query, qargs)
@@ -114,9 +114,10 @@ class Sqlite3Db(object):
         query, qargs = self._get_query(category, sall, stag, sgrp, digest, data, Sqlite3Db.QUERY_TYPE_REGEX)
         if query:
             rows = self._get_db(query, qargs)
-        self._logger.debug('selected %d rows %s', len(rows), rows)
-        
-        collection.convert(rows)
+            total = self._count_content(category, sall, stag, sgrp, digest, data)
+            collection.convert(rows)
+            collection.total = total
+            self._logger.debug('selected %d rows %s', len(rows), rows)
 
         return collection
 
@@ -160,7 +161,7 @@ class Sqlite3Db(object):
 
         return rows
 
-    def count_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
+    def _count_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Count content based on defined filters."""
 
         count = 0

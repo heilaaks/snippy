@@ -1,9 +1,13 @@
 ## WORKING
+   - [ ] How cases that abuse getting first content from collection with index?
    - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
    - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
    - [ ] Add test that verifies that OID is not changing in one operation.
    - [ ] Remember that Solution DATE was removed from data to be able to use digest. This affects tests.
    - [ ] Remember that API JSON response data list attribute is now singular. This is actually correct because the request is 'snippet' and the type is in one item of data.
+   - [ ] Validate and jsonapiv1 are the same encode and decode. Naming misleading.
+   - [ ] filter_fields to remove_fields?
+   - [ ] is this tested? CAn the json.load removed (json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))
 
 ## FEATURES
    - [ ] Add OPTIONS method.

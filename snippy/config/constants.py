@@ -12,12 +12,12 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     EMPTY = ''
     COMMA = ','
     NEWLINE = '\n'
-    EMPTY_LIST = []
-    EMPTY_TUPLE = ()
 
-    # Python2
     PYTHON2 = sys.version_info.major == 2
 
+    #######################
+    # TODO: MOVE BELOW AWAY
+    #######################
     # Content categories.
     SNIPPET = 'snippet'
     SOLUTION = 'solution'

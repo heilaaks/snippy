@@ -64,12 +64,12 @@ class ContentApiBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger.debug('run get %s', request.uri)
         api = Api(self._content.category, Api.SEARCH, request.params)
         Config.load(api)
-        contents = self._content.run()
-        if not contents['data'] and Config.search_limit != 0:
+        self._content.run()
+        if not self._content.collection.count() and Config.search_limit != 0:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(self._content.category, contents, request, pagination=True)
+            response.body = JsonApiV1.collection(self._content.collection, request, pagination=True)
             response.status = Cause.http_status()
         else:
             response.content_type = Const.MEDIA_JSON_API

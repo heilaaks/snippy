@@ -60,7 +60,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def __str__(self):
         """Format string from the class object."""
 
-        return self.convert_terminal(index=1, ansi=True, debug=True)
+        return self.convert_term(index=1, ansi=True, debug=True)
 
     @property
     def data(self):
@@ -298,7 +298,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
 
         return True if self.category == Resource.SNIPPET else False
 
-    def convert_qargs(self):
+    def dump_qargs(self):
         """Convert resource for sqlite qargs."""
 
         qargs = (
@@ -319,31 +319,101 @@ class Resource(object):  # pylint: disable=too-many-public-methods
 
         return qargs
 
-    def convert_json(self, filter_fields):
+    def dump_json(self, remove_fields):
         """Convert resource to json."""
 
-        dictionary = {'data': self.data,
-                      'brief': self.brief,
-                      'group': self.group,
-                      'tags': self.tags,
-                      'links': self.links,
-                      'category': self.category,
-                      'filename': self.filename,
-                      'runalias': self.runalias,
-                      'versions': self.versions,
-                      'created': self.created,
-                      'updated': self.updated,
-                      'digest': self.digest}
+        json = {
+            'data': self.data,
+            'brief': self.brief,
+            'group': self.group,
+            'tags': self.tags,
+            'links': self.links,
+            'category': self.category,
+            'filename': self.filename,
+            'runalias': self.runalias,
+            'versions': self.versions,
+            'created': self.created,
+            'updated': self.updated,
+            'digest': self.digest
+        }
 
-        for field in filter_fields:
-            dictionary.pop(field, None)
+        for field in remove_fields:
+            json.pop(field, None)
 
-        return dictionary
+        return json
 
-    def convert_terminal(self, index, ansi, debug):
-        """Convert resource to text to be printed in terminal."""
+    def dump_text(self, templates):
+        """Convert resource to text."""
 
-        text = ''
+        text = templates[self.category]
+        text = self._add_data(text)
+        text = self._add_brief(text)
+        text = self._add_group(text)
+        text = self._add_tags(text)
+        text = self._add_links(text)
+        text = self._add_filename(text)
+
+        return text
+
+    def _add_data(self, template):
+        """Add resource data to text template."""
+
+        data = Resource.DELIMITER_DATA.join(map(str, self.data))
+        if data:
+            if self.is_snippet():
+                template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
+            else:
+                template = data
+        else:
+            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
+
+        return template
+
+    def _add_brief(self, template):
+        """Add resource brief to text template."""
+
+        brief = self.brief
+        template = template.replace('<SNIPPY_BRIEF>', brief)
+
+        return template
+
+    def _add_group(self, template):
+        """Add resource group to text template."""
+
+        group = self.group
+        template = template.replace('<SNIPPY_GROUP>', group)
+
+        return template
+
+    def _add_tags(self, template):
+        """Add resource tags to text template."""
+
+        tags = Resource.DELIMITER_TAGS.join(map(str, self.tags))
+        template = template.replace('<SNIPPY_TAGS>', tags)
+
+        return template
+
+    def _add_links(self, template):
+        """Add resource links to text template."""
+
+        links = Resource.DELIMITER_LINKS.join(map(str, self.links))
+        links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
+        template = template.replace('<SNIPPY_LINKS>', links)
+
+        return template
+
+    def _add_filename(self, template):
+        """Add resource filename to text template."""
+
+        filename = self.filename
+        template = template.replace('<SNIPPY_FILE>', filename)
+
+        return template
+
+    def convert_term(self, index, ansi, debug):
+        """Convert resource to be printed to terminal."""
+
+        text = Const.EMPTY
         if self.is_snippet():
             text = text + self.get_snippet_text(index, ansi)
         else:
@@ -360,7 +430,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
                                                          self.digest == self.compute_digest())
             text = text + self._terminal_metadata(ansi) % self.metadata
             text = text + self._terminal_key(ansi) % self.key
-            text = text + '\n'
+            text = text + Const.NEWLINE
 
         return text
 

@@ -188,15 +188,15 @@ class Migrate(object):
         return text
 
     @classmethod
-    def dump(cls, contents, filename):
-        """Dump contents into file."""
+    def dump(cls, collection, filename):
+        """Dump collection into file."""
 
         if not Config.is_supported_file_format():
             cls._logger.debug('file format not supported for file %s', filename)
 
             return
 
-        if not contents:
+        if not collection.count():
             cls._logger.debug('no content to be exported')
 
             return
@@ -207,10 +207,10 @@ class Migrate(object):
                 dictionary = {'meta': {'updated': Config.get_utc_time(),
                                        'version': __version__,
                                        'homepage': __homepage__},
-                              'content': Migrate.get_dictionary_list(contents)}
+                              'content': collection.dump_json}
                 if Config.is_operation_file_text:
-                    for content in contents:
-                        template = content.convert_text()
+                    for resource in collection.resources():
+                        template = resource.dump_text(Config.templates)
                         outfile.write(template)
                         outfile.write(Const.NEWLINE)
                 elif Config.is_operation_file_json:
@@ -239,7 +239,7 @@ class Migrate(object):
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting template {}'.format(filename))
 
     @classmethod
-    def load(cls, filename, content):
+    def load(cls, collection, filename, content): ## TODO Remove content when refactoring done - only for get_content.
         """Load dictionary from file."""
 
         dictionary = {}
@@ -253,8 +253,7 @@ class Migrate(object):
             with open(filename, 'r') as infile:
                 try:
                     if Config.is_operation_file_text:
-                        contents = Config.get_contents(content, source=infile.read())
-                        dictionary = {'content': Migrate.get_dictionary_list(contents)}
+                        collection = Config.get_contents(content, source=infile.read())
                     elif Config.is_operation_file_json:
                         dictionary = json.load(infile)
                     elif Config.is_operation_file_yaml:
@@ -268,7 +267,7 @@ class Migrate(object):
         else:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot read file {}'.format(filename))
 
-        return dictionary
+        return collection
 
     @staticmethod
     def _terminal_header(ansi=False):

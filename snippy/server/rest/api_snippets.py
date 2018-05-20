@@ -135,12 +135,8 @@ class ApiSnippetsDigest(object):
         self._logger.debug('end post %ssnippets/%s', Config.base_path_app, digest)
 
 
-class ApiSnippetsField(object):  # pylint: disable=too-few-public-methods
+class ApiSnippetsField(ContentApiBase):  # pylint: disable=too-few-public-methods
     """Process snippet based on digest resource ID and specified field."""
-
-    def __init__(self, storage):
-        self._logger = Logger.get_logger(__name__)
-        self.storage = storage
 
     @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest, field):
@@ -150,12 +146,12 @@ class ApiSnippetsField(object):  # pylint: disable=too-few-public-methods
         local_params = {'digest': digest, 'fields': field}
         api = Api(Const.SNIPPET, Api.SEARCH, local_params)
         Config.load(api)
-        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents['data']:
+        self._content.run()
+        if not self._content.collection.count():
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(Const.SNIPPET, contents, request, digest, field=field, pagination=False)
+            response.body = JsonApiV1.resource(self._content.collection, request, digest, field=field, pagination=False)
             response.status = Cause.http_status()
         else:
             response.content_type = Const.MEDIA_JSON_API

@@ -47,7 +47,7 @@ class Snippet(ContentTypeBase):
         """Search snippets."""
 
         self._logger.debug('searching snippets')
-        snippets, total = self.storage.search(
+        self.collection = self.storage.search(
             Const.SNIPPET,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -55,15 +55,12 @@ class Snippet(ContentTypeBase):
             digest=Config.operation_digest,
             data=Config.content_data
         )
-        snippets = Migrate.content(snippets, self._content_type)
-
-        return self.storage.get_contents(snippets, total)
 
     def update(self):
         """Update snippets."""
 
         contents = self.storage.get_contents(None)
-        snippets, _ = self.storage.search(
+        collection = self.storage.search(
             Const.SNIPPET,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
@@ -71,14 +68,14 @@ class Snippet(ContentTypeBase):
             digest=Config.operation_digest,
             data=Config.content_data
         )
-        if len(snippets) == 1:
-            digest = snippets[0].get_digest()
+        if collection.count() == 1:
+            digest = collection.get_digest()
             self._logger.debug('updating snippet with digest %.16s', digest)
             snippets = Config.get_contents(content=snippets[0])
             contents = self.storage.update(snippets[0], digest)
             contents['data'] = Migrate.content(contents['data'], self._content_type)
         else:
-            Config.validate_search_context(snippets, 'update')
+            Config.validate_search_context(collection, 'update')
 
         return contents
 
@@ -108,7 +105,7 @@ class Snippet(ContentTypeBase):
             Migrate.dump_template(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))
         elif Config.is_search_criteria():
             self._logger.debug('exporting snippets based on search criteria')
-            snippets, _ = self.storage.search(
+            collection = self.storage.search(
                 Const.SNIPPET,
                 sall=Config.search_all_kws,
                 stag=Config.search_tag_kws,
@@ -116,11 +113,11 @@ class Snippet(ContentTypeBase):
                 digest=Config.operation_digest,
                 data=Config.content_data
             )
-            if len(snippets) == 1:
+            if collection.count == 1:
                 filename = Config.get_operation_file(content_filename=snippets[0].get_filename())
-            elif not snippets:
+            elif not collection.count():
                 Config.validate_search_context(snippets, 'export')
-            Migrate.dump(snippets, filename)
+            Migrate.dump(collection, filename)
         else:
             self._logger.debug('exporting all snippets %s', filename)
             snippets = self.storage.export_content(Const.SNIPPET)
@@ -129,11 +126,12 @@ class Snippet(ContentTypeBase):
     def import_all(self):
         """Import snippets."""
 
+        collection = Collection()
         content_digest = Config.operation_digest
         if content_digest:
-            snippets, _ = self.storage.search(Const.SNIPPET, digest=content_digest)
-            if len(snippets) == 1:
-                digest = snippets[0].get_digest()
+            collection = self.storage.search(Const.SNIPPET, digest=content_digest)
+            if collection.count() == 1:
+                digest = collection[0].get_digest()
                 self._logger.debug('importing solution with digest %.16s', digest)
                 content = Content(category=Const.SNIPPET, timestamp=Config.get_utc_time())
                 dictionary = Migrate.load(Config.get_operation_file(), content)
@@ -147,9 +145,8 @@ class Snippet(ContentTypeBase):
         else:
             self._logger.debug('importing snippets %s', Config.get_operation_file())
             content = Content(category=Const.SNIPPET, timestamp=Config.get_utc_time())
-            dictionary = Migrate.load(Config.get_operation_file(), content)
-            snippets = Content.load(dictionary)
-            self.storage.import_content(snippets)
+            collection = Migrate.load(collection, Config.get_operation_file(), content)
+            self.storage.import_content(collection)
 
     @Logger.timeit
     def run(self):

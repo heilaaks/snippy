@@ -67,12 +67,10 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
-        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
-        print(Database.print_contents())
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('remove-utc')
@@ -101,11 +99,11 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '632'
+            'content-length': '631'
         }
         result_json = {
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': content_read
             }]
@@ -146,11 +144,11 @@ class TestApiCreateSnippet(object):
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '837'
+            'content-length': '836'
         }
         result_json = {
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
@@ -193,11 +191,11 @@ class TestApiCreateSnippet(object):
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '837'
+            'content-length': '836'
         }
         result_json = {
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
@@ -246,11 +244,11 @@ class TestApiCreateSnippet(object):
         content = {'3d855210284302d5': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '483'
+            'content-length': '482'
         }
         result_json = {
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
                 'attributes': content_read
             }]
@@ -288,15 +286,15 @@ class TestApiCreateSnippet(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1323'
+            'content-length': '1321'
         }
         result_json = {
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
@@ -531,14 +529,14 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '723'
+            'content-length': '722'
         }
         result_json = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
             },
             'data': {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': content_read
             }
@@ -587,14 +585,14 @@ class TestApiCreateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '815'
+            'content-length': '814'
         }
         result_json = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
             },
             'data': {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2',
                 'attributes': content_read
             }

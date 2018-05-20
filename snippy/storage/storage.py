@@ -43,11 +43,9 @@ class Storage(object):
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content."""
 
-        rows = self._database.select_content(category, sall, stag, sgrp, digest, data)
-        total = self._database.count_content(category, sall, stag, sgrp, digest, data)
-        contents = Storage._get_contents(rows)
+        collection = self._database.select_content(category, sall, stag, sgrp, digest, data)
 
-        return contents, total
+        return collection
 
     def update(self, content, digest):
         """Update content."""
@@ -72,10 +70,10 @@ class Storage(object):
 
         return contents
 
-    def import_content(self, contents):
+    def import_content(self, collection):
         """Import content."""
 
-        return self._database.insert_content(contents)
+        return self._database.insert_content(collection)
 
     def disconnect(self):
         """Disconnect storage."""

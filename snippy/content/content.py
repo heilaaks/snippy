@@ -378,11 +378,11 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """Create empty content."""
 
         content = [
-            Const.EMPTY_TUPLE,
+            (),
             Const.EMPTY,
             Const.DEFAULT_GROUP,
-            Const.EMPTY_TUPLE,
-            Const.EMPTY_TUPLE,
+            (),
+            (),
             category,
             Const.EMPTY,
             Const.EMPTY,

@@ -45,7 +45,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1383'
+            'content-length': '1381'
         }
         result_json = {
             'meta': {
@@ -55,11 +55,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
@@ -85,7 +85,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1518'
+            'content-length': '1516'
         }
         result_json = {
             'meta': {
@@ -95,11 +95,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
@@ -126,7 +126,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '247'
+            'content-length': '246'
         }
         result_json = {
             'meta': {
@@ -136,7 +136,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
             }]
@@ -162,7 +162,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '247'
+            'content-length': '246'
         }
         result_json = {
             'meta': {
@@ -172,7 +172,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
             }]
@@ -197,7 +197,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1486'
+            'content-length': '1484'
         }
         result_json = {
             'meta': {
@@ -207,11 +207,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
@@ -237,7 +237,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1486'
+            'content-length': '1484'
         }
         result_json = {
             'meta': {
@@ -247,11 +247,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
@@ -305,7 +305,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '247'
+            'content-length': '246'
         }
         result_json = {
             'meta': {
@@ -315,7 +315,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
             }]
@@ -431,7 +431,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '783'
+            'content-length': '782'
         }
         result_json = {
             'meta': {
@@ -441,7 +441,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 1
             },
             'data': {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             },
@@ -496,7 +496,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1383'
+            'content-length': '1381'
         }
         result_json = {
             'meta': {
@@ -506,11 +506,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
@@ -536,7 +536,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '760'
+            'content-length': '759'
         }
         result_json = {
             'meta': {
@@ -546,7 +546,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
@@ -572,7 +572,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2365'
+            'content-length': '2363'
         }
         result_json = {
             'meta': {
@@ -582,11 +582,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
@@ -613,7 +613,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3151'
+            'content-length': '3147'
         }
         result_json = {
             'meta': {
@@ -623,19 +623,19 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }],
@@ -666,7 +666,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1978'
+            'content-length': '1976'
         }
         result_json = {
             'meta': {
@@ -676,11 +676,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }],
@@ -711,7 +711,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1810'
+            'content-length': '1808'
         }
         result_json = {
             'meta': {
@@ -721,11 +721,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }],
@@ -758,7 +758,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1468'
+            'content-length': '1467'
         }
         result_json = {
             'meta': {
@@ -768,7 +768,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }],
@@ -803,7 +803,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2159'
+            'content-length': '2157'
         }
         result_json = {
             'meta': {
@@ -813,11 +813,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }],
@@ -851,7 +851,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1119'
+            'content-length': '1118'
         }
         result_json = {
             'meta': {
@@ -861,7 +861,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }],
@@ -892,7 +892,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2014'
+            'content-length': '2012'
         }
         result_json = {
             'meta': {
@@ -902,11 +902,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 5
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }],
@@ -1123,11 +1123,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '278'
+            'content-length': '277'
         }
         result_json = {
             'data': {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': {
                     'data': Snippet.DEFAULTS[Snippet.REMOVE]['data']
@@ -1156,11 +1156,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '273'
+            'content-length': '272'
         }
         result_json = {
             'data': {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': {
                     'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief']
@@ -1187,11 +1187,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '238'
+            'content-length': '237'
         }
         result_json = {
             'data': {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': {
                     'group': Snippet.DEFAULTS[Snippet.REMOVE]['group']
@@ -1218,11 +1218,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '283'
+            'content-length': '282'
         }
         result_json = {
             'data': {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': {
                     'tags': Snippet.DEFAULTS[Snippet.REMOVE]['tags']
@@ -1249,11 +1249,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '290'
+            'content-length': '289'
         }
         result_json = {
             'data': {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': {
                     'links': Snippet.DEFAULTS[Snippet.REMOVE]['links']
@@ -1342,7 +1342,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1383'
+            'content-length': '1381'
         }
         result_json = {
             'meta': {
@@ -1352,11 +1352,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
@@ -1382,7 +1382,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1518'
+            'content-length': '1516'
         }
         result_json = {
             'meta': {
@@ -1392,11 +1392,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'total': 4
             },
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]

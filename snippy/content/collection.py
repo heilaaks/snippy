@@ -37,7 +37,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         text = ''
         for i, resource in enumerate(self.resources(), start=1):
-            text = text + resource.convert_terminal(index=i, ansi=True, debug=True)
+            text = text + resource.convert_term(index=i, ansi=True, debug=True)
 
         return text
 
@@ -68,7 +68,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         for digest in self.keys():
             yield self.data['data'][digest]['data']
 
-    def size(self):
+    def count(self):
         """Return the count of resources."""
 
         return len(self.data['data'])
@@ -111,6 +111,15 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             resource.migrate(content)
             self.migrate(resource)
 
+    def dump_json(self, filter_fields):
+        """Convert collection to json."""
+
+        json = []
+        for resource in source.resources():
+            json.append(resource.dump_json)
+
+        return json
+
     @property
     def data(self):
         """Get collection data."""
@@ -123,6 +132,18 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         self._data = value
 
+    @property
+    def total(self):
+        """Get total amount of resources without filters."""
+
+        return self._data['meta']['total']
+
+    @total.setter
+    def total(self, value):
+        """Total amount of resources without filters."""
+
+        self._data['meta']['total'] = value
+
     def _init(self):
         """Wrap content list with metadata."""
 
@@ -130,7 +151,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         meta_content = {
             'data': OrderedDict(),
             'meta': {
-                'total': 0,
+                'total': 0,  # Total amount of search results without filters.
             }
         }
 

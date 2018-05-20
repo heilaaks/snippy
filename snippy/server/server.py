@@ -69,7 +69,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'hello'), ApiHello())
         self.api.add_route(urljoin(Config.base_path_app, 'snippets'), ApiSnippets(Snippet(self.storage, Const.CONTENT_TYPE_JSON)))
         self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}'), ApiSnippetsDigest(self.storage))
-        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}/{field}'), ApiSnippetsField(self.storage))
+        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}/{field}'), ApiSnippetsField(Snippet(self.storage, Const.CONTENT_TYPE_JSON)))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(Solution(self.storage, Const.CONTENT_TYPE_JSON)))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(self.storage))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}/{field}'), ApiSolutionsField(self.storage))

@@ -58,6 +58,7 @@ class Config(object):
         cls.storage_schema = cls._storage_schema()
         cls.snippet_template = cls._content_template('snippet-template.txt')
         cls.solution_template = cls._content_template('solution-template.txt')
+        cls.templates = {'snippet': cls.snippet_template, 'solution': cls.solution_template}
         cls.storage_path = source.storage_path
         cls.storage_file = cls._storage_file()
 

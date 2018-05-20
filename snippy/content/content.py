@@ -111,7 +111,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """Merge content.
 
         Content fields that can be modified by user are merged. This overrides
-        original content field only if the merged source does not exist.
+        original content fields only if merged source fields exists.
         """
 
         if source:

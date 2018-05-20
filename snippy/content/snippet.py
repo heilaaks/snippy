@@ -22,29 +22,26 @@
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
+from snippy.content.base import ContentTypeBase
 from snippy.content.content import Content
+from snippy.content.collection import Collection
 from snippy.logger import Logger
 from snippy.migrate.migrate import Migrate
 
 
-class Snippet(object):
+class Snippet(ContentTypeBase):
     """Snippet management."""
 
-    def __init__(self, storage, content_type=Const.CONTENT_TYPE_TEXT):
-        self._logger = Logger.get_logger(__name__)
-        self._content_type = content_type
-        self.category = Const.SNIPPET
-        self.storage = storage
+    def __init__(self, *args, **kwargs):
+        super(Snippet, self).__init__(*args, **kwargs)
 
     def create(self):
         """Create new snippets."""
 
         self._logger.debug('creating new snippet')
-        snippets = Config.get_contents(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))
-        contents = self.storage.create(snippets)
-        contents['data'] = Migrate.content(contents['data'], self._content_type)
-
-        return contents
+        collection = Config.get_contents(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))
+        collection = self.storage.create(collection)
+        self.collection.migrate(collection)
 
     def search(self):
         """Search snippets."""
@@ -162,7 +159,7 @@ class Snippet(object):
         content = self.storage.get_contents(None)
         Config.content_category = Const.SNIPPET
         if Config.is_operation_create:
-            content = self.create()
+            self.create()
         elif Config.is_operation_search:
             content = self.search()
         elif Config.is_operation_update:
@@ -178,4 +175,4 @@ class Snippet(object):
 
         self._logger.debug('end snippet content')
 
-        return content
+        return self.collection

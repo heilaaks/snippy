@@ -33,14 +33,12 @@ class Storage(object):
         self._database = Database()
         self._database.init()
 
-    def create(self, contents):
+    def create(self, collection):
         """Create new content."""
 
-        self._database.insert_content(contents)
-        rows = self._database.select_content(contents[0].get_category(), digest=contents[0].get_digest())
-        contents = Storage._get_contents(rows)
+        collection = self._database.insert_content(collection)
 
-        return self._meta_content(contents)
+        return collection
 
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content."""

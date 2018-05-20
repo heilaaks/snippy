@@ -84,20 +84,18 @@ class JsonApiV1(object):
         return cls.dumps(resource_)
 
     @classmethod
-    def collection(cls, category, contents, request, pagination=False):  # pylint: disable=too-many-locals,too-many-branches
+    def collection(cls, collection, request, pagination=False):  # pylint: disable=too-many-locals,too-many-branches
         """Format JSON API v1.0 collection from content list."""
 
-        collection = {
+        encoded = {
             'data': []
         }
-        for content in contents['data']:
-            type_ = 'snippets' if category == Const.SNIPPET else 'solutions'
-            digest = content['digest']
-            if 'digest' in Config.filter_fields:
-                content.pop('digest', None)
-            collection['data'].append({'type': type_,
-                                       'id': digest,
-                                       'attributes': content})
+        for resource in collection.resources():
+            encoded['data'].append({
+                'type': resource.category,
+                'id': resource.digest,
+                'attributes': resource.convert_json(Config.filter_fields)
+            })
         if pagination:
             collection['meta'] = {}
             collection['meta']['count'] = len(collection['data'])
@@ -168,7 +166,7 @@ class JsonApiV1(object):
                 collection['links']['first'] = first_link
                 collection['links']['last'] = last_link
 
-        return cls.dumps(collection)
+        return cls.dumps(encoded)
 
     @classmethod
     def error(cls, causes):

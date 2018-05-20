@@ -487,7 +487,6 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         mocked_open = mock.mock_open(read_data=template)
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './solution-template.txt'])  ## workflow
-            print(Database.print_contents())
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()

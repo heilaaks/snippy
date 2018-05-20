@@ -53,11 +53,11 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '632'
+            'content-length': '631'
         }
         result_json = {
             'data': [{
-                'type': 'snippets',
+                'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': content_read
             }]
@@ -67,10 +67,12 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
+        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_snippets()) == 1
+        print(Database.print_contents())
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('remove-utc')

@@ -28,6 +28,7 @@ from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
 from snippy.cause import Cause
 from snippy.config.config import Config
+from snippy.content.collection import Collection
 
 
 class Sqlite3Db(object):
@@ -57,54 +58,47 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self._logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_content(self, contents):
-        """Insert contents into database."""
+    def insert_content(self, collection):
+        """Insert collection into database."""
 
         inserted = 0
         cause = (Cause.HTTP_OK, Const.EMPTY)
-        for content in contents:
-            digest = content.get_digest()
-            if digest != content.compute_digest():
-                self._logger.debug('invalid digest found and updated while storing content data: "%s"', content.get_data())
-                content.update_digest()
-
-            cause = self._insert_content(content)
+        for resource in collection.resources():
+            if resource.digest != resource.compute_digest():
+                self._logger.debug('invalid digest found and updated while storing content data: "%s"', resource.data)
+                resource.update_digest()
+            cause = self._insert_content(resource)
             if cause[0] == Cause.HTTP_OK:
                 inserted = inserted + 1
 
-        self._logger.debug('inserted %d out of %d content', inserted, len(contents))
+        self._logger.debug('inserted %d out of %d content', inserted, collection.size())
 
-        if not contents:
+        if not collection:
             cause = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
-        elif inserted == len(contents):
+        elif inserted == collection.size():
             Cause.push(Cause.HTTP_CREATED, 'content created')
 
         if not inserted and cause[1]:
             Cause.push(cause[0], cause[1])
 
-    def _insert_content(self, content):
+        result = Collection()
+        for resource in collection.resources():
+            result.migrate(self.select_content(resource.category, digest=resource.digest))
+        
+        return result
+
+    def _insert_content(self, resource):
         """Insert content."""
 
-        cause = self._test_content(content)
+        cause = self._test_content(resource)
         if cause[0] != Cause.HTTP_OK:
 
             return cause
 
         query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, ' +
                  'runalias, versions, created, updated, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
-        qargs = (content.get_data(Const.STRING_CONTENT),
-                 content.get_brief(Const.STRING_CONTENT),
-                 content.get_group(Const.STRING_CONTENT),
-                 content.get_tags(Const.STRING_CONTENT),
-                 content.get_links(Const.STRING_CONTENT),
-                 content.get_category(Const.STRING_CONTENT),
-                 content.get_filename(Const.STRING_CONTENT),
-                 content.get_runalias(Const.STRING_CONTENT),
-                 content.get_versions(Const.STRING_CONTENT),
-                 content.get_created(Const.STRING_CONTENT),
-                 content.get_updated(Const.STRING_CONTENT),
-                 content.get_digest(Const.STRING_CONTENT),
-                 content.get_metadata(Const.STRING_CONTENT))
+        qargs = resource.convert_qargs()
+
         try:
             self._put_db(query, qargs)
         except sqlite3.IntegrityError:
@@ -116,13 +110,15 @@ class Sqlite3Db(object):
     def select_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Select content based on defined filters."""
 
-        rows = ()
+        collection = Collection()
         query, qargs = self._get_query(category, sall, stag, sgrp, digest, data, Sqlite3Db.QUERY_TYPE_REGEX)
         if query:
             rows = self._get_db(query, qargs)
         self._logger.debug('selected %d rows %s', len(rows), rows)
+        
+        collection.convert(rows)
 
-        return rows
+        return collection
 
     def _select_content_data(self, data):
         """Select content based on data."""
@@ -252,7 +248,7 @@ class Sqlite3Db(object):
 
         return re.search(expr, item, re.IGNORECASE) is not None
 
-    def _test_content(self, content):
+    def _test_content(self, resource):
         """Test content validity."""
 
         # Common failure cases:
@@ -260,20 +256,20 @@ class Sqlite3Db(object):
         #   2. Default content is imported multiple times.
         #   3. Content already exists.
         cause = (Cause.HTTP_OK, Const.EMPTY)
-        if content.is_template():
+        if resource.is_template():
             cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
             self._logger.debug(cause[1])
 
             return cause
 
-        if not content.has_data():
+        if not resource.has_data():
             cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content data was missing')
             self._logger.debug(cause[1])
 
             return cause
 
-        if self._select_content_data(content.get_data()):
-            cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest {:.16}'.format(self._get_db_digest(content)))
+        if self._select_content_data(resource.data):
+            cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest {:.16}'.format(self._get_db_digest(resource)))
             self._logger.debug(cause[1])
 
             return cause

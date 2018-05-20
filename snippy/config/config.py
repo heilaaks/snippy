@@ -32,6 +32,7 @@ from snippy.config.constants import Constants as Const
 from snippy.config.source.cli import Cli
 from snippy.config.source.editor import Editor
 from snippy.config.source.parser import Parser
+from snippy.content.collection import Collection
 from snippy.devel.profiler import Profiler
 from snippy.logger import Logger
 
@@ -150,6 +151,7 @@ class Config(object):
     def get_contents(cls, content, source=None):
         """Get content list from one of the configuration sources."""
 
+        collection = Collection()
         if source is not None:
             contents = Parser.read_content(content, source)
         elif cls.editor:
@@ -157,7 +159,9 @@ class Config(object):
         else:
             contents = cls._read_content(content)
 
-        return tuple(contents)
+        collection.convert(contents)
+
+        return collection
 
     @classmethod
     def _init_logs(cls, args):

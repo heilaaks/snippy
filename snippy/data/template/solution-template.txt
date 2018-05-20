@@ -1,7 +1,6 @@
 ################################################################################
 ## BRIEF : <SNIPPY_BRIEF>
 ##
-## DATE  : <SNIPPY_DATE>
 ## GROUP : <SNIPPY_GROUP>
 ## TAGS  : <SNIPPY_TAGS>
 ## FILE  : <SNIPPY_FILE>

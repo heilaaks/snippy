@@ -39,17 +39,15 @@ class ContentApiBase(object):  # pylint: disable=too-many-instance-attributes
     def on_post(self, request, response):
         """Create new content."""
 
-        contents = self._content.storage.get_contents(None)
         self._logger.debug('run post %s', request.uri)
         collection = Validate.collection(request)
-        for member in collection:
-            api = Api(self._content.category, Api.CREATE, member)
+        for resource in collection:
+            api = Api(self._content.category, Api.CREATE, resource)
             Config.load(api)
-            content = self._content.run()
-            contents['data'].extend(content['data'])
+            self._content.run()
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(self._content.category, contents, request)
+            response.body = JsonApiV1.collection(self._content.collection, request)
             response.status = Cause.http_status()
         else:
             response.content_type = Const.MEDIA_JSON_API

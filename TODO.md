@@ -2,6 +2,8 @@
    - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
    - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
    - [ ] Add test that verifies that OID is not changing in one operation.
+   - [ ] Remember that Solution DATE was removed from data to be able to use digest. This affects tests.
+   - [ ] Remember that API JSON response data list attribute is now singular. This is actually correct because the request is 'snippet' and the type is in one item of data.
 
 ## FEATURES
    - [ ] Add OPTIONS method.
@@ -29,6 +31,8 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix _logger.info should be debug.
+   - [ ] Fix insert_content and digest check is probably unnecessary. Remove it after content refactor.
    - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv
    - [ ] Fix all post responses to have link to created resource. Why this is not always included? Only in updates but not in create?
    - [ ] Fix 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH'' It seems Python 2.7 does not support PATCH somewhere?

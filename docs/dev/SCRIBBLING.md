@@ -759,6 +759,10 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     field     : Field that is part of the content.
     category  : Defines content category which can be 'snippet' or 'solution'
     parameter : Parameter in URL that defines for example filtering criteria for HTTP request.
+    
+    collection : collection of resources
+    resource   : single resource that can be any of the content types
+    contents   : list of content that is not in form of Resource()
 
 
     STRANGER THINGS

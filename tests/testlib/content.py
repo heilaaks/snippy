@@ -79,7 +79,7 @@ class Content(object):
     def verified(mocker, snippy, content):
         """Compare given content against content stored in database."""
 
-        mocker.patch.object(Config, 'get_utc_time', side_effect=(Content.EXPORT_TIME,)*len(content))
+        mocker.patch.object(Config, 'utcnow', side_effect=(Content.EXPORT_TIME,)*len(content))
         assert len(Database.get_contents()) == len(content)
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open()) as mock_file:
             for digest in content:

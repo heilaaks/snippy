@@ -33,7 +33,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
-# Calls to get_utc_time()
+# Calls to Config.utcnow()
 # =======================
 #
 # Content creation:
@@ -205,7 +205,7 @@ def import_remove_snippet(mocker, snippy):
 def create_remove_time_mock(mocker):
     """Mock timestamps to create 'remove' snippet."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_REMOVE)
+    mocker.patch.object(Config, 'utcnow', side_effect=CREATE_REMOVE)
 
 @pytest.fixture(scope='function', name='import-remove-utc')
 def import_remove_time_mock(mocker):
@@ -219,7 +219,7 @@ def edit_remove_snippet(mocker):
 
     template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
     mocker.patch.object(Editor, 'call_editor', return_value=template)
-    mocker.patch.object(Config, 'get_utc_time', side_effect=EDITED_REMOVE)
+    mocker.patch.object(Config, 'utcnow', side_effect=EDITED_REMOVE)
 
 @pytest.fixture(scope='function', name='edited_remove')
 def edited_remove(mocker):
@@ -250,7 +250,7 @@ def import_forced_time_mock(mocker):
 def create_exited_time_mock(mocker):
     """Mock timestamps to create 'exited' solution."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_EXITED)
+    mocker.patch.object(Config, 'utcnow', side_effect=CREATE_EXITED)
 
 @pytest.fixture(scope='function', name='netcat')
 def import_netcat_snippet(mocker, snippy):
@@ -263,7 +263,7 @@ def import_netcat_snippet(mocker, snippy):
 def create_netcat_time_mock(mocker):
     """Mock timestamps to create 'netcat' snippet."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=CREATE_NETCAT)
+    mocker.patch.object(Config, 'utcnow', side_effect=CREATE_NETCAT)
 
 @pytest.fixture(scope='function', name='import-netcat-utc')
 def import_netcat_time_mock(mocker):
@@ -364,7 +364,7 @@ def import_kafka_time_mock(mocker):
 def export_template_time_mock(mocker):
     """Mock timestamps to export solution template."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=(EXPORT_TEMPLATE,)*2)
+    mocker.patch.object(Config, 'utcnow', side_effect=(EXPORT_TEMPLATE,)*2)
 
 ## Content
 
@@ -563,7 +563,7 @@ def _create_snippy(mocker, options):
 def _import_content(snippy, mocker, contents, timestamps):
     """Import requested content."""
 
-    mocker.patch.object(Config, 'get_utc_time', side_effect=timestamps)
+    mocker.patch.object(Config, 'utcnow', side_effect=timestamps)
     start = len(Database.get_contents()) + 1
     for idx, content in enumerate(contents, start=start):
         mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
@@ -577,10 +577,10 @@ def _add_utc_time(mocker, timestamps):
 
     side_effects = ()
     try:
-        side_effects = Config.get_utc_time.side_effect
+        side_effects = Config.utcnow.side_effect
     except AttributeError:
         pass
-    mocker.patch.object(Config, 'get_utc_time', side_effect=tuple(side_effects) + timestamps)
+    mocker.patch.object(Config, 'utcnow', side_effect=tuple(side_effects) + timestamps)
 
 def _editor(mocker, timestamp):
     """Mock editor."""

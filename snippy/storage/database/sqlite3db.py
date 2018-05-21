@@ -58,8 +58,8 @@ class Sqlite3Db(object):
             except sqlite3.Error as exception:
                 self._logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
-    def insert_content(self, collection):
-        """Insert collection into database."""
+    def insert(self, collection):
+        """Insert Collection() into database."""
 
         inserted = 0
         cause = (Cause.HTTP_OK, Const.EMPTY)
@@ -67,7 +67,7 @@ class Sqlite3Db(object):
             if resource.digest != resource.compute_digest():
                 self._logger.debug('invalid digest found and updated while storing content data: "%s"', resource.data)
                 resource.update_digest()
-            cause = self._insert_content(resource)
+            cause = self._insert(resource)
             if cause[0] == Cause.HTTP_OK:
                 inserted = inserted + 1
 
@@ -81,14 +81,14 @@ class Sqlite3Db(object):
         if not inserted and cause[1]:
             Cause.push(cause[0], cause[1])
 
-        result = Collection()
+        stored = Collection()
         for resource in collection.resources():
-            result.migrate(self.select_content(resource.category, digest=resource.digest))
+            stored.migrate(self.select(resource.category, digest=resource.digest))
         
-        return result
+        return stored
 
-    def _insert_content(self, resource):
-        """Insert content."""
+    def _insert(self, resource):
+        """Insert Resource() into database."""
 
         cause = self._test_content(resource)
         if cause[0] != Cause.HTTP_OK:
@@ -107,7 +107,7 @@ class Sqlite3Db(object):
 
         return cause
 
-    def select_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
+    def select(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Select content based on defined filters."""
 
         collection = Collection()
@@ -121,7 +121,7 @@ class Sqlite3Db(object):
 
         return collection
 
-    def _select_content_data(self, data):
+    def _select_data(self, data):
         """Select content based on data."""
 
         rows = ()
@@ -175,26 +175,18 @@ class Sqlite3Db(object):
 
         return count
 
-    def update_content(self, content, digest, metadata=None):
+    def update(self, digest, resource):
         """Update existing content."""
 
         query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, '
                  'runalias=?, versions=?, created=?, updated=?, digest=?, metadata=? WHERE digest LIKE ?')
-        qargs = (content.get_data(Const.STRING_CONTENT),
-                 content.get_brief(Const.STRING_CONTENT),
-                 content.get_group(Const.STRING_CONTENT),
-                 content.get_tags(Const.STRING_CONTENT),
-                 content.get_links(Const.STRING_CONTENT),
-                 content.get_category(Const.STRING_CONTENT),
-                 content.get_filename(Const.STRING_CONTENT),
-                 content.get_runalias(Const.STRING_CONTENT),
-                 content.get_versions(Const.STRING_CONTENT),
-                 content.get_created(Const.STRING_CONTENT),
-                 content.get_updated(Const.STRING_CONTENT),
-                 content.get_digest(Const.STRING_CONTENT),
-                 metadata,
-                 digest)
+        qargs = resource.dump_qargs() + (digest,)
         self._put_db(query, qargs)
+
+        stored = Collection()
+        stored.migrate(self.select(resource.category, digest=resource.digest))
+        
+        return stored
 
     def delete_content(self, digest):
         """Delete single content based on given digest."""
@@ -269,7 +261,7 @@ class Sqlite3Db(object):
 
             return cause
 
-        if self._select_content_data(resource.data):
+        if self._select_data(resource.data):
             cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest {:.16}'.format(self._get_db_digest(resource)))
             self._logger.debug(cause[1])
 
@@ -282,7 +274,7 @@ class Sqlite3Db(object):
 
         digest = Const.EMPTY
         category = content.get_category(Const.STRING_CONTENT)
-        contents = self._select_content_data(content.get_data())
+        contents = self._select_data(content.get_data())
         if len(contents) == 1:
             digest = contents[0][Const.DIGEST]
         else:

@@ -36,26 +36,26 @@ class Storage(object):
     def create(self, collection):
         """Create new content."""
 
-        collection = self._database.insert_content(collection)
+        collection = self._database.insert(collection)
 
         return collection
 
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content."""
 
-        collection = self._database.select_content(category, sall, stag, sgrp, digest, data)
+        collection = self._database.select(category, sall, stag, sgrp, digest, data)
 
         return collection
 
-    def update(self, content, digest):
-        """Update content."""
+    def update(self, digest, resource):
+        """Update resource specified by digest."""
+        
+        from snippy.config.config import Config # Mote to top when refactor done
+        
+        resource.updated = Config.utcnow() # TODO Add Config.utcnow() when Content is removed
+        collection = self._database.update(digest, resource)
 
-        content.update_updated()
-        self._database.update_content(content, digest)
-        rows = self._database.select_content(content.get_category(), digest=content.get_digest())
-        contents = Storage._get_contents(rows)
-
-        return self._meta_content(contents)
+        return collection
 
     def delete(self, digest):
         """Delete content."""
@@ -73,7 +73,7 @@ class Storage(object):
     def import_content(self, collection):
         """Import content."""
 
-        return self._database.insert_content(collection)
+        return self._database.insert(collection)
 
     def disconnect(self):
         """Disconnect storage."""

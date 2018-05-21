@@ -47,6 +47,11 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def __iter__(self):
         return iter(self.data['data'])
 
+    def count(self):
+        """Return the count of resources."""
+
+        return len(self.data['data'])
+
     def keys(self):
         """Iterate over keys stored in collection."""
 
@@ -67,11 +72,6 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         for digest in self.keys():
             yield self.data['data'][digest]['data']
-
-    def count(self):
-        """Return the count of resources."""
-
-        return len(self.data['data'])
 
     def init(self):
         """Initialize collection."""

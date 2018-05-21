@@ -283,6 +283,24 @@ class Resource(object):  # pylint: disable=too-many-public-methods
             self.metadata = source[12]
             self.key = source[13]
 
+    def merge(self, source):
+        """Merge two resource.
+
+        This overrides original resource fields only if the merged source
+        fields exists.
+        """
+
+        if source:
+            if source.data:
+                self.data = source.data
+            if source.brief:
+                self.brief = source.brief
+            if source.tags:
+                self.tags = source.tags
+            if source.links:
+                self.links = source.links
+            self.digest = self.compute_digest()
+
     def is_template(self):
         """Test if resource data is empty template."""
 

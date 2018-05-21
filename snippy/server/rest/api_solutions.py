@@ -27,12 +27,12 @@ from snippy.config.constants import Constants as Const
 from snippy.config.source.api import Api
 from snippy.content.solution import Solution
 from snippy.logger import Logger
-from snippy.server.rest.base import ContentApiBase
+from snippy.server.rest.base import ApiContentBase
 from snippy.server.rest.jsonapiv1 import JsonApiV1
 from snippy.server.rest.validate import Validate
 
 
-class ApiSolutions(ContentApiBase):
+class ApiSolutions(ApiContentBase):
     """Process solution collections"""
 
 

@@ -28,7 +28,7 @@ from snippy.server.rest.jsonapiv1 import JsonApiV1
 from snippy.server.rest.validate import Validate
 
 
-class ContentApiBase(object):  # pylint: disable=too-many-instance-attributes
+class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
     """Base class for content APIs."""
 
     def __init__(self, content):
@@ -91,3 +91,41 @@ class ContentApiBase(object):  # pylint: disable=too-many-instance-attributes
 
         Cause.reset()
         self._logger.debug('end delete %s', request.uri)
+
+class ApiContentDigestBase(object):
+    """Process snippet based on digest resource ID."""
+
+    def __init__(self, content):
+        self._logger = Logger.get_logger(__name__)
+        self._content = content
+
+    @Logger.timeit(refresh_oid=True)
+    def on_put(self, request, response, digest):
+        """Update whole snippet based on digest."""
+
+        self._logger.debug('run put %s', request.uri)
+        resource = Validate.resource(request, digest)
+        if resource:
+            api = Api(Const.SNIPPET, Api.UPDATE, resource)
+            Config.load(api)
+            self._content.run()
+        if Cause.is_ok():
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.resource(self._content.collection, request, digest)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        self._logger.debug('end put %s', request.uri)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_patch(self, request, response, digest):
+        """Update partial snippet based on digest."""
+
+        self._logger.debug('run patch %s', request.uri)
+        self.on_put(request, response, digest)
+        Cause.reset()
+        self._logger.debug('end patch %s', request.uri)

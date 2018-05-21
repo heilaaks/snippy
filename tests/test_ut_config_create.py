@@ -32,11 +32,11 @@ from snippy.content.content import Content
 class TestUtConfigCreate(unittest.TestCase):
     """Testing configurationg management for creating snippets."""
 
-    @mock.patch.object(Config, 'get_utc_time')
-    def test_no_arguments(self, mock_get_utc_time):
+    @mock.patch.object(Config, 'utcnow')
+    def test_no_arguments(self, mock_utcnow):
         """Test that empty argument list is set to configuration."""
 
-        mock_get_utc_time.return_value = '2018-02-17 13:23:43'
+        mock_utcnow.return_value = '2018-02-17 13:23:43'
 
         snippet = [(), '', Const.DEFAULT_GROUP, (), (), Const.SNIPPET, '', '', '', '2018-02-17 13:23:43',
                    '2018-02-17 13:23:43', 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc', None, None]
@@ -55,7 +55,7 @@ class TestUtConfigCreate(unittest.TestCase):
         assert isinstance(Config.search_grp_kws, tuple)
         assert isinstance(Config.search_filter, str)
         assert isinstance(Config.get_operation_file(), str)
-        assert Config.get_contents(Content(category=Const.SNIPPET, timestamp=Config.get_utc_time()))[0].item == snippet
+        assert Config.get_contents(Content(category=Const.SNIPPET, timestamp=Config.utcnow()))[0].item == snippet
         assert Config.is_operation_create
         assert not Config.is_operation_search
         assert not Config.is_operation_update

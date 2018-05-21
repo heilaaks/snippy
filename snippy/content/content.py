@@ -149,7 +149,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def update_updated(self):
         """Update content update timestamp."""
 
-        self.item[Const.UPDATED] = Config.get_utc_time()
+        self.item[Const.UPDATED] = Config.utcnow()
         self.update_digest()
 
     def is_template(self):

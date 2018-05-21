@@ -165,6 +165,16 @@ class Config(object):
         return collection
 
     @classmethod
+    def get_resource(cls, content): # TODO Remove the content when done
+        """Get single resource from config sources."""
+
+        collection = Collection()
+        contents = cls._read_content(content)
+        collection.convert(contents)
+
+        return next(collection.resources())
+
+    @classmethod
     def _init_logs(cls, args):
         """Init logger and development configuration."""
 
@@ -352,43 +362,43 @@ class Config(object):
         return filetype
 
     @classmethod
-    def validate_search_context(cls, contents, operation):  # pylint: disable=too-many-branches
+    def validate_search_context(cls, collection, operation):  # pylint: disable=too-many-branches
         """Validate content search context."""
 
         # Search keys are treated in priority order of 1) digest, 2) content data
         # and 3) search keywords. Search keywords are already validated and invalid
         # keywords are interpreted as 'list all' which is always correct at this
         # point.
-        cls._logger.debug('validating search context with %d results', len(contents))
+        cls._logger.debug('validating search context with %d results', collection.count())
         if cls.is_content_digest():
             if cls.operation_digest:
-                if not contents:
+                if not collection.count():
                     Cause.push(Cause.HTTP_NOT_FOUND,
                                'cannot find content with message digest %s' % cls.operation_digest)
-                elif len(contents) > 1:
+                elif len(collection.count()) > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
                                'given digest %.16s matches (%d) more than once preventing the operation' %
-                               (cls.operation_digest, len(contents)))
+                               (cls.operation_digest, collection.count()))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest to %s content' % operation)
         elif cls.content_data:
             if any(cls.content_data):
                 data = Const.EMPTY.join(cls.content_data)
                 data = data[:30] + (data[30:] and '...')
-                if not contents:
+                if not collection.count():
                     Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with content data \'%s\'' % data)
-                elif len(contents) > 1:
+                elif collection.count() > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
                                'given content data %s matches (%d) more than once preventing the operation' %
-                               (data, len(contents)))
+                               (data, collection.count()))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content data to %s content' % operation)
         elif cls._is_search_keywords():
-            if not contents:
+            if not collection.count():
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
-            elif len(contents) > 1:
+            elif collection.count() > 1:
                 Cause.push(Cause.HTTP_CONFLICT,
-                           'given search keyword matches (%d) more than once preventing the operation' % len(contents))
+                           'given search keyword matches (%d) more than once preventing the operation' % collection.count())
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'no message digest, content data or search keywords were provided')
 
@@ -433,7 +443,7 @@ class Config(object):
         return True if cls.is_operation_file_yaml or cls.is_operation_file_json or cls.is_operation_file_text else False
 
     @staticmethod
-    def get_utc_time():
+    def utcnow():
         """Get UTC time stamp in ISO8601 format."""
 
         utc = datetime.datetime.utcnow()

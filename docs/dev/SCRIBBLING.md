@@ -406,10 +406,10 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
 
     # Mocking examples for fixture prints.
     print("")
-    print("calls %s" % Config.get_utc_time.called)
-    print("calls %s" % Config.get_utc_time.call_count)
-    print("calls %s" % Config.get_utc_time.call_count)
-    print("calls %s" % Config.get_utc_time.mock_calls)
+    print("calls %s" % Config.utcnow.called)
+    print("calls %s" % Config.utcnow.call_count)
+    print("calls %s" % Config.utcnow.call_count)
+    print("calls %s" % Config.utcnow.mock_calls)
 
     # List tests
     $ cat tests/test_wf_* | grep -E '[[:space:]]{12}\$' | grep -Ev SnippetHelp

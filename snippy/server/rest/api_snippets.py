@@ -39,48 +39,6 @@ class ApiSnippetsDigest(ApiContentDigestBase):
     """Process snippet based on digest resource ID."""
 
     @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, digest):
-        """Search snippet based on digest."""
-
-        self._logger.debug('run get %ssnippets/%s', Config.base_path_app, digest)
-        local_params = {'digest': digest}
-        api = Api(Const.SNIPPET, Api.SEARCH, local_params)
-        Config.load(api)
-        contents = Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents['data']:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
-        if Cause.is_ok():
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(Const.SNIPPET, contents, request, digest, pagination=True)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end get %ssnippets/%s', Config.base_path_app, digest)
-
-    @Logger.timeit(refresh_oid=True)
-    def on_delete(self, _, response, digest):
-        """Delete snippet based on digest."""
-
-        self._logger.debug('run delete %ssnippets/%s', Config.base_path_app, digest)
-        local_params = {'digest': digest}
-        api = Api(Const.SNIPPET, Api.DELETE, local_params)
-        Config.load(api)
-        Snippet(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if Cause.is_ok():
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end delete %ssnippets/%s', Config.base_path_app, digest)
-
-    @Logger.timeit(refresh_oid=True)
     def on_post(self, request, response, digest):
         """Update snippet."""
 
@@ -113,7 +71,7 @@ class ApiSnippetsField(ApiContentBase):  # pylint: disable=too-few-public-method
         api = Api(Const.SNIPPET, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if not self._content.collection.count():
+        if not self._content.collection.size():
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API

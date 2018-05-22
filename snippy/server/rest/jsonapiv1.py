@@ -96,7 +96,7 @@ class JsonApiV1(object):
             })
         if pagination:
             json['meta'] = {}
-            json['meta']['count'] = collection.count()
+            json['meta']['count'] = collection.size()
             json['meta']['limit'] = Config.search_limit
             json['meta']['offset'] = Config.search_offset
             json['meta']['total'] = collection.total

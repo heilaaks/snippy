@@ -82,7 +82,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             digest=Config.operation_digest,
             data=Config.content_data
         )
-        if collection.count() == 1:
+        if collection.size() == 1:
             stored = next(collection.resources())
             digest = stored.digest
             self._logger.debug('updating %s with digest %.16s', self.category, digest)
@@ -94,18 +94,21 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         else:
             Config.validate_search_context(collection, 'update')
 
-    @staticmethod
-    def _meta_content(contents=None, total=None):
-        """Wrap content with metadata."""
+    def delete(self):
+        """Delete content."""
 
-        if contents is None:
-            contents = []
+        collection = self._storage.search(
+            self.category,
+            sall=Config.search_all_kws,
+            stag=Config.search_tag_kws,
+            sgrp=Config.search_grp_kws,
+            digest=Config.operation_digest,
+            data=Config.content_data
+        )
+        if collection.size() == 1:
+            resource = next(collection.resources())
+            self._logger.debug('deleting %s with digest %.16s', resource.category, resource.digest)
+            self._storage.delete(resource.digest)
+        else:
+            Config.validate_search_context(collection, 'delete')
 
-        meta_content = {
-            'data': contents,
-            'meta': {
-                'total': len(contents) if total is None else total,
-            }
-        }
-
-        return meta_content

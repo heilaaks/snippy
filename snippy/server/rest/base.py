@@ -65,7 +65,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         api = Api(self._content.category, Api.SEARCH, request.params)
         Config.load(api)
         self._content.run()
-        if not self._content.collection.count() and Config.search_limit != 0:
+        if not self._content.collection.size() and Config.search_limit != 0:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = Const.MEDIA_JSON_API
@@ -100,13 +100,55 @@ class ApiContentDigestBase(object):
         self._content = content
 
     @Logger.timeit(refresh_oid=True)
+    def on_get(self, request, response, digest):
+        """Search snippet based on digest."""
+
+        self._logger.debug('run get %s', request.uri)
+        local_params = {'digest': digest}
+        api = Api(self._content.category, Api.SEARCH, local_params)
+        Config.load(api)
+        self._content.run()
+        if not self._content.collection.size():
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
+        if Cause.is_ok():
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.resource(self._content.collection, request, digest, pagination=True)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        self._logger.debug('end get %s', request.uri)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_delete(self, request, response, digest):
+        """Delete snippet based on digest."""
+
+        self._logger.debug('run delete %s', request.uri)
+        local_params = {'digest': digest}
+        api = Api(self._content.category, Api.DELETE, local_params)
+        Config.load(api)
+        self._content.run()
+        if Cause.is_ok():
+            response.status = Cause.http_status()
+        else:
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        self._logger.debug('end delete %s', request.uri)
+
+    @Logger.timeit(refresh_oid=True)
     def on_put(self, request, response, digest):
         """Update whole snippet based on digest."""
 
         self._logger.debug('run put %s', request.uri)
         resource = Validate.resource(request, digest)
         if resource:
-            api = Api(Const.SNIPPET, Api.UPDATE, resource)
+            api = Api(self._content.category, Api.UPDATE, resource)
             Config.load(api)
             self._content.run()
         if Cause.is_ok():

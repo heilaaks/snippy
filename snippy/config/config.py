@@ -369,36 +369,36 @@ class Config(object):
         # and 3) search keywords. Search keywords are already validated and invalid
         # keywords are interpreted as 'list all' which is always correct at this
         # point.
-        cls._logger.debug('validating search context with %d results', collection.count())
+        cls._logger.debug('validating search context with %d results', collection.size())
         if cls.is_content_digest():
             if cls.operation_digest:
-                if not collection.count():
+                if not collection.size():
                     Cause.push(Cause.HTTP_NOT_FOUND,
                                'cannot find content with message digest %s' % cls.operation_digest)
-                elif len(collection.count()) > 1:
+                elif len(collection.size()) > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
                                'given digest %.16s matches (%d) more than once preventing the operation' %
-                               (cls.operation_digest, collection.count()))
+                               (cls.operation_digest, collection.size()))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest to %s content' % operation)
         elif cls.content_data:
             if any(cls.content_data):
                 data = Const.EMPTY.join(cls.content_data)
                 data = data[:30] + (data[30:] and '...')
-                if not collection.count():
+                if not collection.size():
                     Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with content data \'%s\'' % data)
-                elif collection.count() > 1:
+                elif collection.size() > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
                                'given content data %s matches (%d) more than once preventing the operation' %
-                               (data, collection.count()))
+                               (data, collection.size()))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content data to %s content' % operation)
         elif cls._is_search_keywords():
-            if not collection.count():
+            if not collection.size():
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
-            elif collection.count() > 1:
+            elif collection.size() > 1:
                 Cause.push(Cause.HTTP_CONFLICT,
-                           'given search keyword matches (%d) more than once preventing the operation' % collection.count())
+                           'given search keyword matches (%d) more than once preventing the operation' % collection.size())
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'no message digest, content data or search keywords were provided')
 

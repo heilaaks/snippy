@@ -71,11 +71,11 @@ class Sqlite3Db(object):
             if cause[0] == Cause.HTTP_OK:
                 inserted = inserted + 1
 
-        self._logger.debug('inserted %d out of %d content', inserted, collection.count())
+        self._logger.debug('inserted %d out of %d content', inserted, collection.size())
 
         if not collection:
             cause = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
-        elif inserted == collection.count():
+        elif inserted == collection.size():
             Cause.push(Cause.HTTP_CREATED, 'content created')
 
         if not inserted and cause[1]:

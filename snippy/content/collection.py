@@ -47,8 +47,8 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def __iter__(self):
         return iter(self.data['data'])
 
-    def count(self):
-        """Return the count of resources."""
+    def size(self):
+        """Return count of resources in collection."""
 
         return len(self.data['data'])
 

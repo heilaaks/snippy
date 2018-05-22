@@ -196,7 +196,7 @@ class Migrate(object):
 
             return
 
-        if not collection.count():
+        if not collection.size():
             cls._logger.debug('no content to be exported')
 
             return

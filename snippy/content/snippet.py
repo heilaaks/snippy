@@ -35,23 +35,6 @@ class Snippet(ContentTypeBase):
     def __init__(self, storage):
         super(Snippet, self).__init__(storage, Const.SNIPPET)
 
-    def delete(self):
-        """Delete snippet."""
-
-        snippets, _ = self._storage.search(
-            Const.SNIPPET,
-            sall=Config.search_all_kws,
-            stag=Config.search_tag_kws,
-            sgrp=Config.search_grp_kws,
-            digest=Config.operation_digest,
-            data=Config.content_data
-        )
-        if len(snippets) == 1:
-            self._logger.debug('deleting snippet with digest %.16s', snippets[0].get_digest())
-            self._storage.delete(snippets[0].get_digest())
-        else:
-            Config.validate_search_context(snippets, 'delete')
-
     def export_all(self):
         """Export snippets."""
 
@@ -69,9 +52,10 @@ class Snippet(ContentTypeBase):
                 digest=Config.operation_digest,
                 data=Config.content_data
             )
-            if collection.count == 1:
-                filename = Config.get_operation_file(content_filename=snippets[0].get_filename())
-            elif not collection.count():
+            if collection.size() == 1:
+                resource = next(collection.resources())
+                filename = Config.get_operation_file(content_filename=resource.filename)
+            elif not collection.size():
                 Config.validate_search_context(snippets, 'export')
             Migrate.dump(collection, filename)
         else:
@@ -86,7 +70,7 @@ class Snippet(ContentTypeBase):
         content_digest = Config.operation_digest
         if content_digest:
             collection = self._storage.search(Const.SNIPPET, digest=content_digest)
-            if collection.count() == 1:
+            if collection.size() == 1:
                 digest = collection[0].get_digest()
                 self._logger.debug('importing solution with digest %.16s', digest)
                 content = Content(category=Const.SNIPPET, timestamp=Config.utcnow())

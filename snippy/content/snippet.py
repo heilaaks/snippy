@@ -19,14 +19,8 @@
 
 """snippet: Snippet management."""
 
-from snippy.cause import Cause
-from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.content.base import ContentTypeBase
-from snippy.content.content import Content
-from snippy.content.collection import Collection
-from snippy.logger import Logger
-from snippy.migrate.migrate import Migrate
 
 
 class Snippet(ContentTypeBase):
@@ -34,57 +28,3 @@ class Snippet(ContentTypeBase):
 
     def __init__(self, storage):
         super(Snippet, self).__init__(storage, Const.SNIPPET)
-
-    def export_all(self):
-        """Export snippets."""
-
-        filename = Config.get_operation_file()
-        if Config.template:
-            self._logger.debug('exporting snippet template %s', Config.get_operation_file())
-            Migrate.dump_template(Content(category=Const.SNIPPET, timestamp=Config.utcnow()))
-        elif Config.is_search_criteria():
-            self._logger.debug('exporting snippets based on search criteria')
-            collection = self._storage.search(
-                Const.SNIPPET,
-                sall=Config.search_all_kws,
-                stag=Config.search_tag_kws,
-                sgrp=Config.search_grp_kws,
-                digest=Config.operation_digest,
-                data=Config.content_data
-            )
-            if collection.size() == 1:
-                resource = next(collection.resources())
-                filename = Config.get_operation_file(content_filename=resource.filename)
-            elif not collection.size():
-                Config.validate_search_context(snippets, 'export')
-            Migrate.dump(collection, filename)
-        else:
-            self._logger.debug('exporting all snippets %s', filename)
-            snippets = self._storage.export_content(Const.SNIPPET)
-            Migrate.dump(snippets, filename)
-
-    def import_all(self):
-        """Import snippets."""
-
-        collection = Collection()
-        content_digest = Config.operation_digest
-        if content_digest:
-            collection = self._storage.search(Const.SNIPPET, digest=content_digest)
-            if collection.size() == 1:
-                digest = collection[0].get_digest()
-                self._logger.debug('importing solution with digest %.16s', digest)
-                content = Content(category=Const.SNIPPET, timestamp=Config.utcnow())
-                dictionary = Migrate.load(Config.get_operation_file(), content)
-                contents = Content.load(dictionary)
-                snippets[0].migrate(contents[0])
-                self._storage.update(snippets[0], digest)
-            elif not snippets:
-                Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find snippet identified with digest {:.16}'.format(content_digest))
-            else:
-                Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple snippets with same digest {:.16}'.format(content_digest))
-        else:
-            self._logger.debug('importing snippets %s', Config.get_operation_file())
-            content = Content(category=Const.SNIPPET, timestamp=Config.utcnow())
-            collection = Migrate.load(collection, Config.get_operation_file(), content)
-            self._storage.import_content(collection)
-

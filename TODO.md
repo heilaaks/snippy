@@ -1,5 +1,10 @@
 ## WORKING
+   - [ ] Where timestamp to Resource? It does not make sense to put TS in collection. Only in resource because it creates it. For DB this is an issue (fixed?)
+         - previously update used Content from search which had the time stamps. Now the resource is created which creates new TS usage. 
+        
+   - [ ] pytest -s tests/test_api_create_snippet.py -k test_api_create_snippet_012
    - [ ] How cases that abuse getting first content from collection with index?
+   - [ ] tests use _get_contents. change to collection and resource.
    - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
    - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
    - [ ] Add test that verifies that OID is not changing in one operation.

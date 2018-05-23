@@ -38,20 +38,25 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 #
 # Content creation:
 #
-#   1) Create empty content and set created and updated timestamps to same value.
+#   1) Create resource from each configured content.
 #
+# Content updating:
+#
+#   1) Create resource from configured content.
+#   2) Update 'updated' timestamp.
+# 
 # Content importing from file:
 #
-#   1) Create one empty content to be copied among all imported contents.
+#   1) Create resource from each configured content.
 #
 # Content importing (=update) based on digest:
 #
-#   1) Create one empty content to be copied among all imported contents.
-#   2) Update 'updated' timestamp(s)
+#   1) Create resource from each configured content.
+#   2) Update 'updated' timestamp.
 #
 # Content editing:
 #
-#   1) Creating empty content.
+#   1) Create resource from configured content.
 #
 # Content exporting:
 #
@@ -68,6 +73,7 @@ CREATE_FORCED = (FORCED_CREATED,)*1
 CREATE_EXITED = (EXITED_CREATED,)*1
 CREATE_NETCAT = (NETCAT_CREATED,)*1
 CREATE_UMOUNT = (UMOUNT_CREATED,)*1
+UPDATE_REMOVE = (REMOVE_CREATED,)*2
 IMPORT_REMOVE = (REMOVE_CREATED,)*2
 IMPORT_FORCED = (FORCED_CREATED,)*2
 IMPORT_EXITED = (EXITED_CREATED,)*2
@@ -206,6 +212,12 @@ def create_remove_time_mock(mocker):
     """Mock timestamps to create 'remove' snippet."""
 
     mocker.patch.object(Config, 'utcnow', side_effect=CREATE_REMOVE)
+
+@pytest.fixture(scope='function', name='update-remove-utc')
+def update_remove_time_mock(mocker):
+    """Mock timestamps to update 'remove' snippet."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=UPDATE_REMOVE)
 
 @pytest.fixture(scope='function', name='import-remove-utc')
 def import_remove_time_mock(mocker):

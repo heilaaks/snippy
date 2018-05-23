@@ -33,10 +33,9 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
 
     def __init__(self, storage, category):
         self._logger = Logger.get_logger(__name__)
-        self.category = category
-        self.collection = Collection()
+        self._category = category
         self._storage = storage
-        self.__tobe_removed = Content(category=category, timestamp='2017-10-14T19:56:31.000001+0000') # Remove when done
+        self.collection = Collection()
 
     @property
     def collection(self):
@@ -53,17 +52,17 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
     def create(self):
         """Create new content."""
 
-        self._logger.debug('creating new %s', self.category)
-        collection = Config.get_contents(Content(category=self.category, timestamp=Config.utcnow())) # TODO remove Content when  done
+        self._logger.debug('creating new %s', self._category)
+        collection = Config.get_collection()
         collection = self._storage.create(collection)
         self.collection.migrate(collection)
 
     def search(self):
         """Search content."""
 
-        self._logger.debug('searching %s', self.category)
+        self._logger.debug('searching %s', self._category)
         self.collection = self._storage.search(
-            Const.SNIPPET,
+            self._category,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
@@ -75,7 +74,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         """Update content."""
 
         collection = self._storage.search(
-            self.category,
+            self._category,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
@@ -85,12 +84,13 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         if collection.size() == 1:
             stored = next(collection.resources())
             digest = stored.digest
-            self._logger.debug('updating stored %s with digest %.16s', self.category, digest)
-            updates = Config.get_resource(self.__tobe_removed)
+            self._logger.debug('updating stored %s with digest %.16s', self._category, digest)
+            updates = Config.get_resource()
             if Config.merge:
                 stored.merge(updates)
-                updates = stored
-            self.collection = self._storage.update(digest, updates)
+            else:
+                stored.migrate(updates)
+            self.collection = self._storage.update(digest, stored)
         else:
             Config.validate_search_context(collection, 'update')
 
@@ -98,7 +98,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         """Delete content."""
 
         collection = self._storage.search(
-            self.category,
+            self._category,
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
@@ -112,12 +112,62 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         else:
             Config.validate_search_context(collection, 'delete')
 
+    def export_all(self):
+        """Export content."""
+
+        filename = Config.get_operation_file()
+        if Config.template:
+            self._logger.debug('exporting %s template %s', self._category, Config.get_operation_file())
+            Migrate.dump_template(self._category)
+        elif Config.is_search_criteria():
+            self._logger.debug('exporting %s based on search criteria', self._category)
+            collection = self._storage.search(
+                self._category,
+                sall=Config.search_all_kws,
+                stag=Config.search_tag_kws,
+                sgrp=Config.search_grp_kws,
+                digest=Config.operation_digest,
+                data=Config.content_data
+            )
+            if collection.size() == 1:
+                resource = next(collection.resources())
+                filename = Config.get_operation_file(content_filename=resource.filename)
+            elif not collection.size():
+                Config.validate_search_context(snippets, 'export')
+            Migrate.dump(collection, filename)
+        else:
+            self._logger.debug('exporting all %s content %s', self._category, filename)
+            content = self._storage.export_content(self._category)
+            Migrate.dump(content, filename)
+
+    def import_all(self):
+        """Import content."""
+
+        content_digest = Config.operation_digest
+        if content_digest:
+            collection = self._storage.search(self._category, digest=content_digest)
+            if collection.size() == 1:
+                resource = next(collection.resources())
+                self._logger.debug('importing %s with digest %.16s', self._category, resource.digest)
+                dictionary = Migrate.load(Config.get_operation_file())
+                contents = Content.load(dictionary)
+                snippets[0].migrate(contents[0])
+                self._storage.update(snippets[0], digest)
+            elif not snippets:
+                Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find {} identified with digest {:.16}'.format(self._category, content_digest))
+            else:
+                Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple {] contents with same digest {:.16}'.format(self._category, content_digest))
+        else:
+            self._logger.debug('importing content %s', Config.get_operation_file())
+            collection = Migrate.load(Config.get_operation_file())
+            self._storage.import_content(collection)
+
     @Logger.timeit
     def run(self):
         """Run operation."""
 
-        self._logger.debug('run %s content', self.category)
-        Config.content_category = self.category
+        self._logger.debug('run %s content', self._category)
+        Config.content_category = self._category
         if Config.is_operation_create:
             self.create()
         elif Config.is_operation_search:
@@ -131,9 +181,9 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         elif Config.is_operation_import:
             self.import_all()
         else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for %s', self.category)
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for %s', self._category)
 
-        self._logger.debug('end %s content', self.category)
+        self._logger.debug('end %s content', self._category)
 
         return self.collection
 

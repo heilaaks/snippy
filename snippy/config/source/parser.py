@@ -24,6 +24,8 @@ import re
 
 from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
+from snippy.content.collection import Collection
+from snippy.content.resource import Resource
 from snippy.logger import Logger
 
 
@@ -46,7 +48,7 @@ class Parser(object):
     _logger = Logger.get_logger(__name__)
 
     @staticmethod
-    def read_content(content, source):
+    def read_content(source, timestamp):
         """Read contents from text source."""
 
         data = []
@@ -59,27 +61,20 @@ class Parser(object):
         else:
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text template content category')
 
+        collection = Collection()
         for item in data:
-            content_copy = copy.copy(content)
-            content_copy.item = [
-                Parser.content_data(category, item),
-                Parser.content_brief(category, item),
-                Parser.content_group(category, item),
-                Parser.content_tags(category, item),
-                Parser.content_links(category, item),
-                category,
-                Parser.content_filename(category, item),
-                content_copy.get_runalias(),
-                content_copy.get_versions(),
-                content_copy.get_created(),
-                content_copy.get_updated(),
-                content_copy.get_digest(),
-                content_copy.get_metadata(),
-                content_copy.get_key()
-            ]
-            contents.append(content_copy)
+            resource = Resource(category, timestamp)
+            resource.data = Parser.content_data(category, item)
+            resource.brief = Parser.content_brief(category, item)
+            resource.group = Parser.content_group(category, item)
+            resource.tags = Parser.content_tags(category, item)
+            resource.links = Parser.content_links(category, item)
+            resource.category = category
+            resource.filename = Parser.content_filename(category, item)
+            resource.digest = resource.compute_digest()
+            collection.migrate(resource)
 
-        return contents
+        return collection
 
     @staticmethod
     def _split_source(source, split, offset):

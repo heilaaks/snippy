@@ -43,7 +43,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger.debug('run post %s', request.uri)
         collection = Validate.collection(request)
         for resource in collection:
-            api = Api(self._content.category, Api.CREATE, resource)
+            api = Api(self._category, Api.CREATE, resource)
             Config.load(api)
             self._content.run()
         if Cause.is_ok():
@@ -63,7 +63,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         """Search content based on query parameters."""
 
         self._logger.debug('run get %s', request.uri)
-        api = Api(self._content.category, Api.SEARCH, request.params)
+        api = Api(self._category, Api.SEARCH, request.params)
         Config.load(api)
         self._content.run()
         if not self._content.collection.size() and Config.search_limit != 0:
@@ -127,7 +127,7 @@ class ApiContentDigestBase(object):
 
         self._logger.debug('run get %s', request.uri)
         local_params = {'digest': digest}
-        api = Api(self._content.category, Api.SEARCH, local_params)
+        api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
         if not self._content.collection.size():
@@ -150,7 +150,7 @@ class ApiContentDigestBase(object):
 
         self._logger.debug('run delete %s', request.uri)
         local_params = {'digest': digest}
-        api = Api(self._content.category, Api.DELETE, local_params)
+        api = Api(self._category, Api.DELETE, local_params)
         Config.load(api)
         self._content.run()
         if Cause.is_ok():
@@ -170,7 +170,7 @@ class ApiContentDigestBase(object):
         self._logger.debug('run put %s', request.uri)
         resource = Validate.resource(request, digest)
         if resource:
-            api = Api(self._content.category, Api.UPDATE, resource)
+            api = Api(self._category, Api.UPDATE, resource)
             Config.load(api)
             self._content.run()
         if Cause.is_ok():
@@ -208,7 +208,7 @@ class ApiContentFieldBase(object):  # pylint: disable=too-few-public-methods
 
         self._logger.debug('run get %s', request.uri)
         local_params = {'digest': digest, 'fields': field}
-        api = Api(self._content.category, Api.SEARCH, local_params)
+        api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
         if not self._content.collection.size():

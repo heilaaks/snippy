@@ -505,7 +505,7 @@ class TestApiCreateSnippet(object):
         assert result.status == falcon.HTTP_403
         assert not Database.get_snippets()
 
-    @pytest.mark.usefixtures('forced', 'remove-utc')
+    @pytest.mark.usefixtures('forced', 'update-remove-utc')
     def test_api_create_snippet_012(self, server, mocker):
         """Update snippet with POST that maps to PUT.
 

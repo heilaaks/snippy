@@ -1024,6 +1024,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        - tags
        - links
        - filename
+       - runalias
        - versions
     
     2. Attributes that cannot be changed by user

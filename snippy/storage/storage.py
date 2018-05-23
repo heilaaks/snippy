@@ -50,9 +50,9 @@ class Storage(object):
     def update(self, digest, resource):
         """Update resource specified by digest."""
         
-        from snippy.config.config import Config # Mote to top when refactor done
+        from snippy.config.config import Config
         
-        resource.updated = Config.utcnow() # TODO Add Config.utcnow() when Content is removed
+        resource.updated = Config.utcnow()
         collection = self._database.update(digest, resource)
 
         return collection
@@ -65,10 +65,9 @@ class Storage(object):
     def export_content(self, category):
         """Export content."""
 
-        rows = self._database.select_all_content(category)
-        contents = Storage._get_contents(rows)
+        collection = self._database.select_all_content(category)
 
-        return contents
+        return collection
 
     def import_content(self, collection):
         """Import content."""
@@ -82,13 +81,8 @@ class Storage(object):
             self._database.disconnect()
             self._database = None
 
-    def get_contents(self, contents=None, total=None):
-        """Get content."""
-
-        return self._meta_content(contents, total)
-
     @staticmethod
-    def _get_contents(rows):
+    def _get_contents(rows): # TODO TEST USE THIS.
         """Convert database rows to tuple of Content()."""
 
         contents = []

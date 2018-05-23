@@ -88,7 +88,7 @@ class Sqlite3Db(object):
         return stored
 
     def _insert(self, resource):
-        """Insert Resource() into database."""
+        """Insert Resource into database."""
 
         cause = self._test_content(resource)
         if cause[0] != Cause.HTTP_OK:
@@ -145,7 +145,7 @@ class Sqlite3Db(object):
     def select_all_content(self, category):
         """Select all content."""
 
-        rows = ()
+        collection = Collection()
         if self._connection:
             self._logger.debug('select all contents from category %s', category)
             query = ('SELECT * FROM contents WHERE category=?')
@@ -154,12 +154,13 @@ class Sqlite3Db(object):
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
+                    collection.convert(rows)
             except sqlite3.Error as exception:
                 Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(exception))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
 
-        return rows
+        return collection
 
     def _count_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Count content based on defined filters."""

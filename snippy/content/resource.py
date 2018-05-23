@@ -33,6 +33,22 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     SNIPPET = 'snippet'
     SOLUTION = 'solution'
 
+    # Database column numbers.
+    DATA = 0
+    BRIEF = 1
+    GROUP = 2
+    TAGS = 3
+    LINKS = 4
+    CATEGORY = 5
+    FILENAME = 6
+    RUNALIAS = 7
+    VERSIONS = 8
+    CREATED = 9
+    UPDATED = 10
+    DIGEST = 11
+    METADATA = 12
+    KEY = 13
+
     # Data delimiters
     DELIMITER_DATA = '\n'
     DELIMITER_TAGS = ','
@@ -42,19 +58,21 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
     TEMPLATES = (SNIPPET_TEMPLATE, SOLUTION_TEMPLATE)
 
-    def __init__(self):
+    def __init__(self, category='', timestamp=''):
         self._logger = Logger.get_logger(__name__)
         self._data = ()
         self._brief = ''
         self._group = ''
         self._tags = ()
         self._links = ()
-        self._category = ''
+        self._category = category
         self._filename = ''
         self._runalias = ''
         self._versions = ''
-        self._created = ''
-        self._updated = ''
+        self._created = timestamp
+        self._updated = timestamp
+        self.metadata = ''
+        self.key = ''
         self._digest = self.compute_digest()
 
     def __str__(self):
@@ -247,11 +265,15 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         return digest
 
     def migrate(self, source):
-        """Migrate source into Resource."""
+        """Migrate source into Resource.
+        
+        This always overrides fields that can be modified by user.
+        """
 
         # TODO: Remove when refactoring done.
         from snippy.content.content import Content
 
+        self._logger.debug('migrate to resouce: %.16s', self.digest)
         if isinstance(source, Content):
             self.data = source.get_data()
             self.brief = source.get_brief()
@@ -282,6 +304,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods
             self.digest = source[11]
             self.metadata = source[12]
             self.key = source[13]
+        elif isinstance(source, Resource):
+            # Migrate only values that user can change.
+            self.data = source.data
+            self.brief = source.brief
+            self.group = source.group
+            self.tags = source.tags
+            self.links = source.links
+            self.filename = source.filename
+            self.runalias = source.runalias
+            self.versions = source.versions
+
+        self.digest = self.compute_digest()
 
     def merge(self, source):
         """Merge two resource.
@@ -290,6 +324,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         fields exists.
         """
 
+        self._logger.debug('merge to resouce: %.16s', self.digest)
         if source:
             if source.data:
                 self.data = source.data
@@ -300,6 +335,24 @@ class Resource(object):  # pylint: disable=too-many-public-methods
             if source.links:
                 self.links = source.links
             self.digest = self.compute_digest()
+
+    def convert(self, row):
+        """Convert database row into resource."""
+
+        self.data = tuple(row[Resource.DATA].split(Resource.DELIMITER_DATA))
+        self.brief = row[Resource.BRIEF]
+        self.group = row[Resource.GROUP]
+        self.tags = tuple(row[Resource.TAGS].split(Resource.DELIMITER_TAGS) if row[Resource.TAGS] else [])
+        self.links = tuple(row[Resource.LINKS].split(Resource.DELIMITER_LINKS) if row[Resource.LINKS] else [])
+        self.category = row[Resource.CATEGORY]
+        self.filename = row[Resource.FILENAME]
+        self.runalias = row[Resource.RUNALIAS]
+        self.versions = row[Resource.VERSIONS]
+        self.created = row[Resource.CREATED]
+        self.updated = row[Resource.UPDATED]
+        self.digest = row[Resource.DIGEST]
+        self.metadata = row[Resource.METADATA]
+        self.key = row[Resource.KEY]
 
     def is_template(self):
         """Test if resource data is empty template."""

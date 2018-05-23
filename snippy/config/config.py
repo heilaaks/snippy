@@ -33,6 +33,7 @@ from snippy.config.source.cli import Cli
 from snippy.config.source.editor import Editor
 from snippy.config.source.parser import Parser
 from snippy.content.collection import Collection
+from snippy.content.resource import Resource
 from snippy.devel.profiler import Profiler
 from snippy.logger import Logger
 
@@ -153,26 +154,35 @@ class Config(object):
         """Get content list from one of the configuration sources."""
 
         collection = Collection()
-        if source is not None:
-            contents = Parser.read_content(content, source)
-        elif cls.editor:
+        if cls.editor:
             contents = Editor.read_content(content)
+            collection.convert(contents)
         else:
-            contents = cls._read_content(content)
-
-        collection.convert(contents)
+            resource = cls._read_resource()
+            collection.migrate(resource)
 
         return collection
 
     @classmethod
-    def get_resource(cls, content): # TODO Remove the content when done
-        """Get single resource from config sources."""
+    def get_resource(cls):
+        """Get resource from configuration source."""
+
+        resource = cls._read_resource()
+
+        return resource
+
+    @classmethod
+    def get_collection(cls, source=None):
+        """Get resource from configuration source."""
 
         collection = Collection()
-        contents = cls._read_content(content)
-        collection.convert(contents)
+        if source is not None:
+            collection = Parser.read_content(source, Config.utcnow())
+        else:
+            resource = cls._read_resource()
+            collection.migrate(resource)
 
-        return next(collection.resources())
+        return collection
 
     @classmethod
     def _init_logs(cls, args):
@@ -225,35 +235,19 @@ class Config(object):
         )
 
     @classmethod
-    def _read_content(cls, content):
+    def _read_resource(cls):
         """Read configurared content."""
 
-        contents = []
-        source = copy.copy(content)
-        source.item = [
-            cls.content_data,
-            cls.content_brief,
-            cls.content_group,
-            cls.content_tags,
-            cls.content_links,
-            content.get_category(),
-            cls.content_filename,
-            content.get_runalias(),
-            content.get_versions(),
-            content.get_created(),
-            content.get_updated(),
-            content.get_digest(),
-            content.get_metadata(),
-            content.get_key()
-        ]
+        resource = Resource(cls.content_category, Config.utcnow())
+        resource.data = cls.content_data
+        resource.brief = cls.content_brief
+        resource.group = cls.content_group
+        resource.tags = cls.content_tags
+        resource.links = cls.content_links
+        resource.filename = cls.content_filename
+        resource.digest = resource.compute_digest()
 
-        if Config.merge:
-            content.merge(source)
-        else:
-            content.migrate(source)
-        contents.append(content)
-
-        return contents
+        return resource
 
     @classmethod
     def _storage_schema(cls):

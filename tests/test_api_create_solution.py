@@ -67,6 +67,7 @@ class TestApiCreateSolution(object):
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
+        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
@@ -160,10 +161,12 @@ class TestApiCreateSolution(object):
         result_json['data']['attributes']['updated'] = Content.NGINX_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         server.run()
+        print(Database.print_contents())
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
+        print(Database.print_contents())
         print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)

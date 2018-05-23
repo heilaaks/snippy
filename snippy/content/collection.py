@@ -103,12 +103,12 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         source collection resource fields are defined.
         """
 
-    def convert(self, source):
-        """Convert source into Collection()."""
+    def convert(self, rows):
+        """Convert database rows into collection."""
 
-        for content in source:
+        for row in rows:
             resource = Resource()
-            resource.migrate(content)
+            resource.convert(row)
             self.migrate(resource)
 
     def dump_json(self, filter_fields):

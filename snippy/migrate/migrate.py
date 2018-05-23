@@ -32,6 +32,7 @@ import yaml
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
+from snippy.content.collection import Collection
 from snippy.logger import Logger
 from snippy.meta import __homepage__
 from snippy.meta import __version__
@@ -225,21 +226,21 @@ class Migrate(object):
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting content to file')
 
     @classmethod
-    def dump_template(cls, content):
+    def dump_template(cls, category):
         """Dump content template into file."""
 
-        filename = Config.get_operation_file(content_filename=content.get_filename())
-        template = content.convert_text()
+        resource = Resource(category, Config.utcnow())
+        template = resource.dump_text(Config.templates)
         cls._logger.debug('exporting content template %s', filename)
         with open(filename, 'w') as outfile:
             try:
                 outfile.write(template)
             except IOError as exception:
-                cls._logger.exception('fatal failure in creating snippet template file "%s"', exception)
+                cls._logger.exception('fatal failure in creating %s template file "%s"', category, exception)
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting template {}'.format(filename))
 
     @classmethod
-    def load(cls, collection, filename, content): ## TODO Remove content when refactoring done - only for get_content.
+    def load(cls, filename):
         """Load dictionary from file."""
 
         dictionary = {}
@@ -248,12 +249,13 @@ class Migrate(object):
 
             return dictionary
 
+        collection = Collection()
         cls._logger.debug('importing contents from file %s', filename)
         if os.path.isfile(filename):
             with open(filename, 'r') as infile:
                 try:
                     if Config.is_operation_file_text:
-                        collection = Config.get_contents(content, source=infile.read())
+                        collection = Config.get_collection(source=infile.read())
                     elif Config.is_operation_file_json:
                         dictionary = json.load(infile)
                     elif Config.is_operation_file_yaml:

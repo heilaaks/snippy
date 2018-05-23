@@ -31,8 +31,9 @@ from snippy.server.rest.validate import Validate
 class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
     """Base class for content APIs."""
 
-    def __init__(self, content):
+    def __init__(self, content, category):
         self._logger = Logger.get_logger(__name__)
+        self._category = category
         self._content = content
 
     @Logger.timeit(refresh_oid=True)
@@ -93,15 +94,36 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger.debug('end delete %s', request.uri)
 
 class ApiContentDigestBase(object):
-    """Process snippet based on digest resource ID."""
+    """Process content based on digest."""
 
-    def __init__(self, content):
+    def __init__(self, content, category):
         self._logger = Logger.get_logger(__name__)
+        self._category = category
         self._content = content
 
     @Logger.timeit(refresh_oid=True)
+    def on_post(self, request, response, digest):
+        """Update content."""
+
+        self._logger.debug('run post %', request.uri)
+        if request.get_header('x-http-method-override', default='post').lower() == 'put':
+            self.on_put(request, response, digest)
+        elif request.get_header('x-http-method-override', default='post').lower() == 'patch':
+            self.on_patch(request, response, digest)
+        elif request.get_header('x-http-method-override', default='post').lower() == 'delete':
+            self.on_delete(request, response, digest)
+        else:
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot create resource with id, use x-http-method-override to override the request')
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        self._logger.debug('end post %s', request.uri)
+
+    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest):
-        """Search snippet based on digest."""
+        """Search content based on digest."""
 
         self._logger.debug('run get %s', request.uri)
         local_params = {'digest': digest}
@@ -124,7 +146,7 @@ class ApiContentDigestBase(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_delete(self, request, response, digest):
-        """Delete snippet based on digest."""
+        """Delete content based on digest."""
 
         self._logger.debug('run delete %s', request.uri)
         local_params = {'digest': digest}
@@ -143,7 +165,7 @@ class ApiContentDigestBase(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_put(self, request, response, digest):
-        """Update whole snippet based on digest."""
+        """Update whole content based on digest."""
 
         self._logger.debug('run put %s', request.uri)
         resource = Validate.resource(request, digest)
@@ -165,9 +187,41 @@ class ApiContentDigestBase(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_patch(self, request, response, digest):
-        """Update partial snippet based on digest."""
+        """Update partial content based on digest."""
 
         self._logger.debug('run patch %s', request.uri)
         self.on_put(request, response, digest)
         Cause.reset()
         self._logger.debug('end patch %s', request.uri)
+
+class ApiContentFieldBase(object):  # pylint: disable=too-few-public-methods
+    """Process content based on digest resource ID and specified field."""
+
+    def __init__(self, content, category):
+        self._logger = Logger.get_logger(__name__)
+        self._category = category
+        self._content = content
+
+    @Logger.timeit(refresh_oid=True)
+    def on_get(self, request, response, digest, field):
+        """Get defined content field based on digest."""
+
+        self._logger.debug('run get %s', request.uri)
+        local_params = {'digest': digest, 'fields': field}
+        api = Api(self._content.category, Api.SEARCH, local_params)
+        Config.load(api)
+        self._content.run()
+        if not self._content.collection.size():
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
+        if Cause.is_ok():
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.resource(self._content.collection, request, digest, field=field, pagination=False)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = Const.MEDIA_JSON_API
+            response.body = JsonApiV1.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        self._logger.debug('end get %s', request.uri)
+

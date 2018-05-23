@@ -22,85 +22,17 @@
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
+from snippy.content.base import ContentTypeBase
 from snippy.content.content import Content
 from snippy.logger import Logger
 from snippy.migrate.migrate import Migrate
 
 
-class Solution(object):
+class Solution(ContentTypeBase):
     """Solution management."""
 
-    def __init__(self, storage, content_type=Const.CONTENT_TYPE_TEXT):
-        self._logger = Logger.get_logger(__name__)
-        self._content_type = content_type
-        self.category = Const.SOLUTION
-        self.storage = storage
-
-    def create(self):
-        """Create new solutions."""
-
-        self._logger.debug('creating new solution')
-        solutions = Config.get_contents(Content(category=Const.SOLUTION, timestamp=Config.utcnow()))
-        contents = self.storage.create(solutions)
-        contents['data'] = Migrate.content(contents['data'], self._content_type)
-
-        return contents
-
-    def search(self):
-        """Search solutions."""
-
-        self._logger.debug('searching solutions')
-        solutions, total = self.storage.search(
-            Const.SOLUTION,
-            sall=Config.search_all_kws,
-            stag=Config.search_tag_kws,
-            sgrp=Config.search_grp_kws,
-            digest=Config.operation_digest,
-            data=Config.content_data
-        )
-        solutions = Migrate.content(solutions, self._content_type)
-
-        return self.storage.get_contents(solutions, total)
-
-    def update(self):
-        """Update solutions."""
-
-        contents = self.storage.get_contents(None)
-        solutions, _ = self.storage.search(
-            Const.SOLUTION,
-            sall=Config.search_all_kws,
-            stag=Config.search_tag_kws,
-            sgrp=Config.search_grp_kws,
-            digest=Config.operation_digest,
-            data=Config.content_data
-        )
-        if len(solutions) == 1:
-            digest = solutions[0].get_digest()
-            self._logger.debug('updating solution with digest %.16s', digest)
-            solutions = Config.get_contents(content=solutions[0])
-            contents = self.storage.update(solutions[0], digest)
-            contents['data'] = Migrate.content(contents['data'], self._content_type)
-        else:
-            Config.validate_search_context(solutions, 'update')
-
-        return contents
-
-    def delete(self):
-        """Delete solutions."""
-
-        solutions, _ = self.storage.search(
-            Const.SOLUTION,
-            sall=Config.search_all_kws,
-            stag=Config.search_tag_kws,
-            sgrp=Config.search_grp_kws,
-            digest=Config.operation_digest,
-            data=Config.content_data
-        )
-        if len(solutions) == 1:
-            self._logger.debug('deleting solution with digest %.16s', solutions[0].get_digest())
-            self.storage.delete(solutions[0].get_digest())
-        else:
-            Config.validate_search_context(solutions, 'delete')
+    def __init__(self, storage):
+        super(Solution, self).__init__(storage, Const.SOLUTION)
 
     def export_all(self):
         """Export solutions."""
@@ -111,7 +43,7 @@ class Solution(object):
             Migrate.dump_template(Content(category=Const.SOLUTION, timestamp=Config.utcnow()))
         elif Config.is_search_criteria():
             self._logger.debug('exporting solutions based on search criteria')
-            solutions, _ = self.storage.search(
+            collection = self.storage.search(
                 Const.SOLUTION,
                 sall=Config.search_all_kws,
                 stag=Config.search_tag_kws,
@@ -119,9 +51,10 @@ class Solution(object):
                 digest=Config.operation_digest,
                 data=Config.content_data
             )
-            if len(solutions) == 1:
-                filename = Config.get_operation_file(content_filename=solutions[0].get_filename())
-            elif not solutions:
+            if collection.size() == 1:
+                resource = next(collection.resources())
+                filename = Config.get_operation_file(content_filename=resource.filename)
+            elif not collection.size():
                 Config.validate_search_context(solutions, 'export')
             Migrate.dump(solutions, filename)
         else:
@@ -154,28 +87,3 @@ class Solution(object):
             solutions = Content.load(dictionary)
             self.storage.import_content(solutions)
 
-    @Logger.timeit
-    def run(self):
-        """Run operation for solution."""
-
-        self._logger.debug('run solution')
-        content = self.storage.get_contents(None)
-        Config.content_category = Const.SOLUTION
-        if Config.is_operation_create:
-            content = self.create()
-        elif Config.is_operation_search:
-            content = self.search()
-        elif Config.is_operation_update:
-            content = self.update()
-        elif Config.is_operation_delete:
-            self.delete()
-        elif Config.is_operation_export:
-            self.export_all()
-        elif Config.is_operation_import:
-            self.import_all()
-        else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for solution')
-
-        self._logger.debug('end solution')
-
-        return content

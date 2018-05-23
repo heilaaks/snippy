@@ -54,10 +54,10 @@ class TestApiCreateSolution(object):
         content = {Solution.BEATS_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2387'}
+            'content-length': '2386'}
         result_json = {
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': content_read
             }]
@@ -93,15 +93,15 @@ class TestApiCreateSolution(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6974'
+            'content-length': '6972'
         }
         result_json = {
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
@@ -143,14 +143,14 @@ class TestApiCreateSolution(object):
         content = {'2cd0e794244a07f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3000'
+            'content-length': '2999'
         }
         result_json = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/solutions/2cd0e794244a07f8'
             },
             'data': {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
                 'attributes': content_read
             }
@@ -164,6 +164,7 @@ class TestApiCreateSolution(object):
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
+        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -204,14 +205,14 @@ class TestApiCreateSolution(object):
         content = {'21c737e704b97226': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3083'
+            'content-length': '3082'
         }
         result_json = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21c737e704b97226'
             },
             'data': {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0',
                 'attributes': content_read
             }

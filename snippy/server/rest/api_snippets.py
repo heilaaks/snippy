@@ -27,6 +27,7 @@ from snippy.content.snippet import Snippet
 from snippy.logger import Logger
 from snippy.server.rest.base import ApiContentBase
 from snippy.server.rest.base import ApiContentDigestBase
+from snippy.server.rest.base import ApiContentFieldBase
 from snippy.server.rest.jsonapiv1 import JsonApiV1
 from snippy.server.rest.validate import Validate
 
@@ -34,53 +35,20 @@ from snippy.server.rest.validate import Validate
 class ApiSnippets(ApiContentBase):
     """Process snippet collections."""
 
+    def __init__(self, content):
+        super(ApiSnippets, self).__init__(content, Const.SNIPPET)
+
 
 class ApiSnippetsDigest(ApiContentDigestBase):
-    """Process snippet based on digest resource ID."""
+    """Process snippet based on digest."""
 
-    @Logger.timeit(refresh_oid=True)
-    def on_post(self, request, response, digest):
-        """Update snippet."""
-
-        self._logger.debug('run post %ssnippets/%s', Config.base_path_app, digest)
-        if request.get_header('x-http-method-override', default='post').lower() == 'put':
-            self.on_put(request, response, digest)
-        elif request.get_header('x-http-method-override', default='post').lower() == 'patch':
-            self.on_patch(request, response, digest)
-        elif request.get_header('x-http-method-override', default='post').lower() == 'delete':
-            self.on_delete(request, response, digest)
-        else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot create resource with id, use x-http-method-override to override the request')
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end post %ssnippets/%s', Config.base_path_app, digest)
+    def __init__(self, content):
+        super(ApiSnippetsDigest, self).__init__(content, Const.SNIPPET)
 
 
-class ApiSnippetsField(ApiContentBase):  # pylint: disable=too-few-public-methods
-    """Process snippet based on digest resource ID and specified field."""
+class ApiSnippetsField(ApiContentFieldBase):
+    """Process snippet based on digest and field."""
 
-    @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, digest, field):
-        """Get defined snippet field based on digest."""
+    def __init__(self, content):
+        super(ApiSnippetsField, self).__init__(content, Const.SNIPPET)
 
-        self._logger.debug('run get %ssnippets/%s/field', Config.base_path_app, digest, field)
-        local_params = {'digest': digest, 'fields': field}
-        api = Api(Const.SNIPPET, Api.SEARCH, local_params)
-        Config.load(api)
-        self._content.run()
-        if not self._content.collection.size():
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
-        if Cause.is_ok():
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(self._content.collection, request, digest, field=field, pagination=False)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end get %ssnippets/%s/field', Config.base_path_app, digest, field)

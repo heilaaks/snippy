@@ -28,6 +28,8 @@ from snippy.config.source.api import Api
 from snippy.content.solution import Solution
 from snippy.logger import Logger
 from snippy.server.rest.base import ApiContentBase
+from snippy.server.rest.base import ApiContentDigestBase
+from snippy.server.rest.base import ApiContentFieldBase
 from snippy.server.rest.jsonapiv1 import JsonApiV1
 from snippy.server.rest.validate import Validate
 
@@ -35,134 +37,20 @@ from snippy.server.rest.validate import Validate
 class ApiSolutions(ApiContentBase):
     """Process solution collections"""
 
-
-class ApiSolutionsDigest(object):
-    """Process solutions based on digest resource ID."""
-
-    def __init__(self, storage):
-        self._logger = Logger.get_logger(__name__)
-        self.storage = storage
-
-    @Logger.timeit(refresh_oid=True)
-    def on_put(self, request, response, digest):
-        """Update whole solution based on digest."""
-
-        self._logger.debug('run put %ssolutions/%s', Config.base_path_app, digest)
-        resource_ = Validate.resource(request, digest)
-        if resource_:
-            api = Api(Const.SOLUTION, Api.UPDATE, resource_)
-            Config.load(api)
-            contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if Cause.is_ok():
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request, digest)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end put %ssolutions/%s', Config.base_path_app, digest)
-
-    @Logger.timeit(refresh_oid=True)
-    def on_patch(self, request, response, digest):
-        """Update partial solution based on digest."""
-
-        self._logger.debug('run patch %ssolutions/%s', Config.base_path_app, digest)
-        self.on_put(request, response, digest)
-        Cause.reset()
-        self._logger.debug('end patch %ssolutions/%s', Config.base_path_app, digest)
-
-    @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, digest):
-        """Search solutions based on digest."""
-
-        self._logger.debug('run get %ssolutions/%s', Config.base_path_app, digest)
-        local_params = {'digest': digest}
-        api = Api(Const.SOLUTION, Api.SEARCH, local_params)
-        Config.load(api)
-        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents['data']:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
-        if Cause.is_ok():
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request, digest, pagination=True)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end get %ssolutions/%s', Config.base_path_app, digest)
-
-    @Logger.timeit(refresh_oid=True)
-    def on_delete(self, _, response, digest):
-        """Delete solution based on digest."""
-
-        self._logger.debug('run delete %ssolutions/%s', Config.base_path_app, digest)
-        local_params = {'digest': digest}
-        api = Api(Const.SOLUTION, Api.DELETE, local_params)
-        Config.load(api)
-        Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if Cause.is_ok():
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end delete %ssolutions/%s', Config.base_path_app, digest)
-
-    @Logger.timeit(refresh_oid=True)
-    def on_post(self, request, response, digest):
-        """Update solution."""
-
-        self._logger.debug('run post %ssolutions/%s', Config.base_path_app, digest)
-        if request.get_header('x-http-method-override', default='post').lower() == 'put':
-            self.on_put(request, response, digest)
-        elif request.get_header('x-http-method-override', default='post').lower() == 'patch':
-            self.on_patch(request, response, digest)
-        elif request.get_header('x-http-method-override', default='post').lower() == 'delete':
-            self.on_delete(request, response, digest)
-        else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot create resource with id, use x-http-method-override to override the request')
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end post %ssolutions/%s', Config.base_path_app, digest)
+    def __init__(self, content):
+        super(ApiSolutions, self).__init__(content, Const.SOLUTION)
 
 
-class ApiSolutionsField(object):  # pylint: disable=too-few-public-methods
+class ApiSolutionsDigest(ApiContentDigestBase):
+    """Process solutions based on digest."""
+
+    def __init__(self, content):
+        super(ApiSolutionsDigest, self).__init__(content, Const.SOLUTION)
+
+
+class ApiSolutionsField(ApiContentFieldBase):
     """Process solution based on digest resource ID and specified field."""
 
-    def __init__(self, storage):
-        self._logger = Logger.get_logger(__name__)
-        self.storage = storage
+    def __init__(self, content):
+        super(ApiSolutionsField, self).__init__(content, Const.SOLUTION)
 
-    @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, digest, field):
-        """Get defined solution field based on digest."""
-
-        self._logger.debug('run get %ssolutions/%s/field', Config.base_path_app, digest, field)
-        local_params = {'digest': digest, 'fields': field}
-        api = Api(Const.SOLUTION, Api.SEARCH, local_params)
-        Config.load(api)
-        contents = Solution(self.storage, Const.CONTENT_TYPE_JSON).run()
-        if not contents['data']:
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
-        if Cause.is_ok():
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(Const.SOLUTION, contents, request, digest, field=field, pagination=False)
-            response.status = Cause.http_status()
-        else:
-            response.content_type = Const.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
-            response.status = Cause.http_status()
-
-        Cause.reset()
-        self._logger.debug('end get %ssolutions/%s/field', Config.base_path_app, digest, field)

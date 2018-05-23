@@ -71,6 +71,6 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}'), ApiSnippetsDigest(Snippet(self.storage)))
         self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}/{field}'), ApiSnippetsField(Snippet(self.storage)))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(Solution(self.storage)))
-        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(self.storage))
-        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}/{field}'), ApiSolutionsField(self.storage))
+        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(Solution(self.storage)))
+        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}/{field}'), ApiSolutionsField(Solution(self.storage)))
         SnippyServer(self.api, options).run()

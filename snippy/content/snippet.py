@@ -88,27 +88,3 @@ class Snippet(ContentTypeBase):
             collection = Migrate.load(collection, Config.get_operation_file(), content)
             self._storage.import_content(collection)
 
-    @Logger.timeit
-    def run(self):
-        """Run operation for snippet."""
-
-        self._logger.debug('run snippet content')
-        Config.content_category = Const.SNIPPET
-        if Config.is_operation_create:
-            self.create()
-        elif Config.is_operation_search:
-            content = self.search()
-        elif Config.is_operation_update:
-            self.update()
-        elif Config.is_operation_delete:
-            self.delete()
-        elif Config.is_operation_export:
-            self.export_all()
-        elif Config.is_operation_import:
-            self.import_all()
-        else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for snippet')
-
-        self._logger.debug('end snippet content')
-
-        return self.collection

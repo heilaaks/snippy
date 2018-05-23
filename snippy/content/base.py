@@ -36,7 +36,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         self.category = category
         self.collection = Collection()
         self._storage = storage
-        self.__tobe_removed = Content(category=Const.SNIPPET, timestamp='2017-10-14T19:56:31.000001+0000') # Remove when done
+        self.__tobe_removed = Content(category=category, timestamp='2017-10-14T19:56:31.000001+0000') # Remove when done
 
     @property
     def collection(self):
@@ -85,7 +85,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         if collection.size() == 1:
             stored = next(collection.resources())
             digest = stored.digest
-            self._logger.debug('updating %s with digest %.16s', self.category, digest)
+            self._logger.debug('updating stored %s with digest %.16s', self.category, digest)
             updates = Config.get_resource(self.__tobe_removed)
             if Config.merge:
                 stored.merge(updates)
@@ -111,4 +111,29 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             self._storage.delete(resource.digest)
         else:
             Config.validate_search_context(collection, 'delete')
+
+    @Logger.timeit
+    def run(self):
+        """Run operation."""
+
+        self._logger.debug('run %s content', self.category)
+        Config.content_category = self.category
+        if Config.is_operation_create:
+            self.create()
+        elif Config.is_operation_search:
+            self.search()
+        elif Config.is_operation_update:
+            self.update()
+        elif Config.is_operation_delete:
+            self.delete()
+        elif Config.is_operation_export:
+            self.export_all()
+        elif Config.is_operation_import:
+            self.import_all()
+        else:
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for %s', self.category)
+
+        self._logger.debug('end %s content', self.category)
+
+        return self.collection
 

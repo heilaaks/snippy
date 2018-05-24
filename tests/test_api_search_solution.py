@@ -45,7 +45,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5366'
+            'content-length': '5364'
         }
         result_json = {
             'meta': {
@@ -55,11 +55,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
@@ -88,7 +88,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5365'
+            'content-length': '5363'
         }
         result_json = {
             'meta': {
@@ -98,11 +98,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 3
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
@@ -129,7 +129,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '234'
+            'content-length': '233'
         }
         result_json = {
             'meta': {
@@ -139,7 +139,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
@@ -165,7 +165,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '234'
+            'content-length': '233'
         }
         result_json = {
             'meta': {
@@ -175,7 +175,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
@@ -202,7 +202,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7033'
+            'content-length': '7031'
         }
         result_json = {
             'meta': {
@@ -212,11 +212,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 3
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
@@ -243,7 +243,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7575'
+            'content-length': '7573'
         }
         result_json = {
             'meta': {
@@ -253,11 +253,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }, {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
@@ -313,7 +313,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '234'
+            'content-length': '233'
         }
         result_json = {
             'meta': {
@@ -323,7 +323,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
@@ -437,7 +437,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2539'
+            'content-length': '2538'
         }
         result_json = {
             'meta': {
@@ -447,7 +447,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 1
             },
             'data': {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             },
@@ -502,7 +502,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5366'
+            'content-length': '5364'
         }
         result_json = {
             'meta': {
@@ -512,11 +512,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
@@ -542,7 +542,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2988'
+            'content-length': '2987'
         }
         result_json = {
             'meta': {
@@ -552,7 +552,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
@@ -578,7 +578,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '8348'
+            'content-length': '8346'
         }
         result_json = {
             'meta': {
@@ -588,11 +588,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'total': 2
             },
             'data': [{
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
@@ -649,11 +649,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2000'
+            'content-length': '1999'
         }
         result_json = {
             'data': {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': {
                     'data': Solution.DEFAULTS[Solution.BEATS]['data']
@@ -680,11 +680,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '257'
+            'content-length': '256'
         }
         result_json = {
             'data': {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': {
                     'brief': Solution.DEFAULTS[Solution.BEATS]['brief']
@@ -711,11 +711,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '239'
+            'content-length': '238'
         }
         result_json = {
             'data': {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': {
                     'group': Solution.DEFAULTS[Solution.BEATS]['group']
@@ -742,11 +742,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '280'
+            'content-length': '279'
         }
         result_json = {
             'data': {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': {
                     'tags': Solution.DEFAULTS[Solution.BEATS]['tags']
@@ -773,11 +773,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '320'
+            'content-length': '319'
         }
         result_json = {
             'data': {
-                'type': 'solutions',
+                'type': 'solution',
                 'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
                 'attributes': {
                     'links': Solution.DEFAULTS[Solution.BEATS]['links']

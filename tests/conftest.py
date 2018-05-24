@@ -74,6 +74,7 @@ CREATE_EXITED = (EXITED_CREATED,)*1
 CREATE_NETCAT = (NETCAT_CREATED,)*1
 CREATE_UMOUNT = (UMOUNT_CREATED,)*1
 UPDATE_REMOVE = (REMOVE_CREATED,)*2
+UPDATE_NETCAT = (NETCAT_CREATED,)*2
 IMPORT_REMOVE = (REMOVE_CREATED,)*2
 IMPORT_FORCED = (FORCED_CREATED,)*2
 IMPORT_EXITED = (EXITED_CREATED,)*2
@@ -88,6 +89,8 @@ KAFKA_CREATED = '2017-10-20T06:16:27.000001+0000'
 CREATE_BEATS = (BEATS_CREATED,)*1
 CREATE_NGINX = (NGINX_CREATED,)*1
 CREATE_KAFKA = (KAFKA_CREATED,)*1
+UPDATE_BEATS = (BEATS_CREATED,)*2
+UPDATE_NGINX = (NGINX_CREATED,)*2
 IMPORT_BEATS = (BEATS_CREATED,)*1
 IMPORT_NGINX = (NGINX_CREATED,)*2
 IMPORT_KAFKA = (KAFKA_CREATED,)*2
@@ -277,6 +280,12 @@ def create_netcat_time_mock(mocker):
 
     mocker.patch.object(Config, 'utcnow', side_effect=CREATE_NETCAT)
 
+@pytest.fixture(scope='function', name='update-netcat-utc')
+def update_netcat_time_mock(mocker):
+    """Mock timestamps to update 'netcat' snippet."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=UPDATE_NETCAT)
+
 @pytest.fixture(scope='function', name='import-netcat-utc')
 def import_netcat_time_mock(mocker):
     """Mock timestamps to import 'netcat' snippet."""
@@ -326,6 +335,12 @@ def create_beats_time_mock(mocker):
 
     _add_utc_time(mocker, CREATE_BEATS)
 
+@pytest.fixture(scope='function', name='update-beats-utc')
+def update_beats_time_mock(mocker):
+    """Mock timestamps to update 'beats' solution."""
+
+    _add_utc_time(mocker, UPDATE_BEATS)
+
 @pytest.fixture(scope='function', name='import-beats-utc')
 def import_beats_time_mock(mocker):
     """Mock timestamps to import 'beats' solution."""
@@ -352,6 +367,12 @@ def create_nginx_time_mock(mocker):
     """Mock timestamps to create 'nginx' solution."""
 
     _add_utc_time(mocker, CREATE_NGINX)
+
+@pytest.fixture(scope='function', name='update-nginx-utc')
+def update_nginx_time_mock(mocker):
+    """Mock timestamps to update 'nginx' solution."""
+
+    _add_utc_time(mocker, UPDATE_NGINX)
 
 @pytest.fixture(scope='function', name='import-nginx-utc')
 def import_nginx_time_mock(mocker):

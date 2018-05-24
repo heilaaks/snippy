@@ -53,6 +53,7 @@ class Storage(object):
         from snippy.config.config import Config
         
         resource.updated = Config.utcnow()
+        print("calls %s" % Config.utcnow.call_count)
         collection = self._database.update(digest, resource)
 
         return collection

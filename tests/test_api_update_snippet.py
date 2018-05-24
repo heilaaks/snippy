@@ -37,7 +37,7 @@ pytest.importorskip('gunicorn')
 class TestApiUpdateSnippet(object):
     """Test PUT /snippets/{digest} API."""
 
-    @pytest.mark.usefixtures('forced', 'remove-utc')
+    @pytest.mark.usefixtures('forced', 'update-remove-utc')
     def test_api_update_snippet_001(self, server, mocker):
         """Update one snippet with PUT request.
 
@@ -86,7 +86,7 @@ class TestApiUpdateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('forced', 'remove-utc')
+    @pytest.mark.usefixtures('forced', 'update-remove-utc')
     def test_api_update_snippet_002(self, server, mocker):
         """Update one snippet with PUT request.
 
@@ -145,7 +145,7 @@ class TestApiUpdateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('forced', 'remove-utc')
+    @pytest.mark.usefixtures('forced', 'update-remove-utc')
     def test_api_update_snippet_003(self, server, mocker):
         """Update one snippet with PUT request.
 
@@ -281,7 +281,7 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_400
         assert len(Database.get_snippets()) == 1
 
-    @pytest.mark.usefixtures('forced', 'netcat-utc')
+    @pytest.mark.usefixtures('forced', 'update-netcat-utc')
     def test_api_update_snippet_006(self, server, mocker):
         """Updated snippet and verify created and updated timestamps.
 
@@ -377,6 +377,7 @@ class TestApiUpdateSnippet(object):
                 'attributes': content_read
             }
         }
+        print(Database.print_contents())
         server.run()
         result = testing.TestClient(server.server.api).simulate_patch(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',

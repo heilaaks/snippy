@@ -118,7 +118,7 @@ class TestApiCreateSolution(object):
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('beats', 'nginx-utc')
+    @pytest.mark.usefixtures('beats', 'update-nginx-utc')
     def test_api_create_solution_003(self, server, mocker):
         """Update solution with POST that maps to PUT.
 
@@ -174,7 +174,7 @@ class TestApiCreateSolution(object):
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('beats', 'beats-utc')
+    @pytest.mark.usefixtures('beats', 'update-beats-utc')
     def test_api_create_solution_004(self, server, mocker):
         """Update solution with POST that maps to PATCH.
 

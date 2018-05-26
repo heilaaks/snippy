@@ -1,5 +1,7 @@
 ## WORKING
    
+   - Update digest not working
+   - Update and save not changes not working
    - Add collection.new_resource(category, timetstamp) # Removes the need to use Resource outside collectio
    - Add dictionary['content'] --> dictionary['data']
    
@@ -92,6 +94,7 @@
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
+   - [ ] Add tests that verifies that update with digest shows the existing content in editor.
    - [ ] Test Content() qe and ne - probably UT test to be added for Content().
    - [ ] Add tests that tries to sort based on non existent field. Is there already such case - migth be?
    - [ ] Refactor API tests based on update tests.

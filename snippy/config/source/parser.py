@@ -25,7 +25,6 @@ import re
 from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.content.collection import Collection
-from snippy.content.resource import Resource
 from snippy.logger import Logger
 
 
@@ -63,7 +62,7 @@ class Parser(object):
 
         collection = Collection()
         for item in data:
-            resource = Resource(category, timestamp)
+            resource = collection.get_resource(category, timestamp)
             resource.data = Parser.content_data(category, item)
             resource.brief = Parser.content_brief(category, item)
             resource.group = Parser.content_group(category, item)

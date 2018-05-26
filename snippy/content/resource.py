@@ -299,26 +299,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         This always overrides fields that can be modified by user.
         """
 
-        # TODO: Remove when refactoring done.
-        from snippy.content.content import Content
-
         self._logger.debug('migrate to resouce: %.16s', self.digest)
-        if isinstance(source, Content):
-            self.data = source.get_data()
-            self.brief = source.get_brief()
-            self.group = source.get_group()
-            self.tags = source.get_tags()
-            self.links = source.get_links()
-            self.category = source.get_category()
-            self.filename = source.get_filename()
-            self.runalias = source.get_runalias()
-            self.versions = source.get_versions()
-            self.created = source.get_created()
-            self.updated = source.get_updated()
-            self.digest = source.get_digest()
-            self.metadata = source.get_metadata()
-            self.key = source.get_key()
-        elif isinstance(source, (list,tuple)):
+        if isinstance(source, (list,tuple)):
             self.data = tuple(source[0].split(Resource.DELIMITER_DATA))
             self.brief = source[1]
             self.group = source[2]
@@ -359,10 +341,19 @@ class Resource(object):  # pylint: disable=too-many-public-methods
                 self.data = source.data
             if source.brief:
                 self.brief = source.brief
+            if source.group and source.group != Resource.DEFAULT_GROUP:
+                self.group = source.group
             if source.tags:
                 self.tags = source.tags
             if source.links:
                 self.links = source.links
+            if source.filename:
+                self.filename = source.filename
+            if source.runalias:
+                self.runalias = source.runalias
+            if source.versions:
+                self.versions = source.versions
+
             self.digest = self.compute_digest()
 
     def convert(self, row):
@@ -528,7 +519,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def _add_tags(self, template):
         """Add resource tags to text template."""
 
-        tags = Resource.DELIMITER_TAGS.join(map(str, self.tags))
+        tags = Resource.DELIMITER_TAGS.join(map(str, sorted(self.tags)))
         template = template.replace('<SNIPPY_TAGS>', tags)
 
         return template
@@ -536,7 +527,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def _add_links(self, template):
         """Add resource links to text template."""
 
-        links = Resource.DELIMITER_LINKS.join(map(str, self.links))
+        links = Resource.DELIMITER_LINKS.join(map(str, sorted(self.links)))
         links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
         template = template.replace('<SNIPPY_LINKS>', links)
 

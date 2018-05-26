@@ -45,14 +45,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        and format.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]
             ]
         }
         cause = snippy.run(['snippy', 'export', '--solution'])  ## workflow
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         yaml_dump.assert_called_once_with('./solutions.yaml', 'w')
         yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
@@ -64,7 +64,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        format are defined in command line.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]
             ]
@@ -82,7 +82,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        format are defined in command line.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]
             ]
@@ -198,7 +198,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', 'eeef5ca3ec9cd364', '-f', 'kafka.text'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 3
+            assert Database.get_solutions().size() == 3
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', '7a5bf1bc09939f42'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -218,7 +218,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        file format is yaml.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
         }
@@ -235,7 +235,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        without specifying the content category explicitly.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
         }
@@ -255,7 +255,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        file format is json.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
         }
@@ -272,7 +272,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        without specifying the content category explicitly.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
         }
@@ -373,7 +373,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', 'eeef5ca3ec9cd364', '-f', 'kafka.text'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 3
+            assert Database.get_solutions().size() == 3
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', '2c4298ff3c582fe5'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -398,7 +398,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './kafka.text'])  ## workflow
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 3
+            assert Database.get_solutions().size() == 3
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', '745c9e70eacc304b'])  ## workflow
             assert cause == Cause.ALL_OK
@@ -446,7 +446,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        format defined by the command line option.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
         }
@@ -465,7 +465,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        format defined by the command line option.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS]
             ]
         }
@@ -541,7 +541,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        format.
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]
             ]
@@ -587,7 +587,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', 'mocked_file.txt', '-d', 'a96accc25dd23ac0'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 2
+            assert Database.get_solutions().size() == 2
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             original = original.replace('## DATE  : 2017-10-20T11:11:19.000001+0000', '## DATE  :  2017-10-20T06:16:27.000001+0000')
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow

@@ -80,7 +80,7 @@ class Content(object):
         """Compare given content against content stored in database."""
 
         mocker.patch.object(Config, 'utcnow', side_effect=(Content.EXPORT_TIME,)*len(content))
-        assert len(Database.get_contents()) == len(content)
+        assert Database.get_collection().size() == len(content)
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open()) as mock_file:
             for digest in content:
                 mock_file.reset_mock()
@@ -120,7 +120,7 @@ class Content(object):
     def imported_dict(content_read):
         """Return imported dictionary from content."""
 
-        return {'content': list(content_read.values())}
+        return {'data': list(content_read.values())}
 
     @staticmethod
     def mocked_open(content_read):

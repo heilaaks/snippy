@@ -40,7 +40,7 @@ class TestCliDeleteSolution(object):
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -53,7 +53,7 @@ class TestCliDeleteSolution(object):
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
         cause = snippy.run(['snippy', 'delete', '-d', '61a24a156f5e9d2d'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -67,7 +67,7 @@ class TestCliDeleteSolution(object):
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '61a24'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -80,7 +80,7 @@ class TestCliDeleteSolution(object):
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('import-nginx')
@@ -94,7 +94,7 @@ class TestCliDeleteSolution(object):
 
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', ''])
         assert cause == Cause.ALL_OK
-        assert not Database.get_solutions()
+        assert not Database.get_solutions().size()
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_delete_solution_006(self, snippy, mocker):
@@ -109,7 +109,7 @@ class TestCliDeleteSolution(object):
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -126,7 +126,7 @@ class TestCliDeleteSolution(object):
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest to delete content'
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -143,7 +143,7 @@ class TestCliDeleteSolution(object):
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '123456'])
         assert cause == 'NOK: cannot find content with message digest 123456'
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -157,7 +157,7 @@ class TestCliDeleteSolution(object):
         data = Solution.get_template(Solution.DEFAULTS[Solution.NGINX])
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', data])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -174,7 +174,7 @@ class TestCliDeleteSolution(object):
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', 'not-exists'])
         assert cause == 'NOK: cannot find content with content data \'not-exists\''
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -192,7 +192,7 @@ class TestCliDeleteSolution(object):
         data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', data])
         assert cause == 'NOK: cannot find content with content data \'##############################...\''
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -209,7 +209,7 @@ class TestCliDeleteSolution(object):
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', ''])
         assert cause == 'NOK: cannot use empty content data to delete content'
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @classmethod

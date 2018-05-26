@@ -22,7 +22,6 @@
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.content.content import Content
 from snippy.content.collection import Collection
 from snippy.logger import Logger
 from snippy.migrate.migrate import Migrate
@@ -88,7 +87,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             stored = next(collection.resources())
             digest = stored.digest
             self._logger.debug('updating stored %s with digest %.16s', self._category, digest)
-            updates = Config.get_resource()
+            updates = Config.get_resource(updates=stored)
             if Config.merge:
                 stored.merge(updates)
             else:

@@ -21,7 +21,6 @@
 
 from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
-from snippy.content.content import Content
 from snippy.storage.database.sqlite3db import Sqlite3Db as Database
 
 
@@ -80,50 +79,3 @@ class Storage(object):
         if self._database:
             self._database.disconnect()
             self._database = None
-
-    @staticmethod
-    def _get_contents(rows): # TODO TEST USE THIS.
-        """Convert database rows to tuple of Content()."""
-
-        contents = []
-        for row in rows:
-            contents.append(Storage._convert(row))
-
-        return tuple(contents)
-
-    @staticmethod
-    def _convert(row):
-        """Convert single row from database into content."""
-
-        content = Content([tuple(row[Const.DATA].split(Const.DELIMITER_DATA)),
-                           row[Const.BRIEF],
-                           row[Const.GROUP],
-                           tuple(row[Const.TAGS].split(Const.DELIMITER_TAGS) if row[Const.TAGS] else []),
-                           tuple(row[Const.LINKS].split(Const.DELIMITER_LINKS) if row[Const.LINKS] else []),
-                           row[Const.CATEGORY],
-                           row[Const.FILENAME],
-                           row[Const.RUNALIAS],
-                           row[Const.VERSIONS],
-                           row[Const.CREATED],
-                           row[Const.UPDATED],
-                           row[Const.DIGEST],
-                           row[Const.METADATA],
-                           row[Const.KEY]])
-
-        return content
-
-    @staticmethod
-    def _meta_content(contents=None, total=None):
-        """Wrap content with metadata."""
-
-        if contents is None:
-            contents = []
-
-        meta_content = {
-            'data': contents,
-            'meta': {
-                'total': len(contents) if total is None else total,
-            }
-        }
-
-        return meta_content

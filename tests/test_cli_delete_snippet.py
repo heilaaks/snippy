@@ -40,7 +40,7 @@ class TestCliDeleteSnippet(object):
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         cause = snippy.run(['snippy', 'delete', '-d', '53908d68425c61dc'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
+        assert Database.get_snippets().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -54,7 +54,7 @@ class TestCliDeleteSnippet(object):
         content_read = {Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]}
         cause = snippy.run(['snippy', 'delete', '-d', '54e41'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
+        assert Database.get_snippets().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -67,7 +67,7 @@ class TestCliDeleteSnippet(object):
         content_read = {Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]}
         cause = snippy.run(['snippy', 'delete', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
+        assert Database.get_snippets().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('import-remove')
@@ -81,7 +81,7 @@ class TestCliDeleteSnippet(object):
 
         cause = snippy.run(['snippy', 'delete', '-d', ''])
         assert cause == Cause.ALL_OK
-        assert not Database.get_snippets()
+        assert not Database.get_snippets().size()
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_005(self, snippy, mocker):
@@ -96,7 +96,7 @@ class TestCliDeleteSnippet(object):
         }
         cause = snippy.run(['snippy', 'delete', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -113,7 +113,7 @@ class TestCliDeleteSnippet(object):
         }
         cause = snippy.run(['snippy', 'delete', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest to delete content'
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -130,7 +130,7 @@ class TestCliDeleteSnippet(object):
         }
         cause = snippy.run(['snippy', 'delete', '-d', '123456'])
         assert cause == 'NOK: cannot find content with message digest 123456'
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -143,7 +143,7 @@ class TestCliDeleteSnippet(object):
         content_read = {Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]}
         cause = snippy.run(['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
+        assert Database.get_snippets().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -160,7 +160,7 @@ class TestCliDeleteSnippet(object):
         }
         cause = snippy.run(['snippy', 'delete', '--content', 'not found content'])
         assert cause == 'NOK: cannot find content with content data \'not found content\''
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -177,7 +177,7 @@ class TestCliDeleteSnippet(object):
         }
         cause = snippy.run(['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all)'])
         assert cause == 'NOK: cannot find content with content data \'docker rm --volumes $(docker p...\''
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -194,7 +194,7 @@ class TestCliDeleteSnippet(object):
         }
         cause = snippy.run(['snippy', 'delete', '--content', ''])
         assert cause == 'NOK: cannot use empty content data to delete content'
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -208,7 +208,7 @@ class TestCliDeleteSnippet(object):
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         cause = snippy.run(['snippy', 'delete', '--sall', 'redis'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
+        assert Database.get_snippets().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -225,7 +225,7 @@ class TestCliDeleteSnippet(object):
         }
         cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])
         assert cause == 'NOK: given search keyword matches (2) more than once preventing the operation'
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -245,7 +245,7 @@ class TestCliDeleteSnippet(object):
         out, _ = capsys.readouterr()
         assert cause == 'NOK: given search keyword matches (2) more than once preventing the operation'
         assert out == 'NOK: given search keyword matches (2) more than once preventing the operation\n'
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @classmethod

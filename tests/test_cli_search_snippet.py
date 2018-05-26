@@ -31,10 +31,12 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_001(self, snippy, capsys):
-        """Search snippet from all fields."""
+        """Search snippet from all fields.
+        
+        Search snippets from all fields. The match is made from one
+        snippet content data.
+        """
 
-        ## Brief: Search snippets from all fields. The match is made from one
-        ##        snippet content data.
         output = (
             '1. Remove docker image with force @docker [53908d68425c61dc]',
             '   $ docker rm --force redis',
@@ -46,19 +48,20 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', 'redis', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'redis', '--no-ansi'])
         out, err = capsys.readouterr()
-        print(out)
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_002(self, snippy, capsys):
-        """Search snippet from all fields."""
+        """Search snippet from all fields.
+        
+        Search snippets from all fields. The match is made from one snippet
+        brief description.
+        """
 
-        ## Brief: Search snippets from all fields. The match is made from one
-        ##        snippet brief description.
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
@@ -69,7 +72,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', 'all', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'all', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -98,7 +101,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', 'docker', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'docker', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -127,7 +130,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', 'moby', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'moby', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -150,7 +153,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', 'tutorials', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'tutorials', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -173,7 +176,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '53908d68425c61dc', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -203,7 +206,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', 'redis,--quiet', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'redis,--quiet', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -233,7 +236,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', 'netcat --quiet all', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'netcat --quiet all', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -262,7 +265,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -292,7 +295,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -321,7 +324,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -335,7 +338,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         ##        The used search keyword matches to 'match any' that tries
         ##        to list all the content.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -347,7 +350,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         ## Brief: Try to search snippets with keyword that cannot be found.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run(['snippy', 'search', '--sall', 'not-found', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', 'not-found', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -370,7 +373,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--stag', 'netcat', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', 'netcat', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -382,7 +385,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         ## Brief: Search snippets from tag field. No matches are made.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run(['snippy', 'search', '--stag', 'not-found', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', 'not-found', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -411,7 +414,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--stag', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -434,7 +437,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sgrp', 'linux', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sgrp', 'linux', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -446,7 +449,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         ## Brief: Search snippets from group field. No matches are made.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run(['snippy', 'search', '--sgrp', 'not-found', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sgrp', 'not-found', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -475,7 +478,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sgrp', '', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sgrp', '', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -497,7 +500,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', '.*(\\$\\s.*)'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', '.*(\\$\\s.*)'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -528,7 +531,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--all', '--sall', '.', '--filter', '\\.*(\\$\\s.*)'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--all', '--sall', '.', '--filter', '\\.*(\\$\\s.*)'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -540,9 +543,8 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         ## Brief: Search all content with regexp filter. There are no matches.
         output = 'OK\n'
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', 'not-found'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', 'not-found'])
         out, err = capsys.readouterr()
-        print(out)
         assert cause == Cause.ALL_OK
         assert out == output
         assert not err
@@ -570,7 +572,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'NOK: listing matching content without filter because it was not syntactically correct regular expression',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', '[invalid(regexp', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', '[invalid(regexp', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: listing matching content without filter because it was not syntactically correct regular expression'
         assert out == Const.NEWLINE.join(output)
@@ -591,7 +593,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--content', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--content', 'docker rm --volumes $(docker ps --all --quiet)', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -613,7 +615,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--content', 'docker rm --volumes', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--content', 'docker rm --volumes', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -635,7 +637,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--content', 'volumes', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--content', 'volumes', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -657,7 +659,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--digest', '53908d68425c61dc', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -679,7 +681,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--digest', '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5', '--no-ansi'])  ## workflow  pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'search', '--digest', '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5', '--no-ansi'])  # pylint: disable=line-too-long
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -708,7 +710,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--digest', '5', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--digest', '5', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -737,7 +739,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--digest', '', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--digest', '', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -767,7 +769,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--sgrp', 'docker', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--sgrp', 'docker', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -802,7 +804,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--sgrp', 'docker,linux', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--sgrp', 'docker,linux', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -832,7 +834,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'docker', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'docker', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -845,7 +847,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         ## Brief: Try to search snippets based on tag fields of specific
         ##        group. In this case there are no matches made.
         output = 'NOK: cannot find content with given search criteria\n'
-        cause = snippy.run(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'linux', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'linux', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -857,7 +859,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         ## Brief: Try to search snippets without defining any search criteria.
         output = 'NOK: please define keyword, digest or content data as search criteria\n'
-        cause = snippy.run(['snippy', 'search'])  ## workflow
+        cause = snippy.run(['snippy', 'search'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: please define keyword, digest or content data as search criteria'
         assert out == output
@@ -871,7 +873,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         ##        criteria. In this case the filter cannot be applied because
         ##        no search criteria is applied.
         output = 'NOK: please define keyword, digest or content data as search criteria\n'
-        cause = snippy.run(['snippy', 'search', '--filter', '.*(\\$\\s.*)'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--filter', '.*(\\$\\s.*)'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: please define keyword, digest or content data as search criteria'
         assert out == output

@@ -33,7 +33,6 @@ from snippy.config.source.cli import Cli
 from snippy.config.source.editor import Editor
 from snippy.config.source.parser import Parser
 from snippy.content.collection import Collection
-from snippy.content.resource import Resource
 from snippy.devel.profiler import Profiler
 from snippy.logger import Logger
 
@@ -150,7 +149,7 @@ class Config(object):
         Profiler.disable()
 
     @classmethod
-    def get_contents(cls, content, source=None):
+    def get_contents(cls, source=None):
         """Get content list from one of the configuration sources."""
 
         collection = Collection()
@@ -164,24 +163,29 @@ class Config(object):
         return collection
 
     @classmethod
-    def get_resource(cls):
+    def get_resource(cls, updates=None, text=None):
         """Get resource from configuration source."""
 
-        collection = cls.get_collection()
+        collection = cls.get_collection(updates, text)
         resource = next(collection.resources())
 
         return resource
 
     @classmethod
-    def get_collection(cls, source=None):
-        """Get resource from configuration source."""
+    def get_collection(cls, updates=None, text=None):
+        """Get collection from configuration source.
+        
+        If existing updates are provided, they are used on top of template
+        generated for the editor.
+        """
 
         collection = Collection()
-        if source is not None:
-            collection = Parser.read_content(Config.utcnow(), source)
+        if text is not None:
+            collection = Parser.read_content(Config.utcnow(), text)
         elif cls.editor:
             timestamp = Config.utcnow()
-            resource = Resource(cls.content_category, timestamp)
+            resource = collection.get_resource(cls.content_category, timestamp)
+            resource.merge(updates)
             template = resource.dump_text(Config.templates)
             collection = Editor.read_content(timestamp, template)
         else:
@@ -244,7 +248,7 @@ class Config(object):
     def _read_resource(cls):
         """Read configurared content."""
 
-        resource = Resource(cls.content_category, Config.utcnow())
+        resource = Collection.get_resource(cls.content_category, Config.utcnow())
         resource.data = cls.content_data
         resource.brief = cls.content_brief
         resource.group = cls.content_group

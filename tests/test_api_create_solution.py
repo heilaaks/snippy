@@ -70,7 +70,7 @@ class TestApiCreateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('create-beats-utc', 'create-kafka-utc')
@@ -114,7 +114,7 @@ class TestApiCreateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
@@ -167,7 +167,7 @@ class TestApiCreateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-beats', 'update-beats-utc')
@@ -224,7 +224,7 @@ class TestApiCreateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
@@ -241,14 +241,14 @@ class TestApiCreateSolution(object):
         }
         result_headers = {}
         server.run()
-        assert len(Database.get_solutions()) == 3
+        assert Database.get_solutions().size() == 3
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/eeef5ca3ec9cd36',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.headers == result_headers
         assert not result.text
         assert result.status == falcon.HTTP_204
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('caller')

@@ -33,34 +33,36 @@ class Sqlite3DbHelper(object):
     """Helper methods for Sqlite3 database testing."""
 
     @staticmethod
-    def get_contents():
+    def get_collection():
         """Return database as content tuple."""
 
         rows = ()
+        collection = Collection()
         connection = Sqlite3DbHelper._connect()
         with closing(connection.cursor()) as cursor:
             cursor.execute('SELECT * FROM contents')
             rows = cursor.fetchall()
         connection.close()
+        collection.convert(rows)
 
-        return Storage()._get_contents(rows)  # pylint: disable=protected-access
+        return collection
 
     @staticmethod
     def print_contents():
         """Print database content."""
 
         rows = ()
+        collection = Collection()
         connection = Sqlite3DbHelper._connect()
         with closing(connection.cursor()) as cursor:
             cursor.execute('SELECT * FROM contents')
             rows = cursor.fetchall()
         connection.close()
-
-        for content in Storage()._get_contents(rows):  # pylint: disable=protected-access
-            print(content)
+        collection.convert(rows)
+        print(collection)
 
     @staticmethod
-    def get_content(digest):
+    def get_collectiom(digest):
         """Return content based on digest."""
 
         rows = ()
@@ -82,6 +84,7 @@ class Sqlite3DbHelper(object):
         """Return content based on category."""
 
         rows = ()
+        collection = Collection()
         try:
             query = ('SELECT * FROM contents WHERE category=?')
             qargs = [category]
@@ -93,7 +96,9 @@ class Sqlite3DbHelper(object):
         except sqlite3.Error as exception:
             print(exception)
 
-        return Storage()._get_contents(rows)  # pylint: disable=protected-access
+        collection.convert(rows)
+
+        return collection
 
     @staticmethod
     def get_snippets():

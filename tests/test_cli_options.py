@@ -438,7 +438,7 @@ class TestCliOptions(object):
             '   ! metadata : ',
             '   ! key      : 1',
             '',
-            '1. Remove docker image with force @docker [53908d68425c61dc]',
+            '2. Remove docker image with force @docker [53908d68425c61dc]',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -455,8 +455,7 @@ class TestCliOptions(object):
             '   ! metadata : ',
             '   ! key      : 2'
         )
-        print(Database.get_snippets()[0])  # Part of the test.
-        print(Database.get_snippets()[1])  # Part of the test.
+        print(Database.get_snippets())  # Part of the test.
         out, err = capsys.readouterr()
         out = re.sub(r'\x1b[^m]*m', '', out)  # Remove all color codes from output for comparison.
         assert Const.NEWLINE.join(output) in out

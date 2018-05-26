@@ -45,7 +45,7 @@ class TestCliUpdateSolution(object):
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -63,7 +63,7 @@ class TestCliUpdateSolution(object):
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '--digest', 'a96ac'])  ## workflow
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
 
@@ -82,7 +82,7 @@ class TestCliUpdateSolution(object):
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'])  ## workflow # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -102,7 +102,7 @@ class TestCliUpdateSolution(object):
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--snippet', '-d', 'a96accc25dd23ac0'])  ## workflow
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -123,7 +123,7 @@ class TestCliUpdateSolution(object):
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', 'a96accc25dd23ac0'])  ## workflow
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -141,7 +141,7 @@ class TestCliUpdateSolution(object):
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', '123456789abcdef0'])  ## workflow
         assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -161,7 +161,7 @@ class TestCliUpdateSolution(object):
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', ''])  ## workflow
         assert cause == 'NOK: cannot use empty message digest to update content'
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -179,7 +179,7 @@ class TestCliUpdateSolution(object):
         data = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         cause = snippy.run(['snippy', 'update', '--solution', '-c', data])  ## workflow
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -197,7 +197,7 @@ class TestCliUpdateSolution(object):
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '--content', 'solution not existing'])  ## workflow
         assert cause == 'NOK: cannot find content with content data \'solution not existing\''
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions')
@@ -216,7 +216,7 @@ class TestCliUpdateSolution(object):
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-c', ''])  ## workflow
         assert cause == 'NOK: cannot use empty content data to update content'
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @classmethod

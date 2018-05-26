@@ -133,6 +133,10 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         source collection resource fields are defined.
         """
 
+        #for resource in source.keys():
+            
+
+
     def convert(self, rows):
         """Convert database rows into collection."""
 
@@ -144,8 +148,8 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def load_dict(self, dictionary):
         """Convert dictionary to collection."""
 
-        if 'content' in dictionary:
-            for content in dictionary['content']:
+        if 'data' in dictionary:
+            for content in dictionary['data']:
                 resource = Resource()
                 resource.load_dict(content)
                 self.migrate(resource)

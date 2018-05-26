@@ -21,12 +21,10 @@
 
 import six
 
-from snippy.config.constants import Constants as Const
 from snippy.config.config import Config
+from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
-from snippy.content.content import Content
 from snippy.content.collection import Collection
-from snippy.migrate.migrate import Migrate
 
 
 class SnippetHelper(object):
@@ -144,15 +142,6 @@ class SnippetHelper(object):
             collection.migrate(resource)
     
         return collection
-    
-    #@staticmethod
-    #def get_dictionary(template):
-    #    """Transform template to dictinary."""
-    #
-    #    content = SnippetHelper.get_content(text=template)
-    #    dictionary = Migrate.get_dictionary_list([content])
-    #
-    #    return dictionary[0]
 
     @staticmethod
     def get_dictionary(template):
@@ -167,9 +156,10 @@ class SnippetHelper(object):
     def get_template(dictionary):
         """Transform dictionary to text template."""
 
-        contents = Content.load({'content': [dictionary]})
+        resource = Collection.get_resource(Const.SNIPPET, '2018-10-20T06:16:27.000001+0000')
+        resource.load_dict(dictionary)
 
-        return contents[0].convert_text()
+        return resource.dump_text(Config.templates)
 
     @staticmethod
     def _get_content(source):

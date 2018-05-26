@@ -45,7 +45,7 @@ class TestCliCreateSnippet(object):
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
+        assert Database.get_snippets().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     def test_cli_create_snippet_002(self, snippy, mocker):
@@ -64,7 +64,7 @@ class TestCliCreateSnippet(object):
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
+        assert Database.get_snippets().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     def test_cli_create_snippet_003(self, snippy):
@@ -79,7 +79,7 @@ class TestCliCreateSnippet(object):
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links])
         assert cause == 'NOK: content was not stored because mandatory content data was missing'
-        assert not Database.get_snippets()
+        assert not Database.get_snippets().size()
 
     @pytest.mark.usefixtures('edit-snippet-template')
     def test_cli_create_snippet_004(self, snippy):
@@ -90,7 +90,7 @@ class TestCliCreateSnippet(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
-        assert not Database.get_snippets()
+        assert not Database.get_snippets().size()
 
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_snippet_005(self, snippy):
@@ -102,7 +102,7 @@ class TestCliCreateSnippet(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
-        assert not Database.get_snippets()
+        assert not Database.get_snippets().size()
 
     @pytest.mark.usefixtures('default-snippets', 'edit-remove')
     def test_cli_create_snippet_006(self, snippy, mocker):
@@ -123,7 +123,7 @@ class TestCliCreateSnippet(object):
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @classmethod

@@ -46,14 +46,14 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
         cause = snippy.run(['snippy', 'export'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         yaml_dump.assert_called_once_with('./snippets.yaml', 'w')
         yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
@@ -67,14 +67,14 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
         cause = snippy.run(['snippy', 'export', '--snippet'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         yaml_dump.assert_called_once_with('./snippets.yaml', 'w')
         yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
@@ -87,14 +87,14 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
         cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yaml'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         yaml_dump.assert_called_once_with('./defined-snippets.yaml', 'w')
         yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
@@ -108,14 +108,14 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
         cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
+        assert Database.get_snippets().size() == 2
         yaml_dump.assert_called_once_with('./defined-snippets.yaml', 'w')
         yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 
@@ -128,11 +128,10 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         created.
         """
 
-        ## Brief:
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', 'foo.bar'])
             assert cause == 'NOK: cannot identify file format for file foo.bar'
-            assert len(Database.get_snippets()) == 2
+            assert Database.get_snippets().size() == 2
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
@@ -164,7 +163,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
@@ -184,7 +183,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
@@ -253,7 +252,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
@@ -272,7 +271,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
@@ -371,7 +370,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
             ]
         }
@@ -390,7 +389,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
             ]
         }
@@ -455,7 +454,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content_dict = {
             'meta': Content.get_cli_meta(),
-            'content': [
+            'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]

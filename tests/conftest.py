@@ -553,8 +553,8 @@ def devel_file_data(mocker):
         '        import_dict = {\'content\': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}',
         '        mock_yaml_load.return_value = import_dict',
         '        mock_json_load.return_value = import_dict',
-        '        compare_content = {\'54e41e9b52a02b63\': import_dict[\'content\'][0],',
-        '                           \'f3fd167c64b6f97e\': import_dict[\'content\'][1]}',
+        '        compare_content = {\'54e41e9b52a02b63\': import_dict[\'data\'][0],',
+        '                           \'f3fd167c64b6f97e\': import_dict[\'data\'][1]}',
         '',
         '        ## Brief: Import all snippets. File name is not defined in commmand line. This should',
         '        ##        result tool internal default file name ./snippets.yaml being used by default.',
@@ -562,7 +562,7 @@ def devel_file_data(mocker):
         '            snippy = Snippy()',
         '            cause = snippy.run([\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\'])  ## workflow',
         '            assert cause == Cause.ALL_OK',
-        '            assert len(Database.get_snippets()) == 2',
+        '            assert Database.get_collection().size() == 2',
         '            mock_file.assert_called_once_with(\'./snippets.yaml\', \'r\')',
         '            Snippet.test_content(snippy, mock_file, compare_content)',
         '            snippy.release()',
@@ -604,13 +604,13 @@ def _import_content(snippy, mocker, contents, timestamps):
     """Import requested content."""
 
     mocker.patch.object(Config, 'utcnow', side_effect=timestamps)
-    start = len(Database.get_contents()) + 1
+    start = Database.get_collection().size() + 1
     for idx, content in enumerate(contents, start=start):
         mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
         mocker.patch('snippy.migrate.migrate.open', mocked_open, create=True)
         cause = snippy.run(['snippy', 'import', '-f', 'content.txt'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_contents()) == idx
+        assert Database.get_collection().size() == idx
 
 def _add_utc_time(mocker, timestamps):
     """Add UTC time mock as side effect."""

@@ -49,7 +49,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         yaml_load.assert_called_once_with('./solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -65,7 +65,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.yaml'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         yaml_load.assert_called_once_with('./all-solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -82,8 +82,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '-f', './all-solutions.yaml'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
-        assert not Database.get_snippets()
+        assert Database.get_solutions().size() == 2
+        assert not Database.get_snippets().size()
         yaml_load.assert_called_once_with('./all-solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -99,7 +99,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         json.load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.json'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         json_load.assert_called_once_with('./all-solutions.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -116,8 +116,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         json.load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '-f', './all-solutions.json'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
-        assert not Database.get_snippets()
+        assert Database.get_solutions().size() == 2
+        assert not Database.get_snippets().size()
         json_load.assert_called_once_with('./all-solutions.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -135,7 +135,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.txt'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 2
+            assert Database.get_solutions().size() == 2
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -154,7 +154,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-solutions.txt'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 2
+            assert Database.get_solutions().size() == 2
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -172,7 +172,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.text'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 2
+            assert Database.get_solutions().size() == 2
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -191,7 +191,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-solutions.text'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 2
+            assert Database.get_solutions().size() == 2
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -207,10 +207,10 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         cause = snippy.run(['snippy', 'import', '--solution', '--file', './all-solutions.yaml'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         yaml_load.assert_called_once_with('./all-solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -224,7 +224,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './solution-template.txt'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
-            assert not Database.get_contents()
+            assert not Database.get_collection().size()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
     def test_cli_import_solution_012(self, snippy):
@@ -236,7 +236,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './foo.bar'])
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
-            assert not Database.get_contents()
+            assert not Database.get_collection().size()
             mock_file.assert_not_called()
 
     @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
@@ -250,7 +250,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         yaml_load.assert_called_once_with('one-solution.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -265,8 +265,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
-        assert not Database.get_snippets()
+        assert Database.get_solutions().size() == 1
+        assert not Database.get_snippets().size()
         yaml_load.assert_called_once_with('one-solution.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -281,7 +281,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         json.load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.json'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         json_load.assert_called_once_with('one-solution.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -298,7 +298,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.txt'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
+            assert Database.get_solutions().size() == 1
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -315,7 +315,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
+            assert Database.get_solutions().size() == 1
             mock_file.assert_called_once_with('one-solution.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -332,8 +332,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--snippet', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
-            assert not Database.get_snippets()
+            assert Database.get_solutions().size() == 1
+            assert not Database.get_snippets().size()
             mock_file.assert_called_once_with('one-solution.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -348,8 +348,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', '123456789abcdef0', '-f', 'one-solution.text'])
             assert cause == 'NOK: cannot find solution identified with digest 123456789abcdef0'
-            assert len(Database.get_solutions()) == 1
-            assert not Database.get_snippets()
+            assert Database.get_solutions().size() == 1
+            assert not Database.get_snippets().size()
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, {Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]})
 
@@ -363,7 +363,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.yaml'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         yaml_load.assert_called_once_with('one-solution.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -377,7 +377,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         json.load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.json'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         json_load.assert_called_once_with('one-solution.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -393,7 +393,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.txt'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
+            assert Database.get_solutions().size() == 1
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -410,8 +410,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', 'one-solution.txt'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
-            assert not Database.get_snippets()
+            assert Database.get_solutions().size() == 1
+            assert not Database.get_snippets().size()
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -427,7 +427,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
+            assert Database.get_solutions().size() == 1
             mock_file.assert_called_once_with('one-solution.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -444,7 +444,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '--defaults'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
         yaml_load.assert_called_once_with(defaults_solutions, 'r')
         Content.verified(mocker, snippy, content_read)
@@ -466,7 +466,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         cause = snippy.run(['snippy', 'import', '--solution', '--defaults'])
         assert cause == 'NOK: content data already exist with digest 61a24a156f5e9d2d' or \
                cause == 'NOK: content data already exist with digest a96accc25dd23ac0'
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
         yaml_load.assert_called_once_with(defaults_solutions, 'r')
         Content.verified(mocker, snippy, content_read)
@@ -490,8 +490,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './solution-template.txt'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_solutions()) == 1
-            assert not Database.get_snippets()
+            assert Database.get_solutions().size() == 1
+            assert not Database.get_snippets().size()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
@@ -508,7 +508,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '--template'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
-            assert not Database.get_contents()
+            assert not Database.get_collection().size()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
     @classmethod

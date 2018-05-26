@@ -27,7 +27,7 @@ from snippy.config.config import Config
 from snippy.logger import Logger
 
 
-class Content(object):  # pylint: disable=too-many-public-methods
+class Content2(object):  # pylint: disable=too-many-public-methods
     """Store content."""
 
     def __init__(self, content=None, category=None, timestamp=Const.EMPTY):
@@ -368,8 +368,8 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         contents = ()
 
-        if 'content' in dictionary:
-            contents = Content._get_contents(dictionary['content'])
+        if 'data' in dictionary:
+            contents = Content._get_contents(dictionary['data'])
 
         return contents
 

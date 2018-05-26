@@ -47,13 +47,13 @@ class TestApiDeleteSolution(object):
         }
         result_headers = {}
         server.run()
-        assert len(Database.get_solutions()) == 3
+        assert Database.get_solutions().size() == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions/eeef5ca3ec9cd36',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, server, content_read)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka', 'caller')
@@ -76,14 +76,14 @@ class TestApiDeleteSolution(object):
             }]
         }
         server.run()
-        assert len(Database.get_solutions()) == 3
+        assert Database.get_solutions().size() == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions/beefbeef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert len(Database.get_solutions()) == 3
+        assert Database.get_solutions().size() == 3
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_delete_solution_003(self, server, mocker):
@@ -111,14 +111,14 @@ class TestApiDeleteSolution(object):
             }]
         }
         server.run()
-        assert len(Database.get_contents()) == 2
+        assert Database.get_collection().size() == 2
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, server, content_read)
 
     @classmethod

@@ -48,7 +48,7 @@ class TestCliCreateSolution(object):
         links = Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.BEATS]['links'])
         cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions', 'edit-beats')
@@ -64,7 +64,7 @@ class TestCliCreateSolution(object):
         }
         cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: content data already exist with digest a96accc25dd23ac0'
-        assert len(Database.get_solutions()) == 2
+        assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('edit-solution-template')
@@ -76,7 +76,7 @@ class TestCliCreateSolution(object):
 
         cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
-        assert not Database.get_solutions()
+        assert not Database.get_solutions().size()
 
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_solution_004(self, snippy):
@@ -88,7 +88,7 @@ class TestCliCreateSolution(object):
 
         cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
-        assert not Database.get_solutions()
+        assert not Database.get_solutions().size()
 
     @pytest.mark.usefixtures('edit-unknown-template')
     def test_cli_create_solution_005(self, snippy):
@@ -101,7 +101,7 @@ class TestCliCreateSolution(object):
 
         cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
-        assert not Database.get_solutions()
+        assert not Database.get_solutions().size()
 
     @pytest.mark.usefixtures('edit-beats')
     def test_cli_create_solution_006(self, snippy, mocker):
@@ -113,7 +113,7 @@ class TestCliCreateSolution(object):
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
         cause = snippy.run(['snippy', 'create', '--solution', '--editor'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
+        assert Database.get_solutions().size() == 1
         Content.verified(mocker, snippy, content_read)
 
     @classmethod

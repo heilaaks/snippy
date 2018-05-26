@@ -58,8 +58,8 @@ class TestCliPerformance(object):
         start = time.time()
         for _ in range(55):
             self.create_defaults(snippy)
-            assert len(Database.get_snippets()) == 2
-            assert len(Database.get_solutions()) == 2
+            assert Database.get_snippets().size() == 2
+            assert Database.get_solutions().size() == 2
 
             # Search all content
             cause = snippy.run(['snippy', 'search', '--all', '--sall', '.'])
@@ -74,7 +74,7 @@ class TestCliPerformance(object):
             assert cause == Cause.ALL_OK
             cause = snippy.run(['snippy', 'delete', '-d', '61a24a156f5e9d2d'])
             assert cause == Cause.ALL_OK
-            assert not Database.get_contents()
+            assert not Database.get_collection().size()
 
         runtime = time.time() - start
         out, err = capsys.readouterr()

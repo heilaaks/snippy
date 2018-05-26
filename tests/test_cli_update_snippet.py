@@ -42,8 +42,10 @@ class TestCliUpdateSnippet(object):
             'af8c89629dc1a531': Snippet.get_dictionary(template),
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
+        print(template)
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63'])  ## workflow
+        print(Database.print_contents())
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)

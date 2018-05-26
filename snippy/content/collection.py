@@ -19,8 +19,13 @@
 
 """collection: Store list of contents in collection."""
 
+import re
+import sys
 from collections import OrderedDict
+from signal import signal, getsignal, SIGPIPE, SIG_DFL
 
+from snippy.cause import Cause
+from snippy.config.constants import Constants as Const
 from snippy.content.resource import Resource
 from snippy.logger import Logger
 
@@ -35,11 +40,30 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def __str__(self):
         """Format string from the class object."""
 
-        text = ''
+        text = Const.EMPTY
         for i, resource in enumerate(self.resources(), start=1):
             text = text + resource.convert_term(index=i, ansi=True, debug=True)
 
         return text
+
+    def __eq__(self, collection):
+        """Compare collections if they are equal."""
+
+        # See [1] and [2] for details how to override comparisons.
+        #
+        # [1] https://stackoverflow.com/a/30676267
+        # [2] https://stackoverflow.com/a/390640
+        if type(collection) is type(self):
+            if self.size() != collection.size():
+                return False
+
+            for digest in self.keys():
+                if digest in collection and self[digest] != collection[digest]:
+                    return False
+
+            return True
+
+        return False
 
     def __getitem__(self, digest):
         return self.data['data'][digest]
@@ -78,6 +102,12 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         self._init()
 
+    @classmethod
+    def get_resource(cls, category, timestamp):
+        """Return new source."""
+
+        return Resource(category, timestamp)
+
     def migrate(self, source):
         """Migrate Resource of Collections.
 
@@ -111,14 +141,55 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             resource.convert(row)
             self.migrate(resource)
 
+    def load_dict(self, dictionary):
+        """Convert dictionary to collection."""
+
+        if 'content' in dictionary:
+            for content in dictionary['content']:
+                resource = Resource()
+                resource.load_dict(content)
+                self.migrate(resource)
+        else:
+            self._logger.debug('json format not indentified: %s', json)
+
     def dump_json(self, filter_fields):
         """Convert collection to json."""
 
         json = []
-        for resource in source.resources():
-            json.append(resource.dump_json)
+        for resource in self.resources():
+            json.append(resource.dump_json(filter_fields))
 
         return json
+
+    def dump_term(self, use_ansi, debug_logs, search_filter):
+        """Convert collection for terminal."""
+
+        if not self.size():
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
+
+        # In case user provided regexp filter, the ANSI control characters for
+        # colors are not used in order to make the filter work as expected.
+        ansi = use_ansi
+        if search_filter:
+            ansi = False
+
+        text = Const.EMPTY
+        for i, resource in enumerate(self.resources(), start=1):
+            text = text + resource.convert_term(index=i, ansi=ansi, debug=debug_logs)
+        # Set only one empty line at the end of string for beautified output.
+        if self.size():
+            text = text.rstrip()
+            text = text + Const.NEWLINE
+
+        if search_filter:
+            match = re.findall(search_filter, text)
+            if match:
+                text = Const.NEWLINE.join(match) + Const.NEWLINE
+            else:
+                text = Const.EMPTY
+
+        self._logger.debug('printing content to terminal stdout')
+        self._print_stdout(text)
 
     @property
     def data(self):
@@ -156,3 +227,24 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         }
 
         return meta_content
+
+    @classmethod
+    def _print_stdout(cls, text):
+        """Print tool output to stdout."""
+
+        # The signal handler manipulation and flush setting below prevents 'broken
+        # pipe' errors with grep. For example incorrect parameter usage in grep may
+        # cause this. See below listed references /1,2/ and examples that fail
+        # without this correction.
+        #
+        # /1/ https://stackoverflow.com/a/16865106
+        # /2/ https://stackoverflow.com/a/26738736
+        #
+        # $ snippy search --sall '--all' --filter crap | grep --all
+        # $ snippy search --sall 'test' --filter test -vv | grep --all
+        if text:
+            signal_sigpipe = getsignal(SIGPIPE)
+            signal(SIGPIPE, SIG_DFL)
+            print(text)
+            sys.stdout.flush()
+            signal(SIGPIPE, signal_sigpipe)

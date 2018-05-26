@@ -20,6 +20,7 @@
 """solution_helper: Helper methods for solution testing."""
 
 from snippy.config.constants import Constants as Const
+from snippy.config.config import Config
 from snippy.config.source.parser import Parser
 from snippy.content.content import Content
 from snippy.migrate.migrate import Migrate
@@ -268,7 +269,6 @@ class SolutionHelper(object):
     TEMPLATE = ('################################################################################',
                 '## BRIEF : ',
                 '##',
-                '## DATE  : 2017-10-14T19:56:31.000001+0000',
                 '## GROUP : default',
                 '## TAGS  : ',
                 '## FILE  : ',
@@ -304,10 +304,10 @@ class SolutionHelper(object):
     def get_dictionary(template):
         """Transform template to dictinary."""
 
-        content = SolutionHelper._get_content(template)
-        dictionary = Migrate.get_dictionary_list([content])
+        collection = SolutionHelper._get_content(template)
+        resource = next(collection.resources())
 
-        return dictionary[0]
+        return resource.dump_dict()
 
     @staticmethod
     def get_template(dictionary):
@@ -318,10 +318,10 @@ class SolutionHelper(object):
         return contents[0].convert_text()
 
     @staticmethod
-    def _get_content(text):
+    def _get_content(source):
         """Transform text template to content."""
 
-        contents = Parser.read_content(Content(category=Const.SOLUTION), text)
-        content = contents[0]
+        timestamp = Config.utcnow()
+        collection = Parser.read_content(timestamp, source)
 
-        return content
+        return collection

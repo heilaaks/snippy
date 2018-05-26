@@ -22,8 +22,10 @@
 import six
 
 from snippy.config.constants import Constants as Const
+from snippy.config.config import Config
 from snippy.config.source.parser import Parser
 from snippy.content.content import Content
+from snippy.content.collection import Collection
 from snippy.migrate.migrate import Migrate
 
 
@@ -129,25 +131,37 @@ class SnippetHelper(object):
                 '')
 
     @staticmethod
-    def get_content(text=None, snippet=None):
+    def get_collection(source=None, snippet=None):
         """Transform text template to content."""
-
-        if text:
-            contents = Parser.read_content(Content(category=Const.SNIPPET), text)
+    
+        if source:
+            collection = Parser.read_content(Config.utcnow(), source)
             content = contents[0]
         else:
-            content = Content.load({'content': [SnippetHelper.DEFAULTS[snippet]]})[0]
-
-        return content
+            collection = Collection()
+            resource = collection.get_resource(Const.SNIPPET, Config.utcnow())
+            resource.load_dict(SnippetHelper.DEFAULTS[snippet])
+            collection.migrate(resource)
+    
+        return collection
+    
+    #@staticmethod
+    #def get_dictionary(template):
+    #    """Transform template to dictinary."""
+    #
+    #    content = SnippetHelper.get_content(text=template)
+    #    dictionary = Migrate.get_dictionary_list([content])
+    #
+    #    return dictionary[0]
 
     @staticmethod
     def get_dictionary(template):
         """Transform template to dictinary."""
 
-        content = SnippetHelper.get_content(text=template)
-        dictionary = Migrate.get_dictionary_list([content])
+        collection = SnippetHelper._get_content(template)
+        resource = next(collection.resources())
 
-        return dictionary[0]
+        return resource.dump_dict()
 
     @staticmethod
     def get_template(dictionary):
@@ -156,6 +170,14 @@ class SnippetHelper(object):
         contents = Content.load({'content': [dictionary]})
 
         return contents[0].convert_text()
+
+    @staticmethod
+    def _get_content(source):
+        """Transform text template to content."""
+
+        collection = Parser.read_content(Config.utcnow(), source)
+
+        return collection
 
     @staticmethod
     def compare_db(snippet, content):

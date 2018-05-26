@@ -132,6 +132,7 @@ class TestApiPerformance(object):
         server.wait()
         out = server.stdout.readlines()
         err = server.stderr.readlines()
+        print(out)
         print("====================================")
         print("Runtime %.4f" % runtime)
         print("There are %d rows in stdout" % len(out))

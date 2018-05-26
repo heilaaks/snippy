@@ -73,7 +73,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_002(self, server):
         """Search snippets with GET.
 
@@ -186,7 +186,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_005(self, server):
         """Search snippets with GET.
 
@@ -225,7 +225,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_006(self, server):
         """Search snippets with GET.
 
@@ -600,7 +600,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_001(self, server):
         """Search snippets with GET.
 
@@ -654,7 +654,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_002(self, server):
         """Search snippets with GET.
 
@@ -700,7 +700,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_003(self, server):
         """Search snippets with GET.
 
@@ -745,7 +745,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_004(self, server):
         """Search snippets with GET.
 
@@ -789,7 +789,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_005(self, server):
         """Search snippets with GET.
 
@@ -838,7 +838,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_006(self, server):
         """Search snippets with GET.
 
@@ -881,7 +881,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'umount')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'import-umount')
     def test_api_search_snippet_paginate_007(self, server):
         """Search snippets with GET.
 
@@ -926,7 +926,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_008(self, server):
         """Search snippets with GET.
 
@@ -956,7 +956,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_009(self, server):
         """Search snippets with GET.
 
@@ -986,7 +986,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_010(self, server):
         """Search snippets with GET.
 
@@ -1017,7 +1017,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_011(self, server):
         """Search snippets with GET.
 
@@ -1046,7 +1046,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_012(self, server):
         """Search snippets with GET.
 
@@ -1080,7 +1080,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'exited', 'caller')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_013(self, server):
         """Search snippets with GET.
 
@@ -1370,7 +1370,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('remove', 'forced', 'exited', 'netcat')
+    @pytest.mark.usefixtures('import-remove', 'import-forced', 'import-exited', 'import-netcat')
     def test_pytest_fixtures2(self, server):
         """Test pytest fixtures with pytest specific mocking.
 

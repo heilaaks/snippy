@@ -53,7 +53,6 @@ class Storage(object):
         from snippy.config.config import Config
         
         resource.updated = Config.utcnow()
-        print("calls %s" % Config.utcnow.call_count)
         collection = self._database.update(digest, resource)
 
         return collection
@@ -61,7 +60,7 @@ class Storage(object):
     def delete(self, digest):
         """Delete content."""
 
-        self._database.delete_content(digest)
+        self._database.delete(digest)
 
     def export_content(self, category):
         """Export content."""

@@ -36,7 +36,7 @@ pytest.importorskip('gunicorn')
 class TestApiCreateSnippet(object):
     """Test POST snippets collection API."""
 
-    @pytest.mark.usefixtures('remove-utc')
+    @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_001(self, server, mocker):
         """Create one snippet with POST.
 
@@ -73,7 +73,7 @@ class TestApiCreateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('remove-utc')
+    @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_002(self, server, mocker):
         """Create one snippet with POST.
 
@@ -119,7 +119,7 @@ class TestApiCreateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('exited-utc')
+    @pytest.mark.usefixtures('create-exited-utc')
     def test_api_create_snippet_003(self, server, mocker):
         """Create one snippet with POST.
 
@@ -164,7 +164,7 @@ class TestApiCreateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('exited-utc')
+    @pytest.mark.usefixtures('create-exited-utc')
     def test_api_create_snippet_004(self, server, mocker):
         """Create one snippet with POST.
 
@@ -211,7 +211,7 @@ class TestApiCreateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('remove-utc')
+    @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_005(self, server, mocker):
         """Create one snippet with POST.
 
@@ -264,7 +264,7 @@ class TestApiCreateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('remove-utc', 'forced-utc')
+    @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
     def test_api_create_snippet_006(self, server, mocker):
         """Create list of snippets from API.
 
@@ -505,7 +505,7 @@ class TestApiCreateSnippet(object):
         assert result.status == falcon.HTTP_403
         assert not Database.get_snippets()
 
-    @pytest.mark.usefixtures('forced', 'update-remove-utc')
+    @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
     def test_api_create_snippet_012(self, server, mocker):
         """Update snippet with POST that maps to PUT.
 
@@ -552,7 +552,7 @@ class TestApiCreateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('forced', 'forced-utc')
+    @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
     def test_api_create_snippet_013(self, server, mocker):
         """Update snippet with POST that maps to PATCH.
 
@@ -608,7 +608,7 @@ class TestApiCreateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_api_create_snippet_014(self, server, mocker):
         """Update snippet with POST that maps to DELETE.
 

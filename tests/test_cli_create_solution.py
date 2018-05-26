@@ -33,76 +33,85 @@ class TestCliCreateSolution(object):
 
     @pytest.mark.usefixtures('snippy', 'edit-beats')
     def test_cli_create_solution_001(self, snippy, mocker):
-        """Create solution from CLI."""
+        """Create solution from CLI.
+        
+        Create new solution by defining all content parameters from command
+        line. Creating solution from command line will always use editor to
+        create the content.
+        """
 
-        ## Brief: Create new solution by defining all content parameters from
-        ##        command line. Creating solution from command line will
-        ##        always use editor to create the content.
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
         data = Const.NEWLINE.join(Solution.DEFAULTS[Solution.BEATS]['data'])
         brief = Solution.DEFAULTS[Solution.BEATS]['brief']
         group = Solution.DEFAULTS[Solution.BEATS]['group']
         tags = Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.BEATS]['tags'])
         links = Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.BEATS]['links'])
-        cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  ## workflow # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-solutions', 'edit-beats')
     def test_cli_create_solution_002(self, snippy, mocker):
-        """Try to create solution from CLI."""
+        """Try to create solution from CLI.
+        
+        Try to create same solution again with exactly the same content data.
+        """
 
-        ## Brief: Try to create same solution again with exactly the same
-        ##        content data.
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
-        cause = snippy.run(['snippy', 'create', '--solution'])  ## workflow
+        cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: content data already exist with digest a96accc25dd23ac0'
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('edit-solution-template')
     def test_cli_create_solution_003(self, snippy):
-        """Try to create solution from CLI."""
+        """Try to create solution from CLI.
+        
+        Try to create new solution without any changes to template.        
+        """
 
-        ## Brief: Try to create new solution without any changes to template.
-        cause = snippy.run(['snippy', 'create', '--solution'])  ## workflow
+        cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
         assert not Database.get_solutions()
 
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_solution_004(self, snippy):
-        """Try to create solution from CLI."""
+        """Try to create solution from CLI.
+        
+        Try to create new solution with empty data. In this case the whole
+        template is deleted and the edited solution is an empty string.
+        """
 
-        ## Brief: Try to create new solution with empty data. In this case
-        ##        the whole template is deleted and the edited solution is
-        ##        an empty string.
-        cause = snippy.run(['snippy', 'create', '--solution'])  ## workflow
+        cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
         assert not Database.get_solutions()
 
     @pytest.mark.usefixtures('edit-unknown-template')
     def test_cli_create_solution_005(self, snippy):
-        """Try to create solution from CLI."""
+        """Try to create solution from CLI.
+        
+        Try to create new solution with a template that cannot be identified.
+        In this case the user has changed the input template completely and
+        it has lost tags that identify it as a solution content.
+        """
 
-        ## Brief: Try to create new solution with a template that cannot be
-        ##        identified. In this case the user has changed the input
-        ##        template completely and it has lost tags that identify it
-        ##        as a solution content.
-        cause = snippy.run(['snippy', 'create', '--solution'])  ## workflow
+        cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
         assert not Database.get_solutions()
 
     @pytest.mark.usefixtures('edit-beats')
     def test_cli_create_solution_006(self, snippy, mocker):
-        """Create solution from editor."""
+        """Create solution from editor.
+        
+        Create new solution by defining all values from editor.
+        """
 
-        ## Brief: Create new solution by defining all values from editor.
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
-        cause = snippy.run(['snippy', 'create', '--solution', '--editor'])  ## workflow
+        cause = snippy.run(['snippy', 'create', '--solution', '--editor'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, snippy, content_read)

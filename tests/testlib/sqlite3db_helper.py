@@ -25,6 +25,7 @@ import os.path
 from contextlib import closing
 import pkg_resources
 from snippy.config.constants import Constants as Const
+from snippy.content.collection import Collection
 from snippy.storage.storage import Storage
 
 
@@ -159,13 +160,15 @@ class Sqlite3DbHelper(object):
         """Select all rows from database. DEPRECATED."""
 
         rows = ()
+        collection = Collection()
         connection = Sqlite3DbHelper._connect()
         with closing(connection.cursor()) as cursor:
             cursor.execute('SELECT * FROM contents')
             rows = cursor.fetchall()
         connection.close()
+        collection.convert(rows)
 
-        return rows
+        return collection
 
     @staticmethod
     def _connect():

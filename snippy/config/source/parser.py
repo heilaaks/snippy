@@ -48,7 +48,7 @@ class Parser(object):
     _logger = Logger.get_logger(__name__)
 
     @staticmethod
-    def read_content(source, timestamp):
+    def read_content(timestamp, source):
         """Read contents from text source."""
 
         data = []

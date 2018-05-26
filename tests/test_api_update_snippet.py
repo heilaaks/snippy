@@ -37,7 +37,7 @@ pytest.importorskip('gunicorn')
 class TestApiUpdateSnippet(object):
     """Test PUT /snippets/{digest} API."""
 
-    @pytest.mark.usefixtures('forced', 'update-remove-utc')
+    @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
     def test_api_update_snippet_001(self, server, mocker):
         """Update one snippet with PUT request.
 
@@ -79,14 +79,13 @@ class TestApiUpdateSnippet(object):
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
-        print(result.json)
-        #assert result.headers == result_headers
+        assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('forced', 'update-remove-utc')
+    @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
     def test_api_update_snippet_002(self, server, mocker):
         """Update one snippet with PUT request.
 
@@ -145,7 +144,7 @@ class TestApiUpdateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('forced', 'update-remove-utc')
+    @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
     def test_api_update_snippet_003(self, server, mocker):
         """Update one snippet with PUT request.
 
@@ -202,7 +201,7 @@ class TestApiUpdateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('forced', 'caller')
+    @pytest.mark.usefixtures('import-forced', 'caller')
     def test_api_update_snippet_004(self, server):
         """Try to update snippet with malformed request.
 
@@ -245,7 +244,7 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_404
         assert len(Database.get_snippets()) == 1
 
-    @pytest.mark.usefixtures('forced', 'caller')
+    @pytest.mark.usefixtures('import-forced', 'caller')
     def test_api_update_snippet_005(self, server):
         """Try to update snippet with malformed request.
 
@@ -281,7 +280,7 @@ class TestApiUpdateSnippet(object):
         assert result.status == falcon.HTTP_400
         assert len(Database.get_snippets()) == 1
 
-    @pytest.mark.usefixtures('forced', 'update-netcat-utc')
+    @pytest.mark.usefixtures('import-forced', 'update-netcat-utc')
     def test_api_update_snippet_006(self, server, mocker):
         """Updated snippet and verify created and updated timestamps.
 
@@ -330,7 +329,7 @@ class TestApiUpdateSnippet(object):
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('forced', 'forced-utc')
+    @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
     def test_api_update_snippet_007(self, server, mocker):
         """Update one snippet with PATCH request.
 
@@ -377,7 +376,6 @@ class TestApiUpdateSnippet(object):
                 'attributes': content_read
             }
         }
-        print(Database.print_contents())
         server.run()
         result = testing.TestClient(server.server.api).simulate_patch(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',

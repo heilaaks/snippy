@@ -37,19 +37,21 @@ class TestUtSqlite3dbSelect(object):
     @mock.patch.object(Config, 'storage_schema', Database.get_schema())
     @mock.patch.object(Config, 'search_all_kws', ('foo', 'bar', 'digitalocean'))
     def test_select_keyword_matching_links_column(self, mock_cause_push):
-        """Test selecting content."""
+        """Test selecting content.
+        
+        Select content with regexp stored into sqlite. In this case th last
+        keyword matches to links column.
+        """
 
         sqlite = Sqlite3Db()
         sqlite.init()
 
-        ## Brief: Select content with regexp stored into sqlite. In this
-        ##        case th last keyword matches to links column.
-        content = Snippet.get_content(snippet=Snippet.FORCED)
+        collection = Snippet.get_collection(snippet=Snippet.FORCED)
         keywords = ['foo', 'bar', 'digitalocean']
-        sqlite.insert_content([content])
+        sqlite.insert(collection)
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content)
-        assert len(sqlite.select_content(Const.SNIPPET, keywords)) == 1
+        assert collection == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert Database.select_all_snippets().size() == 1
         mock_cause_push.assert_not_called()
         sqlite.disconnect()
         Database.delete_all_contents()

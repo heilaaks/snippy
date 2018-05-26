@@ -208,7 +208,7 @@ class Migrate(object):
                 dictionary = {'meta': {'updated': Config.utcnow(),
                                        'version': __version__,
                                        'homepage': __homepage__},
-                              'content': collection.dump_json}
+                              'content': collection.dump_json(Config.filter_fields)}
                 if Config.is_operation_file_text:
                     for resource in collection.resources():
                         template = resource.dump_text(Config.templates)
@@ -229,7 +229,8 @@ class Migrate(object):
     def dump_template(cls, category):
         """Dump content template into file."""
 
-        resource = Resource(category, Config.utcnow())
+        filename = Config.get_operation_file()
+        resource = Collection.get_resource(category, Config.utcnow())
         template = resource.dump_text(Config.templates)
         cls._logger.debug('exporting content template %s', filename)
         with open(filename, 'w') as outfile:
@@ -243,13 +244,12 @@ class Migrate(object):
     def load(cls, filename):
         """Load dictionary from file."""
 
-        dictionary = {}
+        collection = Collection()
         if not Config.is_supported_file_format():
             cls._logger.debug('file format not supported for file %s', filename)
 
-            return dictionary
+            return collection
 
-        collection = Collection()
         cls._logger.debug('importing contents from file %s', filename)
         if os.path.isfile(filename):
             with open(filename, 'r') as infile:
@@ -258,8 +258,10 @@ class Migrate(object):
                         collection = Config.get_collection(source=infile.read())
                     elif Config.is_operation_file_json:
                         dictionary = json.load(infile)
+                        collection.load_dict(dictionary)
                     elif Config.is_operation_file_yaml:
                         dictionary = yaml.safe_load(infile)
+                        collection.load_dict(dictionary)
                     else:
                         cls._logger.debug('unknown import file format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:

@@ -31,9 +31,10 @@ from snippy.migrate.migrate import Migrate
 class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
     """Base class for content types."""
 
-    def __init__(self, storage, category):
+    def __init__(self, storage, run_cli, category):
         self._logger = Logger.get_logger(__name__)
         self._category = category
+        self._run_cli = run_cli
         self._storage = storage
         self.collection = Collection()
 
@@ -69,6 +70,8 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             digest=Config.operation_digest,
             data=Config.content_data
         )
+        if self._run_cli:
+            self.collection.dump_term(Config.use_ansi, Config.debug_logs, Config.search_filter)
 
     def update(self):
         """Update content."""
@@ -87,9 +90,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             self._logger.debug('updating stored %s with digest %.16s', self._category, digest)
             updates = Config.get_resource()
             if Config.merge:
-                print("merge %s" % updates)
                 stored.merge(updates)
-                print("stored %s" % stored)
             else:
                 stored.migrate(updates)
             self.collection = self._storage.update(digest, stored)
@@ -135,12 +136,12 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 resource = next(collection.resources())
                 filename = Config.get_operation_file(content_filename=resource.filename)
             elif not collection.size():
-                Config.validate_search_context(snippets, 'export')
+                Config.validate_search_context(collection, 'export')
             Migrate.dump(collection, filename)
         else:
             self._logger.debug('exporting all %s content %s', self._category, filename)
-            content = self._storage.export_content(self._category)
-            Migrate.dump(content, filename)
+            collection = self._storage.export_content(self._category)
+            Migrate.dump(collection, filename)
 
     def import_all(self):
         """Import content."""
@@ -150,12 +151,13 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             collection = self._storage.search(self._category, digest=content_digest)
             if collection.size() == 1:
                 resource = next(collection.resources())
-                self._logger.debug('importing %s with digest %.16s', self._category, resource.digest)
-                dictionary = Migrate.load(Config.get_operation_file())
-                contents = Content.load(dictionary)
-                snippets[0].migrate(contents[0])
-                self._storage.update(snippets[0], digest)
-            elif not snippets:
+                digest = resource.digest
+                self._logger.debug('importing %s with digest %.16s', resource.category, resource.digest)
+                collection = Migrate.load(Config.get_operation_file())
+                updates = next(collection.resources())
+                resource.migrate(updates)
+                self._storage.update(digest, resource)
+            elif not collection.size():
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find {} identified with digest {:.16}'.format(self._category, content_digest))
             else:
                 Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple {] contents with same digest {:.16}'.format(self._category, content_digest))
@@ -183,7 +185,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         elif Config.is_operation_import:
             self.import_all()
         else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for %s', self._category)
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for %s'.format(self._category))
 
         self._logger.debug('end %s content', self._category)
 

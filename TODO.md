@@ -1,8 +1,13 @@
 ## WORKING
+   
+   - Add collection.new_resource(category, timetstamp) # Removes the need to use Resource outside collectio
+   - Add dictionary['content'] --> dictionary['data']
+   
+   
    - [ ] Where timestamp to Resource? It does not make sense to put TS in collection. Only in resource because it creates it. For DB this is an issue (fixed?)
          - previously update used Content from search which had the time stamps. Now the resource is created which creates new TS usage. 
-        
-   - [ ] pytest -s tests/test_api_create_snippet.py -k test_api_create_snippet_012
+   - [ ] Update with editor, check that this is tested.
+
    - [ ] How cases that abuse getting first content from collection with index?
    - [ ] tests use _get_contents. change to collection and resource.
    - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
@@ -42,6 +47,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Updating cls.server = cls.source.server does not make sense after start. But this was propably fix to some other problem.
    - [ ] Fix _logger.info should be debug.
    - [ ] Fix insert_content and digest check is probably unnecessary. Remove it after content refactor.
    - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv

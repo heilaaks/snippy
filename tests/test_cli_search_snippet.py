@@ -48,6 +48,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         )
         cause = snippy.run(['snippy', 'search', '--sall', 'redis', '--no-ansi'])  ## workflow
         out, err = capsys.readouterr()
+        print(out)
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
@@ -208,7 +209,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_008(self, snippy, capsys):
         """Search snippet from all fields."""
 
@@ -352,7 +353,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_014(self, snippy, capsys):
         """Search snippet from tag field."""
 
@@ -375,7 +376,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_015(self, snippy, capsys):
         """Search snippet from tag field."""
 
@@ -417,7 +418,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert not err
 
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_017(self, snippy, capsys):
         """Search snippet from group field."""
 
@@ -439,7 +440,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_018(self, snippy, capsys):
         """Search snippet from group field."""
 
@@ -480,7 +481,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_020(self, snippy, capsys):
         """Search snippet with regexp."""
 
@@ -502,7 +503,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_021(self, snippy, capsys):
         """Search snippet with regexp."""
 
@@ -533,7 +534,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_022(self, snippy, capsys):
         """Search snippet with regexp."""
 
@@ -541,6 +542,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         output = 'OK\n'
         cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', 'not-found'])  ## workflow
         out, err = capsys.readouterr()
+        print(out)
         assert cause == Cause.ALL_OK
         assert out == output
         assert not err
@@ -741,7 +743,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_031(self, snippy, capsys):
         """Search snippet from all fields and limit the search within specific group."""
 
@@ -771,7 +773,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_032(self, snippy, capsys):
         """Search snippet from all fields and limit the search within specific group."""
 
@@ -806,7 +808,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_033(self, snippy, capsys):
         """Search snippet from tag fields and limit the search within specific group."""
 
@@ -836,7 +838,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_cli_search_snippet_034(self, snippy, capsys):
         """Search snippet from tag fields and limit the search within specific group."""
 

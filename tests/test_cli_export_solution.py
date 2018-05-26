@@ -185,7 +185,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             file_handle.write.assert_has_calls([mock.call(Solution.get_template(Solution.DEFAULTS[Solution.BEATS])),
                                                 mock.call(Const.NEWLINE)])
 
-    @pytest.mark.usefixtures('default-solutions', 'kafka', 'import-kafka-utc', 'export-time')
+    @pytest.mark.usefixtures('default-solutions', 'import-kafka', 'import-kafka-utc', 'export-time')
     def test_cli_export_solution_010(self, snippy):
         """Export defined solution with digest."""
 
@@ -359,7 +359,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('default-solutions', 'kafka', 'import-kafka-utc', 'export-time')
+    @pytest.mark.usefixtures('default-solutions', 'import-kafka', 'import-kafka-utc', 'export-time')
     def test_cli_export_solution_020(self, snippy):
         """Export defined solution with digest."""
 

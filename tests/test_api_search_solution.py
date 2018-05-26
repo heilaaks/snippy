@@ -73,7 +73,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_search_solution_002(self, server):
         """Search solution with GET.
 
@@ -189,7 +189,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_search_solution_005(self, server):
         """Search solution with GET.
 
@@ -230,7 +230,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_search_solution_006(self, server):
         """Search solution with GET.
 
@@ -606,7 +606,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_search_solution_paginate_001(self, server):
         """Search solution with GET.
 

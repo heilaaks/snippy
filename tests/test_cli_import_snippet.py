@@ -155,7 +155,7 @@ class TestCliImportSnippet(object):
             assert not Database.get_contents()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
-    @pytest.mark.usefixtures('remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'import-remove-utc')
     def test_cli_import_snippet_009(self, snippy, yaml_load, mocker):
         """Import defined snippet."""
 
@@ -172,7 +172,7 @@ class TestCliImportSnippet(object):
         yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'import-remove-utc')
     def test_cli_import_snippet_010(self, snippy, yaml_load, mocker):
         """Import defined snippet."""
 
@@ -190,7 +190,7 @@ class TestCliImportSnippet(object):
         yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'import-remove-utc')
     def test_cli_import_snippet_011(self, snippy, json_load, mocker):
         """Import defined snippet."""
 
@@ -208,7 +208,7 @@ class TestCliImportSnippet(object):
         json_load.assert_called_once_with('one-snippet.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
     def test_cli_import_snippet_012(self, snippy, mocker):
         """Import defined snippet."""
 
@@ -228,7 +228,7 @@ class TestCliImportSnippet(object):
             mock_file.assert_called_once_with('one-snippet.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
     def test_cli_import_snippet_013(self, snippy, mocker):
         """Import defined snippet."""
 
@@ -248,7 +248,7 @@ class TestCliImportSnippet(object):
             mock_file.assert_called_once_with('one-snippet.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('remove')
+    @pytest.mark.usefixtures('import-remove')
     def test_cli_import_snippet_014(self, snippy, mocker):
         """Import defined snippet."""
 

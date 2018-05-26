@@ -167,7 +167,8 @@ class Config(object):
     def get_resource(cls):
         """Get resource from configuration source."""
 
-        resource = cls._read_resource()
+        collection = cls.get_collection()
+        resource = next(collection.resources())
 
         return resource
 
@@ -177,7 +178,12 @@ class Config(object):
 
         collection = Collection()
         if source is not None:
-            collection = Parser.read_content(source, Config.utcnow())
+            collection = Parser.read_content(Config.utcnow(), source)
+        elif cls.editor:
+            timestamp = Config.utcnow()
+            resource = Resource(cls.content_category, timestamp)
+            template = resource.dump_text(Config.templates)
+            collection = Editor.read_content(timestamp, template)
         else:
             resource = cls._read_resource()
             collection.migrate(resource)
@@ -369,7 +375,7 @@ class Config(object):
                 if not collection.size():
                     Cause.push(Cause.HTTP_NOT_FOUND,
                                'cannot find content with message digest %s' % cls.operation_digest)
-                elif len(collection.size()) > 1:
+                elif collection.size() > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
                                'given digest %.16s matches (%d) more than once preventing the operation' %
                                (cls.operation_digest, collection.size()))

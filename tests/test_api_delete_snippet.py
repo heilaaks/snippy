@@ -33,7 +33,7 @@ pytest.importorskip('gunicorn')
 class TestApiDeleteSnippet(object):
     """Test DELETE snippets API."""
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_api_delete_snippet_001(self, server, mocker):
         """Delete snippet with digest.
 
@@ -56,7 +56,7 @@ class TestApiDeleteSnippet(object):
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('default-snippets', 'netcat', 'caller')
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'caller')
     def test_api_delete_snippet_002(self, server):
         """Try to delete snippet.
 

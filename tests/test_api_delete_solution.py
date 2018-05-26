@@ -33,7 +33,7 @@ pytest.importorskip('gunicorn')
 class TestApiDeleteSolution(object):
     """Test DELETE solutions API."""
 
-    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_delete_solution_001(self, server, mocker):
         """Delete solution with digest.
 
@@ -56,7 +56,7 @@ class TestApiDeleteSolution(object):
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('default-solutions', 'kafka', 'caller')
+    @pytest.mark.usefixtures('default-solutions', 'import-kafka', 'caller')
     def test_api_delete_solution_002(self, server):
         """Try to delete solution.
 

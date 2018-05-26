@@ -32,191 +32,216 @@ class TestCliDeleteSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_001(self, snippy, mocker):
-        """Delete snippet with digest."""
+        """Delete snippet with digest.
+        
+        Delete snippet with short 16 byte version of message digest.
+        """
 
-        ## Brief: Delete snippet with short 16 byte version of message digest.
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        cause = snippy.run(['snippy', 'delete', '-d', '53908d68425c61dc'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '-d', '53908d68425c61dc'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_002(self, snippy, mocker):
-        """Delete snippet with digest."""
+        """Delete snippet with digest.
+        
+        Delete snippet with very short version of digest that matches to one
+        snippet.
+        """
 
-        ## Brief: Delete snippet with very short version of digest that
-        #         matches to one snippet.
         content_read = {Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]}
-        cause = snippy.run(['snippy', 'delete', '-d', '54e41'])  ## workflow)
+        cause = snippy.run(['snippy', 'delete', '-d', '54e41'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_003(self, snippy, mocker):
-        """Delete snippet with digest."""
+        """Delete snippet with digest.
+        
+        Delete snippet with long 16 byte version of message digest.
+        """
 
-        ## Brief: Delete snippet with long 16 byte version of message digest.
         content_read = {Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]}
-        cause = snippy.run(['snippy', 'delete', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('remove')
+    @pytest.mark.usefixtures('import-remove')
     def test_cli_delete_snippet_004(self, snippy):
-        """Delete snippet with dgiest."""
+        """Delete snippet with dgiest.
+        
+        Delete snippet with empty message digest when there is only one
+        content stored. In this case the last content can be deleted with
+        empty digest.
+        """
 
-        ## Brief: Delete snippet with empty message digest when there is only
-        ##        one content stored. In this case the last content can be
-        ##        deleted with empty digest.
-        cause = snippy.run(['snippy', 'delete', '-d', ''])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '-d', ''])
         assert cause == Cause.ALL_OK
         assert not Database.get_snippets()
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_005(self, snippy, mocker):
-        """Delete snippet with dgiest."""
+        """Delete snippet with dgiest.
+        
+        Try to delete snippet with message digest that cannot be found.
+        """
 
-        ## Brief: Try to delete snippet with message digest that cannot be
-        ##        found.
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        cause = snippy.run(['snippy', 'delete', '-d', '123456789abcdef0'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_006(self, snippy, mocker):
-        """Delete snippet with dgiest."""
+        """Delete snippet with dgiest.
+        
+        Try to delete snippet with empty message digest. Nothing should be
+        deleted in this case because there is more than one content stored.
+        """
 
-        ## Brief: Try to delete snippet with empty message digest. Nothing
-        ##        should be deleted in this case because there is more than
-        ##        one content stored.
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        cause = snippy.run(['snippy', 'delete', '-d', ''])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest to delete content'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_007(self, snippy, mocker):
-        """Delete snippet with dgiest."""
+        """Delete snippet with dgiest.
+        
+        Try to delete snippet with short version of digest that does not match
+        to any existing message digest.
+        """
 
-        ## Brief: Try to delete snippet with short version of digest that
-        ##        does not match to any existing message digest.
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        cause = snippy.run(['snippy', 'delete', '-d', '123456'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '-d', '123456'])
         assert cause == 'NOK: cannot find content with message digest 123456'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_008(self, snippy, mocker):
-        """Delete snippet with data."""
+        """Delete snippet with data.
+        
+        Delete snippet based on content data.
+        """
 
-        ## Brief: Delete snippet based on content data.
         content_read = {Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]}
-        cause = snippy.run(['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_009(self, snippy, mocker):
-        """Delete snippet with data."""
+        """Delete snippet with data.
+        
+        Try to delete snippet with content data that does not exist. In this
+        case the content data is not truncated.
+        """
 
-        ## Brief: Try to delete snippet with content data that does not exist.
-        ##        In this case the content data is not truncated.
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        cause = snippy.run(['snippy', 'delete', '--content', 'not found content'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '--content', 'not found content'])
         assert cause == 'NOK: cannot find content with content data \'not found content\''
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_0010(self, snippy, mocker):
-        """Delete snippet with data."""
+        """Delete snippet with data.
+        
+        Try to delete snippet with content data that does not exist. In this
+        case the content data is truncated.
+        """
 
-        ## Brief: Try to delete snippet with content data that does not exist.
-        ##        In this case the content data is truncated.
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        cause = snippy.run(['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all)'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all)'])
         assert cause == 'NOK: cannot find content with content data \'docker rm --volumes $(docker p...\''
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_011(self, snippy, mocker):
-        """Delete snippet with data."""
+        """Delete snippet with data.
+        
+        Try to delete snippet with empty content data. Nothing should be
+        deleted in this case because there is more than one content left.
+        """
 
-        ## Brief: Try to delete snippet with empty content data. Nothing
-        ##        should be deleted in this case because there is more than
-        ##        one content left.
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        cause = snippy.run(['snippy', 'delete', '--content', ''])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '--content', ''])
         assert cause == 'NOK: cannot use empty content data to delete content'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_012(self, snippy, mocker):
-        """Delete snippet with search."""
+        """Delete snippet with search.
+        
+        Delete snippet based on search keyword that results one hit. In this
+        case the content is deleted.
+        """
 
-        ## Brief: Delete snippet based on search keyword that results one hit.
-        ##        In this case the content is deleted.
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        cause = snippy.run(['snippy', 'delete', '--sall', 'redis'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '--sall', 'redis'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_013(self, snippy, mocker):
-        """Delete snippet with search."""
+        """Delete snippet with search.
+        
+        Delete snippet based on search keyword that results more than one hit.
+        In this case the content must not be deleted.
+        """
 
-        ## Brief: Delete snippet based on search keyword that results more
-        ##        than one hit. In this case the content must not be deleted.
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])
         assert cause == 'NOK: given search keyword matches (2) more than once preventing the operation'
         assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_014(self, snippy, mocker, capsys):
-        """Delete snippet with data."""
+        """Delete snippet with data.
+        
+        Delete snippet based on search keyword that results more than one hit.
+        In this case the error text is read from stdout and it must contain
+        the error string.
+        """
 
-        ## Brief: Delete snippet based on search keyword that results more
-        ##        than one hit. In this case the error text is read from
-        ##        stdout and it must contain the error string.
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])  ## workflow
+        cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])
         out, _ = capsys.readouterr()
         assert cause == 'NOK: given search keyword matches (2) more than once preventing the operation'
         assert out == 'NOK: given search keyword matches (2) more than once preventing the operation\n'

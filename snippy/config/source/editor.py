@@ -24,6 +24,8 @@ import os
 from snippy.cause import Cause
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
+from snippy.content.collection import Collection
+from snippy.content.resource import Resource
 from snippy.logger import Logger
 
 
@@ -33,36 +35,29 @@ class Editor(object):
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def read_content(cls, content):
+    def read_content(cls, timestamp, template):
         """Read content from editor."""
 
         contents = []
-        template = content.convert_text()
         source = cls.call_editor(template)
+        
         category = Parser.content_category(source)
+        collection = Collection()
         if category == Const.SNIPPET or category == Const.SOLUTION:
-            content.item = [
-                Parser.content_data(category, source),
-                Parser.content_brief(category, source),
-                Parser.content_group(category, source),
-                Parser.content_tags(category, source),
-                Parser.content_links(category, source),
-                content.get_category(),
-                Parser.content_filename(category, source),
-                content.get_runalias(),
-                content.get_versions(),
-                content.get_created(),
-                content.get_updated(),
-                content.get_digest(),
-                content.get_metadata(),
-                content.get_key()
-            ]
+            resource = Resource(category, timestamp)
+            resource.data = Parser.content_data(category, source)
+            resource.brief = Parser.content_brief(category, source)
+            resource.group = Parser.content_group(category, source)
+            resource.tags = Parser.content_tags(category, source)
+            resource.links = Parser.content_links(category, source)
+            resource.category = category
+            resource.filename = Parser.content_filename(category, source)
+            resource.digest = resource.compute_digest()
+            collection.migrate(resource)
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
 
-        contents.append(content)
-
-        return contents
+        return collection
 
     @classmethod
     def call_editor(cls, template):

@@ -35,18 +35,20 @@ class TestUtSqlite3dbInsert(object):
     @mock.patch.object(Config, 'storage_file', Database.get_storage())
     @mock.patch.object(Config, 'storage_schema', Database.get_schema())
     def test_insert_with_all_parameters(self, mock_cause_push):
-        """Insert content into database."""
+        """Insert content into database.
+        
+        Insert content into database with all parameters.
+        """
 
         sqlite = Sqlite3Db()
         sqlite.init()
 
-        ## Brief: Insert content into database with all parameters.
-        content = Snippet.get_content(snippet=Snippet.REMOVE)
-        sqlite.insert_content([content])
+        collection = Snippet.get_collection(snippet=Snippet.REMOVE)
+        sqlite.insert(collection)
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((Database.select_all_snippets())[0], content)
-        assert len(Database.select_all_snippets()) == 1
+        assert collection == Database.select_all_snippets()
+        assert Database.select_all_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()
         Database.delete_storage()
@@ -60,13 +62,12 @@ class TestUtSqlite3dbInsert(object):
         sqlite = Sqlite3Db()
         sqlite.init()
 
-        ## Brief: Insert content with multiple links.
-        content = Snippet.get_content(snippet=Snippet.FORCED)
-        sqlite.insert_content([content])
+        collection = Snippet.get_collection(snippet=Snippet.FORCED)
+        sqlite.insert(collection)
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((Database.select_all_snippets())[0], content)
-        assert len(Database.select_all_snippets()) == 1
+        assert collection == Database.select_all_snippets()
+        assert Database.select_all_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()
         Database.delete_storage()

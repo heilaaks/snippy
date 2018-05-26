@@ -37,7 +37,7 @@ pytest.importorskip('gunicorn')
 class TestApiCreateSolution(object):
     """Test POST solutions collection API."""
 
-    @pytest.mark.usefixtures('beats-utc')
+    @pytest.mark.usefixtures('create-beats-utc')
     def test_api_create_solution_001(self, server, mocker):
         """Create one solution from API.
 
@@ -67,14 +67,13 @@ class TestApiCreateSolution(object):
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('beats-utc', 'kafka-utc')
+    @pytest.mark.usefixtures('create-beats-utc', 'create-kafka-utc')
     def test_api_create_solution_002(self, server, mocker):
         """Create multiple solutions from API.
 
@@ -118,7 +117,7 @@ class TestApiCreateSolution(object):
         assert len(Database.get_solutions()) == 2
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('beats', 'update-nginx-utc')
+    @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
     def test_api_create_solution_003(self, server, mocker):
         """Update solution with POST that maps to PUT.
 
@@ -161,20 +160,17 @@ class TestApiCreateSolution(object):
         result_json['data']['attributes']['updated'] = Content.NGINX_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
         server.run()
-        print(Database.print_contents())
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
-        print(Database.print_contents())
-        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('beats', 'update-beats-utc')
+    @pytest.mark.usefixtures('import-beats', 'update-beats-utc')
     def test_api_create_solution_004(self, server, mocker):
         """Update solution with POST that maps to PATCH.
 
@@ -231,7 +227,7 @@ class TestApiCreateSolution(object):
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('default-solutions', 'kafka')
+    @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_create_solution_005(self, server, mocker):
         """Update solution with POST that maps to DELETE.
 

@@ -333,7 +333,7 @@ class TestCliOptions(object):
             '   ! created  : 2017-10-14T19:56:31.000001+0000',
             '   ! updated  : 2017-10-14T19:56:31.000001+0000',
             '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
-            '   ! metadata : None',
+            '   ! metadata : ',
             '   ! key      : 1',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
@@ -350,7 +350,7 @@ class TestCliOptions(object):
             '   ! created  : 2017-10-14T19:56:31.000001+0000',
             '   ! updated  : 2017-10-14T19:56:31.000001+0000',
             '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
-            '   ! metadata : None',
+            '   ! metadata : ',
             '   ! key      : 2'
         )
         cause = snippy.run(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])  ## workflow
@@ -435,7 +435,7 @@ class TestCliOptions(object):
             '   ! created  : 2017-10-14T19:56:31.000001+0000',
             '   ! updated  : 2017-10-14T19:56:31.000001+0000',
             '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
-            '   ! metadata : None',
+            '   ! metadata : ',
             '   ! key      : 1',
             '',
             '1. Remove docker image with force @docker [53908d68425c61dc]',
@@ -452,7 +452,7 @@ class TestCliOptions(object):
             '   ! created  : 2017-10-14T19:56:31.000001+0000',
             '   ! updated  : 2017-10-14T19:56:31.000001+0000',
             '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
-            '   ! metadata : None',
+            '   ! metadata : ',
             '   ! key      : 2'
         )
         print(Database.get_snippets()[0])  # Part of the test.

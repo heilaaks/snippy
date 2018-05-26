@@ -37,29 +37,31 @@ class TestUtSqlite3dbDelete(object):
     @mock.patch.object(Config, 'storage_schema', Database.get_schema())
     @mock.patch.object(Config, 'search_all_kws', ('foo', 'engine', 'digitalocean'))
     def test_delete_snippet_short_digest(self, mock_cause_push):
-        """Delete snippet with short digest."""
+        """Delete snippet with short digest.
+        
+        Delete snippets with short version from digest.
+        """
 
         sqlite = Sqlite3Db()
         sqlite.init()
 
-        ## Brief: Delete snippets with short version from digest.
-        content1 = Snippet.get_content(snippet=Snippet.REMOVE)
-        content2 = Snippet.get_content(snippet=Snippet.FORCED)
+        collection1 = Snippet.get_collection(snippet=Snippet.REMOVE)
+        collection2 = Snippet.get_collection(snippet=Snippet.FORCED)
         keywords = ['foo', 'engine', 'digitalocean']
-        sqlite.insert_content([content1])
+        sqlite.insert(collection1)
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        sqlite.insert_content([content2])
+        sqlite.insert(collection2)
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[1], content2)
-        assert len(Database.select_all_snippets()) == 2
-        sqlite.delete_content('53908d68425c61dc')
+        collection1.migrate(collection2)
+        assert collection1 == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert Database.select_all_snippets().size() == 2
+        sqlite.delete('53908d68425c61dc')
         mock_cause_push.assert_called_once_with('204 No Content', 'content deleted successfully')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
-        assert len(Database.select_all_snippets()) == 1
+        assert collection2 == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert Database.select_all_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()
         Database.delete_storage()
@@ -69,29 +71,31 @@ class TestUtSqlite3dbDelete(object):
     @mock.patch.object(Config, 'storage_schema', Database.get_schema())
     @mock.patch.object(Config, 'search_all_kws', ('foo', 'engine', 'digitalocean'))
     def test_delete_snippet_long_digest(self, mock_cause_push):
-        """Delete snippet with long digest."""
+        """Delete snippet with long digest.
+        
+        Delete snippets with long version from digest.
+        """
 
         sqlite = Sqlite3Db()
         sqlite.init()
 
-        ## Brief: Delete snippets with long version from digest.
-        content1 = Snippet.get_content(snippet=Snippet.REMOVE)
-        content2 = Snippet.get_content(snippet=Snippet.FORCED)
+        collection1 = Snippet.get_collection(snippet=Snippet.REMOVE)
+        collection2 = Snippet.get_collection(snippet=Snippet.FORCED)
         keywords = ['foo', 'engine', 'digitalocean']
-        sqlite.insert_content([content1])
+        sqlite.insert(collection1)
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        sqlite.insert_content([content2])
+        sqlite.insert(collection2)
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[1], content2)
-        assert len(Database.select_all_snippets()) == 2
-        sqlite.delete_content('53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5')
+        collection1.migrate(collection2)
+        assert collection1 == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert Database.select_all_snippets().size() == 2
+        sqlite.delete('53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5')
         mock_cause_push.assert_called_once_with('204 No Content', 'content deleted successfully')
         mock_cause_push.reset_mock()
-        Snippet.compare_db((sqlite.select_content(Const.SNIPPET, keywords))[0], content1)
-        assert len(Database.select_all_snippets()) == 1
+        assert collection2 == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert Database.select_all_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()
         Database.delete_storage()

@@ -22,7 +22,7 @@
 import re
 import hashlib
 
-from snippy.config.constants import Constants as Const # TODO REMOVE
+from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
 
 
@@ -32,6 +32,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     # Resource categories.
     SNIPPET = 'snippet'
     SOLUTION = 'solution'
+
+    # Default group.
+    DEFAULT_GROUP = 'default'
 
     # Database column numbers.
     DATA = 0
@@ -50,9 +53,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     KEY = 13
 
     # Data delimiters
-    DELIMITER_DATA = '\n'
+    DELIMITER_DATA = Const.NEWLINE
     DELIMITER_TAGS = ','
-    DELIMITER_LINKS = '\n'
+    DELIMITER_LINKS = Const.NEWLINE
 
     SOLUTION_TEMPLATE = '844d0d37738ff2d20783f97690f771bb47d81ef3a4bda4ee9d022a17919fd271'
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
@@ -62,7 +65,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         self._logger = Logger.get_logger(__name__)
         self._data = ()
         self._brief = ''
-        self._group = ''
+        self.group = Resource.DEFAULT_GROUP
         self._tags = ()
         self._links = ()
         self._category = category
@@ -79,6 +82,32 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         """Format string from the class object."""
 
         return self.convert_term(index=1, ansi=True, debug=True)
+
+    def __eq__(self, resource):
+        """Compare resources if they are equal."""
+
+        if type(resource) is type(self):
+            # Resource key is defined by database and it is not compared.
+            return self.data == resource.data and \
+                   self.brief == resource.brief and \
+                   self.group == resource.group and \
+                   self.tags == resource.tags and \
+                   self.links == resource.links and \
+                   self.category == resource.category and \
+                   self.filename == resource.filename and \
+                   self.runalias == resource.runalias and \
+                   self.versions == resource.versions and \
+                   self.created == resource.created and \
+                   self.updated == resource.updated and \
+                   self.metadata == resource.metadata and \
+                   self.digest == resource.digest
+
+        return False
+
+    def __ne__(self, resource):
+        """Compare resources if they are not equl."""
+
+        return not self.item == resource.item
 
     @property
     def data(self):
@@ -266,7 +295,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
 
     def migrate(self, source):
         """Migrate source into Resource.
-        
+
         This always overrides fields that can be modified by user.
         """
 
@@ -389,6 +418,46 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         )
 
         return qargs
+
+    def load_dict(self, dictionary):
+        """Convert dictionary to resource."""
+
+        self.data = dictionary['data']
+        self.brief = dictionary['brief']
+        self.group = dictionary['group']
+        self.tags = dictionary['tags']
+        self.links = dictionary['links']
+        self.category = dictionary['category']
+        self.filename = dictionary['filename']
+        self.runalias = dictionary['runalias']
+        self.versions = dictionary['versions']
+        self.created = dictionary['created']
+        self.updated = dictionary['updated']
+        self.digest = dictionary['digest']
+        self.metadata = None
+        self.key = None
+
+        self.digest = self.compute_digest()
+
+    def dump_dict(self):
+        """Convert resource to dictionary."""
+
+        dictionary = {
+            'data': self.data,
+            'brief': self.brief,
+            'group': self.group,
+            'tags': self.tags,
+            'links': self.links,
+            'category': self.category,
+            'filename': self.filename,
+            'runalias': self.runalias,
+            'versions': self.versions,
+            'created': self.created,
+            'updated': self.updated,
+            'digest': self.digest,
+        }
+
+        return dictionary
 
     def dump_json(self, remove_fields):
         """Convert resource to json."""

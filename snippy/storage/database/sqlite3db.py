@@ -103,7 +103,7 @@ class Sqlite3Db(object):
             self._put_db(query, qargs)
         except sqlite3.IntegrityError:
             Cause.push(Cause.HTTP_CONFLICT,
-                       'content already exist with digest {:.16}'.format(self._get_db_digest(content)))
+                       'content already exist with digest {:.16}'.format(self._get_db_digest(resource)))
 
         return cause
 
@@ -124,7 +124,7 @@ class Sqlite3Db(object):
     def _select_data(self, data):
         """Select content based on data."""
 
-        rows = ()
+        collection = Collection()
         if self._connection:
             query = ('SELECT * FROM contents WHERE data=?')
             qargs = [Const.DELIMITER_DATA.join(map(str, data))]
@@ -133,6 +133,7 @@ class Sqlite3Db(object):
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
+                    collection.convert(rows)
             except sqlite3.Error as exception:
                 Cause.push(Cause.HTTP_500, 'selecting data from database failed with exception {}'.format(exception))
         else:
@@ -140,7 +141,7 @@ class Sqlite3Db(object):
 
         self._logger.debug('selected rows %s', rows)
 
-        return rows
+        return collection
 
     def select_all_content(self, category):
         """Select all content."""
@@ -189,7 +190,7 @@ class Sqlite3Db(object):
         
         return stored
 
-    def delete_content(self, digest):
+    def delete(self, digest):
         """Delete single content based on given digest."""
 
         if self._connection:
@@ -262,7 +263,7 @@ class Sqlite3Db(object):
 
             return cause
 
-        if self._select_data(resource.data):
+        if self._select_data(resource.data).size():
             cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest {:.16}'.format(self._get_db_digest(resource)))
             self._logger.debug(cause[1])
 
@@ -270,16 +271,16 @@ class Sqlite3Db(object):
 
         return cause
 
-    def _get_db_digest(self, content):
+    def _get_db_digest(self, resource):
         """Return digest of given content from database."""
 
         digest = Const.EMPTY
-        category = content.get_category(Const.STRING_CONTENT)
-        contents = self._select_data(content.get_data())
-        if len(contents) == 1:
-            digest = contents[0][Const.DIGEST]
+        category = resource.category
+        collection = self._select_data(resource.data)
+        if collection.size() == 1:
+            digest = next(collection.resources()).digest
         else:
-            self._logger.debug('unexpected number %d of %s received while searching', len(contents), category)
+            self._logger.debug('unexpected number %d of %s received while searching', collection.size(), category)
 
         return digest
 

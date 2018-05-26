@@ -74,12 +74,13 @@ CREATE_EXITED = (EXITED_CREATED,)*1
 CREATE_NETCAT = (NETCAT_CREATED,)*1
 CREATE_UMOUNT = (UMOUNT_CREATED,)*1
 UPDATE_REMOVE = (REMOVE_CREATED,)*2
+UPDATE_FORCED = (REMOVE_CREATED,)*2
 UPDATE_NETCAT = (NETCAT_CREATED,)*2
-IMPORT_REMOVE = (REMOVE_CREATED,)*2
-IMPORT_FORCED = (FORCED_CREATED,)*2
-IMPORT_EXITED = (EXITED_CREATED,)*2
-IMPORT_NETCAT = (NETCAT_CREATED,)*2
-IMPORT_UMOUNT = (UMOUNT_CREATED,)*2
+IMPORT_REMOVE = (REMOVE_CREATED,)*1
+IMPORT_FORCED = (FORCED_CREATED,)*1
+IMPORT_EXITED = (EXITED_CREATED,)*1
+IMPORT_NETCAT = (NETCAT_CREATED,)*1
+IMPORT_UMOUNT = (UMOUNT_CREATED,)*1
 EDITED_REMOVE = (REMOVE_CREATED,)*1
 
 # Solutions
@@ -196,21 +197,21 @@ def import_default_snippets(mocker, snippy):
     contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
 
-@pytest.fixture(scope='function', name='exited')
+@pytest.fixture(scope='function', name='import-exited')
 def import_exited_snippet(mocker, snippy):
     """Import 'exited' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.EXITED]]
     _import_content(snippy, mocker, contents, IMPORT_EXITED)
 
-@pytest.fixture(scope='function', name='remove')
+@pytest.fixture(scope='function', name='import-remove')
 def import_remove_snippet(mocker, snippy):
     """Import 'remove' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.REMOVE]]
     _import_content(snippy, mocker, contents, IMPORT_REMOVE)
 
-@pytest.fixture(scope='function', name='remove-utc')
+@pytest.fixture(scope='function', name='create-remove-utc')
 def create_remove_time_mock(mocker):
     """Mock timestamps to create 'remove' snippet."""
 
@@ -242,18 +243,24 @@ def edited_remove(mocker):
 
     return _editor(mocker, EDITED_REMOVE)
 
-@pytest.fixture(scope='function', name='forced')
+@pytest.fixture(scope='function', name='import-forced')
 def import_forced_snippet(mocker, snippy):
     """Import 'forced' snippet for testing purposes."""
 
     contents = [Snippet.DEFAULTS[Snippet.FORCED]]
     _import_content(snippy, mocker, contents, IMPORT_FORCED)
 
-@pytest.fixture(scope='function', name='forced-utc')
+@pytest.fixture(scope='function', name='create-forced-utc')
 def create_forced_time_mock(mocker):
     """Mock timestamps to create 'forced' snippet."""
 
     _add_utc_time(mocker, CREATE_FORCED)
+
+@pytest.fixture(scope='function', name='update-forced-utc')
+def update_forced_time_mock(mocker):
+    """Mock timestamps to update 'forced' snippet."""
+
+    _add_utc_time(mocker, UPDATE_FORCED)
 
 @pytest.fixture(scope='function', name='import-forced-utc')
 def import_forced_time_mock(mocker):
@@ -261,13 +268,13 @@ def import_forced_time_mock(mocker):
 
     _add_utc_time(mocker, IMPORT_FORCED)
 
-@pytest.fixture(scope='function', name='exited-utc')
+@pytest.fixture(scope='function', name='create-exited-utc')
 def create_exited_time_mock(mocker):
     """Mock timestamps to create 'exited' solution."""
 
     mocker.patch.object(Config, 'utcnow', side_effect=CREATE_EXITED)
 
-@pytest.fixture(scope='function', name='netcat')
+@pytest.fixture(scope='function', name='import-netcat')
 def import_netcat_snippet(mocker, snippy):
     """Import 'netcat' snippet for testing purposes."""
 
@@ -292,7 +299,7 @@ def import_netcat_time_mock(mocker):
 
     _add_utc_time(mocker, IMPORT_NETCAT)
 
-@pytest.fixture(scope='function', name='umount')
+@pytest.fixture(scope='function', name='import-umount')
 def import_umount_snippet(mocker, snippy):
     """Import 'umount' snippet for testing purposes."""
 
@@ -308,28 +315,28 @@ def import_default_solutions(mocker, snippy):
     contents = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SOLUTIONS)
 
-@pytest.fixture(scope='function', name='beats')
+@pytest.fixture(scope='function', name='import-beats')
 def import_beats_solution(mocker, snippy):
     """Import 'beats' solution for testing purposes."""
 
     contents = [Solution.DEFAULTS[Solution.BEATS]]
     _import_content(snippy, mocker, contents, IMPORT_BEATS)
 
-@pytest.fixture(scope='function', name='nginx')
+@pytest.fixture(scope='function', name='import-nginx')
 def import_nginx_solution(mocker, snippy):
     """Import 'nginx' solution for testing purposes."""
 
     contents = [Solution.DEFAULTS[Solution.NGINX]]
     _import_content(snippy, mocker, contents, IMPORT_NGINX)
 
-@pytest.fixture(scope='function', name='kafka')
+@pytest.fixture(scope='function', name='import-kafka')
 def import_kafka_solution(mocker, snippy):
     """Import 'kafka' solution for testing purposes."""
 
     contents = [Solution.DEFAULTS[Solution.KAFKA]]
     _import_content(snippy, mocker, contents, IMPORT_KAFKA)
 
-@pytest.fixture(scope='function', name='beats-utc')
+@pytest.fixture(scope='function', name='create-beats-utc')
 def create_beats_time_mock(mocker):
     """Mock timestamps to create 'beats' solution."""
 
@@ -380,7 +387,7 @@ def import_nginx_time_mock(mocker):
 
     _add_utc_time(mocker, IMPORT_NGINX)
 
-@pytest.fixture(scope='function', name='kafka-utc')
+@pytest.fixture(scope='function', name='create-kafka-utc')
 def create_kafka_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
 

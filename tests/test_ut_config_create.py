@@ -38,8 +38,19 @@ class TestUtConfigCreate(unittest.TestCase):
 
         mock_utcnow.return_value = '2018-02-17 13:23:43'
 
-        snippet = [(), '', Const.DEFAULT_GROUP, (), (), Const.SNIPPET, '', '', '', '2018-02-17 13:23:43',
-                   '2018-02-17 13:23:43', 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc', None, None]
+        resource = {
+            'data': (),
+            'brief': '',
+            'group': 'default',
+            'tags': (),
+            'links': (),
+            'category': 'snippet',
+            'filename': '',
+            'runalias': '',
+            'versions': '',
+            'created': '2018-02-17 13:23:43',
+            'updated': '2018-02-17 13:23:43',
+            'digest': 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'}
         Config.init(None)
         Config.load(Cli(['snippy', 'create']))
         assert isinstance(Config.content_category, str)
@@ -55,7 +66,8 @@ class TestUtConfigCreate(unittest.TestCase):
         assert isinstance(Config.search_grp_kws, tuple)
         assert isinstance(Config.search_filter, str)
         assert isinstance(Config.get_operation_file(), str)
-        assert Config.get_contents(Content(category=Const.SNIPPET, timestamp=Config.utcnow()))[0].item == snippet
+        assert Config.get_resource().dump_dict(), resource
+        assert next(Config.get_collection().resources()).dump_dict(), resource
         assert Config.is_operation_create
         assert not Config.is_operation_search
         assert not Config.is_operation_update

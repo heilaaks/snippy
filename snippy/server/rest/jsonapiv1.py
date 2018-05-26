@@ -47,7 +47,7 @@ class JsonApiV1(object):
         The contents is a list but there can be only one resources.
         """
 
-        json = {
+        data = {
             'data': {},
             'links': {}
         }
@@ -60,8 +60,8 @@ class JsonApiV1(object):
             uri = urljoin(uri, resource.digest[:16])
             if field:
                 uri = urljoin(uri + '/', field)
-            json['links'] = {'self': uri}
-            json['data'] = {
+            data['links'] = {'self': uri}
+            data['data'] = {
                 'type': resource.category,
                 'id': resource.digest,
                 'attributes': resource.dump_json(Config.filter_fields)
@@ -70,36 +70,36 @@ class JsonApiV1(object):
             break
 
         if pagination:
-            json['meta'] = {}
-            json['meta']['count'] = 1
-            json['meta']['limit'] = Config.search_limit
-            json['meta']['offset'] = Config.search_offset
-            json['meta']['total'] = collection.total
+            data['meta'] = {}
+            data['meta']['count'] = 1
+            data['meta']['limit'] = Config.search_limit
+            data['meta']['offset'] = Config.search_offset
+            data['meta']['total'] = collection.total
 
-        if not json['data']:
-            json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}')
+        if not data['data']:
+            data = json.loads('{"links": {"self": "' + uri + '"}, "data": null}')
 
-        return cls.dumps(json)
+        return cls.dumps(data)
 
     @classmethod
     def collection(cls, collection, request, pagination=False):  # pylint: disable=too-many-locals,too-many-branches
         """Format JSON API v1.0 collection from content list."""
 
-        json = {
+        data = {
             'data': []
         }
         for resource in collection.resources():
-            json['data'].append({
-                 'type': resource.category,
-                 'id': resource.digest,
-                 'attributes': resource.dump_json(Config.filter_fields)
+            data['data'].append({
+                'type': resource.category,
+                'id': resource.digest,
+                'attributes': resource.dump_json(Config.filter_fields)
             })
         if pagination:
-            json['meta'] = {}
-            json['meta']['count'] = collection.size()
-            json['meta']['limit'] = Config.search_limit
-            json['meta']['offset'] = Config.search_offset
-            json['meta']['total'] = collection.total
+            data['meta'] = {}
+            data['meta']['count'] = collection.size()
+            data['meta']['limit'] = Config.search_limit
+            data['meta']['offset'] = Config.search_offset
+            data['meta']['total'] = collection.total
 
             # Rules
             #
@@ -110,7 +110,7 @@ class JsonApiV1(object):
             # 5. Add links only when offset parameter is defined. Pagination makes sense only with offset.
             # 6. In case search limit is zero, only meta is requested and no links are needed.
             if request.get_param('offset', default=None) and Config.search_limit:
-                json['links'] = {}
+                data['links'] = {}
                 self_offset = Config.search_offset
 
                 # Sort query parameter in link URL to have deterministic URL
@@ -131,7 +131,7 @@ class JsonApiV1(object):
                         # prev: o-l >t           ==> o=t-l  (over) (N/P)
                         prev_offset = Config.search_offset-Config.search_limit if Config.search_offset-Config.search_limit > 0 else 0
                         prev_link = re.sub(r'offset=\d+', 'offset='+str(prev_offset), url)
-                        json['links']['prev'] = prev_link
+                        data['links']['prev'] = prev_link
 
                     if Config.search_offset + Config.search_limit < collection.total:
                         # next: o+l<t            ==> o=o+l  (less)
@@ -140,7 +140,7 @@ class JsonApiV1(object):
                         # next: o+l>t            ==> N/A    (over)
                         next_offset = Config.search_offset+Config.search_limit
                         next_link = re.sub(r'offset=\d+', 'offset='+str(next_offset), url)
-                        json['links']['next'] = next_link
+                        data['links']['next'] = next_link
                     # last: o+l<=t-l             ==> o=ceil(t/l)xl-l (less)
                     # last: o+l<t-l && o+l<t     ==> o=o+l           (last)
                     # last: o+l=t                ==> o=o             (even)
@@ -160,11 +160,11 @@ class JsonApiV1(object):
                 self_link = re.sub(r'offset=\d+', 'offset='+str(self_offset), url)
                 first_link = re.sub(r'offset=\d+', 'offset='+str(first_offset), url)
                 last_link = re.sub(r'offset=\d+', 'offset='+str(last_offset), url)
-                json['links']['self'] = self_link
-                json['links']['first'] = first_link
-                json['links']['last'] = last_link
+                data['links']['self'] = self_link
+                data['links']['first'] = first_link
+                data['links']['last'] = last_link
 
-        return cls.dumps(json)
+        return cls.dumps(data)
 
     @classmethod
     def error(cls, causes):

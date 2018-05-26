@@ -26,15 +26,8 @@ from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
 
 
-class Resource(object):  # pylint: disable=too-many-public-methods
+class Resource(object):  # pylint: disable=too-many-public-methods,too-many-instance-attributes
     """Persiste one resource."""
-
-    # Resource categories.
-    SNIPPET = 'snippet'
-    SOLUTION = 'solution'
-
-    # Default group.
-    DEFAULT_GROUP = 'default'
 
     # Database column numbers.
     DATA = 0
@@ -52,11 +45,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     METADATA = 12
     KEY = 13
 
-    # Data delimiters
-    DELIMITER_DATA = Const.NEWLINE
-    DELIMITER_TAGS = ','
-    DELIMITER_LINKS = Const.NEWLINE
-
     SOLUTION_TEMPLATE = '844d0d37738ff2d20783f97690f771bb47d81ef3a4bda4ee9d022a17919fd271'
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
     TEMPLATES = (SNIPPET_TEMPLATE, SOLUTION_TEMPLATE)
@@ -65,7 +53,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         self._logger = Logger.get_logger(__name__)
         self._data = ()
         self._brief = ''
-        self.group = Resource.DEFAULT_GROUP
+        self._group = Const.DEFAULT_GROUP
         self._tags = ()
         self._links = ()
         self._category = category
@@ -74,8 +62,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         self._versions = ''
         self._created = timestamp
         self._updated = timestamp
-        self.metadata = ''
-        self.key = ''
+        self._metadata = ''
+        self._key = ''
         self._digest = self.compute_digest()
 
     def __str__(self):
@@ -105,9 +93,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         return False
 
     def __ne__(self, resource):
-        """Compare resources if they are not equl."""
+        """Compare resources if they are not equal."""
 
-        return not self.item == resource.item
+        return not self == resource
 
     @property
     def data(self):
@@ -280,11 +268,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def compute_digest(self):
         """Compute digest from the content."""
 
-        resource_str = Resource.DELIMITER_DATA.join(map(str, self.data))
+        resource_str = Const.DELIMITER_DATA.join(map(str, self.data))
         resource_str = resource_str + self.brief
         resource_str = resource_str + self.group
-        resource_str = resource_str + Resource.DELIMITER_TAGS.join(map(str, sorted(self.tags)))
-        resource_str = resource_str + Resource.DELIMITER_LINKS.join(map(str, sorted(self.links)))
+        resource_str = resource_str + Const.DELIMITER_TAGS.join(map(str, sorted(self.tags)))
+        resource_str = resource_str + Const.DELIMITER_LINKS.join(map(str, sorted(self.links)))
         resource_str = resource_str + self.category
         resource_str = resource_str + self.filename
         resource_str = resource_str + self.runalias
@@ -296,35 +284,19 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def migrate(self, source):
         """Migrate source into Resource.
 
-        This always overrides fields that can be modified by user.
+        This always overrides fields that can be modified by user. Only the
+        fields can be changed and modified.
         """
 
         self._logger.debug('migrate to resouce: %.16s', self.digest)
-        if isinstance(source, (list,tuple)):
-            self.data = tuple(source[0].split(Resource.DELIMITER_DATA))
-            self.brief = source[1]
-            self.group = source[2]
-            self.tags = tuple(source[3].split(Resource.DELIMITER_TAGS) if source[3] else [])
-            self.links = tuple(source[4].split(Resource.DELIMITER_LINKS) if source[4] else [])
-            self.category = source[5]
-            self.filename = source[6]
-            self.runalias = source[7]
-            self.versions = source[8]
-            self.created = source[9]
-            self.updated = source[10]
-            self.digest = source[11]
-            self.metadata = source[12]
-            self.key = source[13]
-        elif isinstance(source, Resource):
-            # Migrate only values that user can change.
-            self.data = source.data
-            self.brief = source.brief
-            self.group = source.group
-            self.tags = source.tags
-            self.links = source.links
-            self.filename = source.filename
-            self.runalias = source.runalias
-            self.versions = source.versions
+        self.data = source.data
+        self.brief = source.brief
+        self.group = source.group
+        self.tags = source.tags
+        self.links = source.links
+        self.filename = source.filename
+        self.runalias = source.runalias
+        self.versions = source.versions
 
         self.digest = self.compute_digest()
 
@@ -332,7 +304,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         """Merge two resource.
 
         This overrides original resource fields only if the merged source
-        fields exists.
+        fields exists. Only the fields can be changed and modified.
         """
 
         self._logger.debug('merge to resouce: %.16s', self.digest)
@@ -341,7 +313,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
                 self.data = source.data
             if source.brief:
                 self.brief = source.brief
-            if source.group and source.group != Resource.DEFAULT_GROUP:
+            if source.group and source.group != Const.DEFAULT_GROUP:
                 self.group = source.group
             if source.tags:
                 self.tags = source.tags
@@ -359,11 +331,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def convert(self, row):
         """Convert database row into resource."""
 
-        self.data = tuple(row[Resource.DATA].split(Resource.DELIMITER_DATA))
+        self.data = tuple(row[Resource.DATA].split(Const.DELIMITER_DATA))
         self.brief = row[Resource.BRIEF]
         self.group = row[Resource.GROUP]
-        self.tags = tuple(row[Resource.TAGS].split(Resource.DELIMITER_TAGS) if row[Resource.TAGS] else [])
-        self.links = tuple(row[Resource.LINKS].split(Resource.DELIMITER_LINKS) if row[Resource.LINKS] else [])
+        self.tags = tuple(row[Resource.TAGS].split(Const.DELIMITER_TAGS) if row[Resource.TAGS] else [])
+        self.links = tuple(row[Resource.LINKS].split(Const.DELIMITER_LINKS) if row[Resource.LINKS] else [])
         self.category = row[Resource.CATEGORY]
         self.filename = row[Resource.FILENAME]
         self.runalias = row[Resource.RUNALIAS]
@@ -387,17 +359,17 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def is_snippet(self):
         """Test if resource is snippet."""
 
-        return True if self.category == Resource.SNIPPET else False
+        return True if self.category == Const.SNIPPET else False
 
     def dump_qargs(self):
         """Convert resource for sqlite qargs."""
 
         qargs = (
-            Resource.DELIMITER_DATA.join(map(str, self.data)),
+            Const.DELIMITER_DATA.join(map(str, self.data)),
             self.brief,
             self.group,
-            Resource.DELIMITER_TAGS.join(map(str, sorted(self.tags))),
-            Resource.DELIMITER_LINKS.join(map(str, sorted(self.links))),
+            Const.DELIMITER_TAGS.join(map(str, sorted(self.tags))),
+            Const.DELIMITER_LINKS.join(map(str, sorted(self.links))),
             self.category,
             self.filename,
             self.runalias,
@@ -489,7 +461,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def _add_data(self, template):
         """Add resource data to text template."""
 
-        data = Resource.DELIMITER_DATA.join(map(str, self.data))
+        data = Const.DELIMITER_DATA.join(map(str, self.data))
         if data:
             if self.is_snippet():
                 template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
@@ -519,7 +491,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def _add_tags(self, template):
         """Add resource tags to text template."""
 
-        tags = Resource.DELIMITER_TAGS.join(map(str, sorted(self.tags)))
+        tags = Const.DELIMITER_TAGS.join(map(str, sorted(self.tags)))
         template = template.replace('<SNIPPY_TAGS>', tags)
 
         return template
@@ -527,7 +499,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods
     def _add_links(self, template):
         """Add resource links to text template."""
 
-        links = Resource.DELIMITER_LINKS.join(map(str, sorted(self.links)))
+        links = Const.DELIMITER_LINKS.join(map(str, sorted(self.links)))
         links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
         template = template.replace('<SNIPPY_LINKS>', links)
 
@@ -572,8 +544,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         data = Const.EMPTY
         links = Const.EMPTY
         text = text + Resource._terminal_header(ansi) % (idx, self.brief,
-                                                        self.group,
-                                                        self.digest)
+                                                         self.group,
+                                                         self.digest)
         text = text + Const.EMPTY.join([Resource._terminal_snippet(ansi) % (data, line)
                                         for line in self.data])
         text = text + Const.NEWLINE
@@ -591,8 +563,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         data = Const.EMPTY
         links = Const.EMPTY
         text = text + Resource._terminal_header(ansi) % (idx, self.brief,
-                                                        self.group,
-                                                        self.digest)
+                                                         self.group,
+                                                         self.digest)
         text = text + Const.NEWLINE
         text = Resource._terminal_tags(ansi) % (text, Const.DELIMITER_TAGS.join(self.tags))
         text = text + Const.EMPTY.join([Resource._terminal_links(ansi) % (links, link)
@@ -689,39 +661,3 @@ class Resource(object):  # pylint: disable=too-many-public-methods
         """Format content key."""
 
         return '   \x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m      : %s\n' if ansi else '   ! key      : %s\n'
-
-    @staticmethod
-    def get_dictionary_list(contents):
-        """Convert content to dictionary format."""
-
-        dictionary_list = []
-        for entry in contents:
-            dictionary_list.append(Migrate._get_dict_entry(entry))
-
-        return dictionary_list
-
-    @staticmethod
-    def _get_dict_entry(content):
-        """Convert content into dictionary."""
-
-        dictionary = {'data': content.get_data(),
-                      'brief': content.get_brief(),
-                      'group': content.get_group(),
-                      'tags': content.get_tags(),
-                      'links': content.get_links(),
-                      'category': content.get_category(),
-                      'filename': content.get_filename(),
-                      'runalias': content.get_runalias(),
-                      'versions': content.get_versions(),
-                      'created': content.get_created(),
-                      'updated': content.get_updated(),
-                      'digest': content.get_digest()}
-
-        # Digest is always needed when JSON REST API response is constructed.
-        # Because of this, the digest is not removed in here but just before
-        # constructing the JSON API response.
-        for field in Config.filter_fields:
-            if field != 'digest':
-                dictionary.pop(field, None)
-
-        return dictionary

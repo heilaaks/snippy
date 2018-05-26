@@ -21,7 +21,6 @@
 
 from snippy.cause import Cause
 from snippy.config.config import Config
-from snippy.config.constants import Constants as Const
 from snippy.content.collection import Collection
 from snippy.logger import Logger
 from snippy.migrate.migrate import Migrate
@@ -35,7 +34,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         self._category = category
         self._run_cli = run_cli
         self._storage = storage
-        self.collection = Collection()
+        self._collection = Collection()
 
     @property
     def collection(self):
@@ -159,7 +158,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             elif not collection.size():
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find {} identified with digest {:.16}'.format(self._category, content_digest))
             else:
-                Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple {] contents with same digest {:.16}'.format(self._category, content_digest))
+                Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple {} with same digest {:.16}'.format(self._category, content_digest))
         else:
             self._logger.debug('importing content %s', Config.get_operation_file())
             collection = Migrate.load(Config.get_operation_file())
@@ -184,9 +183,8 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         elif Config.is_operation_import:
             self.import_all()
         else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for %s'.format(self._category))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for {}'.format(self._category))
 
         self._logger.debug('end %s content', self._category)
 
         return self.collection
-

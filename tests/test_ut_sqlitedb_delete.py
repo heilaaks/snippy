@@ -38,7 +38,7 @@ class TestUtSqlite3dbDelete(object):
     @mock.patch.object(Config, 'search_all_kws', ('foo', 'engine', 'digitalocean'))
     def test_delete_snippet_short_digest(self, mock_cause_push):
         """Delete snippet with short digest.
-        
+
         Delete snippets with short version from digest.
         """
 
@@ -56,12 +56,12 @@ class TestUtSqlite3dbDelete(object):
         mock_cause_push.reset_mock()
         collection1.migrate(collection2)
         assert collection1 == sqlite.select(Const.SNIPPET, sall=keywords)
-        assert Database.select_all_snippets().size() == 2
+        assert Database.get_snippets().size() == 2
         sqlite.delete('53908d68425c61dc')
         mock_cause_push.assert_called_once_with('204 No Content', 'content deleted successfully')
         mock_cause_push.reset_mock()
         assert collection2 == sqlite.select(Const.SNIPPET, sall=keywords)
-        assert Database.select_all_snippets().size() == 1
+        assert Database.get_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()
         Database.delete_storage()
@@ -72,7 +72,7 @@ class TestUtSqlite3dbDelete(object):
     @mock.patch.object(Config, 'search_all_kws', ('foo', 'engine', 'digitalocean'))
     def test_delete_snippet_long_digest(self, mock_cause_push):
         """Delete snippet with long digest.
-        
+
         Delete snippets with long version from digest.
         """
 
@@ -90,12 +90,12 @@ class TestUtSqlite3dbDelete(object):
         mock_cause_push.reset_mock()
         collection1.migrate(collection2)
         assert collection1 == sqlite.select(Const.SNIPPET, sall=keywords)
-        assert Database.select_all_snippets().size() == 2
+        assert Database.get_snippets().size() == 2
         sqlite.delete('53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5')
         mock_cause_push.assert_called_once_with('204 No Content', 'content deleted successfully')
         mock_cause_push.reset_mock()
         assert collection2 == sqlite.select(Const.SNIPPET, sall=keywords)
-        assert Database.select_all_snippets().size() == 1
+        assert Database.get_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()
         Database.delete_storage()

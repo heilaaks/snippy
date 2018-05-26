@@ -19,8 +19,6 @@
 
 """snippet_helper: Helper methods for snippet testing."""
 
-import six
-
 from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
 from snippy.config.source.parser import Parser
@@ -129,18 +127,14 @@ class SnippetHelper(object):
                 '')
 
     @staticmethod
-    def get_collection(source=None, snippet=None):
+    def get_collection(snippet=None):
         """Transform text template to content."""
-    
-        if source:
-            collection = Parser.read_content(Config.utcnow(), source)
-            content = contents[0]
-        else:
-            collection = Collection()
-            resource = collection.get_resource(Const.SNIPPET, Config.utcnow())
-            resource.load_dict(SnippetHelper.DEFAULTS[snippet])
-            collection.migrate(resource)
-    
+
+        collection = Collection()
+        resource = collection.get_resource(Const.SNIPPET, Config.utcnow())
+        resource.load_dict(SnippetHelper.DEFAULTS[snippet])
+        collection.migrate(resource)
+
         return collection
 
     @staticmethod
@@ -168,32 +162,3 @@ class SnippetHelper(object):
         collection = Parser.read_content(Config.utcnow(), source)
 
         return collection
-
-    @staticmethod
-    def compare_db(snippet, content):
-        """Compare snippets in database format to content format."""
-
-        # Test that all fields excluding id and onwards are equal.
-        assert snippet[Const.DATA] == content.get_data(Const.STRING_CONTENT)
-        assert snippet[Const.BRIEF] == content.get_brief(Const.STRING_CONTENT)
-        assert snippet[Const.GROUP] == content.get_group(Const.STRING_CONTENT)
-        assert snippet[Const.TAGS] == content.get_tags(Const.STRING_CONTENT)
-        assert snippet[Const.LINKS] == content.get_links(Const.STRING_CONTENT)
-        assert snippet[Const.CATEGORY] == content.get_category(Const.STRING_CONTENT)
-        assert snippet[Const.FILENAME] == content.get_filename(Const.STRING_CONTENT)
-        assert snippet[Const.RUNALIAS] == content.get_runalias(Const.STRING_CONTENT)
-        assert snippet[Const.VERSIONS] == content.get_versions(Const.STRING_CONTENT)
-        assert snippet[Const.DIGEST] == content.get_digest(Const.STRING_CONTENT)
-        assert snippet[Const.METADATA] == content.get_metadata(Const.STRING_CONTENT)
-
-        # Test that tags and links are lists and rest of the fields strings.
-        assert isinstance(snippet[Const.DATA], six.string_types)
-        assert isinstance(snippet[Const.BRIEF], six.string_types)
-        assert isinstance(snippet[Const.GROUP], six.string_types)
-        assert isinstance(snippet[Const.TAGS], six.string_types)
-        assert isinstance(snippet[Const.LINKS], six.string_types)
-        assert isinstance(snippet[Const.CATEGORY], six.string_types)
-        assert isinstance(snippet[Const.FILENAME], six.string_types)
-        assert isinstance(snippet[Const.RUNALIAS], six.string_types)
-        assert isinstance(snippet[Const.VERSIONS], six.string_types)
-        assert isinstance(snippet[Const.DIGEST], six.string_types)

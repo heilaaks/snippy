@@ -84,7 +84,7 @@ class Sqlite3Db(object):
         stored = Collection()
         for resource in collection.resources():
             stored.migrate(self.select(resource.category, digest=resource.digest))
-        
+
         return stored
 
     def _insert(self, resource):
@@ -187,7 +187,7 @@ class Sqlite3Db(object):
 
         stored = Collection()
         stored.migrate(self.select(resource.category, digest=resource.digest))
-        
+
         return stored
 
     def delete(self, digest):

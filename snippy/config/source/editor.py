@@ -37,9 +37,7 @@ class Editor(object):
     def read_content(cls, timestamp, template):
         """Read content from editor."""
 
-        contents = []
         source = cls.call_editor(template)
-        
         category = Parser.content_category(source)
         collection = Collection()
         if category == Const.SNIPPET or category == Const.SOLUTION:

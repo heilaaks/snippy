@@ -20,32 +20,19 @@
 """sqlite3db_helper: Helper methods for Sqlite3 database testing."""
 
 from __future__ import print_function
-import sqlite3
+
 import os.path
+import sqlite3
 from contextlib import closing
+
 import pkg_resources
+
 from snippy.config.constants import Constants as Const
 from snippy.content.collection import Collection
-from snippy.storage.storage import Storage
 
 
 class Sqlite3DbHelper(object):
     """Helper methods for Sqlite3 database testing."""
-
-    @staticmethod
-    def get_collection():
-        """Return database as content tuple."""
-
-        rows = ()
-        collection = Collection()
-        connection = Sqlite3DbHelper._connect()
-        with closing(connection.cursor()) as cursor:
-            cursor.execute('SELECT * FROM contents')
-            rows = cursor.fetchall()
-        connection.close()
-        collection.convert(rows)
-
-        return collection
 
     @staticmethod
     def print_contents():
@@ -59,58 +46,33 @@ class Sqlite3DbHelper(object):
             rows = cursor.fetchall()
         connection.close()
         collection.convert(rows)
-        print(collection)
 
     @staticmethod
-    def get_collectiom(digest):
-        """Return content based on digest."""
-
-        rows = ()
-        try:
-            query = ('SELECT * FROM contents WHERE digest LIKE ?')
-            qargs = [digest+'%']
-            connection = Sqlite3DbHelper._connect()
-            with closing(connection.cursor()) as cursor:
-                cursor.execute(query, qargs)
-                rows = cursor.fetchall()
-            connection.close()
-        except sqlite3.Error as exception:
-            print(exception)
-
-        return Storage()._get_contents(rows)  # pylint: disable=protected-access
-
-    @staticmethod
-    def get_category(category):
-        """Return content based on category."""
+    def get_collection():
+        """Return database rows as collection."""
 
         rows = ()
         collection = Collection()
-        try:
-            query = ('SELECT * FROM contents WHERE category=?')
-            qargs = [category]
-            connection = Sqlite3DbHelper._connect()
-            with closing(connection.cursor()) as cursor:
-                cursor.execute(query, qargs)
-                rows = cursor.fetchall()
-            connection.close()
-        except sqlite3.Error as exception:
-            print(exception)
-
+        connection = Sqlite3DbHelper._connect()
+        with closing(connection.cursor()) as cursor:
+            cursor.execute('SELECT * FROM contents')
+            rows = cursor.fetchall()
+        connection.close()
         collection.convert(rows)
 
         return collection
 
     @staticmethod
     def get_snippets():
-        """Return snippets from database as content tuple."""
+        """Return snippets from database as collection."""
 
-        return Sqlite3DbHelper.get_category(Const.SNIPPET)
+        return Sqlite3DbHelper._select(Const.SNIPPET)
 
     @staticmethod
     def get_solutions():
-        """Return solutions from database as content tuple."""
+        """Return solutions from database as collection."""
 
-        return Sqlite3DbHelper.get_category(Const.SOLUTION)
+        return Sqlite3DbHelper._select(Const.SOLUTION)
 
     @staticmethod
     def delete_all_contents():
@@ -161,21 +123,6 @@ class Sqlite3DbHelper(object):
                     pass
 
     @staticmethod
-    def select_all_snippets():
-        """Select all rows from database. DEPRECATED."""
-
-        rows = ()
-        collection = Collection()
-        connection = Sqlite3DbHelper._connect()
-        with closing(connection.cursor()) as cursor:
-            cursor.execute('SELECT * FROM contents')
-            rows = cursor.fetchall()
-        connection.close()
-        collection.convert(rows)
-
-        return collection
-
-    @staticmethod
     def _connect():
         """Connect to database."""
 
@@ -185,3 +132,24 @@ class Sqlite3DbHelper(object):
             connection = sqlite3.connect(Sqlite3DbHelper.get_storage(), check_same_thread=False)
 
         return connection
+
+    @staticmethod
+    def _select(category):
+        """Return content based on category."""
+
+        rows = ()
+        collection = Collection()
+        try:
+            query = ('SELECT * FROM contents WHERE category=?')
+            qargs = [category]
+            connection = Sqlite3DbHelper._connect()
+            with closing(connection.cursor()) as cursor:
+                cursor.execute(query, qargs)
+                rows = cursor.fetchall()
+            connection.close()
+        except sqlite3.Error as exception:
+            print(exception)
+
+        collection.convert(rows)
+
+        return collection

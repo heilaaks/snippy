@@ -32,7 +32,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_001(self, snippy, capsys):
         """Search snippet from all fields.
-        
+
         Search snippets from all fields. The match is made from one
         snippet content data.
         """
@@ -57,7 +57,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_search_snippet_002(self, snippy, capsys):
         """Search snippet from all fields.
-        
+
         Search snippets from all fields. The match is made from one snippet
         brief description.
         """

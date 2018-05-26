@@ -19,7 +19,6 @@
 
 """config: Global configuration."""
 
-import copy
 import datetime
 import io
 import os.path
@@ -39,6 +38,12 @@ from snippy.logger import Logger
 
 class Config(object):
     """Global configuration object."""
+
+    # Content formats
+    CONTENT_FORMAT_NONE = 'none'
+    CONTENT_FORMAT_YAML = 'yaml'
+    CONTENT_FORMAT_JSON = 'json'
+    CONTENT_FORMAT_TEXT = 'text'
 
     _logger = Logger.get_logger(__name__)
 
@@ -136,9 +141,9 @@ class Config(object):
         cls.is_category_all = True if cls.content_category == Const.ALL else False
         cls.operation_filename = cls._operation_filename()
         cls.operation_filetype = cls._operation_filetype()
-        cls.is_operation_file_json = True if cls.operation_filetype == Const.CONTENT_TYPE_JSON else False
-        cls.is_operation_file_text = True if cls.operation_filetype == Const.CONTENT_TYPE_TEXT else False
-        cls.is_operation_file_yaml = True if cls.operation_filetype == Const.CONTENT_TYPE_YAML else False
+        cls.is_operation_file_json = True if cls.operation_filetype == Config.CONTENT_FORMAT_JSON else False
+        cls.is_operation_file_text = True if cls.operation_filetype == Config.CONTENT_FORMAT_TEXT else False
+        cls.is_operation_file_yaml = True if cls.operation_filetype == Config.CONTENT_FORMAT_YAML else False
 
         cls.debug()
 
@@ -147,20 +152,6 @@ class Config(object):
         """Reset configuration."""
 
         Profiler.disable()
-
-    @classmethod
-    def get_contents(cls, source=None):
-        """Get content list from one of the configuration sources."""
-
-        collection = Collection()
-        if cls.editor:
-            contents = Editor.read_content(content)
-            collection.convert(contents)
-        else:
-            resource = cls._read_resource()
-            collection.migrate(resource)
-
-        return collection
 
     @classmethod
     def get_resource(cls, updates=None, text=None):
@@ -174,7 +165,7 @@ class Config(object):
     @classmethod
     def get_collection(cls, updates=None, text=None):
         """Get collection from configuration source.
-        
+
         If existing updates are provided, they are used on top of template
         generated for the editor.
         """
@@ -333,9 +324,9 @@ class Config(object):
         # the operation file.
         if cls.is_operation_export and cls.is_search_criteria():
             if cls.is_category_snippet and not filename:
-                filename = 'snippet.' + Const.CONTENT_TYPE_TEXT
+                filename = 'snippet.' + Config.CONTENT_FORMAT_TEXT
             elif cls.is_category_solution and not filename:
-                filename = 'solution.' + Const.CONTENT_TYPE_TEXT
+                filename = 'solution.' + Config.CONTENT_FORMAT_TEXT
 
         # In case user did not provide filename, set defaults. For example
         # if user defined export or import operation without the file, the
@@ -350,16 +341,16 @@ class Config(object):
         """Operation file type is extracted from operation fiel and it makes
         sure that only supported content types can be operated."""
 
-        filetype = Const.CONTENT_TYPE_NONE
+        filetype = Config.CONTENT_FORMAT_NONE
 
         # User defined content to/from user specified file.
         name, extension = os.path.splitext(cls.operation_filename)
         if name and ('yaml' in extension or 'yml' in extension):
-            filetype = Const.CONTENT_TYPE_YAML
+            filetype = Config.CONTENT_FORMAT_YAML
         elif name and 'json' in extension:
-            filetype = Const.CONTENT_TYPE_JSON
+            filetype = Config.CONTENT_FORMAT_JSON
         elif name and ('txt' in extension or 'text' in extension):
-            filetype = Const.CONTENT_TYPE_TEXT
+            filetype = Config.CONTENT_FORMAT_TEXT
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file {}'.format(cls.operation_filename))
 

@@ -33,7 +33,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_001(self, snippy, mocker):
         """Delete snippet with digest.
-        
+
         Delete snippet with short 16 byte version of message digest.
         """
 
@@ -46,7 +46,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_002(self, snippy, mocker):
         """Delete snippet with digest.
-        
+
         Delete snippet with very short version of digest that matches to one
         snippet.
         """
@@ -60,7 +60,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_003(self, snippy, mocker):
         """Delete snippet with digest.
-        
+
         Delete snippet with long 16 byte version of message digest.
         """
 
@@ -73,7 +73,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('import-remove')
     def test_cli_delete_snippet_004(self, snippy):
         """Delete snippet with dgiest.
-        
+
         Delete snippet with empty message digest when there is only one
         content stored. In this case the last content can be deleted with
         empty digest.
@@ -86,7 +86,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_005(self, snippy, mocker):
         """Delete snippet with dgiest.
-        
+
         Try to delete snippet with message digest that cannot be found.
         """
 
@@ -102,7 +102,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_006(self, snippy, mocker):
         """Delete snippet with dgiest.
-        
+
         Try to delete snippet with empty message digest. Nothing should be
         deleted in this case because there is more than one content stored.
         """
@@ -119,7 +119,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_007(self, snippy, mocker):
         """Delete snippet with dgiest.
-        
+
         Try to delete snippet with short version of digest that does not match
         to any existing message digest.
         """
@@ -136,7 +136,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_008(self, snippy, mocker):
         """Delete snippet with data.
-        
+
         Delete snippet based on content data.
         """
 
@@ -149,7 +149,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_009(self, snippy, mocker):
         """Delete snippet with data.
-        
+
         Try to delete snippet with content data that does not exist. In this
         case the content data is not truncated.
         """
@@ -166,7 +166,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_0010(self, snippy, mocker):
         """Delete snippet with data.
-        
+
         Try to delete snippet with content data that does not exist. In this
         case the content data is truncated.
         """
@@ -183,7 +183,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_011(self, snippy, mocker):
         """Delete snippet with data.
-        
+
         Try to delete snippet with empty content data. Nothing should be
         deleted in this case because there is more than one content left.
         """
@@ -200,7 +200,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_012(self, snippy, mocker):
         """Delete snippet with search.
-        
+
         Delete snippet based on search keyword that results one hit. In this
         case the content is deleted.
         """
@@ -214,7 +214,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_013(self, snippy, mocker):
         """Delete snippet with search.
-        
+
         Delete snippet based on search keyword that results more than one hit.
         In this case the content must not be deleted.
         """
@@ -231,7 +231,7 @@ class TestCliDeleteSnippet(object):
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_014(self, snippy, mocker, capsys):
         """Delete snippet with data.
-        
+
         Delete snippet based on search keyword that results more than one hit.
         In this case the error text is read from stdout and it must contain
         the error string.

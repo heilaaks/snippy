@@ -19,7 +19,6 @@
 
 """parser: Parse configuration source parameters."""
 
-import copy
 import re
 
 from snippy.cause import Cause
@@ -51,7 +50,6 @@ class Parser(object):
         """Read contents from text source."""
 
         data = []
-        contents = []
         category = Parser.content_category(source)
         if category == Const.SNIPPET:
             data = Parser._split_source(source, '# Add mandatory snippet below', 2)
@@ -133,8 +131,8 @@ class Parser(object):
         if category == Const.SNIPPET:
             match = re.search('%s(.*)%s' % (cls.BRIEF_HEAD, cls.BRIEF_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
-                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_SPACE)])
-                brief = Const.DELIMITER_SPACE.join(lines)
+                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
+                brief = Const.SPACE.join(lines)
         else:
             match = re.search(r'## BRIEF :\s*?(.*|$)', source, re.MULTILINE)
             if match:
@@ -151,8 +149,8 @@ class Parser(object):
         if category == Const.SNIPPET:
             match = re.search('%s(.*)%s' % (cls.GROUP_HEAD, cls.GROUP_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
-                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_SPACE)])
-                group = Const.DELIMITER_SPACE.join(lines)
+                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
+                group = Const.SPACE.join(lines)
         else:
             match = re.search(r'## GROUP :\s*?(\S+|$)', source, re.MULTILINE)
             if match:

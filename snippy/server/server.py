@@ -26,7 +26,6 @@ except ImportError:
     from urlparse import urljoin
 
 from snippy.config.config import Config
-from snippy.config.constants import Constants as Const
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
 from snippy.logger import CustomGunicornLogger
@@ -62,15 +61,17 @@ class Server(object):  # pylint: disable=too-few-public-methods
             self.api = falcon.API(media_type='application/vnd.api+json')
         except AttributeError:
             raise ImportError
+        snippet = Snippet(self.storage, run_cli=False)
+        solution = Solution(self.storage, run_cli=False)
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.add_route('/snippy', ApiHello())
         self.api.add_route(Config.base_path_app.rstrip('/'), ApiHello())
         self.api.add_route(urljoin(Config.base_path_app, 'hello'), ApiHello())
-        self.api.add_route(urljoin(Config.base_path_app, 'snippets'), ApiSnippets(Snippet(self.storage, run_cli=False)))
-        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}'), ApiSnippetsDigest(Snippet(self.storage, run_cli=False)))
-        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}/{field}'), ApiSnippetsField(Snippet(self.storage, run_cli=False)))
-        self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(Solution(self.storage, run_cli=False)))
-        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(Solution(self.storage, run_cli=False)))
-        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}/{field}'), ApiSolutionsField(Solution(self.storage, run_cli=False)))
+        self.api.add_route(urljoin(Config.base_path_app, 'snippets'), ApiSnippets(snippet))
+        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}'), ApiSnippetsDigest(snippet))
+        self.api.add_route(urljoin(Config.base_path_app, 'snippets/{digest}/{field}'), ApiSnippetsField(snippet))
+        self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(solution))
+        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(solution))
+        self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}/{field}'), ApiSolutionsField(solution))
         SnippyServer(self.api, options).run()

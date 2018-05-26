@@ -23,14 +23,14 @@ import json
 
 import falcon
 
-from snippy.config.constants import Constants as Const
+from snippy.server.rest.base import ApiContentBase
 from snippy.meta import __docs__
 from snippy.meta import __homepage__
 from snippy.meta import __openapi__
 from snippy.meta import __version__
 
 
-class ApiHello(object):  # pylint: disable=too-few-public-methods
+class ApiHello(ApiContentBase):  # pylint: disable=too-few-public-methods
     """Hello API."""
 
     @staticmethod
@@ -45,6 +45,6 @@ class ApiHello(object):  # pylint: disable=too-few-public-methods
                 'openapi': __openapi__
             }
         }
-        response.content_type = Const.MEDIA_JSON_API
+        response.content_type = ApiContentBase.MEDIA_JSON_API
         response.body = json.dumps(hello)
         response.status = falcon.HTTP_200

@@ -44,7 +44,7 @@ from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 #
 #   1) Create resource from configured content.
 #   2) Update 'updated' timestamp.
-# 
+#
 # Content importing from file:
 #
 #   1) Create resource from each configured content.

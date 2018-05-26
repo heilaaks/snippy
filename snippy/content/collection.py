@@ -19,6 +19,8 @@
 
 """collection: Store list of contents in collection."""
 
+from __future__ import print_function
+
 import re
 import sys
 from collections import OrderedDict
@@ -65,6 +67,11 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return False
 
+    def __ne__(self, collection):
+        """Compare collections if they are not equal."""
+
+        return not self == collection
+
     def __getitem__(self, digest):
         return self.data['data'][digest]
 
@@ -97,11 +104,6 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         for digest in self.keys():
             yield self.data['data'][digest]['data']
 
-    def init(self):
-        """Initialize collection."""
-
-        self._init()
-
     @classmethod
     def get_resource(cls, category, timestamp):
         """Return new source."""
@@ -121,21 +123,10 @@ class Collection(object):  # pylint: disable=too-many-public-methods
                 self.data['data'][resource.digest]['meta'] = OrderedDict()
                 self.data['data'][resource.digest]['meta']['digest'] = resource.digest
         elif isinstance(source, Resource):
-                self.data['data'][source.digest] = OrderedDict()
-                self.data['data'][source.digest]['data'] = source
-                self.data['data'][source.digest]['meta'] = OrderedDict()
-                self.data['data'][source.digest]['meta']['digest'] = source.digest
-
-    def merge(self, source):
-        """Migrate two collections to one.
-
-        Add new resources or override the original resource fields if the
-        source collection resource fields are defined.
-        """
-
-        #for resource in source.keys():
-            
-
+            self.data['data'][source.digest] = OrderedDict()
+            self.data['data'][source.digest]['data'] = source
+            self.data['data'][source.digest]['meta'] = OrderedDict()
+            self.data['data'][source.digest]['meta']['digest'] = source.digest
 
     def convert(self, rows):
         """Convert database rows into collection."""
@@ -154,16 +145,16 @@ class Collection(object):  # pylint: disable=too-many-public-methods
                 resource.load_dict(content)
                 self.migrate(resource)
         else:
-            self._logger.debug('json format not indentified: %s', json)
+            self._logger.debug('json format not indentified: %s', dictionary)
 
     def dump_json(self, filter_fields):
         """Convert collection to json."""
 
-        json = []
+        data = []
         for resource in self.resources():
-            json.append(resource.dump_json(filter_fields))
+            data.append(resource.dump_json(filter_fields))
 
-        return json
+        return data
 
     def dump_term(self, use_ansi, debug_logs, search_filter):
         """Convert collection for terminal."""

@@ -19,7 +19,7 @@
 
 """storage: Storage management for content."""
 
-from snippy.config.constants import Constants as Const
+from snippy.config.config import Config
 from snippy.logger import Logger
 from snippy.storage.database.sqlite3db import Sqlite3Db as Database
 
@@ -35,6 +35,7 @@ class Storage(object):
     def create(self, collection):
         """Create new content."""
 
+        self._logger.debug('store content')
         collection = self._database.insert(collection)
 
         return collection
@@ -42,15 +43,15 @@ class Storage(object):
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content."""
 
+        self._logger.debug('search content')
         collection = self._database.select(category, sall, stag, sgrp, digest, data)
 
         return collection
 
     def update(self, digest, resource):
         """Update resource specified by digest."""
-        
-        from snippy.config.config import Config
-        
+
+        self._logger.debug('update content')
         resource.updated = Config.utcnow()
         collection = self._database.update(digest, resource)
 
@@ -59,11 +60,13 @@ class Storage(object):
     def delete(self, digest):
         """Delete content."""
 
+        self._logger.debug('delete content')
         self._database.delete(digest)
 
     def export_content(self, category):
         """Export content."""
 
+        self._logger.debug('export content')
         collection = self._database.select_all_content(category)
 
         return collection
@@ -71,7 +74,10 @@ class Storage(object):
     def import_content(self, collection):
         """Import content."""
 
-        return self._database.insert(collection)
+        self._logger.debug('export content')
+        collection = self._database.insert(collection)
+
+        return collection
 
     def disconnect(self):
         """Disconnect storage."""

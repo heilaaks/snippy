@@ -19,36 +19,28 @@
 
 """api_snippets: JSON REST API for Snippets."""
 
-from snippy.cause import Cause
-from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.config.source.api import Api
-from snippy.content.snippet import Snippet
-from snippy.logger import Logger
 from snippy.server.rest.base import ApiContentBase
 from snippy.server.rest.base import ApiContentDigestBase
 from snippy.server.rest.base import ApiContentFieldBase
-from snippy.server.rest.jsonapiv1 import JsonApiV1
-from snippy.server.rest.validate import Validate
 
 
 class ApiSnippets(ApiContentBase):
-    """Process snippet collections."""
+    """Query solutions."""
 
     def __init__(self, content):
         super(ApiSnippets, self).__init__(content, Const.SNIPPET)
 
 
 class ApiSnippetsDigest(ApiContentDigestBase):
-    """Process snippet based on digest."""
+    """Query snippets based on digest."""
 
     def __init__(self, content):
         super(ApiSnippetsDigest, self).__init__(content, Const.SNIPPET)
 
 
-class ApiSnippetsField(ApiContentFieldBase):
-    """Process snippet based on digest and field."""
+class ApiSnippetsField(ApiContentFieldBase):  # pylint: disable=too-few-public-methods
+    """Query snippets based on digest and specified field."""
 
     def __init__(self, content):
         super(ApiSnippetsField, self).__init__(content, Const.SNIPPET)
-

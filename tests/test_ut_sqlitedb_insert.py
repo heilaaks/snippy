@@ -36,7 +36,7 @@ class TestUtSqlite3dbInsert(object):
     @mock.patch.object(Config, 'storage_schema', Database.get_schema())
     def test_insert_with_all_parameters(self, mock_cause_push):
         """Insert content into database.
-        
+
         Insert content into database with all parameters.
         """
 
@@ -47,8 +47,8 @@ class TestUtSqlite3dbInsert(object):
         sqlite.insert(collection)
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        assert collection == Database.select_all_snippets()
-        assert Database.select_all_snippets().size() == 1
+        assert collection == Database.get_snippets()
+        assert Database.get_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()
         Database.delete_storage()
@@ -66,8 +66,8 @@ class TestUtSqlite3dbInsert(object):
         sqlite.insert(collection)
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
-        assert collection == Database.select_all_snippets()
-        assert Database.select_all_snippets().size() == 1
+        assert collection == Database.get_snippets()
+        assert Database.get_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()
         Database.delete_storage()

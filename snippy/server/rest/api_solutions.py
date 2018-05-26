@@ -19,38 +19,28 @@
 
 """api_solutions: JSON REST API for Solutions."""
 
-from __future__ import print_function
-
-from snippy.cause import Cause
-from snippy.config.config import Config
 from snippy.config.constants import Constants as Const
-from snippy.config.source.api import Api
-from snippy.content.solution import Solution
-from snippy.logger import Logger
 from snippy.server.rest.base import ApiContentBase
 from snippy.server.rest.base import ApiContentDigestBase
 from snippy.server.rest.base import ApiContentFieldBase
-from snippy.server.rest.jsonapiv1 import JsonApiV1
-from snippy.server.rest.validate import Validate
 
 
 class ApiSolutions(ApiContentBase):
-    """Process solution collections"""
+    """Query solutions."""
 
     def __init__(self, content):
         super(ApiSolutions, self).__init__(content, Const.SOLUTION)
 
 
 class ApiSolutionsDigest(ApiContentDigestBase):
-    """Process solutions based on digest."""
+    """Query solutions based on digest."""
 
     def __init__(self, content):
         super(ApiSolutionsDigest, self).__init__(content, Const.SOLUTION)
 
 
-class ApiSolutionsField(ApiContentFieldBase):
-    """Process solution based on digest resource ID and specified field."""
+class ApiSolutionsField(ApiContentFieldBase):  # pylint: disable=too-few-public-methods
+    """Query solution based on digest and specified field."""
 
     def __init__(self, content):
         super(ApiSolutionsField, self).__init__(content, Const.SOLUTION)
-

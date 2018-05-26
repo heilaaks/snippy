@@ -33,7 +33,7 @@ class TestCliCreateSnippet(object):
 
     def test_cli_create_snippet_001(self, snippy, mocker):
         """Create snippet from CLI.
-        
+
         Create new snippet by defining all content parameters from command line.
         """
 
@@ -50,7 +50,7 @@ class TestCliCreateSnippet(object):
 
     def test_cli_create_snippet_002(self, snippy, mocker):
         """Create snippet from CLI.
-        
+
         Create new snippet with all content parameters but only one tag.
         """
 
@@ -69,7 +69,7 @@ class TestCliCreateSnippet(object):
 
     def test_cli_create_snippet_003(self, snippy):
         """Try to create snippet from CLI.
-        
+
         Try to create new snippet without defining mandatory content data.
         """
 
@@ -84,7 +84,7 @@ class TestCliCreateSnippet(object):
     @pytest.mark.usefixtures('edit-snippet-template')
     def test_cli_create_snippet_004(self, snippy):
         """Try to create snippet from CLI.
-        
+
         Try to create new snippet without any changes to snippet template.
         """
 
@@ -95,7 +95,7 @@ class TestCliCreateSnippet(object):
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_snippet_005(self, snippy):
         """Try to create snippet from CLI.
-        
+
         Try to create new snippet with empty data. In this case the whole
         template is deleted and the edited solution is an empty string.
         """
@@ -107,7 +107,7 @@ class TestCliCreateSnippet(object):
     @pytest.mark.usefixtures('default-snippets', 'edit-remove')
     def test_cli_create_snippet_006(self, snippy, mocker):
         """Try to create snippet from CLI.
-        
+
         Try to create snippet again with exactly same content than already
         stored.
         """

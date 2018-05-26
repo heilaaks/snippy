@@ -473,7 +473,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
     def test_cli_import_solution_027(self, snippy, mocker):
         """Import solutions from text template.
-        
+
         Import solution template that does not have any changes to file header
         located at the top of content data. This tests a scenario where user
         does not bother to do any changes to header which has the solution
@@ -497,7 +497,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
     def test_cli_import_solution_028(self, snippy):
         """Import solutions from text template.
-        
+
         Try to import solution template without any changes. This should result
         error text for end user and no files should be read. The error text must
         be the same for all content types.

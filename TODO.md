@@ -1,24 +1,7 @@
 ## WORKING
-   
-   - Update digest not working
-   - Update and save not changes not working
-   - Add collection.new_resource(category, timetstamp) # Removes the need to use Resource outside collectio
-   - Add dictionary['content'] --> dictionary['data']
-   
-   
-   - [ ] Where timestamp to Resource? It does not make sense to put TS in collection. Only in resource because it creates it. For DB this is an issue (fixed?)
-         - previously update used Content from search which had the time stamps. Now the resource is created which creates new TS usage. 
-   - [ ] Update with editor, check that this is tested.
-
-   - [ ] How cases that abuse getting first content from collection with index?
-   - [ ] tests use _get_contents. change to collection and resource.
-   - [ ] Add base class for snippet/solutions for /content and /server/rest since both contents share same kinf of implementation.
-   - [ ] Move digest to meta in order to get rid of conveying digest to json1 coding if digest is not requested field.
-   - [ ] Add test that verifies that OID is not changing in one operation.
-   - [ ] Remember that Solution DATE was removed from data to be able to use digest. This affects tests.
-   - [ ] Remember that API JSON response data list attribute is now singular. This is actually correct because the request is 'snippet' and the type is in one item of data.
-   - [ ] Validate and jsonapiv1 are the same encode and decode. Naming misleading.
+   - [ ] Validate and jsonapiv1 are the same encode and decode for JSON API v1.0. Naming misleading. Use one file with two classes like encode/decode.
    - [ ] filter_fields to remove_fields?
+   - [ ] How cases that abuse getting first content from collection with index?
    - [ ] is this tested? CAn the json.load removed (json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))
    - [ ] Add sqlite doc string that the e.g. insert update return stored/updated content in collection.
    - [ ] Add pring ot meta to collection __str__
@@ -95,6 +78,7 @@
 
 ## TESTS
    - [ ] Add tests that verifies that update with digest shows the existing content in editor.
+   - [ ] Add test that verifies that OID is not changing in one operation.
    - [ ] Test Content() qe and ne - probably UT test to be added for Content().
    - [ ] Add tests that tries to sort based on non existent field. Is there already such case - migth be?
    - [ ] Refactor API tests based on update tests.

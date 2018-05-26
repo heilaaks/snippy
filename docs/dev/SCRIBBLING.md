@@ -569,7 +569,7 @@ $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndo
     $ python setup.py checkdocs
     $ st2html.py README.rst  > /tmp/test.html
     $ python setup.py check --restructuredtext
-    
+
     # Test PyPI
     > https://testpypi.python.org/pypi
     > https://pypi.python.org/pypi/snippy
@@ -727,48 +727,26 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     # How to include
     > https://www.reddit.com/r/Python/comments/1bbbwk/whats_your_opinion_on_what_to_include_in_init_py/
 
-
-    # Class hierarchy design notes
-
-    1. Any class can import Constants()
-
-    2. Any class can import Logger()
-
-    3. Any class can import Cause()
-
-    4. Migrate() should be kept in state where anyone can import it.
-
-    5. Only the Config() can import and imported classes must not import outside config sub-package.
-        A) Cli()
-        B) Editor()
-
-    6. Only Storage(), Snippet() and Solution() can import Content()
-
-    7. Only Storage() can import Sqlite3db()
-
-    8. Content() is designed to be used by Snippet() and Solution(). It is not designed to abstract
-       or hide Snippet() or Solution() classes.
-
 #######################################
-## Design decisions
+## Design notes and decisions
 #######################################
 
     TERMS
-    
-    attribute : Field that is part of the content.
-    field     : Field that is part of the content.
-    category  : Defines content category which can be 'snippet' or 'solution'
-    parameter : Parameter in URL that defines for example filtering criteria for HTTP request.
-    
-    collection : collection of resources
-    resource   : single resource that can be any of the content types
-    contents   : list of content that is not in form of Resource()
+
+    attribute  : Field that is part of the content, same as field.
+    field      : Field that is part of the content, same as attribute.
+    category   : Defines content category which can be either 'snippet' or 'solution'.
+    parameter  : Parameter in URL that defines for example filtering criteria for HTTP request.
+
+    content    : Content types like Snippet or Solution stored inside collections and resources.
+    collection : Collection of resources.
+    resource   : Single resource that can be any of the content types.
 
 
     STRANGER THINGS
-    
+
     1. 'I/O operation on closed file'
-    
+
        If test 'test_debug_option_001' removes the caplog, there is error about
        I/O operation on closed file. Why? The case seems to work so this is
        caplog or capsys issue? Investigate more.
@@ -863,12 +841,12 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     SECURITY HARDENING
 
     1. Logger has own security log level
-    
+
        All suspected security related events are printed to logs with 'security'
        level.
-    
+
     2. Hard maximum on log messages
-    
+
        There is a hard maximum 'Logger.SECURITY_LOG_MSG_MAX' for log messages for
        safety and security reasons. This tries to prevent extremely long log messages
        which may cause problems for the server.
@@ -897,7 +875,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        exceptions printed to user', it is more suitable to use always the stdout.
        This is also considered more predictable for the end user who is debugging.
        the logs.
-       
+
        The exception is that the argument parser prints parse failures to stderr.
 
     4. Logs from exceptions are printed in INFO level all other logs in DEBUG
@@ -1012,12 +990,12 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        /1/ http://jsonapi.org/
 
     UPDATING CONTENT ATTRIBUTES
-    
+
     1. Attributes that can be updated
-    
+
        Following attributes can be freely modified by user withing the limits
        of attribute definitions:
-       
+
        - data
        - brief
        - group
@@ -1026,31 +1004,53 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        - filename
        - runalias
        - versions
-    
+
     2. Attributes that cannot be changed by user
-    
+
        A) Category
-       
+
           The category is defined when the content is created. After this,
           it cannot be changed by updating it. The only way to change this
           attribute is to delete and create the content again.
-       
+
        B) Created
-       
+
           The created timestamp is set when the content is created and user
           cannot modify. The only way to change this attribute is to delete
           and create the content again.
 
        B) Updated
-       
+
           The updated timestamp is set when the content is updated and user
           cannot modify.
 
        C) Digest
-       
+
           The content digest field is always set by the tool based on sha256
           hash algorithm. The digest is automatically updated when content
           is changed.
+
+    CLASS HIERARCHY
+
+    1. Any class can import Constants()
+
+    2. Any class can import Logger()
+
+    3. Any class can import Cause()
+
+    4. Any class can import Collection()
+
+    5. Only Collection can import Resource()
+
+    6. With exception of config package, any class can import Migrate()
+
+    7. Only the Config() can import and imported classes must not import outside config sub-package.
+        A) Cli()
+        B) Editor()
+        C) Parser()
+
+    8. Only Storage() can import Sqlite3db()
+
 
 #######################################
 ## Command line design
@@ -1620,7 +1620,7 @@ sort = OrderedDict()
 ¿/defects?offset=10	Returns defects 11..36 (the default number of the returned defects is 25).
 
 1. You can request ¿/defects?limit=0 to get just metadata, without defect data.
-2. When the response doesn¿t contain a link to the next page of results, you know that you¿ve reached the end. 
+2. When the response doesn¿t contain a link to the next page of results, you know that you¿ve reached the end.
 
 # From start
 "meta": {

@@ -164,12 +164,12 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         else:
             self._logger.debug('json format not indentified: %s', dictionary)
 
-    def dump_dict(self, filter_fields):
+    def dump_dict(self, remove_fields):
         """Convert collection to dictionary."""
 
         data = []
         for resource in self.resources():
-            data.append(resource.dump_dict(filter_fields))
+            data.append(resource.dump_dict(remove_fields))
 
         return data
 

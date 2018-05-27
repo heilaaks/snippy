@@ -119,7 +119,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.editor = parameters.get('editor', False)
         self.failure = parameters.get('failure', False)
         self.filename = parameters.get('filename', Const.EMPTY)
-        self.filter_fields = parameters.get('fields', self.ATTRIBUTES)
+        self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
         self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT)
         self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
@@ -313,14 +313,14 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._sort_fields = parsed  # pylint: disable=attribute-defined-outside-init
 
     @property
-    def filter_fields(self):
-        """Get filtered fields."""
+    def remove_fields(self):
+        """Get removed fields."""
 
-        return self._filter_fields
+        return self._remove_fields
 
-    @filter_fields.setter
-    def filter_fields(self, value):
-        """Filtered fields are presented as tuple and they are converted
+    @remove_fields.setter
+    def remove_fields(self, value):
+        """Removed fields are presented as tuple and they are converted
         from requested fields."""
 
         requested_fields = Parser.keywords(value)
@@ -331,9 +331,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'resource field does not exist: {}'.format(field))
 
         if valid:
-            self._filter_fields = tuple(set(self.ATTRIBUTES) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
+            self._remove_fields = tuple(set(self.ATTRIBUTES) - set(requested_fields))  # pylint: disable=attribute-defined-outside-init
 
-        self._logger.debug('config source content fields that are removed from response: %s', self._filter_fields)
+        self._logger.debug('config source content fields that are removed from response: %s', self._remove_fields)
 
     @property
     def base_path_app(self):

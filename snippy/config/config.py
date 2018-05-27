@@ -114,7 +114,7 @@ class Config(object):
         cls.search_filter = cls.source.regexp
         cls.search_limit = cls.source.search_limit
         cls.search_offset = cls.source.search_offset
-        cls.filter_fields = cls.source.filter_fields
+        cls.remove_fields = cls.source.remove_fields
         cls.sort_fields = cls.source.sort_fields
 
         # migrate
@@ -469,7 +469,7 @@ class Config(object):
         cls._logger.debug('configured search group keywords: %s', cls.search_grp_kws)
         cls._logger.debug('configured search result regexp filter: %s', cls.search_filter)
         cls._logger.debug('configured search result limit: %s and offset: %s', cls.search_limit, cls.search_offset)
-        cls._logger.debug('configured search result filter fields: %s', cls.filter_fields)
+        cls._logger.debug('configured search result filter fields: %s', cls.remove_fields)
         cls._logger.debug('configured search result sorted fields: %s', cls.sort_fields)
         cls._logger.debug('configured option editor: %s', cls.editor)
         cls._logger.debug('configured option use ansi characters in text output: %s', cls.use_ansi)

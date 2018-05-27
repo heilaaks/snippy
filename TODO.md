@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] filter_fields to remove_fields?
-   - [ ] How cases that abuse getting first content from collection with index?
    - [ ] is this tested? CAn the json.load removed (json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))
    - [ ] Add sqlite doc string that the e.g. insert update return stored/updated content in collection.
    - [ ] Add pring ot meta to collection __str__

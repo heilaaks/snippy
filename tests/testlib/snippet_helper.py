@@ -144,7 +144,7 @@ class SnippetHelper(object):
         collection = SnippetHelper._get_content(template)
         resource = next(collection.resources())
 
-        return resource.dump_dict(Config.filter_fields)
+        return resource.dump_dict(Config.remove_fields)
 
     @staticmethod
     def get_template(dictionary):

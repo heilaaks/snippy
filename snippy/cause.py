@@ -94,7 +94,7 @@ class Cause(object):
         caller = 'snippy.cause.cause.optimize:1'
         if status not in Cause.OK_STATUS_LIST:
             caller = cls._caller()
-        cls._logger.info('cause %s with message %s from %s', status, message, caller)
+        cls._logger.debug('cause %s with message %s from %s', status, message, caller)
         cls._list['errors'].append({
             'status': int(status.split()[0]),
             'status_string': status,

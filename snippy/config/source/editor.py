@@ -68,7 +68,7 @@ class Editor(object):
         message = Const.EMPTY
         template = template.encode('UTF-8')
         editor = cls._get_editor()
-        cls._logger.info('using %s as editor', editor)
+        cls._logger.debug('using %s as editor', editor)
         with tempfile.NamedTemporaryFile(prefix='snippy-edit-') as outfile:
             outfile.write(template)
             outfile.flush()
@@ -95,7 +95,7 @@ class Editor(object):
         # environment variables? What is the generic way to use editor in
         # Windows and Mac?
         if editor != 'vi':
-            cls._logger.info('enforcing vi as default editor instead of %s', editor)
+            cls._logger.debug('enforcing vi as default editor instead of %s', editor)
             editor = 'vi'
 
         return editor

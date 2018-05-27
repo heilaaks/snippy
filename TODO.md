@@ -1,5 +1,7 @@
 ## WORKING
-   - [ ] is this tested? CAn the json.load removed (json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))
+   - [ ] Add test to merge other than data fields
+   - [ ] Add test that verifies update patch and existing resource in Editor
+   - [ ] Is this tested? CAn the json.load removed (json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))
    - [ ] Add sqlite doc string that the e.g. insert update return stored/updated content in collection.
    - [ ] Add pring ot meta to collection __str__
 

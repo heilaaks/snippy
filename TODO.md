@@ -1,7 +1,9 @@
 ## WORKING
-   - [ ] Is this tested? Can the json.load removed (json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))
    - [ ] Add sqlite doc string that the e.g. insert update return stored/updated content in collection.
-   - [ ] Add pring ot meta to collection __str__
+   - [ ] Add meta to collection __str__ printing.
+   - [ ] Is this tested? Can the json.load removed (json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))
+   - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
+   - [ ] Add UT tests for class Debug() methods.
 
 ## FEATURES
    - [ ] Add OPTIONS method.
@@ -11,9 +13,8 @@
    - [ ] Add support to export content to markdown format.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
-   - [ ] Add support to run with runalias.
-   - [ ] Add support to add versions to version list.
-   - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
+   - [ ] Add logic to runalias. This can be updated from REST. This should not do anything because of security?
+   - [ ] Add logic versions. Change version to content_versions in base? Same all content? Requires long lines for cli.py. How describe versions?
    - [ ] Add support to print only selected fields, like brief and digest for CLI text output. Hard to generalize since layout e.g. contains header with three fields.
    - [ ] Add statistics object which tracks peak and percentile latencies with memory and CPU usage.
    - [ ] Add support for REST API YAML responses.
@@ -29,25 +30,21 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile']) and new document stuff
    - [ ] Updating cls.server = cls.source.server does not make sense after start. But this was propably fix to some other problem.
-   - [ ] Fix _logger.info should be debug.
    - [ ] Fix insert_content and digest check is probably unnecessary. Remove it after content refactor.
    - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv
    - [ ] Fix all post responses to have link to created resource. Why this is not always included? Only in updates but not in create?
    - [ ] Fix 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH'' It seems Python 2.7 does not support PATCH somewhere?
-   - [ ] Fix add paranoid security level to define maximum printed variables from user to REST responses and logs.
    - [ ] Fix testing error titles. Some contain the hash which now prevent all checks for title. Some titles should be checked.
    - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
-   - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases?
-   - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
+   - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases? This comes from UT sqlite cases at least.
    - [ ] Fix OID refresh not done for the first operation. Only at the first one refreshed at the end. This cannot be in wrapper start since that misses one log from Falcon.
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
-   - [ ] Fix wheel seems so create PyPI package that cannot access the defaults? Is this the case? This was working with sdist.
    - [ ] Fix make test if pytest cover leaves hanging files like .coverage.localhost.localdomain.4727.176219. Add --cover-erase in commmand? // https://bitbucket.org/ned/coveragepy/issues/476/coverageexception-cant-add-arcs-to
    - [ ] Fix when server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
    - [ ] Fix OpenAPI specs. The ResponseData and the attributes contain mandatory 'data' field. This is not true if resouce field like brief is requirested.
    - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field. Was this some test?
-   - [ ] Fix the get_template to Content(). Did this mean test helpers that uses the get_template? There is one case
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix the REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
    - [ ] Fix if the sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
@@ -62,35 +59,27 @@
 
 ## REFACTOR
    - [ ] Make solution template and UTC time readon to follow timestamp without microseconds?
-   - [ ] API modules have: contents['data'].extend(content['data']). Can he content with meta be done with hash.update(another hash) ?
-   - [ ] Storage create() supports only one content. Maybe this could be a loop of list but the meta needs more work to combine.
-   - [ ] Storage update() supports only one content and this is not in line with create(). Update should also take list instead of one.
-   - [ ] Offset based pagination is slow with large data sets (how large?).
-   - [ ] Refactor parser and editor to use merge? The Config uses merge and migrate but can the parser and editor do the same? They cannot include Config (easily).
-   - [ ] Logger __init__ is confusing since it is not objec but global class. Should be like Logger(__NAME__).api
+   - [ ] Storage update() supports only one resource and this is not in line with others. Change to collection?
+   - [ ] Offset based pagination is slow with large data sets (how large?). Measure with test.
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
    - [ ] Read storage schema directly to config() like the content templates.
-   - [ ] Change is_template in Content to __cmp__?
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
-   - [ ] Add tests that verifies that update with digest shows the existing content in editor.
-   - [ ] Add test that verifies that OID is not changing in one operation.
-   - [ ] Test Content() qe and ne - probably UT test to be added for Content().
+   - [ ] Refactor UT tests for sqlite DB module.
+   - [ ] Add test that verifies that OID is not changing duringn one operation. Run two operations and check two OIDs in dict.
+   - [ ] Test Collection()/Resource() ne - probably UT tests.
    - [ ] Add tests that tries to sort based on non existent field. Is there already such case - migth be?
    - [ ] Refactor API tests based on update tests.
    - [ ] How to test case where required Python module is missing? Tests can be skipped when module is missing but how to simulate this? Try with Logger and gunicorn.
    - [ ] Is tested? import first content that already exist but second is new? Should result OK. Check test_cli_import_snippet_018-> Is the order this?
-   - [ ] Add test to import solution without date (check if exist first).
    - [ ] Add unit test for Cause.debug().
    - [ ] Add test to verify --help without server depdencies. This is the PyPI case.
-   - [ ] Refactor UT tests for sqlite DB module.
    - [ ] Add custom parameter to pytest to enable debug logs in snippy fixture easily. Read https://docs.pytest.org/en/latest/example/simple.html?highlight=pytest_addoption
    - [ ] Add tests for 3 scenarios that exit with log in the startup.
    - [ ] Observe if Content.mocked_open and Content.imported_dict has sorting problems because of the hash. This could already sorted because the comparison sorts always the output.
    - [ ] Why test_cli_import_snippet_009 requires import-remove-utc but the 001 does not?
    - [ ] Why delete_storage requires not try/catch block for file remove when the existence is tested? This was with after server/snippy.run refactoring.
-   - [ ] Add more tests /api/v1/snippets.
    - [ ] Fix api performance test failure which leaves the server running and hanging.
    - [ ] Test URL encoded REST API queries. The same problem that was with %2C may be with other formats.
    - [ ] Test manually the exception cases for example with file with Python3 and 2.7. Some exceptions may not be in Python2.7.
@@ -104,7 +93,6 @@
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.
    - [ ] It is not possible in OAS 2 to deffine single mandatory parameter from group? For example search must have at least one for GET. For OAS 3 this works?
-   - [ ] Document that solution text header date is not updated when the solution is updated. The metadata is updated.
    - [ ] Document that importing content defined with digest will be update operation internally. This allows importing the same content data again with OK cause.
    - [ ] Add to document that using double dash is interpreted as option. To use this in grep: search --sall "--all" --no-ansi | grep -- '--all'
    - [ ] Update documents.
@@ -132,6 +120,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added test to verify updates based on digest show already stored content in editor.
    - [x] Change Content to Collection that contains list of Resources.
    - [x] Added support to GET resource fields with URI's like /snippets/54e41e9b52/brief.
    - [x] Added safety check and security event based on log message length.

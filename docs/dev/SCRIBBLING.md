@@ -937,6 +937,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
          6. 'Security' in case of vulnerabilities.
          7. 'Refactor' code without external changes.
          8. 'Edit' small fixes like typo and layout fixes.
+         9. 'Test' new test cases.
 
        The rule must be applied so that the logs are written for humans. This means
        that the commit log must tell the reasons and design decisions behind the

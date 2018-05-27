@@ -135,6 +135,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.profiler = parameters.get('profiler', False)
         self.quiet = parameters.get('quiet', False)
         self.regexp = parameters.get('regexp', Const.EMPTY)
+        self.runalias = parameters.get('runalias', Const.EMPTY)
         self.sall = parameters.get('sall', None)
         self.server = parameters.get('server', False)
         self.sgrp = parameters.get('sgrp', None)
@@ -143,6 +144,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
         self.version = parameters.get('version', __version__)
+        self.versions = parameters.get('versions', Const.EMPTY)
         self.very_verbose = parameters.get('very_verbose', False)
         self._repr = self._get_repr()
 

@@ -74,7 +74,8 @@ CREATE_EXITED = (EXITED_CREATED,)*1
 CREATE_NETCAT = (NETCAT_CREATED,)*1
 CREATE_UMOUNT = (UMOUNT_CREATED,)*1
 UPDATE_REMOVE = (REMOVE_CREATED,)*2
-UPDATE_FORCED = (REMOVE_CREATED,)*2
+UPDATE_FORCED = (FORCED_CREATED,)*2
+UPDATE_EXITED = (EXITED_CREATED,)*2
 UPDATE_NETCAT = (NETCAT_CREATED,)*2
 IMPORT_REMOVE = (REMOVE_CREATED,)*1
 IMPORT_FORCED = (FORCED_CREATED,)*1
@@ -273,6 +274,12 @@ def create_exited_time_mock(mocker):
     """Mock timestamps to create 'exited' solution."""
 
     mocker.patch.object(Config, 'utcnow', side_effect=CREATE_EXITED)
+
+@pytest.fixture(scope='function', name='update-exited-utc')
+def update_exited_time_mock(mocker):
+    """Mock timestamps to update 'exited' solution."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=UPDATE_EXITED)
 
 @pytest.fixture(scope='function', name='import-netcat')
 def import_netcat_snippet(mocker, snippy):

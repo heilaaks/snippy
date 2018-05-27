@@ -608,8 +608,76 @@ class TestApiCreateSnippet(object):
         assert Database.get_snippets().size() == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
+    @pytest.mark.usefixtures('import-forced', 'update-exited-utc')
     def test_api_create_snippet_014(self, server, mocker):
+        """Update snippet with POST that maps to PATCH.
+
+        Call POST /v1/snippets with X-HTTP-Method-Override header to update
+        snippet. All fields are tried to be updated but only the that can be
+        modified by user must be modified.
+        """
+
+        request_body = {
+            'data': {
+                'type': 'snippet',
+                'attributes': {
+                    'data': 'data row1\ndata row2',
+                    'brief': 'brief description',
+                    'group': 'solution',
+                    'tags': 'tag1,tag2',
+                    'links': 'link1\nlink2',
+                    'categeory': 'solution',
+                    'filename': 'filename.txt',
+                    'runalias': 'runme',
+                    'versions': 'versions 1.1',
+                    'created': 'invalid time',
+                    'updated': 'invalid time',
+                    'digest': 'invalid digest'
+                }
+            }
+        }
+        content_read = {
+            'data': request_body['data']['attributes']['data'].split(Const.DELIMITER_DATA),
+            'brief': request_body['data']['attributes']['brief'],
+            'group': request_body['data']['attributes']['group'],
+            'tags': request_body['data']['attributes']['tags'].split(Const.DELIMITER_TAGS),
+            'links': request_body['data']['attributes']['links'].split(Const.DELIMITER_LINKS),
+            'category': 'snippet',
+            'filename': request_body['data']['attributes']['filename'],
+            'runalias': request_body['data']['attributes']['runalias'],
+            'versions': request_body['data']['attributes']['versions'],
+            'created': Content.FORCED_TIME,
+            'updated': Content.EXITED_TIME,
+            'digest': '79372a673201fb1831d4cebb2cd54945c6e732f0d3c9725239e3691ff8522eff'
+        }
+        content = {'79372a673201fb18': content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '624'
+        }
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/79372a673201fb18'
+            },
+            'data': {
+                'type': 'snippet',
+                'id': '79372a673201fb1831d4cebb2cd54945c6e732f0d3c9725239e3691ff8522eff',
+                'attributes': content_read
+            }
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+            headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+        assert Database.get_snippets().size() == 1
+        Content.verified(mocker, server, content)
+
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
+    def test_api_create_snippet_015(self, server, mocker):
         """Update snippet with POST that maps to DELETE.
 
         Call POST /v1/snippets with X-HTTP-Method-Override header to delete
@@ -633,7 +701,7 @@ class TestApiCreateSnippet(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_015(self, server):
+    def test_api_create_snippet_016(self, server):
         """Try to create snippet with resource id.
 
         Try to call POST /v1/snippets/53908d68425c61dc to create new snippet

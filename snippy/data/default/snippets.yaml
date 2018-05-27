@@ -1,4 +1,4 @@
-content:
+data:
 - brief: Remove all docker containers with volumes
   category: snippet
   created: '2017-10-12T11:52:11.000001+0000'

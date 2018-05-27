@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Validate and jsonapiv1 are the same encode and decode for JSON API v1.0. Naming misleading. Use one file with two classes like encode/decode.
    - [ ] filter_fields to remove_fields?
    - [ ] How cases that abuse getting first content from collection with index?
    - [ ] is this tested? CAn the json.load removed (json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))
@@ -135,6 +134,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Change Content to Collection that contains list of Resources.
    - [x] Added support to GET resource fields with URI's like /snippets/54e41e9b52/brief.
    - [x] Added safety check and security event based on log message length.
    - [x] Changed REST API default base bath to /snippy/api/app/v1 to prepare auth and admin paths.

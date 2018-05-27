@@ -23,14 +23,16 @@ from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.source.api import Api
 from snippy.logger import Logger
-from snippy.server.rest.jsonapiv1 import JsonApiV1
+from snippy.server.rest.generate import Generate
 from snippy.server.rest.validate import Validate
 
 
 class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
     """Base class for content APIs."""
 
-    # JSON API v1.0 media header.
+    # JSON API v1.0 media header. The character set is deviation from the
+    # specification but it was considered very useful so that user always
+    # knows how to decode the characters.
     MEDIA_JSON_API = 'application/vnd.api+json; charset=UTF-8'
 
     def __init__(self, content=None, category=None):
@@ -50,11 +52,11 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
             self._content.run()
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(self._content.collection, request)
+            response.body = Generate.collection(self._content.collection, request)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
+            response.body = Generate.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -72,11 +74,11 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.collection(self._content.collection, request, pagination=True)
+            response.body = Generate.collection(self._content.collection, request, pagination=True)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
+            response.body = Generate.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -89,7 +91,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger.debug('run delete %s', request.uri)
         Cause.push(Cause.HTTP_NOT_FOUND, 'cannot delete content without identified resource')
         response.content_type = ApiContentBase.MEDIA_JSON_API
-        response.body = JsonApiV1.error(Cause.json_message())
+        response.body = Generate.error(Cause.json_message())
         response.status = Cause.http_status()
 
         Cause.reset()
@@ -118,7 +120,7 @@ class ApiContentDigestBase(object):
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot create resource with id, use x-http-method-override to override the request')
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
+            response.body = Generate.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -137,11 +139,11 @@ class ApiContentDigestBase(object):
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(self._content.collection, request, digest, pagination=True)
+            response.body = Generate.resource(self._content.collection, request, digest, pagination=True)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
+            response.body = Generate.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -160,7 +162,7 @@ class ApiContentDigestBase(object):
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
+            response.body = Generate.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -178,11 +180,11 @@ class ApiContentDigestBase(object):
             self._content.run()
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(self._content.collection, request, digest)
+            response.body = Generate.resource(self._content.collection, request, digest)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
+            response.body = Generate.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()
@@ -219,11 +221,11 @@ class ApiContentFieldBase(object):  # pylint: disable=too-few-public-methods
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.resource(self._content.collection, request, digest, field=field, pagination=False)
+            response.body = Generate.resource(self._content.collection, request, digest, field=field, pagination=False)
             response.status = Cause.http_status()
         else:
             response.content_type = ApiContentBase.MEDIA_JSON_API
-            response.body = JsonApiV1.error(Cause.json_message())
+            response.body = Generate.error(Cause.json_message())
             response.status = Cause.http_status()
 
         Cause.reset()

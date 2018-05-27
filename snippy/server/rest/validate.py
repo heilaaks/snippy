@@ -51,8 +51,26 @@ class Validate(object):
     _logger = Logger.get_logger(__name__)
 
     @classmethod
+    def resource(cls, request, digest):
+        """Validate JSON API v1.0 resource."""
+
+        resource_ = {}
+        if JsonSchema.validate(JsonSchema.RESOURCE, request.media):
+            if isinstance(request.media['data'], dict):
+                if cls.is_valid_data(request.media['data']):
+                    resource_ = request.media['data']['attributes']
+                    resource_['digest'] = digest
+            else:
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(request.media['data'])))  # noqa: E501 # pylint: disable=line-too-long
+
+        if request.method.lower() == 'patch' or request.get_header('x-http-method-override', default='post').lower() == 'patch':
+            resource_['merge'] = True
+
+        return resource_
+
+    @classmethod
     def collection(cls, request):
-        """Return media as collection of content."""
+        """Validate JSON API v1.0 collection."""
 
         collection = []
         if JsonSchema.validate(JsonSchema.COLLECTION, request.media):
@@ -70,24 +88,6 @@ class Validate(object):
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(request.media['data'])))  # noqa: E501 # pylint: disable=line-too-long
 
         return tuple(collection)
-
-    @classmethod
-    def resource(cls, request, digest):
-        """Return media as specific resource with digest."""
-
-        resource_ = {}
-        if JsonSchema.validate(JsonSchema.RESOURCE, request.media):
-            if isinstance(request.media['data'], dict):
-                if cls.is_valid_data(request.media['data']):
-                    resource_ = request.media['data']['attributes']
-                    resource_['digest'] = digest
-            else:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(request.media['data'])))  # noqa: E501 # pylint: disable=line-too-long
-
-        if request.method.lower() == 'patch' or request.get_header('x-http-method-override', default='post').lower() == 'patch':
-            resource_['merge'] = True
-
-        return resource_
 
     @staticmethod
     def is_valid_data(data):

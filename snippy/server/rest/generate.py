@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""jsonapiv10: Format to JSON API v1.0."""
+"""generate: Generate REST API responses."""
 
 import json
 import math
@@ -35,17 +35,14 @@ from snippy.config.constants import Constants as Const
 from snippy.logger import Logger
 
 
-class JsonApiV1(object):
-    """Format according to JSON API v1.0 specifications."""
+class Generate(object):
+    """Generate REST API responses."""
 
     _logger = Logger.get_logger(__name__)
 
     @classmethod
     def resource(cls, collection, request, digest, field=Const.EMPTY, pagination=False):
-        """Format JSON API v1.0 resource from content list.
-
-        The contents is a list but there can be only one resources.
-        """
+        """Generate JSON API v1.0 resource."""
 
         data = {
             'data': {},
@@ -79,11 +76,11 @@ class JsonApiV1(object):
         if not data['data']:
             data = json.loads('{"links": {"self": "' + uri + '"}, "data": null}')
 
-        return cls.dumps(data)
+        return cls._dumps(data)
 
     @classmethod
     def collection(cls, collection, request, pagination=False):  # pylint: disable=too-many-locals,too-many-branches
-        """Format JSON API v1.0 collection from content list."""
+        """Generate JSON API v1.0 collection."""
 
         data = {
             'data': []
@@ -164,34 +161,40 @@ class JsonApiV1(object):
                 data['links']['first'] = first_link
                 data['links']['last'] = last_link
 
-        return cls.dumps(data)
+        return cls._dumps(data)
 
     @classmethod
     def error(cls, causes):
-        """Format JSON API v1.0 error."""
+        """Generate JSON API v1.0 error."""
 
         # Follow CamelCase in field names because expected usage is from
         # Javascript that uses CamelCase.
-        errors = {
+        data = {
             'errors': [],
             'meta': {}
         }
         for cause in causes['errors']:
-            errors['errors'].append({'status': str(cause['status']),
-                                     'statusString': cause['status_string'],
-                                     'title': cause['title'],
-                                     'module': cause['module']})
+            data['errors'].append({
+                'status': str(cause['status']),
+                'statusString': cause['status_string'],
+                'title': cause['title'],
+                'module': cause['module']
+            })
 
-        if not errors['errors']:
-            errors = {'errors': [{'status': '500',
-                                  'statusString': '500 Internal Server Error',
-                                  'title': 'Internal errors not found when error detected.'}]}
-        errors['meta'] = causes['meta']
+        if not data['errors']:
+            data = {
+                'errors': [{
+                    'status': '500',
+                    'statusString': '500 Internal Server Error',
+                    'title': 'Internal errors not found when error detected.'
+                }]
+            }
+        data['meta'] = causes['meta']
 
-        return cls.dumps(errors)
+        return cls._dumps(data)
 
     @staticmethod
-    def dumps(response):
+    def _dumps(response):
         """Create string from json structure."""
 
         # Python 2 and Python 3 have different defaults for separators and

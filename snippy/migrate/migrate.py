@@ -60,7 +60,7 @@ class Migrate(object):
                 dictionary = {'meta': {'updated': Config.utcnow(),
                                        'version': __version__,
                                        'homepage': __homepage__},
-                              'data': collection.dump_json(Config.filter_fields)}
+                              'data': collection.dump_dict(Config.filter_fields)}
                 if Config.is_operation_file_text:
                     for resource in collection.resources():
                         template = resource.dump_text(Config.templates)

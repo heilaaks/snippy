@@ -65,8 +65,8 @@ class TestUtConfigCreate(unittest.TestCase):
         assert isinstance(Config.search_grp_kws, tuple)
         assert isinstance(Config.search_filter, str)
         assert isinstance(Config.get_operation_file(), str)
-        assert Config.get_resource().dump_dict(), resource
-        assert next(Config.get_collection().resources()).dump_dict(), resource
+        assert Config.get_resource().dump_dict([]), resource
+        assert next(Config.get_collection().resources()).dump_dict([]), resource
         assert Config.is_operation_create
         assert not Config.is_operation_search
         assert not Config.is_operation_update

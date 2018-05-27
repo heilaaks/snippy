@@ -44,7 +44,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         text = Const.EMPTY
         for i, resource in enumerate(self.resources(), start=1):
-            text = text + resource.convert_term(index=i, ansi=True, debug=True)
+            text = text + resource.dump_term(index=i, ansi=True, debug=True)
 
         return text
 
@@ -111,9 +111,9 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         return Resource(category, timestamp)
 
     def migrate(self, source):
-        """Migrate Resource of Collections.
+        """Migrate resource or collection.
 
-        Add new resources or override the original resources if they exist.
+        Add new resources or override the originals if they exist.
         """
 
         if isinstance(source, Collection):
@@ -127,6 +127,23 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             self.data['data'][source.digest]['data'] = source
             self.data['data'][source.digest]['meta'] = OrderedDict()
             self.data['data'][source.digest]['meta']['digest'] = source.digest
+
+    def merge(self, source):
+        """Merge resource.
+
+        Merge content to existing resource.
+        """
+
+        if not source:
+            return
+
+        print(self)
+        print("===")
+
+        if source.digest in self:
+            self[source.digest].merge(source)
+
+        print(self)
 
     def convert(self, rows):
         """Convert database rows into collection."""
@@ -147,14 +164,28 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         else:
             self._logger.debug('json format not indentified: %s', dictionary)
 
-    def dump_json(self, filter_fields):
-        """Convert collection to json."""
+    def dump_dict(self, filter_fields):
+        """Convert collection to dictionary."""
 
         data = []
         for resource in self.resources():
-            data.append(resource.dump_json(filter_fields))
+            data.append(resource.dump_dict(filter_fields))
 
         return data
+
+    def dump_text(self, digest, category, timestamp, templates):
+        """Convert collection to text.
+
+        Conversion is made from specific resource or from empty template for
+        defined category.
+        """
+
+        if digest:
+            text = self[digest].dump_text(templates)
+        else:
+            text = self.get_resource(category, timestamp).dump_text(templates)
+
+        return text
 
     def dump_term(self, use_ansi, debug_logs, search_filter):
         """Convert collection for terminal."""
@@ -170,7 +201,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         text = Const.EMPTY
         for i, resource in enumerate(self.resources(), start=1):
-            text = text + resource.convert_term(index=i, ansi=ansi, debug=debug_logs)
+            text = text + resource.dump_term(index=i, ansi=ansi, debug=debug_logs)
         # Set only one empty line at the end of string for beautified output.
         if self.size():
             text = text.rstrip()

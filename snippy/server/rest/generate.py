@@ -61,7 +61,7 @@ class Generate(object):
             data['data'] = {
                 'type': resource.category,
                 'id': resource.digest,
-                'attributes': resource.dump_json(Config.filter_fields)
+                'attributes': resource.dump_dict(Config.filter_fields)
             }
 
             break
@@ -89,7 +89,7 @@ class Generate(object):
             data['data'].append({
                 'type': resource.category,
                 'id': resource.digest,
-                'attributes': resource.dump_json(Config.filter_fields)
+                'attributes': resource.dump_dict(Config.filter_fields)
             })
         if pagination:
             data['meta'] = {}

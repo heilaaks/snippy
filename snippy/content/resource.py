@@ -69,7 +69,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def __str__(self):
         """Format string from the class object."""
 
-        return self.convert_term(index=1, ansi=True, debug=True)
+        return self.dump_term(index=1, ansi=True, debug=True)
 
     def __eq__(self, resource):
         """Compare resources if they are equal."""
@@ -285,7 +285,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Migrate source into Resource.
 
         This always overrides fields that can be modified by user. Only the
-        fields can be changed and modified.
+        fields that can be modified by end user are updated.
         """
 
         self._logger.debug('migrate to resouce: %.16s', self.digest)
@@ -304,29 +304,32 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Merge two resource.
 
         This overrides original resource fields only if the merged source
-        fields exists. Only the fields can be changed and modified.
+        fields exists. Only the fields that can be modified by end user are
+        updated.
         """
 
-        self._logger.debug('merge to resouce: %.16s', self.digest)
-        if source:
-            if source.data:
-                self.data = source.data
-            if source.brief:
-                self.brief = source.brief
-            if source.group and source.group != Const.DEFAULT_GROUP:
-                self.group = source.group
-            if source.tags:
-                self.tags = source.tags
-            if source.links:
-                self.links = source.links
-            if source.filename:
-                self.filename = source.filename
-            if source.runalias:
-                self.runalias = source.runalias
-            if source.versions:
-                self.versions = source.versions
+        if not source:
+            return
 
-            self.digest = self.compute_digest()
+        self._logger.debug('merge to resouce: %.16s', self.digest)
+        if source.data:
+            self.data = source.data
+        if source.brief:
+            self.brief = source.brief
+        if source.group and source.group != Const.DEFAULT_GROUP:
+            self.group = source.group
+        if source.tags:
+            self.tags = source.tags
+        if source.links:
+            self.links = source.links
+        if source.filename:
+            self.filename = source.filename
+        if source.runalias:
+            self.runalias = source.runalias
+        if source.versions:
+            self.versions = source.versions
+
+        self.digest = self.compute_digest()
 
     def convert(self, row):
         """Convert database row into resource."""
@@ -402,30 +405,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         self.digest = self.compute_digest()
 
-    def dump_dict(self):
+    def dump_dict(self, remove_fields):
         """Convert resource to dictionary."""
 
-        dictionary = {
-            'data': self.data,
-            'brief': self.brief,
-            'group': self.group,
-            'tags': self.tags,
-            'links': self.links,
-            'category': self.category,
-            'filename': self.filename,
-            'runalias': self.runalias,
-            'versions': self.versions,
-            'created': self.created,
-            'updated': self.updated,
-            'digest': self.digest,
-        }
-
-        return dictionary
-
-    def dump_json(self, remove_fields):
-        """Convert resource to json."""
-
-        json = {
+        data = {
             'data': self.data,
             'brief': self.brief,
             'group': self.group,
@@ -441,9 +424,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         }
 
         for field in remove_fields:
-            json.pop(field, None)
+            data.pop(field, None)
 
-        return json
+        return data
 
     def dump_text(self, templates):
         """Convert resource to text."""
@@ -458,62 +441,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return text
 
-    def _add_data(self, template):
-        """Add resource data to text template."""
-
-        data = Const.DELIMITER_DATA.join(map(str, self.data))
-        if data:
-            if self.is_snippet():
-                template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
-            else:
-                template = data
-        else:
-            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
-
-        return template
-
-    def _add_brief(self, template):
-        """Add resource brief to text template."""
-
-        brief = self.brief
-        template = template.replace('<SNIPPY_BRIEF>', brief)
-
-        return template
-
-    def _add_group(self, template):
-        """Add resource group to text template."""
-
-        group = self.group
-        template = template.replace('<SNIPPY_GROUP>', group)
-
-        return template
-
-    def _add_tags(self, template):
-        """Add resource tags to text template."""
-
-        tags = Const.DELIMITER_TAGS.join(map(str, sorted(self.tags)))
-        template = template.replace('<SNIPPY_TAGS>', tags)
-
-        return template
-
-    def _add_links(self, template):
-        """Add resource links to text template."""
-
-        links = Const.DELIMITER_LINKS.join(map(str, sorted(self.links)))
-        links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
-        template = template.replace('<SNIPPY_LINKS>', links)
-
-        return template
-
-    def _add_filename(self, template):
-        """Add resource filename to text template."""
-
-        filename = self.filename
-        template = template.replace('<SNIPPY_FILE>', filename)
-
-        return template
-
-    def convert_term(self, index, ansi, debug):
+    def dump_term(self, index, ansi, debug):
         """Convert resource to be printed to terminal."""
 
         text = Const.EMPTY
@@ -576,6 +504,61 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = text + Const.NEWLINE
 
         return text
+
+    def _add_data(self, template):
+        """Add resource data to text template."""
+
+        data = Const.DELIMITER_DATA.join(map(str, self.data))
+        if data:
+            if self.is_snippet():
+                template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
+            else:
+                template = data
+        else:
+            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
+
+        return template
+
+    def _add_brief(self, template):
+        """Add resource brief to text template."""
+
+        brief = self.brief
+        template = template.replace('<SNIPPY_BRIEF>', brief)
+
+        return template
+
+    def _add_group(self, template):
+        """Add resource group to text template."""
+
+        group = self.group
+        template = template.replace('<SNIPPY_GROUP>', group)
+
+        return template
+
+    def _add_tags(self, template):
+        """Add resource tags to text template."""
+
+        tags = Const.DELIMITER_TAGS.join(map(str, sorted(self.tags)))
+        template = template.replace('<SNIPPY_TAGS>', tags)
+
+        return template
+
+    def _add_links(self, template):
+        """Add resource links to text template."""
+
+        links = Const.DELIMITER_LINKS.join(map(str, sorted(self.links)))
+        links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
+        template = template.replace('<SNIPPY_LINKS>', links)
+
+        return template
+
+    def _add_filename(self, template):
+        """Add resource filename to text template."""
+
+        filename = self.filename
+        template = template.replace('<SNIPPY_FILE>', filename)
+
+        return template
 
     @staticmethod
     def _terminal_header(ansi=False):

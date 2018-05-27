@@ -154,20 +154,13 @@ class Config(object):
         Profiler.disable()
 
     @classmethod
-    def get_resource(cls, updates=None, text=None):
-        """Get resource from configuration source."""
-
-        collection = cls.get_collection(updates, text)
-        resource = next(collection.resources())
-
-        return resource
-
-    @classmethod
     def get_collection(cls, updates=None, text=None):
         """Get collection from configuration source.
 
-        If existing updates are provided, they are used on top of template
-        generated for the editor.
+        If updates are provided on top of configured content, the updates are
+        added on top of configured content. For example when existing content
+        is updated, the stored content must be shown on text editor on top of
+        he default template.
         """
 
         collection = Collection()
@@ -175,15 +168,22 @@ class Config(object):
             collection = Parser.read_content(Config.utcnow(), text)
         elif cls.editor:
             timestamp = Config.utcnow()
-            resource = collection.get_resource(cls.content_category, timestamp)
-            resource.merge(updates)
-            template = resource.dump_text(Config.templates)
+            digest = collection.merge(updates)
+            template = collection.dump_text(digest, cls.content_category, timestamp, Config.templates)
             collection = Editor.read_content(timestamp, template)
         else:
-            resource = cls._read_resource()
-            collection.migrate(resource)
+            collection = cls._read_collection()
 
         return collection
+
+    @classmethod
+    def get_resource(cls, updates=None, text=None):
+        """Get resource from configuration source."""
+
+        collection = cls.get_collection(updates, text)
+        resource = next(collection.resources())
+
+        return resource
 
     @classmethod
     def _init_logs(cls, args):
@@ -236,10 +236,11 @@ class Config(object):
         )
 
     @classmethod
-    def _read_resource(cls):
+    def _read_collection(cls):
         """Read configurared content."""
 
-        resource = Collection.get_resource(cls.content_category, Config.utcnow())
+        collection = Collection()
+        resource = collection.get_resource(cls.content_category, Config.utcnow())
         resource.data = cls.content_data
         resource.brief = cls.content_brief
         resource.group = cls.content_group
@@ -247,8 +248,9 @@ class Config(object):
         resource.links = cls.content_links
         resource.filename = cls.content_filename
         resource.digest = resource.compute_digest()
+        collection.migrate(resource)
 
-        return resource
+        return collection
 
     @classmethod
     def _storage_schema(cls):

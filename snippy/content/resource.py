@@ -301,7 +301,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.digest = self.compute_digest()
 
     def merge(self, source):
-        """Merge two resource.
+        """Merge two resources.
 
         This overrides original resource fields only if the merged source
         fields exists. Only the fields that can be modified by end user are
@@ -309,7 +309,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """
 
         if not source:
-            return
+            return None
 
         self._logger.debug('merge to resouce: %.16s', self.digest)
         if source.data:
@@ -330,6 +330,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.versions = source.versions
 
         self.digest = self.compute_digest()
+
+        return self.digest
 
     def convert(self, row):
         """Convert database row into resource."""

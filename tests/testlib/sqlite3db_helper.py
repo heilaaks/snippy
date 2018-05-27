@@ -46,6 +46,7 @@ class Sqlite3DbHelper(object):
             rows = cursor.fetchall()
         connection.close()
         collection.convert(rows)
+        print(collection)
 
     @staticmethod
     def get_collection():

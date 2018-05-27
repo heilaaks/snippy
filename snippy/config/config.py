@@ -162,7 +162,7 @@ class Config(object):
         If updates are provided on top of configured content, the updates are
         added on top of configured content. For example when existing content
         is updated, the stored content must be shown on text editor on top of
-        he default template.
+        the default template.
         """
 
         collection = Collection()

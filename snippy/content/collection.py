@@ -134,16 +134,17 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         Merge content to existing resource.
         """
 
+        digest = None
         if not source:
-            return
-
-        print(self)
-        print("===")
+            return digest
 
         if source.digest in self:
-            self[source.digest].merge(source)
+            digest = self[source.digest].merge(source)
+        else:
+            self.migrate(source)
+            digest = source.digest
 
-        print(self)
+        return digest
 
     def convert(self, rows):
         """Convert database rows into collection."""
@@ -181,7 +182,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         """
 
         if digest:
-            text = self[digest].dump_text(templates)
+            text = self[digest]['data'].dump_text(templates)
         else:
             text = self.get_resource(category, timestamp).dump_text(templates)
 

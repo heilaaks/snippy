@@ -74,7 +74,7 @@ class Storage(object):
     def import_content(self, collection):
         """Import content."""
 
-        self._logger.debug('export content')
+        self._logger.debug('import content')
         collection = self._database.insert(collection)
 
         return collection

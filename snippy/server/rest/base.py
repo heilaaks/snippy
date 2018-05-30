@@ -70,7 +70,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         api = Api(self._category, Api.SEARCH, request.params)
         Config.load(api)
         self._content.run()
-        if not self._content.collection.size() and Config.search_limit != 0:
+        if self._content.collection.empty() and Config.search_limit != 0:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
@@ -135,7 +135,7 @@ class ApiContentDigestBase(object):
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if not self._content.collection.size():
+        if self._content.collection.empty():
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
@@ -217,7 +217,7 @@ class ApiContentFieldBase(object):  # pylint: disable=too-few-public-methods
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if not self._content.collection.size():
+        if self._content.collection.empty():
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API

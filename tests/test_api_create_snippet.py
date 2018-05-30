@@ -752,7 +752,7 @@ class TestApiCreateSnippet(object):
             'data': [{
                 'type': 'snippet',
                 'attributes': {
-                    'data': [],
+                    'data': []
                 }
             }]
         }

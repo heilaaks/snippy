@@ -373,7 +373,7 @@ class Config(object):
         cls._logger.debug('validating search context with %d results', collection.size())
         if cls.is_content_digest():
             if cls.operation_digest:
-                if not collection.size():
+                if collection.empty():
                     Cause.push(Cause.HTTP_NOT_FOUND,
                                'cannot find content with message digest %s' % cls.operation_digest)
                 elif collection.size() > 1:
@@ -386,7 +386,7 @@ class Config(object):
             if any(cls.content_data):
                 data = Const.EMPTY.join(cls.content_data)
                 data = data[:30] + (data[30:] and '...')
-                if not collection.size():
+                if collection.empty():
                     Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with content data \'%s\'' % data)
                 elif collection.size() > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
@@ -395,7 +395,7 @@ class Config(object):
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content data to %s content' % operation)
         elif cls._is_search_keywords():
-            if not collection.size():
+            if collection.empty():
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
             elif collection.size() > 1:
                 Cause.push(Cause.HTTP_CONFLICT,

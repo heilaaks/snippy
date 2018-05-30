@@ -133,7 +133,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             if collection.size() == 1:
                 resource = next(collection.resources())
                 filename = Config.get_operation_file(content_filename=resource.filename)
-            elif not collection.size():
+            elif collection.empty():
                 Config.validate_search_context(collection, 'export')
             Migrate.dump(collection, filename)
         else:
@@ -155,7 +155,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 updates = next(collection.resources())
                 resource.migrate(updates)
                 self._storage.update(digest, resource)
-            elif not collection.size():
+            elif collection.empty():
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find {} identified with digest {:.16}'.format(self._category, content_digest))
             else:
                 Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple {} with same digest {:.16}'.format(self._category, content_digest))

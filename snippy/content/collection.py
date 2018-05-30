@@ -83,6 +83,11 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return len(self.data['data'])
 
+    def empty(self):
+        """Test if collection is empty."""
+
+        return True if self.size() == 0 else False
+
     def keys(self):
         """Iterate over keys stored in collection."""
 

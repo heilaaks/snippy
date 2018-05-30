@@ -177,8 +177,8 @@ class TestCliUpdateSnippet(object):
         """Update snippet based on digest.
 
         Try to update snippet with one digit digest that matches two snippets.
-        Note! not change the snippets because this ase is produced with real
-        message digests that just happen to have same digit starting both of
+        Note! Don't not change the test snippets because this case is produced
+        with real digests that just happen to have same digit starting both of
         the cases.
         """
 
@@ -252,6 +252,23 @@ class TestCliUpdateSnippet(object):
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('default-snippets')
+    def test_cli_update_snippet_012(self, snippy, mocker):
+        """Update snippet based on content data.
+
+        Try to update snippet with content data that matches to two different
+        snippets. Nothing must be updated in this case because content can be
+        updated only if it is uniquely identified.
+        """
+
+        content_read = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        }
+        cause = snippy.run(['snippy', 'update', '-c', 'docker'])
+        assert cause == 'NOK: given content data docker matches (2) more than once preventing the operation'
+        assert Database.get_snippets().size() == 2
+        Content.verified(mocker, snippy, content_read)
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

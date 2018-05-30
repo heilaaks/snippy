@@ -56,12 +56,11 @@ class Validate(object):
 
         resource_ = {}
         if JsonSchema.validate(JsonSchema.RESOURCE, request.media):
-            if isinstance(request.media['data'], dict):
-                if cls.is_valid_data(request.media['data']):
-                    resource_ = request.media['data']['attributes']
-                    resource_['digest'] = digest
-            else:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(request.media['data'])))  # noqa: E501 # pylint: disable=line-too-long
+            if cls.is_valid_data(request.media['data']):
+                resource_ = request.media['data']['attributes']
+                resource_['digest'] = digest
+        else:
+            cls._logger.debug('invalid json media for resource', request.media)
 
         if request.method.lower() == 'patch' or request.get_header('x-http-method-override', default='post').lower() == 'patch':
             resource_['merge'] = True
@@ -74,18 +73,14 @@ class Validate(object):
 
         collection = []
         if JsonSchema.validate(JsonSchema.COLLECTION, request.media):
-            if isinstance(request.media['data'], (list, tuple)):
-                for data in request.media['data']:
-                    if cls.is_valid_data(data):
-                        collection.append(data['attributes'])
-                    else:
-                        collection = []
-                        break
-            elif isinstance(request.media['data'], dict):
-                if cls.is_valid_data(request.media['data']):
-                    collection.append(request.media['data']['attributes'])
-            else:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'invalid request with unknown top level data object: {}'.format(type(request.media['data'])))  # noqa: E501 # pylint: disable=line-too-long
+            for data in request.media['data']:
+                if cls.is_valid_data(data):
+                    collection.append(data['attributes'])
+                else:
+                    collection = []
+                    break
+        else:
+            cls._logger.debug('invalid json media for collection', request.media)
 
         return tuple(collection)
 

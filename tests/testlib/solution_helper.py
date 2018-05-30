@@ -20,7 +20,7 @@
 """solution_helper: Helper methods for solution testing."""
 
 from snippy.config.config import Config
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.config.source.parser import Parser
 from snippy.content.collection import Collection
 

@@ -19,7 +19,7 @@
 
 """api_snippets: JSON REST API for Snippets."""
 
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.server.rest.base import ApiContentBase
 from snippy.server.rest.base import ApiContentDigestBase
 from snippy.server.rest.base import ApiContentFieldBase

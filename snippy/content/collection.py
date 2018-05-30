@@ -27,7 +27,7 @@ from collections import OrderedDict
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
 
 from snippy.cause import Cause
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.content.resource import Resource
 from snippy.logger import Logger
 

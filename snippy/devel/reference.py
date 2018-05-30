@@ -29,7 +29,7 @@ from signal import signal, getsignal, SIGPIPE, SIG_DFL
 import pkg_resources
 
 from snippy.cause import Cause
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.logger import Logger
 
 

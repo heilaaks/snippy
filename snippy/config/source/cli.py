@@ -24,7 +24,7 @@ from __future__ import print_function
 import sys
 import argparse
 
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.config.source.base import ConfigSourceBase
 from snippy.logger import Logger
 from snippy.meta import __homepage__

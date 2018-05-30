@@ -19,7 +19,7 @@
 
 """snippet: Snippet management."""
 
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.content.base import ContentTypeBase
 
 

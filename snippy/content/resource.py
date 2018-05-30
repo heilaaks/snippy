@@ -22,7 +22,7 @@
 import re
 import hashlib
 
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.logger import Logger
 
 

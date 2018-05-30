@@ -26,7 +26,7 @@ import yaml
 
 from snippy.cause import Cause
 from snippy.config.config import Config
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
@@ -538,7 +538,7 @@ def devel_file_data(mocker):
         'import pkg_resources',
         'from snippy.snip import Snippy',
         'from snippy.config.config import Config',
-        'from snippy.config.constants import Constants as Const',
+        'from snippy.constants import Constants as Const',
         'from snippy.cause import Cause',
         'from tests.testlib.snippet_helper import SnippetHelper as Snippet',
         'from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database',

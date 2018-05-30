@@ -31,7 +31,7 @@ except ImportError:
     from urllib import quote_plus  # pylint: disable=ungrouped-imports
 
 from snippy.config.config import Config
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.logger import Logger
 
 

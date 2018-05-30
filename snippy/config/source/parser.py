@@ -22,7 +22,7 @@
 import re
 
 from snippy.cause import Cause
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
 from snippy.logger import Logger
 

@@ -19,7 +19,7 @@
 
 """test_ut_arguments_create: Test command line argumens for creating new snippets."""
 
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.config.source.cli import Cli
 
 

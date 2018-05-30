@@ -26,7 +26,7 @@ from falcon import testing
 import falcon
 import pytest
 
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database

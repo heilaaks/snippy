@@ -22,7 +22,7 @@
 import pytest
 
 from snippy.cause import Cause
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
 
 

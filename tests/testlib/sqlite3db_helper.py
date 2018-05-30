@@ -27,7 +27,7 @@ from contextlib import closing
 
 import pkg_resources
 
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
 
 

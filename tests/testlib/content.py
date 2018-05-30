@@ -25,7 +25,7 @@ import mock
 
 from snippy.cause import Cause
 from snippy.config.config import Config
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.meta import __docs__
 from snippy.meta import __homepage__
 from snippy.meta import __openapi__

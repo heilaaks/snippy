@@ -26,7 +26,7 @@ import re
 import pytest
 
 from snippy.cause import Cause
-from snippy.config.constants import Constants as Const
+from snippy.constants import Constants as Const
 from snippy.meta import __homepage__
 from snippy.meta import __version__
 from snippy.snip import Snippy

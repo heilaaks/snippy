@@ -357,9 +357,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return True if self.digest in Resource.TEMPLATES else False
 
     def has_data(self):
-        """Test if content has data defined."""
+        """Test if resource has data."""
 
-        return True if self.data or any(self.data) else False
+        return True if any(self.data) else False
 
     def is_snippet(self):
         """Test if resource is snippet."""

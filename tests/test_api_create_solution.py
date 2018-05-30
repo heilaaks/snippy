@@ -322,6 +322,44 @@ class TestApiCreateSolution(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
+    @pytest.mark.usefixtures('create-beats-utc', 'caller')
+    def test_api_create_solution_008(self, server):
+        """Create one solution from API.
+
+        Try to call POST /v1/solutions to create new solutuon with empty
+        content data.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'solution',
+                'attributes': {
+                    'data': [],
+                }
+            }]
+        }
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '381'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content was not stored because mandatory content data was missing'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/solutions',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

@@ -30,6 +30,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix error string that complains about snippet content matching to empty template when the data is empty. See test_api_create_snippet_017.
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile']) and new document stuff
    - [ ] Updating cls.server = cls.source.server does not make sense after start. But this was propably fix to some other problem.
    - [ ] Fix insert_content and digest check is probably unnecessary. Remove it after content refactor.

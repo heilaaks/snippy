@@ -245,10 +245,6 @@ class Sqlite3Db(object):
     def _test_content(self, resource):
         """Test content validity."""
 
-        # Common failure cases:
-        #   1. Content is imported from template that is not changed.
-        #   2. Default content is imported multiple times.
-        #   3. Content already exists.
         cause = (Cause.HTTP_OK, Const.EMPTY)
         if resource.is_template():
             cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')

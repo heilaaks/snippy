@@ -737,6 +737,47 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
+    @pytest.mark.usefixtures('create-exited-utc', 'caller')
+    def test_api_create_snippet_017(self, server):
+        """Create one snippet with POST.
+
+        Try to call POST /v1/snippets to create new snippet with empty content
+        data. In case of snippets, the resulting error string is misleading.
+        TODO: The reason is that the content is compared against content
+        templates. And with snippets, the content template with empty data
+        is also matching to non existent mandatory data check.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'snippet',
+                'attributes': {
+                    'data': [],
+                }
+            }]
+        }
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '383'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content was not stored because it was matching to an empty template'
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/snippets',
+            headers={'accept': 'application/json'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

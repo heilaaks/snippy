@@ -1,7 +1,6 @@
 ## WORKING
    - [ ] Add sqlite doc string that the e.g. insert update return stored/updated content in collection.
    - [ ] Add meta to collection __str__ printing.
-   - [ ] Is this tested? Can the json.load removed (json = json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
    - [ ] Add UT tests for class Debug() methods.
 
@@ -30,6 +29,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix the Generate() does not need 'json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))' because code is not called with emty collection.
    - [ ] Fix error string that complains about snippet content matching to empty template when the data is empty. See test_api_create_snippet_017.
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile']) and new document stuff
    - [ ] Updating cls.server = cls.source.server does not make sense after start. But this was propably fix to some other problem.

@@ -311,6 +311,35 @@ class Parser(object):
         # In Python 2 a string can be str or unicode but in Python 3 strings
         # are always unicode strings. This makes sure that a string is always
         # str for Python 2 and python 3.
+        #if not Const.PYTHON2:
+        #    #unicode = str
+        #if isinstance(parameter, unicode):
+        #    parameter = parameter.encode('utf-8')
+
+        #if Const.PYTHON2:
+        #    basestring = basestring
+        #else:
+        #    basestring = str
+        #if isinstance(parameter, basestring):
+        #    parameter = parameter.encode('utf-8')
+        #try:
+        #except
+        #try:
+        #    print("before (%s)" % parameter)
+        #    parameter = str(parameter, 'utf-8')
+        #    print("after (%s) " % parameter)
+        #except TypeError:
+        #    pass
+        #if isinstance(parameter, unicode):
+        #    print("before (%s)" % parameter)
+        #    parameter = parameter.encode('utf-8')
+        #    print("after (%s) " % parameter)
+        #print("before type (%s)" % type(parameter))
+        #print("before (%s)" % (parameter,))
+        #parameter = str(parameter).encode('utf-8')
+        #parameter = str(parameter)
+        #print("after (%s) " % parameter)
+        #print("after type (%s)" % type(parameter))
         if Const.PYTHON2 and isinstance(parameter, unicode):  # noqa: F821 # pylint: disable=undefined-variable
             parameter = parameter.encode('utf-8')
 

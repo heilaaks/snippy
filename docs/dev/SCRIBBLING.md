@@ -31,11 +31,12 @@ Random notes and scribling during development.
    ```
    # Installing for Python 2.7
    $ pip2 install virtualenvwrapper
-   $ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2    # Add to ~/.bashrc
-   $ mkvirtualenv snippy-python27
-   $ workon snippy-python27
-   $ pip install -e .[dev]
-   $ sudo dnf install redhat-rpm-config
+   $ virtualenv --python=/usr/bin/python2 snippy-python27
+   #$ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python2    # Add to ~/.bashrc
+   #$ mkvirtualenv snippy-python27
+   #$ workon snippy-python27
+   #$ pip install -e .[dev]
+   #$ sudo dnf install redhat-rpm-config
    ```
 
    ```

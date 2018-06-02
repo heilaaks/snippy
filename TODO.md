@@ -1,6 +1,7 @@
 ## WORKING
    - [ ] Fix all files to be in UTF-8 format.
    - [ ] Fix config base to have _ in init with properties
+   - [ ] Add tests for command line unicode create and search.
    - [ ] Add sqlite doc string that the e.g. insert update return stored/updated content in collection.
    - [ ] Add meta to collection __str__ printing.
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.

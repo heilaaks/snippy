@@ -777,7 +777,6 @@ class TestApiCreateSnippet(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
-    @pytest.mark.skip(reason="does not work in python 2")
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_018(self, server, mocker):
         """Create and search snippet with unicode characters.
@@ -791,11 +790,11 @@ class TestApiCreateSnippet(object):
             'data': [{
                 'type': 'snippet',
                 'attributes': {
-                    'data': ['Sîne klâwen durh die wolken sint geslagen', 'er stîget ûf mit grôzer kraft'],
-                    'brief': 'Tagelied of Wolfram von Eschenbach Sîne klâwen',
-                    'group': 'Düsseldorf',
-                    'tags': ['γλώσσα', 'έδωσαν', 'ελληνική'],
-                    'links': ['http://www.чухонца.edu/~fdc/utf8/']
+                    'data': [u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'],
+                    'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
+                    'group': u'Düsseldorf',
+                    'tags': [u'γλώσσα', u'έδωσαν', u'ελληνική'],
+                    'links': [u'http://www.чухонца.edu/~fdc/utf8/']
                 }
             }]
         }
@@ -830,10 +829,8 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
-        #print(Database.print_contents())
-        print(result.json)
         assert result.headers == result_headers
-        #assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert Database.get_snippets().size() == 1
         Content.verified(mocker, server, content)
@@ -855,16 +852,13 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
-        server.run('--server')
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=Düsseldorf&limit=20&sort=brief')
-        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        #assert 0
 
     @classmethod
     def teardown_class(cls):

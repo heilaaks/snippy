@@ -369,9 +369,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def dump_qargs(self):
         """Convert resource for sqlite qargs."""
 
-        #print("==")
-        #print(self.tags)
-        #print("==")
         qargs = (
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data)),
             self.brief,
@@ -468,6 +465,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + self._terminal_key(ansi) % self.key
             text = text + Const.NEWLINE
 
+        # Unicode character string must be encoded for Python 2 in order
+        # to get it printed to terminal.
+        if Const.PYTHON2:
+            text = text.encode('utf-8')
+
         return text
 
     def get_snippet_text(self, idx, ansi=False):
@@ -513,7 +515,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def _add_data(self, template):
         """Add resource data to text template."""
 
-        data = Const.DELIMITER_DATA.join(map(str, self.data))
+        data = Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data))
         if data:
             if self.is_snippet():
                 template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
@@ -543,7 +545,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def _add_tags(self, template):
         """Add resource tags to text template."""
 
-        tags = Const.DELIMITER_TAGS.join(map(str, sorted(self.tags)))
+        tags = Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
         template = template.replace('<SNIPPY_TAGS>', tags)
 
         return template
@@ -551,7 +553,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def _add_links(self, template):
         """Add resource links to text template."""
 
-        links = Const.DELIMITER_LINKS.join(map(str, sorted(self.links)))
+        links = Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, sorted(self.links)))
         links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
         template = template.replace('<SNIPPY_LINKS>', links)
 

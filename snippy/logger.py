@@ -31,6 +31,8 @@ from signal import signal, getsignal, SIGPIPE, SIG_DFL
 
 import json
 
+from snippy.constants import Constants as Const
+
 try:
     from gunicorn.glogging import Logger as GunicornLogger
 except ImportError:
@@ -330,7 +332,7 @@ class CustomFormatter(logging.Formatter):
         # be read by reading three significat digits after point.
         if Logger.CONFIG['log_json']:
             timstamp = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(record.created))
-            time_string = '%s.%d+0000' % (timstamp, int(str(record.msecs).replace('.', '')[:6]))
+            time_string = '%s.%d+0000' % (timstamp, int(Const.TEXT_TYPE(record.msecs).replace('.', '')[:6]))
         else:
             timstamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(record.created))
             time_string = '%s.%03d' % (timstamp, record.msecs)

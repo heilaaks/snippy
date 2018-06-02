@@ -97,7 +97,6 @@ class Sqlite3Db(object):
         query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, ' +
                  'runalias, versions, created, updated, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
         qargs = resource.dump_qargs()
-        #print("qargs (%s)" % (qargs,))
 
         try:
             self._put_db(query, qargs)
@@ -340,7 +339,7 @@ class Sqlite3Db(object):
                 query = ('SELECT count(*) FROM contents WHERE data LIKE ?')
             else:
                 query = ('SELECT * FROM contents WHERE data LIKE ?')
-            qargs = ['%'+Const.DELIMITER_DATA.join(map(str, data))+'%']
+            qargs = ['%'+Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, data))+'%']
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'please define keyword, digest or content data as search criteria')
 

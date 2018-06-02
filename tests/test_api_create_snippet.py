@@ -229,8 +229,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': ['docker rm $(docker ps --all -q -f status=exited)'],
             'brief': '',
-            'group':
-            'default',
+            'group': 'default',
             'tags': [],
             'links': [],
             'category': 'snippet',
@@ -777,6 +776,101 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+
+    @pytest.mark.skip(reason="not working")
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_api_create_snippet_018(self, server, mocker):
+        """Create one snippet with POST.
+
+        Call POST /v1/snippets to create new snippet. In this case the content
+        contains unicode characters in every field. The contet must be also
+        returned correct when searching with unicode characters.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'snippet',
+                'attributes': {
+                    'data': ['   ', ' ,   '],
+                    'brief': '  .   ',
+                    'group': '',
+                    'tags': [' Bronze', 'Horseman', 'Russian', ''],
+                    'links': ['http://www.columbia.edu/~fdc/utf8/']
+                }
+            }]
+        }
+        print(request_body)
+        content_read = {
+            'data': request_body['data'][0]['attributes']['data'],
+            'brief': request_body['data'][0]['attributes']['brief'],
+            'group': request_body['data'][0]['attributes']['group'],
+            'tags': request_body['data'][0]['attributes']['tags'],
+            'links': request_body['data'][0]['attributes']['links'],
+            'category': 'snippet',
+            'filename': '',
+            'runalias': '',
+            'versions': '',
+            'created': '2017-10-14T19:56:31.000001+0000',
+            'updated': '2017-10-14T19:56:31.000001+0000',
+            'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
+        }
+        content = {Snippet.REMOVE_DIGEST: content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '631'
+        }
+        result_json = {
+            'data': [{
+                'type': 'snippet',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': content_read
+            }]
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/snippets',
+            headers={'accept': 'application/json'},
+            body=json.dumps(request_body))
+        print(Database.print_contents())
+        print(result.json)
+        print("data (%s)" % result.json['data'][0]['attributes']['data'][0]).decode('utf-8')
+        sys.exit(0)
+        #assert result.headers == result_headers
+        #assert Content.ordered(result.json) == Content.ordered(result_json)
+        #assert result.status == falcon.HTTP_201
+        #assert Database.get_snippets().size() == 1
+        #Content.verified(mocker, server, content)
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '1038'
+        }
+        result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
+            'data': [{
+                'type': 'snippet',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippet',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+            }]
+        }
+        server.run('--server')
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/snippets',
+            headers={'accept': 'application/vnd.api+json'},
+            query_string='sall=%2C&limit=20&sort=brief')
+        print(result.json)
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
 
     @classmethod
     def teardown_class(cls):

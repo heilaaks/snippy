@@ -163,7 +163,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         Any value including empty string is considered valid data."""
 
         if value is not None:
-            string_ = Parser.to_string(value)
+            string_ = Parser.to_unicode(value)
             data = tuple(string_.split(Const.DELIMITER_DATA))
         else:
             data = ()

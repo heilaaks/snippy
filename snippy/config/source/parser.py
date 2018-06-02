@@ -208,7 +208,9 @@ class Parser(object):
 
     @staticmethod
     def keywords(keywords, sort_=True):
-        """Parse user provided keyword list. The keywords are tags or search
+        """Convert keywords to utf-8 encoded list of keywords.
+
+        Parse user provided keyword list. The keywords are tags or search
         keywords. User may use various formats so each item in a list may be
         for example a string of comma separated tags.
 
@@ -232,9 +234,30 @@ class Parser(object):
 
         return tuple(list_)
 
+
+    @classmethod
+    def search_keywords(cls, value):
+        """Convert keywords to utf-8 encoded search keywords."""
+
+        # The keyword list may be empty or it can contain empty string.
+        # Both cases must be evaluated to 'match any'.
+        keywords = ()
+        if value is not None:
+            keywords = Parser.keywords(value)
+            if not any(keywords):
+                cls._logger.debug('all content listed because keywords were not provided')
+                keywords = ('.')
+        else:
+            keywords = ()
+
+        return keywords
+
     @staticmethod
     def links(links):
-        """Parse user provided link list. Because URL and keyword have different
+        """Convert links to utf-8 encoded list of links.
+
+
+        Parse user provided link list. Because URL and keyword have different
         forbidden characters, the methods to parse keywords are simular but still
         they are separated. URLs can be separated only with space and bar. These
         are defined 'unsafe characters' in URL character set /1/.
@@ -258,89 +281,36 @@ class Parser(object):
         return tuple(sorted_list)
 
     @classmethod
-    def search_keywords(cls, value):
-        """Convert value to list of search keywrods."""
+    def to_unicode(cls, value):
+        """Convert value to utf-8 coded unicode string.
 
-        # The keyword list may be empty or it can contain empty string.
-        # Both cases must be evaluated to 'match any'.
-        keywords = ()
-        if value is not None:
-            keywords = Parser.keywords(value)
-            if not any(keywords):
-                cls._logger.debug('all content listed because keywords were not provided')
-                keywords = ('.')
-        else:
-            keywords = ()
-
-        return keywords
-
-    @classmethod
-    def to_string(cls, value):
-        """Return value as string by joining list items with newlines."""
+        Conversion quarantees only one newline at the end of the string.
+        """
 
         string_ = Const.EMPTY
-        value = Parser._six_string(value)
-        if isinstance(value, str):
+        if isinstance(value, Const.TEXT_TYPE):
             string_ = value
+        elif isinstance(value, Const.BINARY_TYPE):
+            string_ = value.decode('utf-8')
         elif isinstance(value, (list, tuple)):
-            string_ = Const.NEWLINE.join([x.rstrip() for x in value])  # Enforce only one newline at the end.
+            string_ = Const.NEWLINE.join([Parser.to_unicode(x.rstrip()) for x in value])  # Enforce only one newline at the end.
         else:
-            cls._logger.debug('source value conversion to string skipped in normal condition %s : %s', type(value), value)
+            cls._logger.debug('conversion to unicode string failed with unknown type %s : %s', type(value), value)
 
         return string_
 
     @classmethod
     def _to_list(cls, value):
-        """Return option as list of items."""
+        """Return list of UTF-8 encoded unicode strings."""
 
         list_ = []
-        value = Parser._six_string(value)
-        if isinstance(value, str):
+        if isinstance(value, Const.TEXT_TYPE):
             list_.append(value)
+        elif isinstance(value, Const.BINARY_TYPE):
+            list_.append(value.decode('utf-8'))
         elif isinstance(value, (list, tuple)):
-            list_ = list(value)
+            list_ = list([Parser.to_unicode(i) for i in value])
         else:
-            cls._logger.debug('source value conversion to list skipped in normal condition: %s : %s', type(value), value)
+            cls._logger.debug('conversion to list of unicode unicode strings failed with unknown type %s : %s', type(value), value)
 
         return list_
-
-    @staticmethod
-    def _six_string(parameter):
-        """Take care of converting Python 2 unicode string to str."""
-
-        # In Python 2 a string can be str or unicode but in Python 3 strings
-        # are always unicode strings. This makes sure that a string is always
-        # str for Python 2 and python 3.
-        #if not Const.PYTHON2:
-        #    #unicode = str
-        #if isinstance(parameter, unicode):
-        #    parameter = parameter.encode('utf-8')
-
-        #if Const.PYTHON2:
-        #    basestring = basestring
-        #else:
-        #    basestring = str
-        #if isinstance(parameter, basestring):
-        #    parameter = parameter.encode('utf-8')
-        #try:
-        #except
-        #try:
-        #    print("before (%s)" % parameter)
-        #    parameter = str(parameter, 'utf-8')
-        #    print("after (%s) " % parameter)
-        #except TypeError:
-        #    pass
-        #if isinstance(parameter, unicode):
-        #    print("before (%s)" % parameter)
-        #    parameter = parameter.encode('utf-8')
-        #    print("after (%s) " % parameter)
-        #print("before type (%s)" % type(parameter))
-        #print("before (%s)" % (parameter,))
-        #parameter = str(parameter).encode('utf-8')
-        #parameter = str(parameter)
-        #print("after (%s) " % parameter)
-        #print("after type (%s)" % type(parameter))
-        if Const.PYTHON2 and isinstance(parameter, unicode):  # noqa: F821 # pylint: disable=undefined-variable
-            parameter = parameter.encode('utf-8')
-
-        return parameter

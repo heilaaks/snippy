@@ -13,7 +13,14 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     COMMA = ','
     NEWLINE = '\n'
 
+    # Python 2 and 3 compatibility.
     PYTHON2 = sys.version_info.major == 2
+    if PYTHON2:
+        TEXT_TYPE = unicode
+        BINARY_TYPE = str
+    else:
+        TEXT_TYPE = str
+        BINARY_TYPE = bytes
 
     # Content categories.
     SNIPPET = 'snippet'

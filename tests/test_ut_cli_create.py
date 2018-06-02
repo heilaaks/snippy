@@ -137,10 +137,10 @@ class TestUtCliCreate(object):
         """Test that tags are accepted if they contain special characters."""
 
         content = 'docker rm $(docker ps -a -q)'
-        obj = Cli(['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing'])
+        obj = Cli(['snippy', 'create', '-c', content, '-t', 'docker–testing, ', 'container-managemenet, ', 'cleanup_testing'])
         assert obj.data == (content,)
         assert obj.brief == ''
-        assert obj.tags == ('cleanup_testing', 'container-managemenet', 'dockertesting')
+        assert obj.tags == (u'cleanup_testing', u'container-managemenet', u'docker–testing')
 
     def test_tags_provided_in_list(self):
         """Test that tags are accepted if the tags are elements in a list.

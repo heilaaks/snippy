@@ -97,6 +97,7 @@ class Sqlite3Db(object):
         query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, filename, ' +
                  'runalias, versions, created, updated, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?)')
         qargs = resource.dump_qargs()
+        #print("qargs (%s)" % (qargs,))
 
         try:
             self._put_db(query, qargs)
@@ -126,7 +127,7 @@ class Sqlite3Db(object):
         collection = Collection()
         if self._connection:
             query = ('SELECT * FROM contents WHERE data=?')
-            qargs = [Const.DELIMITER_DATA.join(map(str, data))]
+            qargs = [Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, data))]
             self._logger.debug('running select query "%s"', query)
             try:
                 with closing(self._connection.cursor()) as cursor:

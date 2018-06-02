@@ -92,9 +92,9 @@ class TestUtConfigSearch(unittest.TestCase):
         """Test that search keywords are accepted if they contain special
         characters."""
 
-        search_kw = ('cleanup_testing', 'container-managemenet', 'dockertesting')
+        search_kw = (u'cleanup_testing', u'container-managemenet', u'docker–testing')
         Config.init(None)
-        Config.load(Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
+        Config.load(Cli(['snippy', 'search', '--sall', 'docker–testing, ', 'container-managemenet, ', 'cleanup_testing']))
         assert isinstance(Config.search_all_kws, tuple)
         self.assertTupleEqual(Config.search_all_kws, search_kw)
         assert len(Config.search_all_kws) == 3

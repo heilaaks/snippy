@@ -105,6 +105,12 @@ Random notes and scribling during development.
    $ bandit -r snippy
    ```
 
+   ```
+   # For UTF-8 set below to terminal.
+   $ export LC_ALL=en_US.UTF-
+   $ touch Düsseldorf.txt
+   $ ll
+   ```
 
    ```
    # Running pytests tests

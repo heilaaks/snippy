@@ -71,5 +71,5 @@ class TestUtCliSearch(object):
         """Test that search keywords are accepted if they contain special
         characters."""
 
-        obj = Cli(['snippy', 'search', '--sall', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing'])
-        assert obj.sall == ('cleanup_testing', 'container-managemenet', 'dockertesting')
+        obj = Cli(['snippy', 'search', '--sall', 'docker–testing, ', 'container-managemenet, ', 'cleanup_testing'])
+        assert obj.sall == (u'cleanup_testing', u'container-managemenet', u'docker–testing')

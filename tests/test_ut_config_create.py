@@ -221,9 +221,9 @@ class TestUtConfigCreate(unittest.TestCase):
         """Test that tags are accepted if they contain special characters."""
 
         content = 'docker rm $(docker ps -a -q)'
-        tags = ('cleanup_testing', 'container-managemenet', 'dockertesting')
+        tags = (u'cleanup_testing', u'container-managemenet', u'docker–testing')
         Config.init(None)
-        Config.load(Cli(['snippy', 'create', '-c', content, '-t', 'dockertesting, ', 'container-managemenet, ', 'cleanup_testing']))
+        Config.load(Cli(['snippy', 'create', '-c', content, '-t', 'docker–testing, ', 'container-managemenet, ', 'cleanup_testing']))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, str)
         assert isinstance(Config.content_tags, tuple)

@@ -268,11 +268,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def compute_digest(self):
         """Compute digest from the content."""
 
-        resource_str = Const.DELIMITER_DATA.join(map(str, self.data))
+        resource_str = Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data))
         resource_str = resource_str + self.brief
         resource_str = resource_str + self.group
-        resource_str = resource_str + Const.DELIMITER_TAGS.join(map(str, sorted(self.tags)))
-        resource_str = resource_str + Const.DELIMITER_LINKS.join(map(str, sorted(self.links)))
+        resource_str = resource_str + Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
+        resource_str = resource_str + Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, sorted(self.links)))
         resource_str = resource_str + self.category
         resource_str = resource_str + self.filename
         resource_str = resource_str + self.runalias
@@ -369,12 +369,15 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def dump_qargs(self):
         """Convert resource for sqlite qargs."""
 
+        #print("==")
+        #print(self.tags)
+        #print("==")
         qargs = (
-            Const.DELIMITER_DATA.join(map(str, self.data)),
+            Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data)),
             self.brief,
             self.group,
-            Const.DELIMITER_TAGS.join(map(str, sorted(self.tags))),
-            Const.DELIMITER_LINKS.join(map(str, sorted(self.links))),
+            Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags))),
+            Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, sorted(self.links))),
             self.category,
             self.filename,
             self.runalias,

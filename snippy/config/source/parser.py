@@ -222,15 +222,16 @@ class Parser(object):
         #           2. -t docker, container, cleanup
         #           3. -t 'docker container cleanup'
         #           4. -t 'docker, container, cleanup'
-        #           5. -t dockertesting', container-managemenet', cleanup_testing
+        #           5. -t docker–testing', container-managemenet', cleanup_testing
         #           6. --sall '.'
         list_ = []
         keywords = Parser._to_list(keywords)
         for tag in keywords:
-            list_ = list_ + re.findall(r"[\w\-\.]+", tag)
+            list_ = list_ + re.findall(u'[\w–\-\.]+', tag, flags=re.UNICODE)  # Python 2 and 3 compatible unicode regexp.
 
         if sort_:
             list_ = sorted(list_)
+        #print("keywords (%s)" %(list_,))
 
         return tuple(list_)
 
@@ -288,15 +289,17 @@ class Parser(object):
         """
 
         string_ = Const.EMPTY
+        #print("enter value (%s)" % value)
         if isinstance(value, Const.TEXT_TYPE):
             string_ = value
+            #print("HERE (%s)", type(string_)) 
         elif isinstance(value, Const.BINARY_TYPE):
             string_ = value.decode('utf-8')
         elif isinstance(value, (list, tuple)):
             string_ = Const.NEWLINE.join([Parser.to_unicode(x.rstrip()) for x in value])  # Enforce only one newline at the end.
         else:
             cls._logger.debug('conversion to unicode string failed with unknown type %s : %s', type(value), value)
-
+        #print("value (%s)" % string_)
         return string_
 
     @classmethod
@@ -313,4 +316,5 @@ class Parser(object):
         else:
             cls._logger.debug('conversion to list of unicode unicode strings failed with unknown type %s : %s', type(value), value)
 
+        #print("list (%s)" % list_)
         return list_

@@ -101,7 +101,9 @@ Timestamps are in local time with text formatted logs. In case of JSON logs, the
 timestamp is in GMT time zone and it follows strictly the ISO8601 format. Both
 timestamps are in millisecond granularity.
 
-Severity level names follow `RFC 5424 <https://en.wikipedia.org/wiki/Syslog#Severity_level>`_.
+The log levels are are from Python logger but they follow severity level names
+from `RFC 5424 <https://en.wikipedia.org/wiki/Syslog#Severity_level>`_. There is
+a custom security level reserved only for security events.
 
 All logs include operation ID that uniquely identifies all logs within specific
 operation. The operation ID must be refreshed by logger user after each operation
@@ -112,6 +114,15 @@ All logs including Gunicorn server logs, are formatted to match format defined i
 this logger.
 
 All logs are printed to stdout.
+
+**Security**
+
+There is a custom security level above critical level. This log level must be
+used only when there is a suspected security related event.
+
+There is a hard maximum for log messages length for safety and security reasons.
+This tries to prevent extremely long log messages which may cause problems for
+the server.
 
 **Rules**
 
@@ -125,6 +136,18 @@ All logs are printed to stdout.
    #. The -vv option must print logs in lower case and one log per line.
    #. All external libraries must follow the same log format.
    #. All logs must be printed to stdout.
+
+**Examples**
+
+   .. code-block:: text
+
+      # Variable printed at the end of log message is separated with colon.
+      2018-06-03 19:20:54.838 snippy[5756] [d] [b339bab5]: configured option server: true
+
+      # Variable printed in the middle of log message is separated colons and
+      # space from both sides. The purpose is to provide possibility to allow
+      # log message post processing and to parse variables from log messages.
+      2018-06-03 19:20:54.838 snippy[5756] [d] [b339bab5]: server ip: 127.0.0.1 :and port: 8080
 
 .. autoclass:: snippy.logger.Logger
    :members:

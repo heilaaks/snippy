@@ -17,19 +17,19 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_ut_sqlite3db_delete.py: Test deleting content from sqlite."""
+"""test_ut_sqlitedb_delete.py: Test deleting content from sqlite."""
 
 import mock
 
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.constants import Constants as Const
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.storage.database.sqlitedb import SqliteDb
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
-class TestUtSqlite3dbDelete(object):
+class TestUtSqlitedbDelete(object):
     """Testing deleting snippets from sqlite."""
 
     @mock.patch.object(Cause, 'push')
@@ -42,7 +42,7 @@ class TestUtSqlite3dbDelete(object):
         Delete snippets with short version from digest.
         """
 
-        sqlite = Sqlite3Db()
+        sqlite = SqliteDb()
         sqlite.init()
 
         collection1 = Snippet.get_collection(snippet=Snippet.REMOVE)
@@ -76,7 +76,7 @@ class TestUtSqlite3dbDelete(object):
         Delete snippets with long version from digest.
         """
 
-        sqlite = Sqlite3Db()
+        sqlite = SqliteDb()
         sqlite.init()
 
         collection1 = Snippet.get_collection(snippet=Snippet.REMOVE)

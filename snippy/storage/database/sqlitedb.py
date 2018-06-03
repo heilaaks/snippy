@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""sqlite3db: Database management."""
+"""sqlitedb: Database management."""
 
 import re
 import os.path
@@ -31,8 +31,8 @@ from snippy.config.config import Config
 from snippy.content.collection import Collection
 
 
-class Sqlite3Db(object):
-    """Sqlite3 database management."""
+class SqliteDb(object):
+    """Sqlite database management."""
 
     QUERY_TYPE_REGEX = 'regex'
     QUERY_TYPE_TOTAL = 'total'
@@ -59,7 +59,13 @@ class Sqlite3Db(object):
                 self._logger.exception('closing sqlite3 database failed with exception "%s"', exception)
 
     def insert(self, collection):
-        """Insert Collection() into database."""
+        """Insert collection into database.
+
+        Parameters
+        ----------
+        Args:
+           collection (Collection): Content container to be stored into database.
+        """
 
         inserted = 0
         cause = (Cause.HTTP_OK, Const.EMPTY)
@@ -87,7 +93,13 @@ class Sqlite3Db(object):
         return stored
 
     def _insert(self, resource):
-        """Insert Resource into database."""
+        """Insert one resource into database.
+
+        Parameters
+        ----------
+        Args:
+           resource (Resource): A single Resource container to be stored.
+        """
 
         cause = self._test_content(resource)
         if cause[0] != Cause.HTTP_OK:
@@ -107,10 +119,21 @@ class Sqlite3Db(object):
         return cause
 
     def select(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
-        """Select content based on defined filters."""
+        """Select content based on search criteria.
+
+        Parameters
+        ----------
+        Args:
+           category (str): Content category.
+           sall (tuple): Search all keyword list.
+           stag (tuple): Search tag keyword list.
+           sgrp (tuple): Search group keyword list.
+           digest (str): Search specific digest or part of it.
+           data (str): Search specific content data or part of it.
+        """
 
         collection = Collection()
-        query, qargs = self._get_query(category, sall, stag, sgrp, digest, data, Sqlite3Db.QUERY_TYPE_REGEX)
+        query, qargs = self._get_query(category, sall, stag, sgrp, digest, data, SqliteDb.QUERY_TYPE_REGEX)
         if query:
             rows = self._get_db(query, qargs)
             total = self._count_content(category, sall, stag, sgrp, digest, data)
@@ -120,8 +143,112 @@ class Sqlite3Db(object):
 
         return collection
 
+    def select_all(self, category):
+        """Select all content from specific category.
+
+        Parameters
+        ----------
+        Args:
+           category (str): Content category.
+        """
+
+        collection = Collection()
+        if self._connection:
+            self._logger.debug('select all contents from category %s', category)
+            query = ('SELECT * FROM contents WHERE category=?')
+            qargs = [category]
+            try:
+                with closing(self._connection.cursor()) as cursor:
+                    cursor.execute(query, qargs)
+                    rows = cursor.fetchall()
+                    collection.convert(rows)
+            except sqlite3.Error as exception:
+                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(exception))
+        else:
+            Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
+
+        return collection
+
+    def _count_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
+        """Count content based on search criteria.
+
+        Parameters
+        ----------
+        Args:
+           category (str): Content category.
+           sall (tuple): Search all keyword list.
+           stag (tuple): Search tag keyword list.
+           sgrp (tuple): Search group keyword list.
+           digest (str): Search specific digest or part of it.
+           data (str): Search specific content data or part of it.
+        """
+
+        count = 0
+        query, qargs = self._get_query(category, sall, stag, sgrp, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
+        if query:
+            rows = self._get_db(query, qargs)
+            try:
+                count = rows[0][0]
+            except IndexError:
+                pass
+
+        return count
+
+    def update(self, digest, resource):
+        """Update existing content.
+
+        Parameters
+        ----------
+        Args:
+           digest (str): Content digest that is udpated.
+           resource (Resource): A single Resource container to be stored.
+        """
+
+        query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, '
+                 'runalias=?, versions=?, created=?, updated=?, digest=?, metadata=? WHERE digest LIKE ?')
+        qargs = resource.dump_qargs() + (digest,)
+        self._put_db(query, qargs)
+
+        stored = Collection()
+        stored.migrate(self.select(resource.category, digest=resource.digest))
+
+        return stored
+
+    def delete(self, digest):
+        """Delete content based on given digest.
+
+        Parameters
+        ----------
+        Args:
+           digest (str): Content digest that is deleted.
+        """
+
+        if self._connection:
+            query = ('DELETE FROM contents WHERE digest LIKE ?')
+            self._logger.debug('delete content with digest %s', digest)
+            try:
+                with closing(self._connection.cursor()) as cursor:
+                    cursor.execute(query, (digest+'%',))
+                    if cursor.rowcount == 1:
+                        self._connection.commit()
+                        Cause.push(Cause.HTTP_NO_CONTENT, 'content deleted successfully')
+                    elif cursor.rowcount == 0:
+                        Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content to be deleted with digest {:.16}'.format(digest))
+                    else:
+                        self._logger.debug('unexpected row count %d while deleting with digest %s', cursor.rowcount, digest)
+            except sqlite3.Error as exception:
+                Cause.push(Cause.HTTP_500, 'deleting from database failed with exception {}'.format(exception))
+        else:
+            Cause.push(Cause.HTTP_500, 'internal error prevented deleting content in database')
+
     def _select_data(self, data):
-        """Select content based on data."""
+        """Select content based on data.
+
+        Parameters
+        ----------
+        Args:
+           data (str): Search specific content data or part of it.
+        """
 
         collection = Collection()
         if self._connection:
@@ -142,74 +269,6 @@ class Sqlite3Db(object):
 
         return collection
 
-    def select_all_content(self, category):
-        """Select all content."""
-
-        collection = Collection()
-        if self._connection:
-            self._logger.debug('select all contents from category %s', category)
-            query = ('SELECT * FROM contents WHERE category=?')
-            qargs = [category]
-            try:
-                with closing(self._connection.cursor()) as cursor:
-                    cursor.execute(query, qargs)
-                    rows = cursor.fetchall()
-                    collection.convert(rows)
-            except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(exception))
-        else:
-            Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
-
-        return collection
-
-    def _count_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
-        """Count content based on defined filters."""
-
-        count = 0
-        query, qargs = self._get_query(category, sall, stag, sgrp, digest, data, Sqlite3Db.QUERY_TYPE_TOTAL)
-        if query:
-            rows = self._get_db(query, qargs)
-            try:
-                count = rows[0][0]
-            except IndexError:
-                pass
-
-        return count
-
-    def update(self, digest, resource):
-        """Update existing content."""
-
-        query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, filename=?, '
-                 'runalias=?, versions=?, created=?, updated=?, digest=?, metadata=? WHERE digest LIKE ?')
-        qargs = resource.dump_qargs() + (digest,)
-        self._put_db(query, qargs)
-
-        stored = Collection()
-        stored.migrate(self.select(resource.category, digest=resource.digest))
-
-        return stored
-
-    def delete(self, digest):
-        """Delete single content based on given digest."""
-
-        if self._connection:
-            query = ('DELETE FROM contents WHERE digest LIKE ?')
-            self._logger.debug('delete content with digest %s', digest)
-            try:
-                with closing(self._connection.cursor()) as cursor:
-                    cursor.execute(query, (digest+'%',))
-                    if cursor.rowcount == 1:
-                        self._connection.commit()
-                        Cause.push(Cause.HTTP_NO_CONTENT, 'content deleted successfully')
-                    elif cursor.rowcount == 0:
-                        Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content to be deleted with digest {:.16}'.format(digest))
-                    else:
-                        self._logger.debug('unexpected row count %d while deleting with digest %s', cursor.rowcount, digest)
-            except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'deleting from database failed with exception {}'.format(exception))
-        else:
-            Cause.push(Cause.HTTP_500, 'internal error prevented deleting content in database')
-
     def _create_db(self):
         """Create the database."""
 
@@ -227,7 +286,7 @@ class Sqlite3Db(object):
                 connection = sqlite3.connect(location, check_same_thread=False, uri=True)
             else:
                 connection = sqlite3.connect(location, check_same_thread=False)
-            connection.create_function('REGEXP', 2, Sqlite3Db._regexp)
+            connection.create_function('REGEXP', 2, SqliteDb._regexp)
             with closing(connection.cursor()) as cursor:
                 cursor.execute(schema)
             self._logger.debug('sqlite3 database persisted in %s', location)
@@ -238,7 +297,7 @@ class Sqlite3Db(object):
 
     @staticmethod
     def _regexp(expr, item):
-        """Regular expression for the sqlite3."""
+        """Regular expression for the sqlite database."""
 
         return re.search(expr, item, re.IGNORECASE) is not None
 
@@ -315,7 +374,7 @@ class Sqlite3Db(object):
 
         query = ()
         qargs = []
-        if query_type == Sqlite3Db.QUERY_TYPE_TOTAL:
+        if query_type == SqliteDb.QUERY_TYPE_TOTAL:
             query_pointer = self._query_count
         else:
             query_pointer = self._query_regex
@@ -329,13 +388,13 @@ class Sqlite3Db(object):
             columns = ['groups']
             query, qargs = query_pointer(sgrp, columns, (), category)
         elif Config.is_content_digest() or digest:  # The later condition is for tool internal search based on digest.
-            if query_type == Sqlite3Db.QUERY_TYPE_TOTAL:
+            if query_type == SqliteDb.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE digest LIKE ?')
             else:
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
             qargs = [digest+'%']
         elif Config.content_data:
-            if query_type == Sqlite3Db.QUERY_TYPE_TOTAL:
+            if query_type == SqliteDb.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE data LIKE ?')
             else:
                 query = ('SELECT * FROM contents WHERE data LIKE ?')

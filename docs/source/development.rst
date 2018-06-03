@@ -145,3 +145,26 @@ descriptions of the event.
 .. autoclass:: snippy.cause.Cause
    :members:
    :member-order: bysource
+
+snippy.storage.storage
+~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+Storage class offers database agnosting storage services. This abstracts the
+actual database solution from rest of the implementation.
+
+.. autoclass:: snippy.storage.storage.Storage
+   :members:
+   :member-order: bysource
+
+snippy.storage.database.sqlitedb
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+SqliteDb class offers database implementation for the Storage class.
+
+.. autoclass:: snippy.storage.database.sqlitedb.SqliteDb
+   :members:
+   :member-order: bysource

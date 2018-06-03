@@ -156,7 +156,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @data.setter
     def data(self, value):
-        """Convert content data to list of utf-8 encoded unicode strings.
+        """Convert content data to tuple of utf-8 encoded unicode strings.
 
         Content data is stored as a tuple with one line per element. It is
         quaranteed that each line contains only one newline at the end of
@@ -204,7 +204,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @tags.setter
     def tags(self, value):
-        """Content tags are stored as a tuple with one tag per element."""
+        """Convert content tags to tuple of utf-8 encoded unicode strings."""
 
         self._tags = Parser.keywords(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -216,7 +216,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @links.setter
     def links(self, value):
-        """Content links are stored as a tuple with one link per element."""
+        """Convert content links to tuple of utf-8 encoded unicode strings."""
 
         self._links = Parser.links(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -264,8 +264,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @sall.setter
     def sall(self, value):
-        """Search all keywords stored as a tuple with one keywords per
-        element."""
+        """Store 'search all' keywords.
+
+        The keywords are stored in tuple with one keywords per element."""
 
         self._sall = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -277,8 +278,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @stag.setter
     def stag(self, value):
-        """Search tag keywords stored as a tuple with one keywords per
-        element."""
+        """Store 'search tag' keywords.
+
+        The keywords are stored in tuple with one keywords per element."""
 
         self._stag = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -290,8 +292,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @sgrp.setter
     def sgrp(self, value):
-        """Search group keywords stored as a tuple with one keywords per
-        element."""
+        """Store 'search group' keywords.
+
+        The keywords are stored in tuple with one keywords per element."""
 
         self._sgrp = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
@@ -341,7 +344,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @search_offset.setter
     def search_offset(self, value):
-        """Search offset defines how many entries are skippet from the
+        """Store 'search offset'.
+
+        The search offset defines how many entries are skippet from the
         beginning of search results."""
 
         self._search_offset = self.OFFSET_DEFAULT  # pylint: disable=attribute-defined-outside-init
@@ -384,8 +389,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @remove_fields.setter
     def remove_fields(self, value):
-        """Removed fields are presented as tuple and they are converted
-        from requested fields."""
+        """Store 'removed fields'.
+
+        The removed fields are presented as tuple and they are converted from
+        requested 'fields' parameter."""
 
         requested_fields = Parser.keywords(value)
         valid = True

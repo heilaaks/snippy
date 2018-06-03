@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Fix typo iven digest 5 matches (2) more than once preventing the operation
-   - [ ] Add sqlite doc string that the e.g. insert update return stored/updated content in collection.
    - [ ] Add meta to collection __str__ printing.
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
    - [ ] Add UT tests for class Debug() methods.
@@ -30,6 +28,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
    - [ ] Fix terminal encodings other than utf-8. Something like this may be needed https://stackoverflow.com/a/33812744.
    - [ ] Fix the Generate() does not need 'json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))' because code is not called with emty collection.
    - [ ] Fix error string that complains about snippet content matching to empty template when the data is empty. See test_api_create_snippet_017.

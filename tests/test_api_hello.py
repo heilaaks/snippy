@@ -25,7 +25,7 @@ import pytest
 
 from snippy.snip import Snippy
 from tests.testlib.content import Content
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 pytest.importorskip('gunicorn')
 

@@ -172,7 +172,7 @@ Random notes and scribling during development.
    import mock
    import pytest
    from snippy.snip import Snippy
-   from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+   from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
    class TestApiFramework(unittest.TestCase):
@@ -1065,7 +1065,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
         B) Editor()
         C) Parser()
 
-    8. Only Storage() can import Sqlite3db()
+    8. Only Storage() can import Sqlitedb()
 
 
     CHARACTER ENCODING

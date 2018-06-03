@@ -31,7 +31,7 @@ from snippy.meta import __homepage__
 from snippy.meta import __version__
 from snippy.snip import Snippy
 from snippy.snip import main
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliOptions(object):

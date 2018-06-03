@@ -31,7 +31,7 @@ from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 # Calls to Config.utcnow()
 # =======================
@@ -541,7 +541,7 @@ def devel_file_data(mocker):
         'from snippy.constants import Constants as Const',
         'from snippy.cause import Cause',
         'from tests.testlib.snippet_helper import SnippetHelper as Snippet',
-        'from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database',
+        'from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database',
         '',
         '',
         'class TestWfImportSnippet(object):',

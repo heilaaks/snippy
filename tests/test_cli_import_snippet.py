@@ -31,7 +31,7 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliImportSnippet(object):

@@ -31,7 +31,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 try:
     import http.client as httplib

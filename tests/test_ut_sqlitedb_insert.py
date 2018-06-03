@@ -17,18 +17,18 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_ut_sqlite3db_insert.py: Test inserting content into sqlite."""
+"""test_ut_sqlitedb_insert.py: Test inserting content into sqlite."""
 
 import mock
 
 from snippy.cause import Cause
 from snippy.config.config import Config
-from snippy.storage.database.sqlite3db import Sqlite3Db
+from snippy.storage.database.sqlitedb import SqliteDb
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlite3db_helper import Sqlite3DbHelper as Database
+from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
-class TestUtSqlite3dbInsert(object):
+class TestUtSqlitedbInsert(object):
     """Testing inserting content into sqlite."""
 
     @mock.patch.object(Cause, 'push')
@@ -40,7 +40,7 @@ class TestUtSqlite3dbInsert(object):
         Insert content into database with all parameters.
         """
 
-        sqlite = Sqlite3Db()
+        sqlite = SqliteDb()
         sqlite.init()
 
         collection = Snippet.get_collection(snippet=Snippet.REMOVE)
@@ -59,7 +59,7 @@ class TestUtSqlite3dbInsert(object):
     def test_insert_multiple_links(self, mock_cause_push):
         """Insert content with multiple links."""
 
-        sqlite = Sqlite3Db()
+        sqlite = SqliteDb()
         sqlite.init()
 
         collection = Snippet.get_collection(snippet=Snippet.FORCED)

@@ -21,7 +21,7 @@
 
 from snippy.config.config import Config
 from snippy.logger import Logger
-from snippy.storage.database.sqlite3db import Sqlite3Db as Database
+from snippy.storage.database.sqlitedb import SqliteDb as Database
 
 
 class Storage(object):
@@ -33,7 +33,13 @@ class Storage(object):
         self._database.init()
 
     def create(self, collection):
-        """Create new content."""
+        """Create new content.
+
+        Parameters
+        ----------
+        Args:
+           collection (Collection): Content container to be stored into database.
+        """
 
         self._logger.debug('store content')
         collection = self._database.insert(collection)
@@ -41,7 +47,18 @@ class Storage(object):
         return collection
 
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
-        """Search content."""
+        """Search content.
+
+        Parameters
+        ----------
+        Args:
+           category (str): Content category.
+           sall (tuple): Search all keyword list.
+           stag (tuple): Search tag keyword list.
+           sgrp (tuple): Search group keyword list.
+           digest (str): Search specific digest or part of it.
+           data (str): Search specific content data or part of it.
+        """
 
         self._logger.debug('search content')
         collection = self._database.select(category, sall, stag, sgrp, digest, data)
@@ -49,7 +66,14 @@ class Storage(object):
         return collection
 
     def update(self, digest, resource):
-        """Update resource specified by digest."""
+        """Update resource specified by digest.
+
+        Parameters
+        ----------
+        Args:
+           digest (str): Content digest that is udpated.
+           resource (Resource): A single Resource container that contains updates.
+        """
 
         self._logger.debug('update content')
         resource.updated = Config.utcnow()
@@ -58,21 +82,39 @@ class Storage(object):
         return collection
 
     def delete(self, digest):
-        """Delete content."""
+        """Delete content.
+
+        Parameters
+        ----------
+        Args:
+           digest (str): Content digest that is deleted.
+        """
 
         self._logger.debug('delete content')
         self._database.delete(digest)
 
     def export_content(self, category):
-        """Export content."""
+        """Export content.
+
+        Parameters
+        ----------
+        Args:
+           category (str): Content category.
+        """
 
         self._logger.debug('export content')
-        collection = self._database.select_all_content(category)
+        collection = self._database.select_all(category)
 
         return collection
 
     def import_content(self, collection):
-        """Import content."""
+        """Import content.
+
+        Parameters
+        ----------
+        Args:
+           collection (Collection): Content container to be imported into database.
+        """
 
         self._logger.debug('import content')
         collection = self._database.insert(collection)

@@ -468,7 +468,7 @@ class TestUtLogger(object):
         assert 'abcdefghijabcdefg...' in out
         assert 'abcdefghijabcdefgh...' in out
         assert 'variable abcdefghij' in out
-        assert 'log messages cannot extend over security level' in caplog.text
+        assert 'log message length: 10080 :cannot exceed security limit: 10000' in caplog.text
         assert len(caplog.records[1].msg) == Logger.DEFAULT_LOG_MSG_MAX
         assert len(caplog.records[2].msg) == Logger.DEFAULT_LOG_MSG_MAX
         assert len(caplog.records[3].msg) == Logger.DEFAULT_LOG_MSG_MAX

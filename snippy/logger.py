@@ -150,8 +150,8 @@ class Logger(object):
             logging.getLogger('snippy').setLevel(logging.DEBUG)
 
         if config['log_msg_max'] > Logger.SECURITY_LOG_MSG_MAX:
-            Logger.get_logger().debug('log messages cannot extend over security level: %s, %s',
-                                      config['log_msg_max'], Logger.DEFAULT_LOG_MSG_MAX)
+            Logger.get_logger().debug('log message length: %s :cannot exceed security limit: %s',
+                                      config['log_msg_max'], Logger.SECURITY_LOG_MSG_MAX)
 
         Logger._update()
 

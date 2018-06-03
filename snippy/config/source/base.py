@@ -156,9 +156,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @data.setter
     def data(self, value):
-        """Content data is stored as a tuple with one line per element.
-        There is a quarantee that each line contains only one newline
-        at the end of string in the tuple.
+        """Convert content data to list of utf-8 encoded unicode strings.
+
+        Content data is stored as a tuple with one line per element. It is
+        quaranteed that each line contains only one newline at the end of
+        string in the tuple.
 
         Any value including empty string is considered valid data."""
 
@@ -169,6 +171,30 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             data = ()
 
         self._data = data  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def brief(self):
+        """Get content brief."""
+
+        return self._brief
+
+    @brief.setter
+    def brief(self, value):
+        """Convert content brief to utf-8 encoded unicode string."""
+
+        self._brief = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def group(self):
+        """Get content group."""
+
+        return self._group
+
+    @group.setter
+    def group(self, value):
+        """Convert content group to utf-8 encoded unicode string."""
+
+        self._group = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def tags(self):
@@ -193,6 +219,42 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         """Content links are stored as a tuple with one link per element."""
 
         self._links = Parser.links(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def filename(self):
+        """Get content filename."""
+
+        return self._filename
+
+    @filename.setter
+    def filename(self, value):
+        """Convert content filename to utf-8 encoded unicode string."""
+
+        self._filename = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def runalias(self):
+        """Get content runalias."""
+
+        return self._runalias
+
+    @runalias.setter
+    def runalias(self, value):
+        """Convert content runalias to utf-8 encoded unicode string."""
+
+        self._runalias = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def versions(self):
+        """Get content versions."""
+
+        return self._versions
+
+    @versions.setter
+    def versions(self, value):
+        """Convert content versions to utf-8 encoded unicode string."""
+
+        self._versions = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sall(self):
@@ -245,7 +307,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         try:
             re.compile(value)
-            self._regexp = value  # pylint: disable=attribute-defined-outside-init
+            self._regexp = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
         except re.error:
             self._regexp = Const.EMPTY  # pylint: disable=attribute-defined-outside-init
             Cause.push(Cause.HTTP_BAD_REQUEST,

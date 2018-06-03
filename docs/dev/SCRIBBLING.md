@@ -108,7 +108,7 @@ Random notes and scribling during development.
    ```
    # For UTF-8 set below to terminal.
    $ export LC_ALL=en_US.UTF-
-   $ touch Düsseldorf.txt
+   $ touch DÃ¼sseldorf.txt
    $ ll
    ```
 
@@ -145,7 +145,7 @@ Random notes and scribling during development.
    ```
    $ make docker
    $
-   $ sudo docker run heilaaks/snippy search --sall .
+   $Â sudo docker run heilaaks/snippy search --sall .
    $ vi ~/.bashrc
      alias snippy-d='sudo docker run heilaaks/snippy'
    $ source ~/.bashrc
@@ -1060,6 +1060,14 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     8. Only Storage() can import Sqlite3db()
 
 
+    CHARACTER ENCODING
+
+    1. In Python 2.7, unicode defaults to decoding 'ascii'.
+
+    2. All strings are automatically encoded to TEXT_TYPE
+
+       In Python 2, the text type is unicode and in Python 3 it si str.
+
 #######################################
 ## Command line design
 #######################################
@@ -1624,11 +1632,11 @@ sort = OrderedDict()
  'created': ASC}
 
 
-¿/defects?offset=5&limit=5	# 	Returns defects 6..10.
-¿/defects?offset=10	Returns defects 11..36 (the default number of the returned defects is 25).
+Â¿/defects?offset=5&limit=5	# 	Returns defects 6..10.
+Â¿/defects?offset=10	Returns defects 11..36 (the default number of the returned defects is 25).
 
-1. You can request ¿/defects?limit=0 to get just metadata, without defect data.
-2. When the response doesn¿t contain a link to the next page of results, you know that you¿ve reached the end.
+1. You can request Â¿/defects?limit=0 to get just metadata, without defect data.
+2. When the response doesnÂ¿t contain a link to the next page of results, you know that youÂ¿ve reached the end.
 
 # From start
 "meta": {

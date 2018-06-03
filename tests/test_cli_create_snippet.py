@@ -126,6 +126,59 @@ class TestCliCreateSnippet(object):
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_snippet_007(self, snippy, mocker, capsys):
+        """Create snippet with unicode characters from CLI.
+
+        Each field that can be given from command line contains unicode
+        characters. The same content must be found with search with keyword
+        with unicode character
+        """
+
+        data = Const.DELIMITER_DATA.join(['Sîne klâwen durh die wolken sint geslagen', 'er stîget ûf mit grôzer kraft'])
+        brief = 'Tagelied of Wolfram von Eschenbach Sîne klâwen'
+        group = 'Düsseldorf'
+        tags = Const.DELIMITER_TAGS.join(['γλώσσα', 'έδωσαν', 'ελληνική'])
+        links = Const.DELIMITER_LINKS.join(['http://www.чухонца.edu/~fdc/utf8/'])
+        content_read = {
+            'data': [u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'],
+            'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
+            'group': u'Düsseldorf',
+            'tags': [u'γλώσσα', u'έδωσαν', u'ελληνική'],
+            'links': [u'http://www.чухонца.edu/~fdc/utf8/'],
+            'category': 'snippet',
+            'filename': '',
+            'runalias': '',
+            'versions': '',
+            'created': Content.REMOVE_TIME,
+            'updated': Content.REMOVE_TIME,
+            'digest': 'a74d83df95d5729aceffc472433fea4d5e3fd2d87b510112fac264c741f20438'
+        }
+        content = {'a74d83df95d572': content_read}
+        cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
+        assert cause == Cause.ALL_OK
+        assert Database.get_snippets().size() == 1
+        Content.verified(mocker, snippy, content)
+
+        output = (
+            u'1. Tagelied of Wolfram von Eschenbach Sîne klâwen @Düsseldorf [a74d83df95d5729a]',
+            u'   $ Sîne klâwen durh die wolken sint geslagen',
+            u'   $ er stîget ûf mit grôzer kraft',
+            u'',
+            u'   # έδωσαν,γλώσσα,ελληνική',
+            u'   > http://www.чухонца.edu/~fdc/utf8/',
+            u'',
+            u'OK',
+            u''
+        )
+
+        out, err = capsys.readouterr()  # Reset the previous output in capture buffer.
+        cause = snippy.run(['snippy', 'search', '--sall', 'klâwen', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

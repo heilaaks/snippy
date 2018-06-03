@@ -1,7 +1,5 @@
 ## WORKING
-   - [ ] Fix all files to be in UTF-8 format.
-   - [ ] Fix config base to have _ in init with properties
-   - [ ] Add tests for command line unicode create and search.
+   - [ ] Fix typo iven digest 5 matches (2) more than once preventing the operation
    - [ ] Add sqlite doc string that the e.g. insert update return stored/updated content in collection.
    - [ ] Add meta to collection __str__ printing.
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
@@ -32,6 +30,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix terminal encodings other than utf-8. Something like this may be needed https://stackoverflow.com/a/33812744.
    - [ ] Fix the Generate() does not need 'json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))' because code is not called with emty collection.
    - [ ] Fix error string that complains about snippet content matching to empty template when the data is empty. See test_api_create_snippet_017.
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile']) and new document stuff
@@ -124,6 +123,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added UTF-8 coded unicode string support for server and CLI.
    - [x] Added test to verify updates based on digest show already stored content in editor.
    - [x] Change Content to Collection that contains list of Resources.
    - [x] Added support to GET resource fields with URI's like /snippets/54e41e9b52/brief.

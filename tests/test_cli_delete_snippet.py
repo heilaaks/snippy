@@ -95,7 +95,7 @@ class TestCliDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         cause = snippy.run(['snippy', 'delete', '-d', '123456789abcdef0'])
-        assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
+        assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -112,7 +112,7 @@ class TestCliDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         cause = snippy.run(['snippy', 'delete', '-d', ''])
-        assert cause == 'NOK: cannot use empty message digest to delete content'
+        assert cause == 'NOK: cannot use empty message digest for: delete :operation'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -129,7 +129,7 @@ class TestCliDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         cause = snippy.run(['snippy', 'delete', '-d', '123456'])
-        assert cause == 'NOK: cannot find content with message digest 123456'
+        assert cause == 'NOK: cannot find content with message digest: 123456'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -159,7 +159,7 @@ class TestCliDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         cause = snippy.run(['snippy', 'delete', '--content', 'not found content'])
-        assert cause == 'NOK: cannot find content with content data \'not found content\''
+        assert cause == 'NOK: cannot find content with content data: not found content'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -176,7 +176,7 @@ class TestCliDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         cause = snippy.run(['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all)'])
-        assert cause == 'NOK: cannot find content with content data \'docker rm --volumes $(docker p...\''
+        assert cause == 'NOK: cannot find content with content data: docker rm --volumes $(docker p...'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -193,7 +193,7 @@ class TestCliDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         cause = snippy.run(['snippy', 'delete', '--content', ''])
-        assert cause == 'NOK: cannot use empty content data to delete content'
+        assert cause == 'NOK: cannot use empty content data for: delete :operation'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -224,7 +224,7 @@ class TestCliDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])
-        assert cause == 'NOK: given search keyword matches (2) more than once preventing the operation'
+        assert cause == 'NOK: search keywords matched more than once: 2 :preventing: delete :operation'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -243,8 +243,8 @@ class TestCliDeleteSnippet(object):
         }
         cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])
         out, _ = capsys.readouterr()
-        assert cause == 'NOK: given search keyword matches (2) more than once preventing the operation'
-        assert out == 'NOK: given search keyword matches (2) more than once preventing the operation\n'
+        assert cause == 'NOK: search keywords matched more than once: 2 :preventing: delete :operation'
+        assert out == 'NOK: search keywords matched more than once: 2 :preventing: delete :operation\n'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 

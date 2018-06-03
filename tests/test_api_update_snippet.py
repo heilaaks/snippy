@@ -223,7 +223,7 @@ class TestApiUpdateSnippet(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '369'
+            'content-length': '370'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -231,7 +231,7 @@ class TestApiUpdateSnippet(object):
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find content with message digest 101010101010101'
+                'title': 'cannot find content with message digest: 101010101010101'
             }]
         }
         server.run()

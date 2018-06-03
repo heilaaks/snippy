@@ -108,7 +108,7 @@ class TestCliDeleteSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX],
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '123456789abcdef0'])
-        assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
+        assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -125,7 +125,7 @@ class TestCliDeleteSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX],
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', ''])
-        assert cause == 'NOK: cannot use empty message digest to delete content'
+        assert cause == 'NOK: cannot use empty message digest for: delete :operation'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -142,7 +142,7 @@ class TestCliDeleteSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX],
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '123456'])
-        assert cause == 'NOK: cannot find content with message digest 123456'
+        assert cause == 'NOK: cannot find content with message digest: 123456'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -173,7 +173,7 @@ class TestCliDeleteSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX],
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', 'not-exists'])
-        assert cause == 'NOK: cannot find content with content data \'not-exists\''
+        assert cause == 'NOK: cannot find content with content data: not-exists'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -191,7 +191,7 @@ class TestCliDeleteSolution(object):
         }
         data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', data])
-        assert cause == 'NOK: cannot find content with content data \'##############################...\''
+        assert cause == 'NOK: cannot find content with content data: ##############################...'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -208,7 +208,7 @@ class TestCliDeleteSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX],
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', ''])
-        assert cause == 'NOK: cannot use empty content data to delete content'
+        assert cause == 'NOK: cannot use empty content data for: delete :operation'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 

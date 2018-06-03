@@ -147,7 +147,7 @@ class TestCliUpdateSnippet(object):
         }
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '123456789abcdef0'])
-        assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
+        assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -168,7 +168,7 @@ class TestCliUpdateSnippet(object):
         }
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', ''])
-        assert cause == 'NOK: cannot use empty message digest to update content'
+        assert cause == 'NOK: cannot use empty message digest for: update :operation'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -190,7 +190,7 @@ class TestCliUpdateSnippet(object):
         }
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '5'])
-        assert cause == 'NOK: given digest 5 matches (2) more than once preventing the operation'
+        assert cause == 'NOK: content digest: 5 :matched more than once: 2 :preventing: update :operation'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -228,7 +228,7 @@ class TestCliUpdateSnippet(object):
         }
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-c', 'snippet not existing'])
-        assert cause == 'NOK: cannot find content with content data \'snippet not existing\''
+        assert cause == 'NOK: cannot find content with content data: snippet not existing'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -248,7 +248,7 @@ class TestCliUpdateSnippet(object):
         }
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-c', ''])
-        assert cause == 'NOK: cannot use empty content data to update content'
+        assert cause == 'NOK: cannot use empty content data for: update :operation'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -266,7 +266,7 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         cause = snippy.run(['snippy', 'update', '-c', 'docker'])
-        assert cause == 'NOK: given content data docker matches (2) more than once preventing the operation'
+        assert cause == 'NOK: content data: docker :matched more than once: 2 :preventing: update :operation'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
     @classmethod

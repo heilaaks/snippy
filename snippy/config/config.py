@@ -375,31 +375,31 @@ class Config(object):
             if cls.operation_digest:
                 if collection.empty():
                     Cause.push(Cause.HTTP_NOT_FOUND,
-                               'cannot find content with message digest %s' % cls.operation_digest)
+                               'cannot find content with message digest: %s' % cls.operation_digest)
                 elif collection.size() > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
-                               'given digest %.16s matches (%d) more than once preventing the operation' %
-                               (cls.operation_digest, collection.size()))
+                               'content digest: %.16s :matched more than once: %d :preventing: %s :operation' %
+                               (cls.operation_digest, collection.size(), operation))
             else:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest to %s content' % operation)
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest for: %s :operation' % operation)
         elif cls.content_data:
             if any(cls.content_data):
                 data = Const.EMPTY.join(cls.content_data)
                 data = data[:30] + (data[30:] and '...')
                 if collection.empty():
-                    Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with content data \'%s\'' % data)
+                    Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with content data: %s' % data)
                 elif collection.size() > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
-                               'given content data %s matches (%d) more than once preventing the operation' %
-                               (data, collection.size()))
+                               'content data: %s :matched more than once: %d :preventing: %s :operation' %
+                               (data, collection.size(), operation))
             else:
-                Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content data to %s content' % operation)
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content data for: %s :operation' % operation)
         elif cls._is_search_keywords():
             if collection.empty():
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
             elif collection.size() > 1:
                 Cause.push(Cause.HTTP_CONFLICT,
-                           'given search keyword matches (%d) more than once preventing the operation' % collection.size())
+                           'search keywords matched more than once: %d :preventing: %s :operation' % (collection.size(), operation))
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'no message digest, content data or search keywords were provided')
 

@@ -220,7 +220,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
         with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '123456789abcdef0', '-f', 'defined-snippet.txt'])
-            assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
+            assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()

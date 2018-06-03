@@ -64,7 +64,7 @@ class TestApiDeleteSolution(object):
         """
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '362'
+            'content-length': '363'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -72,7 +72,7 @@ class TestApiDeleteSolution(object):
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find content with message digest beefbeef'
+                'title': 'cannot find content with message digest: beefbeef'
             }]
         }
         server.run()

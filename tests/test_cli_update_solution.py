@@ -151,7 +151,7 @@ class TestCliUpdateSolution(object):
         }
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', '123456789abcdef0'])
-        assert cause == 'NOK: cannot find content with message digest 123456789abcdef0'
+        assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -172,7 +172,7 @@ class TestCliUpdateSolution(object):
         }
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', ''])
-        assert cause == 'NOK: cannot use empty message digest to update content'
+        assert cause == 'NOK: cannot use empty message digest for: update :operation'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -211,7 +211,7 @@ class TestCliUpdateSolution(object):
         }
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '--content', 'solution not existing'])
-        assert cause == 'NOK: cannot find content with content data \'solution not existing\''
+        assert cause == 'NOK: cannot find content with content data: solution not existing'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 
@@ -231,7 +231,7 @@ class TestCliUpdateSolution(object):
         }
         edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-c', ''])
-        assert cause == 'NOK: cannot use empty content data to update content'
+        assert cause == 'NOK: cannot use empty content data for: update :operation'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 

@@ -893,9 +893,17 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     5. Variables printed in logs are seprated with colon
 
        When variables are printed in logs, they must be separated with colon
-       like in the example output below:
+       like in the examples below.
+       
+       When there is a variable being printed in the middle of the text string,
+       it must be separated with colons and space before and after the printed
+       variable.
+       
+       These rules intent to improve parsing of the text strings by providing
+       tags than be used to exract variable values inside log strings.
 
          > ... config source category: snippet
+         > content data: docker :matched more than once: 2 :preventing update operation
 
     6. All other than error logs are always printed in lower case
 

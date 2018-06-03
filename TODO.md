@@ -46,7 +46,7 @@
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix make test if pytest cover leaves hanging files like .coverage.localhost.localdomain.4727.176219. Add --cover-erase in commmand? // https://bitbucket.org/ned/coveragepy/issues/476/coverageexception-cant-add-arcs-to
    - [ ] Fix when server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
-   - [ ] Fix OpenAPI specs. The ResponseData and the attributes contain mandatory 'data' field. This is not true if resouce field like brief is requirested.
+   - [ ] Fix OpenAPI specs. The ResponseData and the attributes contain mandatory 'dhttps://stackoverflow.com/a/33812744ata' field. This is not true if resouce field like brief is requirested.
    - [ ] Fix export the original which contains additional whitespace before the exported template in the DATE field. Was this some test?
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix the REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.

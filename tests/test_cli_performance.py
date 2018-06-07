@@ -93,22 +93,22 @@ class TestCliPerformance(object):
         """Add default snippets for testing purposes."""
 
         mocked_open = mock.mock_open(read_data=Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'remove.txt'])
             assert cause == Cause.ALL_OK
 
         mocked_open = mock.mock_open(read_data=Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'forced.txt'])
             assert cause == Cause.ALL_OK
 
         mocked_open = mock.mock_open(read_data=Snippet.get_template(Solution.DEFAULTS[Solution.BEATS]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'beats.txt'])
             assert cause == Cause.ALL_OK
 
         mocked_open = mock.mock_open(read_data=Snippet.get_template(Solution.DEFAULTS[Solution.NGINX]))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True):
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'nginx.txt'])
             assert cause == Cause.ALL_OK
 

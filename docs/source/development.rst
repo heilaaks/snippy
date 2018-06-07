@@ -188,6 +188,6 @@ snippy.storage.database.sqlitedb
 
 SqliteDb class offers database implementation for the Storage class.
 
-.. autoclass:: snippy.storage.database.sqlitedb.SqliteDb
+.. autoclass:: snippy.storage.sqlitedb.SqliteDb
    :members:
    :member-order: bysource

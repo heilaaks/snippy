@@ -23,7 +23,7 @@ import mock
 
 from snippy.cause import Cause
 from snippy.config.config import Config
-from snippy.storage.database.sqlitedb import SqliteDb
+from snippy.storage.sqlitedb import SqliteDb
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 

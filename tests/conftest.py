@@ -473,7 +473,7 @@ def yaml_load(mocker):
     """Mock importing from yaml file."""
 
     mocker.patch.object(yaml, 'safe_load')
-    mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
+    mocker_open = mocker.patch('snippy.content.migrate.open', mocker.mock_open(), create=True)
 
     return mocker_open
 
@@ -482,7 +482,7 @@ def yaml_dump(mocker):
     """Mock exporting to yaml file."""
 
     mocker.patch.object(yaml, 'safe_dump')
-    mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
+    mocker_open = mocker.patch('snippy.content.migrate.open', mocker.mock_open(), create=True)
 
     return mocker_open
 
@@ -493,7 +493,7 @@ def json_load(mocker):
     """Mock importing from json file."""
 
     mocker.patch.object(json, 'load')
-    mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
+    mocker_open = mocker.patch('snippy.content.migrate.open', mocker.mock_open(), create=True)
 
     return mocker_open
 
@@ -502,7 +502,7 @@ def json_dump(mocker):
     """Mock exporting to json file."""
 
     mocker.patch.object(json, 'dump')
-    mocker_open = mocker.patch('snippy.migrate.migrate.open', mocker.mock_open(), create=True)
+    mocker_open = mocker.patch('snippy.content.migrate.open', mocker.mock_open(), create=True)
 
     return mocker_open
 
@@ -550,7 +550,7 @@ def devel_file_data(mocker):
         '    @mock.patch.object(json, \'load\')',
         '    @mock.patch.object(yaml, \'safe_load\')',
         '    @mock.patch.object(Config, \'_storage_file\')',
-        '    @mock.patch(\'snippy.migrate.migrate.os.path.isfile\')',
+        '    @mock.patch(\'snippy.content.migrate.os.path.isfile\')',
         '    def test_import_all_snippets(self, mock_isfile, mock_storage_file, mock_yaml_load, mock_json_load):',
         '        """Import all snippets."""',
         '',
@@ -564,7 +564,7 @@ def devel_file_data(mocker):
         '',
         '        ## Brief: Import all snippets. File name is not defined in commmand line. This should',
         '        ##        result tool internal default file name ./snippets.yaml being used by default.',
-        '        with mock.patch(\'snippy.migrate.migrate.open\', mock.mock_open(), create=True) as mock_file:',
+        '        with mock.patch(\'snippy.content.migrate.open\', mock.mock_open(), create=True) as mock_file:',
         '            snippy = Snippy()',
         '            cause = snippy.run([\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\'])  ## workflow',
         '            assert cause == Cause.ALL_OK',
@@ -601,7 +601,7 @@ def _create_snippy(mocker, options):
     """Create snippy with mocks."""
 
     mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
-    mocker.patch('snippy.migrate.migrate.os.path.isfile', return_value=True)
+    mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
     snippy = Snippy(options)
 
     return snippy
@@ -613,7 +613,7 @@ def _import_content(snippy, mocker, contents, timestamps):
     start = Database.get_collection().size() + 1
     for idx, content in enumerate(contents, start=start):
         mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
-        mocker.patch('snippy.migrate.migrate.open', mocked_open, create=True)
+        mocker.patch('snippy.content.migrate.open', mocked_open, create=True)
         cause = snippy.run(['snippy', 'import', '-f', 'content.txt'])
         assert cause == Cause.ALL_OK
         assert Database.get_collection().size() == idx

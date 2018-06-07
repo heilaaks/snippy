@@ -99,7 +99,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export all solutions into defined text file with file
         ##        extension 'txt'. File name and format are defined in command
         ##        line.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.txt', 'w')
@@ -116,7 +116,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export all solutions into defined text file with file
         ##        extension 'text'. File name and format are defined in
         ##        command line.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./all-solutions.text', 'w')
@@ -133,7 +133,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Try to export all solutions into file format that is not
         ##        supported. This should result error text for end user and
         ##        no files should be created.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             mock_file.assert_not_called()
@@ -147,7 +147,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Try to export all content by defining the content category
         ##        to --all. This is not supported with export operation and
         ##        error cause is returned.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--all'])  ## workflow
             assert cause == 'NOK: content category \'all\' is supported only with search operation'
             mock_file.assert_not_called()
@@ -161,7 +161,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined solution based on message digest. File name
         ##        is defined in solution metadata but not by command line
         ##        -f|--file option.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
@@ -177,7 +177,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        is defined in solution metadata but not by command line
         ##        -f|--file option. In this case the content category is not
         ##        specified explicitly from command line.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
@@ -195,11 +195,11 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        name and format defined by tool internal defaults.
         content_read = Content.updated_kafka1()
         mocked_open = Content.mocked_open(content_read)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', 'eeef5ca3ec9cd364', '-f', 'kafka.text'])
             assert cause == Cause.ALL_OK
             assert Database.get_solutions().size() == 3
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', '7a5bf1bc09939f42'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('solution.text', 'w')
@@ -290,7 +290,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        -f|--file option. This should result the file name and format
         ##        defined by the command line option. In this case the text
         ##        format file extension is 'txt'.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.txt', 'w')
@@ -305,7 +305,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined solution based on message digest to text
         ##        file without specifying the content category explicitly.
         ##        In this case the file extension is *.txt.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.txt', 'w')
@@ -322,7 +322,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        -f|--file option. This should result the file name and format
         ##        defined by the command line option. In this case the tex
         ##        format file extension is 'text'.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.text', 'w')
@@ -337,7 +337,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined solution based on message digest to text
         ##        file without specifying the content category explicitly.
         ##        In this case the file extension is *.text.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.text', 'w')
@@ -352,7 +352,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Try to export defined solution based on message digest into
         ##        file format that is not supported. This should result error
         ##        string for end user and no files should be created.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             mock_file.assert_not_called()
@@ -370,11 +370,11 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        there is no space after colon.
         content_read = Content.updated_kafka2()
         mocked_open = Content.mocked_open(content_read)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', 'eeef5ca3ec9cd364', '-f', 'kafka.text'])
             assert cause == Cause.ALL_OK
             assert Database.get_solutions().size() == 3
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', '2c4298ff3c582fe5'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('solution.text', 'w')
@@ -395,11 +395,11 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        is not parsed for filename like with the text template.
         content_read = Content.updated_kafka3()
         mocked_open = Content.mocked_open(content_read)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './kafka.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert Database.get_solutions().size() == 3
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', '745c9e70eacc304b'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('kubernetes-docker-log-driver-kafka.txt', 'w')
@@ -414,7 +414,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Try to export defined solution based on message digest that
         ##        cannot be found. This should result error text for end user
         ##        and no files should be created.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', '123456789abcdef0', '-f' './defined-solution.text'])  ## workflow
             assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
             mock_file.assert_not_called()
@@ -428,7 +428,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined solution based on search keyword. File name
         ##        is defined in solution metadata but not by command line
         ##        -f|--file option.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'beats'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('howto-debug-elastic-beats.txt', 'w')
@@ -483,7 +483,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        -f|--file option. This should result the file name and
         ##        format defined by the command line option. In this case the
         ##        text format file extension is 'txt'.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'beats', '-f' './defined-solution.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solution.txt', 'w')
@@ -498,7 +498,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ## Brief: Export defined solution based on search keyword. In this
         ##        case the search keyword matchies to two solutions that
         ##        must be exported to file defined in command line.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'howto', '-f' './defined-solutions.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./defined-solutions.txt', 'w')
@@ -514,7 +514,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
         ## Brief: Try to export snippet based on search keyword that cannot
         ##        befound.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'notfound', '-f', './defined-solution.yaml'])  ## workflow
             assert cause == 'NOK: cannot find content with given search criteria'
             mock_file.assert_not_called()
@@ -525,7 +525,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
         ## Brief: Export solution template. This should result file name and
         ##        format based on tool internal settings.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--template'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_called_once_with('./solution-template.txt', 'w')
@@ -560,7 +560,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         ##        solutions. No files should be created and OK should printed
         ##        for end user. The reason is that processing list of zero
         ##        items is considered as an OK case.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--defaults'])  ## workflow
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
@@ -584,11 +584,11 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         import_data = original
         import_data = import_data.replace('## DATE  : 2017-10-20T11:11:19.000001+0000', '## DATE  : ')
         mocked_open = mock.mock_open(read_data=import_data)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', 'mocked_file.txt', '-d', 'a96accc25dd23ac0'])
             assert cause == Cause.ALL_OK
             assert Database.get_solutions().size() == 2
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             original = original.replace('## DATE  : 2017-10-20T11:11:19.000001+0000', '## DATE  :  2017-10-20T06:16:27.000001+0000')
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0'])  ## workflow
             assert cause == Cause.ALL_OK

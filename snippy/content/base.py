@@ -23,7 +23,7 @@ from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.content.collection import Collection
 from snippy.logger import Logger
-from snippy.migrate.migrate import Migrate
+from snippy.content.migrate import Migrate
 
 
 class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
@@ -150,17 +150,19 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             if collection.size() == 1:
                 resource = next(collection.resources())
                 digest = resource.digest
-                self._logger.debug('importing %s with digest %.16s', resource.category, resource.digest)
+                self._logger.debug('importing: %s :with digest: %.16s', resource.category, resource.digest)
                 collection = Migrate.load(Config.get_operation_file())
                 updates = next(collection.resources())
                 resource.migrate(updates)
                 self._storage.update(digest, resource)
             elif collection.empty():
-                Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find {} identified with digest {:.16}'.format(self._category, content_digest))
+                Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find: {} :identified with digest: {:.16}'.format(self._category, content_digest))
             else:
-                Cause.push(Cause.HTTP_CONFLICT, 'cannot import multiple {} with same digest {:.16}'.format(self._category, content_digest))
+                Cause.push(Cause.HTTP_CONFLICT, 'cannot import: {} :because digest: {:.16} :matched: {} :times'.format(self._category,
+                                                                                                                       content_digest,
+                                                                                                                       collection.size()))
         else:
-            self._logger.debug('importing content %s', Config.get_operation_file())
+            self._logger.debug('importing content: %s', Config.get_operation_file())
             collection = Migrate.load(Config.get_operation_file())
             self._storage.import_content(collection)
 

@@ -97,7 +97,7 @@ class TestCliImportSnippet(object):
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
         mocked_open = Content.mocked_open(content_read)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
@@ -115,7 +115,7 @@ class TestCliImportSnippet(object):
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
         mocked_open = Content.mocked_open(content_read)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
@@ -128,7 +128,7 @@ class TestCliImportSnippet(object):
         ## Brief: Try to import snippet from file which file format is not
         ##        supported. This should result error text for end user and
         ##        no files should be read.
-        with mock.patch('snippy.migrate.migrate.open', mock.mock_open(), create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             assert not Database.get_collection().size()
@@ -139,7 +139,7 @@ class TestCliImportSnippet(object):
 
         ## Brief: Try to import snippet from file that is not existing. The
         ##        file extension is one of the supported file formats.
-        with mock.patch('snippy.migrate.migrate.os.path.isfile', return_value=False):
+        with mock.patch('snippy.content.migrate.os.path.isfile', return_value=False):
             cause = snippy.run(['snippy', 'import', '-f', './foo.yaml'])  ## workflow
             assert cause == 'NOK: cannot read file ./foo.yaml'
             assert not Database.get_collection().size()
@@ -149,7 +149,7 @@ class TestCliImportSnippet(object):
 
         ## Brief: Try to import snippet from text file that is empty.
         mocked_open = mock.mock_open(read_data=Const.EMPTY)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
             assert cause == 'NOK: could not identify text template content category'
             assert not Database.get_collection().size()
@@ -157,11 +157,13 @@ class TestCliImportSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'import-remove-utc')
     def test_cli_import_snippet_009(self, snippy, yaml_load, mocker):
-        """Import defined snippet."""
+        """Import defined snippet.
 
-        ## Brief: Import defined snippet based on message digest. File name
-        ##        is defined from command line as yaml file which contain one
-        ##        snippet. Content is not updated in this case.
+        Import defined snippet based on message digest. File name is defined
+        from command line as yaml file which contain one snippet. Content is
+        not updated in this case because the same content is imported again.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]
         }
@@ -221,7 +223,7 @@ class TestCliImportSnippet(object):
         }
         content_read['7681559ca5c001e2']['links'] = ('https://new.link', )
         mocked_open = Content.mocked_open(content_read)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt'])  ## workflow
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 1
@@ -241,7 +243,7 @@ class TestCliImportSnippet(object):
         }
         content_read['7681559ca5c001e2']['links'] = ('https://new.link', )
         mocked_open = Content.mocked_open(content_read)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text'])  ## workflow
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 1
@@ -258,9 +260,9 @@ class TestCliImportSnippet(object):
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]
         }
         mocked_open = Content.mocked_open(content_read)
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])  ## workflow
-            assert cause == 'NOK: cannot find snippet identified with digest 123456789abcdef0'
+            assert cause == 'NOK: cannot find: snippet :identified with digest: 123456789abcdef0'
             assert Database.get_snippets().size() == 1
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, content_read)
@@ -314,7 +316,7 @@ class TestCliImportSnippet(object):
         ##        be read. The error text must be the same for all content
         ##        types.
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Snippet.TEMPLATE))
-        with mock.patch('snippy.migrate.migrate.open', mocked_open, create=True) as mock_file:
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--template'])  ## workflow
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
             assert not Database.get_snippets().size()
@@ -340,6 +342,27 @@ class TestCliImportSnippet(object):
         assert cause == Cause.ALL_OK
         assert Database.get_collection().size() == 3
         yaml_load.assert_called_once_with('./snippets.yaml', 'r')
+        Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('default-snippets')
+    def test_cli_import_snippet_019(self, snippy, yaml_load, mocker):
+        """Import snippet based on digest.
+
+        Try to import snippet based on message digest that matches to two
+        snippets. Note! Don't not change the test snippets because this case
+        is produced with real digests that just happen to have same digit
+        starting both of the cases.
+        """
+
+        content_read = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        }
+        yaml.safe_load.return_value = Content.imported_dict(content_read)
+        cause = snippy.run(['snippy', 'import', '-d', '5', '-f', 'one-snippet.yaml'])  ## workflow
+        assert cause == 'NOK: cannot import: snippet :because digest: 5 :matched: 2 :times'
+        assert Database.get_snippets().size() == 2
+        yaml_load.assert_not_called()
         Content.verified(mocker, snippy, content_read)
 
     @classmethod

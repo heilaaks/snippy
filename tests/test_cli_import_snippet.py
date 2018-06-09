@@ -38,11 +38,12 @@ class TestCliImportSnippet(object):
     """Test workflows for importing snippets."""
 
     def test_cli_import_snippet_001(self, snippy, yaml_load, mocker):
-        """Import all snippets."""
+        """Import all snippets.
 
-        ## Brief: Import all snippets. File name is not defined in command
-        ##        line. This must result tool internal default file name and
-        ##        format being used.
+        Import all snippets. File name is not defined in command line. This
+        must result tool internal default file name and format being used.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
@@ -55,10 +56,12 @@ class TestCliImportSnippet(object):
         Content.verified(mocker, snippy, content_read)
 
     def test_cli_import_snippet_002(self, snippy, yaml_load, mocker):
-        """Import all snippets."""
+        """Import all snippets.
 
-        ## Brief: Import all snippets from yaml file. File name and format
-        ##        are extracted from command line option -f|--file.
+        Import all snippets from yaml file. File name and format are extracted
+        from command line option -f|--file.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
@@ -71,10 +74,12 @@ class TestCliImportSnippet(object):
         Content.verified(mocker, snippy, content_read)
 
     def test_cli_import_snippet_003(self, snippy, json_load, mocker):
-        """Import all snippets."""
+        """Import all snippets.
 
-        ## Brief: Import all snippets from json file. File name and format
-        ##        are extracted from command line option -f|--file.
+        Import all snippets from json file. File name and format are extracted
+        from command line option -f|--file.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
@@ -87,11 +92,13 @@ class TestCliImportSnippet(object):
         Content.verified(mocker, snippy, content_read)
 
     def test_cli_import_snippet_004(self, snippy, mocker):
-        """Import all snippets."""
+        """Import all snippets.
 
-        ## Brief: Import all snippets from txt file. File name and format are
-        ##        extracted from command line option -f|--file. File extension
-        ##        is '*.txt' in this case.
+        Import all snippets from txt file. File name and format are extracted
+        from command line option -f|--file. File extension is '*.txt' in this
+        case.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
@@ -105,11 +112,13 @@ class TestCliImportSnippet(object):
             Content.verified(mocker, snippy, content_read)
 
     def test_cli_import_snippet_005(self, snippy, mocker):
-        """Import all snippets."""
+        """Import all snippets.
 
-        ## Brief: Import all snippets from text file. File name and format are
-        ##        extracted from command line option -f|--file. File extension
-        ##        is '*.text' in this case.
+        Import all snippets from text file. File name and format are extracted
+        from command line option -f|--file. File extension is '*.text' in this
+        case.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
@@ -123,11 +132,13 @@ class TestCliImportSnippet(object):
             Content.verified(mocker, snippy, content_read)
 
     def test_cli_import_snippet_006(self, snippy):
-        """Import all snippets."""
+        """Import all snippets.
 
-        ## Brief: Try to import snippet from file which file format is not
-        ##        supported. This should result error text for end user and
-        ##        no files should be read.
+        Try to import snippet from file which file format is not supported.
+        This should result error text for end user and no files should be
+        read.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './foo.bar'])  ## workflow
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
@@ -135,19 +146,23 @@ class TestCliImportSnippet(object):
             mock_file.assert_not_called()
 
     def test_cli_import_snippet_007(self, snippy):
-        """Import all snippets."""
+        """Import all snippets.
 
-        ## Brief: Try to import snippet from file that is not existing. The
-        ##        file extension is one of the supported file formats.
+        Try to import snippet from file that is not existing. The file
+        extension is one of the supported file formats.
+        """
+
         with mock.patch('snippy.content.migrate.os.path.isfile', return_value=False):
             cause = snippy.run(['snippy', 'import', '-f', './foo.yaml'])  ## workflow
             assert cause == 'NOK: cannot read file ./foo.yaml'
             assert not Database.get_collection().size()
 
     def test_cli_import_snippet_008(self, snippy):
-        """Import all snippets."""
+        """Import all snippets.
 
-        ## Brief: Try to import snippet from text file that is empty.
+        Try to import snippet from text file that is empty.
+        """
+
         mocked_open = mock.mock_open(read_data=Const.EMPTY)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
@@ -176,11 +191,13 @@ class TestCliImportSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'import-remove-utc')
     def test_cli_import_snippet_010(self, snippy, yaml_load, mocker):
-        """Import defined snippet."""
+        """Import defined snippet.
 
-        ## Brief: Import defined snippet based on message digest. File name
-        ##        is defined from command line as yaml file which contain one
-        ##        snippet. Content tags were updated.
+        Import defined snippet based on message digest. File name is defined
+        from command line as yaml file which contain one snippet. Content
+        tags were updated.
+        """
+
         content_read = {
             '4525613eaecd5297': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
         }
@@ -194,11 +211,13 @@ class TestCliImportSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'import-remove-utc')
     def test_cli_import_snippet_011(self, snippy, json_load, mocker):
-        """Import defined snippet."""
+        """Import defined snippet.
 
-        ## Brief: Import defined snippet based on message digest. File name
-        ##        is defined from command line as json file which contain one
-        ##        snippet. Content brief were updated.
+        Import defined snippet based on message digest. File name is defined
+        from command line as json file which contain one snippet. Content
+        brief were updated.
+        """
+
         content_read = {
             'f07547e7c692741a': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
         }
@@ -212,12 +231,13 @@ class TestCliImportSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
     def test_cli_import_snippet_012(self, snippy, mocker):
-        """Import defined snippet."""
+        """Import defined snippet.
 
-        ## Brief: Import defined snippet based on message digest. File name
-        ##        is defined from command line as text file which contain one
-        ##        snippet. Content links were updated. The file extenansion is
-        ##        '*.txt' in this case.
+        Import defined snippet based on message digest. File name is defined
+        from command line as text file which contain one snippet. Content
+        links were updated. The file extenansion is '*.txt' in this case.
+        """
+
         content_read = {
             '7681559ca5c001e2': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
         }
@@ -232,12 +252,13 @@ class TestCliImportSnippet(object):
 
     @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
     def test_cli_import_snippet_013(self, snippy, mocker):
-        """Import defined snippet."""
+        """Import defined snippet.
 
-        ## Brief: Import defined snippet based on message digest. File name
-        ##        is defined from command line as text file which contain one
-        ##        snippet. Content links were updated. The file extenansion is
-        ##        '*.text' in this case.
+        Import defined snippet based on message digest. File name is defined
+        from command line as text file which contain one snippet. Content
+        links were updated. The file extenansion is '*.text' in this case.
+        """
+
         content_read = {
             '7681559ca5c001e2': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
         }
@@ -252,10 +273,12 @@ class TestCliImportSnippet(object):
 
     @pytest.mark.usefixtures('import-remove')
     def test_cli_import_snippet_014(self, snippy, mocker):
-        """Import defined snippet."""
+        """Import defined snippet.
 
-        ## Brief: Try to import defined snippet with message digest that
-        ##        cannot be found. In this case there is one snippet stored.
+        Try to import defined snippet with message digest that cannot be
+        found. In this case there is one snippet stored.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]
         }
@@ -268,11 +291,12 @@ class TestCliImportSnippet(object):
             Content.verified(mocker, snippy, content_read)
 
     def test_cli_import_snippet_015(self, snippy, yaml_load, mocker):
-        """Import snippet defaults."""
+        """Import snippet defaults.
 
-        ## Brief: Import snippet defaults. All snippets should be imported
-        ##        from predefined file location under tool data folder from
-        ##        yaml format.
+        Import snippet defaults. All snippets should be imported from
+        predefined file location under tool data folder from yaml format.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
@@ -287,14 +311,17 @@ class TestCliImportSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'import-remove-utc', 'import-forced-utc')
     def test_cli_import_snippet_016(self, snippy, yaml_load, mocker):
-        """Import snippet defaults."""
+        """Import snippet defaults.
 
-        ## Brief: Try to import snippet defaults again. The second import
-        ##        should fail with an error because the content already exist.
-        ##        The error text must be the same for all content categories.
-        ##        Because of random order dictionary in the code, the reported
-        ##        digest can vary if there are multiple failures.
-        ##        TODO: The UTC time mocking is likely incorrect here.
+        Try to import snippet defaults again. The second import should fail
+        with an error because the content already exist. The error text must
+        be the same for all content categories. Because of random order
+        dictionary in the code, the reported digest can vary if there are
+        multiple failures.
+
+        TODO: The UTC time mocking is likely incorrect here.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
@@ -309,12 +336,13 @@ class TestCliImportSnippet(object):
         Content.verified(mocker, snippy, content_read)
 
     def test_cli_import_snippet_017(self, snippy):
-        """Import defined snippet."""
+        """Import defined snippet.
 
-        ## Brief: Try to import snippet template without any changes. This
-        ##        should result error text for end user and no files should
-        ##        be read. The error text must be the same for all content
-        ##        types.
+        Try to import snippet template without any changes. This should result
+        error text for end user and no files should be read. The error text
+        must be the same for all content types.
+        """
+
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Snippet.TEMPLATE))
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--template'])  ## workflow
@@ -324,14 +352,16 @@ class TestCliImportSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets', 'import-remove-utc', 'import-netcat-utc')
     def test_cli_import_snippet_018(self, snippy, yaml_load, mocker):
-        """Import snippets already existing."""
+        """Import snippets already existing.
 
-        ## Brief: Import snippets from yaml file that is defined from command
-        ##        line. In this case one of the two snippets is already
-        ##        existing. Because the content existing is not considered as
-        ##        an error and another snippet is imported successfully, the
-        ##        result cause is OK. TODO: The UTC time mocking is likely
-        ##        incorrect here.
+        Import snippets from yaml file that is defined from command line. In
+        this case one of the two snippets is already existing. Because the
+        content existing is not considered as an error and another snippet
+        is imported successfully, the result cause is OK.
+
+        TODO: The UTC time mocking is likely incorrect here.
+        """
+
         content_read = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]

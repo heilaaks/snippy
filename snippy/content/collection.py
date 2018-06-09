@@ -45,6 +45,13 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         text = Const.EMPTY
         for i, resource in enumerate(self.resources(), start=1):
             text = text + resource.dump_term(index=i, ansi=True, debug=True)
+            text = text + '   \x1b[91m!\x1b[0m \x1b[2mcollection-meta-digest\x1b[0m : %s (%s)\n\n' % (
+                self[resource.digest]['meta']['digest'],
+                resource.digest == self[resource.digest]['meta']['digest']
+            )
+
+        text = text + '\x1b[96;1m# \x1b[1;92mcollection meta\x1b[0m\n'
+        text = text + '   \x1b[91m!\x1b[0m \x1b[2mtotal\x1b[0m : %d\n' % self.data['meta']['total']
 
         return text
 
@@ -123,14 +130,18 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         if isinstance(source, Collection):
             for resource in source.resources():
-                self.data['data'][resource.digest] = OrderedDict()
+                if resource.digest not in self.data['data']:
+                    self.data['meta']['total'] = self.data['meta']['total'] + 1
+                self.data['data'][resource.digest] = {}
                 self.data['data'][resource.digest]['data'] = resource
-                self.data['data'][resource.digest]['meta'] = OrderedDict()
+                self.data['data'][resource.digest]['meta'] = {}
                 self.data['data'][resource.digest]['meta']['digest'] = resource.digest
         elif isinstance(source, Resource):
-            self.data['data'][source.digest] = OrderedDict()
+            if source.digest not in self.data['data']:
+                self.data['meta']['total'] = self.data['meta']['total'] + 1
+            self.data['data'][source.digest] = {}
             self.data['data'][source.digest]['data'] = source
-            self.data['data'][source.digest]['meta'] = OrderedDict()
+            self.data['data'][source.digest]['meta'] = {}
             self.data['data'][source.digest]['meta']['digest'] = source.digest
 
     def merge(self, source):
@@ -239,13 +250,13 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def total(self):
         """Get total amount of resources without filters."""
 
-        return self._data['meta']['total']
+        return self.data['meta']['total']
 
     @total.setter
     def total(self, value):
         """Total amount of resources without filters."""
 
-        self._data['meta']['total'] = value
+        self.data['meta']['total'] = value
 
     def _init(self):
         """Wrap content list with metadata."""

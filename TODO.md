@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Add meta to collection __str__ printing.
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
    - [ ] Add UT tests for class Debug() methods.
 

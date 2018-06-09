@@ -23,6 +23,7 @@ import json
 
 import falcon
 
+from snippy.logger import Logger
 from snippy.server.rest.base import ApiContentBase
 from snippy.meta import __docs__
 from snippy.meta import __homepage__
@@ -34,6 +35,7 @@ class ApiHello(ApiContentBase):  # pylint: disable=too-few-public-methods
     """Hello API."""
 
     @staticmethod
+    @Logger.timeit(refresh_oid=True)
     def on_get(_, response):
         """Get Hello!"""
 
@@ -48,3 +50,11 @@ class ApiHello(ApiContentBase):  # pylint: disable=too-few-public-methods
         response.content_type = ApiContentBase.MEDIA_JSON_API
         response.body = json.dumps(hello)
         response.status = falcon.HTTP_200
+
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response):
+        """Respond with allowed methods for Hello!"""
+
+        response.status = falcon.HTTP_200
+        response.set_header('Allow', 'GET')

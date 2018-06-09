@@ -1,11 +1,12 @@
 ## WORKING
-   - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
-   - [ ] Add UT tests for class Debug() methods.
+   - [ ] Add uuid primary key to content database table.
+   - [ ] Add embedded security features.
 
 ## FEATURES
-   - [ ] Add OPTIONS method.
-   - [ ] Add uuid primary key to content database table.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
+   - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
+   - [ ] Add UT tests for class Debug() methods.
+   - [ ] Add CORS https://stackoverflow.com/a/45183343
    - [ ] Add /snippy/api/admin/v1/settings for log config. Same base /snippy/api/ for all routes.
    - [ ] Add support to export content to markdown format.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
@@ -22,7 +23,6 @@
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## SECURITY
-   - [ ] Add embedded security features.
    - [ ] Add /snippy/api/auth/v1 for login. Same base /snippy/api/ for all routes.
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
@@ -121,6 +121,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added support for OPTIONS get allowed methods for different routes.
    - [x] Added UTF-8 coded unicode string support for server and CLI.
    - [x] Added test to verify updates based on digest show already stored content in editor.
    - [x] Change Content to Collection that contains list of Resources.

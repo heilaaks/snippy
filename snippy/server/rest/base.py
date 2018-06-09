@@ -97,6 +97,14 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         Cause.reset()
         self._logger.debug('end delete %s', request.uri)
 
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response):
+        """Respond with allowed methods."""
+
+        response.status = Cause.HTTP_200
+        response.set_header('Allow', 'DELETE,GET,POST')
+
 
 class ApiContentDigestBase(object):
     """Process content based on digest."""
@@ -199,8 +207,16 @@ class ApiContentDigestBase(object):
         Cause.reset()
         self._logger.debug('end patch %s', request.uri)
 
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response, digest):  # pylint: disable=unused-argument
+        """Respond with allowed methods."""
 
-class ApiContentFieldBase(object):  # pylint: disable=too-few-public-methods
+        response.status = Cause.HTTP_200
+        response.set_header('Allow', 'DELETE,GET,PATCH,POST,PUT')
+
+
+class ApiContentFieldBase(object):
     """Process content based on digest resource ID and specified field."""
 
     def __init__(self, content, category):
@@ -230,3 +246,11 @@ class ApiContentFieldBase(object):  # pylint: disable=too-few-public-methods
 
         Cause.reset()
         self._logger.debug('end get %s', request.uri)
+
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response, digest, field):  # pylint: disable=unused-argument
+        """Respond with allowed methods."""
+
+        response.status = Cause.HTTP_200
+        response.set_header('Allow', 'GET')

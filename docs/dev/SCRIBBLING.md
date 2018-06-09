@@ -316,6 +316,13 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-created" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
+    
+    # Server OPTIONS
+    $ curl -i -X OPTIONS http://127.0.0.1:8080
+    $ curl -v -X OPTIONS "http://127.0.0.1:8080/"
+    $ curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets"
+    $ curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets/1234"
+    $ curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets/1234/brief"
 
     # Fix multiple fields
     $ curl -X GET "https://app.swaggerhub.com/api/v1/snippets?sall=docker&sall=filebeat&sort=data&fields=data&fields=brief&fields=group" -H  "accept: application/json"

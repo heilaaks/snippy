@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""server: JSON REST API server."""
+"""server: JSON RESTish API server."""
 
 import falcon
 try:
@@ -41,7 +41,7 @@ from snippy.server.rest.api_solutions import ApiSolutionsField
 
 
 class Server(object):  # pylint: disable=too-few-public-methods
-    """REST API Server."""
+    """RESTish API Server."""
 
     def __init__(self, storage):
         self._logger = Logger.get_logger(__name__)

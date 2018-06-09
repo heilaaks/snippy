@@ -207,6 +207,78 @@ class TestApiHello(object):
         server.release()
         Database.delete_storage()
 
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_009(self, server):
+        """Test hello API with OPTIONS.
+
+        Call GET /snippy/api/hello to get hello API allowed methods.
+        """
+
+        result_header = {
+            'allow': 'GET',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_010(self, server):
+        """Test snippets API with OPTIONS.
+
+        Call GET /v1/snippets to get allowed methods.
+        """
+
+        result_header = {
+            'allow': 'DELETE,GET,POST',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/snippets')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_011(self, server):
+        """Test snippets digest API with OPTIONS.
+
+        Call GET /v1/snippets/digest to get allowed methods.
+        """
+
+        result_header = {
+            'allow': 'DELETE,GET,PATCH,POST,PUT',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/snippets/123456')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_012(self, server):
+        """Test snippets field API with OPTIONS.
+
+        Call GET /v1/snippets/<digest>/<field> to get allowed methods.
+        """
+
+        result_header = {
+            'allow': 'GET',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        server.run()
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/snippets/123456/brief')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

@@ -362,7 +362,7 @@ class TestCliImportSnippet(object):
         cause = snippy.run(['snippy', 'import', '-d', '5', '-f', 'one-snippet.yaml'])  ## workflow
         assert cause == 'NOK: cannot import: snippet :because digest: 5 :matched: 2 :times'
         assert Database.get_snippets().size() == 2
-        yaml_load.assert_not_called()
+        assert not yaml_load.mock_calls
         Content.verified(mocker, snippy, content_read)
 
     @classmethod

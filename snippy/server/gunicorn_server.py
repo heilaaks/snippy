@@ -22,6 +22,9 @@
 import gunicorn.app.base
 from gunicorn.six import iteritems
 
+from snippy.config.config import Config
+from snippy.logger import Logger
+
 
 class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abstract-method
     """Gunicorn WSGI HTTP server."""
@@ -30,6 +33,7 @@ class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abst
         self.options = options or {}
         self.application = app
         super(GunicornServer, self).__init__()
+        Logger.refresh_oid()
 
     def load_config(self):
         """Load configuration."""
@@ -43,3 +47,34 @@ class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abst
         """Load configuration."""
 
         return self.application
+
+    @staticmethod
+    def post_worker_init(_):
+        """Called by Gunicorn server after worker has been initialized.
+
+        This is used to tell user that the server is running.
+        """
+
+        Logger.print_status("snippy server running at {0}:{1}".format(Config.server_ip, Config.server_port))
+
+    @staticmethod
+    def pre_request(_, __):
+        """Called by Gunicorn before executing request.
+
+        This method is used to prevent log from Gunicorn and to rely only
+        for Snippy logger in this case. Without this, there is one log printed
+        with incorrect operation ID (OID) into logs. The OID refreshed in
+        Snippy so the Gunicorn log from new request would be otherwise printed
+        with previous request OID which would be incorrect.
+        """
+
+        pass
+
+    @staticmethod
+    def on_exit(_):
+        """Called by Gunicorn server on exit.
+
+        This is used to tell user that the server has been stopped.
+        """
+
+        Logger.print_status("snippy server stopped at {0}:{1}".format(Config.server_ip, Config.server_port))

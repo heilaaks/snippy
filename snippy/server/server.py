@@ -53,8 +53,11 @@ class Server(object):  # pylint: disable=too-few-public-methods
 
         options = {
             'bind': '%s:%s' % (Config.server_ip, Config.server_port),
-            'workers': 1,
-            'logger_class': CustomGunicornLogger
+            'logger_class': CustomGunicornLogger,
+            'on_exit': SnippyServer.on_exit,
+            'post_worker_init': SnippyServer.post_worker_init,
+            'pre_request': SnippyServer.pre_request,
+            'workers': 1
         }
         self._logger.debug('run rest api server application with base path: %s', Config.base_path_app)
         try:

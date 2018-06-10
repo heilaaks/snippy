@@ -215,7 +215,7 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': False
         })
-        Logger.print_cause('NOK: exit cause')
+        Logger.print_status('NOK: exit cause')
         out, err = capsys.readouterr()
         assert not err
         assert out == 'NOK: exit cause\n'
@@ -230,7 +230,7 @@ class TestUtLogger(object):
             'quiet': True,
             'very_verbose': False
         })
-        Logger.print_cause('NOK: exit cause')
+        Logger.print_status('NOK: exit cause')
         out, err = capsys.readouterr()
         assert not err
         assert not out
@@ -246,11 +246,11 @@ class TestUtLogger(object):
             'quiet': False,
             'very_verbose': True
         })
-        Logger.print_cause('NOK: exit cause')
+        Logger.print_status('NOK: exit cause')
         out, err = capsys.readouterr()
         assert not err
-        assert 'exiting with cause nok: exit cause' in out
-        assert caplog.records[0].msg == 'exiting with cause nok: exit cause'
+        assert 'nok: exit cause' in out
+        assert caplog.records[0].msg == 'nok: exit cause'
 
         # Because the debug log printing is enabled, the cause is printed
         # only in the log string exactly the same as provided.
@@ -262,11 +262,11 @@ class TestUtLogger(object):
             'quiet': True,
             'very_verbose': False
         })
-        Logger.print_cause('NOK: exit cause')
+        Logger.print_status('NOK: exit cause')
         out, err = capsys.readouterr()
         assert not err
-        assert 'exiting with cause NOK: exit cause' in out
-        assert caplog.records[0].msg == 'exiting with cause NOK: exit cause'
+        assert 'NOK: exit cause' in out
+        assert caplog.records[0].msg == 'NOK: exit cause'
 
     def test_logger_007(self, capsys):
         """Test operation ID (OID).

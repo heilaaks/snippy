@@ -190,13 +190,13 @@ class Logger(object):
         cls.SERVER_OID = format(getrandbits(32), "08x")
 
     @classmethod
-    def print_cause(cls, cause):
-        """Print exit cause.
+    def print_status(cls, status):
+        """Print status information like exit cause or server running.
 
         Parameters
         ----------
         Args:
-            cause (str): Exit cause to be printed on stdout.
+            status (str): Status to be printed on stdout.
         """
 
         # The signal handler manipulation and the flush below prevent the
@@ -207,12 +207,12 @@ class Logger(object):
         # /2/ https://stackoverflow.com/a/26738736
         if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
             if cls.CONFIG['very_verbose']:
-                cause.lower()
-            Logger.get_logger().info('exiting with cause %s', cause)
+                status.lower()
+            Logger.get_logger().info('%s', status)
         elif not cls.CONFIG['quiet']:
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)
-            print(cause)
+            print(status)
             sys.stdout.flush()
             signal(SIGPIPE, signal_sigpipe)
 
@@ -230,10 +230,10 @@ class Logger(object):
                 """Wrapper to measure latency."""
 
                 start = time.time()
-                result = method(*args, **kwargs)
-                Logger.get_logger().debug('operation duration: %.6fs', (time.time() - start))
                 if refresh_oid:
                     Logger.refresh_oid()
+                result = method(*args, **kwargs)
+                Logger.get_logger().debug('operation duration: %.6fs', (time.time() - start))
 
                 return result
 

@@ -263,7 +263,7 @@ class Config(object):
         # The database schema is installed with the tool and it must always exist.
         schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
         if not os.path.isfile(schema_file):
-            Logger.print_cause('NOK: cannot run because database schema is not accessible: {}'.format(schema_file))
+            Logger.print_status('NOK: cannot run because database schema is not accessible: {}'.format(schema_file))
             sys.exit(1)
 
         return schema_file
@@ -274,7 +274,7 @@ class Config(object):
 
         filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), template)
         if not os.path.isfile(filename):
-            Logger.print_cause('NOK: cannot run because content template path is not accessible: {}'.format(filename))
+            Logger.print_status('NOK: cannot run because content template path is not accessible: {}'.format(filename))
             sys.exit(1)
 
         template = Const.EMPTY
@@ -298,7 +298,7 @@ class Config(object):
             # This is a special case which prevents additional error log after
             # tool is already about to exit with help text from the CLI parser.
             if not cls.source.exit:
-                Logger.print_cause('NOK: cannot run because content storage path is not accessible: {}'.format(storage_path))
+                Logger.print_status('NOK: cannot run because content storage path is not accessible: {}'.format(storage_path))
             sys.exit(1)
 
         return storage_file

@@ -4,11 +4,12 @@
 
 ## FEATURES
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
+   - [ ] Add support to export content to markdown format.
+   - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
    - [ ] Add UT tests for class Debug() methods.
    - [ ] Add CORS https://stackoverflow.com/a/45183343
    - [ ] Add /snippy/api/admin/v1/settings for log config. Same base /snippy/api/ for all routes.
-   - [ ] Add support to export content to markdown format.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
    - [ ] Add logic to runalias. This can be updated from REST. This should not do anything because of security?
@@ -19,8 +20,6 @@
    - [ ] Add upload command like in setup example from https://github.com/kennethreitz/setup.py/blob/master/setup.py
    - [ ] How to add custom Falcon error codes? Now e.g. 500 is HTML string and it is different than normal Snippy server error code.
    - [ ] How to add custom Falcon exception handling through snippy logger?
-   - [ ] Add server startup indicator like 'server running in 127.0.0.1:8080' or 'OK' (suppress with -q). This can be used in api performance test to see when the server is up.
-   - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
 
 ## SECURITY
    - [ ] Add /snippy/api/auth/v1 for login. Same base /snippy/api/ for all routes.
@@ -32,7 +31,7 @@
    - [ ] Fix the Generate() does not need 'json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))' because code is not called with emty collection.
    - [ ] Fix error string that complains about snippet content matching to empty template when the data is empty. See test_api_create_snippet_017.
    - [ ] Fix test reference to match to main(['snippy', 'search', '--sall', '.', '--profile']) and new document stuff
-   - [ ] Updating cls.server = cls.source.server does not make sense after start. But this was propably fix to some other problem.
+   - [ ] Fix updating cls.server = cls.source.server does not make sense after start. But this was propably fix to some other problem.
    - [ ] Fix insert_content and digest check is probably unnecessary. Remove it after content refactor.
    - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv
    - [ ] Fix all post responses to have link to created resource. Why this is not always included? Only in updates but not in create?
@@ -40,7 +39,6 @@
    - [ ] Fix testing error titles. Some contain the hash which now prevent all checks for title. Some titles should be checked.
    - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
    - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases? This comes from UT sqlite cases at least.
-   - [ ] Fix OID refresh not done for the first operation. Only at the first one refreshed at the end. This cannot be in wrapper start since that misses one log from Falcon.
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix make test if pytest cover leaves hanging files like .coverage.localhost.localdomain.4727.176219. Add --cover-erase in commmand? // https://bitbucket.org/ned/coveragepy/issues/476/coverageexception-cant-add-arcs-to
    - [ ] Fix when server parameters are erronous, error text from argparse is misleading since it complains about the content operations. Custom errors for --server?
@@ -59,9 +57,8 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
-   - [ ] Make solution template and UTC time readon to follow timestamp without microseconds?
    - [ ] Storage update() supports only one resource and this is not in line with others. Change to collection?
-   - [ ] Offset based pagination is slow with large data sets (how large?). Measure with test.
+   - [ ] Offset based pagination is slow with large data sets (how large?). Measure with test. This was improved in laest sqlite 3.24.0 https://www.sqlite.org/changes.html
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
    - [ ] Read storage schema directly to config() like the content templates.
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
@@ -121,6 +118,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Fixed OID refresh for the first request and added server running and stopped logs which can be silenced with '-q'.
    - [x] Added support for OPTIONS get allowed methods for different routes.
    - [x] Added UTF-8 coded unicode string support for server and CLI.
    - [x] Added test to verify updates based on digest show already stored content in editor.

@@ -1074,7 +1074,6 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     8. Only Storage() can import Sqlitedb()
 
-
     CHARACTER ENCODING
 
     1. In Python 2.7, unicode defaults to decoding 'ascii'.
@@ -1082,6 +1081,22 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     2. All strings are automatically encoded to TEXT_TYPE
 
        In Python 2, the text type is unicode and in Python 3 it si str.
+
+    SECURITY
+
+    1. Generating self signed SSL certificates
+
+       ```
+       # Create private key and self signed SSL certificate to run
+       # server in 127.0.0.1.
+       $ openssl req -x509 -newkey rsa:4096 -nodes -keyout server.key -out server.crt -days 356 -subj "/C=US/O=Snippy/CN=127.0.0.1"
+
+       # View certificate.
+       $ openssl x509 -text -noout -in server.crt
+
+       # Verify private key.
+       $ openssl rsa -check -in server.key
+       ```
 
 #######################################
 ## Command line design

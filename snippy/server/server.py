@@ -19,6 +19,8 @@
 
 """server: JSON RESTish API server."""
 
+import ssl
+
 import falcon
 try:
     from urllib.parse import urljoin
@@ -53,10 +55,15 @@ class Server(object):  # pylint: disable=too-few-public-methods
 
         options = {
             'bind': '%s:%s' % (Config.server_ip, Config.server_port),
+            'ca_certs': Config.ssl_ca_cert,
+            'certfile': Config.ssl_cert,
+            'ciphers': 'ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA',
+            'keyfile': Config.ssl_key,
             'logger_class': CustomGunicornLogger,
             'on_exit': SnippyServer.on_exit,
             'post_worker_init': SnippyServer.post_worker_init,
             'pre_request': SnippyServer.pre_request,
+            'ssl_version': ssl.PROTOCOL_TLSv1_2,
             'workers': 1
         }
         self._logger.debug('run rest api server application with base path: %s', Config.base_path_app)

@@ -73,6 +73,9 @@ class Config(object):
         cls.server = source.server
         cls.server_ip = source.server_ip
         cls.server_port = source.server_port
+        cls.ssl_cert = cls._ssl_file(source.ssl_cert)
+        cls.ssl_key = cls._ssl_file(source.ssl_key)
+        cls.ssl_ca_cert = cls._ssl_file(source.ssl_ca_cert)
 
         # Dynamic configuration.
         cls.load(source)
@@ -285,7 +288,7 @@ class Config(object):
 
     @classmethod
     def _storage_file(cls):
-        """Test that storage path exist."""
+        """Construct store file with absolute path."""
 
         if Config.storage_path:
             storage_path = Config.storage_path
@@ -302,6 +305,16 @@ class Config(object):
             sys.exit(1)
 
         return storage_file
+
+    @classmethod
+    def _ssl_file(cls, filename):
+        """Test that given SSL/TLS certificate or key file exist."""
+
+        if filename is not None and not os.path.isfile(filename):
+            Logger.print_status('NOK: cannot run secured server because ssl/tls certificate file cannot be read: {}'.format(filename))
+            sys.exit(1)
+
+        return filename
 
     @classmethod
     def _operation_filename(cls):
@@ -485,3 +498,6 @@ class Config(object):
         cls._logger.debug('configured option server app base path: %s', cls.base_path_app)
         cls._logger.debug('configured option server ip: %s :and port: %s', cls.server_ip, cls.server_port)
         cls._logger.debug('configured option server compact json: %s', cls.compact_json)
+        cls._logger.debug('configured option server ssl certificate file: %s', cls.ssl_cert)
+        cls._logger.debug('configured option server ssl key file: %s', cls.ssl_key)
+        cls._logger.debug('configured option server ssl ca certificate file: %s', cls.ssl_ca_cert)

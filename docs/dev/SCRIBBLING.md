@@ -168,6 +168,7 @@ Random notes and scribling during development.
    # Signing Git commits
    > https://help.github.com/articles/generating-a-new-gpg-key/
    > https://help.github.com/articles/telling-git-about-your-gpg-key/
+   > https://stackoverflow.com/a/42265848
    $ sudo dnf update gnupg2
    $ gpg2 --list-secret-keys --keyid-format LONG
    $ gpg2 --default-new-key-algo rsa4096 --gen-key
@@ -176,6 +177,8 @@ Random notes and scribling during development.
    $ git config commit.gpgsign true
    $ git config --global gpg.program gpg2
    $ git commit -S -s
+   $ export GPG_TTY=$(tty)
+   $ git log --show-signature -1
    ```
 
    ```
@@ -330,7 +333,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-created" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
-    
+
     # Server OPTIONS
     $ curl -i -X OPTIONS http://127.0.0.1:8080
     $ curl -v -X OPTIONS "http://127.0.0.1:8080/"
@@ -915,11 +918,11 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        When variables are printed in logs, they must be separated with colon
        like in the examples below.
-       
+
        When there is a variable being printed in the middle of the text string,
        it must be separated with colons and space before and after the printed
        variable.
-       
+
        These rules intent to improve parsing of the text strings by providing
        tags than be used to exract variable values inside log strings.
 
@@ -1098,7 +1101,47 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     SECURITY
 
-    1. Generating self signed SSL certificates
+    1. All code commits must be signed
+
+       Following example can be used to generate and use GPG2 keys with GitHub.
+
+       ```
+       # Signing Git commits
+       > https://help.github.com/articles/generating-a-new-gpg-key/
+       > https://help.github.com/articles/telling-git-about-your-gpg-key/
+       > https://stackoverflow.com/a/42265848
+       $ sudo dnf update gnupg2
+       $ gpg2 --list-secret-keys --keyid-format LONG
+       $ gpg2 --default-new-key-algo rsa4096 --gen-key
+       $ gpg2 --list-secret-keys --keyid-format LONG
+       $ gpg2 --armor --export <key>
+       $ git config commit.gpgsign true
+       $ git config --global gpg.program gpg2
+       $ git commit -S -s
+       $ export GPG_TTY=$(tty)
+       $ git log --show-signature -1
+       ```
+
+    2. Only TLSv1.2 is allowed
+
+       All SSL versions are considered unsecure and compromised. TLS v1.1 and
+       v1.2 are both without known security issues, but only v1.2 provides
+       modern cryptographic algorithms. [1]
+
+       [1] https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices
+       [2] https://wiki.mozilla.org/Security/Server_Side_TLS
+
+    3. Only selected set of ciphers are allowed
+
+       Only ECDHE-RSA-AES256-SHA and ECDHE-RSA-AES128-SHA ciphers are allowed
+       with the TLSv1.2. This set balances compatiblity and security. Ciphers
+       can be tested for example with script [1]. Cipher list and mapping can
+       be read from [2].
+
+       [1] https://superuser.com/a/224263
+       [2] https://testssl.sh/openssl-rfc.mapping.html
+
+    3. Generating self signed SSL certificates
 
        ```
        # Create private key and self signed SSL certificate to run
@@ -1111,6 +1154,30 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        # Verify private key.
        $ openssl rsa -check -in server.key
        ```
+
+    === WHITEBOARD ===
+    # SECURITY
+    $ curl --insecure -v https://127.0.0.1:8080
+
+    # Running in 443 requires sudo and all installs?
+
+    # Best practises
+    > https://github.com/ssllabs/research/wiki/SSL-and-TLS-Deployment-Best-Practices
+
+    $ openssl req -x509 -newkey rsa:4096 -nodes -keyout server.key -out server.crt -days 356 -subj "/C=US/O=Snippy/CN=127.0.0.1"
+
+    # certificates are not dependent on protocols
+
+    $ openssl s_client -debug -connect 127.0.0.1:8080 -tls1_2  # must work
+    $ openssl s_client -debug -connect 127.0.0.1:8080 -tls1    # must not work
+    $ openssl s_client -debug -connect 127.0.0.1:8080 -tls1_1  # must not work
+    $ openssl s_client -debug -connect 127.0.0.1:8080 -ssl3    # must not work
+    
+    # Run server
+    $ python runner --server -vv --ssl-cert ./snippy/data/ssl/server.crt --ssl-key ./snippy/data/ssl/server.key
+    === WHITEBOARD ===
+
+
 
 #######################################
 ## Command line design
@@ -1642,6 +1709,67 @@ python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker
 
 7. Suppress ANSI characters with --no-ansi (DONE)
 
+########################
+## Security TODO
+########################
+
+         - [ ] Main: Document
+               - [ ] Add generate SSL cert and key
+                     - [ ] openssl req -newkey rsa:2048 -nodes -keyout domain.key -x509 -days 365 -out domain.crt
+                           // -nodes (no des) if you don't want to protect your private key with a passphrase
+                           // -subj "/C=FI/ST=Helsinki/L=Portland/O=Company Name/OU=Org/CN=www.snippy.com" // localhost how?
+         - [ ] Main: Configure server
+               - [ ] Add --jws-secret-key <secret>  // do not store in server. Do not add --secured because other params can be used to find this.
+               - [ ] Add --jws-public-key <key>  // do not store in server. Do not add --secured because other params can be used to find this.
+               - [ ] Add --jws-private-key <key>  // do not store in server. Do not add --secured because other params can be used to find this.
+               - [ ] Add --jws-expire-secs <seconds>
+               - [ ] Add check which generates security log if the request was not over HTTPS when --secured is not used. When it is used, reject request.
+               - [ ] Add paths
+                     /snippy/api/admin/v1/settings [server settings]
+                     /snippy/api/admin/v1/users    [server users]
+                     /snippy/api/auth/v1           [user authentication]
+         - [ ] Main: Register new user
+               - [ ] Add /snippy/api/admin/v1/users to create new user.
+               - [ ] Add user table with uuid and hashed password
+               - [ ] Add hash_password and verify password
+         - [ ] Main: Authenticate registered user with JWT (or simple session ID?)
+               - [ ] http://cryto.net/~joepie91/blog/2016/06/13/stop-using-jwt-for-sessions/ Simple is better?
+               - [ ] Add /snippy/api/auth/v1 for authentication
+               - [ ] Session ID
+                     - [ ] sessionIdCookie_v1 = username ":" SHA256(username + global salt)
+               - [ ] Add Authentication with JWT.
+                     - [x] JWS is simpler https://tools.ietf.org/html/rfc7519
+                           - [ ] Tokens have size limit.
+                           - [ ] Tokens cannot be revoked.
+                           - [ ] This requires tokens to have a short expiration --> use cookies.
+                           - [ ] Authorization: Bearer <token>
+                           - [ ] Use import jwt
+                           - [ ] https://auth0.com/blog/ten-things-you-should-know-about-tokens-and-cookies/
+                           - [x] https://www.youtube.com/watch?v=oXxbB5kv9OA
+                                    header {'typ': JWT, 'alg': 'hash alg'}
+                                    claims {'iss': 'Snippy', 'exp': 'expiration', 'iat': 'issued at time'} #  Do not add user name for security https://stormpath.com/blog/jwt-the-right-way
+                                    s = base64encode(header) + '.' + base64encode(payload)
+                                    signature = hashAlgHs256(s, 'secret')
+                                    jwt = s + '.' base64encode(signature)
+                                    
+                                    Request token --> user/password                               Enforce HTTPS
+                                                                                                  check credentials
+                                                                                                  create JWT token
+                                                  <-- JWT or error in cookie to expire
+                           - [ ] Encrypted or not
+                           - [ ] https://github.com/jhildreth/falcon-jwt-checker/tree/master/falcon_jwt_checker
+                           - [ ] https://github.com/jpadilla/pyjwt
+                           - [ ] https://github.com/loanzen/falcon-auth
+                           - [ ] "symmetric algorithms such as HS256, you will have only a single key to be used to sign and verify the signature."
+                           - [ ] "If you consider asymmetric algorithms such as RS256, you will have a private and a public key. "
+                           - [ ] Add HS256
+                           - [ ] RS256
+                           - [ ] Add How can I extract a public / private key from a x509 certificate https://pyjwt.readthedocs.io/en/latest/faq.html
+                           - [ ] JWT JTI can prevent replay attack mut it makes server stateful. It works so that user is stored and has unique JTI, When user complains, the JTI is generated again for removed user. https://security.stackexchange.com/a/106375
+               - [ ] Add generate_auth_token for JSON Web tokens
+         - [ ] Main: Do we need to store sessions because authentication tokens?
+               - [ ] Add new table for sessions?
+               - [ ] Use same table as for user?
 
 ########################
 ## Make container with
@@ -1714,3 +1842,4 @@ LIMIT <count> OFFSET <skip>
 ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 
 "links":{"self":"URL?limit=5&offset=10","first":"URL?limit=5&offset=0","prev":"URL?limit=5&offset=5","next":"URL?limit=5&offset=15","last":"URL?limit=5&offset=30",}
+

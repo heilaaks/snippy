@@ -165,6 +165,20 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Signing Git commits
+   > https://help.github.com/articles/generating-a-new-gpg-key/
+   > https://help.github.com/articles/telling-git-about-your-gpg-key/
+   $ sudo dnf update gnupg2
+   $ gpg2 --list-secret-keys --keyid-format LONG
+   $ gpg2 --default-new-key-algo rsa4096 --gen-key
+   $ gpg2 --list-secret-keys --keyid-format LONG
+   $ gpg2 --armor --export <key>
+   $ git config commit.gpgsign true
+   $ git config --global gpg.program gpg2
+   $ git commit -S -s
+   ```
+
+   ```
    # Why this slows down and starts to consume huge amount of cpu and stalls all cases=
    # The problem is the order of sys.argv that was after the Snippy object was created.
    import sys

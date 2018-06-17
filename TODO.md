@@ -28,8 +28,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
-   - [ ] Fix logs have operation duration twice.
-   - [ ] Fix failure to process request like SSL error does not refresh OID.
+   - [ ] Fix failure to process request like SSL error does not refresh OID. Is there a hook for this?
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
    - [ ] Fix terminal encodings other than utf-8. Something like this may be needed https://stackoverflow.com/a/33812744.
    - [ ] Fix the Generate() does not need 'json.loads('{"links": {"self": "' + uri + '"}, "data": null}'))' because code is not called with emty collection.

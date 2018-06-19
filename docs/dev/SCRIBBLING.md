@@ -1117,8 +1117,8 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        $ gpg2 --armor --export <key>
        $ git config commit.gpgsign true
        $ git config --global gpg.program gpg2
-       $ git commit -S -s
        $ export GPG_TTY=$(tty)
+       $ git commit -S -s
        $ git log --show-signature -1
        ```
 

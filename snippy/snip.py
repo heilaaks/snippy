@@ -93,8 +93,11 @@ class Snippy(object):
             Cause.print_message()
 
 
-def main(args):
+def main(args=None):
     """Run Snippy."""
+
+    if not args:
+        args = sys.argv
 
     snippy = Snippy(args)
     snippy.run()
@@ -102,4 +105,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    main(sys.argv)
+    main()

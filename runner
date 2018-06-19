@@ -2,8 +2,6 @@
 Run Snippy.
 """
 
-import sys
-
 import snippy.snip
 
-snippy.snip.main(sys.argv)
+snippy.snip.main()

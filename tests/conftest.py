@@ -19,6 +19,7 @@
 
 """conftest: Fixtures for pytest."""
 
+import mock
 import json
 
 import pytest
@@ -144,17 +145,18 @@ def server(mocker, request):
         params = request.param
     else:
         params.extend(['--server', '--compact-json', '-q'])
-
     params.insert(0, 'snippy')  # Add the tool name here to args list.
+
+    mocker.patch('snippy.server.server.SnippyServer')
     snippy = _create_snippy(mocker, params)
+    snippy.run()
+
     def fin():
         """Clear the resources at the end."""
 
         snippy.release()
         Database.delete_storage()
     request.addfinalizer(fin)
-
-    mocker.patch('snippy.server.server.SnippyServer')
 
     return snippy
 
@@ -597,11 +599,22 @@ def devel_no_tests(mocker):
 
 ## Helpers
 
+## Templates
+@pytest.fixture(scope='function', name='isfile')
+def isfile_mock(mocker):
+    """Mock os.path.isfile."""
+
+    mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
+
 def _create_snippy(mocker, options):
     """Create snippy with mocks."""
 
+    # Mock only objects from Snippy package. If system calls are mocked
+    # here, it will mock all the third party packages that are imported
+    # when the Snippy object is created. System calls like os.path.isfile
+    # must be mocked after the Snippy object is in a such state that it
+    # can accept test case input.
     mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
-    mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
     snippy = Snippy(options)
 
     return snippy
@@ -611,12 +624,13 @@ def _import_content(snippy, mocker, contents, timestamps):
 
     mocker.patch.object(Config, 'utcnow', side_effect=timestamps)
     start = Database.get_collection().size() + 1
-    for idx, content in enumerate(contents, start=start):
-        mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
-        mocker.patch('snippy.content.migrate.open', mocked_open, create=True)
-        cause = snippy.run(['snippy', 'import', '-f', 'content.txt'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_collection().size() == idx
+    with mock.patch('snippy.content.migrate.os.path.isfile', return_value=True):
+        for idx, content in enumerate(contents, start=start):
+            mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
+            mocker.patch('snippy.content.migrate.open', mocked_open, create=True)
+            cause = snippy.run(['snippy', 'import', '-f', 'content.txt'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == idx
 
 def _add_utc_time(mocker, timestamps):
     """Add UTC time mock as side effect."""

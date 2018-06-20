@@ -495,7 +495,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    def test_cli_import_solution_028(self, snippy):
+    def test_cli_import_solution_028(self, snippy, isfile):
         """Import solutions from text template.
 
         Try to import solution template without any changes. This should result

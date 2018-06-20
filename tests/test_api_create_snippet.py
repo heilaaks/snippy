@@ -62,7 +62,6 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},

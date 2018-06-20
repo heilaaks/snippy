@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] Add isfile mock to places that require importing data to mock is.file.
+   - [ ] remove server.run() because that is not needed.
    - [ ] Add uuid primary key to content database table.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
 

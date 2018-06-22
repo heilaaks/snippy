@@ -552,7 +552,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         }
         cause = snippy.run(['snippy', 'export', '--solution', '--defaults'])
         assert cause == Cause.ALL_OK
-        defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
+        defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
         yaml_dump.assert_called_once_with(defaults_solutions, 'w')
         yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
 

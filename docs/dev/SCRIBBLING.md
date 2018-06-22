@@ -876,20 +876,6 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        This follows the same rule as printing variables in logs.
 
-    SECURITY HARDENING
-
-    1. Logger has own security log level
-
-       All suspected security related events are printed to logs with 'security'
-       level.
-
-    2. Hard maximum on log messages
-
-       There is a hard maximum 'Logger.SECURITY_LOG_MSG_MAX' for log messages for
-       safety and security reasons. This tries to prevent extremely long log messages
-       which may cause problems for the server.
-
-
     LOGGING
 
     1. There are no logs printed to user
@@ -1105,6 +1091,20 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     2. All strings are automatically encoded to TEXT_TYPE
 
        In Python 2, the text type is unicode and in Python 3 it si str.
+
+    SECURITY HARDENING
+
+    1. Logger has own security log level
+
+       All suspected security related events are printed to logs with 'security'
+       level.
+
+    2. Hard maximum on log messages
+
+       There is a hard maximum 'Logger.SECURITY_LOG_MSG_MAX' for log messages for
+       safety and security reasons. This tries to prevent extremely long log messages
+       which may cause problems for the server.
+
 
     SECURITY
 

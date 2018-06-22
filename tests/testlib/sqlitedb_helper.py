@@ -93,7 +93,7 @@ class SqliteDbHelper(object):
     def get_schema():
         """Return the file where the database schema is located."""
 
-        schema = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
+        schema = os.path.join(pkg_resources.resource_filename('snippy', 'data/storage'), 'database.sql')
 
         return  schema
 

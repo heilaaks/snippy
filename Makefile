@@ -35,7 +35,7 @@ pyflakes:
 	-python -m pyflakes .
 
 schema:
-	openapi2jsonschema snippy/data/openapi/swagger-2.0.yml -o snippy/data/schema/
+	openapi2jsonschema snippy/data/server/openapi/swagger-2.0.yml -o snippy/data/server/openapi/schema/
 
 docker: clean clean-db
 	docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy} -t heilaaks/snippy .

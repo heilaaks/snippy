@@ -502,7 +502,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         cause = snippy.run(['snippy', 'import', '--solution', '--defaults'])
         assert cause == Cause.ALL_OK
         assert Database.get_solutions().size() == 2
-        defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
+        defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
         yaml_load.assert_called_once_with(defaults_solutions, 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -526,7 +526,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         assert cause == 'NOK: content data already exist with digest 61a24a156f5e9d2d' or \
                cause == 'NOK: content data already exist with digest a96accc25dd23ac0'
         assert Database.get_solutions().size() == 2
-        defaults_solutions = pkg_resources.resource_filename('snippy', 'data/default/solutions.yaml')
+        defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
         yaml_load.assert_called_once_with(defaults_solutions, 'r')
         Content.verified(mocker, snippy, content_read)
 

@@ -61,8 +61,8 @@ class Config(object):
 
         # Static storage configuration.
         cls.storage_schema = cls._storage_schema()
-        cls.snippet_template = cls._content_template('snippet-template.txt')
-        cls.solution_template = cls._content_template('solution-template.txt')
+        cls.snippet_template = cls._content_template('snippet.txt')
+        cls.solution_template = cls._content_template('solution.txt')
         cls.templates = {'snippet': cls.snippet_template, 'solution': cls.solution_template}
         cls.storage_path = source.storage_path
         cls.storage_file = cls._storage_file()
@@ -264,7 +264,7 @@ class Config(object):
         """Test that database schema file exist."""
 
         # The database schema is installed with the tool and it must always exist.
-        schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/config'), 'database.sql')
+        schema_file = os.path.join(pkg_resources.resource_filename('snippy', 'data/storage'), 'database.sql')
         if not os.path.isfile(schema_file):
             Logger.print_status('NOK: cannot run because database schema is not accessible: {}'.format(schema_file))
             sys.exit(1)
@@ -275,7 +275,7 @@ class Config(object):
     def _content_template(cls, template):
         """Get defined content template installed with the tool."""
 
-        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/template'), template)
+        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/templates'), template)
         if not os.path.isfile(filename):
             Logger.print_status('NOK: cannot run because content template path is not accessible: {}'.format(filename))
             sys.exit(1)
@@ -318,10 +318,13 @@ class Config(object):
 
     @classmethod
     def _operation_filename(cls):
-        """Operation filename is set based user input for content filename,
-        operation and content. For some operations like import and export
-        with defaults option cause the filename to be updated automatically
-        to point into correct location that stores e.g. the default content."""
+        """Return operation filename
+
+        The filename is set based user input for content filename, operation
+        and content. For some operations like import and export with defaults
+        option cause the filename to be updated automatically to point into
+        correct location that stores e.g. the default content.
+        """
 
         filename = cls.source.filename
 
@@ -333,7 +336,7 @@ class Config(object):
 
         # Run migrate operation with default content.
         if cls.defaults:
-            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/default'), defaults)
+            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/defaults'), defaults)
 
         # Run migrate operation with content template.
         if cls.template:

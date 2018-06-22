@@ -89,10 +89,9 @@ setup(
     package_dir={'snippy': 'snippy'},
     package_data={
         'snippy': [
-            'data/config/*',
-            'data/default/*',
+            'data/defaults/*',
             'data/storage/*',
-            'data/template/*'
+            'data/templates/*'
         ]
     },
     zip_safe=False,

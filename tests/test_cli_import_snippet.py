@@ -311,7 +311,7 @@ class TestCliImportSnippet(object):
         cause = snippy.run(['snippy', 'import', '--defaults'])  ## workflow
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 2
-        defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
+        defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
         yaml_load.assert_called_once_with(defaults_snippets, 'r')
         Content.verified(mocker, snippy, content_read)
 
@@ -337,7 +337,7 @@ class TestCliImportSnippet(object):
         assert cause == 'NOK: content data already exist with digest 53908d68425c61dc' or \
                cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
         assert Database.get_snippets().size() == 2
-        defaults_snippets = pkg_resources.resource_filename('snippy', 'data/default/snippets.yaml')
+        defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
         yaml_load.assert_called_once_with(defaults_snippets, 'r')
         Content.verified(mocker, snippy, content_read)
 

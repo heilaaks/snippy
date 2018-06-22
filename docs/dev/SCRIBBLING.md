@@ -1533,7 +1533,7 @@ python snip.py export --file ./snippets.txt
 
 4. Export without file to use default file
 python snip.py export (DONE)
-python snip.py export --snippet  # Creates snippets.yaml
+python snip.py export --snippets  # Creates snippets.yaml
 python snip.py export --solution # Creates solutions.yaml (DONE)
 
 5. Export template

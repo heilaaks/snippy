@@ -72,7 +72,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '--snippet'])
+        cause = snippy.run(['snippy', 'export', '--snippets'])
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 2
         yaml_dump.assert_called_once_with('./snippets.yaml', 'w')

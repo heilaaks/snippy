@@ -105,7 +105,7 @@ class TestCliUpdateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         edited_remove.return_value = template
-        cause = snippy.run(['snippy', 'update', '--snippet', '-d', '54e41e9b52a02b63'])
+        cause = snippy.run(['snippy', 'update', '--snippets', '-d', '54e41e9b52a02b63'])
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)

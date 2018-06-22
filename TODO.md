@@ -1,5 +1,6 @@
 ## WORKING
    - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
+   - [ ] Add tests for References.
    - [ ] Add uuid primary key to content database table.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
 
@@ -125,6 +126,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added support for references content.
    - [x] Fixed tests with Falcon 1.4.1.
    - [x] Fixed OID refresh for the first request and added server running and stopped logs which can be silenced with '-q'.
    - [x] Added support for OPTIONS get allowed methods for different routes.

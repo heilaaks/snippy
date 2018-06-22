@@ -41,9 +41,9 @@ class Cli(ConfigSourceBase):
     )
     ARGS_USAGE = ('snippy [-v, --version] [-h, --help] <operation> [<options>] [-vv] [-q]')
     ARGS_CATEGORY = (
-        '  --snippet                     operate snippets (default)',
-        '  --solution                    operate solutions',
-        '  --reference                   operate references',
+        '  --snippets                    operate snippets (default)',
+        '  --solutions                   operate solutions',
+        '  --references                  operate references',
         '  --all                         operate all content (search only)'
     )
     ARGS_EDITOR = (
@@ -77,11 +77,11 @@ class Cli(ConfigSourceBase):
         '',
         'examples:',
         '    Import default content.',
-        '      $ snippy import --snippet --defaults',
-        '      $ snippy import --solution --defaults',
+        '      $ snippy import --snippets --defaults',
+        '      $ snippy import --solutions --defaults',
         '',
         '    List all snippets.',
-        '      $ snippy search --snippet --sall .',
+        '      $ snippy search --snippets --sall .',
         '',
         '    List more examples.',
         '      $ snippy --help examples',
@@ -90,46 +90,46 @@ class Cli(ConfigSourceBase):
     ARGS_EXAMPLES = (
         'examples:',
         '    Creating new content:',
-        '      $ snippy create --snippet --editor',
-        '      $ snippy create --snippet -c \'docker ps\' -b \'list containers\' -t docker,moby',
+        '      $ snippy create --snippets --editor',
+        '      $ snippy create --snippets -c \'docker ps\' -b \'list containers\' -t docker,moby',
         '',
         '    Searching and filtering content:',
-        '      $ snippy search --snippet --sall docker,moby',
-        '      $ snippy search --snippet --sall .',
-        '      $ snippy search --snippet --sall . --no-ansi | grep \'\\$\' | sort',
-        '      $ snippy search --solution --sall .',
-        '      $ snippy search --solution --sall . | grep -Ev \'[^\\s]+:\'',
+        '      $ snippy search --snippets --sall docker,moby',
+        '      $ snippy search --snippets --sall .',
+        '      $ snippy search --snippets --sall . --no-ansi | grep \'\\$\' | sort',
+        '      $ snippy search --solutions --sall .',
+        '      $ snippy search --solutions --sall . | grep -Ev \'[^\\s]+:\'',
         '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
         '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
         '',
         '    Updating content:',
-        '      $ snippy update --snippet -d 44afdd0c59e17159',
-        '      $ snippy update --snippet -c \'docker ps\'',
+        '      $ snippy update --snippets -d 44afdd0c59e17159',
+        '      $ snippy update --snippets -c \'docker ps\'',
         '',
         '    Deleting content:',
-        '      $ snippy delete --snippet -d 44afdd0c59e17159',
-        '      $ snippy delete --snippet -c \'docker ps\'',
+        '      $ snippy delete --snippets -d 44afdd0c59e17159',
+        '      $ snippy delete --snippets -c \'docker ps\'',
         '',
         '    Migrating default content:',
-        '      $ snippy import --snippet --defaults',
-        '      $ snippy import --solution --defaults',
+        '      $ snippy import --snippets --defaults',
+        '      $ snippy import --solutions --defaults',
         '',
         '    Migrating content templates:',
-        '      $ snippy export --solution --template',
-        '      $ snippy import --solution --template',
-        '      $ snippy import --solution -f solution-template.txt',
+        '      $ snippy export --solutions --template',
+        '      $ snippy import --solutions --template',
+        '      $ snippy import --solutions -f solution-template.txt',
         '',
         '    Migrating specific content:',
         '      $ snippy export -d 76a1a02951f6bcb4',
         '      $ snippy import -d 76a1a02951f6bcb4 -f howto-debug-elastic-beats.txt',
         '',
         '    Migrating content:',
-        '      $ snippy export --snippet -f snippets.yaml',
-        '      $ snippy export --snippet -f snippets.json',
-        '      $ snippy export --snippet -f snippets.text',
-        '      $ snippy import --snippet -f snippets.yaml',
-        '      $ snippy export --solution -f solutions.yaml',
-        '      $ snippy import --solution -f solutions.yaml',
+        '      $ snippy export --snippets -f snippets.yaml',
+        '      $ snippy export --snippets -f snippets.json',
+        '      $ snippy export --snippets -f snippets.text',
+        '      $ snippy import --snippets -f snippets.yaml',
+        '      $ snippy export --solutions -f solutions.yaml',
+        '      $ snippy import --solutions -f solutions.yaml',
         '') + ARGS_COPYRIGHT
 
     def __init__(self, args):
@@ -157,9 +157,9 @@ class Cli(ConfigSourceBase):
         # content options
         content = parser.add_argument_group(title='content category', description=Const.NEWLINE.join(Cli.ARGS_CATEGORY))
         content_meg = content.add_mutually_exclusive_group()
-        content_meg.add_argument('--snippet', action='store_const', dest='category', const='snippet', help=argparse.SUPPRESS)
-        content_meg.add_argument('--solution', action='store_const', dest='category', const='solution', help=argparse.SUPPRESS)
-        content_meg.add_argument('--reference', action='store_const', dest='category', const='reference', help=argparse.SUPPRESS)
+        content_meg.add_argument('--snippet', '--snippets', action='store_const', dest='category', const='snippet', help=argparse.SUPPRESS)
+        content_meg.add_argument('--solution', '--solutions', action='store_const', dest='category', const='solution', help=argparse.SUPPRESS)  # noqa: E501 # pylint: disable=line-too-long
+        content_meg.add_argument('--reference', '--references', action='store_const', dest='category', const='reference', help=argparse.SUPPRESS)  # noqa: E501 # pylint: disable=line-too-long
         content_meg.add_argument('--all', action='store_const', dest='category', const='all', help=argparse.SUPPRESS)
         content_meg.set_defaults(category='snippet')
 

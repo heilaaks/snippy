@@ -24,7 +24,7 @@ group, tags and links related to the snippet.
 
 .. code-block:: none
 
-    snippy create --snippet --editor
+    snippy create --snippets --editor
 
 Creating snippet from text template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -33,8 +33,8 @@ Following commands allows using a text template to import new snippet.
 
 .. code-block:: none
 
-    snippy export --snippet --template
-    snippy import --snippet -f snippet-template.txt
+    snippy export --snippets --template
+    snippy import --snippets -f snippet-template.txt
 
 Creating snippet from command line
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -52,8 +52,8 @@ Creating solution from text template
 
 .. code-block:: none
 
-    snippy export --solution --template
-    snippy import --snippet -f solution-template.txt
+    snippy export --solutions --template
+    snippy import --snippets -f solution-template.txt
 
 Searching content
 -----------------
@@ -169,10 +169,10 @@ and path with the -f|--file option.
 
 .. code-block:: none
 
-    snippy export --snippet
-    snippy export --snippet -f my-snippets.yaml
-    snippy export --solution
-    snippy export --solution -f my-solutions.yaml
+    snippy export --snippets
+    snippy export --snippets -f my-snippets.yaml
+    snippy export --solutions
+    snippy export --solutions -f my-solutions.yaml
 
 Importing content
 ~~~~~~~~~~~~~~~~~
@@ -183,8 +183,8 @@ command is executed. You can define the file name and path with the -f|--file op
 
 .. code-block:: none
 
-    snippy import --snippet
-    snippy import --solution
+    snippy import --snippets
+    snippy import --solutions
 
 .. _Read the Docs: http://snippy.readthedocs.io/en/latest/
 

@@ -109,8 +109,8 @@ default content for snippets and solutions.
 
 .. code-block:: text
 
-   snippy import --snippet --defaults
-   snippy import --solution --defaults
+   snippy import --snippets --defaults
+   snippy import --solutions --defaults
 
 Using docker container
 ----------------------
@@ -139,7 +139,7 @@ which matches to to any character.
 .. code-block:: text
 
    snippy search --sall .
-   snippy search --solution --sall .
+   snippy search --solutions --sall .
 
 Filtering with grep
 ~~~~~~~~~~~~~~~~~~~
@@ -156,7 +156,7 @@ Filtering out solution content to list only the metadata.
 
 .. code-block:: text
 
-   snippy search --solution --sall . | grep -Ev '[^\s]+:'
+   snippy search --solutions --sall . | grep -Ev '[^\s]+:'
 
 Creating content
 ----------------
@@ -170,7 +170,7 @@ description, group, tags and links related to the snippet.
 
 .. code-block:: text
 
-   snippy create --snippet --editor
+   snippy create --snippets --editor
 
 Create snippet from text template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -179,8 +179,8 @@ Following commands allows using a text template to import new snippet.
 
 .. code-block:: text
 
-   snippy export --snippet --template
-   snippy import --snippet -f snippet-template.txt
+   snippy export --snippets --template
+   snippy import --snippets -f snippet-template.txt
 
 Create solution from text template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -189,8 +189,8 @@ Following commands allows using a text template to import new solution.
 
 .. code-block:: text
 
-   snippy export --solution --template
-   snippy import --snippet -f solution-template.txt
+   snippy export --solutions --template
+   snippy import --snippets -f solution-template.txt
 
 Updating content
 ----------------
@@ -230,10 +230,10 @@ define the file name and path with the ``-f|--file`` option.
 
 .. code-block:: text
 
-   snippy export --snippet
-   snippy export --snippet -f my-snippets.yaml
-   snippy export --solution
-   snippy export --solution -f my-solutions.yaml
+   snippy export --snippets
+   snippy export --snippets -f my-snippets.yaml
+   snippy export --solutions
+   snippy export --solutions -f my-solutions.yaml
 
 Importing content
 ~~~~~~~~~~~~~~~~~
@@ -245,8 +245,8 @@ where the command is executed. You can define the file name and path with the
 
 .. code-block:: text
 
-   snippy import --snippet
-   snippy import --solution
+   snippy import --snippets
+   snippy import --solutions
 
 Server
 ======
@@ -305,7 +305,7 @@ location before starting the server.
 .. code-block:: text
 
    snippy import --defaults --storage-path ${HOME}/devel/temp
-   snippy import --defaults --solution --storage-path ${HOME}/devel/temp
+   snippy import --defaults --solutions --storage-path ${HOME}/devel/temp
    snippy --server --storage-path ${HOME}/devel/temp --port 8080 --ip 127.0.0.1 -vv
 
 Contributing

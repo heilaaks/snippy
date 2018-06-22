@@ -355,9 +355,9 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     > http://dredd.org/en/latest/quickstart.html
     $ sudo yum install nodejs
     $ sudo npm install -g dredd
-    $ dredd snippy/data/openapi/swagger-2.0.yml http://127.0.0.1:8080
-    $ dredd snippy/data/openapi/swagger-2.0.yml http://127.0.0.1:8080 --dry-run
-    $ dredd snippy/data/openapi/swagger.yml http://127.0.0.1:8080 --dry-run
+    $ dredd snippy/data/server/openapi/swagger-2.0.yml http://127.0.0.1:8080
+    $ dredd snippy/data/server/openapi/swagger-2.0.yml http://127.0.0.1:8080 --dry-run
+    $ dredd snippy/data/server/openapi/swagger.yml http://127.0.0.1:8080 --dry-run
 
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/json" -d '{}'
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/json" -d '{"data":["row1","row2"]}'

@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
-#  Snippy - command, solution and code snippet management.
+#  Snippy - command, solution, reference and code snippet manager.
 #  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
 #
 #  This program is free software: you can redistribute it and/or modify
@@ -65,7 +65,7 @@ setup(
     author = __author__,
     author_email = __email__,
     url = __homepage__,
-    description = 'Command, solution and code snippet management.',
+    description = 'Command, solution, reference and code snippet manager.',
     long_description = readme(),
     license=__license__,
     classifiers=[
@@ -84,7 +84,7 @@ setup(
         'Natural Language :: English',
         'Topic :: Utilities'
     ],
-    keywords='command solution snippet manager console',
+    keywords='command solution snippet reference link snippet manager server console',
     packages=find_packages(exclude=['tests', 'tests.testlib']),
     package_dir={'snippy': 'snippy'},
     package_data={

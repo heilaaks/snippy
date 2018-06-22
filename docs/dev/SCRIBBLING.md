@@ -170,6 +170,8 @@ Random notes and scribling during development.
    > https://help.github.com/articles/telling-git-about-your-gpg-key/
    > https://stackoverflow.com/a/42265848
    $ sudo dnf update gnupg2
+   $ sudo dnf update libgcrypt
+   $ sudo dnf update libassuan
    $ gpg2 --list-secret-keys --keyid-format LONG
    $ gpg2 --default-new-key-algo rsa4096 --gen-key
    $ gpg2 --list-secret-keys --keyid-format LONG
@@ -179,6 +181,11 @@ Random notes and scribling during development.
    $ git commit -S -s
    $ export GPG_TTY=$(tty)
    $ git log --show-signature -1
+   
+   # GPG errors: update libgcrypt and libassuan
+   $ /usr/bin/gpg-agent -v --daemon
+   /usr/bin/gpg-agent: relocation error: /usr/bin/gpg-agent: symbol gcry_get_config, version GCRYPT_1.6 not defined in file libgcrypt.so.20 with link time reference
+   /usr/bin/gpg-agent: relocation error: /usr/bin/gpg-agent: symbol assuan_sock_set_system_hooks, version LIBASSUAN_1.0 not defined in file libassuan.so.0 with link time reference
    ```
 
    ```

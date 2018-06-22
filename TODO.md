@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Add isfile mock to places that require importing data to mock is.file.
-   - [ ] remove server.run() because that is not needed.
    - [ ] Add uuid primary key to content database table.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
 
@@ -123,6 +121,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Fixed tests with Falcon 1.4.1.
    - [x] Fixed OID refresh for the first request and added server running and stopped logs which can be silenced with '-q'.
    - [x] Added support for OPTIONS get allowed methods for different routes.
    - [x] Added UTF-8 coded unicode string support for server and CLI.

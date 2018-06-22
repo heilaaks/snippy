@@ -24,6 +24,7 @@ from __future__ import print_function
 import time
 
 import mock
+import pytest
 
 from snippy.cause import Cause
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
@@ -34,6 +35,7 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliPerformance(object):
     """Test CLI performance."""
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_performance(self, snippy, capsys, caplog):
         """Test CLI performance."""
 

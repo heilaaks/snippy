@@ -78,7 +78,6 @@ class TestApiUpdateSolution(object):
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
         result_json['data']['attributes']['updated'] = Content.NGINX_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -135,7 +134,6 @@ class TestApiUpdateSolution(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -179,7 +177,6 @@ class TestApiUpdateSolution(object):
                 'title': 'cannot find content with message digest: 101010101010101'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/solutions/101010101010101',
             headers={'accept': 'application/json'},
@@ -216,7 +213,6 @@ class TestApiUpdateSolution(object):
                 'title': 'not compared because of hash structure in random order inside the string'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
@@ -261,7 +257,6 @@ class TestApiUpdateSolution(object):
                 'title': 'client generated resource id is not supported, remove member data.id'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
@@ -303,7 +298,6 @@ class TestApiUpdateSolution(object):
                 'title': 'client generated resource id is not supported, remove member data.id'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
@@ -360,7 +354,6 @@ class TestApiUpdateSolution(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_patch(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},

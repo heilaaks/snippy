@@ -46,7 +46,6 @@ class TestApiDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         result_headers = {}
-        server.run()
         assert Database.get_snippets().size() == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
@@ -76,7 +75,6 @@ class TestApiDeleteSnippet(object):
                 'title': 'cannot find content with message digest: beefbeef'
             }]
         }
-        server.run()
         assert Database.get_snippets().size() == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/snippets/beefbeef',
@@ -111,7 +109,6 @@ class TestApiDeleteSnippet(object):
                 'title': 'cannot delete content without identified resource'
             }]
         }
-        server.run()
         assert Database.get_collection().size() == 2
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/snippets',

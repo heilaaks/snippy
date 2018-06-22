@@ -62,7 +62,6 @@ class TestApiCreateSolution(object):
                 'attributes': content_read
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -106,7 +105,6 @@ class TestApiCreateSolution(object):
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
@@ -159,7 +157,6 @@ class TestApiCreateSolution(object):
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
         result_json['data']['attributes']['updated'] = Content.NGINX_TIME
         result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
@@ -216,7 +213,6 @@ class TestApiCreateSolution(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
@@ -240,7 +236,6 @@ class TestApiCreateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         result_headers = {}
-        server.run()
         assert Database.get_solutions().size() == 3
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/eeef5ca3ec9cd36',
@@ -279,7 +274,6 @@ class TestApiCreateSolution(object):
                 'title': 'cannot create resource with id, use x-http-method-override to override the request'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/53908d68425c61dc',
             headers={'accept': 'application/json'},
@@ -313,7 +307,6 @@ class TestApiCreateSolution(object):
                 'title': 'not compared because of hash structure in random order inside the string'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
@@ -351,7 +344,6 @@ class TestApiCreateSolution(object):
                 'title': 'content was not stored because mandatory content data was missing'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},

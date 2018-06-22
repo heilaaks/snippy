@@ -36,12 +36,14 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing solutions."""
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_001(self, snippy, yaml_load, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import all solutions. File name is not defined in command
-        ##        line. This should result tool internal default file name and
-        ##        format being used.
+        Import all solutions. File name is not defined in command line. This
+        should result tool internal default file name and format being used.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -53,11 +55,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml_load.assert_called_once_with('./solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_002(self, snippy, yaml_load, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import all solutions from yaml file. File name and format
-        ##        are extracted from command line option -f|--file.
+        Import all solutions from yaml file. File name and format are extracted
+        from command line option -f|--file.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -69,12 +74,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml_load.assert_called_once_with('./all-solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_003(self, snippy, yaml_load, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import all solutions from yaml file without specifying the
-        ##        solution category. File name and format are extracted from
-        ##        command line option -f|--file.
+        Import all solutions from yaml file without specifying the solution
+        category. File name and format are extracted from command line
+        option -f|--file.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -87,11 +95,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml_load.assert_called_once_with('./all-solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_004(self, snippy, json_load, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import all solutions from json file. File name and format
-        ##        are extracted from command line option -f|--file.
+        Import all solutions from json file. File name and format are extracted
+        from command line option -f|--file.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -103,12 +114,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         json_load.assert_called_once_with('./all-solutions.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_005(self, snippy, json_load, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import all solutions from json file without specifying the
-        ##        solution category. File name and format are extracted from
-        ##        command line option -f|--file.
+        Import all solutions from json file without specifying the solution
+        category. File name and format are extracted from command line
+        option -f|--file.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -121,12 +135,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         json_load.assert_called_once_with('./all-solutions.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_006(self, snippy, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import all solutions from txt file. File name and format are
-        ##        extracted from command line option -f|--file. File extension
-        ##        is '*.txt' in this case.
+        Import all solutions from txt file. File name and format are extracted
+        from command line option -f|--file. File extension is '*.txt' in this
+        case.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -139,13 +156,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_007(self, snippy, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import all solutions from txt file without specifying the
-        ##        solution category. File name and format are extracted from
-        ##        command line option -f|--file. File extension is '*.txt'
-        ##        in this case.
+        Import all solutions from txt file without specifying the solution
+        category. File name and format are extracted from command line
+        option -f|--file. File extension is '*.txt' in this case.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -158,12 +177,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./all-solutions.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_008(self, snippy, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import all solutions from txt file. File name and format are
-        ##        extracted from command line option -f|--file. File extension
-        ##        is '*.text' in this case.
+        Import all solutions from txt file. File name and format are extracted
+        from command line option -f|--file. File extension is '*.text' in this
+        case.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -176,13 +198,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_009(self, snippy, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import all solutions from txt file without specifying the
-        ##        solution category. File name and format are extracted from
-        ##        command line option -f|--file. File extension is '*.text'
-        ##        in this case.
+        Import all solutions from txt file without specifying the solution
+        category. File name and format are extracted from command line option
+        -f|--file. File extension is '*.text' in this case.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -195,13 +219,16 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./all-solutions.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     @pytest.mark.usefixtures('import-beats', 'import-beats-utc', 'import-kafka-utc')
     def test_cli_import_solution_010(self, snippy, yaml_load, mocker):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Import solutions from yaml file when all but one of the
-        ##        solutions in the file is already stored. Because one
-        ##        solution was stored successfully, the return cause is OK.
+        Import solutions from yaml file when all but one of the solutions in
+        the file is already stored. Because one solution was stored
+        successfully, the return cause is OK.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
@@ -214,12 +241,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml_load.assert_called_once_with('./all-solutions.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_011(self, snippy):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Try to import empty solution template. The operation will
-        ##        fail because content templates without any modifications
-        ##        cannot be imported.
+        Try to import empty solution template. The operation will fail because
+        content templates without any modifications cannot be imported.
+        """
+
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Solution.TEMPLATE))
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './solution-template.txt'])
@@ -228,24 +257,27 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
     def test_cli_import_solution_012(self, snippy):
-        """Import all solutions."""
+        """Import all solutions.
 
-        ## Brief: Try to import solution from file which file format is not
-        ##        supported. This should result error text for end user and
-        ##        no files should be read.
+        Try to import solution from file which file format is not supported.
+        This should result error text for end user and no files should be read.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './foo.bar'])
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             assert not Database.get_collection().size()
             mock_file.assert_not_called()
 
-    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc', 'isfile_true')
     def test_cli_import_solution_013(self, snippy, yaml_load, mocker):
-        """Import solution based on message digest."""
+        """Import solution based on message digest.
 
-        ## Brief: Import defined solution based on message digest. File name
-        ##        is defined from command line as yaml file which contain one
-        ##        solution. One line in the solution data was updated.
+        Import defined solution based on message digest. File name is defined
+        from command line as yaml file which contain one solution. One line in
+        the solution data was updated.
+        """
+
         content_read = Content.updated_nginx()
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])
@@ -254,13 +286,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml_load.assert_called_once_with('one-solution.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc', 'isfile_true')
     def test_cli_import_solution_014(self, snippy, yaml_load, mocker):
-        """Import solution based on message digest."""
+        """Import solution based on message digest.
 
-        ## Brief: Import defined solution based on message digest without
-        ##        specifying the content category explicitly. One line in
-        ##        the solution data was updated.
+        Import defined solution based on message digest without specifying the
+        content category explicitly. One line in the solution data was updated.
+        """
+
         content_read = Content.updated_nginx()
         yaml.safe_load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.yaml'])
@@ -270,13 +303,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml_load.assert_called_once_with('one-solution.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc', 'isfile_true')
     def test_cli_import_solution_015(self, snippy, json_load, mocker):
-        """Import solution based on message digest."""
+        """Import solution based on message digest.
 
-        ## Brief: Import defined solution based on message digest. File name
-        ##        is defined from command line as json file which contain one
-        ##        solution. One line in the content data was updated.
+        Import defined solution based on message digest. File name is defined
+        from command line as json file which contain one solution. One line in
+        the content data was updated.
+        """
+
         content_read = Content.updated_nginx()
         json.load.return_value = Content.imported_dict(content_read)
         cause = snippy.run(['snippy', 'import', '--solution', '-d', '61a24a156f5e9d2d', '-f', 'one-solution.json'])
@@ -285,14 +320,16 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         json_load.assert_called_once_with('one-solution.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc', 'isfile_true')
     def test_cli_import_solution_016(self, snippy, mocker):
-        """Import solution based on message digest."""
+        """Import solution based on message digest.
 
-        ## Brief: Import defined solution based on message digest. File name
-        ##        is defined from command line as text file which contain one
-        ##        solution. One line in the content data was updated. The file
-        ##        extension is '*.txt' in this case.
+        Import defined solution based on message digest. File name is defined
+        from command line as text file which contain one solution. One line
+        in the content data was updated. The file extension is '*.txt' in
+        this case.
+        """
+
         content_read = Content.updated_nginx()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -302,14 +339,16 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc', 'isfile_true')
     def test_cli_import_solution_017(self, snippy, mocker):
-        """Import solution based on message digest."""
+        """Import solution based on message digest.
 
-        ## Brief: Import defined solution based on message digest. File name
-        ##        is defined from command line as text file which contain one
-        ##        solution. One line in the content data was updated. The file
-        ##        extension is '*.text' in this case.
+        Import defined solution based on message digest. File name is defined
+        from command line as text file which contain one solution. One line
+        in the content data was updated. The file extension is '*.text' in
+        this case.
+        """
+
         content_read = Content.updated_nginx()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -319,14 +358,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('one-solution.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
+    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc', 'isfile_true')
     def test_cli_import_solution_018(self, snippy, mocker):
-        """Import solution based on message digest."""
+        """Import solution based on message digest.
 
-        ## Brief: Import defined solution based on message digest. In this
-        ##        case the content category is accidentally specified as
-        ##        'snippet'. This should still import the content in solution.
-        ##        category
+        Import defined solution based on message digest. In this case the
+        content category is accidentally specified as 'snippet'. This
+        should still import the content in solution category.
+        """
+
         content_read = Content.updated_nginx()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -339,10 +379,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc')
     def test_cli_import_solution_019(self, snippy, mocker):
-        """Import solution based on message digest."""
+        """Import solution based on message digest.
 
-        ## Brief: Try to import defined solution with message digest that
-        ##        cannot be found. In this case there is one solution stored.
+        Try to import defined solution with message digest that cannot be
+        found. In this case there is one solution stored.
+        """
+
         content_read = Content.updated_nginx()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -353,10 +395,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, {Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]})
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_020(self, snippy, yaml_load, mocker):
-        """Import solution."""
+        """Import solution.
 
-        ## Brief: Import new solution from yaml file.
+        Import new solution from yaml file.
+        """
+
         content_read = {
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
@@ -367,10 +412,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml_load.assert_called_once_with('one-solution.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_021(self, snippy, json_load, mocker):
-        """Import solution."""
+        """Import solution.
 
-        ## Brief: Import new solution from json file.
+        Import new solution from json file.
+        """
+
         content_read = {
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
@@ -381,11 +429,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         json_load.assert_called_once_with('one-solution.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_022(self, snippy, mocker):
-        """Import solution."""
+        """Import solution.
 
-        ## Brief: Import new solution from text file. In this case the file
-        ##        extension is '*.txt'.
+        Import new solution from text file. In this case the file extension
+        is '*.txt'.
+        """
+
         content_read = {
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
@@ -397,12 +448,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_023(self, snippy, mocker):
-        """Import solution."""
+        """Import solution.
 
-        ## Brief: Import new solution from text file without specifying the
-        ##        content category explicitly. In this case the file extension
-        ##        is '*.txt'.
+        Import new solution from text file without specifying the content
+        category explicitly. In this case the file extension is '*.txt'.
+        """
+
         content_read = {
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
@@ -415,11 +468,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_024(self, snippy, mocker):
-        """Import solution."""
+        """Import solution.
 
-        ## Brief: Import new solution from text file. In this case the file
-        ##        extension is '*.text'.
+        Import new solution from text file. In this case the file extension
+        is '*.text'.
+        """
+
         content_read = {
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
@@ -432,11 +488,12 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content_read)
 
     def test_cli_import_solution_025(self, snippy, yaml_load, mocker):
-        """Import solutions defaults."""
+        """Import solutions defaults.
 
-        ## Brief: Import solution defaults. All solutions should be imported
-        ##        from predefined file location under tool data folder from
-        ##        yaml format.
+        Import solution defaults. All solutions should be imported fromp
+        redefined file location under tool data folder from yaml format.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
@@ -451,13 +508,15 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'import-beats-utc', 'import-nginx-utc')
     def test_cli_import_solution_026(self, snippy, yaml_load, mocker):
-        """Import solutions defaults."""
+        """Import solutions defaults.
 
-        ## Brief: Try to import solution defaults again. The second import
-        ##        should fail with an error because the content already exist.
-        ##        The error text must be the same for all content categories.
-        ##        Because of random order dictionary in the code, the reported
-        ##        digest can vary if there are multiple failures.
+        Try to import solution defaults again. The second import should fail
+        with an error because the content already exist. The error text must
+        be the same for all content categories. Because of random order
+        dictionary in the code, the reported digest can vary if there are
+        multiple failures.
+        """
+
         content_read = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
@@ -471,6 +530,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         yaml_load.assert_called_once_with(defaults_solutions, 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_solution_027(self, snippy, mocker):
         """Import solutions from text template.
 
@@ -495,7 +555,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    def test_cli_import_solution_028(self, snippy, isfile):
+    @pytest.mark.usefixtures('isfile_true')
+    def test_cli_import_solution_028(self, snippy):
         """Import solutions from text template.
 
         Try to import solution template without any changes. This should result

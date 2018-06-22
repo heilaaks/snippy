@@ -44,7 +44,6 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1/')
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -61,7 +60,6 @@ class TestApiHello(object):
             'content-length': '197'
         }
         result_json = {'meta': Content.get_api_meta()}
-        server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1/hello')
         assert result.headers == result_header
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -219,7 +217,6 @@ class TestApiHello(object):
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/')
         assert result.headers == result_header
         assert not result.text
@@ -237,7 +234,6 @@ class TestApiHello(object):
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/snippets')
         assert result.headers == result_header
         assert not result.text
@@ -255,7 +251,6 @@ class TestApiHello(object):
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/snippets/123456')
         assert result.headers == result_header
         assert not result.text
@@ -273,7 +268,6 @@ class TestApiHello(object):
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/snippets/123456/brief')
         assert result.headers == result_header
         assert not result.text

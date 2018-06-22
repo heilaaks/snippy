@@ -19,9 +19,9 @@
 
 """conftest: Fixtures for pytest."""
 
-import mock
 import json
 
+import mock
 import pytest
 import yaml
 
@@ -145,7 +145,7 @@ def server(mocker, request):
         params = request.param
     else:
         params.extend(['--server', '--compact-json', '-q'])
-    params.insert(0, 'snippy')  # Add the tool name here to args list.
+    params.insert(0, 'snippy')  # Add the tool name args list as a first parameter.
 
     mocker.patch('snippy.server.server.SnippyServer')
     snippy = _create_snippy(mocker, params)
@@ -508,6 +508,12 @@ def json_dump(mocker):
 
     return mocker_open
 
+@pytest.fixture(scope='function', name='isfile_true')
+def isfile_mock(mocker):
+    """Mock os.path.isfile."""
+
+    mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
+
 ## Devel
 
 @pytest.fixture(scope='function', name='devel_file_list')
@@ -598,13 +604,6 @@ def devel_no_tests(mocker):
     mocker.patch('snippy.devel.reference.open', mocked_open, create=True)
 
 ## Helpers
-
-## Templates
-@pytest.fixture(scope='function', name='isfile')
-def isfile_mock(mocker):
-    """Mock os.path.isfile."""
-
-    mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
 
 def _create_snippy(mocker, options):
     """Create snippy with mocks."""

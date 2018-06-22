@@ -107,7 +107,6 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -152,7 +151,6 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -199,7 +197,6 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -251,7 +248,6 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -297,7 +293,6 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -328,7 +323,6 @@ class TestApiCreateSnippet(object):
                 'title': 'not compared because of hash structure in random order inside the string'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -374,7 +368,6 @@ class TestApiCreateSnippet(object):
                 'title': "json media validation failed: top level data object type must be 'snippet' or 'solution'"
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -411,7 +404,6 @@ class TestApiCreateSnippet(object):
                 'title': 'client generated resource id is not supported, remove member data.id'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -450,7 +442,6 @@ class TestApiCreateSnippet(object):
                 'title': 'not compared because of hash structure in random order inside the string'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -493,7 +484,6 @@ class TestApiCreateSnippet(object):
                 'title': 'client generated resource id is not supported, remove member data.id'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -539,7 +529,6 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PUT'},
@@ -595,7 +584,6 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
@@ -663,7 +651,6 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
@@ -687,7 +674,6 @@ class TestApiCreateSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         result_headers = {}
-        server.run()
         assert Database.get_snippets().size() == 3
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
@@ -726,7 +712,6 @@ class TestApiCreateSnippet(object):
                 'title': 'cannot create resource with id, use x-http-method-override to override the request'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
@@ -767,7 +752,6 @@ class TestApiCreateSnippet(object):
                 'title': 'content was not stored because it was matching to an empty template'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -823,7 +807,6 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},

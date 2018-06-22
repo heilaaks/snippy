@@ -74,7 +74,6 @@ class TestApiUpdateSnippet(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
@@ -133,7 +132,6 @@ class TestApiUpdateSnippet(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
@@ -190,7 +188,6 @@ class TestApiUpdateSnippet(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
@@ -234,7 +231,6 @@ class TestApiUpdateSnippet(object):
                 'title': 'cannot find content with message digest: 101010101010101'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/101010101010101',
             headers={'accept': 'application/json'},
@@ -270,7 +266,6 @@ class TestApiUpdateSnippet(object):
                 'title': 'not compared because of hash structure in random order inside the string'
             }]
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
@@ -318,7 +313,6 @@ class TestApiUpdateSnippet(object):
             }
         }
         result_json['data']['attributes']['updated'] = Content.NETCAT_TIME
-        server.run()
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
@@ -376,7 +370,6 @@ class TestApiUpdateSnippet(object):
                 'attributes': content_read
             }
         }
-        server.run()
         result = testing.TestClient(server.server.api).simulate_patch(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},

@@ -46,7 +46,6 @@ class TestApiDeleteSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         result_headers = {}
-        server.run()
         assert Database.get_solutions().size() == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions/eeef5ca3ec9cd36',
@@ -75,7 +74,6 @@ class TestApiDeleteSolution(object):
                 'title': 'cannot find content with message digest: beefbeef'
             }]
         }
-        server.run()
         assert Database.get_solutions().size() == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions/beefbeef',
@@ -110,7 +108,6 @@ class TestApiDeleteSolution(object):
                 'title': 'cannot delete content without identified resource'
             }]
         }
-        server.run()
         assert Database.get_collection().size() == 2
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions',

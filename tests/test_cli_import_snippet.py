@@ -37,6 +37,7 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliImportSnippet(object):
     """Test workflows for importing snippets."""
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_001(self, snippy, yaml_load, mocker):
         """Import all snippets.
 
@@ -55,6 +56,7 @@ class TestCliImportSnippet(object):
         yaml_load.assert_called_once_with('./snippets.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_002(self, snippy, yaml_load, mocker):
         """Import all snippets.
 
@@ -73,6 +75,7 @@ class TestCliImportSnippet(object):
         yaml_load.assert_called_once_with('./all-snippets.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_003(self, snippy, json_load, mocker):
         """Import all snippets.
 
@@ -91,6 +94,7 @@ class TestCliImportSnippet(object):
         json_load.assert_called_once_with('./all-snippets.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_004(self, snippy, mocker):
         """Import all snippets.
 
@@ -111,6 +115,7 @@ class TestCliImportSnippet(object):
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_005(self, snippy, mocker):
         """Import all snippets.
 
@@ -157,6 +162,7 @@ class TestCliImportSnippet(object):
             assert cause == 'NOK: cannot read file ./foo.yaml'
             assert not Database.get_collection().size()
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_008(self, snippy):
         """Import all snippets.
 
@@ -170,7 +176,7 @@ class TestCliImportSnippet(object):
             assert not Database.get_collection().size()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
-    @pytest.mark.usefixtures('import-remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'import-remove-utc', 'isfile_true')
     def test_cli_import_snippet_009(self, snippy, yaml_load, mocker):
         """Import defined snippet.
 
@@ -189,7 +195,7 @@ class TestCliImportSnippet(object):
         yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'import-remove-utc', 'isfile_true')
     def test_cli_import_snippet_010(self, snippy, yaml_load, mocker):
         """Import defined snippet.
 
@@ -209,7 +215,7 @@ class TestCliImportSnippet(object):
         yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'import-remove-utc', 'isfile_true')
     def test_cli_import_snippet_011(self, snippy, json_load, mocker):
         """Import defined snippet.
 
@@ -229,7 +235,7 @@ class TestCliImportSnippet(object):
         json_load.assert_called_once_with('one-snippet.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'update-remove-utc', 'isfile_true')
     def test_cli_import_snippet_012(self, snippy, mocker):
         """Import defined snippet.
 
@@ -250,7 +256,7 @@ class TestCliImportSnippet(object):
             mock_file.assert_called_once_with('one-snippet.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-remove', 'update-remove-utc')
+    @pytest.mark.usefixtures('import-remove', 'update-remove-utc', 'isfile_true')
     def test_cli_import_snippet_013(self, snippy, mocker):
         """Import defined snippet.
 
@@ -335,6 +341,7 @@ class TestCliImportSnippet(object):
         yaml_load.assert_called_once_with(defaults_snippets, 'r')
         Content.verified(mocker, snippy, content_read)
 
+    @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_017(self, snippy):
         """Import defined snippet.
 
@@ -350,7 +357,7 @@ class TestCliImportSnippet(object):
             assert not Database.get_snippets().size()
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
 
-    @pytest.mark.usefixtures('default-snippets', 'import-remove-utc', 'import-netcat-utc')
+    @pytest.mark.usefixtures('default-snippets', 'import-remove-utc', 'import-netcat-utc', 'isfile_true')
     def test_cli_import_snippet_018(self, snippy, yaml_load, mocker):
         """Import snippets already existing.
 

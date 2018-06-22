@@ -51,6 +51,10 @@ class Content(object):
     BEATS_TIME = '2017-10-20T11:11:19.000001+0000'
     NGINX_TIME = '2017-10-20T06:16:27.000001+0000'
 
+    # References
+    GITLOG_TIME = '2018-06-22T13:11:13.678729+0000'
+    REGEXP_TIME = '2018-05-21T13:11:13.678729+0000'
+
     @staticmethod
     def ordered(json):
         """Sort JSON in order to compare random order JSON structures."""

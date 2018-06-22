@@ -76,6 +76,12 @@ class SqliteDbHelper(object):
         return SqliteDbHelper._select(Const.SOLUTION)
 
     @staticmethod
+    def get_references():
+        """Return references from database as collection."""
+
+        return SqliteDbHelper._select(Const.REFERENCE)
+
+    @staticmethod
     def delete_all_contents():
         """Delete all content from database."""
 

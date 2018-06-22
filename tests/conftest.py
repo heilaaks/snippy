@@ -32,6 +32,7 @@ from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 # Calls to Config.utcnow()
@@ -436,6 +437,13 @@ def edit_solution_template(mocker):
     """Edited default solution template."""
 
     template = Const.NEWLINE.join(Solution.TEMPLATE)
+    mocker.patch.object(Editor, 'call_editor', return_value=template)
+
+@pytest.fixture(scope='function', name='edit-reference-template')
+def edit_reference_template(mocker):
+    """Edited default reference template."""
+
+    template = Const.NEWLINE.join(Reference.TEMPLATE)
     mocker.patch.object(Editor, 'call_editor', return_value=template)
 
 @pytest.fixture(scope='function', name='edit-empty')

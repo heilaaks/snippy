@@ -165,9 +165,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         quaranteed that each line contains only one newline at the end of
         string in the tuple.
 
-        Any value including empty string is considered valid data."""
+        Any value including empty string is considered valid data.
 
-        if value is not None:
+        In case of reference content, the data is always empty because the
+        link is the considered data and there is no use for the data field.
+        """
+
+        if self.category != Const.REFERENCE and value is not None:
             string_ = Parser.to_unicode(value)
             data = tuple(string_.split(Const.DELIMITER_DATA))
         else:

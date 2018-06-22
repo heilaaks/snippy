@@ -34,7 +34,8 @@ class TestCliCreateSnippet(object):
     def test_cli_create_snippet_001(self, snippy, mocker):
         """Create snippet from CLI.
 
-        Create new snippet by defining all content parameters from command line.
+        Create new snippet by defining all content parameters from command
+        line.
         """
 
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
@@ -130,9 +131,9 @@ class TestCliCreateSnippet(object):
     def test_cli_create_snippet_007(self, snippy, mocker, capsys):
         """Create snippet with unicode characters from CLI.
 
-        Each field that can be given from command line contains unicode
-        characters. The same content must be found with search with keyword
-        with unicode character
+        Every field that can be given from command line contains unicode
+        characters. The same content must be found by searching it with
+        keyword that contains unicode characters.
         """
 
         data = Const.DELIMITER_DATA.join(['Sîne klâwen durh die wolken sint geslagen', 'er stîget ûf mit grôzer kraft'])
@@ -172,7 +173,7 @@ class TestCliCreateSnippet(object):
             u''
         )
 
-        out, err = capsys.readouterr()  # Reset the previous output in capture buffer.
+        out, err = capsys.readouterr()  # Resets the previous output in the capture buffer.
         cause = snippy.run(['snippy', 'search', '--sall', 'klâwen', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK

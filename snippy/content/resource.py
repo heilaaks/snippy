@@ -47,7 +47,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
     SOLUTION_TEMPLATE = '844d0d37738ff2d20783f97690f771bb47d81ef3a4bda4ee9d022a17919fd271'
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
-    TEMPLATES = (SNIPPET_TEMPLATE, SOLUTION_TEMPLATE)
+    REFERENCE_TEMPLATE = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
+    TEMPLATES = (SNIPPET_TEMPLATE, SOLUTION_TEMPLATE, REFERENCE_TEMPLATE)
 
     def __init__(self, category='', timestamp=''):
         self._logger = Logger.get_logger(__name__)
@@ -467,6 +468,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def dump_term(self, index, ansi, debug):
         """Convert resource to be printed to terminal."""
 
+        data = Const.EMPTY
         text = Const.EMPTY
         if self.is_snippet():
             text = text + self.get_snippet_text(index, ansi)
@@ -478,6 +480,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self._logger.debug('internal error with content category: s', self.category)
 
         if debug:
+            if self.is_reference():
+                text = text + Const.EMPTY.join([Resource._terminal_reference(ansi) % (data, line)
+                                                for line in self.data])
             text = text + self._terminal_category(ansi) % self.category
             text = text + self._terminal_filename(ansi) % self.filename
             text = text + self._terminal_runalias(ansi) % self.runalias
@@ -627,6 +632,12 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Format solution text."""
 
         return '%s   \x1b[91m:\x1b[0m %s\n' if ansi else '%s   : %s\n'
+
+    @staticmethod
+    def _terminal_reference(ansi=False):
+        """Format reference data."""
+
+        return '%s   \x1b[91m!\x1b[0m \x1b[2mdata\x1b[0m     : %s\n' if ansi else '   ! data     : %s\n'
 
     @staticmethod
     def _terminal_tags(ansi=False):

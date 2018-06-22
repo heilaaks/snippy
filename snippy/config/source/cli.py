@@ -43,6 +43,7 @@ class Cli(ConfigSourceBase):
     ARGS_CATEGORY = (
         '  --snippet                     operate snippets (default)',
         '  --solution                    operate solutions',
+        '  --reference                   operate references',
         '  --all                         operate all content (search only)'
     )
     ARGS_EDITOR = (
@@ -72,7 +73,7 @@ class Cli(ConfigSourceBase):
         '    :    solution',
         '    @    group',
         '    #    tag',
-        '    >    url',
+        '    >    reference',
         '',
         'examples:',
         '    Import default content.',
@@ -158,6 +159,7 @@ class Cli(ConfigSourceBase):
         content_meg = content.add_mutually_exclusive_group()
         content_meg.add_argument('--snippet', action='store_const', dest='category', const='snippet', help=argparse.SUPPRESS)
         content_meg.add_argument('--solution', action='store_const', dest='category', const='solution', help=argparse.SUPPRESS)
+        content_meg.add_argument('--reference', action='store_const', dest='category', const='reference', help=argparse.SUPPRESS)
         content_meg.add_argument('--all', action='store_const', dest='category', const='all', help=argparse.SUPPRESS)
         content_meg.set_defaults(category='snippet')
 

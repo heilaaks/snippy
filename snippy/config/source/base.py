@@ -219,9 +219,18 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @links.setter
     def links(self, value):
-        """Convert content links to tuple of utf-8 encoded unicode strings."""
+        """Convert content links to tuple of utf-8 encoded unicode strings.
 
-        self._links = Parser.links(value)  # pylint: disable=attribute-defined-outside-init
+        It is assumed that in case of reference links, the user wants to
+        maintain the same order of links as they were give. The expectation
+        is that the first link has more relevance then the following links.
+        """
+
+        sort_ = True
+        if self.category == Const.REFERENCE:
+            sort_ = False
+
+        self._links = Parser.links(value, sort_)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def filename(self):

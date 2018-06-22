@@ -407,6 +407,16 @@ grep -rin './' -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
 $ python runner create -c $'docker rm $(docker ps --all -q -f status=exited)\ndocker images -q --filter dangling=true | xargs docker rmi' -b 'Remove all exited containers and dangling images' -g 'docker' -t docker-ce,docker,moby,container,cleanup,image -l 'https://docs.docker.com/engine/reference/commandline/rm/ https://docs.docker.com/engine/reference/commandline/images/ https://docs.docker.com/engine/reference/commandline/rmi/'
 > https://stackoverflow.com/questions/26517674/passing-newline-within-string-into-a-python-script-from-the-command-line
 
+# REFERENCES
+python runner create --reference -l 'https://stackoverflow.com/a/33812744' -b 'Command line input encoding'
+python runner create --reference -l 'https://stackoverflow.com/a/33812744' -b 'Command line input encoding' -t cli,coding,utf-8
+
+
+python runner create --reference -l 'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages|https://chris.beams.io/posts/git-commit/' -b 'How to write commit messages' -t git,commit,message,howto,scm -g git
+python runner search --sall . --reference
+python runner export --defaults --reference
+python runner import --defaults --reference
+
 #######################################
 ## Logging
 #######################################

@@ -63,7 +63,12 @@ class Config(object):
         cls.storage_schema = cls._storage_schema()
         cls.snippet_template = cls._content_template('snippet.txt')
         cls.solution_template = cls._content_template('solution.txt')
-        cls.templates = {'snippet': cls.snippet_template, 'solution': cls.solution_template}
+        cls.reference_template = cls._content_template('reference.txt')
+        cls.templates = {
+            'snippet': cls.snippet_template,
+            'solution': cls.solution_template,
+            'reference': cls.reference_template
+        }
         cls.storage_path = source.storage_path
         cls.storage_file = cls._storage_file()
 
@@ -143,6 +148,7 @@ class Config(object):
         cls.is_operation_import = True if cls.operation == 'import' else False
         cls.is_category_snippet = True if cls.content_category == Const.SNIPPET else False
         cls.is_category_solution = True if cls.content_category == Const.SOLUTION else False
+        cls.is_category_reference = True if cls.content_category == Const.REFERENCE else False
         cls.is_category_all = True if cls.content_category == Const.ALL else False
         cls.operation_filename = cls._operation_filename()
         cls.operation_filetype = cls._operation_filetype()
@@ -333,6 +339,9 @@ class Config(object):
         if cls.is_category_solution:
             defaults = 'solutions.yaml'
             template = 'solution-template.txt'
+        elif cls.is_category_reference:
+            defaults = 'references.yaml'
+            template = 'references-template.txt'
 
         # Run migrate operation with default content.
         if cls.defaults:
@@ -349,6 +358,8 @@ class Config(object):
                 filename = 'snippet.' + Config.CONTENT_FORMAT_TEXT
             elif cls.is_category_solution and not filename:
                 filename = 'solution.' + Config.CONTENT_FORMAT_TEXT
+            elif cls.is_category_reference and not filename:
+                filename = 'reference.' + Config.CONTENT_FORMAT_TEXT
 
         # In case user did not provide filename, set defaults. For example
         # if user defined export or import operation without the file, the

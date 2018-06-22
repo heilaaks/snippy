@@ -38,10 +38,10 @@ class Parser(object):
     BRIEF_TAIL = '# Add optional single group below.\n'
     GROUP_HEAD = '# Add optional single group below.\n'
     GROUP_TAIL = '# Add optional comma separated list of tags below.\n'
-    TAGS_HEAD = '# Add optional comma separated list of tags below.\n'
-    TAGS_TAIL = '# Add optional links below one link per line.\n'
-    LINKS_HEAD = '# Add optional links below one link per line.\n'
-    LINKS_TAIL = '.'
+    SNIPPET_TAGS = '# Add optional comma separated list of tags below.\n'
+    SNIPPET_LINKS = '# Add optional links below one link per line.\n'
+    REFERENCE_TAGS = SNIPPET_TAGS
+    REFERENCE_LINKS = '# Add mandatory links below one link per line.\n'
 
     _logger = Logger.get_logger(__name__)
 
@@ -55,6 +55,8 @@ class Parser(object):
             data = Parser._split_source(source, '# Add mandatory snippet below', 2)
         elif category == Const.SOLUTION:
             data = Parser._split_source(source, '## BRIEF :', 1)
+        elif category == Const.REFERENCE:
+            data = Parser._split_source(source, 'Add mandatory links below one link per line', 1)
         else:
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text template content category')
 
@@ -104,6 +106,8 @@ class Parser(object):
             category = Const.SNIPPET
         elif cls.SOLUTION_BRIEF in source and cls.SOLUTION_DATE:
             category = Const.SOLUTION
+        elif cls.REFERENCE_LINKS in source:
+            category = Const.REFERENCE
 
         return category
 
@@ -116,9 +120,12 @@ class Parser(object):
             match = re.search('%s(.*)%s' % (cls.DATA_HEAD, cls.DATA_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 data = tuple([s.strip() for s in match.group(1).rstrip().split(Const.NEWLINE)])
-        else:
+        elif category == Const.SOLUTION:
             # Remove unnecessary newlines at the end and make sure there is one at the end.
             data = tuple(source.rstrip().split(Const.NEWLINE) + [Const.EMPTY])
+        elif category == Const.REFERENCE:
+            data = ()  # There is no data with the reference.
+
         cls._logger.debug('parsed content data from "%s"', data)
 
         return data
@@ -128,12 +135,12 @@ class Parser(object):
         """Read content brief from text source."""
 
         brief = Const.EMPTY
-        if category == Const.SNIPPET:
+        if category == Const.SNIPPET or category == Const.REFERENCE:
             match = re.search('%s(.*)%s' % (cls.BRIEF_HEAD, cls.BRIEF_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
                 brief = Const.SPACE.join(lines)
-        else:
+        elif category == Const.SOLUTION:
             match = re.search(r'## BRIEF :\s*?(.*|$)', source, re.MULTILINE)
             if match:
                 brief = match.group(1).strip()
@@ -146,12 +153,12 @@ class Parser(object):
         """Read content group from text source."""
 
         group = Const.EMPTY
-        if category == Const.SNIPPET:
+        if category == Const.SNIPPET or category == Const.REFERENCE:
             match = re.search('%s(.*)%s' % (cls.GROUP_HEAD, cls.GROUP_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
                 group = Const.SPACE.join(lines)
-        else:
+        elif category == Const.SOLUTION:
             match = re.search(r'## GROUP :\s*?(\S+|$)', source, re.MULTILINE)
             if match:
                 group = match.group(1).strip()
@@ -164,14 +171,14 @@ class Parser(object):
         """Read content tags from text source."""
 
         tags = ()
-        if category == Const.SNIPPET:
-            match = re.search('%s(.*)%s' % (cls.TAGS_HEAD, cls.TAGS_TAIL), source, re.DOTALL)
+        if category == Const.SNIPPET or category == Const.REFERENCE:
+            match = re.search('(?:%s|%s)(.*?)(?:\n{2}|$)' % (cls.SNIPPET_TAGS, cls.REFERENCE_TAGS), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 tags = Parser.keywords([match.group(1)])
-        else:
+        elif category == Const.SOLUTION:
             match = re.search(r'## TAGS  :\s*?(.*|$)', source, re.MULTILINE)
             if match:
-                tags = tuple([s.strip() for s in match.group(1).rstrip().split(Const.DELIMITER_TAGS)])
+                tags = tuple([s.strip() for s in match.group(1).strip().split(Const.DELIMITER_TAGS)])
         cls._logger.debug('parsed content tags from "%s"', tags)
 
         return tags
@@ -182,11 +189,11 @@ class Parser(object):
 
         # In case of solution, the links are read from the whole content data.
         links = ()
-        if category == Const.SNIPPET:
-            match = re.search('%s(.*)%s' % (cls.LINKS_HEAD, cls.LINKS_TAIL), source, re.DOTALL)
+        if category == Const.SNIPPET or category == Const.REFERENCE:
+            match = re.search('(?:%s|%s)(.*?)(?:\n{2}|$)' % (cls.SNIPPET_LINKS, cls.REFERENCE_LINKS), source, re.DOTALL)
             if match and not match.group(1).isspace():
-                links = tuple([s.strip() for s in match.group(1).rstrip().split(Const.NEWLINE)])
-        else:
+                links = tuple([s.strip() for s in match.group(1).strip().split(Const.NEWLINE)])
+        elif category == Const.SOLUTION:
             links = tuple(re.findall('> (http.*)', source))
         cls._logger.debug('parsed content links from "%s"', links)
 
@@ -252,14 +259,14 @@ class Parser(object):
         return keywords
 
     @staticmethod
-    def links(links):
+    def links(links, sort_=True):
         """Convert links to utf-8 encoded list of links.
 
 
         Parse user provided link list. Because URL and keyword have different
-        forbidden characters, the methods to parse keywords are simular but still
+        forbidden characters, the methods to parse keywords are similar but still
         they are separated. URLs can be separated only with space and bar. These
-        are defined 'unsafe characters' in URL character set /1/.
+        two characters are defined as 'unsafe characters' in URL character set /1/.
 
         /1/ https://perishablepress.com/stop-using-unsafe-characters-in-urls/"""
 
@@ -275,9 +282,10 @@ class Parser(object):
         links = Parser._to_list(links)
         for link in links:
             list_ = list_ + re.split(r'\s+|\|', link)
-        sorted_list = sorted(list_)
+        if sort_:
+            list_ = sorted(list_)
 
-        return tuple(sorted_list)
+        return tuple(list_)
 
     @classmethod
     def to_unicode(cls, value):

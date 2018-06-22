@@ -40,7 +40,7 @@ class Editor(object):
         source = cls.call_editor(template)
         category = Parser.content_category(source)
         collection = Collection()
-        if category == Const.SNIPPET or category == Const.SOLUTION:
+        if category == Const.SNIPPET or category == Const.SOLUTION or category == Const.REFERENCE:
             resource = collection.get_resource(category, timestamp)
             resource.data = Parser.content_data(category, source)
             resource.brief = Parser.content_brief(category, source)

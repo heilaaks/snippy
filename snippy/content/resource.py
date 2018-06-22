@@ -357,14 +357,35 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return True if self.digest in Resource.TEMPLATES else False
 
     def has_data(self):
-        """Test if resource has data."""
+        """Test if resource has data.
 
-        return True if any(self.data) else False
+        In case of snippet and solution, the content data must be present.
+        But in case of references, only the link must be present.
+        """
+
+        if (self.category == Const.SNIPPET or self.category == Const.SOLUTION) and any(self.data):
+
+            return True
+        elif self.category == Const.REFERENCE and any(self.links):
+
+            return True
+
+        return False
 
     def is_snippet(self):
         """Test if resource is snippet."""
 
         return True if self.category == Const.SNIPPET else False
+
+    def is_solution(self):
+        """Test if resource is solution."""
+
+        return True if self.category == Const.SOLUTION else False
+
+    def is_reference(self):
+        """Test if resource is reference."""
+
+        return True if self.category == Const.REFERENCE else False
 
     def dump_qargs(self):
         """Convert resource for sqlite qargs."""
@@ -449,8 +470,12 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = Const.EMPTY
         if self.is_snippet():
             text = text + self.get_snippet_text(index, ansi)
-        else:
+        elif self.is_solution():
             text = text + self.get_solution_text(index, ansi)
+        elif self.is_reference():
+            text = text + self.get_reference_text(index, ansi)
+        else:
+            self._logger.debug('internal error with content category: s', self.category)
 
         if debug:
             text = text + self._terminal_category(ansi) % self.category
@@ -473,7 +498,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return text
 
     def get_snippet_text(self, idx, ansi=False):
-        """Format snippets for terminal or pure text output."""
+        """Format snippets for terminal."""
 
         text = Const.EMPTY
         data = Const.EMPTY
@@ -492,7 +517,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return text
 
     def get_solution_text(self, idx, ansi=False):
-        """Format solutions for terminal or pure text output."""
+        """Format solutions for terminal."""
 
         text = Const.EMPTY
         data = Const.EMPTY
@@ -508,6 +533,22 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         text = text + Const.EMPTY.join([Resource._terminal_solution(ansi) % (data, line)
                                         for line in self.data])
+        text = text + Const.NEWLINE
+
+        return text
+
+    def get_reference_text(self, idx, ansi=False):
+        """Format references for terminal."""
+
+        text = Const.EMPTY
+        links = Const.EMPTY
+        text = text + Resource._terminal_header(ansi) % (idx, self.brief,
+                                                         self.group,
+                                                         self.digest)
+        text = text + Const.NEWLINE
+        text = text + Const.EMPTY.join([Resource._terminal_links(ansi) % (links, link)
+                                        for link in self.links])
+        text = Resource._terminal_tags(ansi) % (text, Const.DELIMITER_TAGS.join(self.tags))
         text = text + Const.NEWLINE
 
         return text
@@ -554,7 +595,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Add resource links to text template."""
 
         links = Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, sorted(self.links)))
-        links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds extra newline at the end.
+        if self.category == Const.SNIPPET:
+            links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds an extra newline at the end.
         template = template.replace('<SNIPPY_LINKS>', links)
 
         return template

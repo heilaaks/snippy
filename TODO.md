@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
    - [ ] Add uuid primary key to content database table.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
 
@@ -28,6 +29,9 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix get_resource and next if the collection is empty. This generates StopIteration exception.
+   - [ ] Fix reference link sort. The links should not be sorted in case of references because first link assumes more relevance than next. This confuses tests.
+   - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
    - [ ] Fix failure to process request like SSL error does not refresh OID. Is there a hook for this?
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
    - [ ] Fix terminal encodings other than utf-8. Something like this may be needed https://stackoverflow.com/a/33812744.

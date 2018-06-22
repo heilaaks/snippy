@@ -24,6 +24,7 @@ import sys
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.config.source.cli import Cli
+from snippy.content.reference import Reference
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
 from snippy.logger import Logger
@@ -72,6 +73,8 @@ class Snippy(object):
             Snippet(self.storage).run()
         elif Config.is_category_solution:
             Solution(self.storage).run()
+        elif Config.is_category_reference:
+            Reference(self.storage).run()
         elif Config.is_category_all and Config.is_operation_search:
             Snippet(self.storage).run()
             Solution(self.storage).run()

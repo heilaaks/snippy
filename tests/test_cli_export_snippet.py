@@ -197,7 +197,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_snippet_009(self, snippy):
         """Export defined snippet with digest.
 
-        Export defined snippet based on message digest. File namei s defined
+        Export defined snippet based on message digest. File name is defined
         in command line. This should result file and format defined by command
         line option -f|--file.
         """
@@ -317,7 +317,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         """Export defined snippet with search keyword.
 
         Export defined snippet based on search keyword. In this case the
-        search keyword matchies to two snippets that must be exported to
+        search keyword matches to two snippets that must be exported to
         file defined in command line.
         """
 

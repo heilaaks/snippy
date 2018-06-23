@@ -181,7 +181,7 @@ Random notes and scribling during development.
    $ git commit -S -s
    $ export GPG_TTY=$(tty)
    $ git log --show-signature -1
-   
+
    # GPG errors: update libgcrypt and libassuan
    $ /usr/bin/gpg-agent -v --daemon
    /usr/bin/gpg-agent: relocation error: /usr/bin/gpg-agent: symbol gcry_get_config, version GCRYPT_1.6 not defined in file libgcrypt.so.20 with link time reference
@@ -1008,29 +1008,16 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        exist in the parameter set that is give for set_conf in class inherited
        from ConfigSourceBase().
 
-    JSON API
+    2. All but reference content links are sorted
 
-    1. The JSON API responses must follow JSON API v1.0 specifications
+       It is expected that with reference content the order where user gives
+       links matters. That is, the first link is expected to be more relevant
+       if there are multiple links in reference content. The reference category
+       and it's link field can be compared to data field with other content
+       categories. User is not expected to want the data to be sorted because
+       the order matters.
 
-       Few highlights that are currently supported:
-
-       - Top level meta, error and data objects
-       - Top level links and self pointing to resource(s)
-       - Top level data as JSON object (not list) when resource requested
-       - Top level data as JSON object list when collection is requested
-       - Top level data set to null if resource not found.
-       - Top level data type set to 'snippets' or 'solutions'.
-       - Top level data id always unique ID.
-       - Data attributes containing resource or collection with the requested fields.
-
-       Notes:
-
-       - Note that numbers are presented as strings. For example HTTP status
-         code is string.
-       - The JSON response fileds are in CamelCase because the expected use
-         case is from Javascript that uses CamelCase.
-
-       /1/ http://jsonapi.org/
+       With all other content categories, the links are sorted automatically.
 
     UPDATING CONTENT ATTRIBUTES
 
@@ -1072,6 +1059,30 @@ git update-index --no-assume-unchanged FILE_NAME # change back
           The content digest field is always set by the tool based on sha256
           hash algorithm. The digest is automatically updated when content
           is changed.
+
+    JSON API
+
+    1. The JSON API responses must follow JSON API v1.0 specifications
+
+       Few highlights that are currently supported:
+
+       - Top level meta, error and data objects
+       - Top level links and self pointing to resource(s)
+       - Top level data as JSON object (not list) when resource requested
+       - Top level data as JSON object list when collection is requested
+       - Top level data set to null if resource not found.
+       - Top level data type set to 'snippets' or 'solutions'.
+       - Top level data id always unique ID.
+       - Data attributes containing resource or collection with the requested fields.
+
+       Notes:
+
+       - Note that numbers are presented as strings. For example HTTP status
+         code is string.
+       - The JSON response fileds are in CamelCase because the expected use
+         case is from Javascript that uses CamelCase.
+
+       /1/ http://jsonapi.org/
 
     CLASS HIERARCHY
 
@@ -1189,7 +1200,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     $ openssl s_client -debug -connect 127.0.0.1:8080 -tls1    # must not work
     $ openssl s_client -debug -connect 127.0.0.1:8080 -tls1_1  # must not work
     $ openssl s_client -debug -connect 127.0.0.1:8080 -ssl3    # must not work
-    
+
     # Run server
     $ python runner --server -vv --ssl-cert ./snippy/data/ssl/server.crt --ssl-key ./snippy/data/ssl/server.key
     === WHITEBOARD ===
@@ -1768,7 +1779,7 @@ python snip.py create -c 'docker rm -v $(docker ps -a -q)' -b 'Remove all docker
                                     s = base64encode(header) + '.' + base64encode(payload)
                                     signature = hashAlgHs256(s, 'secret')
                                     jwt = s + '.' base64encode(signature)
-                                    
+
                                     Request token --> user/password                               Enforce HTTPS
                                                                                                   check credentials
                                                                                                   create JWT token

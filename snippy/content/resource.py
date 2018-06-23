@@ -273,7 +273,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         resource_str = resource_str + self.brief
         resource_str = resource_str + self.group
         resource_str = resource_str + Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
-        resource_str = resource_str + Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, sorted(self.links)))
+        resource_str = resource_str + Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links))
         resource_str = resource_str + self.category
         resource_str = resource_str + self.filename
         resource_str = resource_str + self.runalias
@@ -293,6 +293,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         if self.category == Const.REFERENCE:
             self.data = self.links
+        else:
+            self.links = tuple(sorted(self.links))
 
         self.digest = self.compute_digest()
 
@@ -409,7 +411,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.brief,
             self.group,
             Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags))),
-            Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, sorted(self.links))),
+            Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links)),
             self.category,
             self.filename,
             self.runalias,
@@ -612,7 +614,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def _add_links(self, template):
         """Add resource links to text template."""
 
-        links = Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, sorted(self.links)))
+        links = Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links))
         if self.category == Const.SNIPPET:
             links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds an extra newline at the end.
         template = template.replace('<SNIPPY_LINKS>', links)

@@ -132,7 +132,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             )
             if collection.size() == 1:
                 resource = next(collection.resources())
-                filename = Config.get_operation_file(content_filename=resource.filename)
+                filename = Config.get_operation_file(resource=resource)
             elif collection.empty():
                 Config.validate_search_context(collection, 'export')
             Migrate.dump(collection, filename)

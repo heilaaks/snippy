@@ -19,6 +19,10 @@
 
 """reference_helper: Helper methods for reference testing."""
 
+from snippy.config.config import Config
+from snippy.content.collection import Collection
+from tests.testlib.content import Content
+
 
 class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     """Helper methods for reference testing."""
@@ -27,7 +31,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     REGEXP = 1
 
     GITLOG_DIGEST = '5c2071094dbfaa33'
-    REGEXP_DIGEST = 'd65a6322aef85e63'
+    REGEXP_DIGEST = 'cb9225a81eab8ced'
     DEFAULTS = ({
         'data': ('', ),
         'brief': 'How to write commit messages',
@@ -54,7 +58,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         'versions': '',
         'created': '2018-05-21T13:11:13.678729+0000',
         'updated': '2018-05-21T13:11:13.678729+0000',
-        'digest': 'd65a6322aef85e637162a8ec3ed2dae1c5ac00a6413b60d04da64ffea40e74ab'
+        'digest': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832'
     })
 
     TEMPLATE = (
@@ -73,3 +77,13 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         '',
         ''
     )
+
+    @staticmethod
+    def get_template(dictionary):
+        """Transform dictionary to text template."""
+
+        dictionary = Content.compared(dictionary)
+        resource = Collection.get_resource(dictionary['category'], '2018-10-20T06:16:27.000001+0000')
+        resource.load_dict(dictionary)
+
+        return resource.dump_text(Config.templates)

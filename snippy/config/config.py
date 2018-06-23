@@ -150,7 +150,7 @@ class Config(object):
         cls.is_category_solution = True if cls.content_category == Const.SOLUTION else False
         cls.is_category_reference = True if cls.content_category == Const.REFERENCE else False
         cls.is_category_all = True if cls.content_category == Const.ALL else False
-        cls.operation_filename = cls._operation_filename()
+        cls.operation_filename = cls._operation_filename(cls.content_category)
         cls.operation_filetype = cls._operation_filetype()
         cls.is_operation_file_json = True if cls.operation_filetype == Config.CONTENT_FORMAT_JSON else False
         cls.is_operation_file_text = True if cls.operation_filetype == Config.CONTENT_FORMAT_TEXT else False
@@ -323,7 +323,7 @@ class Config(object):
         return filename
 
     @classmethod
-    def _operation_filename(cls):
+    def _operation_filename(cls, category):
         """Return operation filename
 
         The filename is set based user input for content filename, operation
@@ -336,12 +336,12 @@ class Config(object):
 
         defaults = 'snippets.yaml'
         template = 'snippet-template.txt'
-        if cls.is_category_solution:
+        if category == Const.SOLUTION:
             defaults = 'solutions.yaml'
             template = 'solution-template.txt'
-        elif cls.is_category_reference:
+        elif category == Const.REFERENCE:
             defaults = 'references.yaml'
-            template = 'references-template.txt'
+            template = 'reference-template.txt'
 
         # Run migrate operation with default content.
         if cls.defaults:
@@ -354,11 +354,11 @@ class Config(object):
         # Run export operation with specified content without specifying
         # the operation file.
         if cls.is_operation_export and cls.is_search_criteria():
-            if cls.is_category_snippet and not filename:
+            if category == Const.SNIPPET and not filename:
                 filename = 'snippet.' + Config.CONTENT_FORMAT_TEXT
-            elif cls.is_category_solution and not filename:
+            elif category == Const.SOLUTION and not filename:
                 filename = 'solution.' + Config.CONTENT_FORMAT_TEXT
-            elif cls.is_category_reference and not filename:
+            elif category == Const.REFERENCE and not filename:
                 filename = 'reference.' + Config.CONTENT_FORMAT_TEXT
 
         # In case user did not provide filename, set defaults. For example
@@ -453,14 +453,22 @@ class Config(object):
         return criteria
 
     @classmethod
-    def get_operation_file(cls, content_filename=Const.EMPTY):
-        """Return file for operation."""
+    def get_operation_file(cls, resource=None):
+        """Return file for operation.
 
-        # Use the content filename only in case of export operation
-        # and when user did not define target file from command line.
+        Use the content filename only in case of export operation and when
+        user did not define target file from command line.
+
+        If there are no filename defined in command line or in the resource,
+        content category defines the default file.
+        """
+
         filename = cls.operation_filename
-        if cls.is_operation_export and content_filename and not cls.source.filename:
-            filename = content_filename
+        if cls.is_operation_export and resource and not cls.source.filename:
+            if resource.filename:
+                filename = resource.filename
+            else:
+                filename = cls._operation_filename(resource.category)
 
         return filename
 

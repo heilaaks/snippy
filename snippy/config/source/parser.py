@@ -262,13 +262,20 @@ class Parser(object):
     def links(links):
         """Convert links to utf-8 encoded list of links.
 
-
         Parse user provided link list. Because URL and keyword have different
-        forbidden characters, the methods to parse keywords are similar but still
-        they are separated. URLs can be separated only with space and bar. These
-        two characters are defined as 'unsafe characters' in URL character set /1/.
+        forbidden characters, the methods to parse keywords are similar but
+        still they are separated. URLs can be separated only with space and
+        bar. These two characters are defined as 'unsafe characters' in URL
+        character set [1].
 
-        /1/ https://perishablepress.com/stop-using-unsafe-characters-in-urls/"""
+        Links are not sorted. The reason is that the sort is done based on
+        content category. The content category is not know for sure when
+        command options are parsed in this class. For this reason, the sort
+        is always made later in the Resource when content category is known
+        for sure.
+
+        [1] https://perishablepress.com/stop-using-unsafe-characters-in-urls/
+        """
 
         # Examples: Support processing of:
         #           1. -l link1    link2
@@ -282,7 +289,6 @@ class Parser(object):
         links = Parser._to_list(links)
         for link in links:
             list_ = list_ + re.split(r'\s+|\|', link)
-        list_ = sorted(list_)
 
         return tuple(list_)
 

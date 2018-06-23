@@ -38,11 +38,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_001(self, snippy, yaml_dump):
-        """Export all solutions."""
+        """Export all solutions.
 
-        ## Brief: Export all solutions into file. File name or format are not
-        ##        defined in command line which must result tool default file
-        ##        and format.
+        Export all solutions into file. File name or format are not defined
+        in command line which must result tool default file and format.
+        """
+
         content_dict = {
             'meta': Content.get_cli_meta(),
             'data': [
@@ -58,10 +59,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_002(self, snippy, yaml_dump):
-        """Export all solutions."""
+        """Export all solutions.
 
-        ## Brief: Export all solutions into defined yaml file. File name and
-        ##        format are defined in command line.
+        Export all solutions into defined yaml file. File name and format are
+        defined in command line.
+        """
+
         content_dict = {
             'meta': Content.get_cli_meta(),
             'data': [
@@ -76,10 +79,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_003(self, snippy, json_dump):
-        """Export all solutions."""
+        """Export all solutions.
 
-        ## Brief: Export all solutions into defined json file. File name and
-        ##        format are defined in command line.
+        Export all solutions into defined json file. File name and format are
+        defined in command line.
+        """
+
         content_dict = {
             'meta': Content.get_cli_meta(),
             'data': [
@@ -94,11 +99,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_004(self, snippy):
-        """Export all solutions."""
+        """Export all solutions.
 
-        ## Brief: Export all solutions into defined text file with file
-        ##        extension 'txt'. File name and format are defined in command
-        ##        line.
+        Export all solutions into defined text file with file extension 'txt'.
+        File name and format are defined in command line.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.txt'])
             assert cause == Cause.ALL_OK
@@ -111,11 +117,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_005(self, snippy):
-        """Export all solutions."""
+        """Export all solutions.
 
-        ## Brief: Export all solutions into defined text file with file
-        ##        extension 'text'. File name and format are defined in
-        ##        command line.
+        Export all solutions into defined text file with file extension
+        'text'. File name and format are defined in command line.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.text'])
             assert cause == Cause.ALL_OK
@@ -128,11 +135,13 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_006(self, snippy):
-        """Export all solutions."""
+        """Export all solutions.
 
-        ## Brief: Try to export all solutions into file format that is not
-        ##        supported. This should result error text for end user and
-        ##        no files should be created.
+        Try to export all solutions into file format that is not supported.
+        This should result error text for end user and no files should be
+        created.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './foo.bar'])
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
@@ -142,11 +151,13 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
     def test_cli_export_solution_007(self, snippy):
-        """Export all solutions."""
+        """Export all solutions.
 
-        ## Brief: Try to export all content by defining the content category
-        ##        to --all. This is not supported with export operation and
-        ##        error cause is returned.
+        Try to export all content by defining the content category to --all.
+        This is not supported with export operation and error cause is
+        returned.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--all'])
             assert cause == 'NOK: content category \'all\' is supported only with search operation'
@@ -156,11 +167,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_008(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata but not by command line
-        ##        -f|--file option.
+        Export defined solution based on message digest. File name is defined
+        in solution metadata but not by command line -f|--file option.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0'])
             assert cause == Cause.ALL_OK
@@ -171,12 +183,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_009(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata but not by command line
-        ##        -f|--file option. In this case the content category is not
-        ##        specified explicitly from command line.
+        Export defined solution based on message digest. File name is defined
+        in solution metadata but not by command line -f|--file option. In
+        this case the content category is not specified explicitly from
+        command line.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'a96accc25dd23ac0'])
             assert cause == Cause.ALL_OK
@@ -187,12 +201,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka', 'import-kafka-utc', 'export-time', 'isfile_true')
     def test_cli_export_solution_010(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest. Content
-        ##        file name is not defined in metadata, solution data or in
-        ##        command line -f|--file option. This should result the file
-        ##        name and format defined by tool internal defaults.
+        Export defined solution based on message digest. Content file name is
+        not defined in metadata, solution data or in command line -f|--file
+        option. This should result the file name and format defined by tool
+        internal defaults.
+        """
+
         content_read = Content.updated_kafka1()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -209,13 +225,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_011(self, snippy, yaml_dump):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and format
-        ##        defined by the command line option. In this case the created
-        ##        file format is yaml.
+        Export defined solution based on message digest. File name is defined
+        in solution metadata and in command line -f|--file option. This should
+        result the file name and format defined by the command line option.
+        In this case the created file format is yaml.
+        """
+
         content_dict = {
             'meta': Content.get_cli_meta(),
             'data': [
@@ -229,10 +246,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_012(self, snippy, yaml_dump):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest to yaml file
-        ##        without specifying the content category explicitly.
+        Export defined solution based on message digest to yaml file without
+        specifying the content category explicitly.
+        """
+
         content_dict = {
             'meta': Content.get_cli_meta(),
             'data': [
@@ -246,13 +265,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_013(self, snippy, json_dump):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and format
-        ##        defined by the command line option. In this case the created
-        ##        file format is json.
+        Export defined solution based on message digest. File name is defined
+        in solution metadata and in command line -f|--file option. This should
+        result the file name and format defined by the command line option. In
+        this case the created file format is json.
+        """
+
         content_dict = {
             'meta': Content.get_cli_meta(),
             'data': [
@@ -266,10 +286,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_014(self, snippy, json_dump):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest to json file
-        ##        without specifying the content category explicitly.
+        Export defined solution based on message digest to json file without
+        specifying the content category explicitly.
+        """
+
         content_dict = {
             'meta': Content.get_cli_meta(),
             'data': [
@@ -283,13 +305,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_015(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and format
-        ##        defined by the command line option. In this case the text
-        ##        format file extension is 'txt'.
+        Export defined solution based on message digest. File name is defined
+        in solution metadata and in command line -f|--file option. This should
+        result the file name and format defined by the command line option. In
+        this case the text format file extension is 'txt'.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])
             assert cause == Cause.ALL_OK
@@ -300,11 +323,13 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_016(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest to text
-        ##        file without specifying the content category explicitly.
-        ##        In this case the file extension is *.txt.
+        Export defined solution based on message digest to text file without
+        specifying the content category explicitly. In this case the file
+        extension is *.txt.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.txt'])
             assert cause == Cause.ALL_OK
@@ -315,13 +340,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_017(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and format
-        ##        defined by the command line option. In this case the tex
-        ##        format file extension is 'text'.
+        Export defined solution based on message digest. File name is defined
+        in solution metadata and in command line -f|--file option. This should
+        result the file name and format defined by the command line option. In
+        this case the text format file extension is 'text'.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])
             assert cause == Cause.ALL_OK
@@ -332,11 +358,13 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_018(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest to text
-        ##        file without specifying the content category explicitly.
-        ##        In this case the file extension is *.text.
+        Export defined solution based on message digest to text file without
+        specifying the content category explicitly. In this case the file
+        extension is *.text.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'a96accc25dd23ac0', '-f' './defined-solution.text'])
             assert cause == Cause.ALL_OK
@@ -347,11 +375,13 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_019(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Try to export defined solution based on message digest into
-        ##        file format that is not supported. This should result error
-        ##        string for end user and no files should be created.
+        Try to export defined solution based on message digest into file
+        format that is not supported. This should result error string for
+        end user and no files should be created.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a96accc25dd23ac0', '-f', './foo.bar'])
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
@@ -361,13 +391,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka', 'import-kafka-utc', 'export-time', 'isfile_true')
     def test_cli_export_solution_020(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is not defined in solution metadata or by command line
-        ##        -f|--file option. In this case there is no space after
-        ##        colon in the file name in the content header. In this case
-        ##        there is no space after colon.
+        Export defined solution based on message digest. File name is not
+        defined in solution metadata or by command line -f|--file option.
+        In this case there is no space after colon in the file name in the
+        content header. In this case there is no space after colon.
+        """
+
         content_read = Content.updated_kafka2()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -384,15 +415,16 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka-utc', 'export-time', 'isfile_true')
     def test_cli_export_solution_021(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Export defined solution based on message digest. File name
-        ##        is not defined in solution metadata or by command line
-        ##        -f|--file option. In this case there are extra spaces
-        ##        around file name. The kafka solution must be imported from
-        ##        text file in order to avoid filling the meta information.
-        ##        When the data is imported from yaml file, the content data
-        ##        is not parsed for filename like with the text template.
+        Export defined solution based on message digest. File name is not
+        defined in solution metadata or by command line -f|--file option.
+        In this case there are extra spaces around file name. The kafka
+        solution must be imported from text file in order to avoid filling
+        the meta information. When the data is imported from yaml file, the
+        content data is not parsed for filename like with the text template.
+        """
+
         content_read = Content.updated_kafka3()
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -409,11 +441,13 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_export_solution_022(self, snippy):
-        """Export defined solution with digest."""
+        """Export defined solution with digest.
 
-        ## Brief: Try to export defined solution based on message digest that
-        ##        cannot be found. This should result error text for end user
-        ##        and no files should be created.
+        Try to export defined solution based on message digest that cannot be
+        found. This should result error text for end user and no files should
+        be created.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', '123456789abcdef0', '-f' './defined-solution.text'])
             assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
@@ -423,11 +457,12 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_023(self, snippy):
-        """Export solution with search keyword."""
+        """Export solution with search keyword.
 
-        ## Brief: Export defined solution based on search keyword. File name
-        ##        is defined in solution metadata but not by command line
-        ##        -f|--file option.
+        Export defined solution based on search keyword. File name is defined
+        in solution metadata but not by command line -f|--file option.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'beats'])
             assert cause == Cause.ALL_OK
@@ -438,12 +473,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_024(self, snippy, yaml_dump):
-        """Export solution with search keyword."""
+        """Export solution with search keyword.
 
-        ## Brief: Export defined solution based on search keyword. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and yaml
-        ##        format defined by the command line option.
+        Export defined solution based on search keyword. File name is defined
+        in solution metadata and in command line -f|--file option. This should
+        result the file name and yaml format defined by the command line
+        option.
+        """
+
         content_dict = {
             'meta': Content.get_cli_meta(),
             'data': [
@@ -457,12 +494,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_025(self, snippy, json_dump):
-        """Export solution with search keyword."""
+        """Export solution with search keyword.
 
-        ## Brief: Export defined solution based on search keyword. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and json
-        ##        format defined by the command line option.
+        Export defined solution based on search keyword. File name is defined
+        in solution metadata and in command line -f|--file option. This should
+        result the file name and json format defined by the command line
+        option.
+        """
+
         content_dict = {
             'meta': Content.get_cli_meta(),
             'data': [
@@ -476,13 +515,14 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_026(self, snippy):
-        """Export solution with search keyword."""
+        """Export solution with search keyword.
 
-        ## Brief: Export defined solution based on search keyword. File name
-        ##        is defined in solution metadata and in command line
-        ##        -f|--file option. This should result the file name and
-        ##        format defined by the command line option. In this case the
-        ##        text format file extension is 'txt'.
+        Export defined solution based on search keyword. File name is defined
+        in solution metadata and in command line -f|--file option. This should
+        result the file name and format defined by the command line option. In
+        this case the text format file extension is 'txt'.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'beats', '-f' './defined-solution.txt'])
             assert cause == Cause.ALL_OK
@@ -493,11 +533,13 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_027(self, snippy):
-        """Export solution with search keyword."""
+        """Export solution with search keyword.
 
-        ## Brief: Export defined solution based on search keyword. In this
-        ##        case the search keyword matchies to two solutions that
-        ##        must be exported to file defined in command line.
+        Export defined solution based on search keyword. In this case the
+        search keyword matchies to two solutions that must be exported to
+        file defined in command line.
+        """
+
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'howto', '-f' './defined-solutions.txt'])
             assert cause == Cause.ALL_OK
@@ -586,7 +628,6 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         export, the date is updated based on metadata on behalf of user.
         """
 
-        ## Brief:
         original = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         import_data = original
         import_data = import_data.replace('## DATE  : 2017-10-20T11:11:19.000001+0000', '## DATE  : ')

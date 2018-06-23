@@ -2,7 +2,6 @@
    - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
    - [ ] Update magic regexp to support no space but tag also. User may not add the newline.
    - [ ] Add tests for References.
-   - [ ] Fix config base not to use category as logic. This does not work because the category may be omitted and read only e.g. from import file. It defaults to snippet which may be incorrect. The links setter does not work always
    - [ ] Add uuid primary key to content database table.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
 
@@ -34,7 +33,6 @@
 ## FIX
    - [ ] Fix print resource it does not print data in debug part because it is empty tuple.
    - [ ] Fix get_resource and next if the collection is empty. This generates StopIteration exception.
-   - [ ] Fix reference link sort. The links should not be sorted in case of references because first link assumes more relevance than next. This confuses tests.
    - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
    - [ ] Fix failure to process request like SSL error does not refresh OID. Is there a hook for this?
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
@@ -129,6 +127,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Changed link sort in case of reference content. The links are sorted all but reference content.
    - [x] Added support for references content.
    - [x] Fixed tests with Falcon 1.4.1.
    - [x] Fixed OID refresh for the first request and added server running and stopped logs which can be silenced with '-q'.

@@ -63,7 +63,11 @@ class Migrate(object):
                               'data': collection.dump_dict(Config.remove_fields)}
                 if Config.is_operation_file_text:
                     for resource in collection.resources():
+                        print(resource)
                         template = resource.dump_text(Config.templates)
+                        print("===")
+                        print(template)
+                        print("===")
                         outfile.write(template)
                         outfile.write(Const.NEWLINE)
                 elif Config.is_operation_file_json:

@@ -30,6 +30,7 @@ from snippy.config.config import Config
 from snippy.constants import Constants as Const
 from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.reference_helper import ReferenceHelper as Reference
@@ -108,6 +109,7 @@ EXPORT_TIME = '2018-02-02T02:02:02.000001+0000'
 
 IMPORT_DEFAULT_SNIPPETS = ((REMOVE_CREATED,) + (FORCED_CREATED,))
 IMPORT_DEFAULT_SOLUTIONS = ((BEATS_CREATED,) + (NGINX_CREATED,))
+IMPORT_DEFAULT_REFERENCES = ((Content.GITLOG_TIME,) + (Content.REGEXP_TIME,))
 
 # Snippy
 @pytest.fixture(scope='function', name='snippy')
@@ -407,6 +409,14 @@ def import_kafka_time_mock(mocker):
     """Mock timestamps to create 'kafka' solution."""
 
     _add_utc_time(mocker, IMPORT_KAFKA)
+
+## References
+@pytest.fixture(scope='function', name='default-references')
+def import_default_references(mocker, snippy):
+    """Import default references for testing purposes."""
+
+    contents = [Reference.DEFAULTS[Reference.GITLOG], Reference.DEFAULTS[Reference.REGEXP]]
+    _import_content(snippy, mocker, contents, IMPORT_DEFAULT_REFERENCES)
 
 ## Templates
 @pytest.fixture(scope='function', name='template-utc')

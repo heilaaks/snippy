@@ -85,7 +85,7 @@ class TestCliDeleteSnippet(object):
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_delete_snippet_005(self, snippy, mocker):
-        """Delete snippet with dgiest.
+        """Delete snippet with digest.
 
         Try to delete snippet with message digest that cannot be found.
         """
@@ -164,7 +164,7 @@ class TestCliDeleteSnippet(object):
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_delete_snippet_0010(self, snippy, mocker):
+    def test_cli_delete_snippet_010(self, snippy, mocker):
         """Delete snippet with data.
 
         Try to delete snippet with content data that does not exist. In this
@@ -212,25 +212,8 @@ class TestCliDeleteSnippet(object):
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_delete_snippet_013(self, snippy, mocker):
-        """Delete snippet with search.
-
-        Delete snippet based on search keyword that results more than one hit.
-        In this case the content must not be deleted.
-        """
-
-        content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
-        }
-        cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])
-        assert cause == 'NOK: search keywords matched more than once: 2 :preventing: delete :operation'
-        assert Database.get_snippets().size() == 2
-        Content.verified(mocker, snippy, content_read)
-
-    @pytest.mark.usefixtures('default-snippets')
-    def test_cli_delete_snippet_014(self, snippy, mocker, capsys):
-        """Delete snippet with data.
+    def test_cli_delete_snippet_013(self, snippy, mocker, capsys):
+        """Delete snippet with search keyword matching more than once.
 
         Delete snippet based on search keyword that results more than one hit.
         In this case the error text is read from stdout and it must contain

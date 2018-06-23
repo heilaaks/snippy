@@ -132,6 +132,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             for resource in source.resources():
                 if resource.digest not in self.data['data']:
                     self.data['meta']['total'] = self.data['meta']['total'] + 1
+                resource.seal()
                 self.data['data'][resource.digest] = {}
                 self.data['data'][resource.digest]['data'] = resource
                 self.data['data'][resource.digest]['meta'] = {}
@@ -139,6 +140,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         elif isinstance(source, Resource):
             if source.digest not in self.data['data']:
                 self.data['meta']['total'] = self.data['meta']['total'] + 1
+            source.seal()
             self.data['data'][source.digest] = {}
             self.data['data'][source.digest]['data'] = source
             self.data['data'][source.digest]['meta'] = {}
@@ -147,7 +149,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def merge(self, source):
         """Merge resource.
 
-        Merge content to existing resource.
+        Merge content into existing resource.
         """
 
         digest = None

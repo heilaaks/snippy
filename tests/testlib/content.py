@@ -92,6 +92,20 @@ class Content(object):
                 assert cause == Cause.ALL_OK
                 mock_file.assert_called_once_with('content.txt', 'w')
                 file_handle = mock_file.return_value.__enter__.return_value
+
+                # Reference content does not use data in the helper. The reason
+                # is that this is the end user behaviour. The reference helper
+                # is used in API tests to provide end user input which does not
+                # contain the data. The tool internally fills the the data with
+                # links. Therefore the reference testing checks that the data
+                # has links in case the category is reference.
+                if content[digest]['category'] == Const.REFERENCE:
+                    content[digest]['data'] = content[digest]['links']
+
+                # For input testing, the helper data may contain spaces in tags
+                # that must be trimmed because this compares the tool output that
+                # does data parsing and trimming.
+                content[digest]['tags'] = tuple([tag.strip() for tag in content[digest]['tags']])
                 file_handle.write.assert_has_calls([mock.call(Snippet.get_template(content[digest])),
                                                     mock.call(Const.NEWLINE)])
 

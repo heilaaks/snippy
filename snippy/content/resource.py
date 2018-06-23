@@ -282,6 +282,20 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return digest
 
+    def seal(self):
+        """Seal content by updating digest and run content specigic tasks.
+
+        In case of reference content, the links are treated as content data.
+        The tool has been built to expect always the data part and it was
+        considered that it is more maintanable to to it like this instead
+        of adding extra logic around the code.
+        """
+
+        if self.category == Const.REFERENCE:
+            self.data = self.links
+
+        self.digest = self.compute_digest()
+
     def migrate(self, source):
         """Migrate source into Resource.
 
@@ -298,8 +312,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.filename = source.filename
         self.runalias = source.runalias
         self.versions = source.versions
-
-        self.digest = self.compute_digest()
+        self.seal()
 
     def merge(self, source):
         """Merge two resources.
@@ -330,7 +343,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         if source.versions:
             self.versions = source.versions
 
-        self.digest = self.compute_digest()
+        self.seal()
 
         return self.digest
 
@@ -565,7 +578,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         if data:
             if self.is_snippet():
                 template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
-            else:
+            if self.is_solution():
                 template = data
         else:
             template = template.replace('<SNIPPY_DATA>', Const.EMPTY)

@@ -56,7 +56,7 @@ class Parser(object):
         elif category == Const.SOLUTION:
             data = Parser._split_source(source, '## BRIEF :', 1)
         elif category == Const.REFERENCE:
-            data = Parser._split_source(source, 'Add mandatory links below one link per line', 1)
+            data = Parser._split_source(source, '# Add mandatory links below one link per line', 2)
         else:
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text template content category')
 

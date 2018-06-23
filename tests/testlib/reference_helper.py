@@ -26,8 +26,8 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     GITLOG = 0
     REGEXP = 1
 
-    GITLOG_DIGEST = '2459998d3b556b9e'
-    REGEXP_DIGEST = '2459998d3b556b9e'
+    GITLOG_DIGEST = '5c2071094dbfaa33'
+    REGEXP_DIGEST = 'd65a6322aef85e63'
     DEFAULTS = ({
         'data': ('', ),
         'brief': 'How to write commit messages',
@@ -40,12 +40,12 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         'versions': '',
         'created': '2018-06-22T13:11:13.678729+0000',
         'updated': '2018-06-22T13:11:13.678729+0000',
-        'digest': '2459998d3b556b9e8a5b640e84426e05046b5235fe34a5958dcfdbfabad7efbb'
+        'digest': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f'
     }, {
         'data': ('', ),
         'brief': 'Python regular expression',
         'group': 'python',
-        'tags': (' python ', ' regexp  ', '  online   '),
+        'tags': (' python ', ' regexp  ', '  online   ', 'howto'),
         'links': ('https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
                   'https://pythex.org/'),
         'category': 'reference',
@@ -54,8 +54,9 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         'versions': '',
         'created': '2018-05-21T13:11:13.678729+0000',
         'updated': '2018-05-21T13:11:13.678729+0000',
-        'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'
+        'digest': 'd65a6322aef85e637162a8ec3ed2dae1c5ac00a6413b60d04da64ffea40e74ab'
     })
+
     TEMPLATE = (
         '# Commented lines will be ignored.',
         '#',

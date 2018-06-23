@@ -1,6 +1,8 @@
 ## WORKING
    - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
+   - [ ] Update magic regexp to support no space but tag also. User may not add the newline.
    - [ ] Add tests for References.
+   - [ ] Fix config base not to use category as logic. This does not work because the category may be omitted and read only e.g. from import file. It defaults to snippet which may be incorrect. The links setter does not work always
    - [ ] Add uuid primary key to content database table.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
 
@@ -30,6 +32,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix print resource it does not print data in debug part because it is empty tuple.
    - [ ] Fix get_resource and next if the collection is empty. This generates StopIteration exception.
    - [ ] Fix reference link sort. The links should not be sorted in case of references because first link assumes more relevance than next. This confuses tests.
    - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/

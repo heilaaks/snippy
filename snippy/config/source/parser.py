@@ -259,7 +259,7 @@ class Parser(object):
         return keywords
 
     @staticmethod
-    def links(links, sort_=True):
+    def links(links):
         """Convert links to utf-8 encoded list of links.
 
 
@@ -282,8 +282,7 @@ class Parser(object):
         links = Parser._to_list(links)
         for link in links:
             list_ = list_ + re.split(r'\s+|\|', link)
-        if sort_:
-            list_ = sorted(list_)
+        list_ = sorted(list_)
 
         return tuple(list_)
 

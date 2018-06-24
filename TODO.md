@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Change --help reference after snippet and solution. This is more logical since reference is now content type.
    - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
    - [ ] Update magic regexp to support no space but tag also. User may not add the newline.
    - [ ] Add tests for References.
@@ -31,6 +32,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix content.verified which does not check other content that what gets to text file. This misses for example update timestamps in e.g. test_cli_import_reference_011.
    - [ ] Fix print resource it does not print data in debug part because it is empty tuple.
    - [ ] Fix get_resource and next if the collection is empty. This generates StopIteration exception.
    - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/

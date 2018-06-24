@@ -33,7 +33,7 @@ from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
-class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
+class TestCliExportReference(object):
     """Test workflows for exporting references."""
 
     @pytest.mark.usefixtures('default-references', 'export-time', 'export-time')

@@ -21,7 +21,6 @@
 
 from snippy.config.config import Config
 from snippy.content.collection import Collection
-from tests.testlib.content import Content
 
 
 class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
@@ -29,9 +28,11 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
 
     GITLOG = 0
     REGEXP = 1
+    PYTEST = 2
 
     GITLOG_DIGEST = '5c2071094dbfaa33'
     REGEXP_DIGEST = 'cb9225a81eab8ced'
+    PYTEST_DIGEST = '1f9d9496005736ef'
     DEFAULTS = ({
         'data': ('', ),
         'brief': 'How to write commit messages',
@@ -59,6 +60,19 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         'created': '2018-05-21T13:11:13.678729+0000',
         'updated': '2018-05-21T13:11:13.678729+0000',
         'digest': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832'
+    }, {
+        'data': ('', ),
+        'brief': 'Python pytest framework',
+        'group': 'python',
+        'tags': ('python', 'pytest', 'docs'),
+        'links': ('https://docs.pytest.org/en/latest/skipping.html', ),
+        'category': 'reference',
+        'filename': '',
+        'runalias': '',
+        'versions': '',
+        'created': '2016-04-21T12:10:11.678729+0000',
+        'updated': '2016-04-21T12:10:11.678729+0000',
+        'digest': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e'
     })
 
     TEMPLATE = (
@@ -82,7 +96,6 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     def get_template(dictionary):
         """Transform dictionary to text template."""
 
-        dictionary = Content.compared(dictionary)
         resource = Collection.get_resource(dictionary['category'], '2018-10-20T06:16:27.000001+0000')
         resource.load_dict(dictionary)
 

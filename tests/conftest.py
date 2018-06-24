@@ -30,10 +30,9 @@ from snippy.config.config import Config
 from snippy.constants import Constants as Const
 from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
-from tests.testlib.content import Content
+from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
-from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 # Calls to Config.utcnow()
@@ -96,10 +95,23 @@ CREATE_NGINX = (NGINX_CREATED,)*1
 CREATE_KAFKA = (KAFKA_CREATED,)*1
 UPDATE_BEATS = (BEATS_CREATED,)*2
 UPDATE_NGINX = (NGINX_CREATED,)*2
+UPDATE_KAFKA = (KAFKA_CREATED,)*2
 IMPORT_BEATS = (BEATS_CREATED,)*1
-IMPORT_NGINX = (NGINX_CREATED,)*2
-IMPORT_KAFKA = (KAFKA_CREATED,)*2
+IMPORT_NGINX = (NGINX_CREATED,)*1
+IMPORT_KAFKA = (KAFKA_CREATED,)*1
 EDITED_BEATS = (BEATS_CREATED,)*1
+
+# References
+GITLOG_CREATED = '2018-06-22T13:11:13.678729+0000'
+REGEXP_CREATED = '2018-05-21T13:11:13.678729+0000'
+PYTEST_CREATED = '2016-04-21T12:10:11.678729+0000'
+CREATE_REGEXP = (REGEXP_CREATED,)*1
+IMPORT_GITLOG = (GITLOG_CREATED,)*1
+IMPORT_REGEXP = (REGEXP_CREATED,)*1
+IMPORT_PYTEST = (PYTEST_CREATED,)*1
+UPDATE_GITLOG = (GITLOG_CREATED,)*2
+UPDATE_REGEXP = (REGEXP_CREATED,)*2
+UPDATE_PYTEST = (PYTEST_CREATED,)*2
 
 # Templates
 EXPORT_TEMPLATE = '2017-10-14T19:56:31.000001+0000'
@@ -109,7 +121,7 @@ EXPORT_TIME = '2018-02-02T02:02:02.000001+0000'
 
 IMPORT_DEFAULT_SNIPPETS = ((REMOVE_CREATED,) + (FORCED_CREATED,))
 IMPORT_DEFAULT_SOLUTIONS = ((BEATS_CREATED,) + (NGINX_CREATED,))
-IMPORT_DEFAULT_REFERENCES = ((Content.GITLOG_TIME,) + (Content.REGEXP_TIME,))
+IMPORT_DEFAULT_REFERENCES = ((GITLOG_CREATED,) + (REGEXP_CREATED,))
 
 # Snippy
 @pytest.fixture(scope='function', name='snippy')
@@ -394,7 +406,7 @@ def update_nginx_time_mock(mocker):
 
 @pytest.fixture(scope='function', name='import-nginx-utc')
 def import_nginx_time_mock(mocker):
-    """Mock timestamps to create 'nginx' solution."""
+    """Mock timestamps to import 'nginx' solution."""
 
     _add_utc_time(mocker, IMPORT_NGINX)
 
@@ -406,9 +418,15 @@ def create_kafka_time_mock(mocker):
 
 @pytest.fixture(scope='function', name='import-kafka-utc')
 def import_kafka_time_mock(mocker):
-    """Mock timestamps to create 'kafka' solution."""
+    """Mock timestamps to import 'kafka' solution."""
 
     _add_utc_time(mocker, IMPORT_KAFKA)
+
+@pytest.fixture(scope='function', name='update-kafka-utc')
+def update_kafka_time_mock(mocker):
+    """Mock timestamps to update 'kafka' solution."""
+
+    _add_utc_time(mocker, UPDATE_KAFKA)
 
 ## References
 @pytest.fixture(scope='function', name='default-references')
@@ -417,6 +435,44 @@ def import_default_references(mocker, snippy):
 
     contents = [Reference.DEFAULTS[Reference.GITLOG], Reference.DEFAULTS[Reference.REGEXP]]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_REFERENCES)
+
+@pytest.fixture(scope='function', name='import-gitlog')
+def import_gitlog_reference(mocker, snippy):
+    """Import 'gitlog' reference for testing purposes."""
+
+    contents = [Reference.DEFAULTS[Reference.GITLOG]]
+    _import_content(snippy, mocker, contents, IMPORT_GITLOG)
+
+@pytest.fixture(scope='function', name='import-gitlog-utc')
+def import_gitlog_time_mock(mocker):
+    """Mock timestamps to import 'gitlog' reference."""
+
+    _add_utc_time(mocker, IMPORT_GITLOG)
+
+@pytest.fixture(scope='function', name='create-regexp-utc')
+def create_regexp_time_mock(mocker):
+    """Mock timestamps to create 'regexp' reference."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=CREATE_REGEXP)
+
+@pytest.fixture(scope='function', name='import-regexp-utc')
+def import_regexp_time_mock(mocker):
+    """Mock timestamps to import 'regexp' reference."""
+
+    _add_utc_time(mocker, IMPORT_REGEXP)
+
+@pytest.fixture(scope='function', name='update-regexp-utc')
+def update_regexp_time_mock(mocker):
+    """Mock timestamps to update 'regexp' reference."""
+
+    _add_utc_time(mocker, UPDATE_REGEXP)
+
+@pytest.fixture(scope='function', name='import-pytest')
+def import_gitlog_solution(mocker, snippy):
+    """Import 'pytest' reference for testing purposes."""
+
+    contents = [Reference.DEFAULTS[Reference.PYTEST]]
+    _import_content(snippy, mocker, contents, IMPORT_PYTEST)
 
 ## Templates
 @pytest.fixture(scope='function', name='template-utc')

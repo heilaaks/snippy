@@ -30,6 +30,7 @@ from snippy.meta import __docs__
 from snippy.meta import __homepage__
 from snippy.meta import __openapi__
 from snippy.meta import __version__
+from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
@@ -54,6 +55,7 @@ class Content(object):
     # References
     GITLOG_TIME = '2018-06-22T13:11:13.678729+0000'
     REGEXP_TIME = '2018-05-21T13:11:13.678729+0000'
+    PYTEST_TIME = '2016-04-21T12:10:11.678729+0000'
 
     @staticmethod
     def ordered(json):
@@ -221,6 +223,18 @@ class Content(object):
         }
         content_read['745c9e70eacc304b']['data'] = tuple([w.replace('## FILE  : kubernetes-docker-log-driver-kafka.txt', '## FILE  :  kubernetes-docker-log-driver-kafka.txt ') for w in content_read['745c9e70eacc304b']['data']])  # pylint: disable=line-too-long
         content_read['745c9e70eacc304b']['filename'] = Const.EMPTY
+
+        return content_read
+
+    @staticmethod
+    def updated_gitlog():
+        """Return updated gitlog reference."""
+
+        # Generate updated nginx solution.
+        content_read = {
+            Reference.GITLOG_DIGEST: copy.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+        }
+        content_read[Reference.GITLOG_DIGEST]['data'] = tuple([w.replace('# Instructions how to debug nginx', '# Changed instruction set') for w in content_read[Reference.GITLOG_DIGEST]['data']])  # pylint: disable=line-too-long
 
         return content_read
 

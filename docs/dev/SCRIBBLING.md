@@ -1060,6 +1060,39 @@ git update-index --no-assume-unchanged FILE_NAME # change back
           hash algorithm. The digest is automatically updated when content
           is changed.
 
+    CONTENT AND TIMESTAMPS (TODO remove from content and refere to here from there)
+
+    1. Following operations require new timestamp
+
+       Calls to Config.utcnow()
+       =======================
+
+       Content creation:
+
+         1) Create resource from each configured content.
+
+       Content updating:
+
+         1) Create resource from configured content.
+         2) Update 'updated' timestamp.
+
+       Content importing from file:
+
+         1) Create resource from each configured content.
+
+       Content importing (=update) based on digest:
+
+         1) Create resource from each configured content.
+         2) Update 'updated' timestamp.
+
+       Content editing:
+
+         1) Create resource from configured content.
+
+       Content exporting:
+
+         1) Creating metadata with export timestamp.
+
     JSON API
 
     1. The JSON API responses must follow JSON API v1.0 specifications

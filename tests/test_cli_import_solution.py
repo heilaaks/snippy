@@ -320,7 +320,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         json_load.assert_called_once_with('one-solution.json', 'r')
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc', 'isfile_true')
+    @pytest.mark.usefixtures('import-nginx', 'update-nginx-utc', 'isfile_true')
     def test_cli_import_solution_016(self, snippy, mocker):
         """Import solution based on message digest.
 
@@ -339,7 +339,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('one-solution.txt', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc', 'isfile_true')
+    @pytest.mark.usefixtures('import-nginx', 'update-nginx-utc', 'isfile_true')
     def test_cli_import_solution_017(self, snippy, mocker):
         """Import solution based on message digest.
 
@@ -358,7 +358,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('one-solution.text', 'r')
             Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.usefixtures('import-nginx', 'import-nginx-utc', 'isfile_true')
+    @pytest.mark.usefixtures('import-nginx', 'update-nginx-utc', 'isfile_true')
     def test_cli_import_solution_018(self, snippy, mocker):
         """Import solution based on message digest.
 
@@ -490,8 +490,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
     def test_cli_import_solution_025(self, snippy, yaml_load, mocker):
         """Import solutions defaults.
 
-        Import solution defaults. All solutions should be imported fromp
-        redefined file location under tool data folder from yaml format.
+        Import solution defaults. All solutions should be imported from
+        predefined file location under tool data folder from yaml format.
         """
 
         content_read = {
@@ -513,8 +513,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Try to import solution defaults again. The second import should fail
         with an error because the content already exist. The error text must
         be the same for all content categories. Because of random order
-        dictionary in the code, the reported digest can vary if there are
-        multiple failures.
+        dictionary in the code, the reported digest can vary when there are
+        multiple failures to import each content.
         """
 
         content_read = {

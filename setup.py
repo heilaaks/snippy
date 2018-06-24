@@ -48,7 +48,7 @@ extras_tests = (
     'logging_tree==1.7',
     'mock==2.0.0',
     'pylint==1.9.2',
-    'pytest==3.6.1',
+    'pytest==3.6.2',
     'pytest-cov==2.5.1',
     'pytest-mock==1.10.0',
     'six==1.11.0',

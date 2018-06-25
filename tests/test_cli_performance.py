@@ -37,37 +37,39 @@ class TestCliPerformance(object):
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_performance(self, snippy, capsys, caplog):
-        """Test CLI performance."""
+        """Test CLI performance.
 
-        ## Brief: Verify performance of the tool on a rough scale. The intention
-        ##        is to keep a reference test that is just iterated few times and
-        ##        the time consumed is measured. This is more for manual analysis
-        ##        than automation as of now.
-        ##
-        ##        Reference PC:   1 loop :  0.0255 /   55 loop :  0.8974 / 100 loop : 1.6226
-        ##        Reference PC: 880 loop : 14.2279 / 1000 loop : 16.2293
-        ##
-        ##        The reference is with sqlite database in memory as with all tests.
-        ##        There is naturally jitter in results and the values are as of now
-        ##        hand picked from few examples.
-        ##
-        ##        Note that when run on Python2, will use sqlite database in disk
-        ##        that is naturally slower than memory database.
-        ##
-        ##        No errors should be printed and the runtime should be below 10
-        ##        seconds. The runtime is intentionally set 10 times higher value
-        ##        than with the reference PC.
+        Verify performance of the tool on a rough scale. The intention
+        is to keep a reference test that is just iterated few times and
+        the time consumed is measured. This is more for manual analysis
+        than automation as of now.
+
+        Reference PC:   1 loop :  0.0255 /   55 loop :  0.8974 / 100 loop : 1.6226
+        Reference PC: 880 loop : 14.2279 / 1000 loop : 16.2293
+
+        The reference is with sqlite database in memory as with all tests.
+        There is naturally jitter in results and the values are as of now
+        hand picked from few examples.
+
+        Note that when run on Python2, will use sqlite database in disk
+        that is naturally slower than memory database.
+
+        No errors should be printed and the runtime should be below 10
+        seconds. The runtime is intentionally set 10 times higher value
+        than with the reference PC.
+        """
+
         start = time.time()
         for _ in range(55):
             self.create_defaults(snippy)
             assert Database.get_snippets().size() == 2
             assert Database.get_solutions().size() == 2
 
-            # Search all content
+            # Search all content.
             cause = snippy.run(['snippy', 'search', '--all', '--sall', '.'])
             assert cause == Cause.ALL_OK
 
-            # Delete all content
+            # Delete all content.
             cause = snippy.run(['snippy', 'delete', '-d', '54e41e9b52a02b63'])
             assert cause == Cause.ALL_OK
             cause = snippy.run(['snippy', 'delete', '-d', '53908d68425c61dc'])

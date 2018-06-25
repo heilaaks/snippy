@@ -72,7 +72,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
                 Solution.DEFAULTS[Solution.NGINX]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.yaml']) ## workflow
+        cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.yaml'])
         assert cause == Cause.ALL_OK
         yaml_dump.assert_called_once_with('./all-solutions.yaml', 'w')
         yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
@@ -92,7 +92,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
                 Solution.DEFAULTS[Solution.NGINX]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.json']) ## workflow
+        cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.json'])
         assert cause == Cause.ALL_OK
         json_dump.assert_called_once_with('./all-solutions.json', 'w')
         json.dump.assert_called_with(content_dict, mock.ANY)

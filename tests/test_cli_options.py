@@ -144,10 +144,12 @@ class TestCliOptions(object):
     )
 
     def test_help_option_001(self, capsys, caplog):
-        """Test printing help from console."""
+        """Test printing help from console.
 
-        ## Brief: Print help with long option.
-        snippy = Snippy(['snippy', '--help'])  ## workflow
+        Print help with long option.
+        """
+
+        snippy = Snippy(['snippy', '--help'])
         snippy.run()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(TestCliOptions.HELP)
@@ -156,10 +158,12 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     def test_help_option_002(self, capsys, caplog):
-        """Test printing help from console."""
+        """Test printing help from console.
 
-        ## Brief: Print help with short option.
-        snippy = Snippy(['snippy', '-h'])  ## workflow
+        Print help with short option.
+        """
+
+        snippy = Snippy(['snippy', '-h'])
         snippy.run()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(TestCliOptions.HELP)
@@ -168,10 +172,12 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     def test_help_option_003(self, capsys, caplog):
-        """Test printing help from console."""
+        """Test printing help from console.
 
-        ## Brief: Generate help text by giving only the tool name
-        snippy = Snippy(['snippy'])  ## workflow
+        Generate help text by giving only the tool name.
+        """
+
+        snippy = Snippy(['snippy'])
         snippy.run()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(TestCliOptions.HELP)
@@ -180,11 +186,13 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     def test_help_option_004(self, capsys, caplog):
-        """Test printing help from console."""
+        """Test printing help from console.
 
-        ## Brief: Suppress tool help text with quiet mode even when there are
-        ##        no other parameters and the help should be printed.
-        snippy = Snippy(['snippy', '-q'])  ## workflow
+        Suppress tool help text with quiet mode even when there are no other
+        parameters and the help should be printed.
+        """
+
+        snippy = Snippy(['snippy', '-q'])
         snippy.run()
         out, err = capsys.readouterr()
         assert out == Const.EMPTY
@@ -193,10 +201,12 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     def test_help_option_005(self, capsys, caplog):
-        """Test printing examples from console."""
+        """Test printing examples from console.
 
-        ## Brief: Print command examples from help.
-        snippy = Snippy(['snippy', '--help', 'examples'])  ## workflow
+        Print command examples from help.
+        """
+
+        snippy = Snippy(['snippy', '--help', 'examples'])
         snippy.run()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(TestCliOptions.EXAMPLES)
@@ -206,10 +216,12 @@ class TestCliOptions(object):
 
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
     def test_help_option_006(self, capsys, caplog):
-        """Test printing test documentation from console."""
+        """Test printing test documentation from console.
 
-        ## Brief: Print test cases. The --no-ansi option must be work when set
-        #         before the --help option.
+        Print test cases. The --no-ansi option must be work when set before
+        the --help option.
+        """
+
         output = (
             'test case reference list:',
             '',
@@ -225,7 +237,7 @@ class TestCliOptions(object):
             '',
             ''
         )
-        snippy = Snippy(['snippy', '--no-ansi', '--help', 'tests'])  ## workflow
+        snippy = Snippy(['snippy', '--no-ansi', '--help', 'tests'])
         snippy.run()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(output)
@@ -235,10 +247,12 @@ class TestCliOptions(object):
 
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
     def test_help_option_007(self, capsys, caplog):
-        """Test printing test documentation from console."""
+        """Test printing test documentation from console.
 
-        ## Brief: Print test cases. The --no-ansi option must work when set
-        #         after the --help option.
+        Print test cases. The --no-ansi option must work when set after
+        the --help option.
+        """
+
         output = (
             'test case reference list:',
             '',
@@ -254,7 +268,7 @@ class TestCliOptions(object):
             '',
             ''
         )
-        snippy = Snippy(['snippy', '--help', 'tests', '--no-ansi'])  ## workflow
+        snippy = Snippy(['snippy', '--help', 'tests', '--no-ansi'])
         snippy.run()
         out, err = capsys.readouterr()
         assert out == Const.NEWLINE.join(output)
@@ -264,11 +278,13 @@ class TestCliOptions(object):
 
     @pytest.mark.usefixtures('devel_no_tests')
     def test_help_option_008(self, capsys, caplog):
-        """Test printing test documentation when testing package does not exist."""
+        """Print test documentation when testing package does not exist.
 
-        ## Brief: Try to print tool test case reference documentation when
-        ##        tests are not packaged with the release.
-        snippy = Snippy(['snippy', '--help', 'tests'])  ## workflow
+        Try to print tool test case reference documentation when tests are
+        not packaged with the release.
+        """
+
+        snippy = Snippy(['snippy', '--help', 'tests'])
         cause = snippy.run()
         out, err = capsys.readouterr()
         assert cause == 'NOK: test cases are not packaged with release No module named \'tests\''
@@ -280,14 +296,17 @@ class TestCliOptions(object):
 
     @pytest.mark.parametrize('snippy', [['-vv']], indirect=True)
     def test_very_verbose_option_001(self, snippy, caplog, capsys):
-        """Test printing logs with the very verbose option."""
+        """Test printing logs with the very verbose option.
 
-        ## Brief: Enable verbose logging with -vv option. Test checks that
-        ##        there is more than randomly picked largish number of logs
-        ##        in order to avoid matching logs explicitly. Nothing must
-        ##        be printed to stderr. TODO: Why the stdout contains few
-        ##        lines in this test and stderr the Logger exception logs?
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
+        Enable verbose logging with -vv option. Test checks that there is more
+        than randomly picked largish number of logs in order to avoid matching
+        logs explicitly. Nothing must be printed to stderr.
+
+        TODO: Why the stdout contains few lines in this test and stderr the
+              Logger exception logs?
+        """
+
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])
         _, _ = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         #assert not out
@@ -296,15 +315,18 @@ class TestCliOptions(object):
 
     @pytest.mark.parametrize('snippy', [['-vv', '--log-msg-max', '200']], indirect=True)
     def test_very_verbose_option_002(self, snippy, caplog, capsys):
-        """Test printing logs with the very verbose option."""
+        """Test printing logs with the very verbose option.
 
-        ## Brief: Enable verbose logging with -vv option. In this case the
-        ##        message lenght is defined from command line. Test checks
-        ##        that there is more than randomly picked largish number of
-        #         logs in order to avoid matching logs explicitly. Nothing
-        ##        must be printed to stderr. TODO: Why the stdout contains
-        #         few lines in this test and stderr the Logger exception logs?
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])  ## workflow
+        Enable verbose logging with -vv option. In this case the message
+        lenght is defined from command line. Test checks that there is
+        more than randomly picked largish number of logs in order to avoid
+        matching logs explicitly. Nothing must be printed to stderr.
+
+        TODO: Why the stdout contains few lines in this test and stderr the
+              Logger exception logs?
+        """
+
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '-vv'])
         out, _ = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert 'msg max: 200' in out
@@ -314,12 +336,15 @@ class TestCliOptions(object):
     @pytest.mark.usefixtures('default-snippets')
     @pytest.mark.parametrize('snippy', [['--debug', '--no-ansi']], indirect=True)
     def test_debug_option_001(self, snippy, capsys, caplog):
-        """Test printing logs with debug option."""
+        """Test printing logs with debug option.
 
-        ## Brief: Enable full logging with --debug option. In this case the
-        ##        debug option must print all fields from stored snippets.
-        ##        TODO: Why the stderr contains log exceptions with 'I/O
-        ##        operation on closed file'?
+        Enable full logging with --debug option. In this case the debug
+        option must print all fields from stored snippets.
+
+        TODO: Why the stderr contains log exceptions with 'I/O operation
+        on closed file'?
+        """
+
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
@@ -354,7 +379,7 @@ class TestCliOptions(object):
             '   ! metadata : ',
             '   ! key      : 2'
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])
         out, _ = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert Const.NEWLINE.join(output) in out
@@ -363,11 +388,13 @@ class TestCliOptions(object):
 
     @pytest.mark.parametrize('snippy', [['-q']], indirect=True)
     def test_quiet_option_001(self, snippy, capsys, caplog):
-        """Test supressing all output from tool."""
+        """Test supressing all output from tool.
 
-        ## Brief: Disable all logging and output to terminal. Only the printed
-        ##        content is displayed on the screen.
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '-q'])  ## workflow
+        Disable all logging and output to terminal. Only the printed content
+        is displayed on the screen.
+        """
+
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '-q'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert not out
@@ -375,12 +402,13 @@ class TestCliOptions(object):
         assert not caplog.records[:]
 
     def test_version_option_001(self, capsys, caplog):
-        """Test printing tool version."""
+        """Test printing tool version.
 
-        ## Brief: Output tool version with long option. Only the version must
-        ##        be printed and nothing else. The print must be send to
-        ##        stdout.
-        snippy = Snippy(['snippy', '--version'])  ## workflow
+        Output tool version with long option. Only the version must be printed
+        and nothing else. The print must be send to stdout.
+        """
+
+        snippy = Snippy(['snippy', '--version'])
         snippy.run()
         out, err = capsys.readouterr()
         assert out == __version__ + Const.NEWLINE
@@ -389,12 +417,13 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     def test_version_option_002(self, capsys, caplog):
-        """Test printing tool version."""
+        """Test printing tool version.
 
-        ## Brief: Output tool version with short option. Only the version must
-        ##        be printed and nothing else. The print must be send to
-        ##        stdout.
-        snippy = Snippy(['snippy', '-v'])  ## workflow
+        Output tool version with short option. Only the version must be
+        printed and nothing else. The print must be send to stdout.
+        """
+
+        snippy = Snippy(['snippy', '-v'])
         snippy.run()
         out, err = capsys.readouterr()
         assert out == __version__ + Const.NEWLINE
@@ -403,13 +432,14 @@ class TestCliOptions(object):
         Database.delete_storage()
 
     def test_snippy_main(self, capsys, caplog):
-        """Test running program main with profile option."""
+        """Test running program main with profile option.
 
-        ## Brief: Run program main with the profile option. Test checks that
-        ##        there is more than randomly picked largish number of rows.
-        ##        This just verifies that the profile option prints lots for
-        ##        data.
-        main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
+        Run program main with the profile option. Test checks that there is
+        more than randomly picked largish number of rows. This just verifies
+        that the profile option prints lots for data.
+        """
+
+        main(['snippy', 'search', '--sall', '.', '--profile'])
         out, err = capsys.readouterr()
         assert 'Ordered by: cumulative time' in out
         assert not err
@@ -418,10 +448,12 @@ class TestCliOptions(object):
 
     @pytest.mark.usefixtures('snippy', 'default-snippets')
     def test_debug_print_001(self, capsys):
-        """Test printing the content."""
+        """Test printing the content.
 
-        ## Brief: Test printing content with print. This is a development
-        ##        test which must directly print the snippet.
+        Test printing content with print. This is a development test which
+        must directly print the snippet.
+        """
+
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
             '   $ docker rm --volumes $(docker ps --all --quiet)',

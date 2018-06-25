@@ -50,7 +50,7 @@ class TestCliImportSnippet(object):
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import'])  ## workflow
+        cause = snippy.run(['snippy', 'import'])
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 2
         yaml_load.assert_called_once_with('./snippets.yaml', 'r')
@@ -69,7 +69,7 @@ class TestCliImportSnippet(object):
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-f', './all-snippets.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-f', './all-snippets.yaml'])
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 2
         yaml_load.assert_called_once_with('./all-snippets.yaml', 'r')
@@ -88,7 +88,7 @@ class TestCliImportSnippet(object):
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
         json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-f', './all-snippets.json'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-f', './all-snippets.json'])
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 2
         json_load.assert_called_once_with('./all-snippets.json', 'r')
@@ -109,7 +109,7 @@ class TestCliImportSnippet(object):
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
@@ -130,7 +130,7 @@ class TestCliImportSnippet(object):
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.text'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
             mock_file.assert_called_once_with('./all-snippets.text', 'r')
@@ -145,7 +145,7 @@ class TestCliImportSnippet(object):
         """
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '-f', './foo.bar'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './foo.bar'])
             assert cause == 'NOK: cannot identify file format for file ./foo.bar'
             assert not Database.get_collection().size()
             mock_file.assert_not_called()
@@ -158,7 +158,7 @@ class TestCliImportSnippet(object):
         """
 
         with mock.patch('snippy.content.migrate.os.path.isfile', return_value=False):
-            cause = snippy.run(['snippy', 'import', '-f', './foo.yaml'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './foo.yaml'])
             assert cause == 'NOK: cannot read file ./foo.yaml'
             assert not Database.get_collection().size()
 
@@ -171,7 +171,7 @@ class TestCliImportSnippet(object):
 
         mocked_open = mock.mock_open(read_data=Const.EMPTY)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
             assert cause == 'NOK: could not identify text template content category'
             assert not Database.get_collection().size()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
@@ -189,7 +189,7 @@ class TestCliImportSnippet(object):
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 1
         yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
@@ -209,7 +209,7 @@ class TestCliImportSnippet(object):
         }
         content_read['4525613eaecd5297']['tags'] = ('new', 'tags', 'set')
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 1
         yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
@@ -229,7 +229,7 @@ class TestCliImportSnippet(object):
         }
         content_read['f07547e7c692741a']['brief'] = 'Updated brief description'
         json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json'])
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 1
         json_load.assert_called_once_with('one-snippet.json', 'r')
@@ -250,7 +250,7 @@ class TestCliImportSnippet(object):
         content_read['7681559ca5c001e2']['links'] = ('https://new.link', )
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 1
             mock_file.assert_called_once_with('one-snippet.txt', 'r')
@@ -271,7 +271,7 @@ class TestCliImportSnippet(object):
         content_read['7681559ca5c001e2']['links'] = ('https://new.link', )
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 1
             mock_file.assert_called_once_with('one-snippet.text', 'r')
@@ -290,7 +290,7 @@ class TestCliImportSnippet(object):
         }
         mocked_open = Content.mocked_open(content_read)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])
             assert cause == 'NOK: cannot find: snippet :identified with digest: 123456789abcdef0'
             assert Database.get_snippets().size() == 1
             mock_file.assert_not_called()
@@ -308,7 +308,7 @@ class TestCliImportSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--defaults'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--defaults'])
         assert cause == Cause.ALL_OK
         assert Database.get_snippets().size() == 2
         defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
@@ -333,7 +333,7 @@ class TestCliImportSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--defaults'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '--defaults'])
         assert cause == 'NOK: content data already exist with digest 53908d68425c61dc' or \
                cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
         assert Database.get_snippets().size() == 2
@@ -352,7 +352,7 @@ class TestCliImportSnippet(object):
 
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Snippet.TEMPLATE))
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--template'])  ## workflow
+            cause = snippy.run(['snippy', 'import', '--template'])
             assert cause == 'NOK: content was not stored because it was matching to an empty template'
             assert not Database.get_snippets().size()
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
@@ -375,7 +375,7 @@ class TestCliImportSnippet(object):
         }
         yaml.safe_load.return_value = copy.deepcopy(Content.imported_dict(content_read))
         content_read[Snippet.FORCED_DIGEST] = Snippet.DEFAULTS[Snippet.FORCED]
-        cause = snippy.run(['snippy', 'import', '-f', './snippets.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-f', './snippets.yaml'])
         assert cause == Cause.ALL_OK
         assert Database.get_collection().size() == 3
         yaml_load.assert_called_once_with('./snippets.yaml', 'r')
@@ -396,7 +396,7 @@ class TestCliImportSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-d', '5', '-f', 'one-snippet.yaml'])  ## workflow
+        cause = snippy.run(['snippy', 'import', '-d', '5', '-f', 'one-snippet.yaml'])
         assert cause == 'NOK: cannot import: snippet :because digest: 5 :matched: 2 :times'
         assert Database.get_snippets().size() == 2
         assert not yaml_load.mock_calls

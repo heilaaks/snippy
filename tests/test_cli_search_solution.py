@@ -31,10 +31,12 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_001(self, snippy, capsys):
-        """Search solution from all fields."""
+        """Search solution from all fields.
 
-        ## Brief: Search solutions from all fields. The match is made from one
-        ##        solution content data.
+        Search solutions from all fields. The match is made from one solution
+        content data.
+        """
+
         output = (
             '1. Debugging Elastic Beats @beats [a96accc25dd23ac0]',
             '',
@@ -87,7 +89,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--sall', 'filebeat', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--sall', 'filebeat', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -95,11 +97,13 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_002(self, snippy, capsys):
-        """Search solution from all fields."""
+        """Search solution from all fields.
 
-        ## Brief: Try to search solutions with keyword that cannot be found.
+        Try to search solutions with keyword that cannot be found.
+        """
+
         output = 'NOK: cannot find content with given search criteria' + Const.NEWLINE
-        cause = snippy.run(['snippy', 'search', '--solution', '--sall', 'notfound', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--sall', 'notfound', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
@@ -107,11 +111,12 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_003(self, snippy, capsys):
-        """Search solution with regexp."""
+        """Search solution with regexp.
 
-        ## Brief: Search all content with regexp filter. The ansi characters
-        ##        must be automatically disabled in when the --filter option
-        ##        is used.
+        Search all content with regexp filter. The ansi characters must be
+        automatically disabled in when the --filter option is used.
+        """
+
         output = (
             '$ ./filebeat -e -c config/filebeat.yml -d "*"',
             '$ nginx -V 2>&1 | grep -- \'--with-debug\'',
@@ -125,7 +130,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\\$\\s.*)'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\\$\\s.*)'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -133,9 +138,11 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_004(self, snippy, capsys):
-        """Search solution with --digest option."""
+        """Search solution with --digest option.
 
-        ## Brief: Search solution by explicitly defining short message digest.
+        Search solution by explicitly defining short message digest.
+        """
+
         output = (
             '1. Debugging Elastic Beats @beats [a96accc25dd23ac0]',
             '',
@@ -188,7 +195,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--digest', 'a96accc25dd23ac0', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--digest', 'a96accc25dd23ac0', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -196,12 +203,13 @@ class TestCliSearchSolution(object):
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_search_solution_005(self, snippy, capsys):
-        """Search solution from all field sand limit the search within specific group."""
+        """Search solution from all field
 
-        ## Brief: Search solutions from all fields and limit the search to
-        ##        specific group. The match must not be made from other than
-        ##        defined group. In this case the list all must print the
-        ##        content of defined group.
+        Search solutions from all fields and limit the search to specific
+        group. The match must not be made from other than defined group. In
+        this case the list all must print the content of defined group.
+        """
+
         output = (
             '1. Debugging Elastic Beats @beats [a96accc25dd23ac0]',
             '',
@@ -254,7 +262,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--sgrp', 'beats', '--no-ansi'])  ## workflow
+        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--sgrp', 'beats', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)

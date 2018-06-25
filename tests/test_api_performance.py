@@ -45,7 +45,34 @@ class TestApiPerformance(object):
     """Test tool performance."""
 
     def test_server_performance(self):
-        """Test API server performance."""
+        """Test API server performance.
+
+        Verify performance of the tool on a rough scale. The intention
+        is to keep a reference test that is just iterated few times and
+        the time consumed is measured. This is more for manual analysis
+        than automation as of now.
+
+        Reference PC:   1 loop :  0.1493 /   55 loop :  5.2769 / 100 loop : 9.5792
+        Reference PC: 880 loop : 84.3105 / 1000 loop : 95.1616
+        Reference PC:  10 loop : 1.0283
+
+        NOTE! Vere slow. Is the reason how requests opens the connection
+              for every requests?
+
+        NOTE! Using http.client gives 20-30% performance boost over Python
+              requests. Also the latencies are more constant with this.
+
+        The reference is with sqlite database in memory as with all tests.
+        There is naturally jitter in results and the values are as of now
+        hand picked from few examples.
+
+        Note that when run on Python2, will use sqlite database in disk
+        that is naturally slower than memory database.
+
+        No errors should be printed and the runtime should be below 10
+        seconds. The runtime is intentionally set 10 times higher value
+        than with the reference PC.
+        """
 
         # Clear the real database and run the real server.
         call(['make', 'clean-db'])
@@ -56,31 +83,6 @@ class TestApiPerformance(object):
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]}]}
 
-        ## Brief: Verify performance of the tool on a rough scale. The intention
-        ##        is to keep a reference test that is just iterated few times and
-        ##        the time consumed is measured. This is more for manual analysis
-        ##        than automation as of now.
-        ##
-        ##        Reference PC:   1 loop :  0.1493 /   55 loop :  5.2769 / 100 loop : 9.5792
-        ##        Reference PC: 880 loop : 84.3105 / 1000 loop : 95.1616
-        ##        Reference PC:  10 loop : 1.0283
-        ##
-        ##        NOTE! Vere slow. Is the reason how requests opens the connection
-        ##              for every requests?
-        ##
-        ##        NOTE! Using http.client gives 20-30% performance boost over Python
-        ##              requests. Also the latencies are more constant with this.
-        ##
-        ##        The reference is with sqlite database in memory as with all tests.
-        ##        There is naturally jitter in results and the values are as of now
-        ##        hand picked from few examples.
-        ##
-        ##        Note that when run on Python2, will use sqlite database in disk
-        ##        that is naturally slower than memory database.
-        ##
-        ##        No errors should be printed and the runtime should be below 10
-        ##        seconds. The runtime is intentionally set 10 times higher value
-        ##        than with the reference PC.
         conn = httplib.HTTPConnection('localhost', port=8080)
         start = time.time()
         for _ in range(10):

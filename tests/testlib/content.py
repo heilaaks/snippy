@@ -114,8 +114,8 @@ class Content(object):
         # contain the data. The tool internally fills the the data with
         # links. Therefore the reference testing checks that the data
         # has links in case the category is reference.
-        if content['category'] == Const.REFERENCE:
-            content['data'] = content['links']
+        #if content['category'] == Const.REFERENCE:
+        #    content['data'] = content['links']
 
         # For input testing, the helper data may contain spaces in tags
         # that must be trimmed because this compares the tool output that

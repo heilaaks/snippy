@@ -319,7 +319,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_008(self, server):
         """Create one solution from API.
 
-        Try to call POST /v1/solutions to create new solutuon with empty
+        Try to call POST /v1/solutions to create new solution with empty
         content data.
         """
 

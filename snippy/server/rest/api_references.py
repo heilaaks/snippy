@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""api_snippets: JSON REST API for Snippets."""
+"""api_refenrecens: JSON REST API for References."""
 
 from snippy.constants import Constants as Const
 from snippy.server.rest.base import ApiContentBase
@@ -25,22 +25,22 @@ from snippy.server.rest.base import ApiContentDigestBase
 from snippy.server.rest.base import ApiContentFieldBase
 
 
-class ApiSnippets(ApiContentBase):
-    """Query snippets."""
+class ApiReferences(ApiContentBase):
+    """Query references."""
 
     def __init__(self, content):
-        super(ApiSnippets, self).__init__(content, Const.SNIPPET)
+        super(ApiReferences, self).__init__(content, Const.REFERENCE)
 
 
-class ApiSnippetsDigest(ApiContentDigestBase):
-    """Query snippets based on digest."""
-
-    def __init__(self, content):
-        super(ApiSnippetsDigest, self).__init__(content, Const.SNIPPET)
-
-
-class ApiSnippetsField(ApiContentFieldBase):
-    """Query snippets based on digest and specified field."""
+class ApiReferencesDigest(ApiContentDigestBase):
+    """Query references based on digest."""
 
     def __init__(self, content):
-        super(ApiSnippetsField, self).__init__(content, Const.SNIPPET)
+        super(ApiReferencesDigest, self).__init__(content, Const.REFERENCE)
+
+
+class ApiReferencesField(ApiContentFieldBase):
+    """Query references based on digest and specified field."""
+
+    def __init__(self, content):
+        super(ApiReferencesField, self).__init__(content, Const.REFERENCE)

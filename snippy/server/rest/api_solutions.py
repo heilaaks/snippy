@@ -39,7 +39,7 @@ class ApiSolutionsDigest(ApiContentDigestBase):
         super(ApiSolutionsDigest, self).__init__(content, Const.SOLUTION)
 
 
-class ApiSolutionsField(ApiContentFieldBase):  # pylint: disable=too-few-public-methods
+class ApiSolutionsField(ApiContentFieldBase):
     """Query solution based on digest and specified field."""
 
     def __init__(self, content):

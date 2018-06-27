@@ -327,6 +327,8 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
+        print(result.headers)
+        print(result.json)
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400

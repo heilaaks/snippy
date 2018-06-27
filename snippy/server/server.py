@@ -28,12 +28,16 @@ except ImportError:
     from urlparse import urljoin
 
 from snippy.config.config import Config
+from snippy.content.reference import Reference
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
 from snippy.logger import CustomGunicornLogger
 from snippy.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
 from snippy.server.rest.api_hello import ApiHello
+from snippy.server.rest.api_references import ApiReferences
+from snippy.server.rest.api_references import ApiReferencesDigest
+from snippy.server.rest.api_references import ApiReferencesField
 from snippy.server.rest.api_snippets import ApiSnippets
 from snippy.server.rest.api_snippets import ApiSnippetsDigest
 from snippy.server.rest.api_snippets import ApiSnippetsField
@@ -73,6 +77,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
             raise ImportError
         snippet = Snippet(self.storage, run_cli=False)
         solution = Solution(self.storage, run_cli=False)
+        reference = Reference(self.storage, run_cli=False)
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.add_route('/snippy', ApiHello())
@@ -84,4 +89,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'solutions'), ApiSolutions(solution))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}'), ApiSolutionsDigest(solution))
         self.api.add_route(urljoin(Config.base_path_app, 'solutions/{digest}/{field}'), ApiSolutionsField(solution))
+        self.api.add_route(urljoin(Config.base_path_app, 'references'), ApiReferences(reference))
+        self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}'), ApiReferencesDigest(reference))
+        self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}/{field}'), ApiReferencesField(reference))
         SnippyServer(self.api, options).run()

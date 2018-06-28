@@ -90,7 +90,7 @@ class TestCliPerformance(object):
 
         assert not err
         assert not caplog.records[:]
-        assert runtime < 10
+        assert runtime < 15
 
     @staticmethod
     def create_defaults(snippy):

@@ -102,7 +102,7 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
     CONTENT = {
         "type": "object",
         "properties": {
-            "type": {"enum": ["snippet", "solution"]},
+            "type": {"enum": ["snippet", "solution", "reference"]},
             "attributes": {
                 "type": "object",
                 "properties": {

@@ -37,7 +37,6 @@ pytest.importorskip('gunicorn')
 class TestApiCreateReference(object):
     """Test POST references collection API."""
 
-    @pytest.mark.skip(reason='not done')
     @pytest.mark.usefixtures('create-gitlog-utc')
     def test_api_create_reference_001(self, server, mocker):
         """Create one reference from API.

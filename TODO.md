@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Change --help reference after snippet and solution. This is more logical since reference is now content type.
    - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
    - [ ] Update magic regexp to support no space but tag also. User may not add the newline.
    - [ ] Add tests for References.

@@ -255,9 +255,8 @@ class TestApiUpdateSnippet(object):
             'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
             'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         }
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1040'}
-        result_headers_p34 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1118'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1120'}
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '877'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '879'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -271,7 +270,7 @@ class TestApiUpdateSnippet(object):
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers_p2 or result.headers == result_headers_p3 or result.headers == result_headers_p34
+        assert result.headers == result_headers_p3 or result.headers == result_headers_p2
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
         assert Database.get_snippets().size() == 1

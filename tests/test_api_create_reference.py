@@ -66,14 +66,12 @@ class TestApiCreateReference(object):
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
         assert Database.get_references().size() == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.skip(reason='not done')
     @pytest.mark.usefixtures('create-gitlog-utc', 'create-pytest-utc')
     def test_api_create_reference_002(self, server, mocker):
         """Create multiple references from API.
@@ -83,18 +81,20 @@ class TestApiCreateReference(object):
 
         request_body = {
             'data': [{
-                'type': 'reference', 'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'type': 'reference',
+                'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
-                'type': 'reference', 'attributes': Reference.DEFAULTS[Reference.PYTEST]
+                'type': 'reference',
+                'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }]
         }
         content = {
             Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
-            'eeef5ca': Reference.DEFAULTS[Reference.PYTEST]
+            '1f9d949': Reference.DEFAULTS[Reference.PYTEST]
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6972'
+            'content-length': '1053'
         }
         result_json = {
             'data': [{
@@ -117,8 +117,7 @@ class TestApiCreateReference(object):
         assert Database.get_references().size() == 2
         Content.verified(mocker, server, content)
 
-    @pytest.mark.skip(reason='not done')
-    @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
+    @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
     def test_api_create_reference_003(self, server, mocker):
         """Update reference with POST that maps to PUT.
 
@@ -141,27 +140,27 @@ class TestApiCreateReference(object):
             }
         }
         content_read = copy.deepcopy(Reference.DEFAULTS[Reference.REGEXP])
-        content = {'2cd0e794244a07f': content_read}
+        content = {'cb9225a81eab8ce': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2999'
+            'content-length': '689'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/2cd0e794244a07f8'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/cb9225a81eab8ced'
             },
             'data': {
                 'type': 'reference',
-                'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
-                'attributes': content_read
+                'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
+                'attributes': Content.compared(content_read)
             }
         }
         result_json['data']['attributes']['filename'] = Const.EMPTY
         result_json['data']['attributes']['created'] = Content.GITLOG_TIME
         result_json['data']['attributes']['updated'] = Content.REGEXP_TIME
-        result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
+        result_json['data']['attributes']['digest'] = 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832'
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/references/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -170,55 +169,55 @@ class TestApiCreateReference(object):
         assert Database.get_references().size() == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.skip(reason='not done')
-    @pytest.mark.usefixtures('import-beats', 'update-beats-utc')
+    @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
     def test_api_create_reference_004(self, server, mocker):
         """Update reference with POST that maps to PATCH.
 
         Call POST /v1/references/a96accc25dd23ac0 to update existing reference
         with X-HTTP-Method-Override header that overrides the operation as
-        PATCH.
+        PATCH. Only the updated attribute must change.
         """
 
         request_body = {
             'data': {
                 'type': 'reference',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Reference.DEFAULTS[Reference.REGEXP]['data']),
+                    'brief': Reference.DEFAULTS[Reference.REGEXP]['brief'],
+                    'links': Const.NEWLINE.join(Reference.DEFAULTS[Reference.REGEXP]['links']),
                 }
             }
         }
         content_read = {
-            'data': Reference.DEFAULTS[Reference.REGEXP]['data'],
-            'brief': Reference.DEFAULTS[Reference.GITLOG]['brief'],
+            'data': Reference.DEFAULTS[Reference.GITLOG]['data'],
+            'brief': Reference.DEFAULTS[Reference.REGEXP]['brief'],
             'group': Reference.DEFAULTS[Reference.GITLOG]['group'],
             'tags': Reference.DEFAULTS[Reference.GITLOG]['tags'],
-            'links': Reference.DEFAULTS[Reference.GITLOG]['links'],
+            'links': Reference.DEFAULTS[Reference.REGEXP]['links'],
             'category': Reference.DEFAULTS[Reference.GITLOG]['category'],
             'filename': Reference.DEFAULTS[Reference.GITLOG]['filename'],
             'runalias': Reference.DEFAULTS[Reference.GITLOG]['runalias'],
             'versions': Reference.DEFAULTS[Reference.GITLOG]['versions'],
             'created': Content.GITLOG_TIME,
-            'updated': Content.GITLOG_TIME,
-            'digest': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0'
+            'updated': Content.REGEXP_TIME,
+            'digest': 'ee4a072a5a7a661a8c5d8e8f2aac88267c47fbf0b26db19b97d0b72bae3d74f0'
         }
-        content = {'21c737e704b97226': content_read}
+        content = {'ee4a072a5a7a661a': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3082'
+            'content-length': '673'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/references/21c737e704b97226'
+                'self': 'http://falconframework.org/snippy/api/app/v1/references/ee4a072a5a7a661a'
             },
             'data': {
                 'type': 'reference',
-                'id': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0',
-                'attributes': content_read
+                'id': 'ee4a072a5a7a661a8c5d8e8f2aac88267c47fbf0b26db19b97d0b72bae3d74f0',
+                'attributes': Content.compared(content_read)
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/references/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -227,7 +226,6 @@ class TestApiCreateReference(object):
         assert Database.get_references().size() == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.skip(reason='not done')
     @pytest.mark.usefixtures('default-references', 'import-pytest')
     def test_api_create_reference_005(self, server, mocker):
         """Update reference with POST that maps to DELETE.
@@ -243,7 +241,7 @@ class TestApiCreateReference(object):
         result_headers = {}
         assert Database.get_references().size() == 3
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/references/eeef5ca3ec9cd36',
+            path='/snippy/api/app/v1/references/1f9d9496005736ef',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.headers == result_headers
         assert not result.text
@@ -252,19 +250,19 @@ class TestApiCreateReference(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.skip(reason='not done')
-    @pytest.mark.usefixtures('create-beats-utc', 'caller')
+    @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
     def test_api_create_reference_006(self, server):
         """Create one reference from API.
 
         Try to call POST /v1/references to create new solutuon with empty
-        content data.
+        content links. The links are mandatory in case of reference content.
         """
 
         request_body = {
             'data': [{
                 'type': 'reference',
                 'attributes': {
-                    'data': [],
+                    'links': [],
                 }
             }]
         }

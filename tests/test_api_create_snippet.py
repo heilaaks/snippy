@@ -312,9 +312,8 @@ class TestApiCreateSnippet(object):
         """
 
         request_body = Snippet.DEFAULTS[Snippet.REMOVE]
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1052'}
-        result_headers_p34 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1130'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '1132'}
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '889'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '891'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -329,7 +328,7 @@ class TestApiCreateSnippet(object):
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         print(result.json)
-        assert result.headers == result_headers_p2 or result.headers == result_headers_p3 or result.headers == result_headers_p34
+        assert result.headers == result_headers_p3 or result.headers == result_headers_p2
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
@@ -359,8 +358,8 @@ class TestApiCreateSnippet(object):
                     'versions': '',
                     'utc': '2017-10-14T19:56:31.000001+0000',
                     'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '598'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '600'}
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '582'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -433,8 +432,8 @@ class TestApiCreateSnippet(object):
                 'attributes': {'brief': ''}
             }]
         }
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '700'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '702'}
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '754'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '758'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -448,7 +447,7 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers_p2 or result.headers == result_headers_p3
+        assert result.headers == result_headers_p3 or result.headers == result_headers_p2
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
         assert not Database.get_snippets().size()

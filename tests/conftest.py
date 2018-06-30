@@ -75,15 +75,15 @@ CREATE_FORCED = (FORCED_CREATED,)*1
 CREATE_EXITED = (EXITED_CREATED,)*1
 CREATE_NETCAT = (NETCAT_CREATED,)*1
 CREATE_UMOUNT = (UMOUNT_CREATED,)*1
-UPDATE_REMOVE = (REMOVE_CREATED,)*2
-UPDATE_FORCED = (FORCED_CREATED,)*2
-UPDATE_EXITED = (EXITED_CREATED,)*2
-UPDATE_NETCAT = (NETCAT_CREATED,)*2
 IMPORT_REMOVE = (REMOVE_CREATED,)*1
 IMPORT_FORCED = (FORCED_CREATED,)*1
 IMPORT_EXITED = (EXITED_CREATED,)*1
 IMPORT_NETCAT = (NETCAT_CREATED,)*1
 IMPORT_UMOUNT = (UMOUNT_CREATED,)*1
+UPDATE_REMOVE = (REMOVE_CREATED,)*2
+UPDATE_FORCED = (FORCED_CREATED,)*2
+UPDATE_EXITED = (EXITED_CREATED,)*2
+UPDATE_NETCAT = (NETCAT_CREATED,)*2
 EDITED_REMOVE = (REMOVE_CREATED,)*1
 
 # Solutions
@@ -93,13 +93,13 @@ KAFKA_CREATED = '2017-10-20T06:16:27.000001+0000'
 CREATE_BEATS = (BEATS_CREATED,)*1
 CREATE_NGINX = (NGINX_CREATED,)*1
 CREATE_KAFKA = (KAFKA_CREATED,)*1
-UPDATE_BEATS = (BEATS_CREATED,)*2
-UPDATE_NGINX = (NGINX_CREATED,)*2
-UPDATE_KAFKA = (KAFKA_CREATED,)*2
 IMPORT_BEATS = (BEATS_CREATED,)*1
 IMPORT_NGINX = (NGINX_CREATED,)*1
 IMPORT_KAFKA = (KAFKA_CREATED,)*1
 EDITED_BEATS = (BEATS_CREATED,)*1
+UPDATE_BEATS = (BEATS_CREATED,)*2
+UPDATE_NGINX = (NGINX_CREATED,)*2
+UPDATE_KAFKA = (KAFKA_CREATED,)*2
 
 # References
 GITLOG_CREATED = '2018-06-22T13:11:13.678729+0000'
@@ -442,7 +442,7 @@ def import_default_references(mocker, snippy):
 def create_gitlog_time_mock(mocker):
     """Mock timestamps to create 'gitlog' reference."""
 
-    mocker.patch.object(Config, 'utcnow', side_effect=CREATE_GITLOG)
+    _add_utc_time(mocker, CREATE_GITLOG)
 
 @pytest.fixture(scope='function', name='import-gitlog')
 def import_gitlog_reference(mocker, snippy):
@@ -461,7 +461,7 @@ def import_gitlog_time_mock(mocker):
 def create_regexp_time_mock(mocker):
     """Mock timestamps to create 'regexp' reference."""
 
-    mocker.patch.object(Config, 'utcnow', side_effect=CREATE_REGEXP)
+    _add_utc_time(mocker, CREATE_REGEXP)
 
 @pytest.fixture(scope='function', name='import-regexp-utc')
 def import_regexp_time_mock(mocker):
@@ -479,7 +479,7 @@ def update_regexp_time_mock(mocker):
 def create_pytest_time_mock(mocker):
     """Mock timestamps to create 'pytest' reference."""
 
-    mocker.patch.object(Config, 'utcnow', side_effect=CREATE_PYTEST)
+    _add_utc_time(mocker, CREATE_PYTEST)
 
 @pytest.fixture(scope='function', name='import-pytest')
 def import_gitlog_solution(mocker, snippy):

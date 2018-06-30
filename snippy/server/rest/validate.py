@@ -107,9 +107,14 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
                 "type": "object",
                 "properties": {
                     "data": {"type": ["string", "array"]},
-                    "brief": {"type": "string"}
+                    "brief": {"type": "string"},
+                    "links": {"type": ["string", "array"]}
                 },
-                "required": ["data"]
+                "anyOf": [{
+                    "required": ["data"]
+                }, {
+                    "required": ["links"]
+                }]
             }
         },
         "required": ["type"]
@@ -144,8 +149,10 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
             validate(media, schema)
             validated = True
         except ValidationError as exception:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'json media validation failed: {}'.format(exception))
+            minimized = ' '.join(str(exception).split())
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'json media validation failed: {}'.format(minimized))
         except SchemaError as exception:
-            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'json schema failure: {}'.format(exception))
+            minimized = ' '.join(str(exception).split())
+            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'json schema failure: {}'.format(minimized))
 
         return validated

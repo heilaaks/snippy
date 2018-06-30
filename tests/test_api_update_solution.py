@@ -203,6 +203,7 @@ class TestApiUpdateSolution(object):
             'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
         }
         result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '6134'}
+        result_headers_p34 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '6212'}
         result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5650'}
         result_json = {
             'meta': Content.get_api_meta(),
@@ -217,7 +218,7 @@ class TestApiUpdateSolution(object):
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers_p2 or result.headers == result_headers_p3
+        assert result.headers == result_headers_p2 or result.headers == result_headers_p3 or result.headers == result_headers_p34
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
         assert Database.get_solutions().size() == 1

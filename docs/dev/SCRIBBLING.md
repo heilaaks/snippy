@@ -73,6 +73,8 @@ Random notes and scribling during development.
    $ sudo docker build -f tests/docker/Dockerfile-Python34-trusty -t snippy/python34-trusty .
    $ sudo docker run -d snippy/python34-jessie
    $ sudo docker run -d snippy/python34-trusty
+   $ sudo docker run -td snippy/python34-jessie tail -f /dev/null
+   $ sudo docker run -td snippy/python34-trusty tail -f /dev/null
    $ sudo docker exec -it $(sudo docker ps | egrep -m 1 'snippy/python34-jessie' | awk '{print $1}') /bin/bash
    $ sudo docker exec -it $(sudo docker ps | egrep -m 1 'snippy/python34-trusty' | awk '{print $1}') /bin/bash
    ```

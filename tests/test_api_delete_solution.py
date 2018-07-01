@@ -37,7 +37,7 @@ class TestApiDeleteSolution(object):
     def test_api_delete_solution_001(self, server, mocker):
         """Delete solution with digest.
 
-        Call DELETE /solutions/f3fd167c64b6f97e that matches one solution
+        Call DELETE /solutions/eeef5ca3ec9cd36 that matches one solution
         that is deleted.
         """
 
@@ -87,8 +87,8 @@ class TestApiDeleteSolution(object):
     def test_api_delete_solution_003(self, server, mocker):
         """Try to delete solution.
 
-        Try to call DELETE /snippets without digest identifying delete
-        reource.
+        Try to call DELETE /references without digest identifying delete
+        resource.
         """
 
         content_read = {

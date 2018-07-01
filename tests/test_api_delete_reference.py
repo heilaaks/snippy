@@ -17,51 +17,50 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_delete_snippets: Test DELETE snippets API."""
+"""test_api_delete_references: Test DELETE references API."""
 
 from falcon import testing
 import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 pytest.importorskip('gunicorn')
 
 
-class TestApiDeleteSnippet(object):
-    """Test DELETE snippets API."""
+class TestApiDeleteReference(object):
+    """Test DELETE references API."""
 
-    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_api_delete_snippet_001(self, server, mocker):
-        """Delete snippet with digest.
+    @pytest.mark.usefixtures('default-references', 'import-pytest')
+    def test_api_delete_reference_001(self, server, mocker):
+        """Delete reference with digest.
 
-        Call DELETE /v1/snippets/f3fd167c64b6f97e that matches one snippet
+        Call DELETE /references/1f9d9496005736ef that matches one reference
         that is deleted.
         """
 
         content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         result_headers = {}
-        assert Database.get_snippets().size() == 3
+        assert Database.get_references().size() == 3
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
+            path='/snippy/api/app/v1/references/1f9d9496005736ef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
-        assert Database.get_snippets().size() == 2
+        assert Database.get_references().size() == 2
         Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'caller')
-    def test_api_delete_snippet_002(self, server):
-        """Try to delete snippet.
+    @pytest.mark.usefixtures('default-references', 'import-pytest', 'caller')
+    def test_api_delete_reference_002(self, server):
+        """Try to delete reference.
 
-        Try to DELETE snippet with resource location that does not exist.
+        Try to DELETE reference with resource location that does not exist.
         """
-
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
@@ -75,26 +74,26 @@ class TestApiDeleteSnippet(object):
                 'title': 'cannot find content with message digest: beefbeef'
             }]
         }
-        assert Database.get_snippets().size() == 3
+        assert Database.get_references().size() == 3
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/snippets/beefbeef',
+            path='/snippy/api/app/v1/references/beefbeef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_snippets().size() == 3
+        assert Database.get_references().size() == 3
 
-    @pytest.mark.usefixtures('default-snippets', 'caller')
-    def test_api_delete_snippet_003(self, server, mocker):
-        """Try to delete snippet.
+    @pytest.mark.usefixtures('default-references', 'caller')
+    def test_api_delete_reference_003(self, server, mocker):
+        """Try to delete reference.
 
-        Try to call DELETE /snippets without digest identifying delete
-        resource.
+        Try to call DELETE /references without digest identifying delete
+        reource.
         """
 
         content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -111,12 +110,12 @@ class TestApiDeleteSnippet(object):
         }
         assert Database.get_collection().size() == 2
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/snippets',
+            path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_snippets().size() == 2
+        assert Database.get_references().size() == 2
         Content.verified(mocker, server, content_read)
 
     @classmethod

@@ -353,7 +353,7 @@ class TestCliImportSnippet(object):
         mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Snippet.TEMPLATE))
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--template'])
-            assert cause == 'NOK: content was not stored because it was matching to an empty template'
+            assert cause == 'NOK: content was not stored because mandatory content field data is empty'
             assert not Database.get_snippets().size()
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
 

@@ -312,7 +312,7 @@ class SqliteDb(object):
             return cause
 
         if not resource.has_data():
-            cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content data was missing')
+            cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data was missing')
             self._logger.debug(cause[1])
 
             return cause

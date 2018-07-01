@@ -22,6 +22,7 @@
 import re
 import hashlib
 
+from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from snippy.logger import Logger
 
@@ -297,6 +298,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.links = tuple(sorted(self.links))
 
         self.digest = self.compute_digest()
+        self.has_data()
 
     def migrate(self, source):
         """Migrate source into Resource.
@@ -379,14 +381,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         But in case of references, only the link must be present.
         """
 
-        if (self.category == Const.SNIPPET or self.category == Const.SOLUTION) and any(self.data):
+        if (self.category == Const.SNIPPET or self.category == Const.SOLUTION) and not any(self.data):
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data is empty')
 
-            return True
-        elif self.category == Const.REFERENCE and any(self.links):
+            return False
+        elif self.category == Const.REFERENCE and not any(self.links):
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field links is empty')
 
-            return True
+            return False
 
-        return False
+        return True
 
     def is_snippet(self):
         """Test if resource is snippet."""

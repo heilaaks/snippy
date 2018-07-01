@@ -249,7 +249,6 @@ class TestApiCreateReference(object):
         assert Database.get_references().size() == 2
         Content.verified(mocker, server, content)
 
-    @pytest.mark.skip(reason='not done')
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
     def test_api_create_reference_006(self, server):
         """Create one reference from API.
@@ -268,7 +267,7 @@ class TestApiCreateReference(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '381'
+            'content-length': '559'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -276,7 +275,12 @@ class TestApiCreateReference(object):
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because mandatory content data was missing'
+                'title': 'content was not stored because mandatory content field links is empty'
+            }, {
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content was not stored because it was matching to an empty template'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -286,6 +290,7 @@ class TestApiCreateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.json['errors'][0]['title'] == 'content was not stored because mandatory content field links is empty'
 
     @classmethod
     def teardown_class(cls):

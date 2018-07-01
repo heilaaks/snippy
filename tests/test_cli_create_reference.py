@@ -61,7 +61,7 @@ class TestCliCreateReferece(object):
         group = Reference.DEFAULTS[Reference.GITLOG]['group']
         tags = Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.GITLOG]['tags'])
         cause = snippy.run(['snippy', 'create', '--references', '--brief', brief, '--group', group, '--tags', tags, '-c', data])
-        assert cause == 'NOK: content was not stored because mandatory content data was missing'
+        assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         assert not Database.get_references().size()
 
     @pytest.mark.usefixtures('edit-reference-template')
@@ -72,7 +72,7 @@ class TestCliCreateReferece(object):
         """
 
         cause = snippy.run(['snippy', 'create', '--editor'])
-        assert cause == 'NOK: content was not stored because it was matching to an empty template'
+        assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         assert not Database.get_references().size()
 
     @pytest.mark.usefixtures('edit-empty')

@@ -727,9 +727,6 @@ class TestApiCreateSnippet(object):
 
         Try to call POST /v1/snippets to create new snippet with empty content
         data. In case of snippets, the resulting error string is misleading.
-        TODO: The reason is that the content is compared against content
-        templates. And with snippets, the content template with empty data
-        is also matching to non existent mandatory data check.
         """
 
         request_body = {
@@ -742,11 +739,16 @@ class TestApiCreateSnippet(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '383'
+            'content-length': '558'
         }
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content was not stored because mandatory content field data is empty'
+            }, {
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
@@ -760,6 +762,7 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.json['errors'][0]['title'] == 'content was not stored because mandatory content field data is empty'
 
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_018(self, server, mocker):

@@ -79,7 +79,7 @@ class TestCliCreateSnippet(object):
         tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--brief', brief, '--group', group, '--tags', tags, '--links', links])
-        assert cause == 'NOK: content was not stored because mandatory content data was missing'
+        assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         assert not Database.get_snippets().size()
 
     @pytest.mark.usefixtures('edit-snippet-template')
@@ -90,7 +90,7 @@ class TestCliCreateSnippet(object):
         """
 
         cause = snippy.run(['snippy', 'create', '--editor'])
-        assert cause == 'NOK: content was not stored because it was matching to an empty template'
+        assert cause == 'NOK: content was not stored because mandatory content field data is empty'
         assert not Database.get_snippets().size()
 
     @pytest.mark.usefixtures('edit-empty')

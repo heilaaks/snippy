@@ -332,7 +332,7 @@ class TestApiCreateSolution(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '381'
+            'content-length': '737'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -340,7 +340,17 @@ class TestApiCreateSolution(object):
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because mandatory content data was missing'
+                'title': 'content was not stored because mandatory content field data is empty'
+            }, {
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content was not stored because mandatory content field data was missing'
+            }, {
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content was not stored because mandatory content field data is empty'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -350,6 +360,7 @@ class TestApiCreateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.json['errors'][0]['title'] == 'content was not stored because mandatory content field data is empty'
 
     @classmethod
     def teardown_class(cls):

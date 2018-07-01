@@ -17,7 +17,7 @@
    - [ ] Add /snippy/api/admin/v1/settings for log config. Same base /snippy/api/ for all routes.
    - [ ] Add limit to multilevel sort fields to two fields to avoid complex scenarios.
    - [ ] Add limits to all parameters: column array size, sort array size, etc.
-   - [ ] Add logic to runalias. This can be updated from REST. This should not do anything because of security?
+   - [ ] Add logic to name. This can be updated from REST. This should not do anything because of security?
    - [ ] Add logic versions. Change version to content_versions in base? Same all content? Requires long lines for cli.py. How describe versions?
    - [ ] Add support to print only selected fields, like brief and digest for CLI text output. Hard to generalize since layout e.g. contains header with three fields.
    - [ ] Add statistics object which tracks peak and percentile latencies with memory and CPU usage.

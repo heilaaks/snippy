@@ -364,7 +364,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/json" -d '{}'
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/json" -d '{"data":["row1","row2"]}'
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H "Content-Type: application/vnd.api+json; charset=UTF-8" -d '{"data":[{"type": "snippet", "attributes": {"data": ["row1", "row2"]}}]}'
-    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H  "Content-Type: application/vnd.api+json; charset=UTF-8" -d "{  \"data\": [    {      \"type\": \"snippet\",      \"attributes\": {        \"data\": [          \"string\"        ],        \"brief\": \"string\",        \"group\": \"string\",        \"tags\": [          \"string\"        ],        \"links\": [          \"string\"        ],        \"category\": \"snippet\",        \"filename\": \"string\",        \"runalias\": \"string\",        \"versions\": \"string\",        \"created\": \"string\",        \"updated\": \"string\",        \"digest\": \"string\"      }    }  ]}"
+    $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H  "Content-Type: application/vnd.api+json; charset=UTF-8" -d "{  \"data\": [    {      \"type\": \"snippet\",      \"attributes\": {        \"data\": [          \"string\"        ],        \"brief\": \"string\",        \"group\": \"string\",        \"tags\": [          \"string\"        ],        \"links\": [          \"string\"        ],        \"category\": \"snippet\",        \"filename\": \"string\",        \"name\": \"string\",        \"versions\": \"string\",        \"created\": \"string\",        \"updated\": \"string\",        \"digest\": \"string\"      }    }  ]}"
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/vnd.api+json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
 
@@ -1033,8 +1033,8 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        - group
        - tags
        - links
+       - name
        - filename
-       - runalias
        - versions
 
     2. Attributes that cannot be changed by user

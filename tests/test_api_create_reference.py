@@ -54,7 +54,7 @@ class TestApiCreateReference(object):
         content = {Reference.GITLOG_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '528'}
+            'content-length': '524'}
         result_json = {
             'data': [{
                 'type': 'reference',
@@ -94,7 +94,7 @@ class TestApiCreateReference(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1053'
+            'content-length': '1045'
         }
         result_json = {
             'data': [{
@@ -143,7 +143,7 @@ class TestApiCreateReference(object):
         content = {'cb9225a81eab8ce': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '689'
+            'content-length': '685'
         }
         result_json = {
             'links': {
@@ -194,8 +194,8 @@ class TestApiCreateReference(object):
             'tags': Reference.DEFAULTS[Reference.GITLOG]['tags'],
             'links': Reference.DEFAULTS[Reference.REGEXP]['links'],
             'category': Reference.DEFAULTS[Reference.GITLOG]['category'],
+            'name': Reference.DEFAULTS[Reference.GITLOG]['name'],
             'filename': Reference.DEFAULTS[Reference.GITLOG]['filename'],
-            'runalias': Reference.DEFAULTS[Reference.GITLOG]['runalias'],
             'versions': Reference.DEFAULTS[Reference.GITLOG]['versions'],
             'created': Content.GITLOG_TIME,
             'updated': Content.REGEXP_TIME,
@@ -204,7 +204,7 @@ class TestApiCreateReference(object):
         content = {'ee4a072a5a7a661a': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '673'
+            'content-length': '669'
         }
         result_json = {
             'links': {

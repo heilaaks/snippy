@@ -54,7 +54,7 @@ class TestApiCreateSolution(object):
         content = {Solution.BEATS_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2386'}
+            'content-length': '2382'}
         result_json = {
             'data': [{
                 'type': 'solution',
@@ -94,7 +94,7 @@ class TestApiCreateSolution(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6972'
+            'content-length': '6964'
         }
         result_json = {
             'data': [{
@@ -143,7 +143,7 @@ class TestApiCreateSolution(object):
         content = {'2cd0e794244a07f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2999'
+            'content-length': '2995'
         }
         result_json = {
             'links': {
@@ -193,8 +193,8 @@ class TestApiCreateSolution(object):
             'tags': Solution.DEFAULTS[Solution.BEATS]['tags'],
             'links': Solution.DEFAULTS[Solution.BEATS]['links'],
             'category': Solution.DEFAULTS[Solution.BEATS]['category'],
+            'name': Solution.DEFAULTS[Solution.BEATS]['name'],
             'filename': Solution.DEFAULTS[Solution.BEATS]['filename'],
-            'runalias': Solution.DEFAULTS[Solution.BEATS]['runalias'],
             'versions': Solution.DEFAULTS[Solution.BEATS]['versions'],
             'created': Content.BEATS_TIME,
             'updated': Content.BEATS_TIME,
@@ -203,7 +203,7 @@ class TestApiCreateSolution(object):
         content = {'21c737e704b97226': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3082'
+            'content-length': '3078'
         }
         result_json = {
             'links': {

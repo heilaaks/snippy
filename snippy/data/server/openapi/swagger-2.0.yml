@@ -291,7 +291,7 @@ paths:
         - name: field
           in: path
           type: string
-          enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, updated, digest]
+          enum: [data, brief, group, tags, links, category, name, filename, versions, created, updated, digest]
           required: true
           description: "One of the resource field attributes."
       responses:
@@ -472,14 +472,14 @@ definitions:
           - snippet
           - solution
         description: "Automatically assigned content category."
+      name:
+        type: string
+        description: "Optional alias to run the content."
       filename:
         type: string
         description: >-
           Optional filename that that defines automatically used filename when
           content is exported.
-      runalias:
-        type: string
-        description: "Optional alias to run the content."
       versions:
         type: string
         description: "Optional list of services and versions related to the snippet."
@@ -604,7 +604,7 @@ parameters:
     name: sort
     type: string
     default: brief
-    enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, updated, digest]
+    enum: [data, brief, group, tags, links, category, name, filename, versions, created, updated, digest]
     in: query
     required: false
     description: "Sort based on defined field."
@@ -613,7 +613,7 @@ parameters:
     type: array
     items:
       type: string
-      enum: [data, brief, group, tags, links, category, filename, runalias, versions, created, updated, digest]
+      enum: [data, brief, group, tags, links, category, name, filename, versions, created, updated, digest]
     in: query
     required: false
     description: "Limit fields that are returned in result list."

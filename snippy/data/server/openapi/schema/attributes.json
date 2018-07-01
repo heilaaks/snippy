@@ -22,7 +22,7 @@
       "type": "string", 
       "description": "Optional group to which the content belongs."
     }, 
-    "runalias": {
+    "name": {
       "type": "string", 
       "description": "Optional alias to run the content."
     }, 

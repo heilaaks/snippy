@@ -45,7 +45,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5364'
+            'content-length': '5356'
         }
         result_json = {
             'meta': {
@@ -87,7 +87,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5363'
+            'content-length': '5355'
         }
         result_json = {
             'meta': {
@@ -198,7 +198,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7031'
+            'content-length': '7023'
         }
         result_json = {
             'meta': {
@@ -238,7 +238,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7573'
+            'content-length': '7565'
         }
         result_json = {
             'meta': {
@@ -426,7 +426,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2538'
+            'content-length': '2534'
         }
         result_json = {
             'meta': {
@@ -489,7 +489,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5364'
+            'content-length': '5356'
         }
         result_json = {
             'meta': {
@@ -528,7 +528,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2987'
+            'content-length': '2983'
         }
         result_json = {
             'meta': {
@@ -563,7 +563,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '8346'
+            'content-length': '8338'
         }
         result_json = {
             'meta': {

@@ -45,7 +45,6 @@ class TestCliCreateReferece(object):
         tags = Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.GITLOG]['tags'])
         links = Const.DELIMITER_LINKS.join(Reference.DEFAULTS[Reference.GITLOG]['links'])
         cause = snippy.run(['snippy', 'create', '--references', '--links', links, '-b', brief, '-g', group, '-t', tags, '-c', data])
-        print(Database.print_contents())
         assert cause == Cause.ALL_OK
         assert Database.get_references().size() == 1
         Content.verified(mocker, snippy, content_read)

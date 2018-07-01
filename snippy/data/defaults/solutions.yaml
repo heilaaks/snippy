@@ -100,7 +100,7 @@ data:
   - https://github.com/MickayG/moby-kafka-logdriver
   - https://github.com/garo/logs2kafka
   - https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ
-  runalias: ''
+  name: ''
   tags:
   - docker
   - driver
@@ -332,7 +332,7 @@ data:
   - https://tenzer.dk/nginx-with-dynamic-upstreams/
   - https://www.nginx.com/blog/dns-service-discovery-nginx-plus/
   - https://www.nginx.com/resources/admin-guide/debug/
-  runalias: ''
+  name: ''
   tags:
   - debug
   - howto
@@ -461,7 +461,7 @@ data:
   links:
   - https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-configuration-details.html
   - https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html
-  runalias: ''
+  name: ''
   tags:
   - Elastic
   - beats
@@ -631,7 +631,7 @@ data:
   - https://github.com/docker/swarmkit/issues/1242
   - https://github.com/moby/moby/issues/30487
   - https://www.computerhope.com/unix/unslooku.htm
-  runalias: ''
+  name: ''
   tags:
   - debug
   - docker
@@ -808,7 +808,7 @@ data:
   - https://blog.codeship.com/getting-started-with-kubernetes/
   - https://github.com/kubernetes/kubernetes/releases
   - https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#deploying-the-dashboard-ui
-  runalias: ''
+  name: ''
   tags:
   - debug
   - docker
@@ -875,7 +875,7 @@ data:
   group: kafka
   links:
   - https://kafka.apache.org/downloads
-  runalias: ''
+  name: ''
   tags:
   - debug
   - howto
@@ -994,7 +994,7 @@ data:
   filename: howto-debug-elasticsearch.txt
   group: elasticsearch
   links: []
-  runalias: ''
+  name: ''
   tags:
   - debug
   - elastic
@@ -1105,7 +1105,7 @@ data:
   - https://linuxcontainers.org/lxc/downloads/
   - https://serverfault.com/a/438824
   - https://www.cyberciti.biz/faq/how-to-install-and-setup-lxc-linux-container-on-fedora-linux-26/
-  runalias: ''
+  name: ''
   tags:
   - containers
   - debug
@@ -1115,5 +1115,5 @@ data:
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: 2018-05-26T16:07:26.052354+0000
+  updated: 2018-07-01T10:48:34.633991+0000
   version: 0.8.d

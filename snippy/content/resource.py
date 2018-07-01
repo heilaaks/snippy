@@ -37,8 +37,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     TAGS = 3
     LINKS = 4
     CATEGORY = 5
-    FILENAME = 6
-    RUNALIAS = 7
+    NAME = 6
+    FILENAME = 7
     VERSIONS = 8
     CREATED = 9
     UPDATED = 10
@@ -59,8 +59,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._tags = ()
         self._links = ()
         self._category = category
+        self._name = ''
         self._filename = ''
-        self._runalias = ''
         self._versions = ''
         self._created = timestamp
         self._updated = timestamp
@@ -84,8 +84,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                    self.tags == resource.tags and \
                    self.links == resource.links and \
                    self.category == resource.category and \
+                   self.name == resource.name and \
                    self.filename == resource.filename and \
-                   self.runalias == resource.runalias and \
                    self.versions == resource.versions and \
                    self.created == resource.created and \
                    self.updated == resource.updated and \
@@ -184,16 +184,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._filename = value
 
     @property
-    def runalias(self):
-        """Get resource runalias."""
+    def name(self):
+        """Get resource name."""
 
-        return self._runalias
+        return self._name
 
-    @runalias.setter
-    def runalias(self, value):
-        """Resource runalias."""
+    @name.setter
+    def name(self, value):
+        """Resource name."""
 
-        self._runalias = value
+        self._name = value
 
     @property
     def versions(self):
@@ -276,8 +276,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         resource_str = resource_str + Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
         resource_str = resource_str + Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links))
         resource_str = resource_str + self.category
+        resource_str = resource_str + self.name
         resource_str = resource_str + self.filename
-        resource_str = resource_str + self.runalias
         resource_str = resource_str + self.versions
         digest = hashlib.sha256(resource_str.encode('UTF-8')).hexdigest()
 
@@ -313,8 +313,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.group = source.group
         self.tags = source.tags
         self.links = source.links
+        self.name = source.name
         self.filename = source.filename
-        self.runalias = source.runalias
         self.versions = source.versions
         self.seal()
 
@@ -340,10 +340,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.tags = source.tags
         if source.links:
             self.links = source.links
+        if source.name:
+            self.name = source.name
         if source.filename:
             self.filename = source.filename
-        if source.runalias:
-            self.runalias = source.runalias
         if source.versions:
             self.versions = source.versions
 
@@ -360,8 +360,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.tags = tuple(row[Resource.TAGS].split(Const.DELIMITER_TAGS) if row[Resource.TAGS] else [])
         self.links = tuple(row[Resource.LINKS].split(Const.DELIMITER_LINKS) if row[Resource.LINKS] else [])
         self.category = row[Resource.CATEGORY]
+        self.name = row[Resource.NAME]
         self.filename = row[Resource.FILENAME]
-        self.runalias = row[Resource.RUNALIAS]
         self.versions = row[Resource.VERSIONS]
         self.created = row[Resource.CREATED]
         self.updated = row[Resource.UPDATED]
@@ -417,8 +417,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags))),
             Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links)),
             self.category,
+            self.name,
             self.filename,
-            self.runalias,
             self.versions,
             self.created,
             self.updated,
@@ -437,8 +437,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.tags = dictionary['tags']
         self.links = dictionary['links']
         self.category = dictionary['category']
+        self.name = dictionary['name']
         self.filename = dictionary['filename']
-        self.runalias = dictionary['runalias']
         self.versions = dictionary['versions']
         self.created = dictionary['created']
         self.updated = dictionary['updated']
@@ -458,8 +458,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             'tags': self.tags,
             'links': self.links,
             'category': self.category,
+            'name': self.name,
             'filename': self.filename,
-            'runalias': self.runalias,
             'versions': self.versions,
             'created': self.created,
             'updated': self.updated,
@@ -508,8 +508,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 text = text + Const.EMPTY.join([Resource._terminal_reference(ansi) % (data, line)
                                                 for line in self.data])
             text = text + self._terminal_category(ansi) % self.category
+            text = text + self._terminal_name(ansi) % self.name
             text = text + self._terminal_filename(ansi) % self.filename
-            text = text + self._terminal_runalias(ansi) % self.runalias
             text = text + self._terminal_versions(ansi) % self.versions
             text = text + self._terminal_created(ansi) % self.created
             text = text + self._terminal_updated(ansi) % self.updated
@@ -688,10 +688,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return '   \x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m : %s\n' if ansi else '   ! filename : %s\n'
 
     @staticmethod
-    def _terminal_runalias(ansi=False):
-        """Format content runalias."""
+    def _terminal_name(ansi=False):
+        """Format content name."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mrunalias\x1b[0m : %s\n' if ansi else '   ! runalias : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mname\x1b[0m     : %s\n' if ansi else '   ! name     : %s\n'
 
     @staticmethod
     def _terminal_versions(ansi=False):

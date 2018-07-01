@@ -48,15 +48,15 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     TAGS = 'tags'
     LINKS = 'links'
     CATEGORY = 'category'
+    NAME = 'name'
     FILENAME = 'filename'
-    RUNALIAS = 'runalias'
     VERSIONS = 'versions'
     CREATED = 'created'
     CREATED = 'updated'
     DIGEST = 'digest'
     KEY = 'key'
-    ATTRIBUTES = ('data', 'brief', 'group', 'tags', 'links', 'category', 'filename',
-                  'runalias', 'versions', 'created', 'updated', 'digest', 'key')
+    ATTRIBUTES = ('data', 'brief', 'group', 'tags', 'links', 'category', 'name',
+                  'filename', 'versions', 'created', 'updated', 'digest', 'key')
 
     # Defaults
     BASE_PATH = '/snippy/api'
@@ -130,12 +130,12 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.log_json = parameters.get('log_json', False)
         self.log_msg_max = parameters.get('log_msg_max', Logger.DEFAULT_LOG_MSG_MAX)
         self.merge = parameters.get('merge', False)
+        self.name = parameters.get('name', Const.EMPTY)
         self.no_ansi = parameters.get('no_ansi', False)
         self.operation = parameters.get('operation')
         self.profiler = parameters.get('profiler', False)
         self.quiet = parameters.get('quiet', False)
         self.regexp = parameters.get('regexp', Const.EMPTY)
-        self.runalias = parameters.get('runalias', Const.EMPTY)
         self.sall = parameters.get('sall', None)
         self.server = parameters.get('server', False)
         self.sgrp = parameters.get('sgrp', None)
@@ -237,16 +237,16 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._filename = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
-    def runalias(self):
-        """Get content runalias."""
+    def name(self):
+        """Get content name."""
 
-        return self._runalias
+        return self._name
 
-    @runalias.setter
-    def runalias(self, value):
-        """Convert content runalias to utf-8 encoded unicode string."""
+    @name.setter
+    def name(self, value):
+        """Convert content name to utf-8 encoded unicode string."""
 
-        self._runalias = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+        self._name = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def versions(self):

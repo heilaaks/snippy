@@ -19,8 +19,9 @@
 
 """resource: Single resource."""
 
-import re
 import hashlib
+import re
+import uuid
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
@@ -43,8 +44,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     CREATED = 9
     UPDATED = 10
     DIGEST = 11
-    METADATA = 12
-    KEY = 13
+    UUID = 12
+    METADATA = 13
+    KEY = 14
 
     SOLUTION_TEMPLATE = '844d0d37738ff2d20783f97690f771bb47d81ef3a4bda4ee9d022a17919fd271'
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
@@ -64,9 +66,13 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._versions = ''
         self._created = timestamp
         self._updated = timestamp
+        self._uuid = str(uuid.uuid1())
         self._metadata = ''
         self._key = ''
         self._digest = self.compute_digest()
+
+    def dummy(self):
+        return str(uuid.uuid1())
 
     def __str__(self):
         """Format string from the class object."""
@@ -89,6 +95,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                    self.versions == resource.versions and \
                    self.created == resource.created and \
                    self.updated == resource.updated and \
+                   self.uuid == resource.uuid and \
                    self.metadata == resource.metadata and \
                    self.digest == resource.digest
 
@@ -244,6 +251,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._digest = value
 
     @property
+    def uuid(self):
+        """Get resource uuid."""
+
+        return self._uuid
+
+    @uuid.setter
+    def uuid(self, value):
+        """Resource uuid."""
+
+        self._uuid = value
+
+    @property
     def metadata(self):
         """Get resource metadata."""
 
@@ -366,6 +385,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.created = row[Resource.CREATED]
         self.updated = row[Resource.UPDATED]
         self.digest = row[Resource.DIGEST]
+        self.uuid = row[Resource.UUID]
         self.metadata = row[Resource.METADATA]
         self.key = row[Resource.KEY]
 
@@ -423,6 +443,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.created,
             self.updated,
             self.digest,
+            self.uuid,
             self.metadata,
         )
 
@@ -463,7 +484,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             'versions': self.versions,
             'created': self.created,
             'updated': self.updated,
-            'digest': self.digest
+            'digest': self.digest,
         }
 
         for field in remove_fields:
@@ -515,6 +536,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + self._terminal_updated(ansi) % self.updated
             text = text + self._terminal_digest(ansi) % (self.digest,
                                                          self.digest == self.compute_digest())
+            text = text + self._terminal_uuid(ansi) % self.uuid
             text = text + self._terminal_metadata(ansi) % self.metadata
             text = text + self._terminal_key(ansi) % self.key
             text = text + Const.NEWLINE
@@ -716,6 +738,12 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Format content digest."""
 
         return '   \x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m   : %s (%s)\n' if ansi else '   ! digest   : %s (%s)\n'
+
+    @staticmethod
+    def _terminal_uuid(ansi=False):
+        """Format content uuid."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m     : %s\n' if ansi else '   ! uuid     : %s\n'
 
     @staticmethod
     def _terminal_metadata(ansi=False):

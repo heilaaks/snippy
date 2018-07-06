@@ -561,24 +561,22 @@ def edit_unidentified_template(mocker):
 
 @pytest.fixture(scope='function', name='uuid')
 def uuid_generate(mocker):
-    """Mock generating uuid.
+    """Mock generating uuid."""
 
-    The same mocked return value is quaranteed for 10 calls.
-    """
-
-    #test_uuids = ['{}'.format(uuid.UUID(hex(i))) for i in range(10)]
     test_uuids = (
-        '1ecd5827b6ef4067b5ac3ceac07dde9f',
-        '2ecd5827b6ef4067b5ac3ceac07dde9f',
-        '3ecd5827b6ef4067b5ac3ceac07dde9f',
-        '4ecd5827b6ef4067b5ac3ceac07dde9f',
-        '5ecd5827b6ef4067b5ac3ceac07dde9f',
-        '6ecd5827b6ef4067b5ac3ceac07dde9f',
-        '7ecd5827b6ef4067b5ac3ceac07dde9f',
-        '8ecd5827b6ef4067b5ac3ceac07dde9f',
+        uuid.UUID(hex='1ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='2ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='3ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='4ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='5ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='6ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='7ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='8ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='9ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='aecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='becd5827b6ef4067b5ac3ceac07dde9f')
     )
-    #mocker.patch.object(uuid, 'uuid1', side_effect=(uuid.UUID(hex='5ecd5827b6ef4067b5ac3ceac07dde9f'),)*10)
-    #mocker.patch.object(uuid, 'uuid1', side_effect=test_uuids)
+    mocker.patch.object(uuid, 'uuid1', side_effect=test_uuids)
 
 ## Yaml
 

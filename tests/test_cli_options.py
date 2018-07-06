@@ -345,7 +345,6 @@ class TestCliOptions(object):
               on closed file'?
         """
 
-        uuid = '5ecd5827-b6ef-4067-b5ac-3ceac07dde9f'
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
@@ -360,7 +359,7 @@ class TestCliOptions(object):
             '   ! created  : 2017-10-14T19:56:31.000001+0000',
             '   ! updated  : 2017-10-14T19:56:31.000001+0000',
             '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
-            '   ! uuid     : 5ecd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! uuid     : 2ecd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! metadata : ',
             '   ! key      : 1',
             '',
@@ -378,14 +377,12 @@ class TestCliOptions(object):
             '   ! created  : 2017-10-14T19:56:31.000001+0000',
             '   ! updated  : 2017-10-14T19:56:31.000001+0000',
             '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
-            '   ! uuid     : 5ecd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! uuid     : 6ecd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! metadata : ',
             '   ! key      : 2'
         )
         cause = snippy.run(['snippy', 'search', '--sall', '.', '--debug', '--no-ansi'])
         out, _ = capsys.readouterr()
-        out = re.sub(r'uuid\s+:\s+.*', 'uuid     : 5ecd5827-b6ef-4067-b5ac-3ceac07dde9f', out)
-        #print(out)
         assert cause == Cause.ALL_OK
         assert Const.NEWLINE.join(output) in out
         #assert not err
@@ -451,7 +448,7 @@ class TestCliOptions(object):
         assert not caplog.records[:]
         Database.delete_storage()
 
-    @pytest.mark.usefixtures('snippy', 'default-snippets')
+    @pytest.mark.usefixtures('uuid', 'snippy', 'default-snippets')
     def test_debug_print_001(self, capsys):
         """Test printing the content.
 
@@ -473,7 +470,7 @@ class TestCliOptions(object):
             '   ! created  : 2017-10-14T19:56:31.000001+0000',
             '   ! updated  : 2017-10-14T19:56:31.000001+0000',
             '   ! digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
-            '   ! uuid     : 5ecd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! uuid     : 2ecd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! metadata : ',
             '   ! key      : 1',
             '',
@@ -493,7 +490,7 @@ class TestCliOptions(object):
             '   ! created  : 2017-10-14T19:56:31.000001+0000',
             '   ! updated  : 2017-10-14T19:56:31.000001+0000',
             '   ! digest   : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
-            '   ! uuid     : 5ecd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! uuid     : 6ecd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! metadata : ',
             '   ! key      : 2',
             '',
@@ -505,7 +502,6 @@ class TestCliOptions(object):
         print(Database.get_snippets())  # Part of the test.
         out, err = capsys.readouterr()
         out = re.sub(r'\x1b[^m]*m', '', out)  # Remove all color codes from output for comparison.
-        out = re.sub(r'uuid\s+:\s+.*', 'uuid     : 5ecd5827-b6ef-4067-b5ac-3ceac07dde9f', out)
         assert Const.NEWLINE.join(output) in out
         assert not err
 

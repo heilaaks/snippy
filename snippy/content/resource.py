@@ -71,9 +71,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._key = ''
         self._digest = self.compute_digest()
 
-    def dummy(self):
-        return str(uuid.uuid1())
-
     def __str__(self):
         """Format string from the class object."""
 

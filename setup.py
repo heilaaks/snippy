@@ -18,14 +18,8 @@
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import io
+import os
 from setuptools import setup, find_packages
-
-from snippy.meta import __author__
-from snippy.meta import __description__
-from snippy.meta import __email__
-from snippy.meta import __homepage__
-from snippy.meta import __license__
-from snippy.meta import __version__
 
 
 extras_dev = (
@@ -56,20 +50,42 @@ extras_tests = (
     'tox==3.0.0'
 )
 
-def readme():
-    with io.open('README.rst', encoding='utf-8') as f:
-        return f.read()
+meta = {}
+here = os.path.abspath(os.path.dirname(__file__))
+with io.open(os.path.join(here, 'snippy', 'meta.py'), mode='r', encoding='utf-8') as f:
+    exec(f.read(), meta)
+
+with io.open('README.rst', mode='r', encoding='utf-8') as f:
+    readme = f.read()
 
 setup(
-    name = 'snippy',
-    version = __version__,
-    description = __description__,
-    long_description = readme(),
+    name = meta['__title__'],
+    version = meta['__version__'],
+    description = meta['__description__'],
+    long_description = readme,
     long_description_content_type='text/x-rst',
-    author = __author__,
-    author_email = __email__,
-    url = __homepage__,
-    license=__license__,
+    author = meta['__author__'],
+    author_email = meta['__email__'],
+    url = meta['__homepage__'],
+    license= meta['__license__'],
+    keywords='command solution snippet reference link snippet manager server console',
+    packages=find_packages(exclude=['tests', 'tests.testlib']),
+    package_dir={'snippy': 'snippy'},
+    package_data={
+        'snippy': [
+            'data/defaults/*',
+            'data/storage/*',
+            'data/templates/*'
+        ]
+    },
+    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
+    install_requires=['pyyaml==3.12'],
+    zip_safe=False,
+    entry_points={
+        'console_scripts': [
+            'snippy = snippy.snip:main'
+        ],
+    },
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
@@ -86,24 +102,6 @@ setup(
         'Natural Language :: English',
         'Topic :: Utilities'
     ],
-    keywords='command solution snippet reference link snippet manager server console',
-    packages=find_packages(exclude=['tests', 'tests.testlib']),
-    package_dir={'snippy': 'snippy'},
-    package_data={
-        'snippy': [
-            'data/defaults/*',
-            'data/storage/*',
-            'data/templates/*'
-        ]
-    },
-    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
-    zip_safe=False,
-    entry_points={
-        'console_scripts': [
-            'snippy = snippy.snip:main'
-        ],
-    },
-    install_requires=['pyyaml==3.12'],
     extras_require={
         'dev': extras_dev + extras_docs + extras_server + extras_tests,
         'docs': extras_docs,

@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 #
 #  Snippy - command, solution, reference and code snippet manager.
 #  Copyright 2017-2018 Heikki J. Laaksonen  <laaksonen.heikki.j@gmail.com>
@@ -17,16 +16,16 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""meta: Metadata information for the tool."""
+"""meta: Metadata for the tool."""
 
 __author__ = 'Heikki J. Laaksonen'
 __copyright__ = '2017-2018, Heikki J. Laaksonen'
-__description__ = 'Command, solution, reference and code snippet manager.',
+__description__ = 'Command, solution, reference and code snippet manager.'
 __email__ = 'laaksonen.heikki.j@gmail.com'
 __homepage__ = 'https://github.com/heilaaks/snippy'
 __license__ = 'GNU Affero General Public License v3 or later'
 __openapi__ = 'https://app.swaggerhub.com/apis/heilaaks/snippy/1.0'
-__project__ = 'snippy'
+__title__ = 'snippy'
 __version__ = '0.8.d'
 
 __docs__ = 'http://snippy.readthedocs.io/en/v' + __version__ + '/'

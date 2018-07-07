@@ -3,7 +3,6 @@
    - [ ] Update magic regexp to support no space but tag also. User may not add the newline.
    - [ ] Add tests for References.
    - [ ] Add uuid to rest and export APIs.
-   - [ ] Fix uuid mock. Now the mock works but the side effect iteration does not.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
 
 ## FEATURES

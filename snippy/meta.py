@@ -21,6 +21,7 @@
 
 __author__ = 'Heikki J. Laaksonen'
 __copyright__ = '2017-2018, Heikki J. Laaksonen'
+__description__ = 'Command, solution, reference and code snippet manager.',
 __email__ = 'laaksonen.heikki.j@gmail.com'
 __homepage__ = 'https://github.com/heilaaks/snippy'
 __license__ = 'GNU Affero General Public License v3 or later'

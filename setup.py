@@ -21,6 +21,7 @@ import io
 from setuptools import setup, find_packages
 
 from snippy.meta import __author__
+from snippy.meta import __description__
 from snippy.meta import __email__
 from snippy.meta import __homepage__
 from snippy.meta import __license__
@@ -62,8 +63,9 @@ def readme():
 setup(
     name = 'snippy',
     version = __version__,
-    description = 'Command, solution, reference and code snippet manager.',
+    description = __description__,
     long_description = readme(),
+    long_description_content_type='text/x-rst',
     author = __author__,
     author_email = __email__,
     url = __homepage__,

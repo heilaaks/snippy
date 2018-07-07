@@ -62,11 +62,11 @@ def readme():
 setup(
     name = 'snippy',
     version = __version__,
+    description = 'Command, solution, reference and code snippet manager.',
+    long_description = readme(),
     author = __author__,
     author_email = __email__,
     url = __homepage__,
-    description = 'Command, solution, reference and code snippet manager.',
-    long_description = readme(),
     license=__license__,
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -94,6 +94,7 @@ setup(
             'data/templates/*'
         ]
     },
+    python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
     zip_safe=False,
     entry_points={
         'console_scripts': [

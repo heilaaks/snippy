@@ -1906,3 +1906,65 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 
 "links":{"self":"URL?limit=5&offset=10","first":"URL?limit=5&offset=0","prev":"URL?limit=5&offset=5","next":"URL?limit=5&offset=15","last":"URL?limit=5&offset=30",}
 
+===
+
+(?:# Add optional links|# Add mandatory links)(.*?)(?:\n{2}|$)
+
+===
+
+# Add mandatory snippet below.
+docker rm $(docker ps --all -q -f status=exited)
+docker images -q --filter dangling=true | xargs docker rm
+
+# Add optional brief description below.
+Remove docker image with force
+
+# Add optional single group below.
+docker
+
+# Add optional comma separated list of tags below.
+cleanup,container,docker,docker-ce,image,moby
+
+# Add optional links
+https://docs.docker.com/engine/reference/commandline/images/
+https://docs.docker.com/engine/reference/commandline/rm/
+https://docs.docker.com/engine/reference/commandline/rmi/
+
+===
+
+# Commented lines will be ignored.
+#
+# Add mandatory links
+https://writingfordevelopers.substack.com/p/how-to-write-commit-messages
+https://chris.beams.io/posts/git-commit/
+
+# Add optional brief description below.
+How to write commit messages
+
+# Add optional single group below.
+git
+
+# Add optional comma separated list of tags below.
+commit,git,howto,message,scm
+
+
+===
+
+# Commented lines will be ignored.
+#
+# Add mandatory links
+https://writingfordevelopers.substack.com/p/how-to-write-commit-messages
+https://chris.beams.io/posts/git-commit/
+# Add optional brief description below.
+How to write commit messages
+
+# Add optional single group below.
+git
+
+# Add optional comma separated list of tags below.
+commit,git,howto,message,scm
+
+
+
+
+

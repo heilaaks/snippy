@@ -172,7 +172,7 @@ class Parser(object):
 
         tags = ()
         if category == Const.SNIPPET or category == Const.REFERENCE:
-            match = re.search('(?:%s|%s)(.*?)(?:\n{2}|$)' % (cls.SNIPPET_TAGS, cls.REFERENCE_TAGS), source, re.DOTALL)
+            match = re.search('(?:%s|%s)(.*?)(?:\n{2}|#|$)' % (cls.SNIPPET_TAGS, cls.REFERENCE_TAGS), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 tags = Parser.keywords([match.group(1)])
         elif category == Const.SOLUTION:
@@ -190,7 +190,7 @@ class Parser(object):
         # In case of solution, the links are read from the whole content data.
         links = ()
         if category == Const.SNIPPET or category == Const.REFERENCE:
-            match = re.search('(?:%s|%s)(.*?)(?:\n{2}|$)' % (cls.SNIPPET_LINKS, cls.REFERENCE_LINKS), source, re.DOTALL)
+            match = re.search('(?:%s|%s)(.*?)(?:\n{2}|#|$)' % (cls.SNIPPET_LINKS, cls.REFERENCE_LINKS), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 links = tuple([s.strip() for s in match.group(1).strip().split(Const.NEWLINE)])
         elif category == Const.SOLUTION:

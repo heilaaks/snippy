@@ -1,6 +1,5 @@
 ## WORKING
    - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
-   - [ ] Update magic regexp to support no space but tag also. User may not add the newline.
    - [ ] Add tests for References.
    - [ ] Add uuid to rest and export APIs.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?

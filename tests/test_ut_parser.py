@@ -86,7 +86,7 @@ class TestUtParser(object):
         the links before the next section.
 
         Test case verifies that the trailing whitespaces are removed from each
-        link and category.
+        link and category and brief sections.
         """
 
         source = '\n'.join((
@@ -97,10 +97,10 @@ class TestUtParser(object):
             'https://chris.beams.io/posts/git-commit/  ',
             '',
             '# Add optional brief description below.',
-            'How to write commit messages',
+            '  How to write commit messages  ',
             '',
             '# Add optional single group below.',
-            'git',
+            '  git   ',
             '',
             '# Add optional comma separated list of tags below.',
             'commit,git,howto,message,scm'

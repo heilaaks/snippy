@@ -139,7 +139,7 @@ class Parser(object):
             match = re.search('%s(.*)%s' % (cls.BRIEF_HEAD, cls.BRIEF_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
-                brief = Const.SPACE.join(lines)
+                brief = Const.SPACE.join(lines).strip()
         elif category == Const.SOLUTION:
             match = re.search(r'## BRIEF :\s*?(.*|$)', source, re.MULTILINE)
             if match:
@@ -157,7 +157,7 @@ class Parser(object):
             match = re.search('%s(.*)%s' % (cls.GROUP_HEAD, cls.GROUP_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
-                group = Const.SPACE.join(lines)
+                group = Const.SPACE.join(lines).strip()
         elif category == Const.SOLUTION:
             match = re.search(r'## GROUP :\s*?(\S+|$)', source, re.MULTILINE)
             if match:

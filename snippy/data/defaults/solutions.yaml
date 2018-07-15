@@ -111,6 +111,7 @@ data:
   - moby
   - plugin
   updated: 2018-05-26T16:05:51.566944+0000
+  uuid: f4f3e188-8830-11e8-86cf-2c4d54508088
   versions: ''
 - brief: Debugging nginx
   category: solution
@@ -339,6 +340,7 @@ data:
   - logging
   - nginx
   updated: 2018-05-26T16:07:22.329920+0000
+  uuid: f4f3e5c0-8830-11e8-86cf-2c4d54508088
   versions: ''
 - brief: Debugging Elastic Beats
   category: solution
@@ -469,6 +471,7 @@ data:
   - filebeat
   - howto
   updated: 2018-05-26T16:06:24.103324+0000
+  uuid: f4f3e9c6-8830-11e8-86cf-2c4d54508088
   versions: ''
 - brief: Debugging Docker
   category: solution
@@ -638,6 +641,7 @@ data:
   - howto
   - swarm
   updated: 2018-05-26T16:06:11.671949+0000
+  uuid: f4f3ec96-8830-11e8-86cf-2c4d54508088
   versions: ''
 - brief: Debugging Kubernetes
   category: solution
@@ -816,6 +820,7 @@ data:
   - kubernetes
   - moby
   updated: 2018-05-26T16:06:58.407075+0000
+  uuid: f4f3eff2-8830-11e8-86cf-2c4d54508088
   versions: ''
 - brief: Debugging Kafka
   category: solution
@@ -882,6 +887,7 @@ data:
   - kafka
   - zookeeper
   updated: 2018-05-26T16:06:46.735042+0000
+  uuid: f4f3f330-8830-11e8-86cf-2c4d54508088
   versions: ''
 - brief: Debugging Elasticsearch
   category: solution
@@ -1001,6 +1007,7 @@ data:
   - elasticsearch
   - howto
   updated: 2018-05-26T16:06:35.023823+0000
+  uuid: f4f3f54c-8830-11e8-86cf-2c4d54508088
   versions: ''
 - brief: Debugging LXC containers
   category: solution
@@ -1112,8 +1119,9 @@ data:
   - howto
   - lxc
   updated: 2018-05-26T16:07:10.406992+0000
+  uuid: f4f3f7fe-8830-11e8-86cf-2c4d54508088
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: 2018-07-01T10:48:34.633991+0000
+  updated: 2018-07-15T13:14:27.021304+0000
   version: 0.8.d

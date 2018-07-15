@@ -17,6 +17,7 @@ data:
   - docker-ce
   - moby
   updated: 2017-10-12T11:52:11.000001+0000
+  uuid: f21c6318-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Find pattern from files
   category: snippet
@@ -36,6 +37,7 @@ data:
   - linux
   - search
   updated: 2017-10-16T12:09:34.000001+0000
+  uuid: f21c662e-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Remove all exited containers and dangling images
   category: snippet
@@ -60,6 +62,7 @@ data:
   - moby
   - prune
   updated: 2017-10-24T07:07:05.000001+0000
+  uuid: f21c67fa-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Stop and delete all running containers and images
   category: snippet
@@ -85,6 +88,7 @@ data:
   - moby
   - stop
   updated: 2017-10-16T12:06:07.000001+0000
+  uuid: f21c69a8-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Build docker containers
   category: snippet
@@ -107,6 +111,7 @@ data:
   - docker-ce
   - moby
   updated: 2017-10-16T19:42:19.000001+0000
+  uuid: f21c6b56-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Run containers and connect to them
   category: snippet
@@ -131,6 +136,7 @@ data:
   - moby
   - run
   updated: 2017-10-16T12:43:15.000001+0000
+  uuid: f21c6ce6-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Compile with screen window manager
   category: snippet
@@ -154,6 +160,7 @@ data:
   - screen
   - terminal
   updated: 2017-10-16T19:10:55.000001+0000
+  uuid: f21c6e8a-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Install docker compose
   category: snippet
@@ -178,6 +185,7 @@ data:
   - install
   - moby
   updated: 2018-06-27T09:44:10.870314+0000
+  uuid: f21c7024-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Install docker-ce on RHEL
   category: snippet
@@ -210,6 +218,7 @@ data:
   - rhel
   - rpm
   updated: 2017-12-04T11:30:21.000001+0000
+  uuid: f21c71be-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Initialize, deploy and remove docker swarm
   category: snippet
@@ -241,6 +250,7 @@ data:
   - moby
   - swarm
   updated: 2017-10-19T10:55:01.000001+0000
+  uuid: f21c7380-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Solve docker networking 'has active endpoints' problem
   category: snippet
@@ -266,6 +276,7 @@ data:
   - solution
   - swarm
   updated: 2017-10-19T11:02:06.000001+0000
+  uuid: f21c752e-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Print Elasticsearch basic information
   category: snippet
@@ -291,6 +302,7 @@ data:
   - rest
   - security
   updated: 2017-12-12T18:17:26.000001+0000
+  uuid: f21c76dc-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Print logs from Kubernetes pods
   category: snippet
@@ -312,6 +324,7 @@ data:
   - logginig
   - moby
   updated: 2017-10-19T11:17:37.000001+0000
+  uuid: f21c7876-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: List, dump and delete Elasticsearch indices
   category: snippet
@@ -340,6 +353,7 @@ data:
   - rest
   - security
   updated: 2017-12-11T17:34:40.000001+0000
+  uuid: f21c79fc-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Debug TLS/SSL connection
   category: snippet
@@ -361,6 +375,7 @@ data:
   - ssl
   - tls
   updated: 2017-10-20T05:42:26.000001+0000
+  uuid: f21c7baa-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Test if specific port is open
   category: snippet
@@ -380,6 +395,7 @@ data:
   - networking
   - port
   updated: 2017-10-20T07:08:45.000001+0000
+  uuid: f21c7d30-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Manage Elasticsearch templates
   category: snippet
@@ -416,6 +432,7 @@ data:
   - template
   - update
   updated: 2017-12-11T17:34:23.000001+0000
+  uuid: f21c7eac-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Perform recursive git pull on subdirectories
   category: snippet
@@ -433,6 +450,7 @@ data:
   - git
   - pull
   updated: 2017-11-07T07:58:46.000001+0000
+  uuid: f21c8064-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: List git commit log headers
   category: snippet
@@ -451,6 +469,7 @@ data:
   - git
   - log
   updated: 2017-11-12T09:54:23.000001+0000
+  uuid: f21c81ea-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Install docker-ce on Fedora
   category: snippet
@@ -485,6 +504,7 @@ data:
   - moby
   - rpm
   updated: 2018-06-27T09:48:02.107035+0000
+  uuid: f21c8370-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Set single node Elasticsearch cluster to green state
   category: snippet
@@ -508,6 +528,7 @@ data:
   - settings
   - shards
   updated: 2017-12-05T06:48:05.000001+0000
+  uuid: f21c8528-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Manage Elasticsearch x-pack watches
   category: snippet
@@ -541,6 +562,7 @@ data:
   - watcher
   - x-pack
   updated: 2017-12-05T06:48:50.000001+0000
+  uuid: f21c86b8-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Manage Elasticsearch plugins
   category: snippet
@@ -562,6 +584,7 @@ data:
   - rest
   - x-pack
   updated: 2017-12-05T06:49:47.000001+0000
+  uuid: f21c888e-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Perform recursive git status on subdirectories
   category: snippet
@@ -579,6 +602,7 @@ data:
   - git
   - status
   updated: 2018-01-11T07:59:46.000001+0000
+  uuid: f21c8a46-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Kill zombie processes
   category: snippet
@@ -597,6 +621,7 @@ data:
   - linux
   - zombie
   updated: 2018-02-28T10:47:08.000001+0000
+  uuid: f21c8bcc-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Umount a busy device
   category: snippet
@@ -616,6 +641,7 @@ data:
   - linux
   - umount
   updated: 2018-05-07T11:11:55.000001+0000
+  uuid: f21c8d52-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Manipulate compressed tar files
   category: snippet
@@ -639,8 +665,9 @@ data:
   - tar
   - untar
   updated: 2018-05-07T11:13:17.000001+0000
+  uuid: f21c8ed8-8830-11e8-a114-2c4d54508088
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: 2018-07-01T10:48:41.678704+0000
+  updated: 2018-07-15T13:14:23.731864+0000
   version: 0.8.d

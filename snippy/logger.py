@@ -22,6 +22,7 @@
 from __future__ import print_function
 
 import logging
+import re
 import sys
 import time
 from collections import OrderedDict
@@ -221,6 +222,13 @@ class Logger(object):
         """Time method by measuring it latency.
 
         The operation ID (OID) is refreshed at the end.
+
+
+        Parameters
+        ----------
+        Args:
+            method (str): Name of the method calling the timeit.
+            refresh_oid (bool): Define if operation ID is refreshed or not.
         """
 
         def _timeit(method):
@@ -243,6 +251,18 @@ class Logger(object):
             return _timeit(method)
 
         return _timeit
+
+    @staticmethod
+    def remove_ansi(string_):
+        """Remove all ANSI escape codes from given string.
+
+        Parameters
+        ----------
+        Args:
+            string_ (str): String which ANSI escape codes are removed.
+        """
+
+        return re.sub(r'\x1b[^m]*m', '', string_)
 
     @staticmethod
     def debug():

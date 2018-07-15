@@ -135,20 +135,44 @@ def mocked_snippy(mocker, request):
 
     # If there are no parameters, the only parameter passed is the tool
     # name. This creates unnecessary help text that pollutes the debug
-    # output. In order to prevent this, the quiet is set. The quiet
-    # parameter is dynamic and therefore it does not affect if the test
-    # cases decided for example run CLI without it to test tool output.
+    # output. In order to prevent this, the quiet parameter is set. The
+    # quiet parameter is dynamic and therefore it does not have affect
+    # if a test cases uses additional CLI commands during the test.
     if hasattr(request, 'param'):
         params = request.param
     else:
         params.append('-q')
-
     params.insert(0, 'snippy')  # Add the tool name here to args list.
+
+    # Mock predicatable UUIDs.
+    _mock_uuids(mocker)
+
     snippy = _create_snippy(mocker, params)
     def fin():
         """Clear the resources at the end."""
 
         snippy.release()
+        Database.delete_all_contents()
+        Database.delete_storage()
+    request.addfinalizer(fin)
+
+    return snippy
+
+@pytest.fixture(scope='function', name='snippy_perf')
+def mocked_snippy_perf(mocker, request):
+    """Create mocked instance from snippy for performance testing.
+
+    The uuid mock must not be used for performance testing because
+    mocking all the UUIDs needed for variable length run is not
+    feasible.
+    """
+
+    snippy = _create_snippy(mocker, ())
+    def fin():
+        """Clear the resources at the end."""
+
+        snippy.release()
+        Database.delete_all_contents()
         Database.delete_storage()
     request.addfinalizer(fin)
 
@@ -165,6 +189,10 @@ def server(mocker, request):
         params.extend(['--server', '--compact-json', '-q'])
     params.insert(0, 'snippy')  # Add the tool name args list as a first parameter.
 
+    # Mock predicatable UUIDs.
+    _mock_uuids(mocker)
+
+    # Mock server so that real Snippy server is not started.
     mocker.patch('snippy.server.server.SnippyServer')
     snippy = _create_snippy(mocker, params)
     snippy.run()
@@ -557,66 +585,33 @@ def edit_unidentified_template(mocker):
     )
     mocker.patch.object(Editor, 'call_editor', return_value=template)
 
-## UUID
+## uuid
 
 @pytest.fixture(scope='function', name='uuid')
 def uuid_generate(mocker):
     """Mock generating uuid."""
 
-    test_uuids = (
-        uuid.UUID(hex='1ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='2ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='3ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='4ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='5ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='6ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='7ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='8ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='9ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='aecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='becd5827b6ef4067b5ac3ceac07dde9f')
-    )
-    mocker.patch.object(uuid, 'uuid1', side_effect=test_uuids)
+    _mock_uuids(mocker)
 
-## Yaml
+## yaml
 
-@pytest.fixture(scope='function', name='yaml_load')
-def yaml_load(mocker):
-    """Mock importing from yaml file."""
-
-    mocker.patch.object(yaml, 'safe_load')
-    mocker_open = mocker.patch('snippy.content.migrate.open', mocker.mock_open(), create=True)
-
-    return mocker_open
-
-@pytest.fixture(scope='function', name='yaml_dump')
-def yaml_dump(mocker):
-    """Mock exporting to yaml file."""
+@pytest.fixture(scope='function', name='yaml')
+def mock_yaml(mocker):
+    """Mock yaml load and dump methods."""
 
     mocker.patch.object(yaml, 'safe_dump')
-    mocker_open = mocker.patch('snippy.content.migrate.open', mocker.mock_open(), create=True)
+    mocker.patch.object(yaml, 'safe_load')
 
-    return mocker_open
+## json
 
-## Json
-
-@pytest.fixture(scope='function', name='json_load')
-def json_load(mocker):
-    """Mock importing from json file."""
-
-    mocker.patch.object(json, 'load')
-    mocker_open = mocker.patch('snippy.content.migrate.open', mocker.mock_open(), create=True)
-
-    return mocker_open
-
-@pytest.fixture(scope='function', name='json_dump')
-def json_dump(mocker):
-    """Mock exporting to json file."""
+@pytest.fixture(scope='function', name='json')
+def mock_json(mocker):
+    """Mock json load and dump methods."""
 
     mocker.patch.object(json, 'dump')
-    mocker_open = mocker.patch('snippy.content.migrate.open', mocker.mock_open(), create=True)
+    mocker.patch.object(json, 'load')
 
-    return mocker_open
+## os.path
 
 @pytest.fixture(scope='function', name='isfile_true')
 def isfile_mock(mocker):
@@ -624,7 +619,7 @@ def isfile_mock(mocker):
 
     mocker.patch('snippy.content.migrate.os.path.isfile', return_value=True)
 
-## Devel
+## devel
 
 @pytest.fixture(scope='function', name='devel_file_list')
 def devel_file_list(mocker):
@@ -758,3 +753,8 @@ def _editor(mocker, timestamp):
     _add_utc_time(mocker, timestamp*3)
 
     return editor
+
+def _mock_uuids(mocker):
+    """Mock UUIDS."""
+
+    mocker.patch.object(uuid, 'uuid1', side_effect=Database.TEST_UUIDS)

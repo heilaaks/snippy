@@ -1,15 +1,16 @@
 ## WORKING
-   - [ ] Add source and license fields for database to indicate possible external import source url.
-   - [ ] Add note that content is with common creations license (or what was it - check what this is)
-   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
-   - [ ] Add tests for References.
-   - [ ] Fix unique uuid that now returns misleading error: NOK: content already exist with digest
    - [ ] Fix _get_db_digest returning no digest in case of reference. The collision of references is not tested.
    - [ ] Fix integrity error and second result as "inserted 2 out of 2 content". So there is still cause all insert if integrity error.
    - [ ] Fix exec not needed in setup and conf.py (sphinx)?
+   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
+   - [ ] Fix unique uuid that now returns misleading error: NOK: content already exist with digest
    - [ ] Fix Resource migrate and merge are missing the UUID. Bug?
+   - [ ] Fix swagger api to contain uuid and source.
+   - [ ] Add tests for References.
 
 ## FEATURES
+   - [ ] Add code content.
+   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
    - [ ] Add support to export content to markdown format.
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
@@ -35,7 +36,6 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
-   - [ ] Fix unique set to TEST_UUIDS which is now twice due to likely circular references that prevents imports between conftest and content.py test modules.
    - [ ] Fix content.verified which does not check other content that what gets to text file. This misses for example update timestamps in e.g. test_cli_import_reference_011.
    - [ ] Fix print resource it does not print data in debug part because it is empty tuple.
    - [ ] Fix get_resource and next if the collection is empty. This generates StopIteration exception.

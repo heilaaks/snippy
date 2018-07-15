@@ -23,7 +23,9 @@ from setuptools import setup, find_packages
 
 
 extras_dev = (
+    'logging_tree==1.7',
     'openapi2jsonschema==0.7.1',
+    'pprintpp==0.4.0',
     'pyflakes==1.6.0'
 )
 extras_docs = (

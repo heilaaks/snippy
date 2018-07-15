@@ -7,8 +7,6 @@
    - [ ] Add tests for References.
    - [ ] Fix unique uuid that now returns misleading error: NOK: content already exist with digest
    - [ ] Fix _get_db_digest returning no digest in case of reference. The collision of references is not tested.
-   - [ ] Fix yaml_load does not need to return because it should be with for migrate.open like in test_cli_export_reference_002
-   - [ ] Fix and remove json_dump and yaml_dump fixture once they are refactored out.
    - [ ] Fix integrity error and second result as "inserted 2 out of 2 content". So there is still cause all insert if integrity error.
 
 ## FEATURES

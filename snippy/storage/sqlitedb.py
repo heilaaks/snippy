@@ -247,12 +247,14 @@ class SqliteDb(object):
             Cause.push(Cause.HTTP_500, 'internal error prevented deleting content in database')
 
     def debug(self):
-        """Debug Sqlitedb()."""
+        """Debug Sqlitedb."""
 
         with closing(self._connection.cursor()) as cursor:
             cursor.execute('SELECT * FROM contents')
             rows = cursor.fetchall()
-        print(rows)
+
+        import pprintpp
+        pprintpp.pprint(rows)
 
     def _select_data(self, data):
         """Select content based on data.

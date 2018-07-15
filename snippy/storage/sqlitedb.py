@@ -22,6 +22,7 @@
 import re
 import os.path
 import sqlite3
+import traceback
 from contextlib import closing
 
 from snippy.constants import Constants as Const
@@ -114,7 +115,11 @@ class SqliteDb(object):
             self._put_db(query, qargs)
         except sqlite3.IntegrityError:
             Cause.push(Cause.HTTP_CONFLICT,
-                       'content already exist with digest {:.16}'.format(self._get_db_digest(resource)))
+                       'content already exist with digest: {:.16}'.format(self._get_db_digest(resource)))
+            self._logger.info('database integrity error from database: {}'.format(traceback.format_exc()))
+            self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
+            self._logger.info('database integrity error from query: {}'.format(query))
+            self._logger.info('database integrity error from query arguments: {}'.format(qargs))
 
         return cause
 
@@ -225,7 +230,7 @@ class SqliteDb(object):
 
         if self._connection:
             query = ('DELETE FROM contents WHERE digest LIKE ?')
-            self._logger.debug('delete content with digest %s', digest)
+            self._logger.debug('delete content with digest: %s', digest)
             try:
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, (digest+'%',))
@@ -240,6 +245,14 @@ class SqliteDb(object):
                 Cause.push(Cause.HTTP_500, 'deleting from database failed with exception {}'.format(exception))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented deleting content in database')
+
+    def debug(self):
+        """Debug Sqlitedb()."""
+
+        with closing(self._connection.cursor()) as cursor:
+            cursor.execute('SELECT * FROM contents')
+            rows = cursor.fetchall()
+        print(rows)
 
     def _select_data(self, data):
         """Select content based on data.
@@ -318,7 +331,7 @@ class SqliteDb(object):
             return cause
 
         if self._select_data(resource.data).size():
-            cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest {:.16}'.format(self._get_db_digest(resource)))
+            cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest: {:.16}'.format(self._get_db_digest(resource)))
             self._logger.debug(cause[1])
 
             return cause

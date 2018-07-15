@@ -64,9 +64,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._name = ''
         self._filename = ''
         self._versions = ''
+        self._uuid = str(uuid.uuid1())
         self._created = timestamp
         self._updated = timestamp
-        self._uuid = str(uuid.uuid1())
         self._metadata = ''
         self._key = ''
         self._digest = self.compute_digest()
@@ -212,6 +212,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._versions = value
 
     @property
+    def uuid(self):
+        """Get resource uuid."""
+
+        return self._uuid
+
+    @uuid.setter
+    def uuid(self, value):
+        """Resource uuid."""
+
+        self._uuid = value
+
+    @property
     def created(self):
         """Get resource created time."""
 
@@ -246,18 +258,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Resource digest."""
 
         self._digest = value
-
-    @property
-    def uuid(self):
-        """Get resource uuid."""
-
-        return self._uuid
-
-    @uuid.setter
-    def uuid(self, value):
-        """Resource uuid."""
-
-        self._uuid = value
 
     @property
     def metadata(self):
@@ -449,18 +449,19 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def load_dict(self, dictionary):
         """Convert dictionary to resource."""
 
-        self.data = dictionary['data']
-        self.brief = dictionary['brief']
-        self.group = dictionary['group']
-        self.tags = dictionary['tags']
-        self.links = dictionary['links']
-        self.category = dictionary['category']
-        self.name = dictionary['name']
-        self.filename = dictionary['filename']
-        self.versions = dictionary['versions']
-        self.created = dictionary['created']
-        self.updated = dictionary['updated']
-        self.digest = dictionary['digest']
+        self.data = dictionary.get('data', self.data)
+        self.brief = dictionary.get('brief', self.brief)
+        self.group = dictionary.get('group', self.group)
+        self.tags = dictionary.get('tags', self.tags)
+        self.links = dictionary.get('links', self.links)
+        self.category = dictionary.get('category', self.category)
+        self.name = dictionary.get('name', self.name)
+        self.filename = dictionary.get('filename', self.filename)
+        self.versions = dictionary.get('versions', self.versions)
+        self.uuid = dictionary.get('uuid', self.uuid)
+        self.created = dictionary.get('created', self.created)
+        self.updated = dictionary.get('updated', self.updated)
+        self.digest = dictionary.get('digest', self.digest)
         self.metadata = None
         self.key = None
 
@@ -479,6 +480,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             'name': self.name,
             'filename': self.filename,
             'versions': self.versions,
+            'uuid': self.uuid,
             'created': self.created,
             'updated': self.updated,
             'digest': self.digest,
@@ -529,11 +531,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + self._terminal_name(ansi) % self.name
             text = text + self._terminal_filename(ansi) % self.filename
             text = text + self._terminal_versions(ansi) % self.versions
+            text = text + self._terminal_uuid(ansi) % self.uuid
             text = text + self._terminal_created(ansi) % self.created
             text = text + self._terminal_updated(ansi) % self.updated
             text = text + self._terminal_digest(ansi) % (self.digest,
                                                          self.digest == self.compute_digest())
-            text = text + self._terminal_uuid(ansi) % self.uuid
             text = text + self._terminal_metadata(ansi) % self.metadata
             text = text + self._terminal_key(ansi) % self.key
             text = text + Const.NEWLINE

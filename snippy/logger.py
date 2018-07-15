@@ -253,16 +253,16 @@ class Logger(object):
         return _timeit
 
     @staticmethod
-    def remove_ansi(string_):
+    def remove_ansi(message):
         """Remove all ANSI escape codes from given string.
 
         Parameters
         ----------
         Args:
-            string_ (str): String which ANSI escape codes are removed.
+            message (str): Log message which ANSI escape codes are removed.
         """
 
-        return re.sub(r'\x1b[^m]*m', '', string_)
+        return re.sub(r'\x1b[^m]*m', '', message)
 
     @staticmethod
     def debug():

@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Change uuid to be before timestamps in db. Add source after filename to get logical order in columns. 
    - [ ] Add source and license fields for database to indicate possible external import source url.
    - [ ] Add note that content is with common creations license (or what was it - check what this is)
    - [ ] Fix document and package structure for snippy.storage.database which does not exist anymore. Also check other modules the same.

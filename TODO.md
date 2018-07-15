@@ -7,6 +7,7 @@
    - [ ] Fix _get_db_digest returning no digest in case of reference. The collision of references is not tested.
    - [ ] Fix integrity error and second result as "inserted 2 out of 2 content". So there is still cause all insert if integrity error.
    - [ ] Fix exec not needed in setup and conf.py (sphinx)?
+   - [ ] Fix Resource migrate and merge are missing the UUID. Bug?
 
 ## FEATURES
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.

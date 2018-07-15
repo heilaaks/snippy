@@ -101,6 +101,7 @@ data:
   - https://github.com/garo/logs2kafka
   - https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ
   name: ''
+  source: ''
   tags:
   - docker
   - driver
@@ -334,6 +335,7 @@ data:
   - https://www.nginx.com/blog/dns-service-discovery-nginx-plus/
   - https://www.nginx.com/resources/admin-guide/debug/
   name: ''
+  source: ''
   tags:
   - debug
   - howto
@@ -464,6 +466,7 @@ data:
   - https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-configuration-details.html
   - https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html
   name: ''
+  source: ''
   tags:
   - Elastic
   - beats
@@ -635,6 +638,7 @@ data:
   - https://github.com/moby/moby/issues/30487
   - https://www.computerhope.com/unix/unslooku.htm
   name: ''
+  source: ''
   tags:
   - debug
   - docker
@@ -813,6 +817,7 @@ data:
   - https://github.com/kubernetes/kubernetes/releases
   - https://kubernetes.io/docs/tasks/access-application-cluster/web-ui-dashboard/#deploying-the-dashboard-ui
   name: ''
+  source: ''
   tags:
   - debug
   - docker
@@ -881,6 +886,7 @@ data:
   links:
   - https://kafka.apache.org/downloads
   name: ''
+  source: ''
   tags:
   - debug
   - howto
@@ -1001,6 +1007,7 @@ data:
   group: elasticsearch
   links: []
   name: ''
+  source: ''
   tags:
   - debug
   - elastic
@@ -1113,6 +1120,7 @@ data:
   - https://serverfault.com/a/438824
   - https://www.cyberciti.biz/faq/how-to-install-and-setup-lxc-linux-container-on-fedora-linux-26/
   name: ''
+  source: ''
   tags:
   - containers
   - debug
@@ -1123,5 +1131,5 @@ data:
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: 2018-07-15T13:14:27.021304+0000
+  updated: 2018-07-15T16:39:16.112543+0000
   version: 0.8.d

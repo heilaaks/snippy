@@ -11,6 +11,7 @@ data:
   - https://writingfordevelopers.substack.com/p/how-to-write-commit-messages
   - https://chris.beams.io/posts/git-commit/
   name: ''
+  source: ''
   tags:
   - commit
   - git
@@ -22,5 +23,5 @@ data:
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: 2018-07-15T13:16:42.807806+0000
+  updated: 2018-07-15T16:39:19.151060+0000
   version: 0.8.d

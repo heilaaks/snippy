@@ -116,6 +116,7 @@ class Config(object):
         cls.content_name = cls.source.name
         cls.content_filename = cls.source.filename
         cls.content_versions = cls.source.versions
+        cls.content_source = cls.source.source
 
         # search
         cls.search_all_kws = cls.source.sall
@@ -260,6 +261,7 @@ class Config(object):
         resource.name = cls.content_name
         resource.filename = cls.content_filename
         resource.versions = cls.content_versions
+        resource.source = cls.content_source
         resource.digest = resource.compute_digest()
         collection.migrate(resource)
 
@@ -502,6 +504,7 @@ class Config(object):
         cls._logger.debug('configured content name: %s', cls.content_name)
         cls._logger.debug('configured content filename: %s', cls.content_filename)
         cls._logger.debug('configured content versions: %s', cls.content_versions)
+        cls._logger.debug('configured content source: %s', cls.content_source)
         cls._logger.debug('configured operation digest: %s', cls.operation_digest)
         cls._logger.debug('configured operation filename: "%s"', cls.operation_filename)
         cls._logger.debug('configured operation file type: "%s"', cls.operation_filetype)

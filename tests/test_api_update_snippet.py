@@ -62,7 +62,7 @@ class TestApiUpdateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '766'
+            'content-length': '780'
         }
         result_json = {
             'links': {
@@ -113,6 +113,7 @@ class TestApiUpdateSnippet(object):
             'name': '',
             'filename': '',
             'versions': '',
+            'source': '',
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.REMOVE_TIME,
             'updated': Content.REMOVE_TIME,
@@ -121,7 +122,7 @@ class TestApiUpdateSnippet(object):
         content = {'e56c2183edcc3a67': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '672'
+            'content-length': '686'
         }
         result_json = {
             'links': {
@@ -170,6 +171,7 @@ class TestApiUpdateSnippet(object):
             'name': '',
             'filename': '',
             'versions': '',
+            'source': '',
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.REMOVE_TIME,
             'updated': Content.REMOVE_TIME,
@@ -178,7 +180,7 @@ class TestApiUpdateSnippet(object):
         content = {'26128ea95707a3a26': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '615'
+            'content-length': '629'
         }
         result_json = {
             'links': {
@@ -302,7 +304,7 @@ class TestApiUpdateSnippet(object):
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '766'
+            'content-length': '780'
         }
         result_json = {
             'links': {
@@ -354,6 +356,7 @@ class TestApiUpdateSnippet(object):
             'filename': Snippet.DEFAULTS[Snippet.FORCED]['filename'],
             'versions': Snippet.DEFAULTS[Snippet.FORCED]['versions'],
             'uuid': Snippet.DEFAULTS[Snippet.FORCED]['uuid'],
+            'source': Snippet.DEFAULTS[Snippet.FORCED]['source'],
             'created': Content.FORCED_TIME,
             'updated': Content.FORCED_TIME,
             'digest': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
@@ -361,7 +364,7 @@ class TestApiUpdateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '858'
+            'content-length': '872'
         }
         result_json = {
             'links': {

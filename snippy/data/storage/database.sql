@@ -13,6 +13,7 @@ create table if not exists contents (
     name        text default '',
     filename    text default '',
     versions    text default '',
+    source      text default '',
     uuid        text not null unique,
     created     datetime default current_timestamp,
     updated     datetime default current_timestamp,

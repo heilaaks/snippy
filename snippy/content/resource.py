@@ -41,12 +41,13 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     NAME = 6
     FILENAME = 7
     VERSIONS = 8
-    UUID = 9
-    CREATED = 10
-    UPDATED = 11
-    DIGEST = 12
-    METADATA = 13
-    KEY = 14
+    SOURCE = 9
+    UUID = 10
+    CREATED = 11
+    UPDATED = 12
+    DIGEST = 13
+    METADATA = 14
+    KEY = 15
 
     SOLUTION_TEMPLATE = '844d0d37738ff2d20783f97690f771bb47d81ef3a4bda4ee9d022a17919fd271'
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
@@ -64,6 +65,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._name = ''
         self._filename = ''
         self._versions = ''
+        self._source = ''
         self._uuid = str(uuid.uuid1())
         self._created = timestamp
         self._updated = timestamp
@@ -90,6 +92,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                    self.name == resource.name and \
                    self.filename == resource.filename and \
                    self.versions == resource.versions and \
+                   self.source == resource.source and \
                    self.uuid == resource.uuid and \
                    self.created == resource.created and \
                    self.updated == resource.updated and \
@@ -212,6 +215,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._versions = value
 
     @property
+    def source(self):
+        """Get resource source."""
+
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        """Resource source."""
+
+        self._source = value
+
+    @property
     def uuid(self):
         """Get resource uuid."""
 
@@ -332,6 +347,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.name = source.name
         self.filename = source.filename
         self.versions = source.versions
+        self.source = source.source
         self.seal()
 
     def merge(self, source):
@@ -362,6 +378,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.filename = source.filename
         if source.versions:
             self.versions = source.versions
+        if source.source:
+            self.source = source.source
 
         self.seal()
 
@@ -379,6 +397,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.name = row[Resource.NAME]
         self.filename = row[Resource.FILENAME]
         self.versions = row[Resource.VERSIONS]
+        self.source = row[Resource.SOURCE]
         self.uuid = row[Resource.UUID]
         self.created = row[Resource.CREATED]
         self.updated = row[Resource.UPDATED]
@@ -437,6 +456,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.name,
             self.filename,
             self.versions,
+            self.source,
             self.uuid,
             self.created,
             self.updated,
@@ -458,6 +478,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.name = dictionary.get('name', self.name)
         self.filename = dictionary.get('filename', self.filename)
         self.versions = dictionary.get('versions', self.versions)
+        self.source = dictionary.get('source', self.source)
         self.uuid = dictionary.get('uuid', self.uuid)
         self.created = dictionary.get('created', self.created)
         self.updated = dictionary.get('updated', self.updated)
@@ -480,6 +501,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             'name': self.name,
             'filename': self.filename,
             'versions': self.versions,
+            'source': self.source,
             'uuid': self.uuid,
             'created': self.created,
             'updated': self.updated,
@@ -531,6 +553,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + self._terminal_name(ansi) % self.name
             text = text + self._terminal_filename(ansi) % self.filename
             text = text + self._terminal_versions(ansi) % self.versions
+            text = text + self._terminal_source(ansi) % self.source
             text = text + self._terminal_uuid(ansi) % self.uuid
             text = text + self._terminal_created(ansi) % self.created
             text = text + self._terminal_updated(ansi) % self.updated
@@ -719,6 +742,12 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Format content version list."""
 
         return '   \x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m : %s\n' if ansi else '   ! versions : %s\n'
+
+    @staticmethod
+    def _terminal_source(ansi=False):
+        """Format content source."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2msource\x1b[0m   : %s\n' if ansi else '   ! source   : %s\n'
 
     @staticmethod
     def _terminal_uuid(ansi=False):

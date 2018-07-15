@@ -1036,6 +1036,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        - name
        - filename
        - versions
+       - source
 
     2. Attributes that cannot be changed by user
 
@@ -1051,12 +1052,18 @@ git update-index --no-assume-unchanged FILE_NAME # change back
           cannot modify. The only way to change this attribute is to delete
           and create the content again.
 
-       B) Updated
+       C) Updated
 
           The updated timestamp is set when the content is updated and user
           cannot modify.
 
-       C) Digest
+       D) UUID
+       
+          The UUID is intended to be used in cases where two databases are
+          merged to one. The UUID is allocated always for the content and it
+          never changes.
+       
+       E) Digest
 
           The content digest field is always set by the tool based on sha256
           hash algorithm. The digest is automatically updated when content

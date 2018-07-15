@@ -10,6 +10,7 @@ data:
   links:
   - https://docs.docker.com/engine/reference/commandline/rm/
   name: ''
+  source: ''
   tags:
   - cleanup
   - container
@@ -33,6 +34,7 @@ data:
   - http://www.skrenta.com/rt/man/grep.1.html
   - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux/
   name: ''
+  source: ''
   tags:
   - linux
   - search
@@ -53,6 +55,7 @@ data:
   - https://docs.docker.com/engine/reference/commandline/rm/
   - https://docs.docker.com/engine/reference/commandline/rmi/
   name: ''
+  source: ''
   tags:
   - cleanup
   - container
@@ -79,6 +82,7 @@ data:
   - https://docs.docker.com/engine/reference/commandline/rmi/
   - https://docs.docker.com/engine/reference/commandline/stop/
   name: ''
+  source: ''
   tags:
   - cleanup
   - container
@@ -104,6 +108,7 @@ data:
   links:
   - https://docs.docker.com/engine/reference/commandline/build/
   name: ''
+  source: ''
   tags:
   - build
   - container
@@ -127,6 +132,7 @@ data:
   - https://docs.docker.com/engine/reference/commandline/exec/
   - https://docs.docker.com/engine/reference/commandline/run/
   name: ''
+  source: ''
   tags:
   - container
   - docker
@@ -155,6 +161,7 @@ data:
   links:
   - http://www.skrenta.com/rt/man/screen.1.html
   name: ''
+  source: ''
   tags:
   - linux
   - screen
@@ -177,6 +184,7 @@ data:
   - https://docs.docker.com/compose/install/
   - https://github.com/docker/compose/releases/
   name: ''
+  source: ''
   tags:
   - compose
   - container
@@ -209,6 +217,7 @@ data:
   - https://docs.docker.com/release-notes/docker-ce/
   - https://github.com/docker/for-linux/issues/20#issuecomment-316930840
   name: ''
+  source: ''
   tags:
   - container
   - docker
@@ -241,6 +250,7 @@ data:
   - https://docs.docker.com/engine/reference/commandline/swarm_init/
   - https://docs.docker.com/engine/swarm/
   name: ''
+  source: ''
   tags:
   - compose
   - container
@@ -266,6 +276,7 @@ data:
   links:
   - https://github.com/moby/moby/issues/23302
   name: ''
+  source: ''
   tags:
   - container
   - docker
@@ -292,6 +303,7 @@ data:
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/cat.html
   name: ''
+  source: ''
   tags:
   - api
   - cat
@@ -316,6 +328,7 @@ data:
   links:
   - https://kubernetes.io/docs/user-guide/kubectl-cheatsheet/
   name: ''
+  source: ''
   tags:
   - container
   - docker
@@ -339,6 +352,7 @@ data:
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html
   name: ''
+  source: ''
   tags:
   - api
   - cat
@@ -368,6 +382,7 @@ data:
   links:
   - https://wiki.openssl.org/index.php/Command_Line_Utilities
   name: ''
+  source: ''
   tags:
   - debug
   - openssl
@@ -389,6 +404,7 @@ data:
   links:
   - https://www.commandlinux.com/man-page/man1/nc.1.html
   name: ''
+  source: ''
   tags:
   - linux
   - netcat
@@ -416,6 +432,7 @@ data:
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html
   name: ''
+  source: ''
   tags:
   - api
   - create
@@ -446,6 +463,7 @@ data:
   - http://snipplr.com/view/62314/perform-git-pull-on-subdirectory-recursive/
   - https://stackoverflow.com/questions/3497123/run-git-pull-over-all-subdirectories
   name: ''
+  source: ''
   tags:
   - git
   - pull
@@ -465,6 +483,7 @@ data:
   - https://github.com/k88hudson/git-flight-rules
   - https://stackoverflow.com/questions/4479225/how-to-output-git-log-with-the-first-line-only
   name: ''
+  source: ''
   tags:
   - git
   - log
@@ -495,6 +514,7 @@ data:
   - https://docs.docker.com/install/linux/docker-ce/fedora/
   - https://docs.docker.com/release-notes/docker-ce/
   name: ''
+  source: ''
   tags:
   - container
   - docker
@@ -517,6 +537,7 @@ data:
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
   name: ''
+  source: ''
   tags:
   - api
   - curl
@@ -554,6 +575,7 @@ data:
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api.html
   name: ''
+  source: ''
   tags:
   - api
   - elastic
@@ -576,6 +598,7 @@ data:
   links:
   - https://www.elastic.co/guide/en/elasticsearch/plugins/current/intro.html
   name: ''
+  source: ''
   tags:
   - api
   - elastic
@@ -598,6 +621,7 @@ data:
   links:
   - https://gist.github.com/tafkey/664266c00387c98631b3
   name: ''
+  source: ''
   tags:
   - git
   - status
@@ -616,6 +640,7 @@ data:
   links:
   - https://stackoverflow.com/a/16944931
   name: ''
+  source: ''
   tags:
   - kill
   - linux
@@ -636,6 +661,7 @@ data:
   links:
   - https://stackoverflow.com/a/7878763
   name: ''
+  source: ''
   tags:
   - device
   - linux
@@ -659,6 +685,7 @@ data:
   group: linux
   links: []
   name: ''
+  source: ''
   tags:
   - howto
   - linux
@@ -669,5 +696,5 @@ data:
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: 2018-07-15T13:14:23.731864+0000
+  updated: 2018-07-15T16:39:10.267698+0000
   version: 0.8.d

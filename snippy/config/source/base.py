@@ -32,7 +32,6 @@ from snippy.meta import __version__
 class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     """Base class for configuration sources."""
 
-    # Operations
     CREATE = 'create'
     SEARCH = 'search'
     UPDATE = 'update'
@@ -41,23 +40,9 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     IMPORT = 'import'
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
-    # Attributes
-    DATA = 'data'
-    BRIEF = 'brief'
-    GROUP = 'group'
-    TAGS = 'tags'
-    LINKS = 'links'
-    CATEGORY = 'category'
-    NAME = 'name'
-    FILENAME = 'filename'
-    VERSIONS = 'versions'
-    CREATED = 'created'
-    CREATED = 'updated'
-    DIGEST = 'digest'
-    KEY = 'key'
     ATTRIBUTES = ('data', 'brief', 'group', 'tags', 'links', 'category', 'name',
-                  'filename', 'versions', 'uuid', 'created', 'updated', 'digest',
-                  'key')
+                  'filename', 'versions', 'source', 'uuid', 'created', 'updated',
+                  'digest', 'key')
 
     # Defaults
     BASE_PATH = '/snippy/api'
@@ -141,6 +126,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.server = parameters.get('server', False)
         self.sgrp = parameters.get('sgrp', None)
         self.sort_fields = parameters.get('sort', ('brief'))
+        self.source = parameters.get('source', Const.EMPTY)
         self.ssl_ca_cert = parameters.get('ssl_ca_cert', None)
         self.ssl_cert = parameters.get('ssl_cert', None)
         self.ssl_key = parameters.get('ssl_key', None)
@@ -260,6 +246,18 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         """Convert content versions to utf-8 encoded unicode string."""
 
         self._versions = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def source(self):
+        """Get content source."""
+
+        return self._source
+
+    @source.setter
+    def source(self, value):
+        """Convert content source to utf-8 encoded unicode string."""
+
+        self._source = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sall(self):

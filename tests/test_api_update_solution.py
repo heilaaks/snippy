@@ -62,7 +62,7 @@ class TestApiUpdateSolution(object):
         content = {'2cd0e794244a07f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3043'
+            'content-length': '3057'
         }
         result_json = {
             'links': {
@@ -115,6 +115,7 @@ class TestApiUpdateSolution(object):
             'name': '',
             'filename': '',
             'versions': '',
+            'source': '',
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.BEATS_TIME,
             'updated': Content.BEATS_TIME,
@@ -123,7 +124,7 @@ class TestApiUpdateSolution(object):
         content = {'8d400d39568354f9': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2942'
+            'content-length': '2956'
         }
         result_json = {
             'links': {
@@ -336,6 +337,7 @@ class TestApiUpdateSolution(object):
             'name': Solution.DEFAULTS[Solution.BEATS]['name'],
             'filename': Solution.DEFAULTS[Solution.BEATS]['filename'],
             'versions': Solution.DEFAULTS[Solution.BEATS]['versions'],
+            'source': Solution.DEFAULTS[Solution.BEATS]['source'],
             'uuid': Solution.DEFAULTS[Solution.BEATS]['uuid'],
             'created': Content.BEATS_TIME,
             'updated': Content.BEATS_TIME,
@@ -344,7 +346,7 @@ class TestApiUpdateSolution(object):
         content = {'21c737e704b97226': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3126'
+            'content-length': '3140'
         }
         result_json = {
             'links': {

@@ -41,10 +41,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     NAME = 6
     FILENAME = 7
     VERSIONS = 8
-    CREATED = 9
-    UPDATED = 10
-    DIGEST = 11
-    UUID = 12
+    UUID = 9
+    CREATED = 10
+    UPDATED = 11
+    DIGEST = 12
     METADATA = 13
     KEY = 14
 
@@ -90,9 +90,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                    self.name == resource.name and \
                    self.filename == resource.filename and \
                    self.versions == resource.versions and \
+                   self.uuid == resource.uuid and \
                    self.created == resource.created and \
                    self.updated == resource.updated and \
-                   self.uuid == resource.uuid and \
                    self.metadata == resource.metadata and \
                    self.digest == resource.digest
 
@@ -379,10 +379,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.name = row[Resource.NAME]
         self.filename = row[Resource.FILENAME]
         self.versions = row[Resource.VERSIONS]
+        self.uuid = row[Resource.UUID]
         self.created = row[Resource.CREATED]
         self.updated = row[Resource.UPDATED]
         self.digest = row[Resource.DIGEST]
-        self.uuid = row[Resource.UUID]
         self.metadata = row[Resource.METADATA]
         self.key = row[Resource.KEY]
 
@@ -437,10 +437,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.name,
             self.filename,
             self.versions,
+            self.uuid,
             self.created,
             self.updated,
             self.digest,
-            self.uuid,
             self.metadata,
         )
 
@@ -721,6 +721,12 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return '   \x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m : %s\n' if ansi else '   ! versions : %s\n'
 
     @staticmethod
+    def _terminal_uuid(ansi=False):
+        """Format content uuid."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m     : %s\n' if ansi else '   ! uuid     : %s\n'
+
+    @staticmethod
     def _terminal_created(ansi=False):
         """Format content creation UTC timestamp."""
 
@@ -737,12 +743,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Format content digest."""
 
         return '   \x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m   : %s (%s)\n' if ansi else '   ! digest   : %s (%s)\n'
-
-    @staticmethod
-    def _terminal_uuid(ansi=False):
-        """Format content uuid."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m     : %s\n' if ansi else '   ! uuid     : %s\n'
 
     @staticmethod
     def _terminal_metadata(ansi=False):

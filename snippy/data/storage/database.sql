@@ -13,10 +13,10 @@ create table if not exists contents (
     name        text default '',
     filename    text default '',
     versions    text default '',
+    uuid        text not null unique,
     created     datetime default current_timestamp,
     updated     datetime default current_timestamp,
     digest      blob(64),
-    uuid        text not null unique,
     metadata    text default '',
     id          integer primary key
 );

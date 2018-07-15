@@ -108,7 +108,7 @@ class SqliteDb(object):
             return cause
 
         query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, name, ' +
-                 'filename, versions, created, updated, digest, uuid, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+                 'filename, versions, uuid, created, updated, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
         qargs = resource.dump_qargs()
 
         try:
@@ -210,7 +210,7 @@ class SqliteDb(object):
         """
 
         query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, name=?, '
-                 'filename=?, versions=?, created=?, updated=?, digest=?, uuid=?, metadata=? WHERE digest LIKE ?')
+                 'filename=?, versions=?, uuid=?, created=?, updated=?, digest=?, metadata=? WHERE digest LIKE ?')
         qargs = resource.dump_qargs() + (digest,)
         self._put_db(query, qargs)
 

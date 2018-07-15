@@ -23,6 +23,7 @@ from __future__ import print_function
 
 import os.path
 import sqlite3
+import uuid
 from contextlib import closing
 
 import pkg_resources
@@ -33,6 +34,55 @@ from snippy.content.collection import Collection
 
 class SqliteDbHelper(object):
     """Helper methods for Sqlite database testing."""
+
+    VALID_UUID = '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+    TEST_UUIDS = (
+        uuid.UUID(hex='11cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='12cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='13cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='14cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='15cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='16cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='17cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='18cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='19cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='1acd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='1bcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='1ccd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='1dcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='1ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='1fcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='21cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='22cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='23cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='24cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='25cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='26cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='27cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='28cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='29cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='2acd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='2bcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='2ccd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='2dcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='2ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='2fcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='31cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='32cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='33cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='34cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='35cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='36cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='37cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='38cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='39cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='3acd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='3bcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='3ccd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='3dcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='3ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='3fcd5827b6ef4067b5ac3ceac07dde9f')
+    )
 
     @staticmethod
     def print_contents():
@@ -82,20 +132,6 @@ class SqliteDbHelper(object):
         return SqliteDbHelper._select(Const.REFERENCE)
 
     @staticmethod
-    def delete_all_contents():
-        """Delete all content from database."""
-
-        # In successful case the database table does not exist anymore
-        try:
-            connection = SqliteDbHelper._connect()
-            with closing(connection.cursor()) as cursor:
-                cursor.execute('DELETE FROM contents')
-                connection.commit()
-            connection.close()
-        except sqlite3.OperationalError:
-            pass
-
-    @staticmethod
     def get_schema():
         """Return the file where the database schema is located."""
 
@@ -115,6 +151,20 @@ class SqliteDbHelper(object):
             storage = os.path.join(pkg_resources.resource_filename('snippy', 'data/storage'), 'snippy-test.db')
 
         return storage
+
+    @staticmethod
+    def delete_all_contents():
+        """Delete all content from database."""
+
+        # In successful case the database table does not exist anymore
+        try:
+            connection = SqliteDbHelper._connect()
+            with closing(connection.cursor()) as cursor:
+                cursor.execute('DELETE FROM contents')
+                connection.commit()
+            connection.close()
+        except sqlite3.OperationalError:
+            pass
 
     @staticmethod
     def delete_storage():

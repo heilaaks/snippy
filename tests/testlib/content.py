@@ -21,6 +21,7 @@
 
 import copy
 import datetime
+
 import mock
 
 from snippy.cause import Cause
@@ -58,30 +59,6 @@ class Content(object):
     PYTEST_TIME = '2016-04-21T12:10:11.678729+0000'
 
     @staticmethod
-    def ordered(json):
-        """Sort JSON in order to compare random order JSON structures."""
-
-        # API errors have special case that containes random order hash
-        # structure inside a string. This string is masked. TODO: It should
-        # be possible to sort this also.
-        if 'errors'  in json:
-            for error in json['errors']:
-                error['title'] = 'not compared because of hash structure in random order inside the string'
-
-        # Sort rest of the scenarios.
-        json_list = []
-        if isinstance(json, list):
-            json_list = (json)
-        else:
-            json_list.append(json)
-
-        jsons = []
-        for json_item in json_list:
-            jsons.append(Content._sorter(json_item))
-
-        return tuple(jsons)
-
-    @staticmethod
     def verified(mocker, snippy, content):
         """Compare given content against content stored in database."""
 
@@ -99,31 +76,83 @@ class Content(object):
                                                     mock.call(Const.NEWLINE)])
 
     @staticmethod
-    def compared(content):
-        """Organize reference content so that it is comparable.
+    def ordered(contents):
+        """Sort JSON in order to compare random order JSON structures.
 
-        The helper content contains errors in input data on purpose. The
-        tool formats the data and outputs it in a controlled manner. In
-        order to be able to compare the helper input to tool output, the
-        input content must be processed.
+        Because the 'contents' parameter may be modified in here, the data
+        structure is always deep copied in order to avoid modifying the
+        original which may be the content helper default JSON data.
+
+        Parameters
+        ----------
+        Args:
+            contents (dict): Server response or content helper default JSON data.
         """
 
-        # Reference content does not use data in the helper. The reason
-        # is that this is the end user behaviour. The reference helper
-        # is used in API tests to provide end user input which does not
-        # contain the data. The tool internally fills the the data with
-        # links. Therefore the reference testing checks that the data
-        # has links in case the category is reference.
-        #if content['category'] == Const.REFERENCE:
-        #    content['data'] = content['links']
+        contents = copy.deepcopy(contents)
 
-        # For input testing, the helper data may contain spaces in tags
-        # that must be trimmed because this compares the tool output that
-        # does data parsing and trimming.
+        # API errors have special case that containes random order hash
+        # structure inside a string. This string is masked.
+        #
+        # TODO: It should be possible to sort and compare this also.
+        if 'errors' in contents:
+            for error in contents['errors']:
+                error['title'] = 'not compared because of hash structure in random order inside the string'
+
+        # Validate predefined set of UUIDs.
+        if 'data' in contents:
+            if isinstance(contents['data'], list):
+                for data in contents['data']:
+                    if Content._any_valid_test_uuid(data['attributes']):
+                        data['attributes']['uuid'] = Database.VALID_UUID
+            else:
+                if Content._any_valid_test_uuid(contents['data']['attributes']):
+                    contents['data']['attributes']['uuid'] = Database.VALID_UUID
+
+        # Sort the content structure in order to be able to compare it.
+        json_list = []
+        if isinstance(contents, list):
+            json_list = (contents)
+        else:
+            json_list.append(contents)
+
+        contents = []
+        for content in json_list:
+            contents.append(Content._sorter(content))
+
+        return tuple(contents)
+
+    @staticmethod
+    def compared(content, validate_uuid=True):
+        """Organize reference resource so that it is comparable.
+
+        The content default helpers contains errors in the default input data
+        on purpose. Running Snippy formats the input data and outputs it in a
+        controlled manner. In order to be able to compare the helper default
+        input content to Snippy output, the input content must be formatted
+        here.
+
+        Because the 'content' parameter may be modified in here, the data
+        structure is always deep copied in order to avoid modifying the
+        original which may be the content helper default JSON data.
+
+        Parameters
+        ----------
+        Args:
+            content (dict): Server response or content helper default JSON data.
+            validate_uuid (bool): Defines if the UUID is validated or not.
+        """
+
+        content = copy.deepcopy(content)
+
+        # Remove white spaces around the tags.
         content['tags'] = tuple([tag.strip() for tag in content['tags']])
 
         # Tags are always sorted for all content.
         content['tags'] = tuple(sorted(content['tags']))
+
+        if Content._any_valid_test_uuid(content) and validate_uuid:
+            content['uuid'] = Database.VALID_UUID
 
         # The helper data may contain links in unsorted order. The links
         # are sorted based on content. Since comparison is made against
@@ -133,6 +162,99 @@ class Content(object):
             content['links'] = tuple(sorted(content['links']))
 
         return content
+
+    @staticmethod
+    def yaml_dump(yaml_dump, mock_file, filename, content):
+        """Compare given content against yaml dump.
+
+        Both test data and reference data must be validated for UUIDs. The
+        list of UUIDs is predefined but it must be unique so each content may
+        have any of the valid UUIDs.
+
+        Because the 'content' parameter may be modified in here, the data
+        structure is always deep copied in order to avoid modifying the
+        original which may be the content helper default JSON data.
+
+        Parameters
+        ----------
+        Args:
+            yaml_dump (obj): Mocked yaml object.
+            mock_file (obj): Mocked file object.
+            filename (str): Expected filename used to for mocked file.
+            content (str): Content expected to be dumped into YAML file.
+        """
+
+        content = copy.deepcopy(content)
+
+        dictionary = yaml_dump.safe_dump.mock_calls[0][1][0]
+        for data in content['data']:
+            if Content._any_valid_test_uuid(data):
+                data['uuid'] = Database.VALID_UUID
+
+        for data in dictionary['data']:
+            if Content._any_valid_test_uuid(data):
+                data['uuid'] = Database.VALID_UUID
+        mock_file.assert_called_once_with(filename, 'w')
+        yaml_dump.safe_dump.assert_called_with(content, mock.ANY, default_flow_style=mock.ANY)
+
+    @staticmethod
+    def json_dump(json_dump, mock_file, filename, content):
+        """Compare given content against yaml dump.
+
+        Both test data and reference data must be validated for UUIDs. The
+        list of UUIDs is predefined but it must be unique so each content may
+        have any of the valid UUIDs.
+
+        Because the 'content' parameter may be modified in here, the data
+        structure is always deep copied in order to avoid modifying the
+        original which may be the content helper default JSON data.
+
+        Parameters
+        ----------
+        Args:
+            json_dump (obj): Mocked yaml object.
+            mock_file (obj): Mocked file object.
+            filename (str): Expected filename used to for mocked file.
+            content (str): Content expected to be dumped into JSON file.
+        """
+
+        content = copy.deepcopy(content)
+
+        dictionary = json_dump.dump.mock_calls[0][1][0]
+        for data in content['data']:
+            if Content._any_valid_test_uuid(data):
+                data['uuid'] = Database.VALID_UUID
+
+        for data in dictionary['data']:
+            if Content._any_valid_test_uuid(data):
+                data['uuid'] = Database.VALID_UUID
+        mock_file.assert_called_once_with(filename, 'w')
+        json_dump.dump.assert_called_with(content, mock.ANY)
+
+    @staticmethod
+    def text_dump(mock_file, filename, contents):
+        """Compare given content against yaml dump.
+
+        Parameters
+        ----------
+        Args:
+            mock_file (obj): Mocked file object.
+            filename (str): Expected filename used to for mocked file.
+            content (str): Content expected to be dumped into text file.
+        """
+
+        # Note: The assert_has_calls does not see if one item from given list
+        #       is missing. The mock_calls works by verifying all calls.
+        #
+        # Note: The reference content has meta but in case of text dump, that
+        #       is not produced and it is not comapred here.
+        references = []
+        for content in contents['data']:
+            references.append(mock.call(Reference.get_template(content)))
+            references.append(mock.call(Const.NEWLINE))
+        mock_file.assert_called_once_with(filename, 'w')
+        handle = mock_file.return_value.__enter__.return_value
+        assert handle.write.mock_calls == references
 
     @staticmethod
     def get_api_meta():
@@ -248,6 +370,30 @@ class Content(object):
             return sorted(Content._sorter(x) for x in json)
 
         return json
+
+    @staticmethod
+    def _any_valid_test_uuid(content):
+        """Test if content UUID is any of the valid test UUIDs.
+
+        Uuid can be any of the allocated UUIDs for testing. Because the test
+        case can contain any order of content, the test UUIDs can in random
+        order. Because of this, the test sets always the correct UUID based
+        on test. There is no way to ignore specific element and this seems
+        to be the only way.
+
+        It may be that the uuid field is not returned by the server for
+        example when user limits the returned fields. Because of this,
+        missing filed is considered valid.
+        """
+
+        if 'uuid' not in content:
+            return True
+
+        if any(content['uuid'] in str(uuid_) for uuid_ in Database.TEST_UUIDS):
+            return True
+
+
+        return False
 
 
 class Field(object):  # pylint: disable=too-few-public-methods

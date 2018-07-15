@@ -36,27 +36,28 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliImportReference(object):
     """Test workflows for importing references."""
 
-    @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_001(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    def test_cli_import_reference_001(self, snippy, mocker):
         """Import all references.
 
         Import all references. File name is not defined in command line. This
         should result tool internal default file name and format being used.
         """
 
-        content_read = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--reference'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
-        yaml_load.assert_called_once_with('./references.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--reference'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            mock_file.assert_called_once_with('./references.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_002(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    def test_cli_import_reference_002(self, snippy, mocker):
         """Import all references.
 
         Import all references from yaml file. File name and format are extracted
@@ -64,19 +65,20 @@ class TestCliImportReference(object):
         explicitly defined from command line.
         """
 
-        content_read = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.yaml'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
-        yaml_load.assert_called_once_with('./all-references.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            mock_file.assert_called_once_with('./all-references.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_003(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    def test_cli_import_reference_003(self, snippy, mocker):
         """Import all references.
 
         Import all references from yaml file without specifying the reference
@@ -84,36 +86,38 @@ class TestCliImportReference(object):
         option -f|--file.
         """
 
-        content_read = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-f', './all-references.yaml'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
-        assert not Database.get_snippets().size()
-        yaml_load.assert_called_once_with('./all-references.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '-f', './all-references.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            assert not Database.get_snippets().size()
+            mock_file.assert_called_once_with('./all-references.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_004(self, snippy, json_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'json')
+    def test_cli_import_reference_004(self, snippy, mocker):
         """Import all references.
 
         Import all references from json file. File name and format are extracted
         from command line option -f|--file.
         """
 
-        content_read = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
         }
-        json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.json'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
-        json_load.assert_called_once_with('./all-references.json', 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            json.load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.json'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            mock_file.assert_called_once_with('./all-references.json', 'r')
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_005(self, snippy, mocker):
@@ -124,17 +128,17 @@ class TestCliImportReference(object):
         case.
         """
 
-        content_read = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
         }
-        mocked_open = Content.mocked_open(content_read)
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.txt'])
             assert cause == Cause.ALL_OK
             assert Database.get_references().size() == 2
             mock_file.assert_called_once_with('./all-references.txt', 'r')
-            Content.verified(mocker, snippy, content_read)
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_006(self, snippy, mocker):
@@ -145,17 +149,17 @@ class TestCliImportReference(object):
         option -f|--file. File extension is '*.txt' in this case.
         """
 
-        content_read = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
         }
-        mocked_open = Content.mocked_open(content_read)
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-references.txt'])
             assert cause == Cause.ALL_OK
             assert Database.get_references().size() == 2
             mock_file.assert_called_once_with('./all-references.txt', 'r')
-            Content.verified(mocker, snippy, content_read)
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_007(self, snippy, mocker):
@@ -166,17 +170,17 @@ class TestCliImportReference(object):
         -f|--file. File extension is '*.text' in this case.
         """
 
-        content_read = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
         }
-        mocked_open = Content.mocked_open(content_read)
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-references.text'])
             assert cause == Cause.ALL_OK
             assert Database.get_references().size() == 2
             mock_file.assert_called_once_with('./all-references.text', 'r')
-            Content.verified(mocker, snippy, content_read)
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_008(self, snippy):
@@ -206,8 +210,8 @@ class TestCliImportReference(object):
             assert not Database.get_collection().size()
             mock_file.assert_not_called()
 
-    @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc', 'isfile_true')
-    def test_cli_import_reference_010(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'update-regexp-utc', 'isfile_true')
+    def test_cli_import_reference_010(self, snippy, mocker):
         """Import reference based on message digest.
 
         Import defined reference based on message digest. File name is defined
@@ -216,16 +220,17 @@ class TestCliImportReference(object):
         regexp content time.
         """
 
-        content_read = Content.updated_gitlog()
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--reference', '-d', '5c2071094dbfaa33', '-f', 'one-reference.yaml'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 1
-        yaml_load.assert_called_once_with('one-reference.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        content = Content.updated_gitlog()
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--reference', '-d', '5c2071094dbfaa33', '-f', 'one-reference.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 1
+            mock_file.assert_called_once_with('one-reference.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc', 'isfile_true')
-    def test_cli_import_reference_011(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'update-regexp-utc', 'isfile_true')
+    def test_cli_import_reference_011(self, snippy, mocker):
         """Import reference based on message digest.
 
         Import defined reference based on message digest without specifying
@@ -233,14 +238,15 @@ class TestCliImportReference(object):
         updated. The updated content is timestamped with regexp content time.
         """
 
-        content_read = Content.updated_gitlog()
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-d', '5c2071094dbfaa33', '-f', 'one-reference.yaml'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 1
-        assert not Database.get_snippets().size()
-        yaml_load.assert_called_once_with('one-reference.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        content = Content.updated_gitlog()
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '-d', '5c2071094dbfaa33', '-f', 'one-reference.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 1
+            assert not Database.get_snippets().size()
+            mock_file.assert_called_once_with('one-reference.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc', 'isfile_true')
     def test_cli_import_reference_012(self, snippy, mocker):
@@ -251,15 +257,15 @@ class TestCliImportReference(object):
         should still import the content in reference category.
         """
 
-        content_read = Content.updated_gitlog()
-        mocked_open = Content.mocked_open(content_read)
+        content = Content.updated_gitlog()
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--snippet', '-d', '5c2071094dbfaa33', '-f', 'one-reference.text'])
             assert cause == Cause.ALL_OK
             assert Database.get_references().size() == 1
             assert not Database.get_snippets().size()
             mock_file.assert_called_once_with('one-reference.text', 'r')
-            Content.verified(mocker, snippy, content_read)
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('import-pytest', 'update-regexp-utc')
     def test_cli_import_reference_013(self, snippy, mocker):
@@ -269,8 +275,8 @@ class TestCliImportReference(object):
         found. In this case there is one reference stored.
         """
 
-        content_read = Content.updated_gitlog()
-        mocked_open = Content.mocked_open(content_read)
+        content = Content.updated_gitlog()
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-d', '123456789abcdef0', '-f', 'one-reference.text'])
             assert cause == 'NOK: cannot find: reference :identified with digest: 123456789abcdef0'
@@ -279,27 +285,29 @@ class TestCliImportReference(object):
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, {Reference.PYTEST_DIGEST: Reference.DEFAULTS[Reference.PYTEST]})
 
-    def test_cli_import_reference_014(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('yaml')
+    def test_cli_import_reference_014(self, snippy, mocker):
         """Import references defaults.
 
         Import reference defaults. All references should be imported from
         predefined file location under tool data folder from yaml format.
         """
 
-        content_read = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-            Reference.PYTEST_DIGEST: Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.PYTEST_DIGEST: Content.compared(Reference.DEFAULTS[Reference.PYTEST], validate_uuid=False)
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
-        defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
-        yaml_load.assert_called_once_with(defaults_references, 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
+            mock_file.assert_called_once_with(defaults_references, 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('default-references', 'import-gitlog-utc', 'import-regexp-utc')
-    def test_cli_import_reference_015(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('yaml', 'default-references', 'import-gitlog-utc', 'import-regexp-utc')
+    def test_cli_import_reference_015(self, snippy, mocker):
         """Import references defaults.
 
         Try to import reference defaults again. The second import should fail
@@ -309,18 +317,19 @@ class TestCliImportReference(object):
         multiple failures to import each content.
         """
 
-        content_read = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
-        assert cause == 'NOK: content data already exist with digest 5c2071094dbfaa33' or \
-               cause == 'NOK: content data already exist with digest cb9225a81eab8ced'
-        assert Database.get_references().size() == 2
-        defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
-        yaml_load.assert_called_once_with(defaults_references, 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
+            assert cause == 'NOK: content data already exist with digest: 5c2071094dbfaa33' or \
+                   cause == 'NOK: content data already exist with digest: cb9225a81eab8ced'
+            assert Database.get_references().size() == 2
+            defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
+            mock_file.assert_called_once_with(defaults_references, 'r')
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_016(self, snippy):

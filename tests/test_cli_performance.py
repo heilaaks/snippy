@@ -36,7 +36,7 @@ class TestCliPerformance(object):
     """Test CLI performance."""
 
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_performance(self, snippy, capsys, caplog):
+    def test_cli_performance(self, snippy_perf, capsys, caplog):
         """Test CLI performance.
 
         Verify performance of the tool on a rough scale. The intention
@@ -61,22 +61,22 @@ class TestCliPerformance(object):
 
         start = time.time()
         for _ in range(55):
-            self.create_defaults(snippy)
+            self.create_defaults(snippy_perf)
             assert Database.get_snippets().size() == 2
             assert Database.get_solutions().size() == 2
 
             # Search all content.
-            cause = snippy.run(['snippy', 'search', '--all', '--sall', '.'])
+            cause = snippy_perf.run(['snippy', 'search', '--all', '--sall', '.'])
             assert cause == Cause.ALL_OK
 
             # Delete all content.
-            cause = snippy.run(['snippy', 'delete', '-d', '54e41e9b52a02b63'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', '54e41e9b52a02b63'])
             assert cause == Cause.ALL_OK
-            cause = snippy.run(['snippy', 'delete', '-d', '53908d68425c61dc'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', '53908d68425c61dc'])
             assert cause == Cause.ALL_OK
-            cause = snippy.run(['snippy', 'delete', '-d', 'a96accc25dd23ac0'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', 'a96accc25dd23ac0'])
             assert cause == Cause.ALL_OK
-            cause = snippy.run(['snippy', 'delete', '-d', '61a24a156f5e9d2d'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', '61a24a156f5e9d2d'])
             assert cause == Cause.ALL_OK
             assert not Database.get_collection().size()
 

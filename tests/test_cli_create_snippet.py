@@ -123,7 +123,7 @@ class TestCliCreateSnippet(object):
         tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
-        assert cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
+        assert cause == 'NOK: content data already exist with digest: 54e41e9b52a02b63'
         assert Database.get_snippets().size() == 2
         Content.verified(mocker, snippy, content_read)
 

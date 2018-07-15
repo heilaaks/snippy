@@ -49,6 +49,7 @@ class SnippetHelper(object):
         'name': '',
         'filename': '',
         'versions': '',
+        'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2017-10-14T19:56:31.000001+0000',
         'updated': '2017-10-14T19:56:31.000001+0000',
         'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'
@@ -64,6 +65,7 @@ class SnippetHelper(object):
         'name': '',
         'filename': '',
         'versions': '',
+        'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2017-10-14T19:56:31.000001+0000',
         'updated': '2017-10-14T19:56:31.000001+0000',
         'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'
@@ -80,6 +82,7 @@ class SnippetHelper(object):
         'name': '',
         'filename': '',
         'versions': '',
+        'uuid': '13cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2017-10-20T07:08:45.000001+0000',
         'updated': '2017-10-20T07:08:45.000001+0000',
         'digest': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73'
@@ -94,6 +97,7 @@ class SnippetHelper(object):
         'name': '',
         'filename': '',
         'versions': '',
+        'uuid': '14cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2017-10-20T07:08:45.000001+0000',
         'updated': '2017-10-20T07:08:45.000001+0000',
         'digest': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'
@@ -109,6 +113,7 @@ class SnippetHelper(object):
         'name': '',
         'filename': '',
         'versions': '',
+        'uuid': '15cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2018-05-07T11:11:55.000001+0000',
         'updated': '2018-05-07T11:11:55.000001+0000',
         'digest': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'

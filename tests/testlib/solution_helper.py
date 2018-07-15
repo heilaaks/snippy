@@ -86,6 +86,7 @@ class SolutionHelper(object):
         'name': '',
         'filename' :'howto-debug-elastic-beats.txt',
         'versions': '',
+        'uuid': '21cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created' :'2017-10-20T11:11:19.000001+0000',
         'updated' :'2017-10-20T11:11:19.000001+0000',
         'digest':'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'
@@ -160,6 +161,7 @@ class SolutionHelper(object):
         'name': '',
         'filename': 'howto-debug-nginx.txt',
         'versions': '',
+        'uuid': '22cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2017-10-20T06:16:27.000001+0000',
         'updated': '2017-10-20T06:16:27.000001+0000',
         'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'
@@ -264,6 +266,7 @@ class SolutionHelper(object):
         'name': '',
         'filename': 'kubernetes-docker-log-driver-kafka.txt',
         'versions': '',
+        'uuid': '23cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2017-10-20T06:16:27.000001+0000',
         'updated': '2017-10-20T06:16:27.000001+0000',
         'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'

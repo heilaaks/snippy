@@ -36,47 +36,47 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliExportReference(object):
     """Test workflows for exporting references."""
 
-    @pytest.mark.usefixtures('default-references', 'export-time', 'export-time')
-    def test_cli_export_reference_001(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time', 'export-time')
+    def test_cli_export_reference_001(self, snippy):
         """Export all references.
 
         Export all references without defining target file name from command
         line.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
                 Content.compared(Reference.DEFAULTS[Reference.REGEXP])
             ]
         }
-        cause = snippy.run(['snippy', 'export', '--references'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
-        yaml_dump.assert_called_once_with('./references.yaml', 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--references'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            Content.yaml_dump(yaml, mock_file, './references.yaml', content)
 
-    @pytest.mark.usefixtures('default-references', 'export-time', 'export-time')
-    def test_cli_export_reference_002(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time', 'export-time')
+    def test_cli_export_reference_002(self, snippy):
         """Export all references.
 
         Export all references into yaml file defined from command line by
         explicitly defining the content category.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
                 Content.compared(Reference.DEFAULTS[Reference.REGEXP])
             ]
         }
-        cause = snippy.run(['snippy', 'export', '-f', './defined-references.yaml', '--reference'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
-        yaml_dump.assert_called_once_with('./defined-references.yaml', 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-f', './defined-references.yaml', '--reference'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            Content.yaml_dump(yaml, mock_file, './defined-references.yaml', content)
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_export_reference_003(self, snippy):
@@ -95,7 +95,7 @@ class TestCliExportReference(object):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('default-references', 'yaml_dump', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
     def test_cli_export_reference_004(self, snippy):
         """Export all references.
 
@@ -105,15 +105,19 @@ class TestCliExportReference(object):
         not explicitly defined from command line.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'cb9225a81eab8ced'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('reference.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Reference.get_template(Reference.DEFAULTS[Reference.REGEXP])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_references().size() == 2
+            Content.text_dump(mock_file, 'reference.text', content)
 
-    @pytest.mark.usefixtures('default-references', 'yaml_dump', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
     def test_cli_export_reference_005(self, snippy):
         """Export all references.
 
@@ -121,7 +125,7 @@ class TestCliExportReference(object):
         in command line as yaml file.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Content.compared(Reference.DEFAULTS[Reference.REGEXP])
@@ -130,10 +134,10 @@ class TestCliExportReference(object):
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'cb9225a81eab8ced', '-f', 'defined-reference.yaml'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-reference.yaml', 'w')
-            yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+            assert Database.get_references().size() == 2
+            Content.yaml_dump(yaml, mock_file, 'defined-reference.yaml', content)
 
-    @pytest.mark.usefixtures('default-references', 'json_dump', 'export-time')
+    @pytest.mark.usefixtures('json', 'default-references', 'export-time')
     def test_cli_export_reference_006(self, snippy):
         """Export all references.
 
@@ -141,7 +145,7 @@ class TestCliExportReference(object):
         in command line as json file.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Content.compared(Reference.DEFAULTS[Reference.REGEXP])
@@ -150,8 +154,8 @@ class TestCliExportReference(object):
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'cb9225a81eab8ced', '-f', 'defined-reference.json'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-reference.json', 'w')
-            json.dump.assert_called_with(content_dict, mock.ANY)
+            assert Database.get_references().size() == 2
+            Content.json_dump(json, mock_file, 'defined-reference.json', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_007(self, snippy):
@@ -162,13 +166,17 @@ class TestCliExportReference(object):
         line option -f|--file.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', 'cb9225a81eab8ced', '-f', 'defined-reference.txt'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-reference.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Reference.get_template(Reference.DEFAULTS[Reference.REGEXP])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_references().size() == 2
+            Content.text_dump(mock_file, 'defined-reference.txt', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_008(self, snippy):
@@ -194,13 +202,17 @@ class TestCliExportReference(object):
         of default file name and format reference.text.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'regexp', '--references'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('reference.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Reference.get_template(Reference.DEFAULTS[Reference.REGEXP])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_references().size() == 2
+            Content.text_dump(mock_file, 'reference.text', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_010(self, snippy):
@@ -210,13 +222,17 @@ class TestCliExportReference(object):
         in command line as text file with *.txt file extension.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'regexp', '-f', 'defined-reference.txt', '--references'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-reference.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Reference.get_template(Reference.DEFAULTS[Reference.REGEXP])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_references().size() == 2
+            Content.text_dump(mock_file, 'defined-reference.txt', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_011(self, snippy):
@@ -226,13 +242,17 @@ class TestCliExportReference(object):
         in command line as text file with *.text file extension.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'regexp', '-f', 'defined-reference.text', '--references'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-reference.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Reference.get_template(Reference.DEFAULTS[Reference.REGEXP])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_references().size() == 2
+            Content.text_dump(mock_file, 'defined-reference.text', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_012(self, snippy):
@@ -243,15 +263,18 @@ class TestCliExportReference(object):
         file defined in command line.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'howto', '-f', 'defined-reference.text', '--references'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-reference.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])),
-                                                mock.call(Const.NEWLINE),
-                                                mock.call(Reference.get_template(Reference.DEFAULTS[Reference.REGEXP])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_references().size() == 2
+            Content.text_dump(mock_file, 'defined-reference.text', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_013(self, snippy):
@@ -265,24 +288,25 @@ class TestCliExportReference(object):
             assert cause == 'NOK: cannot find content with given search criteria'
             mock_file.assert_not_called()
 
-    @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_014(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
+    def test_cli_export_reference_014(self, snippy):
         """Export defined reference with content data.
 
         Export defined reference based on content data. File name is defined in
         command line as yaml file.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Content.compared(Reference.DEFAULTS[Reference.GITLOG])
             ]
         }
-        cause = snippy.run(['snippy', 'export', '-c', 'https://chris.beams.io/posts/git-commit/', '-f', 'defined-reference.yaml', '--references'])  # pylint: disable=line-too-long
-        assert cause == Cause.ALL_OK
-        yaml_dump.assert_called_once_with('defined-reference.yaml', 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-c', 'https://chris.beams.io/posts/git-commit/', '-f', 'defined-reference.yaml', '--references'])  # pylint: disable=line-too-long
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            Content.yaml_dump(yaml, mock_file, 'defined-reference.yaml', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_015(self, snippy):
@@ -295,30 +319,32 @@ class TestCliExportReference(object):
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--reference', '--template'])
             assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
             mock_file.assert_called_once_with('./reference-template.txt', 'w')
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE))
 
-    @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_016(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
+    def test_cli_export_reference_016(self, snippy):
         """Export reference defaults.
 
         Export reference defaults. All references should be exported into
         predefined file location under tool data folder in yaml format.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
                 Content.compared(Reference.DEFAULTS[Reference.REGEXP])
             ]
         }
-        cause = snippy.run(['snippy', 'export', '--defaults', '--references'])
-        assert cause == Cause.ALL_OK
-        defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
-        yaml_dump.assert_called_once_with(defaults_references, 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--defaults', '--references'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
+            Content.yaml_dump(yaml, mock_file, defaults_references, content)
 
     @pytest.mark.usefixtures('export-time')
     def test_cli_export_reference_017(self, snippy):

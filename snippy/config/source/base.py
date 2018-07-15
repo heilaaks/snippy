@@ -56,7 +56,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     DIGEST = 'digest'
     KEY = 'key'
     ATTRIBUTES = ('data', 'brief', 'group', 'tags', 'links', 'category', 'name',
-                  'filename', 'versions', 'created', 'updated', 'digest', 'key')
+                  'filename', 'versions', 'uuid', 'created', 'updated', 'digest',
+                  'key')
 
     # Defaults
     BASE_PATH = '/snippy/api'

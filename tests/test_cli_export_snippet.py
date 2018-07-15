@@ -36,88 +36,88 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting snippets."""
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time', 'export-time')
-    def test_cli_export_snippet_001(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time', 'export-time')
+    def test_cli_export_snippet_001(self, snippy):
         """Export all snippets.
 
         Export all snippets without defining target file name from command
         line.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
-        cause = snippy.run(['snippy', 'export'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
-        yaml_dump.assert_called_once_with('./snippets.yaml', 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time', 'export-time')
-    def test_cli_export_snippet_002(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time', 'export-time')
+    def test_cli_export_snippet_002(self, snippy):
         """Export all snippets.
 
         Export all snippets without defining target file name from command
         line. In this case the content category is defined explicitly.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '--snippets'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
-        yaml_dump.assert_called_once_with('./snippets.yaml', 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--snippets'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time', 'export-time')
-    def test_cli_export_snippet_003(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time', 'export-time')
+    def test_cli_export_snippet_003(self, snippy):
         """Export all snippets.
 
         Export all snippets into yaml file defined from command line.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yaml'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
-        yaml_dump.assert_called_once_with('./defined-snippets.yaml', 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            Content.yaml_dump(yaml, mock_file, './defined-snippets.yaml', content)
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time', 'export-time')
-    def test_cli_export_snippet_004(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time', 'export-time')
+    def test_cli_export_snippet_004(self, snippy):
         """Export all snippets.
 
-        Export all snippets into yaml file defined from command line by
-        explicitly defining the content category.
+        Export all snippets into yaml file by explicitly defining the content
+        category and file name from command line.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
-        yaml_dump.assert_called_once_with('./defined-snippets.yaml', 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            Content.yaml_dump(yaml, mock_file, './defined-snippets.yaml', content)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_export_snippet_005(self, snippy):
@@ -136,7 +136,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('default-snippets', 'yaml_dump', 'export-time')
+    @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_006(self, snippy):
         """Export all snippets.
 
@@ -145,15 +145,19 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         of default file name and format
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('snippet.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_snippets().size() == 2
+            Content.text_dump(mock_file, 'snippet.text', content)
 
-    @pytest.mark.usefixtures('default-snippets', 'yaml_dump', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_007(self, snippy):
         """Export all snippets.
 
@@ -161,7 +165,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as yaml file.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -170,10 +174,10 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.yaml'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.yaml', 'w')
-            yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+            assert Database.get_snippets().size() == 2
+            Content.yaml_dump(yaml, mock_file, 'defined-snippet.yaml', content)
 
-    @pytest.mark.usefixtures('default-snippets', 'json_dump', 'export-time')
+    @pytest.mark.usefixtures('json', 'default-snippets', 'export-time')
     def test_cli_export_snippet_008(self, snippy):
         """Export all snippets.
 
@@ -181,7 +185,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as json file.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -190,8 +194,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.json'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.json', 'w')
-            json.dump.assert_called_with(content_dict, mock.ANY)
+            assert Database.get_snippets().size() == 2
+            Content.json_dump(json, mock_file, 'defined-snippet.json', content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_009(self, snippy):
@@ -202,13 +206,17 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         line option -f|--file.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_snippets().size() == 2
+            Content.text_dump(mock_file, 'defined-snippet.txt', content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_010(self, snippy):
@@ -234,51 +242,56 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         of default file name and format snippet.text.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('snippet.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_snippets().size() == 2
+            Content.text_dump(mock_file, 'snippet.text', content)
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_012(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_012(self, snippy):
         """Export defined snippet with digest.
 
         Export defined snippet based on search keyword. File name is defined
         in command line as yaml file.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml'])
-        assert cause == Cause.ALL_OK
-        yaml_dump.assert_called_once_with('defined-snippet.yaml', 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            Content.yaml_dump(yaml, mock_file, 'defined-snippet.yaml', content)
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_013(self, snippy, json_dump):
+    @pytest.mark.usefixtures('json', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_013(self, snippy):
         """Export defined snippet with digest.
 
         Export defined snippet based on search keyword. File name is defined
         in command line as json file.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json'])
-        assert cause == Cause.ALL_OK
-        json_dump.assert_called_once_with('defined-snippet.json', 'w')
-        json.dump.assert_called_with(content_dict, mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json'])
+            assert cause == Cause.ALL_OK
+            Content.json_dump(json, mock_file, 'defined-snippet.json', content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_014(self, snippy):
@@ -288,13 +301,17 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as text file with *.txt file extension.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_snippets().size() == 2
+            Content.text_dump(mock_file, 'defined-snippet.txt', content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_015(self, snippy):
@@ -304,13 +321,17 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as text file with *.text file extension.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_snippets().size() == 2
+            Content.text_dump(mock_file, 'defined-snippet.text', content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_016(self, snippy):
@@ -321,15 +342,18 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         file defined in command line.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])),
-                                                mock.call(Const.NEWLINE),
-                                                mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_snippets().size() == 2
+            Content.text_dump(mock_file, 'defined-snippet.text', content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_017(self, snippy):
@@ -352,51 +376,57 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         file name and format snippet.text.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('snippet.text', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_snippets().size() == 2
+            Content.text_dump(mock_file, 'snippet.text', content)
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_019(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_019(self, snippy):
         """Export defined snippet with content data.
 
         Export defined snippet based on content data. File name is defined in
         command line as yaml file.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  # pylint: disable=line-too-long
-        assert cause == Cause.ALL_OK
-        yaml_dump.assert_called_once_with('defined-snippet.yaml', 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  # pylint: disable=line-too-long
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            Content.yaml_dump(yaml, mock_file, 'defined-snippet.yaml', content)
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_020(self, snippy, json_dump):
+    @pytest.mark.usefixtures('json', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_020(self, snippy):
         """Export defined snippet with content data.
 
         Export defined snippet based on content data. File name is defined in
         command line as json file.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  # pylint: disable=line-too-long
-        assert cause == Cause.ALL_OK
-        json_dump.assert_called_once_with('defined-snippet.json', 'w')
-        json.dump.assert_called_with(content_dict, mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  # pylint: disable=line-too-long
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            Content.json_dump(json, mock_file, 'defined-snippet.json', content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_021(self, snippy):
@@ -406,13 +436,17 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         command line as text file with *.txt file extension.
         """
 
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
-            mock_file.assert_called_once_with('defined-snippet.txt', 'w')
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_has_calls([mock.call(Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])),
-                                                mock.call(Const.NEWLINE)])
+            assert Database.get_snippets().size() == 2
+            Content.text_dump(mock_file, 'defined-snippet.txt', content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_022(self, snippy):
@@ -444,26 +478,27 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_called_with(Const.NEWLINE.join(Snippet.TEMPLATE))
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time')
-    def test_cli_export_snippet_024(self, snippy, yaml_dump):
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
+    def test_cli_export_snippet_024(self, snippy):
         """Export snippet defaults.
 
         Export snippet defaults. All snippets should be exported into
         predefined file location under tool data folder in yaml format.
         """
 
-        content_dict = {
+        content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
-        cause = snippy.run(['snippy', 'export', '--defaults'])
-        assert cause == Cause.ALL_OK
-        defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
-        yaml_dump.assert_called_once_with(defaults_snippets, 'w')
-        yaml.safe_dump.assert_called_with(content_dict, mock.ANY, default_flow_style=mock.ANY)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--defaults'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
+            Content.yaml_dump(yaml, mock_file, defaults_snippets, content)
 
     @pytest.mark.usefixtures('export-time')
     def test_cli_export_snippet_025(self, snippy):

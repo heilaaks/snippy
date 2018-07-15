@@ -43,6 +43,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         'name': '',
         'filename': '',
         'versions': '',
+        'uuid': '31cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2018-06-22T13:11:13.678729+0000',
         'updated': '2018-06-22T13:11:13.678729+0000',
         'digest': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f'
@@ -57,6 +58,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         'name': '',
         'filename': '',
         'versions': '',
+        'uuid': '32cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2018-05-21T13:11:13.678729+0000',
         'updated': '2018-05-21T13:11:13.678729+0000',
         'digest': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832'
@@ -70,6 +72,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         'name': '',
         'filename': '',
         'versions': '',
+        'uuid': '33cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2016-04-21T12:10:11.678729+0000',
         'updated': '2016-04-21T12:10:11.678729+0000',
         'digest': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e'

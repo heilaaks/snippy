@@ -54,7 +54,7 @@ class TestApiCreateReference(object):
         content = {Reference.GITLOG_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '524'}
+            'content-length': '572'}
         result_json = {
             'data': [{
                 'type': 'reference',
@@ -94,7 +94,7 @@ class TestApiCreateReference(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1045'
+            'content-length': '1141'
         }
         result_json = {
             'data': [{
@@ -143,7 +143,7 @@ class TestApiCreateReference(object):
         content = {'cb9225a81eab8ce': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '685'
+            'content-length': '733'
         }
         result_json = {
             'links': {
@@ -197,6 +197,7 @@ class TestApiCreateReference(object):
             'name': Reference.DEFAULTS[Reference.GITLOG]['name'],
             'filename': Reference.DEFAULTS[Reference.GITLOG]['filename'],
             'versions': Reference.DEFAULTS[Reference.GITLOG]['versions'],
+            'uuid': Reference.DEFAULTS[Reference.GITLOG]['uuid'],
             'created': Content.GITLOG_TIME,
             'updated': Content.REGEXP_TIME,
             'digest': 'ee4a072a5a7a661a8c5d8e8f2aac88267c47fbf0b26db19b97d0b72bae3d74f0'
@@ -204,7 +205,7 @@ class TestApiCreateReference(object):
         content = {'ee4a072a5a7a661a': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '669'
+            'content-length': '717'
         }
         result_json = {
             'links': {

@@ -1218,6 +1218,23 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        $ openssl rsa -check -in server.key
        ```
 
+    TESTING
+
+    1. Mocking UUIDs
+
+       The UUIDs must be unique as defined for the database SQL schema. Each
+       content has one unique UUID. Tests must be able to create the predefined
+       content in any order. This causes situation where content can have
+       different UUID depending on the order how it was generated.
+
+       In order to test predefined but random set of UUIDs, the value of the UUID
+       is tested first against set of valid values and then stored as one valid
+       value for assert.
+
+       The default data for snippet, solution and reference has their own range
+       of UUIDs' The snippet range starts with 1, solution with 2 and reference
+       with 3.
+
     === WHITEBOARD ===
     # SECURITY
     $ curl --insecure -v https://127.0.0.1:8080
@@ -1908,63 +1925,100 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 
 ===
 
-(?:# Add optional links|# Add mandatory links)(.*?)(?:\n{2}|$)
+======================================================================= test session starts ========================================================================
+platform linux -- Python 3.6.5, pytest-3.6.3, py-1.5.2, pluggy-0.5.2
+rootdir: /home/heilaaks/devel/snippy, inifile:
+plugins: mock-1.10.0, cov-2.5.1
+collected 464 items                                                                                                                                                
+
+tests/test_api_create_reference.py ......                                                                                                                    [  1%]
+tests/test_api_create_snippet.py ..................                                                                                                          [  5%]
+tests/test_api_create_solution.py ........                                                                                                                   [  6%]
+tests/test_api_delete_reference.py ...                                                                                                                       [  7%]
+tests/test_api_delete_snippet.py ...                                                                                                                         [  8%]
+tests/test_api_delete_solution.py ...                                                                                                                        [  8%]
+tests/test_api_hello.py ............                                                                                                                         [ 11%]
+tests/test_api_performance.py ..                                                                                                                             [ 11%]
+tests/test_api_search_snippet.py ......................................                                                                                      [ 20%]
+tests/test_api_search_solution.py ........................                                                                                                   [ 25%]
+tests/test_api_update_snippet.py .......                                                                                                                     [ 26%]
+tests/test_api_update_solution.py .......                                                                                                                    [ 28%]
+tests/test_cli_create_reference.py ....                                                                                                                      [ 29%]
+tests/test_cli_create_snippet.py .......                                                                                                                     [ 30%]
+tests/test_cli_create_solution.py ......                                                                                                                     [ 31%]
+tests/test_cli_delete_reference.py .....s...                                                                                                                 [ 33%]
+tests/test_cli_delete_snippet.py .............                                                                                                               [ 36%]
+tests/test_cli_delete_solution.py ............                                                                                                               [ 39%]
+tests/test_cli_export_reference.py FF.FFFF.FFFF.F.F.                                                                                                         [ 42%]
+tests/test_cli_export_snippet.py ..FF..FF...FF.....FF...F.                                                                                                   [ 48%]
+tests/test_cli_export_solution.py FFF.......FFFF.........FF....F..                                                                                           [ 55%]
+tests/test_cli_import_reference.py ................                                                                                                          [ 58%]
+tests/test_cli_import_snippet.py ..............F....                                                                                                         [ 62%]
+tests/test_cli_import_solution.py ............................                                                                                               [ 68%]
+tests/test_cli_options.py ................                                                                                                                   [ 72%]
+tests/test_cli_performance.py .                                                                                                                              [ 72%]
+tests/test_cli_search_reference.py ....                                                                                                                      [ 73%]
+tests/test_cli_search_snippet.py ....................................                                                                                        [ 81%]
+tests/test_cli_search_solution.py .....                                                                                                                      [ 82%]
+tests/test_cli_update_snippet.py ............                                                                                                                [ 84%]
+tests/test_cli_update_solution.py ...........                                                                                                                [ 87%]
+tests/test_ut_cli_create.py ............                                                                                                                     [ 89%]
+tests/test_ut_cli_search.py .......                                                                                                                          [ 91%]
+tests/test_ut_config_create.py .............                                                                                                                 [ 93%]
+tests/test_ut_config_search.py .......                                                                                                                       [ 95%]
+tests/test_ut_logger.py .............                                                                                                                        [ 98%]
+tests/test_ut_parser.py ...                                                                                                                                  [ 98%]
+tests/test_ut_sqlitedb_delete.py FF                                                                                                                          [ 99%]
+tests/test_ut_sqlitedb_insert.py ..                                                                                                                          [ 99%]
+tests/test_ut_sqlitedb_select.py .                                                                                                                           [100%]
 
 ===
 
-# Add mandatory snippet below.
-docker rm $(docker ps --all -q -f status=exited)
-docker images -q --filter dangling=true | xargs docker rm
+======================================================================= test session starts ========================================================================
+platform linux2 -- Python 2.7.15, pytest-3.6.3, py-1.5.2, pluggy-0.6.0
+rootdir: /home/heilaaks/devel/snippy, inifile:
+plugins: mock-1.10.0, cov-2.5.1
+collected 464 items                                                                                                                                                
 
-# Add optional brief description below.
-Remove docker image with force
+tests/test_api_create_reference.py ......                                                                                                                    [  1%]
+tests/test_api_create_snippet.py ..................                                                                                                          [  5%]
+tests/test_api_create_solution.py ........                                                                                                                   [  6%]
+tests/test_api_delete_reference.py ...                                                                                                                       [  7%]
+tests/test_api_delete_snippet.py ...                                                                                                                         [  8%]
+tests/test_api_delete_solution.py ...                                                                                                                        [  8%]
+tests/test_api_hello.py ............                                                                                                                         [ 11%]
+tests/test_api_performance.py ..                                                                                                                             [ 11%]
+tests/test_api_search_snippet.py ......................................                                                                                      [ 20%]
+tests/test_api_search_solution.py ........................                                                                                                   [ 25%]
+tests/test_api_update_snippet.py .......                                                                                                                     [ 26%]
+tests/test_api_update_solution.py .......                                                                                                                    [ 28%]
+tests/test_cli_create_reference.py ....                                                                                                                      [ 29%]
+tests/test_cli_create_snippet.py .......                                                                                                                     [ 30%]
+tests/test_cli_create_solution.py ......                                                                                                                     [ 31%]
+tests/test_cli_delete_reference.py .....s...                                                                                                                 [ 33%]
+tests/test_cli_delete_snippet.py .............                                                                                                               [ 36%]
+tests/test_cli_delete_solution.py ............                                                                                                               [ 39%]
+tests/test_cli_export_reference.py FF.FFFF.FFFF.F.F.                                                                                                         [ 42%]
+tests/test_cli_export_snippet.py ..FF..FF...FF.....FF...F.                                                                                                   [ 48%]
+tests/test_cli_export_solution.py FFF.......FFFF.........FF....F..                                                                                           [ 55%]
+tests/test_cli_import_reference.py ................                                                                                                          [ 58%]
+tests/test_cli_import_snippet.py ..............F....                                                                                                         [ 62%]
+tests/test_cli_import_solution.py ............................                                                                                               [ 68%]
+tests/test_cli_options.py ................                                                                                                                   [ 72%]
+tests/test_cli_performance.py .                                                                                                                              [ 72%]
+tests/test_cli_search_reference.py ....                                                                                                                      [ 73%]
+tests/test_cli_search_snippet.py ....................................                                                                                        [ 81%]
+tests/test_cli_search_solution.py .....                                                                                                                      [ 82%]
+tests/test_cli_update_snippet.py ............                                                                                                                [ 84%]
+tests/test_cli_update_solution.py ...........                                                                                                                [ 87%]
+tests/test_ut_cli_create.py ............                                                                                                                     [ 89%]
+tests/test_ut_cli_search.py .......                                                                                                                          [ 91%]
+tests/test_ut_config_create.py .............                                                                                                                 [ 93%]
+tests/test_ut_config_search.py .......                                                                                                                       [ 95%]
+tests/test_ut_logger.py .............                                                                                                                        [ 98%]
+tests/test_ut_parser.py ...                                                                                                                                  [ 98%]
+tests/test_ut_sqlitedb_delete.py FF                                                                                                                          [ 99%]
+tests/test_ut_sqlitedb_insert.py ..                                                                                                                          [ 99%]
+tests/test_ut_sqlitedb_select.py .                                                                                                                           [100%]
 
-# Add optional single group below.
-docker
-
-# Add optional comma separated list of tags below.
-cleanup,container,docker,docker-ce,image,moby
-
-# Add optional links
-https://docs.docker.com/engine/reference/commandline/images/
-https://docs.docker.com/engine/reference/commandline/rm/
-https://docs.docker.com/engine/reference/commandline/rmi/
-
-===
-
-# Commented lines will be ignored.
-#
-# Add mandatory links
-https://writingfordevelopers.substack.com/p/how-to-write-commit-messages
-https://chris.beams.io/posts/git-commit/
-
-# Add optional brief description below.
-How to write commit messages
-
-# Add optional single group below.
-git
-
-# Add optional comma separated list of tags below.
-commit,git,howto,message,scm
-
-
-===
-
-# Commented lines will be ignored.
-#
-# Add mandatory links
-https://writingfordevelopers.substack.com/p/how-to-write-commit-messages
-https://chris.beams.io/posts/git-commit/
-# Add optional brief description below.
-How to write commit messages
-
-# Add optional single group below.
-git
-
-# Add optional comma separated list of tags below.
-commit,git,howto,message,scm
-
-
-
-
-
+============================================================================= FAILURES ================================================================

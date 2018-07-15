@@ -1,8 +1,14 @@
 ## WORKING
-   - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
+   - [ ] Change uuid to be before timestamps in db. Add source after filename to get logical order in columns. 
+   - [ ] Add source field for database to indicate possible external import source url.
+   - [ ] Fix document and package structure for snippy.storage.database which does not exist anymore. Also check other modules the same.
+   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
    - [ ] Add tests for References.
-   - [ ] Add uuid to rest and export APIs.
-   - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
+   - [ ] Fix unique uuid that now returns misleading error: NOK: content already exist with digest
+   - [ ] Fix _get_db_digest returning no digest in case of reference. The collision of references is not tested.
+   - [ ] Fix yaml_load does not need to return because it should be with for migrate.open like in test_cli_export_reference_002
+   - [ ] Fix and remove json_dump and yaml_dump fixture once they are refactored out.
+   - [ ] Fix integrity error and second result as "inserted 2 out of 2 content". So there is still cause all insert if integrity error.
 
 ## FEATURES
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
@@ -30,6 +36,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix unique set to TEST_UUIDS which is now twice due to likely circular references that prevents imports between conftest and content.py test modules.
    - [ ] Fix content.verified which does not check other content that what gets to text file. This misses for example update timestamps in e.g. test_cli_import_reference_011.
    - [ ] Fix print resource it does not print data in debug part because it is empty tuple.
    - [ ] Fix get_resource and next if the collection is empty. This generates StopIteration exception.
@@ -68,6 +75,7 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
+   - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
    - [ ] Storage update() supports only one resource and this is not in line with others. Change to collection?
    - [ ] Offset based pagination is slow with large data sets (how large?). Measure with test. This was improved in laest sqlite 3.24.0 https://www.sqlite.org/changes.html
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
@@ -76,6 +84,7 @@
 
 ## TESTS
    - [ ] Refactor UT tests for sqlite DB module.
+   - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
    - [ ] Add test that verifies that OID is not changing duringn one operation. Run two operations and check two OIDs in dict.
    - [ ] Test Collection()/Resource() ne - probably UT tests.
    - [ ] Add tests that tries to sort based on non existent field. Is there already such case - migth be?
@@ -129,6 +138,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Add UUID handling into database and for migrated JSON or YAML files.
    - [x] Changed link sort in case of reference content. The links are sorted all but reference content.
    - [x] Added support for references content.
    - [x] Fixed tests with Falcon 1.4.1.

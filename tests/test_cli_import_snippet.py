@@ -37,62 +37,65 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliImportSnippet(object):
     """Test workflows for importing snippets."""
 
-    @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_snippet_001(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    def test_cli_import_snippet_001(self, snippy, mocker):
         """Import all snippets.
 
         Import all snippets. File name is not defined in command line. This
         must result tool internal default file name and format being used.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
-        yaml_load.assert_called_once_with('./snippets.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            mock_file.assert_called_once_with('./snippets.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_snippet_002(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    def test_cli_import_snippet_002(self, snippy, mocker):
         """Import all snippets.
 
         Import all snippets from yaml file. File name and format are extracted
         from command line option -f|--file.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-f', './all-snippets.yaml'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
-        yaml_load.assert_called_once_with('./all-snippets.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            mock_file.assert_called_once_with('./all-snippets.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_snippet_003(self, snippy, json_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'json')
+    def test_cli_import_snippet_003(self, snippy, mocker):
         """Import all snippets.
 
         Import all snippets from json file. File name and format are extracted
         from command line option -f|--file.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-f', './all-snippets.json'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
-        json_load.assert_called_once_with('./all-snippets.json', 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            json.load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.json'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            mock_file.assert_called_once_with('./all-snippets.json', 'r')
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_004(self, snippy, mocker):
@@ -103,17 +106,17 @@ class TestCliImportSnippet(object):
         case.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        mocked_open = Content.mocked_open(content_read)
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
-            Content.verified(mocker, snippy, content_read)
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_005(self, snippy, mocker):
@@ -124,17 +127,17 @@ class TestCliImportSnippet(object):
         case.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        mocked_open = Content.mocked_open(content_read)
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.text'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
             mock_file.assert_called_once_with('./all-snippets.text', 'r')
-            Content.verified(mocker, snippy, content_read)
+            Content.verified(mocker, snippy, content)
 
     def test_cli_import_snippet_006(self, snippy):
         """Import all snippets.
@@ -176,8 +179,8 @@ class TestCliImportSnippet(object):
             assert not Database.get_collection().size()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
-    @pytest.mark.usefixtures('import-remove', 'import-remove-utc', 'isfile_true')
-    def test_cli_import_snippet_009(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'import-remove-utc')
+    def test_cli_import_snippet_009(self, snippy, mocker):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -185,18 +188,19 @@ class TestCliImportSnippet(object):
         not updated in this case because the same content is imported again.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 1
-        yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 1
+            mock_file.assert_called_once_with('one-snippet.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('import-remove', 'import-remove-utc', 'isfile_true')
-    def test_cli_import_snippet_010(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'import-remove-utc')
+    def test_cli_import_snippet_010(self, snippy, mocker):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -204,19 +208,20 @@ class TestCliImportSnippet(object):
         tags were updated.
         """
 
-        content_read = {
+        content = {
             '4525613eaecd5297': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
         }
-        content_read['4525613eaecd5297']['tags'] = ('new', 'tags', 'set')
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 1
-        yaml_load.assert_called_once_with('one-snippet.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        content['4525613eaecd5297']['tags'] = ('new', 'tags', 'set')
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 1
+            mock_file.assert_called_once_with('one-snippet.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('import-remove', 'import-remove-utc', 'isfile_true')
-    def test_cli_import_snippet_011(self, snippy, json_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'json', 'import-remove', 'import-remove-utc')
+    def test_cli_import_snippet_011(self, snippy, mocker):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -224,18 +229,19 @@ class TestCliImportSnippet(object):
         brief were updated.
         """
 
-        content_read = {
+        content = {
             'f07547e7c692741a': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
         }
-        content_read['f07547e7c692741a']['brief'] = 'Updated brief description'
-        json.load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 1
-        json_load.assert_called_once_with('one-snippet.json', 'r')
-        Content.verified(mocker, snippy, content_read)
+        content['f07547e7c692741a']['brief'] = 'Updated brief description'
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            json.load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 1
+            mock_file.assert_called_once_with('one-snippet.json', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('import-remove', 'update-remove-utc', 'isfile_true')
+    @pytest.mark.usefixtures('isfile_true', 'import-remove', 'update-remove-utc')
     def test_cli_import_snippet_012(self, snippy, mocker):
         """Import defined snippet.
 
@@ -244,19 +250,19 @@ class TestCliImportSnippet(object):
         links were updated. The file extenansion is '*.txt' in this case.
         """
 
-        content_read = {
+        content = {
             '7681559ca5c001e2': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
         }
-        content_read['7681559ca5c001e2']['links'] = ('https://new.link', )
-        mocked_open = Content.mocked_open(content_read)
+        content['7681559ca5c001e2']['links'] = ('https://new.link', )
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 1
             mock_file.assert_called_once_with('one-snippet.txt', 'r')
-            Content.verified(mocker, snippy, content_read)
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('import-remove', 'update-remove-utc', 'isfile_true')
+    @pytest.mark.usefixtures('isfile_true', 'import-remove', 'update-remove-utc')
     def test_cli_import_snippet_013(self, snippy, mocker):
         """Import defined snippet.
 
@@ -265,17 +271,17 @@ class TestCliImportSnippet(object):
         links were updated. The file extenansion is '*.text' in this case.
         """
 
-        content_read = {
+        content = {
             '7681559ca5c001e2': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
         }
-        content_read['7681559ca5c001e2']['links'] = ('https://new.link', )
-        mocked_open = Content.mocked_open(content_read)
+        content['7681559ca5c001e2']['links'] = ('https://new.link', )
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 1
             mock_file.assert_called_once_with('one-snippet.text', 'r')
-            Content.verified(mocker, snippy, content_read)
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('import-remove')
     def test_cli_import_snippet_014(self, snippy, mocker):
@@ -285,38 +291,40 @@ class TestCliImportSnippet(object):
         found. In this case there is one snippet stored.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]
         }
-        mocked_open = Content.mocked_open(content_read)
+        mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])
             assert cause == 'NOK: cannot find: snippet :identified with digest: 123456789abcdef0'
             assert Database.get_snippets().size() == 1
             mock_file.assert_not_called()
-            Content.verified(mocker, snippy, content_read)
+            Content.verified(mocker, snippy, content)
 
-    def test_cli_import_snippet_015(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('yaml')
+    def test_cli_import_snippet_015(self, snippy, mocker):
         """Import snippet defaults.
 
         Import snippet defaults. All snippets should be imported from
         predefined file location under tool data folder from yaml format.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--defaults'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
-        defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
-        yaml_load.assert_called_once_with(defaults_snippets, 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--defaults'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
+            mock_file.assert_called_once_with(defaults_snippets, 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('default-snippets', 'import-remove-utc', 'import-forced-utc')
-    def test_cli_import_snippet_016(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'import-remove-utc', 'import-forced-utc')
+    def test_cli_import_snippet_016(self, snippy, mocker):
         """Import snippet defaults.
 
         Try to import snippet defaults again. The second import should fail
@@ -328,18 +336,19 @@ class TestCliImportSnippet(object):
         TODO: The UTC time mocking is likely incorrect here.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '--defaults'])
-        assert cause == 'NOK: content data already exist with digest 53908d68425c61dc' or \
-               cause == 'NOK: content data already exist with digest 54e41e9b52a02b63'
-        assert Database.get_snippets().size() == 2
-        defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
-        yaml_load.assert_called_once_with(defaults_snippets, 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--defaults'])
+            assert cause == 'NOK: content data already exist with digest: 53908d68425c61dc' or \
+                   cause == 'NOK: content data already exist with digest: 54e41e9b52a02b63'
+            assert Database.get_snippets().size() == 2
+            defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
+            mock_file.assert_called_once_with(defaults_snippets, 'r')
+            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_017(self, snippy):
@@ -357,8 +366,8 @@ class TestCliImportSnippet(object):
             assert not Database.get_snippets().size()
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
 
-    @pytest.mark.usefixtures('default-snippets', 'import-remove-utc', 'import-netcat-utc', 'isfile_true')
-    def test_cli_import_snippet_018(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('isfile_true', 'yaml', 'default-snippets', 'import-remove-utc', 'import-netcat-utc')
+    def test_cli_import_snippet_018(self, snippy, mocker):
         """Import snippets already existing.
 
         Import snippets from yaml file that is defined from command line. In
@@ -369,20 +378,21 @@ class TestCliImportSnippet(object):
         TODO: The UTC time mocking is likely incorrect here.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
         }
-        yaml.safe_load.return_value = copy.deepcopy(Content.imported_dict(content_read))
-        content_read[Snippet.FORCED_DIGEST] = Snippet.DEFAULTS[Snippet.FORCED]
-        cause = snippy.run(['snippy', 'import', '-f', './snippets.yaml'])
-        assert cause == Cause.ALL_OK
-        assert Database.get_collection().size() == 3
-        yaml_load.assert_called_once_with('./snippets.yaml', 'r')
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = copy.deepcopy(Content.imported_dict(content))
+            content[Snippet.FORCED_DIGEST] = Snippet.DEFAULTS[Snippet.FORCED]
+            cause = snippy.run(['snippy', 'import', '-f', './snippets.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 3
+            mock_file.assert_called_once_with('./snippets.yaml', 'r')
+            Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('default-snippets')
-    def test_cli_import_snippet_019(self, snippy, yaml_load, mocker):
+    @pytest.mark.usefixtures('yaml', 'default-snippets')
+    def test_cli_import_snippet_019(self, snippy, mocker):
         """Import snippet based on digest.
 
         Try to import snippet based on message digest that matches to two
@@ -391,16 +401,18 @@ class TestCliImportSnippet(object):
         starting both of the cases.
         """
 
-        content_read = {
+        content = {
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
-        yaml.safe_load.return_value = Content.imported_dict(content_read)
-        cause = snippy.run(['snippy', 'import', '-d', '5', '-f', 'one-snippet.yaml'])
-        assert cause == 'NOK: cannot import: snippet :because digest: 5 :matched: 2 :times'
-        assert Database.get_snippets().size() == 2
-        assert not yaml_load.mock_calls
-        Content.verified(mocker, snippy, content_read)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '-d', '5', '-f', 'one-snippet.yaml'])
+            assert cause == 'NOK: cannot import: snippet :because digest: 5 :matched: 2 :times'
+            assert Database.get_snippets().size() == 2
+            mock_file.assert_not_called()
+            yaml.safe_load.assert_not_called()
+            Content.verified(mocker, snippy, content)
 
     @classmethod
     def teardown_class(cls):

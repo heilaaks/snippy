@@ -127,3 +127,9 @@ class Storage(object):
         if self._database:
             self._database.disconnect()
             self._database = None
+
+    def debug(self):
+        """Debug storage."""
+
+        if self._database:
+            self._database.debug()

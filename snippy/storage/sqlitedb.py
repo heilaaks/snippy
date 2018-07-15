@@ -62,8 +62,6 @@ class SqliteDb(object):
     def insert(self, collection):
         """Insert collection into database.
 
-        Parameters
-        ----------
         Args:
            collection (Collection): Content container to be stored into database.
         """
@@ -96,8 +94,6 @@ class SqliteDb(object):
     def _insert(self, resource):
         """Insert one resource into database.
 
-        Parameters
-        ----------
         Args:
            resource (Resource): A single Resource container to be stored.
         """
@@ -126,8 +122,6 @@ class SqliteDb(object):
     def select(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Select content based on search criteria.
 
-        Parameters
-        ----------
         Args:
            category (str): Content category.
            sall (tuple): Search all keyword list.
@@ -151,8 +145,6 @@ class SqliteDb(object):
     def select_all(self, category):
         """Select all content from specific category.
 
-        Parameters
-        ----------
         Args:
            category (str): Content category.
         """
@@ -177,8 +169,6 @@ class SqliteDb(object):
     def _count_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Count content based on search criteria.
 
-        Parameters
-        ----------
         Args:
            category (str): Content category.
            sall (tuple): Search all keyword list.
@@ -202,8 +192,6 @@ class SqliteDb(object):
     def update(self, digest, resource):
         """Update existing content.
 
-        Parameters
-        ----------
         Args:
            digest (str): Content digest that is udpated.
            resource (Resource): A single Resource container to be stored.
@@ -222,8 +210,6 @@ class SqliteDb(object):
     def delete(self, digest):
         """Delete content based on given digest.
 
-        Parameters
-        ----------
         Args:
            digest (str): Content digest that is deleted.
         """
@@ -259,8 +245,6 @@ class SqliteDb(object):
     def _select_data(self, data):
         """Select content based on data.
 
-        Parameters
-        ----------
         Args:
            data (str): Search specific content data or part of it.
         """

@@ -89,8 +89,6 @@ class Logger(object):
         A custom logger adapater is returned to support custom level with
         additional logging parameters.
 
-        Parameters
-        ----------
         Args:
            name (str): Name of the module that requests a Logger.
         """
@@ -110,8 +108,6 @@ class Logger(object):
     def configure(cls, config):
         """Set and update logger configuration.
 
-        Parameters
-        ----------
         Args:
             config (dict): Logger configuration dictionary.
 
@@ -194,8 +190,6 @@ class Logger(object):
     def print_status(cls, status):
         """Print status information like exit cause or server running.
 
-        Parameters
-        ----------
         Args:
             status (str): Status to be printed on stdout.
         """
@@ -224,8 +218,6 @@ class Logger(object):
         The operation ID (OID) is refreshed at the end.
 
 
-        Parameters
-        ----------
         Args:
             method (str): Name of the method calling the timeit.
             refresh_oid (bool): Define if operation ID is refreshed or not.
@@ -256,8 +248,6 @@ class Logger(object):
     def remove_ansi(message):
         """Remove all ANSI escape codes from given string.
 
-        Parameters
-        ----------
         Args:
             message (str): Log message which ANSI escape codes are removed.
         """

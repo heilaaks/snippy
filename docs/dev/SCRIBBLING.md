@@ -1235,6 +1235,17 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        of UUIDs' The snippet range starts with 1, solution with 2 and reference
        with 3.
 
+
+    DOCUMENTATION
+    
+    1. Code documentation follows Goolge docstring format
+    
+       The Google docstring format is considered shorter and more readable than
+       the NumPy format. The later format has it's place when explaining complex
+       algorithms and their parameters. But here the intention is that the method
+       description explains the complicated parts and the method argument is a
+       short explanation of the pararameters.
+
     === WHITEBOARD ===
     # SECURITY
     $ curl --insecure -v https://127.0.0.1:8080

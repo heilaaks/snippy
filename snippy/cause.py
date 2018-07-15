@@ -77,8 +77,6 @@ class Cause(object):
     def push(cls, status, message):
         """Append cause to list.
 
-        Parameters
-        ----------
         Args:
             status (str): One of the predefined HTTP status codes.
             message (str): Description of the cause.

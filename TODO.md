@@ -1,12 +1,12 @@
 ## WORKING
    - [ ] Add source and license fields for database to indicate possible external import source url.
    - [ ] Add note that content is with common creations license (or what was it - check what this is)
-   - [ ] Fix document and package structure for snippy.storage.database which does not exist anymore. Also check other modules the same.
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
    - [ ] Add tests for References.
    - [ ] Fix unique uuid that now returns misleading error: NOK: content already exist with digest
    - [ ] Fix _get_db_digest returning no digest in case of reference. The collision of references is not tested.
    - [ ] Fix integrity error and second result as "inserted 2 out of 2 content". So there is still cause all insert if integrity error.
+   - [ ] Fix exec not needed in setup and conf.py (sphinx)?
 
 ## FEATURES
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.

@@ -83,8 +83,6 @@ class Content(object):
         structure is always deep copied in order to avoid modifying the
         original which may be the content helper default JSON data.
 
-        Parameters
-        ----------
         Args:
             contents (dict): Server response or content helper default JSON data.
         """
@@ -136,8 +134,6 @@ class Content(object):
         structure is always deep copied in order to avoid modifying the
         original which may be the content helper default JSON data.
 
-        Parameters
-        ----------
         Args:
             content (dict): Server response or content helper default JSON data.
             validate_uuid (bool): Defines if the UUID is validated or not.
@@ -175,8 +171,6 @@ class Content(object):
         structure is always deep copied in order to avoid modifying the
         original which may be the content helper default JSON data.
 
-        Parameters
-        ----------
         Args:
             yaml_dump (obj): Mocked yaml object.
             mock_file (obj): Mocked file object.
@@ -209,8 +203,6 @@ class Content(object):
         structure is always deep copied in order to avoid modifying the
         original which may be the content helper default JSON data.
 
-        Parameters
-        ----------
         Args:
             json_dump (obj): Mocked yaml object.
             mock_file (obj): Mocked file object.
@@ -235,8 +227,6 @@ class Content(object):
     def text_dump(mock_file, filename, contents):
         """Compare given content against yaml dump.
 
-        Parameters
-        ----------
         Args:
             mock_file (obj): Mocked file object.
             filename (str): Expected filename used to for mocked file.

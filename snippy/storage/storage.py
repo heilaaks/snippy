@@ -35,8 +35,6 @@ class Storage(object):
     def create(self, collection):
         """Create new content.
 
-        Parameters
-        ----------
         Args:
            collection (Collection): Content container to be stored into database.
         """
@@ -49,8 +47,6 @@ class Storage(object):
     def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content.
 
-        Parameters
-        ----------
         Args:
            category (str): Content category.
            sall (tuple): Search all keyword list.
@@ -68,11 +64,9 @@ class Storage(object):
     def update(self, digest, resource):
         """Update resource specified by digest.
 
-        Parameters
-        ----------
         Args:
-           digest (str): Content digest that is udpated.
-           resource (Resource): A single Resource container that contains updates.
+            digest (str): Content digest that is udpated.
+            resource (Resource): A single Resource() container that contains updates.
         """
 
         self._logger.debug('update content')
@@ -84,8 +78,6 @@ class Storage(object):
     def delete(self, digest):
         """Delete content.
 
-        Parameters
-        ----------
         Args:
            digest (str): Content digest that is deleted.
         """
@@ -96,8 +88,6 @@ class Storage(object):
     def export_content(self, category):
         """Export content.
 
-        Parameters
-        ----------
         Args:
            category (str): Content category.
         """
@@ -110,8 +100,6 @@ class Storage(object):
     def import_content(self, collection):
         """Import content.
 
-        Parameters
-        ----------
         Args:
            collection (Collection): Content container to be imported into database.
         """

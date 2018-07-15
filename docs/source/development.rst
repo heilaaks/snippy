@@ -181,7 +181,7 @@ actual database solution from rest of the implementation.
    :members:
    :member-order: bysource
 
-snippy.storage.database.sqlitedb
+snippy.storage.sqlitedb
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 **Service**

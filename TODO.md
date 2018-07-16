@@ -1,8 +1,6 @@
 ## WORKING
-   - [ ] Fix exec not needed in setup and conf.py (sphinx)?
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
    - [ ] Fix Resource migrate and merge are missing the UUID. Bug?
-   - [ ] Fix swagger api to contain uuid and source.
    - [ ] Is it ok to have the exit cause OK/NOK: string in info log level?
    - [ ] Add tests for References.
    - [ ] Fix setup to use pylint 1.9.2 with python 2 and 2.0.0 with python 3
@@ -136,7 +134,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
-   - [x] Add UUID handling into database and for migrated JSON or YAML files.
+   - [x] Added UUID handling into database and for migrated JSON or YAML files.
    - [x] Changed link sort in case of reference content. The links are sorted all but reference content.
    - [x] Added support for references content.
    - [x] Fixed tests with Falcon 1.4.1.

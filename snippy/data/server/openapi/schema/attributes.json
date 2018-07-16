@@ -24,7 +24,7 @@
     }, 
     "name": {
       "type": "string", 
-      "description": "Optional alias to run the content."
+      "description": "Optional name for the content."
     }, 
     "links": {
       "items": {
@@ -42,7 +42,7 @@
     }, 
     "versions": {
       "type": "string", 
-      "description": "Optional list of services and versions related to the snippet."
+      "description": "Optional list of services and versions related to the content."
     }, 
     "brief": {
       "type": "string", 
@@ -51,6 +51,10 @@
     "filename": {
       "type": "string", 
       "description": "Optional filename that that defines automatically used filename when content is exported."
+    }, 
+    "source": {
+      "type": "string", 
+      "description": "Optional external source for the snippet."
     }, 
     "created": {
       "type": "string", 
@@ -66,6 +70,10 @@
     "digest": {
       "type": "string", 
       "description": "Automatically assigned message digest that uniquely identifies the content."
+    }, 
+    "uuid": {
+      "type": "string", 
+      "description": "Automatically assigned UUID for the content."
     }
   }
 }

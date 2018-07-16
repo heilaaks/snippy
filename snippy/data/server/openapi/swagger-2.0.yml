@@ -291,7 +291,7 @@ paths:
         - name: field
           in: path
           type: string
-          enum: [data, brief, group, tags, links, category, name, filename, versions, created, updated, digest]
+          enum: [data, brief, group, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
           required: true
           description: "One of the resource field attributes."
       responses:
@@ -474,7 +474,7 @@ definitions:
         description: "Automatically assigned content category."
       name:
         type: string
-        description: "Optional alias to run the content."
+        description: "Optional name for the content."
       filename:
         type: string
         description: >-
@@ -482,7 +482,13 @@ definitions:
           content is exported.
       versions:
         type: string
-        description: "Optional list of services and versions related to the snippet."
+        description: "Optional list of services and versions related to the content."
+      source:
+        type: string
+        description: "Optional external source for the snippet."
+      uuid:
+        type: string
+        description: "Automatically assigned UUID for the content."
       created:
         type: string
         description: >-
@@ -604,7 +610,7 @@ parameters:
     name: sort
     type: string
     default: brief
-    enum: [data, brief, group, tags, links, category, name, filename, versions, created, updated, digest]
+    enum: [data, brief, group, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
     in: query
     required: false
     description: "Sort based on defined field."
@@ -613,7 +619,7 @@ parameters:
     type: array
     items:
       type: string
-      enum: [data, brief, group, tags, links, category, name, filename, versions, created, updated, digest]
+      enum: [data, brief, group, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
     in: query
     required: false
     description: "Limit fields that are returned in result list."

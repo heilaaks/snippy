@@ -206,6 +206,35 @@ def server(mocker, request):
 
     return snippy
 
+@pytest.fixture(scope='function', name='server_db')
+def server_db(mocker, request):
+    """Run mocked server and database for testing purposes."""
+
+    params = []
+    if hasattr(request, 'param'):
+        params = request.param
+    else:
+        params.extend(['--server', '--compact-json', '-q'])
+    params.insert(0, 'snippy')  # Add the tool name args list as a first parameter.
+
+    # Mock predicatable UUIDs.
+    _mock_uuids(mocker)
+
+    # Mock server so that real Snippy server is not started.
+    with mocker.patch('snippy.server.server.SnippyServer'):
+        with mock.patch('snippy.storage.sqlitedb.sqlite3.connect', create=True) as mock_db_connect:
+            snippy = _create_snippy(mocker, params)
+            snippy.run()
+
+    def fin():
+        """Clear the resources at the end."""
+
+        snippy.release()
+        Database.delete_storage()
+    request.addfinalizer(fin)
+
+    return (snippy, mock_db_connect)
+
 @pytest.fixture(scope='function', name='mock-server')
 def server_mock(mocker):
     """Mock Snippy server for testing purposes."""

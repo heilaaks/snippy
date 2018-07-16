@@ -950,6 +950,11 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        The -vv option prints always all logs one log per line and the whole
        log string is in lower case.
 
+    9. Logs from internal server errors always contain 'internal server error '
+
+       In order to find all logs related cases where the tool identified internal
+       server error, the logs contain prefix of 'internal server error '.
+
     THREADING
 
     1. The tool is single threaded
@@ -1058,11 +1063,11 @@ git update-index --no-assume-unchanged FILE_NAME # change back
           cannot modify.
 
        D) UUID
-       
+
           The UUID is intended to be used in cases where two databases are
           merged to one. The UUID is allocated always for the content and it
           never changes.
-       
+
        E) Digest
 
           The content digest field is always set by the tool based on sha256
@@ -1244,9 +1249,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
 
     DOCUMENTATION
-    
+
     1. Code documentation follows Goolge docstring format
-    
+
        The Google docstring format is considered shorter and more readable than
        the NumPy format. The later format has it's place when explaining complex
        algorithms and their parameters. But here the intention is that the method

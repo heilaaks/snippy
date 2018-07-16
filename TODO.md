@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix integrity error and second result as "inserted 2 out of 2 content". So there is still cause all insert if integrity error.
    - [ ] Fix exec not needed in setup and conf.py (sphinx)?
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
    - [ ] Fix Resource migrate and merge are missing the UUID. Bug?

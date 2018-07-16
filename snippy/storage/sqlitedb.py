@@ -67,23 +67,23 @@ class SqliteDb(object):
         """
 
         inserted = 0
-        cause = (Cause.HTTP_OK, Const.EMPTY)
+        error = (Cause.HTTP_OK, Const.EMPTY)
         for resource in collection.resources():
             if resource.digest != resource.compute_digest():
                 self._logger.debug('invalid digest found and updated while storing content data: "%s"', resource.data)
                 resource.update_digest()
-            cause = self._insert(resource)
-            if cause[0] == Cause.HTTP_OK:
+            error = self._insert(resource)
+            if error[0] == Cause.HTTP_OK:
                 inserted = inserted + 1
 
         self._logger.debug('inserted %d out of %d content', inserted, collection.size())
         if collection.empty():
-            cause = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
+            error = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
         elif inserted == collection.size():
             Cause.push(Cause.HTTP_CREATED, 'content created')
 
-        if not inserted and cause[1]:
-            Cause.push(cause[0], cause[1])
+        if not inserted and error[1]:
+            Cause.push(error[0], error[1])
 
         stored = Collection()
         for resource in collection.resources():
@@ -98,10 +98,10 @@ class SqliteDb(object):
            resource (Resource): Stored content in ``Resource()`` container.
         """
 
-        cause = self._test_content(resource)
-        if cause[0] != Cause.HTTP_OK:
+        error = self._test_content(resource)
+        if error[0] != Cause.HTTP_OK:
 
-            return cause
+            return error
 
         query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, name, ' +
                  'filename, versions, source, uuid, created, updated, digest, metadata) ' +
@@ -111,14 +111,15 @@ class SqliteDb(object):
         try:
             self._put_db(query, qargs)
         except sqlite3.IntegrityError:
-            Cause.push(Cause.HTTP_CONFLICT, 'content already exist with digest: {:.16}'.format(self._get_digest(resource)))
+            error = (Cause.HTTP_CONFLICT, 'content already exist with digest: {:.16}'.format(self._get_digest(resource)))
+            Cause.push(*error)
             self._logger.info('database integrity error from database: {}'.format(traceback.format_exc()))
             self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
             self._logger.info('database integrity error from query: {}'.format(query))
             self._logger.info('database integrity error from query arguments: {}'.format(qargs))
             self._logger.info('database integrity error stack trace: {}'.format(traceback.format_stack(limit=20)))
 
-        return cause
+        return error
 
     def select(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Select content based on search criteria.
@@ -331,37 +332,37 @@ class SqliteDb(object):
     def _test_content(self, resource):
         """Test content validity."""
 
-        cause = (Cause.HTTP_OK, Const.EMPTY)
+        error = (Cause.HTTP_OK, Const.EMPTY)
         if resource.is_template():
-            cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
-            self._logger.debug(cause[1])
+            error = (Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
+            self._logger.debug(error[1])
 
-            return cause
+            return error
 
         if not resource.has_data():
-            cause = (Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data was missing')
-            self._logger.debug(cause[1])
+            error = (Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data was missing')
+            self._logger.debug(error[1])
 
-            return cause
+            return error
 
         if self._select_data(resource.data).size():
-            cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest: {:.16}'.format(self._get_digest(resource)))
-            self._logger.debug(cause[1])
+            error = (Cause.HTTP_CONFLICT, 'content data already exist with digest: {:.16}'.format(self._get_digest(resource)))
+            self._logger.debug(error[1])
 
-            return cause
+            return error
 
         if self._select_uuid(resource.uuid).size():
-            cause = (Cause.HTTP_CONFLICT, 'content uuid already exist with digest: {:.16}'.format(self._get_digest(resource)))
-            self._logger.debug(cause[1])
+            error = (Cause.HTTP_CONFLICT, 'content uuid already exist with digest: {:.16}'.format(self._get_digest(resource)))
+            self._logger.debug(error[1])
 
-            return cause
+            return error
 
-        return cause
+        return error
 
     def _get_digest(self, resource):
         """Return digest of given content from database."""
 
-        digest = Const.EMPTY
+        digest = 'not found'
         category = resource.category
         collection = self._select_data(resource.data)
         if not collection.size():
@@ -370,7 +371,9 @@ class SqliteDb(object):
         if collection.size() == 1:
             digest = next(collection.resources()).digest
         else:
-            self._logger.debug('unexpected number: %d :of: %s :received while searching digest', collection.size(), category)
+            Cause.push(Cause.HTTP_500, 'internal error when searching content possibly violating database unique constraints')
+            self._logger.debug('internal server error searching resource from database: {}'.format(Logger.remove_ansi(str(resource))))
+            self._logger.debug('internal server error searching unique digest hits: %d :from category: %s', collection.size(), category)
 
         return digest
 

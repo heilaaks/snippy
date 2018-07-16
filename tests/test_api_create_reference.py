@@ -21,6 +21,7 @@
 
 import copy
 import json
+import sqlite3
 
 from falcon import testing
 import falcon
@@ -293,6 +294,55 @@ class TestApiCreateReference(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
         assert result.json['errors'][0]['title'] == 'content was not stored because mandatory content field links is empty'
+
+    @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
+    def test_api_create_reference_007(self, server_db):
+        """Try to create reference.
+
+        Try to POST new reference when database throws an integrity error from
+        uuid column unique constraint violation error. In this case there is
+        no content and the digest in error message is not filled.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'reference',
+                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+            }]
+        }
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '706'}
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '500',
+                'statusString': '500 Internal Server Error',
+                'module': 'snippy.testing.testing:123',
+                'title': 'internal error when searching content possibly violating database unique constraints'
+            }, {
+                'status': '409',
+                'statusString': '409 Conflict',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content already exist with digest: not found'
+            }, {
+                'status': '409',
+                'statusString': '409 Conflict',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content already exist with digest: not found'
+            }]
+        }
+        server = server_db[0]
+        db_connect = server_db[1]
+        db_connect.return_value.commit.side_effect = [sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid')]
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/references',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_500
+        assert Database.get_references().size() == 0
 
     @classmethod
     def teardown_class(cls):

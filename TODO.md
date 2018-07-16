@@ -2,7 +2,7 @@
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
    - [ ] Fix Resource migrate and merge are missing the UUID. Bug?
    - [ ] Add tests for References.
-   - [ ] Fix setup to use pylint 1.9.2 with python 2 and 2.0.0 with python 3
+   - [ ] Test wheel and make sure that the imported defaults are bundled. Does this require the usage of manifest?
 
 ## FEATURES
    - [ ] Add code content.

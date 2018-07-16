@@ -348,6 +348,35 @@ class TestCliImportReference(object):
             assert not Database.get_collection().size()
             mock_file.assert_called_once_with('./reference-template.txt', 'r')
 
+    @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-gitlog-utc')
+    def test_cli_import_reference_017(self, snippy, mocker):
+        """Try to import reference which uuid collides.
+
+        The uuid must be unique and this causes a database integrity error.
+        """
+
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+        }
+        mocked_open = Content.mocked_open(content)
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--reference'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 1
+
+        content_uuid = {
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False),
+        }
+        content_uuid[Reference.REGEXP_DIGEST]['uuid'] = Reference.DEFAULTS[Reference.GITLOG]['uuid']
+        mocked_open = Content.mocked_open(content_uuid)
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
+            yaml.safe_load.return_value = Content.imported_dict(content_uuid)
+            cause = snippy.run(['snippy', 'import', '--reference'])
+            assert cause == 'NOK: content uuid already exist with digest: 5c2071094dbfaa33'
+            assert Database.get_references().size() == 1
+            Content.verified(mocker, snippy, content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

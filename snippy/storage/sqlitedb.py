@@ -95,7 +95,7 @@ class SqliteDb(object):
         """Insert one resource into database.
 
         Args:
-           resource (Resource): A single Resource container to be stored.
+           resource (Resource): Stored content in ``Resource()`` container.
         """
 
         cause = self._test_content(resource)
@@ -104,18 +104,19 @@ class SqliteDb(object):
             return cause
 
         query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, name, ' +
-                 'filename, versions, source, uuid, created, updated, digest, metadata) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+                 'filename, versions, source, uuid, created, updated, digest, metadata) ' +
+                 'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
         qargs = resource.dump_qargs()
 
         try:
             self._put_db(query, qargs)
         except sqlite3.IntegrityError:
-            Cause.push(Cause.HTTP_CONFLICT,
-                       'content already exist with digest: {:.16}'.format(self._get_db_digest(resource)))
+            Cause.push(Cause.HTTP_CONFLICT, 'content already exist with digest: {:.16}'.format(self._get_digest(resource)))
             self._logger.info('database integrity error from database: {}'.format(traceback.format_exc()))
             self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
             self._logger.info('database integrity error from query: {}'.format(query))
             self._logger.info('database integrity error from query arguments: {}'.format(qargs))
+            self._logger.info('database integrity error stack trace: {}'.format(traceback.format_stack(limit=20)))
 
         return cause
 
@@ -194,7 +195,7 @@ class SqliteDb(object):
 
         Args:
            digest (str): Content digest that is udpated.
-           resource (Resource): A single Resource container to be stored.
+           resource (Resource): Stored content in ``Resource()`` container.
         """
 
         query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, name=?, '
@@ -247,21 +248,47 @@ class SqliteDb(object):
         """Select content based on data.
 
         Args:
-           data (str): Search specific content data or part of it.
+           data (str): Content data or part of it.
         """
 
         collection = Collection()
         if self._connection:
             query = ('SELECT * FROM contents WHERE data=?')
             qargs = [Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, data))]
-            self._logger.debug('running select query "%s"', query)
+            self._logger.debug('running select data query: %s :with qargs: %s', query, qargs)
             try:
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
                     collection.convert(rows)
             except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'selecting data from database failed with exception {}'.format(exception))
+                Cause.push(Cause.HTTP_500, 'selecting content from database with data failed with exception {}'.format(exception))
+        else:
+            Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
+
+        self._logger.debug('selected rows %s', rows)
+
+        return collection
+
+    def _select_uuid(self, uuid):
+        """Select content based on uuid.
+
+        Args:
+           uuid (str): Content uuid or part of it.
+        """
+
+        collection = Collection()
+        if self._connection:
+            query = ('SELECT * FROM contents WHERE uuid=?')
+            qargs = [uuid]
+            self._logger.debug('running select uuid query: %s :with qargs: %s', query, qargs)
+            try:
+                with closing(self._connection.cursor()) as cursor:
+                    cursor.execute(query, qargs)
+                    rows = cursor.fetchall()
+                    collection.convert(rows)
+            except sqlite3.Error as exception:
+                Cause.push(Cause.HTTP_500, 'selecting content from database with uuid failed with exception {}'.format(exception))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
 
@@ -318,23 +345,32 @@ class SqliteDb(object):
             return cause
 
         if self._select_data(resource.data).size():
-            cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest: {:.16}'.format(self._get_db_digest(resource)))
+            cause = (Cause.HTTP_CONFLICT, 'content data already exist with digest: {:.16}'.format(self._get_digest(resource)))
+            self._logger.debug(cause[1])
+
+            return cause
+
+        if self._select_uuid(resource.uuid).size():
+            cause = (Cause.HTTP_CONFLICT, 'content uuid already exist with digest: {:.16}'.format(self._get_digest(resource)))
             self._logger.debug(cause[1])
 
             return cause
 
         return cause
 
-    def _get_db_digest(self, resource):
+    def _get_digest(self, resource):
         """Return digest of given content from database."""
 
         digest = Const.EMPTY
         category = resource.category
         collection = self._select_data(resource.data)
+        if not collection.size():
+            collection = self._select_uuid(resource.uuid)
+
         if collection.size() == 1:
             digest = next(collection.resources()).digest
         else:
-            self._logger.debug('unexpected number %d of %s received while searching', collection.size(), category)
+            self._logger.debug('unexpected number: %d :of: %s :received while searching digest', collection.size(), category)
 
         return digest
 

@@ -145,8 +145,8 @@ class Generate(object):
                     if Config.search_offset+Config.search_limit <= collection.total-Config.search_limit:
                         # Explicit float casting is needed for Python 2.7 to
                         # get floating point result for ceil.
-                        last_offset = int(math.ceil(float(collection.total)/float(Config.search_limit))*Config.search_limit-Config.search_limit)  # noqa: E501 # pylint: disable=line-too-long
-                    elif collection.total-Config.search_limit < Config.search_offset+Config.search_limit < collection.total:  # noqa: E501 # pylint: disable=line-too-long
+                        last_offset = int(math.ceil(float(collection.total)/float(Config.search_limit))*Config.search_limit-Config.search_limit)  # noqa pylint: disable=line-too-long
+                    elif collection.total-Config.search_limit < Config.search_offset+Config.search_limit < collection.total:  # noqa pylint: disable=line-too-long
                         last_offset = Config.search_offset+Config.search_limit
                     elif Config.search_offset+Config.search_limit == collection.total:
                         last_offset = self_offset

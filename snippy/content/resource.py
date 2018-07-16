@@ -414,14 +414,14 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Test if resource has data.
 
         In case of snippet and solution, the content data must be present.
-        But in case of references, only the link must be present.
+        In case of references, the link must be present.
         """
 
-        if (self.category == Const.SNIPPET or self.category == Const.SOLUTION) and not any(self.data):
+        if self.category in (Const.SNIPPET, Const.SOLUTION) and not any(self.data):
             Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data is empty')
 
             return False
-        elif self.category == Const.REFERENCE and not any(self.links):
+        if self.category == Const.REFERENCE and not any(self.links):
             Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field links is empty')
 
             return False

@@ -343,8 +343,8 @@ class TestCliImportSnippet(object):
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--defaults'])
-            assert cause == 'NOK: content data already exist with digest: 53908d68425c61dc' or \
-                   cause == 'NOK: content data already exist with digest: 54e41e9b52a02b63'
+            assert cause in ('NOK: content data already exist with digest: 53908d68425c61dc',
+                             'NOK: content data already exist with digest: 54e41e9b52a02b63')
             assert Database.get_snippets().size() == 2
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'r')

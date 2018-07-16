@@ -33,7 +33,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     # Python 2 and 3 compatibility.
     PYTHON2 = sys.version_info.major == 2
     if PYTHON2:
-        TEXT_TYPE = unicode  # noqa: F821 # pylint: disable=undefined-variable
+        TEXT_TYPE = unicode  # noqa pylint: disable=undefined-variable
         BINARY_TYPE = str
     else:
         TEXT_TYPE = str

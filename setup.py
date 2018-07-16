@@ -44,7 +44,7 @@ extras_tests = (
     'flake8==3.5.0',
     'logging_tree==1.7',
     'mock==2.0.0',
-    'pylint==1.9.2',
+    'pylint==2.0.0',
     'pytest==3.6.3',
     'pytest-cov==2.5.1',
     'pytest-mock==1.10.0',
@@ -59,7 +59,7 @@ with io.open(os.path.join(here, 'snippy', 'meta.py'), mode='r', encoding='utf-8'
 
 with io.open('README.rst', mode='r', encoding='utf-8') as f:
     readme = f.read()
-
+print(meta)
 setup(
     name = meta['__title__'],
     version = meta['__version__'],

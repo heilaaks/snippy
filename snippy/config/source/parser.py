@@ -135,7 +135,7 @@ class Parser(object):
         """Read content brief from text source."""
 
         brief = Const.EMPTY
-        if category == Const.SNIPPET or category == Const.REFERENCE:
+        if category in (Const.SNIPPET, Const.REFERENCE):
             match = re.search('%s(.*)%s' % (cls.BRIEF_HEAD, cls.BRIEF_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
@@ -153,7 +153,7 @@ class Parser(object):
         """Read content group from text source."""
 
         group = Const.EMPTY
-        if category == Const.SNIPPET or category == Const.REFERENCE:
+        if category in (Const.SNIPPET, Const.REFERENCE):
             match = re.search('%s(.*)%s' % (cls.GROUP_HEAD, cls.GROUP_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
@@ -171,7 +171,7 @@ class Parser(object):
         """Read content tags from text source."""
 
         tags = ()
-        if category == Const.SNIPPET or category == Const.REFERENCE:
+        if category in (Const.SNIPPET, Const.REFERENCE):
             match = re.search('(?:%s|%s)(.*?)(?:\n{2}|#|$)' % (cls.SNIPPET_TAGS, cls.REFERENCE_TAGS), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 tags = Parser.keywords([match.group(1)])
@@ -189,7 +189,7 @@ class Parser(object):
 
         # In case of solution, the links are read from the whole content data.
         links = ()
-        if category == Const.SNIPPET or category == Const.REFERENCE:
+        if category in (Const.SNIPPET, Const.REFERENCE):
             match = re.search('(?:%s|%s)(.*?)(?:\n{2}|#|$)' % (cls.SNIPPET_LINKS, cls.REFERENCE_LINKS), source, re.DOTALL)
             if match and not match.group(1).isspace():
                 links = tuple([s.strip() for s in match.group(1).strip().split(Const.NEWLINE)])

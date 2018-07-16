@@ -536,8 +536,8 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--solution', '--defaults'])
-            assert cause == 'NOK: content data already exist with digest: 61a24a156f5e9d2d' or \
-                   cause == 'NOK: content data already exist with digest: a96accc25dd23ac0'
+            assert cause in ('NOK: content data already exist with digest: 61a24a156f5e9d2d',
+                             'NOK: content data already exist with digest: a96accc25dd23ac0')
             assert Database.get_solutions().size() == 2
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
             mock_file.assert_called_once_with(defaults_solutions, 'r')

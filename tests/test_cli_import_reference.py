@@ -324,8 +324,8 @@ class TestCliImportReference(object):
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
-            assert cause == 'NOK: content data already exist with digest: 5c2071094dbfaa33' or \
-                   cause == 'NOK: content data already exist with digest: cb9225a81eab8ced'
+            assert cause in ('NOK: content data already exist with digest: 5c2071094dbfaa33',
+                             'NOK: content data already exist with digest: cb9225a81eab8ced')
             assert Database.get_references().size() == 2
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             mock_file.assert_called_once_with(defaults_references, 'r')

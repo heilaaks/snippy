@@ -203,7 +203,7 @@ class Logger(object):
         if logging.getLogger('snippy').getEffectiveLevel() == logging.DEBUG:
             if cls.CONFIG['very_verbose']:
                 status.lower()
-            Logger.get_logger().info('%s', status)
+            Logger.get_logger().debug('%s', status)
         elif not cls.CONFIG['quiet']:
             signal_sigpipe = getsignal(SIGPIPE)
             signal(SIGPIPE, SIG_DFL)

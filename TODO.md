@@ -1,7 +1,6 @@
 ## WORKING
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
    - [ ] Fix Resource migrate and merge are missing the UUID. Bug?
-   - [ ] Is it ok to have the exit cause OK/NOK: string in info log level?
    - [ ] Add tests for References.
    - [ ] Fix setup to use pylint 1.9.2 with python 2 and 2.0.0 with python 3
 
@@ -112,6 +111,7 @@
    - [ ] Update documents.
 
 ## BUBLING UNDER
+   - [ ] Add 'internal server errors' from logger scribling to Sphinx docs. Check that this part is there.
    - [ ] Add optional extra fields for logging.warning('test', extra={'foo': 'bar'}) which might be good for json. What fields to add?
    - [ ] There is a pylint bug that it does not see see Python decorators being used with underscore // https://github.com/PyCQA/pylint/issues/409
    - [ ] Add setup.py longdescription from readme.rst. // https://github.com/pypa/sampleproject/blob/master/setup.py

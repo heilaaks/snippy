@@ -5,6 +5,7 @@
    - [ ] Fix swagger api to contain uuid and source.
    - [ ] Is it ok to have the exit cause OK/NOK: string in info log level?
    - [ ] Add tests for References.
+   - [ ] Fix setup to use pylint 1.9.2 with python 2 and 2.0.0 with python 3
 
 ## FEATURES
    - [ ] Add code content.

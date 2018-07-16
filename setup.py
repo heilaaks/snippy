@@ -26,7 +26,7 @@ extras_dev = (
     'logging_tree==1.7',
     'openapi2jsonschema==0.7.1',
     'pprintpp==0.4.0',
-    'pyflakes==1.6.0'
+    'pyflakes==2.0.0'
 )
 extras_docs = (
     'sphinx==1.7.5',
@@ -49,7 +49,7 @@ extras_tests = (
     'pytest-cov==2.5.1',
     'pytest-mock==1.10.0',
     'six==1.11.0',
-    'tox==3.0.0'
+    'tox==3.1.2'
 )
 
 meta = {}

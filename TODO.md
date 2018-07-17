@@ -30,6 +30,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix docs where it was stated that uuid1 contains hostname. It actually contains mac address. This is different per container by default. Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
    - [ ] Fix test case content.verified methot that does not check other content that what gets dumped to text file. This misses checks for example update timestamps and uuid because those are not in text text file in e.g. test_cli_import_reference_011. Should have been dump to yaml instead of text.
    - [ ] Fix print resource it does not print data in debug part because it is empty tuple.

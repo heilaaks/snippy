@@ -20,6 +20,7 @@
 """reference_helper: Helper methods for reference testing."""
 
 from snippy.config.config import Config
+from snippy.config.source.parser import Parser
 from snippy.content.collection import Collection
 
 
@@ -99,6 +100,15 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     )
 
     @staticmethod
+    def get_dictionary(template):
+        """Transform template to dictinary."""
+
+        collection = ReferenceHelper._get_content(template)
+        resource = next(collection.resources())
+
+        return resource.dump_dict(Config.remove_fields)
+
+    @staticmethod
     def get_template(dictionary):
         """Transform dictionary to text template."""
 
@@ -106,3 +116,12 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         resource.load_dict(dictionary)
 
         return resource.dump_text(Config.templates)
+
+    @staticmethod
+    def _get_content(source):
+        """Transform text template to content."""
+
+        timestamp = Config.utcnow()
+        collection = Parser.read_content(timestamp, source)
+
+        return collection

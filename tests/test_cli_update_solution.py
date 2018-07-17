@@ -35,7 +35,7 @@ class TestCliUpdateSolution(object):
     def test_cli_update_solution_001(self, snippy, edited_beats, mocker):
         """Update solution with digest.
 
-        Update solution based on short message digest. Only the content data
+        Update solution based on short message digest. Only content data
         is updated.
         """
 
@@ -70,7 +70,6 @@ class TestCliUpdateSolution(object):
         assert cause == Cause.ALL_OK
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
-
 
     @pytest.mark.usefixtures('default-solutions')
     def test_cli_update_solution_003(self, snippy, edited_beats, mocker):

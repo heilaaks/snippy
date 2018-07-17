@@ -112,6 +112,7 @@ CREATE_PYTEST = (PYTEST_CREATED,)*1
 IMPORT_GITLOG = (GITLOG_CREATED,)*1
 IMPORT_REGEXP = (REGEXP_CREATED,)*1
 IMPORT_PYTEST = (PYTEST_CREATED,)*1
+EDITED_GITLOG = (GITLOG_CREATED,)*1
 UPDATE_GITLOG = (GITLOG_CREATED,)*2
 UPDATE_REGEXP = (REGEXP_CREATED,)*2
 UPDATE_PYTEST = (PYTEST_CREATED,)*2
@@ -515,11 +516,38 @@ def import_gitlog_time_mock(mocker):
 
     _add_utc_time(mocker, IMPORT_GITLOG)
 
+@pytest.fixture(scope='function', name='update-gitlog-utc')
+def update_gitlog_time_mock(mocker):
+    """Mock timestamps to update 'gitlog' reference."""
+
+    _add_utc_time(mocker, UPDATE_GITLOG)
+
+@pytest.fixture(scope='function', name='edit-gitlog')
+def edit_gitlog_solution(mocker):
+    """Edited 'gitlog' referece."""
+
+    template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+    mocker.patch.object(Editor, 'call_editor', return_value=template)
+    _add_utc_time(mocker, EDITED_GITLOG)
+
+@pytest.fixture(scope='function', name='edited_gitlog')
+def edited_gitlog(mocker):
+    """Mock edited 'gitlog' referece."""
+
+    return _editor(mocker, EDITED_GITLOG)
+
 @pytest.fixture(scope='function', name='create-regexp-utc')
 def create_regexp_time_mock(mocker):
     """Mock timestamps to create 'regexp' reference."""
 
     _add_utc_time(mocker, CREATE_REGEXP)
+
+@pytest.fixture(scope='function', name='import-regexp')
+def import_regexp_reference(mocker, snippy):
+    """Import 'regexp' reference for testing purposes."""
+
+    contents = [Reference.DEFAULTS[Reference.REGEXP]]
+    _import_content(snippy, mocker, contents, IMPORT_REGEXP)
 
 @pytest.fixture(scope='function', name='import-regexp-utc')
 def import_regexp_time_mock(mocker):

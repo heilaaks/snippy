@@ -34,7 +34,7 @@ class TestCliUpdateSnippet(object):
     def test_cli_update_snippet_001(self, snippy, edited_remove, mocker):
         """Update snippet based on digest.
 
-        Update snippet based on short message digest. Only the content data
+        Update snippet based on short message digest. Only content data
         is updated.
         """
 

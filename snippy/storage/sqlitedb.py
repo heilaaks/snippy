@@ -82,8 +82,8 @@ class SqliteDb(object):
         elif inserted == collection.size():
             Cause.push(Cause.HTTP_CREATED, 'content created')
 
-        if not inserted and error[1]:
-            Cause.push(error[0], error[1])
+        if not inserted and error[0] != Cause.HTTP_OK:
+            Cause.push(*error)
 
         stored = Collection()
         for resource in collection.resources():
@@ -199,13 +199,19 @@ class SqliteDb(object):
            resource (Resource): Stored content in ``Resource()`` container.
         """
 
+        stored = Collection()
+        error = self._test_content(resource, update=True)
+        if error[0] != Cause.HTTP_OK:
+            Cause.push(*error)
+
+            return stored
+
         query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, name=?, '
                  'filename=?, versions=?, source=?, uuid=?, created=?, updated=?, digest=?, metadata=? '
                  'WHERE digest LIKE ?')
         qargs = resource.dump_qargs() + (digest,)
         self._put_db(query, qargs)
 
-        stored = Collection()
         stored.migrate(self.select(resource.category, digest=resource.digest))
 
         return stored
@@ -329,8 +335,12 @@ class SqliteDb(object):
 
         return re.search(expr, item, re.IGNORECASE) is not None
 
-    def _test_content(self, resource):
-        """Test content validity."""
+    def _test_content(self, resource, update=False):
+        """Test content validity.
+
+        In case of update, the same content data and uuid are existing. These
+        two checks are relevant only in case of insert.
+        """
 
         error = (Cause.HTTP_OK, Const.EMPTY)
         if resource.is_template():
@@ -345,17 +355,18 @@ class SqliteDb(object):
 
             return error
 
-        if self._select_data(resource.data).size():
-            error = (Cause.HTTP_CONFLICT, 'content data already exist with digest: {:.16}'.format(self._get_digest(resource)))
-            self._logger.debug(error[1])
+        if not update:
+            if self._select_data(resource.data).size():
+                error = (Cause.HTTP_CONFLICT, 'content data already exist with digest: {:.16}'.format(self._get_digest(resource)))
+                self._logger.debug(error[1])
 
-            return error
+                return error
 
-        if self._select_uuid(resource.uuid).size():
-            error = (Cause.HTTP_CONFLICT, 'content uuid already exist with digest: {:.16}'.format(self._get_digest(resource)))
-            self._logger.debug(error[1])
+            if self._select_uuid(resource.uuid).size():
+                error = (Cause.HTTP_CONFLICT, 'content uuid already exist with digest: {:.16}'.format(self._get_digest(resource)))
+                self._logger.debug(error[1])
 
-            return error
+                return error
 
         return error
 

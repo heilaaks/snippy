@@ -64,6 +64,9 @@ class SqliteDb(object):
 
         Args:
            collection (Collection): Content container to be stored into database.
+        
+        Returns:
+            Collection: Collection of inserted content.
         """
 
         inserted = 0
@@ -96,6 +99,9 @@ class SqliteDb(object):
 
         Args:
            resource (Resource): Stored content in ``Resource()`` container.
+
+        Returns:
+            List: Local error that contains cause and message.
         """
 
         error = self._test_content(resource)
@@ -131,6 +137,9 @@ class SqliteDb(object):
            sgrp (tuple): Search group keyword list.
            digest (str): Search specific digest or part of it.
            data (str): Search specific content data or part of it.
+
+        Returns:
+            Collection: Collection of selected content.
         """
 
         collection = Collection()
@@ -149,6 +158,9 @@ class SqliteDb(object):
 
         Args:
            category (str): Content category.
+
+        Returns:
+            Collection: Collection of all content in database.
         """
 
         collection = Collection()
@@ -178,6 +190,9 @@ class SqliteDb(object):
            sgrp (tuple): Search group keyword list.
            digest (str): Search specific digest or part of it.
            data (str): Search specific content data or part of it.
+
+        Returns:
+            Int: Number of content in database based on given filters.
         """
 
         count = 0
@@ -197,6 +212,9 @@ class SqliteDb(object):
         Args:
            digest (str): Content digest that is udpated.
            resource (Resource): Stored content in ``Resource()`` container.
+
+        Returns:
+            Collection: Collection of updated content.
         """
 
         stored = Collection()
@@ -256,6 +274,9 @@ class SqliteDb(object):
 
         Args:
            data (str): Content data or part of it.
+
+        Returns:
+            Collection: Collection of selected content.
         """
 
         collection = Collection()
@@ -282,6 +303,9 @@ class SqliteDb(object):
 
         Args:
            uuid (str): Content uuid or part of it.
+
+        Returns:
+            Collection: Collection of selected content.
         """
 
         collection = Collection()

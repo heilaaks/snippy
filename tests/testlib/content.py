@@ -150,12 +150,16 @@ class Content(object):
         if Content._any_valid_test_uuid(content) and validate_uuid:
             content['uuid'] = Database.VALID_UUID
 
-        # The helper data may contain links in unsorted order. The links
-        # are sorted based on content. Since comparison is made against
-        # the helper data and the tools sorts the links in case of
-        # snippets and solutions, the referece must be sorted here.
+        # The helper data may contain links in unsorted order. The links are
+        # sorted based on content. Since comparison is made against the helper
+        # data and the tools sorts the links in case of snippets and solutions,
+        # the other than referece content must be sorted here.
         if content['category'] != Const.REFERENCE:
             content['links'] = tuple(sorted(content['links']))
+
+        # Content data is always empty in reference response.
+        if content['category'] == Const.REFERENCE:
+            content['data'] = ()
 
         return content
 

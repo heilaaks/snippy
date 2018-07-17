@@ -115,7 +115,7 @@ class TestApiUpdateSnippet(object):
             'versions': '',
             'source': '',
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': Content.REMOVE_TIME,
+            'created': Content.FORCED_TIME,
             'updated': Content.REMOVE_TIME,
             'digest': 'e56c2183edcc3a67cab99e6064439495a8af8a1d0b78bc538acd6079c841f27f'
         }
@@ -173,7 +173,7 @@ class TestApiUpdateSnippet(object):
             'versions': '',
             'source': '',
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': Content.REMOVE_TIME,
+            'created': Content.FORCED_TIME,
             'updated': Content.REMOVE_TIME,
             'digest': '26128ea95707a3a2623bb2613a17f50e29a5ab5232b8ba7ca7f1c96cb1ea5c58'
         }
@@ -327,7 +327,7 @@ class TestApiUpdateSnippet(object):
         assert Database.get_snippets().size() == 1
         Content.verified(mocker, server, content_read)
 
-    @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
+    @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
     def test_api_update_snippet_007(self, server, mocker):
         """Update one snippet with PATCH request.
 
@@ -358,7 +358,7 @@ class TestApiUpdateSnippet(object):
             'uuid': Snippet.DEFAULTS[Snippet.FORCED]['uuid'],
             'source': Snippet.DEFAULTS[Snippet.FORCED]['source'],
             'created': Content.FORCED_TIME,
-            'updated': Content.FORCED_TIME,
+            'updated': Content.REMOVE_TIME,
             'digest': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         }
         content = {'a9e137c08aee0985': content_read}

@@ -51,11 +51,11 @@ class TestApiCreateReference(object):
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }]
         }
-        content_read = Reference.DEFAULTS[Reference.GITLOG]
+        content_read = Content.compared(Reference.DEFAULTS[Reference.GITLOG])
         content = {Reference.GITLOG_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '586'}
+            'content-length': '584'}
         result_json = {
             'data': [{
                 'type': 'reference',
@@ -95,17 +95,17 @@ class TestApiCreateReference(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1169'
+            'content-length': '1165'
         }
         result_json = {
             'data': [{
                 'type': 'reference',
                 'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': Content.compared(Reference.DEFAULTS[Reference.GITLOG])
             }, {
                 'type': 'reference',
                 'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Reference.DEFAULTS[Reference.PYTEST]
+                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -144,7 +144,7 @@ class TestApiCreateReference(object):
         content = {'cb9225a81eab8ce': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '747'
+            'content-length': '745'
         }
         result_json = {
             'links': {
@@ -207,7 +207,7 @@ class TestApiCreateReference(object):
         content = {'ee4a072a5a7a661a': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '731'
+            'content-length': '729'
         }
         result_json = {
             'links': {

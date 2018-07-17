@@ -19,7 +19,6 @@
 
 """test_api_update_solution: Test PUT /solutions API."""
 
-import copy
 import json
 
 from falcon import testing
@@ -58,7 +57,7 @@ class TestApiUpdateSolution(object):
                 }
             }
         }
-        content_read = copy.copy(Solution.DEFAULTS[Solution.NGINX])
+        content_read = Content.compared(Solution.DEFAULTS[Solution.NGINX])
         content = {'2cd0e794244a07f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -88,7 +87,7 @@ class TestApiUpdateSolution(object):
         assert Database.get_solutions().size() == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('import-beats', 'update-beats-utc')
+    @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
     def test_api_update_solution_002(self, server, mocker):
         """Update one solution with PUT request.
 
@@ -118,7 +117,7 @@ class TestApiUpdateSolution(object):
             'source': '',
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.BEATS_TIME,
-            'updated': Content.BEATS_TIME,
+            'updated': Content.NGINX_TIME,
             'digest': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b'
         }
         content = {'8d400d39568354f9': content_read}
@@ -312,7 +311,7 @@ class TestApiUpdateSolution(object):
         assert result.status == falcon.HTTP_403
         assert Database.get_solutions().size() == 1
 
-    @pytest.mark.usefixtures('import-beats', 'update-beats-utc')
+    @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
     def test_api_update_solution_007(self, server, mocker):
         """Update one solution with PATCH request.
 
@@ -343,7 +342,7 @@ class TestApiUpdateSolution(object):
             'source': Solution.DEFAULTS[Solution.BEATS]['source'],
             'uuid': Solution.DEFAULTS[Solution.BEATS]['uuid'],
             'created': Content.BEATS_TIME,
-            'updated': Content.BEATS_TIME,
+            'updated': Content.NGINX_TIME,
             'digest': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0'
         }
         content = {'21c737e704b97226': content_read}
@@ -371,7 +370,7 @@ class TestApiUpdateSolution(object):
         assert Database.get_solutions().size() == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('import-beats', 'update-beats-utc')
+    @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
     def test_api_update_solution_008(self, server, mocker):
         """Update one solution with PUT request.
 
@@ -401,7 +400,7 @@ class TestApiUpdateSolution(object):
             'source': '',
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.BEATS_TIME,
-            'updated': Content.BEATS_TIME,
+            'updated': Content.NGINX_TIME,
             'digest': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b'
         }
         content = {'8d400d39568354f9': content_read}

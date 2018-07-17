@@ -267,6 +267,7 @@ class Cli(ConfigSourceBase):
         if parameters['category'] == Const.REFERENCE and parameters['operation'] == Cli.UPDATE:
             parameters['editor'] = True
 
+
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """Customised help action."""
 

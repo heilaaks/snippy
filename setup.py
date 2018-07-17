@@ -62,7 +62,7 @@ with io.open(os.path.join(here, 'snippy', 'meta.py'), mode='r', encoding='utf-8'
 
 with io.open('README.rst', mode='r', encoding='utf-8') as f:
     readme = f.read()
-print(meta)
+
 setup(
     name = meta['__title__'],
     version = meta['__version__'],

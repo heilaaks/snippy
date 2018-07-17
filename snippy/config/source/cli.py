@@ -248,7 +248,12 @@ class Cli(ConfigSourceBase):
 
     @staticmethod
     def _set_editor(parameters):
-        """Enforce editor usage for some operations for better usability."""
+        """Enforce editor usage for specific operations for better usability.
+
+        It is assumed that longer solutions area always edited in editor when
+        shorter snippets and references are created and updated from command
+        line by default.
+        """
 
         if parameters['failure']:
             return
@@ -259,6 +264,8 @@ class Cli(ConfigSourceBase):
         if parameters['category'] == Const.SOLUTION and (Cli.CREATE or Cli.UPDATE in parameters['operation']):
             parameters['editor'] = True
 
+        if parameters['category'] == Const.REFERENCE and parameters['operation'] == Cli.UPDATE:
+            parameters['editor'] = True
 
 class CustomHelpAction(argparse.Action):  # pylint: disable=too-few-public-methods
     """Customised help action."""

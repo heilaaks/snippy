@@ -52,7 +52,6 @@ extras_tests = (
     'pytest==3.6.3',
     'pytest-cov==2.5.1',
     'pytest-mock==1.10.0',
-    'six==1.11.0',
     'tox==3.1.2'
 )
 

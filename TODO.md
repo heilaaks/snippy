@@ -3,6 +3,8 @@
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.
    - [ ] Refactor sqlite tests to single test_ut_sqlitedb.py like with the logger and parser.
    - [ ] Test wheel and make sure that the imported defaults are bundled. Does this require the usage of manifest?
+   - [ ] Test against Python 3.7.
+   - [ ] Setup pipenv.
 
 ## FEATURES
    - [ ] Add code content.

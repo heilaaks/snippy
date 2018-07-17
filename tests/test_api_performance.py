@@ -71,7 +71,7 @@ class TestApiPerformance(object):
 
         No errors should be printed and the runtime should be below 10
         seconds. The runtime is intentionally set 10 times higher value
-        than with the reference PC.
+        than with the reference PC to cope with slow test envrironments
         """
 
         # Clear the real database and run the real server.

@@ -1064,9 +1064,11 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        D) UUID
 
-          The UUID is intended to be used in cases where two databases are
+          The UUID is intended to be used in cases where multiple databases are
           merged to one. The UUID is allocated always for the content and it
-          never changes.
+          never changes. Used UUID format is uuid1 which contains the hostname
+          and timestamp where it was generated. This allows separting different
+          processes running for example in different containers or hosts.
 
        E) Digest
 

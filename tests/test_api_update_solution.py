@@ -235,7 +235,7 @@ class TestApiUpdateSolution(object):
 
         request_body = {
             'data': {
-                'type': 'snippet',
+                'type': 'solution',
                 'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
@@ -286,7 +286,10 @@ class TestApiUpdateSolution(object):
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
                     'group': Solution.DEFAULTS[Solution.NGINX]['group'],
                     'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])}}}
+                    'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
+                }
+            }
+        }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '382'
@@ -359,6 +362,64 @@ class TestApiUpdateSolution(object):
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
+            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+        assert Database.get_solutions().size() == 1
+        Content.verified(mocker, server, content)
+
+    @pytest.mark.usefixtures('import-beats', 'update-beats-utc')
+    def test_api_update_solution_008(self, server, mocker):
+        """Update one solution with PUT request.
+
+        Try to update solution uuid by calling PUT /v1/solutions. This must
+        not be done because the uuid is not changed once allocated.
+        """
+
+        request_body = {
+            'data': {
+                'type': 'solution',
+                'attributes': {
+                    'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                    'uuid': '11111111-1111-1111-1111-111111111111'
+                }
+            }
+        }
+        content_read = {
+            'data': Solution.DEFAULTS[Solution.NGINX]['data'],
+            'brief': '',
+            'group': 'default',
+            'tags': [],
+            'links': [],
+            'category': 'solution',
+            'name': '',
+            'filename': '',
+            'versions': '',
+            'source': '',
+            'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            'created': Content.BEATS_TIME,
+            'updated': Content.BEATS_TIME,
+            'digest': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b'
+        }
+        content = {'8d400d39568354f9': content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '2956'
+        }
+        result_json = {
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/8d400d39568354f9'
+            },
+            'data': {
+                'type': 'solution',
+                'id': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b',
+                'attributes': content_read
+            }
+        }
+        result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))

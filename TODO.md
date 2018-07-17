@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
-   - [ ] Fix Resource migrate and merge are missing the UUID. Bug?
    - [ ] Add tests for References.
    - [ ] Test wheel and make sure that the imported defaults are bundled. Does this require the usage of manifest?
 
@@ -32,7 +30,8 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
-   - [ ] Fix content.verified which does not check other content that what gets to text file. This misses for example update timestamps in e.g. test_cli_import_reference_011.
+   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change?
+   - [ ] Fix test case content.verified methot that does not check other content that what gets dumped to text file. This misses checks for example update timestamps and uuid because those are not in text text file in e.g. test_cli_import_reference_011. Should have been dump to yaml instead of text.
    - [ ] Fix print resource it does not print data in debug part because it is empty tuple.
    - [ ] Fix get_resource and next if the collection is empty. This generates StopIteration exception.
    - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
@@ -78,6 +77,7 @@
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
+   - [ ] Refactor test case helper functions to export to yaml file instead of text. Yaml allows checking all params and text missed e.g. timestamps and uuid.
    - [ ] Refactor UT tests for sqlite DB module.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
    - [ ] Add test that verifies that OID is not changing duringn one operation. Run two operations and check two OIDs in dict.

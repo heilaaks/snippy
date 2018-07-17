@@ -1,26 +1,28 @@
-Run started:2017-10-01 18:16:25.217848
+Run started:2018-07-17 11:18:45.162968
 
 Test results:
 >> Issue: [B404:blacklist] Consider possible security implications associated with call module.
    Severity: Low   Confidence: High
-   Location: snippy/config/editor.py:38
-37	        import tempfile
-38	        from subprocess import call
-39	
-40	        template = self.read_template()
+   Location: snippy/config/source/editor.py:64
+63	        import tempfile
+64	        from subprocess import call
+65	
+66	        # External dependencies are isolated in this method to ease
+67	        # testing. This method is mocked to return the edited text.
+68	        message = Const.EMPTY
 
 --------------------------------------------------
 >> Issue: [B603:subprocess_without_shell_equals_true] subprocess call - check for execution of untrusted input.
    Severity: Low   Confidence: High
-   Location: snippy/config/editor.py:56
-55	            try: 
-56	                call([editor, outfile.name])
-57	                outfile.seek(0)
+   Location: snippy/config/source/editor.py:76
+75	            try:
+76	                call([editor, outfile.name])
+77	                outfile.seek(0)
 
 --------------------------------------------------
 
 Code scanned:
-	Total lines of code: 1684
+	Total lines of code: 3931
 	Total lines skipped (#nosec): 0
 
 Run metrics:

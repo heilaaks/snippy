@@ -64,7 +64,7 @@ class SqliteDb(object):
 
         Args:
            collection (Collection): Content container to be stored into database.
-        
+
         Returns:
             Collection: Collection of inserted content.
         """

@@ -22,6 +22,9 @@ import os
 from setuptools import setup, find_packages
 
 
+install = (
+    'pyyaml==3.12'
+)
 extras_dev = (
     'logging_tree==1.7',
     'openapi2jsonschema==0.7.1',
@@ -82,7 +85,7 @@ setup(
         ]
     },
     python_requires=">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*",
-    install_requires=['pyyaml==3.12'],
+    install_requires=install,
     zip_safe=False,
     entry_points={
         'console_scripts': [
@@ -92,9 +95,11 @@ setup(
     classifiers=[
         'Development Status :: 4 - Beta',
         'Environment :: Console',
+        'Environment :: Web Environment',
         'Intended Audience :: Developers',
-        'Topic :: Software Development :: Documentation',
+        'Intended Audience :: Information Technology'
         'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
+        'Natural Language :: English',
         'Operating System :: POSIX :: Linux',
         'Programming Language :: Python :: 2',
         'Programming Language :: Python :: 2.7',
@@ -102,7 +107,7 @@ setup(
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
-        'Natural Language :: English',
+        'Topic :: Software Development :: Documentation',
         'Topic :: Utilities'
     ],
     extras_require={

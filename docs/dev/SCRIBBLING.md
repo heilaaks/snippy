@@ -83,6 +83,44 @@ Random notes and scribling during development.
    $ pypy -m pytest -x ./tests/test_*.py --cov snipp
    $ unset PYTHONPATH
    ```
+   
+   ```
+   # Install pipenv development environment
+   $ pipenv install
+   
+   # install pipenv
+   $ pip install --user pipenv
+   $ pipenv lock
+   
+   # Pipenv for Python 3.6
+   $ pipenv --python 3.6
+   $ pipenv install pyyaml==3.12
+   $ pipenv install falcon==1.4.1
+   $ pipenv install gunicorn==19.9.0
+   $ pipenv install jsonschema==2.6.0
+
+   $ pipenv install codecov==2.0.15 --dev
+   $ pipenv install flake8==3.5.0 --dev
+   $ pipenv install logging_tree==1.7 --dev
+   $ pipenv install mock==2.0.0 --dev
+   $ pipenv install openapi2jsonschema==0.7.1 --dev
+   $ pipenv install pprintpp==0.4.0 --dev
+   $ pipenv install pyflakes --dev
+   $ pipenv install pylint==2.0.0 --dev
+   $ pipenv install pytest==3.6.3 --dev
+   $ pipenv install pytest-cov==2.5.1 --dev
+   $ pipenv install pytest-mock==1.10.0 --dev
+   $ pipenv install sphinx==1.7.5 --dev
+   $ pipenv install sphinx-autobuild==0.7.1 --dev
+   $ pipenv install sphinxcontrib-openapi==0.3.2 --dev
+   $ pipenv install sphinx_rtd_theme==0.4.0 --dev
+   $ pipenv install tox==3.1.2 --dev
+
+   # Pipenv for Python 2.7
+   $ pipenv --python 2.7.14
+   
+   
+   ```
 
    ```
    # Running container tests. These containers try to mimic

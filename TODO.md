@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Refactor sqlite tests to single test_ut_sqlitedb.py like with the logger and parser.
    - [ ] Test wheel and make sure that the imported defaults are bundled. Does this require the usage of manifest?
    - [ ] Test against Python 3.7.
    - [ ] Setup pipenv.
@@ -84,7 +83,7 @@
 
 ## TESTS
    - [ ] Refactor test case helper functions to export to yaml file instead of text. Yaml allows checking all params and text missed e.g. timestamps and uuid.
-   - [ ] Refactor UT tests for sqlite DB module.
+   - [ ] Refactor UT tests for single sqlite DB module. Refactor sqlite tests to single test_ut_sqlitedb.py like with the logger and parser.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
    - [ ] Add test that verifies that OID is not changing duringn one operation. Run two operations and check two OIDs in dict.
    - [ ] Test Collection()/Resource() ne - probably UT tests.

@@ -52,6 +52,7 @@ clean:
 	rm -dfr dist
 	rm -drf docs/build/*
 	rm -drf htmlcov
+	rm -drf .pytest_cache
 	rm -drf snippy.egg-info
 	rm -f coverage.xml
 	rm -f pytestdebug.log

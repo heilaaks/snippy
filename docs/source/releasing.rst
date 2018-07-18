@@ -3,7 +3,8 @@ Releasing
 
 #. Preparations
 
-   1. Update release notes
+   1. Update version number in meta.py.
+   1. Update the CHANGELOG.
 
 #. Run tests
 
@@ -89,6 +90,10 @@ Releasing
       pypy runner --server -vv
       pypy -m pytest -x ./tests/test_*.py --cov snipp
       unset PYTHONPATH
+
+#. Verify data in CHANGELOG
+
+   1. Update the CHANGELOG release date if needed.
 
 #. Make tag
 

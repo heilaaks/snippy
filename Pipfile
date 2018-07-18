@@ -27,4 +27,4 @@ gunicorn = "==19.9.0"
 jsonschema = "==2.6.0"
 
 [requires]
-python_version = "3.6"
+

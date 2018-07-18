@@ -1,8 +1,8 @@
 ## WORKING
    - [ ] Test wheel and make sure that the imported defaults are bundled. Does this require the usage of manifest?
-   - [ ] Test against Python 3.7.
 
 ## FEATURES
+   - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add code content.
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.

@@ -1,1 +1,6 @@
-pyyaml
+falcon==1.4.1
+gunicorn==19.9.0
+jsonschema==2.6.0
+python-mimeparse==1.6.0
+pyyaml==3.12
+six==1.11.0

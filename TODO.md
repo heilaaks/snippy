@@ -1,7 +1,6 @@
 ## WORKING
    - [ ] Test wheel and make sure that the imported defaults are bundled. Does this require the usage of manifest?
    - [ ] Test against Python 3.7.
-   - [ ] Setup pipenv.
 
 ## FEATURES
    - [ ] Add code content.

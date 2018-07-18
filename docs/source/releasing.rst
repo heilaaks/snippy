@@ -67,6 +67,29 @@ Releasing
       docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv
       curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
 
+#. Test with PyPy
+
+   .. code-block:: text
+
+      # Default test box install PyPy 2.7 from dnf.
+      sudo dnf install pypy
+      export PYTHONPATH=/usr/lib64/python2.7/site-packages/
+      wget https://bootstrap.pypa.io/get-pip.py
+      sudo pypy get-pip.py
+      sudo pypy -m pip install codecov
+      sudo pypy -m pip install logging_tree
+      sudo pypy -m pip install mock
+      sudo pypy -m pip install pytest
+      sudo pypy -m pip install pytest-cov
+      sudo pypy -m pip install pytest-mock
+      sudo pypy -m pip install falcon
+      sudo pypy -m pip install gunicorn
+      sudo pypy -m pip install jsonschema
+      pypy runner --help
+      pypy runner --server -vv
+      pypy -m pytest -x ./tests/test_*.py --cov snipp
+      unset PYTHONPATH
+
 #. Make tag
 
    .. code-block:: text

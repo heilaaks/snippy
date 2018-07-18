@@ -67,6 +67,24 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Install PyPy and run tests.
+   $ sudo dnf install pypu
+   $ export PYTHONPATH=/usr/lib64/python2.7/site-packages/
+   $ wget https://bootstrap.pypa.io/get-pip.py
+   $ sudo pypy get-pip.py
+   $ sudo pypy -m pip install mock
+   $ pypy -m pytest tests/test_cli_performance.py
+   $ pypy -m pytest tests/test_api_performance.py
+   $ sudo pypy -m pip install gunicorn
+   $ sudo pypy -m pip install jsonschema
+   $ sudo pypy -m pip install falcon
+   $ pypy runner --help
+   $ pypy runner --server -vv
+   $ pypy -m pytest -x ./tests/test_*.py --cov snipp
+   $ unset PYTHONPATH
+   ```
+
+   ```
    # Running container tests. These containers try to mimic
    # Travis CI test environment.
    $ sudo docker build -f tests/docker/Dockerfile-Python34-jessie -t snippy/python34-jessie .

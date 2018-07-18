@@ -5,9 +5,11 @@
    - [ ] Test wheel and make sure that the imported defaults are bundled. Does this require the usage of manifest?
    - [ ] Test against Python 3.7.
    - [ ] Setup pipenv.
+   - [ ] Query 'GET /snippy/api/app/v1/snippets?limit=100&fields=digest' seems to return error with empty content? should be empty list? Is error OK?
 
 ## FEATURES
    - [ ] Add code content.
+   - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
    - [ ] Add support to export content to markdown format.
@@ -34,6 +36,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix pkg_resources for PyPy which seems to work with very very brief testing.
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.
    - [ ] Fix docs where it was stated that uuid1 contains hostname. It actually contains mac address. This is different per container by default. Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings

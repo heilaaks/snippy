@@ -46,7 +46,7 @@ extras_tests = (
     'flake8==3.5.0',
     'logging_tree==1.7',
     'mock==2.0.0',
-    'pyflakes',
+    'pyflakes==1.6.0',
     'pylint==1.9.2 ; python_version=="2.7.*"',
     'pylint==2.0.0 ; python_version>"2.7"',
     'pytest==3.6.3',

@@ -137,15 +137,19 @@ class Content(object):
         Args:
             content (dict): Server response or content helper default JSON data.
             validate_uuid (bool): Defines if the UUID is validated or not.
+
+        Returns:
+            dict: Modified copy from original content for Snippy output reference.
         """
 
         content = copy.deepcopy(content)
 
-        # Remove white spaces around the tags.
-        content['tags'] = tuple([tag.strip() for tag in content['tags']])
+        if 'tags' in content:
+            # Remove white spaces around the tags.
+            content['tags'] = tuple([tag.strip() for tag in content['tags']])
 
-        # Tags are always sorted for all content.
-        content['tags'] = tuple(sorted(content['tags']))
+            # Tags are always sorted for all content.
+            content['tags'] = tuple(sorted(content['tags']))
 
         if Content._any_valid_test_uuid(content) and validate_uuid:
             content['uuid'] = Database.VALID_UUID
@@ -158,7 +162,7 @@ class Content(object):
             content['links'] = tuple(sorted(content['links']))
 
         # Content data is always empty in reference response.
-        if content['category'] == Const.REFERENCE:
+        if content['category'] == Const.REFERENCE and 'data' in content:
             content['data'] = ()
 
         return content

@@ -294,7 +294,6 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
-
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_008(self, server):
         """Search solution with GET.
@@ -520,10 +519,10 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_015(self, server):
         """Search solution without search parameters.
 
-        Call GET /v1/solutions without defining search parameters.
-        In this case only one solution must be returned because the
-        limit is set to one. Also the sorting based on brief field
-        causes the last solution to be returned.
+        Call GET /v1/solutions without defining search parameters. In this
+        case only one solution must be returned because the limit is set to
+        one. Also the sorting based on brief field causes the last solution
+        to be returned.
         """
 
         result_headers = {

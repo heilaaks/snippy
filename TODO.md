@@ -1,11 +1,8 @@
 ## WORKING
-   - [ ] Add tests for References.
-   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.
    - [ ] Refactor sqlite tests to single test_ut_sqlitedb.py like with the logger and parser.
    - [ ] Test wheel and make sure that the imported defaults are bundled. Does this require the usage of manifest?
    - [ ] Test against Python 3.7.
    - [ ] Setup pipenv.
-   - [ ] Query 'GET /snippy/api/app/v1/snippets?limit=100&fields=digest' seems to return error with empty content? should be empty list? Is error OK?
 
 ## FEATURES
    - [ ] Add code content.
@@ -36,7 +33,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
-   - [ ] Fix pkg_resources for PyPy which seems to work with very very brief testing.
+   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.
    - [ ] Fix docs where it was stated that uuid1 contains hostname. It actually contains mac address. This is different per container by default. Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings

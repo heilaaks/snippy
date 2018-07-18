@@ -508,13 +508,13 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             'digest': self.digest,
         }
 
-        for field in remove_fields:
-            data.pop(field, None)
-
         # Data field in case of reference is just for internal purposes. The
         # data field is not meant to be externally visible for references.
         if self.category == Const.REFERENCE:
             data['data'] = ()
+
+        for field in remove_fields:
+            data.pop(field, None)
 
         return data
 

@@ -67,7 +67,7 @@ Usage
 
 Snippy command line commands always include content operation and category.
 The content operation is one of the six basic operations and the category is
-either snippet, solution or resource. The content category is snippet by
+either snippet, solution or reference. The content category is snippet by
 default. Metadata attached to the content allows adding brief description of
 the content, single group to which the content belongs, list of tags to
 assist search operations and a list of links for more information about the
@@ -264,8 +264,8 @@ be expected. The API is documented in Swagger Hub `OpenAPI definitions`_.
 .. code-block:: text
 
    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv
-   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
-   curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=2" -H "accept: application/vnd.api+json"
+   curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
 You can change the port and IP address by defining them from the command
 line. Remember to remove the stopped container before starting it with new
@@ -275,7 +275,7 @@ perameters.
 
    docker rm -f snippy
    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
-   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+   curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
 You can see the logs from the server from the default Docker log. If you do
 not want to read JSON logs, remove the ``--log-json`` parameter from the

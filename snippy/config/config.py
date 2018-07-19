@@ -57,7 +57,7 @@ class Config(object):
         # Set logger and development configuration.
         cls._init_logs(args)
 
-        source = Cli(args)
+        cls.source = Cli(args)
 
         # Static storage configuration.
         cls.storage_schema = cls._storage_schema()
@@ -69,21 +69,21 @@ class Config(object):
             'solution': cls.solution_template,
             'reference': cls.reference_template
         }
-        cls.storage_path = source.storage_path
+        cls.storage_path = cls.source.storage_path
         cls.storage_file = cls._storage_file()
 
         # Static server configuration.
-        cls.base_path_app = source.base_path_app
-        cls.compact_json = source.compact_json
-        cls.server = source.server
-        cls.server_ip = source.server_ip
-        cls.server_port = source.server_port
-        cls.ssl_cert = cls._ssl_file(source.ssl_cert)
-        cls.ssl_key = cls._ssl_file(source.ssl_key)
-        cls.ssl_ca_cert = cls._ssl_file(source.ssl_ca_cert)
+        cls.base_path_app = cls.source.base_path_app
+        cls.compact_json = cls.source.compact_json
+        cls.server = cls.source.server
+        cls.server_ip = cls.source.server_ip
+        cls.server_port = cls.source.server_port
+        cls.ssl_cert = cls._ssl_file(cls.source.ssl_cert)
+        cls.ssl_key = cls._ssl_file(cls.source.ssl_key)
+        cls.ssl_ca_cert = cls._ssl_file(cls.source.ssl_ca_cert)
 
         # Dynamic configuration.
-        cls.load(source)
+        cls.load(cls.source)
 
     @classmethod
     def load(cls, source):
@@ -308,7 +308,7 @@ class Config(object):
         else:
             # This is a special case which prevents additional error log after
             # tool is already about to exit with help text from the CLI parser.
-            if not cls.source.exit:
+            if not cls.source.failure:
                 Logger.print_status('NOK: cannot run because content storage path is not accessible: {}'.format(storage_path))
             sys.exit(1)
 

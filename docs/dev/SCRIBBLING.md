@@ -304,8 +304,10 @@ http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-
     $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
     $ /home/linuxbrew/.linuxbrew/bin/brew install asciinema
     $ export PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
+    
+    $ dnf install asciinema
 
-    asciinema rec snippy.json
+    asciinema rec snippy.cast
     snippy --help
     snippy search --sall .
     snippy import --defaults
@@ -317,6 +319,11 @@ http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-
     snippy import -d ec11663bee073799 -f kubernetes-docker-log-driver-kafka.txt
     snippy search --solution --sall . | grep -Ev '[^\s]+:'
     ctrl-d
+
+    # server
+    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
+    curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+
     https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
 
 ## Travis CI and tooling

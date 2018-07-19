@@ -1,5 +1,6 @@
 ## WORKING
-   - [ ] Test wheel and make sure that the imported defaults are bundled. Does this require the usage of manifest?
+
+   - [ ] Release v0.8.0.
 
 ## FEATURES
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
@@ -31,6 +32,8 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix why default examples with: import --defaults <all> and snippy search -c 'docker ps' matches 8 when there should be 6 matches?
+   - [ ] Fix test cases hiding that cls.source was _not_ set in init when the Config.init called storage method that used cls.source. How this can be not noticed?
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.

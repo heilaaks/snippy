@@ -96,7 +96,7 @@ setup(
         'Environment :: Console',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
-        'Intended Audience :: Information Technology'
+        'Intended Audience :: Information Technology',
         'License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)',
         'Natural Language :: English',
         'Operating System :: POSIX :: Linux',

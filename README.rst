@@ -1,29 +1,33 @@
-|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-health| |badge-codacy| |badge-docs| |badge-build|
+|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-docs| |badge-build|
 
 Features
 ========
 
-Manage command snippets and solution examples directly from console. The tool
-is designed to support software development and troubleshooting workflows by
-collecting command examples and troubleshooting solutions into one manager.
-The tool may be helpful for example when working with different open source
-components that all have different configuration settings and troubleshooting
-methods. You can share the best examples through common data serialization
-languages YAML or JSON.
+Manage command snippets, solution examples and reference links from console
+or REST API server. The tool is designed to support software development and
+troubleshooting workflows by collecting command examples, troubleshooting
+solutions and links into one content manager. The tool may be helpful for
+example when working with different open source components that all have
+different configuration settings and troubleshooting methods. You can share
+the best examples through common data serialization languages YAML or JSON
+or from a REST API server.
 
-Content is divided into two categories called snippets and solutions. Snippets
-are short command examples and solutions are longer solution descriptions. You
-can combine metadata like links and tags with the content in order to help
-searching and tracking the content.
+Content is divided into three categories called snippets, solutions and
+references. Snippets are short command examples. Solutions are longer
+solution descriptions and references are links to important web pages and
+resources. You can combine metadata like tags, group or links with the
+content in order to help searching and tracking stored content.
 
-You can operate snippet or solution content with six basic operations: create,
-search, update, delete, import and export. These operations manage the content
-in persistent file storage installed into the same location as the tool.
+You can operate all content directly from command line with six operations:
+create, search, update, delete, import and export. These operations manage
+the content in persistent file storage installed into the same location as
+the tool.
 
-There is also experimental `RESTish JSON API`_. The API follows a subset of
-the `JSON API V1.0`_ specification. The tool must be installed from Docker Hub
-or from the github repository. The server is not available when installed from
-PyPI.
+You can operate all content from `RESTish JSON API`_. server. The API follows
+a subset of the `JSON API V1.0`_ specification. The tool must be installed
+from Docker Hub or from the github repository if server functionality is
+required. The server functionality is not currently available when installed
+directly from PyPI.
 
 .. image:: https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO.png
     :target: https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
@@ -61,20 +65,22 @@ To install from Github, run:
 Usage
 =====
 
-Snippy commands always include content operation and category. The content
-operation is one of the six basic operations and the category is either snippet
-or solution. The content category is snippet by default. Metadata attached to
-the content allows adding brief description of the content, single group to
-which the content belongs, list of tags to assist search operations and a list
-of links for more information about the content.
+Snippy command line commands always include content operation and category.
+The content operation is one of the six basic operations and the category is
+either snippet, solution or resource. The content category is snippet by
+default. Metadata attached to the content allows adding brief description of
+the content, single group to which the content belongs, list of tags to
+assist search operations and a list of links for more information about the
+content.
 
 Snippy tool outputs always OK after successful operation and NOK with a failure
 string in case of failure. You can use debug option with the command to
 investigate possible problems. For more detailed troubleshooting instructions,
 please refer to the `contributing instructions`_.
 
-The workflow section below contains the basic use cases. You can read more
-detailed documentation from the documentation hosted in the `Read the Docs`_.
+The workflow section below contains the basic use cases for command line
+interface. You can read more detailed documentation from the documentation
+hosted by the `Read the Docs`_.
 
 .. note::
 
@@ -329,12 +335,6 @@ fill a bug report based on contributing_ instructions.
 
 .. |badge-cov| image:: https://codecov.io/gh/heilaaks/snippy/branch/master/graph/badge.svg
    :target: https://codecov.io/gh/heilaaks/snippy
-
-.. |badge-health| image:: https://landscape.io/github/heilaaks/snippy/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/heilaaks/snippy/master
-
-.. |badge-codacy| image:: https://api.codacy.com/project/badge/Grade/170f2ea74ead4f23b574478000ef578a
-   :target: https://www.codacy.com/app/heilaaks/snippy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=heilaaks/snippy&amp;utm_campaign=Badge_Grade
 
 .. |badge-docs| image:: https://readthedocs.org/projects/snippy/badge/?version=latest
    :target: http://snippy.readthedocs.io/en/latest/?badge=latest

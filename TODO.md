@@ -1,18 +1,20 @@
 ## WORKING
 
-   - [ ] Release v0.8.0.
+## PLANNING
+   - [ ] Add api like /api/app/v1/<group>?limit=2&category=snippets,solutions,references". This may be more logical that snippy/etc.
+   - [ ] Add code content.
+   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
+   - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
+   - [ ] Add UT tests for class Debug() methods.
+   - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
+   - [ ] Add support to export content to markdown format.
+   - [ ] Add changelog to README.
 
 ## FEATURES
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
-   - [ ] Add code content.
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
-   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
-   - [ ] Add support to export content to markdown format.
-   - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
-   - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
-   - [ ] Add UT tests for class Debug() methods.
-   - [ ] Add user management for tables. Now all is in one table since there is no user concept.
+   - [ ] Add user management with a new user table that lins to contents table.
    - [ ] Add user authentication. Which one: sessionID, OAuth2, JWS? Maybe OAuth2 (corporate integration) or JWS (embedded, no server?).
    - [ ] Add CORS https://stackoverflow.com/a/45183343
    - [ ] Add /snippy/api/admin/v1/settings for log config. Same base /snippy/api/ for all routes.
@@ -109,6 +111,7 @@
    - [ ] Why tests are failing if falcon is not installed? There is something strange when falcon is uninstalled. After uninstall import still works but variables not there?
 
 ## DOCUMENTS
+   - [ ] Add instructions how to start docker container in README and docs.
    - [ ] Move test case brief to test case document. This cannot be done untill are cases are in new format because the documentation is lost. When this is done, check the autodock before massive desc move.
    - [ ] Add link to specific OAS (swaggerhub) specficiation from homepage and docs.
    - [ ] Add document note that content type is application/vnd.api+json; charset=UTF-8 inclufing the character set.

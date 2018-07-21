@@ -3,6 +3,11 @@
 Release History
 ===============
 
+0.9.0 (development)
+-------------------
+
+* All commits in `0.9.0`_.
+
 0.8.0 (2018-21-07)
 ------------------
 
@@ -34,6 +39,7 @@ Release History
 * Experimental alpha release.
 * All commits in `0.1.0`_.
 
+.. _0.9.0: https://github.com/heilaaks/snippy/compare/c9b1403118...latest
 .. _0.8.0: https://github.com/heilaaks/snippy/compare/b7d18cc267...d6b51ad08f
 .. _0.7.0: https://github.com/heilaaks/snippy/compare/80eef64d4c...46a3ab415f
 .. _0.6.0: https://github.com/heilaaks/snippy/compare/d2ea072119...2855fc91a3

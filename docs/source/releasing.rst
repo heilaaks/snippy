@@ -118,7 +118,7 @@ Releasing
 
    .. code-block:: text
 
-      git tag -a v0.8.0 -m "Add new content category resources"
+      git tag -a v0.8.0 -m "Add new content category references"
       git push -u origin v0.8.0
 
 #. Releas in PyPI
@@ -146,9 +146,9 @@ Releasing
       su
       docker login docker.io
       docker images
-      sudo docker tag 5dc22d1d3380 docker.io/heilaaks/snippy:v0.7.0
-      sudo docker tag 5dc22d1d3380 docker.io/heilaaks/snippy:latest
-      sudo docker push docker.io/heilaaks/snippy:v0.7.0
+      sudo docker tag 57cad43b2095 docker.io/heilaaks/snippy:v0.8.0
+      sudo docker tag 57cad43b2095 docker.io/heilaaks/snippy:latest
+      sudo docker push docker.io/heilaaks/snippy:v0.8.0
       sudo docker push docker.io/heilaaks/snippy:latest
 
 #. Test Docker release
@@ -159,16 +159,17 @@ Releasing
       docker rm $(docker ps --all -q -f status=exited)
       docker images -q --filter dangling=true | xargs docker rmi
       docker images
-      docker rmi heilaaks/snippy:v0.7.0
+      docker rmi heilaaks/snippy:v0.8.0
       docker rmi heilaaks/snippy:latest
       docker rmi docker.io/heilaaks/snippy:latest
-      docker rmi docker.io/heilaaks/snippy:v0.7.0
-      docker run snippy --help
-      docker run snippy search --sall docker
-      docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
-      docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv
-      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json" | python -m json.tool
+      docker rmi docker.io/heilaaks/snippy:v0.8.0
+      docker pull snippy
+      docker run docker.io/heilaaks/snippy:latest --help
+      docker run docker.io/heilaaks/snippy:latest search --sall docker
+      docker run -d --net="host" --name snippy docker.io/heilaaks/snippy:latest --server --port 8080 --ip 127.0.0.1 -vv
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
+      docker run -d --net="host" --name snippy docker.io/heilaaks/snippy:latest --server --log-json -vv
+      curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
 #. Release news
 

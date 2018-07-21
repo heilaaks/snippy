@@ -6,7 +6,7 @@ Release History
 0.8.0 (2018-21-07)
 ------------------
 
-* Add new content category resources.
+* Add new content category references.
 * Experimental beta release from RESTish API server.
 * All commits in `0.8.0`_.
 

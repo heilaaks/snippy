@@ -29,8 +29,8 @@ from Docker Hub or from the github repository if server functionality is
 required. The server functionality is not currently available when installed
 directly from PyPI.
 
-.. image:: https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO.png
-    :target: https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
+.. image:: https://asciinema.org/a/MEpDOPZLqDMySq7hwXGhCOliV.png
+    :target: https://asciinema.org/a/MEpDOPZLqDMySq7hwXGhCOliV
     :alt: Snippy in action!
 
 Installation
@@ -345,8 +345,6 @@ fill a bug report based on contributing_ instructions.
 .. _Read the Docs: http://snippy.readthedocs.io/en/latest/
 
 .. _contributing instructions: https://github.com/heilaaks/snippy/blob/master/CONTRIBUTING.rst
-
-.. _asciinema: https://asciinema.org/a/MEpDOPZLqDMySq7hwXGhCOliV
 
 .. _RESTish JSON API: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
 

@@ -39,9 +39,9 @@ Release History
 * Experimental alpha release.
 * All commits in `0.1.0`_.
 
-.. _0.9.0: https://github.com/heilaaks/snippy/compare/c9b1403118...latest
-.. _0.8.0: https://github.com/heilaaks/snippy/compare/b7d18cc267...d6b51ad08f
-.. _0.7.0: https://github.com/heilaaks/snippy/compare/80eef64d4c...46a3ab415f
-.. _0.6.0: https://github.com/heilaaks/snippy/compare/d2ea072119...2855fc91a3
-.. _0.5.0: https://github.com/heilaaks/snippy/compare/f75c2994ee...7d0c6c0570
-.. _0.1.0: https://github.com/heilaaks/snippy/compare/ce6395137b...38d1ccf2e7
+.. _0.9.0: https://github.com/heilaaks/snippy/compare/v0.8.0...master
+.. _0.8.0: https://github.com/heilaaks/snippy/compare/v0.7.0...heilaaks:v0.8.0
+.. _0.7.0: https://github.com/heilaaks/snippy/compare/v0.6.0...heilaaks:v0.7.0
+.. _0.6.0: https://github.com/heilaaks/snippy/compare/v0.5.0...heilaaks:v0.6.0
+.. _0.5.0: https://github.com/heilaaks/snippy/compare/v0.1.0...heilaaks:v0.5.0
+.. _0.1.0: https://github.com/heilaaks/snippy/compare/ce6395137b...heilaaks:v0.1.0

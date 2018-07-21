@@ -346,7 +346,7 @@ fill a bug report based on contributing_ instructions.
 
 .. _contributing instructions: https://github.com/heilaaks/snippy/blob/master/CONTRIBUTING.rst
 
-.. _asciinema: https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
+.. _asciinema: https://asciinema.org/a/MEpDOPZLqDMySq7hwXGhCOliV
 
 .. _RESTish JSON API: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
 

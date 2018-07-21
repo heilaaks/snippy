@@ -301,28 +301,38 @@ http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-
     # Recoding
     > http://linuxbrew.sh/
     > https://asciinema.org/
-    $ sh -c "$(curl -fsSL https://raw.githubusercontent.com/Linuxbrew/install/master/install.sh)"
-    $ /home/linuxbrew/.linuxbrew/bin/brew install asciinema
-    $ export PATH=$PATH:/home/linuxbrew/.linuxbrew/bin
+    $ alias docker="sudo /usr/bin/docker"
     
     $ dnf install asciinema
+    $ export PYTHONPATH=/usr/lib64/python2.7/site-packages/
+    $ pip install . --user
 
-    asciinema rec snippy.cast
-    snippy --help
-    snippy search --sall .
-    snippy import --defaults
-    snippy import --solution --defaults
-    snippy search --sall elastic
-    snippy search --solution --sall kafka | grep -Ev '[^\s]+:'
-    snippy export -d ec11663bee073799
-    ll
-    snippy import -d ec11663bee073799 -f kubernetes-docker-log-driver-kafka.txt
-    snippy search --solution --sall . | grep -Ev '[^\s]+:'
-    ctrl-d
+    clear
+asciinema rec snippy.cast
+snippy --help
+snippy search --sall .
+snippy import --snippet --defaults
+snippy import --solution --defaults
+snippy import --reference --defaults
+snippy search --sall security
+snippy search --solution --sall kafka | grep -Ev '[^\s]+:'
+ll
+snippy export -d fd4c0adffa232083
+ll
+snippy import -d fd4c0adffa232083 -f kubernetes-docker-log-driver-kafka.txt
+snippy search --solution --sall docker | grep -Ev '[^\s]+:'
+sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
+snippy search --sall prune
+sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
+curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/" | python -m json.tool
+curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets"
+curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=0" -H "accept: application/vnd.api+json"
+curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=security&limit=1" -H "accept: application/vnd.api+json"
+docker logs snippy
+docker stop snippy
+ctrl-d
 
     # server
-    sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
-    curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
     https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
 

@@ -308,7 +308,7 @@ http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-
     $ pip install . --user
 
     clear
-asciinema rec snippy.cast
+asciinema rec ../snippy.cast
 snippy --help
 snippy search --sall .
 snippy import --snippet --defaults

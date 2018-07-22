@@ -52,7 +52,7 @@ To install from Docker Hub, run:
 
 .. code:: text
 
-    docker pull heilaaks/snippy
+    docker pull docker.io/heilaaks/snippy
 
 To install from Github, run:
 
@@ -117,6 +117,7 @@ default content for snippets and solutions.
 
    snippy import --snippets --defaults
    snippy import --solutions --defaults
+   snippy import --references --defaults
 
 Using docker container
 ----------------------
@@ -129,8 +130,8 @@ command line version.
 
 .. code-block:: text
 
-   docker run heilaaks/snippy --help
-   docker run heilaaks/snippy search --sall docker
+   docker run docker.io/heilaaks/snippy --help
+   docker run docker.io/heilaaks/snippy search --sall docker
 
 Searching content
 -----------------
@@ -263,7 +264,7 @@ be expected. The API is documented in Swagger Hub `OpenAPI definitions`_.
 
 .. code-block:: text
 
-   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --log-json -vv
+   sudo docker run -d --net="host" --name snippy docker.io/heilaaks/snippy --server --log-json -vv
    curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=2" -H "accept: application/vnd.api+json"
    curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
@@ -274,7 +275,7 @@ perameters.
 .. code-block:: text
 
    docker rm -f snippy
-   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
+   sudo docker run -d --net="host" --name snippy docker.io/heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
    curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/vnd.api+json"
 
 You can see the logs from the server from the default Docker log. If you do
@@ -285,7 +286,7 @@ option.
 .. code-block:: text
 
    docker rm -f snippy
-   sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
+   sudo docker run -d --net="host" --name snippy docker.io/heilaaks/snippy --server --port 8080 --ip 127.0.0.1 -vv
    docker logs snippy
 
 You can remove the server with command example.

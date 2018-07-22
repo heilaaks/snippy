@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] Fix docker run name after docker.io pull. That was not heilaaks/snippy.
+
 
 ## PLANNING
    - [ ] Add api like /api/app/v1/<group>?limit=2&category=snippets,solutions,references". This may be more logical that snippy/etc.

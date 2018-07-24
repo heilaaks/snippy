@@ -63,6 +63,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         self.collection = self._storage.search(
             self._category,
             sall=Config.search_all_kws,
+            scat=Config.search_cat_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
             digest=Config.operation_digest,
@@ -77,6 +78,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         collection = self._storage.search(
             self._category,
             sall=Config.search_all_kws,
+            scat=Config.search_cat_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
             digest=Config.operation_digest,
@@ -101,6 +103,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         collection = self._storage.search(
             self._category,
             sall=Config.search_all_kws,
+            scat=Config.search_cat_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
             digest=Config.operation_digest,
@@ -125,6 +128,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             collection = self._storage.search(
                 self._category,
                 sall=Config.search_all_kws,
+                scat=Config.search_cat_kws,
                 stag=Config.search_tag_kws,
                 sgrp=Config.search_grp_kws,
                 digest=Config.operation_digest,

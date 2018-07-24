@@ -2,8 +2,9 @@
 
    - [ ] Fix swagger category Attributes that does not list referecens.
    - [ ] Fix can API work with category names snippet and snippets?
+   - [ ] Fix there is a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().
    - [ ] Rename groups to group since it is only one group.
-   - [ ] Add apis like /api/app/v1/group/linux?limit=2&category=snippets,solutions,references".
+   - [ ] Add apis like /api/app/v1/group/linux?limit=2&scat=snippets,solutions,references".
    
       # Is distinct possible with tags?
         https://dba.stackexchange.com/questions/81930/how-to-get-all-distinct-words-in-a-column
@@ -15,7 +16,7 @@
       - snippy/api/app/v1/linux,git?....
    
       # ApiGroups
-      - snippy/api/app/v1/group/linux?sall=git,grep&limit=2&category=snippets,solutions,references,all"
+      - snippy/api/app/v1/group/linux?sall=git,grep&limit=2&scat=snippets,solutions,references,all"
       - snippy/api/app/v1/group/linux?limit=0" # Provide statistics about unique groups.
       - snippy/api/app/v1/tags/linux?limit=2&category=snippets,solutions,references,all"
       

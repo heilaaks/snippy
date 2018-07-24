@@ -59,6 +59,7 @@ class Fields(ContentTypeBase):
 #        self.collection = self._storage.search(
 #            Const.ALL_CATEGORIES,
 #            sall=Config.search_all_kws,
+#            scat=Config.search_cat_kws,
 #            stag=Config.search_tag_kws,
 #            sgrp=Config.search_grp_kws,
 #            digest=Config.operation_digest,

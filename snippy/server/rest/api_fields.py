@@ -42,26 +42,10 @@ class ApiGroups(ApiContentBase):
         """Search content based on group field."""
 
         self._logger.debug('run get: %s', request.uri)
-        print(request.params)
         request.params['sgrp'] = sgrp
-        #self.on_get(request, response)
+        if 'scat' not in request.params:
+            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiGroups, self).on_get(request, response)
-        #api = Api(None, Api.SEARCH, request.params)
-        #Config.load(api)
-        #self._fields.run(self._fields.GROUP)
-        #if self._fields.collection.empty() and Config.search_limit != 0:
-        #    Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
-        #if Cause.is_ok():
-        #    response.content_type = ApiContentBase.MEDIA_JSON_API
-        #    response.body = Generate.collection(self._fields.collection, request, pagination=True)
-        #    response.status = Cause.http_status()
-        #else:
-        #    response.content_type = ApiContentBase.MEDIA_JSON_API
-        #    response.body = Generate.error(Cause.json_message())
-        #    response.status = Cause.http_status()
-        #
-        #Cause.reset()
-        #self._logger.debug('end get: %s', request.uri)
 
 
 class ApiId(object):

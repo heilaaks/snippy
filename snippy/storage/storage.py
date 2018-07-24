@@ -44,12 +44,13 @@ class Storage(object):
 
         return collection
 
-    def search(self, category, sall=None, stag=None, sgrp=None, digest=None, data=None):
+    def search(self, category, sall=None, scat=None, stag=None, sgrp=None, digest=None, data=None):
         """Search content.
 
         Args:
            category (str): Content category.
            sall (tuple): Search all keyword list.
+           scat (tuple): Search category keyword list.
            stag (tuple): Search tag keyword list.
            sgrp (tuple): Search group keyword list.
            digest (str): Search specific digest or part of it.
@@ -57,7 +58,7 @@ class Storage(object):
         """
 
         self._logger.debug('search content')
-        collection = self._database.select(category, sall, stag, sgrp, digest, data)
+        collection = self._database.select(category, sall, scat, stag, sgrp, digest, data)
 
         return collection
 

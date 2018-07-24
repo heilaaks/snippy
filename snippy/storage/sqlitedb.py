@@ -128,12 +128,13 @@ class SqliteDb(object):
 
         return error
 
-    def select(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
+    def select(self, category, sall=(), scat=(), stag=(), sgrp=(), digest=None, data=None):
         """Select content based on search criteria.
 
         Args:
            category (str): Content category.
            sall (tuple): Search all keyword list.
+           scat (tuple): Search category keyword list.
            stag (tuple): Search tag keyword list.
            sgrp (tuple): Search group keyword list.
            digest (str): Search specific digest or part of it.
@@ -144,10 +145,10 @@ class SqliteDb(object):
         """
 
         collection = Collection()
-        query, qargs = self._get_query(category, sall, stag, sgrp, digest, data, SqliteDb.QUERY_TYPE_REGEX)
+        query, qargs = self._get_query(category, sall, scat, stag, sgrp, digest, data, SqliteDb.QUERY_TYPE_REGEX)
         if query:
             rows = self._get_db(query, qargs)
-            total = self._count_content(category, sall, stag, sgrp, digest, data)
+            total = self._count_content(category, sall, scat, stag, sgrp, digest, data)
             collection.convert(rows)
             collection.total = total
             self._logger.debug('selected %d rows %s', len(rows), rows)
@@ -210,12 +211,13 @@ class SqliteDb(object):
 
         return tuple(uniques)
 
-    def _count_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
+    def _count_content(self, category, sall=(), scat=(), stag=(), sgrp=(), digest=None, data=None):
         """Count content based on search criteria.
 
         Args:
            category (str): Content category.
            sall (tuple): Search all keyword list.
+           scat (tuple): Search category keyword list.
            stag (tuple): Search tag keyword list.
            sgrp (tuple): Search group keyword list.
            digest (str): Search specific digest or part of it.
@@ -226,7 +228,7 @@ class SqliteDb(object):
         """
 
         count = 0
-        query, qargs = self._get_query(category, sall, stag, sgrp, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
+        query, qargs = self._get_query(category, sall, scat, stag, sgrp, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
         if query:
             rows = self._get_db(query, qargs)
             try:
@@ -476,26 +478,36 @@ class SqliteDb(object):
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented writing into database')
 
-    def _get_query(self, category, sall, stag, sgrp, digest, data, query_type):
+    def _get_query(self, category, sall, scat, stag, sgrp, digest, data, query_type):
         """Get query based on defined type."""
 
         query = ()
         qargs = []
-        self._logger.debug('query category: %s :sall: %s :stag: %s :sgrp: %s :digest: %s :and data: %s.20s',
-                            category, sall, stag, sgrp, digest, data)
+        self._logger.debug('query category: %s :sall: %s :scat: %s :stag: %s :sgrp: %s :digest: %s :and data: %s.20s',
+                            category, sall, scat, stag, sgrp, digest, data)
+
+        # For database queries, category is always a list that defines from
+        # which categories the search is made. The search always includes the
+        # single defined content category from CLI or from content specific
+        # REST API query.
+        categories = []
+        categories.append(category)
+        if scat:
+            categories = categories + list(scat)
+
         if query_type == SqliteDb.QUERY_TYPE_TOTAL:
             query_pointer = self._query_count
         else:
             query_pointer = self._query_regex
         if sall and Config.search_all_kws:
             columns = ['data', 'brief', 'groups', 'tags', 'links', 'digest']
-            query, qargs = query_pointer(sall, columns, sgrp, category)
+            query, qargs = query_pointer(sall, columns, sgrp, categories)
         elif stag and Config.search_tag_kws:
             columns = ['tags']
-            query, qargs = query_pointer(stag, columns, sgrp, category)
+            query, qargs = query_pointer(stag, columns, sgrp, categories)
         elif sgrp and Config.search_grp_kws:
             columns = ['groups']
-            query, qargs = query_pointer(sgrp, columns, (), category)
+            query, qargs = query_pointer(sgrp, columns, (), categories)
         elif Config.is_content_digest() or digest:  # The later condition is for tool internal search based on digest.
             if query_type == SqliteDb.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE digest LIKE ?')
@@ -513,11 +525,11 @@ class SqliteDb(object):
 
         return query, qargs
 
-    def _query_regex(self, keywords, columns, groups, category):
+    def _query_regex(self, keywords, columns, groups, categories):
         """Filtered regex query that can limit the results."""
 
         query = ('SELECT * FROM contents WHERE ')
-        query, qargs = self._add_regex_filters(query, keywords, columns, groups, category)
+        query, qargs = self._add_regex_filters(query, keywords, columns, groups, categories)
 
         # Sort result set.
         if Config.sort_fields:
@@ -533,16 +545,16 @@ class SqliteDb(object):
 
         return query, qargs
 
-    def _query_count(self, keywords, columns, groups, category):
+    def _query_count(self, keywords, columns, groups, categories):
         """Count total hits of filtered regex query."""
 
         query = ('SELECT count(*) FROM contents WHERE ')
-        query, qargs = self._add_regex_filters(query, keywords, columns, groups, category)
+        query, qargs = self._add_regex_filters(query, keywords, columns, groups, categories)
 
         return query, qargs
 
     @staticmethod
-    def _add_regex_filters(query, keywords, columns, groups, category):
+    def _add_regex_filters(query, keywords, columns, groups, categories):
         """Return regex query."""
 
         qargs = []
@@ -551,7 +563,7 @@ class SqliteDb(object):
         #   1. '(data REGEXP ? OR brief REGEXP ? OR groups REGEXP ? OR tags REGEXP ? OR links REGEXP ?) AND (category=?) '
         #   2. '(data REGEXP ? OR brief REGEXP ? OR groups REGEXP ? OR tags REGEXP ? OR links REGEXP ?) AND
         #       (groups=? OR groups=?) AND (category=?) '
-        #   3. '(tags REGEXP ?) AND (category=?) '
+        #   3. '(tags REGEXP ?) AND (category=? or category=?) '
         regex = '('
         for column in columns:
             regex = regex + column + ' REGEXP ? OR '
@@ -567,16 +579,16 @@ class SqliteDb(object):
             regex = regex + ') '
 
         # Add mandatory categery.
-        if category == Const.ALL_CATEGORIES:
-            regex = regex + 'AND (category LIKE ?) '
-            category = '%'
-        else:
-            regex = regex + 'AND (category=?) '
+        regex = regex + 'AND ('
+        for _ in categories:
+            regex = regex + 'category=? OR '
+        regex = regex[:-4]  # Remove last ' OR ' added by the loop.
+        regex = regex + ') '
 
         # Generate token for each searched column.
         for token in keywords:
             query = query + regex + 'OR '
-            qargs = qargs + [token] * len(columns) + list(groups) + [category]  # Tokens for each search keyword.
+            qargs = qargs + [token] * len(columns) + list(groups) + list(categories)  # Tokens for each search keyword.
         query = query[:-3]  # Remove last 'OR ' added by the loop.
 
         return query, qargs

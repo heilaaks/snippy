@@ -105,13 +105,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.editor = parameters.get('editor', False)
         self.failure = parameters.get('failure', False)
         self.filename = parameters.get('filename', Const.EMPTY)
-        self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
         self.group = parameters.get('group', Const.DEFAULT_GROUP)
-        self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT)
-        self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
-        self.server_ip = parameters.get('server_ip', self.SERVER_IP)
-        self.server_port = parameters.get('server_port', self.SERVER_PORT)
-        self.storage_path = parameters.get('storage_path', Const.EMPTY)
         self.links = parameters.get('links', ())
         self.log_json = parameters.get('log_json', False)
         self.log_msg_max = parameters.get('log_msg_max', Logger.DEFAULT_LOG_MSG_MAX)
@@ -122,8 +116,14 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.profiler = parameters.get('profiler', False)
         self.quiet = parameters.get('quiet', False)
         self.regexp = parameters.get('regexp', Const.EMPTY)
+        self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
         self.sall = parameters.get('sall', None)
+        self.scat = parameters.get('scat', None)
+        self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT)
+        self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
         self.server = parameters.get('server', False)
+        self.server_ip = parameters.get('server_ip', self.SERVER_IP)
+        self.server_port = parameters.get('server_port', self.SERVER_PORT)
         self.sgrp = parameters.get('sgrp', None)
         self.sort_fields = parameters.get('sort', ('brief'))
         self.source = parameters.get('source', Const.EMPTY)
@@ -131,6 +131,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.ssl_cert = parameters.get('ssl_cert', None)
         self.ssl_key = parameters.get('ssl_key', None)
         self.stag = parameters.get('stag', None)
+        self.storage_path = parameters.get('storage_path', Const.EMPTY)
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
         self.version = parameters.get('version', __version__)
@@ -272,6 +273,20 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         The keywords are stored in tuple with one keywords per element."""
 
         self._sall = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def scat(self):
+        """Get 'search categories' keywords."""
+
+        return self._scat
+
+    @scat.setter
+    def scat(self, value):
+        """Store 'search categories' keywords.
+
+        The keywords are stored in tuple with one keywords per element."""
+
+        self._scat = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def stag(self):

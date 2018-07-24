@@ -118,26 +118,22 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         Call GET /v1/groups/docker to get content from the docker and python
         groups with filters and limit applied. In this case the search is
-        limited only to snippets category and the search hit from references
-        should not be returned.
+        limited only to snippet and solution categories and the search hit
+        from references should not be returned.
         """
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5295'
+            'content-length': '4714'
         }
         result_json = {
             'meta': {
-                'count': 2,
+                'count': 1,
                 'limit': 20,
                 'offset': 0,
-                'total': 2
+                'total': 1
             },
             'data': [{
-                'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
-            }, {
                 'type': 'solution',
                 'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
@@ -146,8 +142,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/group/docker,python',
             headers={'accept': 'application/vnd.api+json'},
-            query_string='sall=test&limit=20&sort=brief&category=snippet,solution')
-        print(result.json)
+            query_string='sall=test&limit=20&sort=brief&scat=snippet,solution')
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200

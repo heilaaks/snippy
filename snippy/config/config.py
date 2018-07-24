@@ -120,6 +120,7 @@ class Config(object):
 
         # search
         cls.search_all_kws = cls.source.sall
+        cls.search_cat_kws = cls.source.scat
         cls.search_tag_kws = cls.source.stag
         cls.search_grp_kws = cls.source.sgrp
         cls.search_filter = cls.source.regexp
@@ -436,7 +437,7 @@ class Config(object):
     def _is_search_keywords(cls):
         """Test if search is made with any of the search option."""
 
-        return True if cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws else False
+        return True if cls.search_all_kws or cls.search_cat_kws or cls.search_tag_kws or cls.search_grp_kws else False
 
     @classmethod
     def is_content_digest(cls):
@@ -509,6 +510,7 @@ class Config(object):
         cls._logger.debug('configured operation filename: "%s"', cls.operation_filename)
         cls._logger.debug('configured operation file type: "%s"', cls.operation_filetype)
         cls._logger.debug('configured search all keywords: %s', cls.search_all_kws)
+        cls._logger.debug('configured search cat keywords: %s', cls.search_cat_kws)
         cls._logger.debug('configured search tag keywords: %s', cls.search_tag_kws)
         cls._logger.debug('configured search group keywords: %s', cls.search_grp_kws)
         cls._logger.debug('configured search result regexp filter: %s', cls.search_filter)

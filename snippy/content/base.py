@@ -51,7 +51,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
     def create(self):
         """Create new content."""
 
-        self._logger.debug('creating new %s', self._category)
+        self._logger.debug('creating new: %s', self._category)
         collection = Config.get_collection()
         collection = self._storage.create(collection)
         self.collection.migrate(collection)
@@ -59,7 +59,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
     def search(self):
         """Search content."""
 
-        self._logger.debug('searching %s', self._category)
+        self._logger.debug('searching: %s', self._category)
         self.collection = self._storage.search(
             self._category,
             sall=Config.search_all_kws,
@@ -85,7 +85,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         if collection.size() == 1:
             stored = next(collection.resources())
             digest = stored.digest
-            self._logger.debug('updating stored %s with digest %.16s', self._category, digest)
+            self._logger.debug('updating stored: %s :with digest: %.16s', self._category, digest)
             updates = Config.get_resource(updates=stored)
             if Config.merge:
                 stored.merge(updates)
@@ -108,7 +108,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         )
         if collection.size() == 1:
             resource = next(collection.resources())
-            self._logger.debug('deleting %s with digest %.16s', resource.category, resource.digest)
+            self._logger.debug('deleting: %s :with digest: %.16s', resource.category, resource.digest)
             self._storage.delete(resource.digest)
         else:
             Config.validate_search_context(collection, 'delete')
@@ -118,10 +118,10 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
 
         filename = Config.get_operation_file()
         if Config.template:
-            self._logger.debug('exporting %s template %s', self._category, Config.get_operation_file())
+            self._logger.debug('exporting: %s :template: %s', self._category, Config.get_operation_file())
             Migrate.dump_template(self._category)
         elif Config.is_search_criteria():
-            self._logger.debug('exporting %s based on search criteria', self._category)
+            self._logger.debug('exporting: %s :based on search criteria', self._category)
             collection = self._storage.search(
                 self._category,
                 sall=Config.search_all_kws,
@@ -137,7 +137,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 Config.validate_search_context(collection, 'export')
             Migrate.dump(collection, filename)
         else:
-            self._logger.debug('exporting all %s content %s', self._category, filename)
+            self._logger.debug('exporting all: %s :content: %s', self._category, filename)
             collection = self._storage.export_content(self._category)
             Migrate.dump(collection, filename)
 
@@ -170,7 +170,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
     def run(self):
         """Run operation."""
 
-        self._logger.debug('run %s content', self._category)
+        self._logger.debug('run: %s :content', self._category)
         Config.content_category = self._category
         if Config.is_operation_create:
             self.create()
@@ -185,8 +185,8 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         elif Config.is_operation_import:
             self.import_all()
         else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for {}'.format(self._category))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown operation for: {}'.format(self._category))
 
-        self._logger.debug('end %s content', self._category)
+        self._logger.debug('end: %s :content', self._category)
 
         return self.collection

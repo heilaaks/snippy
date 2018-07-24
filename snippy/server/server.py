@@ -28,12 +28,17 @@ except ImportError:
     from urlparse import urljoin
 
 from snippy.config.config import Config
+from snippy.content.fields import Fields
 from snippy.content.reference import Reference
 from snippy.content.snippet import Snippet
 from snippy.content.solution import Solution
 from snippy.logger import CustomGunicornLogger
 from snippy.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
+from snippy.server.rest.api_fields import ApiGroups
+from snippy.server.rest.api_fields import ApiId
+from snippy.server.rest.api_fields import ApiIdField
+from snippy.server.rest.api_fields import ApiKeywords
 from snippy.server.rest.api_hello import ApiHello
 from snippy.server.rest.api_references import ApiReferences
 from snippy.server.rest.api_references import ApiReferencesDigest
@@ -78,6 +83,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         snippet = Snippet(self.storage, run_cli=False)
         solution = Solution(self.storage, run_cli=False)
         reference = Reference(self.storage, run_cli=False)
+        fields = Fields(self.storage)
         self.api.req_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.resp_options.media_handlers.update({'application/vnd.api+json': falcon.media.JSONHandler()})
         self.api.add_route('/snippy', ApiHello())
@@ -92,4 +98,8 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'references'), ApiReferences(reference))
         self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}'), ApiReferencesDigest(reference))
         self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}/{field}'), ApiReferencesField(reference))
+        self.api.add_route(urljoin(Config.base_path_app, 'group/{sgrp}'), ApiGroups(fields))
+        self.api.add_route(urljoin(Config.base_path_app, 'id/{value}'), ApiId(fields))
+        self.api.add_route(urljoin(Config.base_path_app, 'id/{value}/{field}'), ApiIdField(fields))
+        self.api.add_route(urljoin(Config.base_path_app, '{keywords}'), ApiKeywords(fields))
         SnippyServer(self.api, options).run()

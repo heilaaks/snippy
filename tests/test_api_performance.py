@@ -183,7 +183,7 @@ class TestApiPerformance(object):
         print("There are %d rows in stderr" % len(err))
         print("====================================")
 
-        assert sum('creating new snippet' in str(s) for s in out) == 4
+        assert sum('creating new: snippet' in str(s) for s in out) == 4
         assert not err
         assert runtime < 10
 

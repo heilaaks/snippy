@@ -61,6 +61,21 @@ class Storage(object):
 
         return collection
 
+    def unique_values(self, field):
+        """Get unique values for given field.
+
+        Args:
+           field (str): Content field which unique values are read.
+
+        Returns:
+            tuple: List of unique values for give field.
+        """
+
+        self._logger.debug('search unique values for field: ', field)
+        values = self._database.select_distinct(field)
+
+        return values
+
     def update(self, digest, resource):
         """Update resource specified by digest.
 

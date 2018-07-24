@@ -43,7 +43,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     SNIPPET = 'snippet'
     SOLUTION = 'solution'
     REFERENCE = 'reference'
-    ALL = 'all'
+    ALL_CATEGORIES = 'all'
     UNKNOWN_CONTENT = 'unknown'
 
     # Content delimiters

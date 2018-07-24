@@ -56,7 +56,7 @@ class Validate(object):
 
         resource_ = {}
         if JsonSchema.validate(JsonSchema.RESOURCE, request.media):
-            if cls.is_valid_data(request.media['data']):
+            if cls._is_valid_data(request.media['data']):
                 resource_ = request.media['data']['attributes']
                 resource_['digest'] = digest
         else:
@@ -74,7 +74,7 @@ class Validate(object):
         collection = []
         if JsonSchema.validate(JsonSchema.COLLECTION, request.media):
             for data in request.media['data']:
-                if cls.is_valid_data(data):
+                if cls._is_valid_data(data):
                     collection.append(data['attributes'])
                 else:
                     collection = []
@@ -84,8 +84,9 @@ class Validate(object):
 
         return tuple(collection)
 
+
     @staticmethod
-    def is_valid_data(data):
+    def _is_valid_data(data):
         """Validata top level data object."""
 
         valid = True

@@ -41,6 +41,7 @@ class SqliteDb(object):
     def __init__(self):
         self._logger = Logger.get_logger(__name__)
         self._connection = None
+        self._columns = ()
 
     def init(self):
         """Initialize database."""
@@ -179,6 +180,35 @@ class SqliteDb(object):
             Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
 
         return collection
+
+    def select_distinct(self, column):
+        """Select unique values from given column.
+
+        Args:
+           column (str): column name.
+
+        Returns:
+            tuple: List of unique values in given column.
+        """
+
+        uniques = ()
+        if column not in self._columns:
+            self._logger.security('unidentified column name cannot be accepted: %s', column)
+
+            return uniques
+
+        if self._connection:
+            self._logger.debug('select distinct values from columns: %s', column)
+            try:
+                with closing(self._connection.cursor()) as cursor:
+                    cursor.execute('SELECT DISTINCT {} FROM contents'.format(column))
+                    uniques = [tup[0] for tup in cursor.fetchall()]
+            except sqlite3.Error as exception:
+                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(exception))
+        else:
+            Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
+
+        return tuple(uniques)
 
     def _count_content(self, category, sall=(), stag=(), sgrp=(), digest=None, data=None):
         """Count content based on search criteria.
@@ -347,7 +377,10 @@ class SqliteDb(object):
             connection.create_function('REGEXP', 2, SqliteDb._regexp)
             with closing(connection.cursor()) as cursor:
                 cursor.execute(schema)
-            self._logger.debug('sqlite3 database persisted in %s', location)
+            with closing(connection.cursor()) as cursor:
+                cursor.execute("pragma table_info('contents')")
+                self._columns = [column[1] for column in cursor.fetchall()]
+            self._logger.debug('sqlite3 database persisted in: %s', location)
         except sqlite3.Error as exception:
             Cause.push(Cause.HTTP_500, 'creating database failed with exception {}'.format(exception))
 
@@ -448,6 +481,8 @@ class SqliteDb(object):
 
         query = ()
         qargs = []
+        self._logger.debug('query category: %s :sall: %s :stag: %s :sgrp: %s :digest: %s :and data: %s.20s',
+                            category, sall, stag, sgrp, digest, data)
         if query_type == SqliteDb.QUERY_TYPE_TOTAL:
             query_pointer = self._query_count
         else:
@@ -532,7 +567,11 @@ class SqliteDb(object):
             regex = regex + ') '
 
         # Add mandatory categery.
-        regex = regex + 'AND (category=?) '
+        if category == Const.ALL_CATEGORIES:
+            regex = regex + 'AND (category LIKE ?) '
+            category = '%'
+        else:
+            regex = regex + 'AND (category=?) '
 
         # Generate token for each searched column.
         for token in keywords:

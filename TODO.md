@@ -1,9 +1,33 @@
 ## WORKING
-   - [ ] Fix docker run name after docker.io pull. That was not heilaaks/snippy.
 
+   - [ ] Fix swagger category Attributes that does not list referecens.
+   - [ ] Fix can API work with category names snippet and snippets?
+   - [ ] Rename groups to group since it is only one group.
+   - [ ] Add apis like /api/app/v1/group/linux?limit=2&category=snippets,solutions,references".
+   
+      # Is distinct possible with tags?
+        https://dba.stackexchange.com/questions/81930/how-to-get-all-distinct-words-in-a-column
+   
+      # category=snippet(s),solution(s),resource(s),any
+      
+      # ApiKeywords
+      - snippy/api/app/v1/linux?....
+      - snippy/api/app/v1/linux,git?....
+   
+      # ApiGroups
+      - snippy/api/app/v1/group/linux?sall=git,grep&limit=2&category=snippets,solutions,references,all"
+      - snippy/api/app/v1/group/linux?limit=0" # Provide statistics about unique groups.
+      - snippy/api/app/v1/tags/linux?limit=2&category=snippets,solutions,references,all"
+      
+      # ApiId
+      # ApiIdField
+      - snippy/api/app/v1/id/0101010101"
+      - snippy/api/app/v1/id/0101010101"
+      - snippy/api/app/v1/id/0101010101/brief"
+      - snippy/api/app/v1/id/12cd5827-b6ef-4067-b5ac-3ceac07dde9f"
+      - snippy/api/app/v1/id/12cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief"
 
 ## PLANNING
-   - [ ] Add api like /api/app/v1/<group>?limit=2&category=snippets,solutions,references". This may be more logical that snippy/etc.
    - [ ] Add code content.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.

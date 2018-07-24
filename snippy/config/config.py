@@ -150,7 +150,7 @@ class Config(object):
         cls.is_category_snippet = True if cls.content_category == Const.SNIPPET else False
         cls.is_category_solution = True if cls.content_category == Const.SOLUTION else False
         cls.is_category_reference = True if cls.content_category == Const.REFERENCE else False
-        cls.is_category_all = True if cls.content_category == Const.ALL else False
+        cls.is_category_all = True if cls.content_category == Const.ALL_CATEGORIES else False
         cls.operation_filename = cls._operation_filename(cls.content_category)
         cls.operation_filetype = cls._operation_filetype()
         cls.is_operation_file_json = True if cls.operation_filetype == Config.CONTENT_FORMAT_JSON else False

@@ -81,7 +81,22 @@ class SqliteDbHelper(object):
         uuid.UUID(hex='3ccd5827b6ef4067b5ac3ceac07dde9f'),
         uuid.UUID(hex='3dcd5827b6ef4067b5ac3ceac07dde9f'),
         uuid.UUID(hex='3ecd5827b6ef4067b5ac3ceac07dde9f'),
-        uuid.UUID(hex='3fcd5827b6ef4067b5ac3ceac07dde9f')
+        uuid.UUID(hex='3fcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='41cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='42cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='43cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='44cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='45cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='46cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='47cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='48cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='49cd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='4acd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='4bcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='4ccd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='4dcd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='4ecd5827b6ef4067b5ac3ceac07dde9f'),
+        uuid.UUID(hex='4fcd5827b6ef4067b5ac3ceac07dde9f')
     )
 
     @staticmethod

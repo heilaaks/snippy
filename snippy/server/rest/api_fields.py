@@ -92,23 +92,20 @@ class ApiIdField(object):
         response.set_header('Allow', 'GET')
 
 
-class ApiKeywords(object):
+class ApiKeywords(ApiContentBase):
     """Process content based on given keyword list."""
 
     def __init__(self, fields):
         self._logger = Logger.get_logger(__name__)
-        self._fields = fields
+        self._category = Const.ALL_CATEGORIES
+        self._content = fields
 
     @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, field, value):
+    def on_get(self, request, response, sall):
         """Search content based on given keyword list."""
 
         self._logger.debug('run get: %s', request.uri)
-
-    @staticmethod
-    @Logger.timeit(refresh_oid=True)
-    def on_options(_, response, digest, field):  # pylint: disable=unused-argument
-        """Respond with allowed methods."""
-
-        response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
+        request.params['sall'] = sall
+        if 'scat' not in request.params:
+            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
+        super(ApiKeywords, self).on_get(request, response)

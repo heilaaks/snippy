@@ -101,5 +101,5 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'group/{sgrp}'), ApiGroups(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'id/{value}'), ApiId(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'id/{value}/{field}'), ApiIdField(fields))
-        self.api.add_route(urljoin(Config.base_path_app, '{keywords}'), ApiKeywords(fields))
+        self.api.add_route(urljoin(Config.base_path_app, '{sall}'), ApiKeywords(fields))
         SnippyServer(self.api, options).run()

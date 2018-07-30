@@ -19,7 +19,7 @@
       - snippy/api/app/v1/group/linux?sall=git,grep&limit=2&scat=snippets,solutions,references,all"
       - snippy/api/app/v1/group/linux?limit=0" # Provide statistics about unique groups.
       
-      # ApiTags
+      # ApiTags (done)
       - snippy/api/app/v1/tags/linux?limit=2&category=snippets,solutions,references,all"
       
       # ApiId

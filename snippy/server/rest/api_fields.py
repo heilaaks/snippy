@@ -48,6 +48,25 @@ class ApiGroups(ApiContentBase):
         super(ApiGroups, self).on_get(request, response)
 
 
+class ApiTags(ApiContentBase):
+    """Process content based on tags field."""
+
+    def __init__(self, fields):
+        self._logger = Logger.get_logger(__name__)
+        self._category = Const.ALL_CATEGORIES
+        self._content = fields
+
+    @Logger.timeit(refresh_oid=True)
+    def on_get(self, request, response, stag):
+        """Search content based on tags field."""
+
+        self._logger.debug('run get: %s', request.uri)
+        request.params['stag'] = stag
+        if 'scat' not in request.params:
+            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
+        super(ApiTags, self).on_get(request, response)
+
+
 class ApiId(object):
     """Process content based on unique digest or uuid."""
 

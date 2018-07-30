@@ -36,81 +36,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     """Test GET /snippy/api/{field} API."""
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_keyword_001(self, server):
-        """Get specific content based on given keywords.
-
-        Call GET /v1/docs,python to get content from any category with
-        docs or python keyword.
-        """
-
-        result_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2078'
-        }
-        result_json = {
-            'meta': {
-                'count': 3,
-                'limit': 20,
-                'offset': 0,
-                'total': 3
-            },
-            'data': [{
-                'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
-            }, {
-                'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
-            }, {
-                'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
-            }]
-
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/docs,python',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
-        assert result.status == falcon.HTTP_200
-
-    @pytest.mark.usefixtures('default-references', 'default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_keyword_002(self, server):
-        """Get specific content based on given keywords.
-
-        Call GET /v1/doc to get content from references category with doc
-        keyword.
-        """
-
-        result_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '651'
-        }
-        result_json = {
-            'meta': {
-                'count': 1,
-                'limit': 20,
-                'offset': 0,
-                'total': 1
-            },
-            'data': [{
-                'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
-            }]
-
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/doc',
-            headers={'accept': 'application/vnd.api+json'},
-            query_string='limit=20&sort=brief&scat=reference')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
-        assert result.status == falcon.HTTP_200
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_group_001(self, server):
         """Get specific content based on group field.
 
@@ -265,3 +190,176 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/missing/docker',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_tags_001(self, server):
+        """Get specific content based on tags field.
+
+        Call GET /v1/tags/moby to get all content with a moby tag.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '6141'
+        }
+        result_json = {
+            'meta': {
+                'count': 3,
+                'limit': 20,
+                'offset': 0,
+                'total': 3
+            },
+            'data': [{
+                'type': 'snippet',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippet',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+            }, {
+                'type': 'solution',
+                'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/tags/moby',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_tags_002(self, server):
+        """Get specific content based on tags field.
+
+        Call GET /v1/tags/moby,python to get all content with a volume or
+        python tag.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '651'
+        }
+        result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 20,
+                'offset': 0,
+                'total': 1
+            },
+            'data': [{
+                'type': 'reference',
+                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/tags/volume,python',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
+    def test_api_search_tags_003(self, server):
+        """Try to get specific content based on tags field.
+
+        Try to call GET /v1/tags/missing with a tag that is not found.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '335'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/tags/missing',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_keyword_001(self, server):
+        """Get specific content based on given keywords.
+
+        Call GET /v1/docs,python to get content from any category with
+        docs or python keyword.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '2078'
+        }
+        result_json = {
+            'meta': {
+                'count': 3,
+                'limit': 20,
+                'offset': 0,
+                'total': 3
+            },
+            'data': [{
+                'type': 'reference',
+                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+            }, {
+                'type': 'snippet',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippet',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+            }]
+
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/docs,python',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-references', 'default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_keyword_002(self, server):
+        """Get specific content based on given keywords.
+
+        Call GET /v1/doc to get content from references category with doc
+        keyword.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '651'
+        }
+        result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 20,
+                'offset': 0,
+                'total': 1
+            },
+            'data': [{
+                'type': 'reference',
+                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+            }]
+
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/doc',
+            headers={'accept': 'application/vnd.api+json'},
+            query_string='limit=20&sort=brief&scat=reference')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200

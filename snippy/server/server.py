@@ -39,6 +39,7 @@ from snippy.server.rest.api_fields import ApiGroups
 from snippy.server.rest.api_fields import ApiId
 from snippy.server.rest.api_fields import ApiIdField
 from snippy.server.rest.api_fields import ApiKeywords
+from snippy.server.rest.api_fields import ApiTags
 from snippy.server.rest.api_hello import ApiHello
 from snippy.server.rest.api_references import ApiReferences
 from snippy.server.rest.api_references import ApiReferencesDigest
@@ -99,6 +100,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}'), ApiReferencesDigest(reference))
         self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}/{field}'), ApiReferencesField(reference))
         self.api.add_route(urljoin(Config.base_path_app, 'group/{sgrp}'), ApiGroups(fields))
+        self.api.add_route(urljoin(Config.base_path_app, 'tags/{stag}'), ApiTags(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'id/{value}'), ApiId(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'id/{value}/{field}'), ApiIdField(fields))
         self.api.add_route(urljoin(Config.base_path_app, '{sall}'), ApiKeywords(fields))

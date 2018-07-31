@@ -118,8 +118,14 @@ Random notes and scribling during development.
 
    # Pipenv for Python 2.7
    $ pipenv --python 2.7.14
+   ```
+
+   ```
+   .. |badge-health| image:: https://landscape.io/github/heilaaks/snippy/master/landscape.svg?style=flat
+      :target: https://landscape.io/github/heilaaks/snippy/master
    
-   
+   .. |badge-codacy| image:: https://api.codacy.com/project/badge/Grade/170f2ea74ead4f23b574478000ef578a
+      :target: https://www.codacy.com/app/heilaaks/snippy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=heilaaks/snippy&amp;utm_campaign=Badge_Grade
    ```
 
    ```
@@ -1081,8 +1087,10 @@ git update-index --no-assume-unchanged FILE_NAME # change back
          - data
          - digest
          - sall
+         - scat
          - stag
          - sgrp
+         - uuid
 
        The default value for these parameters must be None or the must not
        exist in the parameter set that is give for set_conf in class inherited

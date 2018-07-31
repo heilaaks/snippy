@@ -27,7 +27,6 @@ from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.reference_helper import ReferenceHelper as Reference
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 pytest.importorskip('gunicorn')
 
@@ -189,6 +188,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/missing/docker',
             headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
         assert result.status == falcon.HTTP_404
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
@@ -284,6 +284,68 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/tags/missing',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_digest_001(self, server):
+        """Get specific content based on digest.
+
+        Call GET /v1/digest/1f9d949600573 to get specific content based on digest.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '740'
+        }
+        result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 20,
+                'offset': 0,
+                'total': 1
+            },
+            'data': {
+                'type': 'reference',
+                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/digest/1f9d9496005736ef'
+            }
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/digest/1f9d949600573',
+            headers={'accept': 'application/vnd.api+json'})
+        print(result.json)
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
+    def test_api_search_digest_002(self, server):
+        """Try to get specific content based on digest.
+
+        Try to call GET /v1/digest/01010101 with a digest that is not found.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '334'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/digest/01010101',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)

@@ -66,6 +66,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             scat=Config.search_cat_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
+            uuid=Config.operation_uuid,
             digest=Config.operation_digest,
             data=Config.content_data
         )
@@ -81,6 +82,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             scat=Config.search_cat_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
+            uuid=Config.operation_uuid,
             digest=Config.operation_digest,
             data=Config.content_data
         )
@@ -106,6 +108,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             scat=Config.search_cat_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
+            uuid=Config.operation_uuid,
             digest=Config.operation_digest,
             data=Config.content_data
         )
@@ -131,6 +134,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 scat=Config.search_cat_kws,
                 stag=Config.search_tag_kws,
                 sgrp=Config.search_grp_kws,
+                uuid=Config.operation_uuid,
                 digest=Config.operation_digest,
                 data=Config.content_data
             )
@@ -149,22 +153,21 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         """Import content."""
 
         content_digest = Config.operation_digest
-        if content_digest:
-            collection = self._storage.search(self._category, digest=content_digest)
+        content_uuid = Config.operation_uuid
+        if content_digest or content_uuid:
+            collection = self._storage.search(self._category, uuid=content_uuid, digest=content_digest)
             if collection.size() == 1:
                 resource = next(collection.resources())
                 digest = resource.digest
-                self._logger.debug('importing: %s :with digest: %.16s', resource.category, resource.digest)
+                self._logger.debug('importing: %s %s', resource.category,
+                                   ':with: uuid: %.16s' % content_uuid if content_uuid else
+                                   ':with: digest: %.16s' % resource.digest)
                 collection = Migrate.load(Config.get_operation_file())
                 updates = next(collection.resources())
                 resource.migrate(updates)
                 self._storage.update(digest, resource)
-            elif collection.empty():
-                Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find: {} :identified with digest: {:.16}'.format(self._category, content_digest))
             else:
-                Cause.push(Cause.HTTP_CONFLICT, 'cannot import: {} :because digest: {:.16} :matched: {} :times'.format(self._category,
-                                                                                                                       content_digest,
-                                                                                                                       collection.size()))
+                Config.validate_search_context(collection, 'import')
         else:
             self._logger.debug('importing content: %s', Config.get_operation_file())
             collection = Migrate.load(Config.get_operation_file())

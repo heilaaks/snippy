@@ -297,7 +297,7 @@ class TestCliImportSnippet(object):
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])
-            assert cause == 'NOK: cannot find: snippet :identified with digest: 123456789abcdef0'
+            assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
             assert Database.get_snippets().size() == 1
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, content)
@@ -408,7 +408,7 @@ class TestCliImportSnippet(object):
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '-d', '5', '-f', 'one-snippet.yaml'])
-            assert cause == 'NOK: cannot import: snippet :because digest: 5 :matched: 2 :times'
+            assert cause == 'NOK: content digest: 5 :matched more than once: 2 :preventing: import :operation'
             assert Database.get_snippets().size() == 2
             mock_file.assert_not_called()
             yaml.safe_load.assert_not_called()

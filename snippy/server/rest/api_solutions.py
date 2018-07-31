@@ -22,7 +22,7 @@
 from snippy.constants import Constants as Const
 from snippy.server.rest.base import ApiContentBase
 from snippy.server.rest.base import ApiContentDigestBase
-from snippy.server.rest.base import ApiContentFieldBase
+from snippy.server.rest.base import ApiContentDigestFieldBase
 
 
 class ApiSolutions(ApiContentBase):
@@ -39,7 +39,7 @@ class ApiSolutionsDigest(ApiContentDigestBase):
         super(ApiSolutionsDigest, self).__init__(content, Const.SOLUTION)
 
 
-class ApiSolutionsField(ApiContentFieldBase):
+class ApiSolutionsField(ApiContentDigestFieldBase):
     """Query solution based on digest and specified field."""
 
     def __init__(self, content):

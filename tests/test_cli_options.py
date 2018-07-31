@@ -57,6 +57,7 @@ class TestCliOptions(object):
         '    -t, --tags [TAG,...]          define comma separated list of tags',
         '    -l, --links [LINK ...]        define space separated list of links',
         '    -d, --digest DIGEST           idenfity content with digest',
+        '    -u, --uuid UUID               idenfity content with uuid',
         '',
         'search options:',
         '    --sall [KW,...]               search keywords from all fields',

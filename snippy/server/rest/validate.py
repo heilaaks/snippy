@@ -84,7 +84,6 @@ class Validate(object):
 
         return tuple(collection)
 
-
     @staticmethod
     def _is_valid_data(data):
         """Validata top level data object."""

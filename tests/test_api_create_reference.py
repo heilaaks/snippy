@@ -164,6 +164,7 @@ class TestApiCreateReference(object):
             path='/snippy/api/app/v1/references/5c2071094dbfaa33',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
+        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200

@@ -36,7 +36,7 @@ class ApiHello(ApiContentBase):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_get(_, response):
+    def on_get(_request, response, _sall=None, _stag=None, _sgrp=None, _uuid=None, _digest=None):
         """Get Hello!"""
 
         hello = {
@@ -53,7 +53,7 @@ class ApiHello(ApiContentBase):  # pylint: disable=too-few-public-methods
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_options(_, response):
+    def on_options(_request, response):
         """Respond with allowed methods for Hello!"""
 
         response.status = falcon.HTTP_200

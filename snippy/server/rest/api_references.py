@@ -22,7 +22,7 @@
 from snippy.constants import Constants as Const
 from snippy.server.rest.base import ApiContentBase
 from snippy.server.rest.base import ApiContentDigestBase
-from snippy.server.rest.base import ApiContentFieldBase
+from snippy.server.rest.base import ApiContentDigestFieldBase
 
 
 class ApiReferences(ApiContentBase):
@@ -39,7 +39,7 @@ class ApiReferencesDigest(ApiContentDigestBase):
         super(ApiReferencesDigest, self).__init__(content, Const.REFERENCE)
 
 
-class ApiReferencesField(ApiContentFieldBase):
+class ApiReferencesField(ApiContentDigestFieldBase):
     """Query references based on digest and specified field."""
 
     def __init__(self, content):

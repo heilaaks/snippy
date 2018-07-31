@@ -35,11 +35,13 @@ from snippy.content.solution import Solution
 from snippy.logger import CustomGunicornLogger
 from snippy.logger import Logger
 from snippy.server.gunicorn_server import GunicornServer as SnippyServer
+from snippy.server.rest.api_fields import ApiDigest
+from snippy.server.rest.api_fields import ApiDigestField
 from snippy.server.rest.api_fields import ApiGroups
-from snippy.server.rest.api_fields import ApiId
-from snippy.server.rest.api_fields import ApiIdField
 from snippy.server.rest.api_fields import ApiKeywords
 from snippy.server.rest.api_fields import ApiTags
+#from snippy.server.rest.api_fields import ApiUuid
+#from snippy.server.rest.api_fields import ApiUuidField
 from snippy.server.rest.api_hello import ApiHello
 from snippy.server.rest.api_references import ApiReferences
 from snippy.server.rest.api_references import ApiReferencesDigest
@@ -101,7 +103,9 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}/{field}'), ApiReferencesField(reference))
         self.api.add_route(urljoin(Config.base_path_app, 'group/{sgrp}'), ApiGroups(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'tags/{stag}'), ApiTags(fields))
-        self.api.add_route(urljoin(Config.base_path_app, 'id/{value}'), ApiId(fields))
-        self.api.add_route(urljoin(Config.base_path_app, 'id/{value}/{field}'), ApiIdField(fields))
+        self.api.add_route(urljoin(Config.base_path_app, 'digest/{digest}'), ApiDigest(fields))
+        self.api.add_route(urljoin(Config.base_path_app, 'digest/{digest}/{field}'), ApiDigestField(fields))
+#        self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}'), ApiDigest(fields))
+#        self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}/{field}'), ApiUuidField(fields))
         self.api.add_route(urljoin(Config.base_path_app, '{sall}'), ApiKeywords(fields))
         SnippyServer(self.api, options).run()

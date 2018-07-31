@@ -193,8 +193,41 @@ class TestCliExportReference(object):
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('default-references', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
     def test_cli_export_reference_009(self, snippy):
+        """Export all references.
+
+        Export defined reference based on uuid.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-u', '16cd5827-b6ef-4067-b5ac-3ceac07dde9f'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            Content.text_dump(mock_file, 'reference.text', content)
+
+    @pytest.mark.usefixtures('default-references', 'export-time')
+    def test_cli_export_reference_010(self, snippy):
+        """Export defined reference with uuid.
+
+        Try to export defined reference based on uudi that cannot be found.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--uuid', '123456789abcdef0', '-f', 'defined-reference.txt'])
+            assert cause == 'NOK: cannot find content with content uuid: 123456789abcdef0'
+            mock_file.assert_not_called()
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_not_called()
+
+    @pytest.mark.usefixtures('default-references', 'export-time')
+    def test_cli_export_reference_011(self, snippy):
         """Export defined reference with digest.
 
         Export defined reference based on search keyword. File name is not
@@ -215,7 +248,7 @@ class TestCliExportReference(object):
             Content.text_dump(mock_file, 'reference.text', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_010(self, snippy):
+    def test_cli_export_reference_012(self, snippy):
         """Export defined reference with digest.
 
         Export defined reference based on search keyword. File name is defined
@@ -235,7 +268,7 @@ class TestCliExportReference(object):
             Content.text_dump(mock_file, 'defined-reference.txt', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_011(self, snippy):
+    def test_cli_export_reference_013(self, snippy):
         """Export defined reference with search keyword.
 
         Export defined reference based on search keyword. File name is defined
@@ -255,7 +288,7 @@ class TestCliExportReference(object):
             Content.text_dump(mock_file, 'defined-reference.text', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_012(self, snippy):
+    def test_cli_export_reference_014(self, snippy):
         """Export defined reference with search keyword.
 
         Export defined reference based on search keyword. In this case the
@@ -277,7 +310,7 @@ class TestCliExportReference(object):
             Content.text_dump(mock_file, 'defined-reference.text', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_013(self, snippy):
+    def test_cli_export_reference_015(self, snippy):
         """Export defined reference with search keyword.
 
         Try to export reference based on search keyword that cannot befound.
@@ -289,7 +322,7 @@ class TestCliExportReference(object):
             mock_file.assert_not_called()
 
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
-    def test_cli_export_reference_014(self, snippy):
+    def test_cli_export_reference_016(self, snippy):
         """Export defined reference with content data.
 
         Export defined reference based on content data. File name is defined in
@@ -309,7 +342,7 @@ class TestCliExportReference(object):
             Content.yaml_dump(yaml, mock_file, 'defined-reference.yaml', content)
 
     @pytest.mark.usefixtures('default-references', 'export-time')
-    def test_cli_export_reference_015(self, snippy):
+    def test_cli_export_reference_017(self, snippy):
         """Export reference template.
 
         Export reference template by explicitly defining content category. This
@@ -325,7 +358,7 @@ class TestCliExportReference(object):
             file_handle.write.assert_called_with(Const.NEWLINE.join(Reference.TEMPLATE))
 
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
-    def test_cli_export_reference_016(self, snippy):
+    def test_cli_export_reference_018(self, snippy):
         """Export reference defaults.
 
         Export reference defaults. All references should be exported into
@@ -347,7 +380,7 @@ class TestCliExportReference(object):
             Content.yaml_dump(yaml, mock_file, defaults_references, content)
 
     @pytest.mark.usefixtures('export-time')
-    def test_cli_export_reference_017(self, snippy):
+    def test_cli_export_reference_019(self, snippy):
         """Export reference defaults.
 
         Try to export reference defaults when there are no stored references. No

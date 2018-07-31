@@ -279,14 +279,47 @@ class TestCliImportReference(object):
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-d', '123456789abcdef0', '-f', 'one-reference.text'])
-            assert cause == 'NOK: cannot find: reference :identified with digest: 123456789abcdef0'
+            assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
+            assert Database.get_references().size() == 1
+            assert not Database.get_snippets().size()
+            mock_file.assert_not_called()
+            Content.verified(mocker, snippy, {Reference.PYTEST_DIGEST: Reference.DEFAULTS[Reference.PYTEST]})
+
+    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'update-regexp-utc', 'isfile_true')
+    def test_cli_import_reference_014(self, snippy, mocker):
+        """Import reference based on uuid.
+
+        Import defined reference based on uuid.
+        """
+
+        content = Content.updated_gitlog()
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--reference', '-u', '12c', '-f', 'one-reference.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 1
+            mock_file.assert_called_once_with('one-reference.yaml', 'r')
+            Content.verified(mocker, snippy, content)
+
+    @pytest.mark.usefixtures('import-pytest', 'update-regexp-utc')
+    def test_cli_import_reference_015(self, snippy, mocker):
+        """Import reference based on message uuid.
+
+        Try to import defined reference with uuid that cannot be found.
+        """
+
+        content = Content.updated_gitlog()
+        mocked_open = Content.mocked_open(content)
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
+            cause = snippy.run(['snippy', 'import', '--reference', '-u', '1234567', '-f', 'one-reference.text'])
+            assert cause == 'NOK: cannot find content with content uuid: 1234567'
             assert Database.get_references().size() == 1
             assert not Database.get_snippets().size()
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, {Reference.PYTEST_DIGEST: Reference.DEFAULTS[Reference.PYTEST]})
 
     @pytest.mark.usefixtures('yaml')
-    def test_cli_import_reference_014(self, snippy, mocker):
+    def test_cli_import_reference_016(self, snippy, mocker):
         """Import references defaults.
 
         Import reference defaults. All references should be imported from
@@ -307,7 +340,7 @@ class TestCliImportReference(object):
             Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('yaml', 'default-references', 'import-gitlog-utc', 'import-regexp-utc')
-    def test_cli_import_reference_015(self, snippy, mocker):
+    def test_cli_import_reference_017(self, snippy, mocker):
         """Import references defaults.
 
         Try to import reference defaults again. The second import should fail
@@ -332,7 +365,7 @@ class TestCliImportReference(object):
             Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_016(self, snippy):
+    def test_cli_import_reference_018(self, snippy):
         """Import references from text template.
 
         Try to import reference template without any changes. This should result
@@ -349,7 +382,7 @@ class TestCliImportReference(object):
             mock_file.assert_called_once_with('./reference-template.txt', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-gitlog-utc')
-    def test_cli_import_reference_017(self, snippy, mocker):
+    def test_cli_import_reference_019(self, snippy, mocker):
         """Try to import reference which uuid collides.
 
         The uuid must be unique and this causes a database integrity error.

@@ -3,8 +3,11 @@
    - [ ] Fix swagger category Attributes that does not list referecens.
    - [ ] Fix can API work with category names snippet and snippets?
    - [ ] Fix there is a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().
+   - [ ] Fix does api fields on_get print the log at the beginngin twice?
    - [ ] Rename groups to group since it is only one group.
    - [ ] Add apis like /api/app/v1/group/linux?limit=2&scat=snippets,solutions,references".
+   
+      # Add support to search with uuid also from command line. (done)
    
       # Is distinct possible with tags?
         https://dba.stackexchange.com/questions/81930/how-to-get-all-distinct-words-in-a-column
@@ -22,7 +25,8 @@
       # ApiTags (done)
       - snippy/api/app/v1/tags/linux?limit=2&category=snippets,solutions,references,all"
       
-      # ApiId
+      # ApiId (digest: done, uuid: todo)
+      - [ ] Check logs after uuid like: please define keyword, digest or content data as search criteria
       # ApiIdField
       - snippy/api/app/v1/id/0101010101"
       - snippy/api/app/v1/id/0101010101"
@@ -63,6 +67,8 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix it seems that python can do like Config.parameternewparameter which adds new parameter in case of typo. Can this be prevented?
+   - [ ] Fix printing content after 9 since the numebered items from 10 shift the spacing one more right. How?
    - [ ] Fix why default examples with: import --defaults <all> and snippy search -c 'docker ps' matches 8 when there should be 6 matches?
    - [ ] Fix test cases hiding that cls.source was _not_ set in init when the Config.init called storage method that used cls.source. How this can be not noticed?
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.

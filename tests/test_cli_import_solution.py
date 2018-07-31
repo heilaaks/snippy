@@ -397,7 +397,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-d', '123456789abcdef0', '-f', 'one-solution.text'])
-            assert cause == 'NOK: cannot find: solution :identified with digest: 123456789abcdef0'
+            assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
             assert Database.get_solutions().size() == 1
             assert not Database.get_snippets().size()
             mock_file.assert_not_called()

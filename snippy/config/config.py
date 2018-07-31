@@ -104,6 +104,7 @@ class Config(object):
         # operation
         cls.operation = cls.source.operation
         cls.operation_digest = cls.source.digest
+        cls.operation_uuid = cls.source.uuid
         cls.merge = cls.source.merge
 
         # content
@@ -396,10 +397,10 @@ class Config(object):
     def validate_search_context(cls, collection, operation):  # pylint: disable=too-many-branches
         """Validate content search context."""
 
-        # Search keys are treated in priority order of 1) digest, 2) content data
-        # and 3) search keywords. Search keywords are already validated and invalid
-        # keywords are interpreted as 'list all' which is always correct at this
-        # point.
+        # Search keys are treated in priority order of 1) digest, 2) uuid,
+        # 3) content data and 4) search keywords. Search keywords are already
+        # validated and invalid keywords are interpreted as 'list all' which
+        # is always correct at this point.
         cls._logger.debug('validating search context with %d results', collection.size())
         if cls.is_content_digest():
             if cls.operation_digest:
@@ -412,6 +413,17 @@ class Config(object):
                                (cls.operation_digest, collection.size(), operation))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest for: %s :operation' % operation)
+        elif cls.is_content_uuid():
+            if cls.operation_uuid:
+                if collection.empty():
+                    Cause.push(Cause.HTTP_NOT_FOUND,
+                               'cannot find content with content uuid: %s' % cls.operation_uuid)
+                elif collection.size() > 1:
+                    Cause.push(Cause.HTTP_CONFLICT,
+                               'content uuid: %.16s :matched more than once: %d :preventing: %s :operation' %
+                               (cls.operation_uuid, collection.size(), operation))
+            else:
+                Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content uuid for: %s :operation' % operation)
         elif cls.content_data:
             if any(cls.content_data):
                 data = Const.EMPTY.join(cls.content_data)
@@ -446,11 +458,17 @@ class Config(object):
         return False if cls.operation_digest is None else True
 
     @classmethod
+    def is_content_uuid(cls):
+        """Test if content uuid was defined from command line."""
+
+        return False if cls.operation_uuid is None else True
+
+    @classmethod
     def is_search_criteria(cls):
         """Test if any of the search criterias were used."""
 
         criteria = False
-        if cls._is_search_keywords() or cls.is_content_digest() or cls.content_data:
+        if cls._is_search_keywords() or cls.is_content_digest() or cls.is_content_uuid() or cls.content_data:
             criteria = True
 
         return criteria
@@ -507,6 +525,7 @@ class Config(object):
         cls._logger.debug('configured content versions: %s', cls.content_versions)
         cls._logger.debug('configured content source: %s', cls.content_source)
         cls._logger.debug('configured operation digest: %s', cls.operation_digest)
+        cls._logger.debug('configured operation uuid: %s', cls.operation_uuid)
         cls._logger.debug('configured operation filename: "%s"', cls.operation_filename)
         cls._logger.debug('configured operation file type: "%s"', cls.operation_filetype)
         cls._logger.debug('configured search all keywords: %s', cls.search_all_kws)

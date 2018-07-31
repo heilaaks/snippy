@@ -128,7 +128,7 @@ class SqliteDb(object):
 
         return error
 
-    def select(self, category, sall=(), scat=(), stag=(), sgrp=(), digest=None, data=None):
+    def select(self, category, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):  # pylint: disable=too-many-arguments
         """Select content based on search criteria.
 
         Args:
@@ -137,6 +137,7 @@ class SqliteDb(object):
            scat (tuple): Search category keyword list.
            stag (tuple): Search tag keyword list.
            sgrp (tuple): Search group keyword list.
+           uuid (str): Search specific uuid or part of it.
            digest (str): Search specific digest or part of it.
            data (str): Search specific content data or part of it.
 
@@ -145,10 +146,10 @@ class SqliteDb(object):
         """
 
         collection = Collection()
-        query, qargs = self._get_query(category, sall, scat, stag, sgrp, digest, data, SqliteDb.QUERY_TYPE_REGEX)
+        query, qargs = self._get_query(category, sall, scat, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_REGEX)
         if query:
             rows = self._get_db(query, qargs)
-            total = self._count_content(category, sall, scat, stag, sgrp, digest, data)
+            total = self._count_content(category, sall, scat, stag, sgrp, uuid, digest, data)
             collection.convert(rows)
             collection.total = total
             self._logger.debug('selected %d rows %s', len(rows), rows)
@@ -211,7 +212,7 @@ class SqliteDb(object):
 
         return tuple(uniques)
 
-    def _count_content(self, category, sall=(), scat=(), stag=(), sgrp=(), digest=None, data=None):
+    def _count_content(self, category, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):  # pylint: disable=too-many-arguments
         """Count content based on search criteria.
 
         Args:
@@ -220,6 +221,7 @@ class SqliteDb(object):
            scat (tuple): Search category keyword list.
            stag (tuple): Search tag keyword list.
            sgrp (tuple): Search group keyword list.
+           uuid (str): Search specific uuid or part of it.
            digest (str): Search specific digest or part of it.
            data (str): Search specific content data or part of it.
 
@@ -228,7 +230,7 @@ class SqliteDb(object):
         """
 
         count = 0
-        query, qargs = self._get_query(category, sall, scat, stag, sgrp, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
+        query, qargs = self._get_query(category, sall, scat, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
         if query:
             rows = self._get_db(query, qargs)
             try:
@@ -478,13 +480,13 @@ class SqliteDb(object):
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented writing into database')
 
-    def _get_query(self, category, sall, scat, stag, sgrp, digest, data, query_type):
+    def _get_query(self, category, sall, scat, stag, sgrp, uuid, digest, data, query_type):  # pylint: disable=too-many-arguments,too-many-locals,too-many-branches
         """Get query based on defined type."""
 
         query = ()
         qargs = []
-        self._logger.debug('query category: %s :sall: %s :scat: %s :stag: %s :sgrp: %s :digest: %s :and data: %s.20s',
-                            category, sall, scat, stag, sgrp, digest, data)
+        self._logger.debug('query category: %s :sall: %s :scat: %s :stag: %s :sgrp: %s :uuid: %s :digest: %s :and data: %s.20s',
+                           category, sall, scat, stag, sgrp, uuid, digest, data)
 
         # For database queries, category is always a list that defines from
         # which categories the search is made. The search always includes the
@@ -514,6 +516,12 @@ class SqliteDb(object):
             else:
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
             qargs = [digest+'%']
+        elif Config.is_content_uuid():
+            if query_type == SqliteDb.QUERY_TYPE_TOTAL:
+                query = ('SELECT count(*) FROM contents WHERE uuid LIKE ?')
+            else:
+                query = ('SELECT * FROM contents WHERE uuid LIKE ?')
+            qargs = [uuid+'%']
         elif Config.content_data:
             if query_type == SqliteDb.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE data LIKE ?')

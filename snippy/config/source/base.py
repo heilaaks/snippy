@@ -134,6 +134,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.storage_path = parameters.get('storage_path', Const.EMPTY)
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
+        self.uuid = parameters.get('uuid', None)
         self.version = parameters.get('version', __version__)
         self.versions = parameters.get('versions', Const.EMPTY)
         self.very_verbose = parameters.get('very_verbose', False)

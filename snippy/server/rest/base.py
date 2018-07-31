@@ -63,10 +63,20 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger.debug('end post %s', request.uri)
 
     @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response):
+    def on_get(self, request, response, sall=None, stag=None, sgrp=None, uuid=None, digest=None):
         """Search content based on query parameters."""
 
         self._logger.debug('run get %s', request.uri)
+        if sall:
+            request.params['sall'] = sall
+        if stag:
+            request.params['stag'] = stag
+        if sgrp:
+            request.params['sgrp'] = sgrp
+        if uuid:
+            request.params['uuid'] = uuid
+        if digest:
+            request.params['uuid'] = digest
         api = Api(self._category, Api.SEARCH, request.params)
         Config.load(api)
         self._content.run()
@@ -216,7 +226,7 @@ class ApiContentDigestBase(object):
         response.set_header('Allow', 'DELETE,GET,PATCH,POST,PUT')
 
 
-class ApiContentFieldBase(object):
+class ApiContentDigestFieldBase(object):
     """Process content based on digest resource ID and specified field."""
 
     def __init__(self, content, category):

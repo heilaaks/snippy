@@ -19,112 +19,88 @@
 
 """api_fields: JSON REST API for content fields."""
 
-from snippy.cause import Cause
-from snippy.config.config import Config
-from snippy.config.source.api import Api
 from snippy.constants import Constants as Const
 from snippy.logger import Logger
 from snippy.server.rest.base import ApiContentBase
-from snippy.server.rest.generate import Generate
-from snippy.server.rest.validate import Validate
-
-
-class ApiGroups(ApiContentBase):
-    """Process content based on group field."""
-
-    def __init__(self, fields):
-        self._logger = Logger.get_logger(__name__)
-        self._category = Const.ALL_CATEGORIES
-        self._content = fields
-
-    @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, sgrp):
-        """Search content based on group field."""
-
-        self._logger.debug('run get: %s', request.uri)
-        request.params['sgrp'] = sgrp
-        if 'scat' not in request.params:
-            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
-        super(ApiGroups, self).on_get(request, response)
-
-
-class ApiTags(ApiContentBase):
-    """Process content based on tags field."""
-
-    def __init__(self, fields):
-        self._logger = Logger.get_logger(__name__)
-        self._category = Const.ALL_CATEGORIES
-        self._content = fields
-
-    @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, stag):
-        """Search content based on tags field."""
-
-        self._logger.debug('run get: %s', request.uri)
-        request.params['stag'] = stag
-        if 'scat' not in request.params:
-            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
-        super(ApiTags, self).on_get(request, response)
-
-
-class ApiId(object):
-    """Process content based on unique digest or uuid."""
-
-    def __init__(self, fields):
-        self._logger = Logger.get_logger(__name__)
-        self._fields = fields
-
-    @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, field, value):
-        """Search content based on digest."""
-
-        self._logger.debug('run get: %s', request.uri)
-
-    @staticmethod
-    @Logger.timeit(refresh_oid=True)
-    def on_options(_, response, digest, field):  # pylint: disable=unused-argument
-        """Respond with allowed methods."""
-
-        response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
-
-
-class ApiIdField(object):
-    """Process content field based on unique digest or uuid."""
-
-    def __init__(self, fields):
-        self._logger = Logger.get_logger(__name__)
-        self._fields = fields
-
-    @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, field, value):
-        """Search content based on uuid."""
-
-        self._logger.debug('run get: %s', request.uri)
-
-    @staticmethod
-    @Logger.timeit(refresh_oid=True)
-    def on_options(_, response, digest, field):  # pylint: disable=unused-argument
-        """Respond with allowed methods."""
-
-        response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
+from snippy.server.rest.base import ApiContentDigestBase
+from snippy.server.rest.base import ApiContentDigestFieldBase
 
 
 class ApiKeywords(ApiContentBase):
     """Process content based on given keyword list."""
 
     def __init__(self, fields):
-        self._logger = Logger.get_logger(__name__)
-        self._category = Const.ALL_CATEGORIES
-        self._content = fields
+        super(ApiKeywords, self).__init__(fields, Const.ALL_CATEGORIES)
 
     @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, sall):
+    def on_get(self, request, response, sall=None, stag=None, sgrp=None, uuid=None, digest=None):
         """Search content based on given keyword list."""
 
         self._logger.debug('run get: %s', request.uri)
-        request.params['sall'] = sall
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
-        super(ApiKeywords, self).on_get(request, response)
+        super(ApiKeywords, self).on_get(request, response, sall=sall)
+
+
+class ApiGroups(ApiContentBase):
+    """Process content based on group field."""
+
+    def __init__(self, fields):
+        super(ApiGroups, self).__init__(fields, Const.ALL_CATEGORIES)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_get(self, request, response, sall=None, stag=None, sgrp=None, uuid=None, digest=None):
+        """Search content based on group field."""
+
+        self._logger.debug('run get: %s', request.uri)
+        if 'scat' not in request.params:
+            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
+        super(ApiGroups, self).on_get(request, response, sgrp=sgrp)
+
+
+class ApiTags(ApiContentBase):
+    """Process content based on tags field."""
+
+    def __init__(self, fields):
+        super(ApiTags, self).__init__(fields, Const.ALL_CATEGORIES)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_get(self, request, response, sall=None, stag=None, sgrp=None, uuid=None, digest=None):
+        """Search content based on tags field."""
+
+        self._logger.debug('run get: %s', request.uri)
+        if 'scat' not in request.params:
+            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
+        super(ApiTags, self).on_get(request, response, stag=stag)
+
+
+class ApiDigest(ApiContentDigestBase):
+    """Process content based on unique digest."""
+
+    def __init__(self, fields):
+        super(ApiDigest, self).__init__(fields, Const.ALL_CATEGORIES)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_get(self, request, response, digest):
+        """Search content based on digest."""
+
+        self._logger.debug('run get: %s', request.uri)
+        if 'scat' not in request.params:
+            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
+        super(ApiDigest, self).on_get(request, response, digest)
+
+
+class ApiDigestField(ApiContentDigestFieldBase):
+    """Process content field based on unique digest or uuid and specified field."""
+
+    def __init__(self, fields):
+        super(ApiDigestField, self).__init__(fields, Const.ALL_CATEGORIES)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_get(self, request, response, digest, field):
+        """Search content based on uuid."""
+
+        self._logger.debug('run get: %s', request.uri)
+        if 'scat' not in request.params:
+            request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
+        super(ApiDigestField, self).on_get(request, response, digest, field)

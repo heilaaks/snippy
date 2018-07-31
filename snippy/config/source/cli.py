@@ -53,7 +53,8 @@ class Cli(ConfigSourceBase):
         '  -g, --group GROUP             define content group',
         '  -t, --tags [TAG,...]          define comma separated list of tags',
         '  -l, --links [LINK ...]        define space separated list of links',
-        '  -d, --digest DIGEST           idenfity content with digest'
+        '  -d, --digest DIGEST           idenfity content with digest',
+        '  -u, --uuid UUID               idenfity content with uuid',
     )
     ARGS_SEARCH = (
         '  --sall [KW,...]               search keywords from all fields',
@@ -174,6 +175,7 @@ class Cli(ConfigSourceBase):
         options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-l', '--links', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-d', '--digest', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        options.add_argument('-u', '--uuid', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('--merge', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # search options

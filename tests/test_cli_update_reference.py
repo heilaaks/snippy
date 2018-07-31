@@ -154,9 +154,47 @@ class TestCliUpdateReference(object):
         assert Database.get_references().size() == 2
         Content.verified(mocker, snippy, content_read)
 
-    @pytest.mark.skip(reason='not supported yet')
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_007(self, snippy, edited_gitlog, mocker):
+        """Update reference with uuid.
+
+        Update reference based on short uuid. Only content links are updated.
+        """
+
+        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
+        content_read = {
+            '1fc34e79a4d2bac5': Reference.get_dictionary(template),
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        }
+        edited_gitlog.return_value = template
+        cause = snippy.run(['snippy', 'update', '--reference', '-u', '12cd5827-b6ef-4067-b5ac'])
+        assert cause == Cause.ALL_OK
+        assert Database.get_references().size() == 2
+        Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('default-references')
+    def test_cli_update_reference_008(self, snippy, edited_gitlog, mocker):
+        """Update reference with uuid.
+
+        Try to update reference based on uuid that cannot be found.
+        """
+
+        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
+        content_read = {
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        }
+        edited_gitlog.return_value = template
+        cause = snippy.run(['snippy', 'update', '--reference', '-u', '9999994'])
+        assert cause == 'NOK: cannot find content with content uuid: 9999994'
+        assert Database.get_references().size() == 2
+        Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.skip(reason='not supported yet')
+    @pytest.mark.usefixtures('default-references')
+    def test_cli_update_reference_009(self, snippy, edited_gitlog, mocker):
         """Update reference with data.
 
         Update reference based on content links.
@@ -176,7 +214,7 @@ class TestCliUpdateReference(object):
 
     @pytest.mark.skip(reason='not supported yet')
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_008(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_010(self, snippy, edited_gitlog, mocker):
         """Update reference with data.
 
         Try to update reference based on content links that is not found.
@@ -195,7 +233,7 @@ class TestCliUpdateReference(object):
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_009(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_011(self, snippy, edited_gitlog, mocker):
         """Update reference with data.
 
         Try to update reference with empty content links. Nothing must be
@@ -216,7 +254,7 @@ class TestCliUpdateReference(object):
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('import-regexp', 'update-gitlog-utc')
-    def test_cli_update_reference_010(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_012(self, snippy, edited_gitlog, mocker):
         """Update existing reference from editor.
 
         Update existing reference by defining all values from editor. In this

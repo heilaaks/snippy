@@ -17,14 +17,10 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""snippet: Content fields management."""
+"""fields: Content fields management."""
 
-from snippy.cause import Cause
-from snippy.config.config import Config
 from snippy.constants import Constants as Const
 from snippy.content.base import ContentTypeBase
-from snippy.content.collection import Collection
-from snippy.logger import Logger
 
 
 class Fields(ContentTypeBase):
@@ -32,51 +28,3 @@ class Fields(ContentTypeBase):
 
     def __init__(self, storage, run_cli=False):
         super(Fields, self).__init__(storage, run_cli, Const.ALL_CATEGORIES)
-
-#    GROUP = 'groups'
-#
-#    def __init__(self, storage):
-#        self._logger = Logger.get_logger(__name__)
-#        self._storage = storage
-#        self._collection = Collection()
-#
-#    @property
-#    def collection(self):
-#        """Get collection."""
-#
-#        return self._collection
-#
-#    @collection.setter
-#    def collection(self, value):
-#        """Store collection of resources."""
-#
-#        self._collection = value
-#
-#    def search_group(self):
-#        """Search content from any category based on field."""
-#
-#        self._logger.debug('searching fields')
-#        self.collection = self._storage.search(
-#            Const.ALL_CATEGORIES,
-#            sall=Config.search_all_kws,
-#            scat=Config.search_cat_kws,
-#            stag=Config.search_tag_kws,
-#            sgrp=Config.search_grp_kws,
-#            digest=Config.operation_digest,
-#            data=Config.content_data
-#        )
-#
-#    @Logger.timeit
-#    def run(self, field):
-#        """Run search operation for defined field."""
-#
-#        self._logger.debug('run search: %s :field', field)
-#        if field == Fields.GROUP:
-#            self.search_group()
-#        else:
-#            Cause.push(Cause.HTTP_BAD_REQUEST, 'unknown field: {}'.format(field))
-#
-#        self._logger.debug('end search: %s :field', field)
-#
-#        return self.collection
-#

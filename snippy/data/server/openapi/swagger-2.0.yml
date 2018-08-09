@@ -26,17 +26,17 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/category'
-        - $ref: '#/parameters-body/snippets'
+        - $ref: '#/parameters/category'
+        - $ref: '#/parameters/snippets'
       responses:
         201:
-          $ref: "#/components/responses/201"
+          $ref: "#/responses/201"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         403:
-          $ref: "#/components/responses/403"
+          $ref: "#/responses/403"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
     get:
       tags:
         - "content"
@@ -45,26 +45,26 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/category'
-        - $ref: '#/parameters-query/sall'
-        - $ref: '#/parameters-query/stag'
-        - $ref: '#/parameters-query/sgrp'
-        - $ref: '#/parameters-query/digest'
-        - $ref: '#/parameters-query/data'
-        - $ref: '#/parameters-query/filter'
-        - $ref: '#/parameters-query/limit'
-        - $ref: '#/parameters-query/offset'
-        - $ref: '#/parameters-query/sort'
-        - $ref: '#/parameters-query/fields'
+        - $ref: '#/parameters/category'
+        - $ref: '#/parameters/sall'
+        - $ref: '#/parameters/stag'
+        - $ref: '#/parameters/sgrp'
+        - $ref: '#/parameters/digest-query'
+        - $ref: '#/parameters/data'
+        - $ref: '#/parameters/filter'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/sort'
+        - $ref: '#/parameters/fields'
       responses:
         200:
-          $ref: "#/components/responses/200-collection"
+          $ref: "#/responses/200-collection"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
   /{category}/{digest}:
     post:
       tags:
@@ -76,10 +76,10 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/category'
-        - $ref: '#/parameters-path/digest'
-        - $ref: '#/parameters-header/x-override'
-        - $ref: '#/parameters-body/snippets'
+        - $ref: '#/parameters/category'
+        - $ref: '#/parameters/digest'
+        - $ref: '#/parameters/x-override'
+        - $ref: '#/parameters/snippets'
       responses:
         200:
           description: "Content updated"
@@ -88,13 +88,13 @@ paths:
         204:
           description: "Content deleted"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         403:
-          $ref: "#/components/responses/403"
+          $ref: "#/responses/403"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
     put:
       tags:
         - "content"
@@ -105,20 +105,20 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/category'
-        - $ref: '#/parameters-path/digest'
-        - $ref: '#/parameters-body/snippet'
+        - $ref: '#/parameters/category'
+        - $ref: '#/parameters/digest'
+        - $ref: '#/parameters/snippet'
       responses:
         200:
-          $ref: "#/components/responses/200-resource"
+          $ref: "#/responses/200-resource"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         403:
-          $ref: "#/components/responses/403"
+          $ref: "#/responses/403"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
     patch:
       tags:
         - "content"
@@ -129,20 +129,20 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/category'
-        - $ref: '#/parameters-path/digest'
-        - $ref: '#/parameters-body/snippet'
+        - $ref: '#/parameters/category'
+        - $ref: '#/parameters/digest'
+        - $ref: '#/parameters/snippet'
       responses:
         200:
-          $ref: "#/components/responses/200-resource"
+          $ref: "#/responses/200-resource"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         403:
-          $ref: "#/components/responses/403"
+          $ref: "#/responses/403"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
     get:
       tags:
         - "content"
@@ -153,36 +153,36 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/category'
-        - $ref: '#/parameters-path/digest'
+        - $ref: '#/parameters/category'
+        - $ref: '#/parameters/digest'
       responses:
         200:
-          $ref: "#/components/responses/200-resource"
+          $ref: "#/responses/200-resource"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
     delete:
       tags:
       - "content"
       summary: "Delete defined content based on digest"
       description: ""
       parameters:
-        - $ref: '#/parameters-path/category'
-        - $ref: '#/parameters-path/digest'
+        - $ref: '#/parameters/category'
+        - $ref: '#/parameters/digest'
       responses:
         204:
-          $ref: "#/components/responses/204"
+          $ref: "#/responses/204"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         409:
-          $ref: "#/components/responses/409"
+          $ref: "#/responses/409"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
   /{category}/{digest}/{fields}:
     get:
       tags:
@@ -192,18 +192,18 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/category'
-        - $ref: '#/parameters-path/digest'
-        - $ref: '#/parameters-path/fields'
+        - $ref: '#/parameters/category'
+        - $ref: '#/parameters/digest'
+        - $ref: '#/parameters/fields'
       responses:
         200:
-          $ref: "#/components/responses/200-resource"
+          $ref: "#/responses/200-resource"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
   /{keywords}:
     get:
       tags:
@@ -215,26 +215,26 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/keywords'
-        - $ref: '#/parameters-query/scat'
-        - $ref: '#/parameters-query/stag'
-        - $ref: '#/parameters-query/sgrp'
-        - $ref: '#/parameters-query/digest'
-        - $ref: '#/parameters-query/data'
-        - $ref: '#/parameters-query/filter'
-        - $ref: '#/parameters-query/limit'
-        - $ref: '#/parameters-query/offset'
-        - $ref: '#/parameters-query/sort'
-        - $ref: '#/parameters-query/fields'
+        - $ref: '#/parameters/keywords'
+        - $ref: '#/parameters/scat'
+        - $ref: '#/parameters/stag'
+        - $ref: '#/parameters/sgrp'
+        - $ref: '#/parameters/digest-query'
+        - $ref: '#/parameters/data'
+        - $ref: '#/parameters/filter'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/sort'
+        - $ref: '#/parameters/fields'
       responses:
         200:
-          $ref: "#/components/responses/200-collection"
+          $ref: "#/responses/200-collection"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
   /group/{groups}:
     get:
       tags:
@@ -246,26 +246,26 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/groups'
-        - $ref: '#/parameters-query/sall'
-        - $ref: '#/parameters-query/scat'
-        - $ref: '#/parameters-query/stag'
-        - $ref: '#/parameters-query/digest'
-        - $ref: '#/parameters-query/data'
-        - $ref: '#/parameters-query/filter'
-        - $ref: '#/parameters-query/limit'
-        - $ref: '#/parameters-query/offset'
-        - $ref: '#/parameters-query/sort'
-        - $ref: '#/parameters-query/fields'
+        - $ref: '#/parameters/groups'
+        - $ref: '#/parameters/sall'
+        - $ref: '#/parameters/scat'
+        - $ref: '#/parameters/stag'
+        - $ref: '#/parameters/digest-query'
+        - $ref: '#/parameters/data'
+        - $ref: '#/parameters/filter'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/sort'
+        - $ref: '#/parameters/fields'
       responses:
         200:
-          $ref: "#/components/responses/200-collection"
+          $ref: "#/responses/200-collection"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
   /tags/{tags}:
     get:
       tags:
@@ -277,26 +277,26 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/tags'
-        - $ref: '#/parameters-query/sall'
-        - $ref: '#/parameters-query/scat'
-        - $ref: '#/parameters-query/sgrp'
-        - $ref: '#/parameters-query/digest'
-        - $ref: '#/parameters-query/data'
-        - $ref: '#/parameters-query/filter'
-        - $ref: '#/parameters-query/limit'
-        - $ref: '#/parameters-query/offset'
-        - $ref: '#/parameters-query/sort'
-        - $ref: '#/parameters-query/fields'
+        - $ref: '#/parameters/tags'
+        - $ref: '#/parameters/sall'
+        - $ref: '#/parameters/scat'
+        - $ref: '#/parameters/sgrp'
+        - $ref: '#/parameters/digest-query'
+        - $ref: '#/parameters/data'
+        - $ref: '#/parameters/filter'
+        - $ref: '#/parameters/limit'
+        - $ref: '#/parameters/offset'
+        - $ref: '#/parameters/sort'
+        - $ref: '#/parameters/fields'
       responses:
         200:
-          $ref: "#/components/responses/200-collection"
+          $ref: "#/responses/200-collection"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
   /uuid/{uuid}:
     get:
       tags:
@@ -308,16 +308,16 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/uuid'
+        - $ref: '#/parameters/uuid'
       responses:
         200:
-          $ref: "#/components/responses/200-resource"
+          $ref: "#/responses/200-resource"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
   /uuid/{uuid}{fields}:
     get:
       tags:
@@ -329,17 +329,17 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/uuid'
-        - $ref: '#/parameters-path/fields'
+        - $ref: '#/parameters/uuid'
+        - $ref: '#/parameters/fields'
       responses:
         200:
-          $ref: "#/components/responses/200-resource"
+          $ref: "#/responses/200-resource"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
   /digest/{digest}:
     get:
       tags:
@@ -351,16 +351,16 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/digest'
+        - $ref: '#/parameters/digest'
       responses:
         200:
-          $ref: "#/components/responses/200-resource"
+          $ref: "#/responses/200-resource"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
+          $ref: "#/responses/500"
   /digest/{digest}{fields}:
     get:
       tags:
@@ -372,51 +372,50 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters-path/digest'
-        - $ref: '#/parameters-path/fields'
+        - $ref: '#/parameters/digest'
+        - $ref: '#/parameters/fields'
       responses:
         200:
-          $ref: "#/components/responses/200-resource"
+          $ref: "#/responses/200-resource"
         400:
-          $ref: "#/components/responses/400"
+          $ref: "#/responses/400"
         404:
-          $ref: "#/components/responses/404"
+          $ref: "#/responses/404"
         500:
-          $ref: "#/components/responses/500"
-components:
-  responses:
-    "200-resource":
-      description: OK
-      schema:
-        $ref: "#/definitions/ResponseResource"
-    "200-collection":
-      description: OK
-      schema:
-        $ref: "#/definitions/ResponseCollectionGet"
-    "201":
-      description: "Content created"
-      schema:
-        $ref: "#/definitions/ResponseCollectionPost"
-    "204":
-      description: "Content deleted"
-    "400":
-      description: "Request not syntactically correct"
-      schema:
-        $ref: '#/definitions/Errors'
-    "403":
-      description: "Using client generated ID is not supported"
-      schema:
-        $ref: '#/definitions/Errors'
-    "404":
-      description: "Content not found"
-      schema:
-        $ref: '#/definitions/Errors'
-    "409":
-      description: "More than one content found"
-      schema:
-        $ref: '#/definitions/Errors'
-    "500":
-      description: "Internal server error"
+          $ref: "#/responses/500"
+responses:
+  "200-resource":
+    description: OK
+    schema:
+      $ref: "#/definitions/ResponseResource"
+  "200-collection":
+    description: OK
+    schema:
+      $ref: "#/definitions/ResponseCollectionGet"
+  "201":
+    description: "Content created"
+    schema:
+      $ref: "#/definitions/ResponseCollectionPost"
+  "204":
+    description: "Content deleted"
+  "400":
+    description: "Request not syntactically correct"
+    schema:
+      $ref: '#/definitions/Errors'
+  "403":
+    description: "Using client generated ID is not supported"
+    schema:
+      $ref: '#/definitions/Errors'
+  "404":
+    description: "Content not found"
+    schema:
+      $ref: '#/definitions/Errors'
+  "409":
+    description: "More than one content found"
+    schema:
+      $ref: '#/definitions/Errors'
+  "500":
+    description: "Internal server error"
 definitions:
   RequestResource:
     type: object
@@ -651,7 +650,7 @@ definitions:
       - statusString
       - module
       - title
-parameters-path:
+parameters:
   category:
     name: category
     type: string
@@ -720,7 +719,6 @@ parameters-path:
       - "docker"
       - "docker,mody"
       - "docker,mody,kubernetes"
-parameters-header:
   x-override:
     name: X-HTTP-Method-Override
     type: string
@@ -728,7 +726,6 @@ parameters-header:
     description: "Override POST method."
     enum: [PUT, PATCH, DELETE]
     required: true
-parameters-body:
   snippet:
     name: snippet
     in: body
@@ -743,7 +740,6 @@ parameters-body:
     required: true
     schema:
       $ref: "#/definitions/RequestCollection"
-parameters-query:
   sall:
     name: sall
     type: array
@@ -778,7 +774,7 @@ parameters-query:
     in: query
     required: false
     description: "Search keywords only from listed groups."
-  digest:
+  digest-query:
     name: digest
     type: string
     in: query
@@ -818,7 +814,7 @@ parameters-query:
     in: query
     required: false
     description: "Sort based on defined field."
-  fields:
+  fields-query:
     name: fields
     type: array
     items:

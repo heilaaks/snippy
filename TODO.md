@@ -1,5 +1,6 @@
 ## WORKING
    - [ ] Fix duplicated paths in swagger specs. The category is enum and it is really /snippets. But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
+   - [ ] Fix make docs broken after latest swagger 2.0 update?
    - [ ] Test if /api/app/v1/group/linux?limit=2&scat=snippets,solutions,references" works.
    - [ ] Test case that fetches specific field with short uuid/digest. This results multiple hits like /v1/uuid/2/brief so it is a question what is returned.
    - [ ] Refactor groups to group since it is only one group (API breaking change).

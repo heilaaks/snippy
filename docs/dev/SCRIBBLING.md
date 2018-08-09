@@ -91,6 +91,14 @@ Random notes and scribling during development.
    # install pipenv
    $ pip install --user pipenv
    $ pipenv lock
+
+   # Updated packages
+   $ pipenv install logging_tree==1.8 --dev
+   $ pipenv install sphinx_rtd_theme==0.4.1 --dev
+   $ pipenv install tox==3.1.3 --dev
+   $ pipenv install pytest==3.6.4 --dev
+   $ pipenv install pylint==2.0.1 --dev
+   $ pipenv lock -r  > requirements.txt
    
    # Pipenv for Python 3.6
    $ pipenv --python 3.6

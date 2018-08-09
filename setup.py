@@ -31,7 +31,7 @@ extras_dev = (
     'pprintpp==0.4.0'
 )
 extras_docs = (
-    'sphinx==1.7.5',
+    'sphinx==1.7.6',
     'sphinxcontrib-openapi==0.3.2',
     'sphinx_rtd_theme==0.4.1',
     'sphinx-autobuild==0.7.1'
@@ -44,6 +44,7 @@ extras_server = (
 extras_tests = (
     'codecov==2.0.15',
     'flake8==3.5.0',
+    'logging_tree==1.8',
     'mock==2.0.0',
     'pyflakes==1.6.0',
     'pylint==1.9.3 ; python_version=="2.7.*"',

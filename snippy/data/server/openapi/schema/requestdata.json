@@ -12,7 +12,8 @@
     "type": {
       "enum": [
         "snippet", 
-        "solution"
+        "solution", 
+        "reference"
       ], 
       "type": "string"
     }

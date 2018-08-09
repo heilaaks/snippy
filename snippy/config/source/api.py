@@ -39,14 +39,10 @@ class Api(ConfigSourceBase):
 
     @staticmethod
     def _set_sall(parameters):
-        """Set 'match any' if search is made without any search criterias."""
+        """Set 'match any' if search is made without any search criteria."""
 
         if parameters['operation'] == Api.SEARCH:
-            if 'sall' not in parameters and \
-               'stag' not in parameters and \
-               'sgrp' not in parameters and \
-               'data' not in parameters and \
-               'digest' not in parameters:
+            if not any(field in parameters for field in ('sall', 'stag', 'sgrp', 'data', 'uuid', 'digest')):
                 parameters['sall'] = ('.')
 
     @staticmethod

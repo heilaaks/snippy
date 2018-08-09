@@ -63,7 +63,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger.debug('end post %s', request.uri)
 
     @Logger.timeit(refresh_oid=True)
-    def on_get(self, request, response, sall=None, stag=None, sgrp=None, uuid=None, digest=None):
+    def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on query parameters."""
 
         self._logger.debug('run get %s', request.uri)
@@ -73,10 +73,6 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
             request.params['stag'] = stag
         if sgrp:
             request.params['sgrp'] = sgrp
-        if uuid:
-            request.params['uuid'] = uuid
-        if digest:
-            request.params['uuid'] = digest
         api = Api(self._category, Api.SEARCH, request.params)
         Config.load(api)
         self._content.run()
@@ -260,6 +256,86 @@ class ApiContentDigestFieldBase(object):
     @staticmethod
     @Logger.timeit(refresh_oid=True)
     def on_options(_, response, digest, field):  # pylint: disable=unused-argument
+        """Respond with allowed methods."""
+
+        response.status = Cause.HTTP_200
+        response.set_header('Allow', 'GET')
+
+
+class ApiContentUuidBase(object):
+    """Process content based on uuid."""
+
+    def __init__(self, content, category):
+        self._logger = Logger.get_logger(__name__)
+        self._category = category
+        self._content = content
+
+    @Logger.timeit(refresh_oid=True)
+    def on_get(self, request, response, uuid):
+        """Search content based on uuid."""
+
+        self._logger.debug('run get %s', request.uri)
+        local_params = {'uuid': uuid}
+        api = Api(self._category, Api.SEARCH, local_params)
+        Config.load(api)
+        self._content.run()
+        if self._content.collection.empty():
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
+        if Cause.is_ok():
+            response.content_type = ApiContentBase.MEDIA_JSON_API
+            response.body = Generate.resource(self._content.collection, request, uuid, pagination=True)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = ApiContentBase.MEDIA_JSON_API
+            response.body = Generate.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        self._logger.debug('end get %s', request.uri)
+
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response, uuid):  # pylint: disable=unused-argument
+        """Respond with allowed methods."""
+
+        response.status = Cause.HTTP_200
+        response.set_header('Allow', 'GET')
+
+
+class ApiContentUuidFieldBase(object):
+    """Process content based on uuid resource ID and specified field."""
+
+    def __init__(self, content, category):
+        self._logger = Logger.get_logger(__name__)
+        self._category = category
+        self._content = content
+
+    @Logger.timeit(refresh_oid=True)
+    def on_get(self, request, response, uuid, field):
+        """Get defined content field based on uuid."""
+
+        self._logger.debug('run get %s', request.uri)
+        local_params = {'uuid': uuid, 'fields': field}
+        api = Api(self._category, Api.SEARCH, local_params)
+        Config.load(api)
+        self._content.run()
+        if self._content.collection.empty():
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
+        if Cause.is_ok():
+            response.content_type = ApiContentBase.MEDIA_JSON_API
+            response.body = Generate.resource(self._content.collection, request, uuid, field=field, pagination=False)
+            response.status = Cause.http_status()
+        else:
+            response.content_type = ApiContentBase.MEDIA_JSON_API
+            response.body = Generate.error(Cause.json_message())
+            response.status = Cause.http_status()
+
+        Cause.reset()
+        self._logger.debug('end get %s', request.uri)
+
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response, uuid, field):  # pylint: disable=unused-argument
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200

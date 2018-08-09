@@ -1,46 +1,20 @@
 ## WORKING
-
-   - [ ] Fix swagger category Attributes that does not list referecens.
-   - [ ] Fix can API work with category names snippet and snippets?
+   - [ ] Fix duplicated paths in swagger specs. The category is enum and it is really /snippets. But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
+   - [ ] Test if /api/app/v1/group/linux?limit=2&scat=snippets,solutions,references" works.
+   - [ ] Test case that fetches specific field with short uuid/digest. This results multiple hits like /v1/uuid/2/brief so it is a question what is returned.
+   - [ ] Refactor groups to group since it is only one group (API breaking change).
    - [ ] Fix there is a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().
    - [ ] Fix does api fields on_get print the log at the beginngin twice?
-   - [ ] Rename groups to group since it is only one group.
-   - [ ] Add apis like /api/app/v1/group/linux?limit=2&scat=snippets,solutions,references".
-   
-      # Add support to search with uuid also from command line. (done)
-   
-      # Is distinct possible with tags?
-        https://dba.stackexchange.com/questions/81930/how-to-get-all-distinct-words-in-a-column
-   
-      # category=snippet(s),solution(s),resource(s),any
-      
-      # ApiKeywords (done)
-      - snippy/api/app/v1/linux?....
-      - snippy/api/app/v1/linux,git?....
-   
-      # ApiGroups (done)
-      - snippy/api/app/v1/group/linux?sall=git,grep&limit=2&scat=snippets,solutions,references,all"
-      - snippy/api/app/v1/group/linux?limit=0" # Provide statistics about unique groups.
-      
-      # ApiTags (done)
-      - snippy/api/app/v1/tags/linux?limit=2&category=snippets,solutions,references,all"
-      
-      # ApiId (digest: done, uuid: todo)
-      - [ ] Check logs after uuid like: please define keyword, digest or content data as search criteria
-      # ApiIdField
-      - snippy/api/app/v1/id/0101010101"
-      - snippy/api/app/v1/id/0101010101"
-      - snippy/api/app/v1/id/0101010101/brief"
-      - snippy/api/app/v1/id/12cd5827-b6ef-4067-b5ac-3ceac07dde9f"
-      - snippy/api/app/v1/id/12cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief"
+   - [ ] Fix if logs after uuid like: please define keyword, digest or content data as search criteria
+   - [ ] Fix group/tags api inherits from base that has e.g. the post which is not good.
 
 ## PLANNING
+   - [ ] Add support to import and export content in markdown format.
    - [ ] Add code content.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
    - [ ] Add UT tests for class Debug() methods.
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
-   - [ ] Add support to export content to markdown format.
    - [ ] Add changelog to README.
 
 ## FEATURES
@@ -67,6 +41,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties
    - [ ] Fix it seems that python can do like Config.parameternewparameter which adds new parameter in case of typo. Can this be prevented?
    - [ ] Fix printing content after 9 since the numebered items from 10 shift the spacing one more right. How?
    - [ ] Fix why default examples with: import --defaults <all> and snippy search -c 'docker ps' matches 8 when there should be 6 matches?
@@ -179,6 +154,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added new fields api and updated OAS specifications.
    - [x] Added UUID handling into database and for migrated JSON or YAML files.
    - [x] Changed link sort in case of reference content. The links are sorted all but reference content.
    - [x] Added support for references content.

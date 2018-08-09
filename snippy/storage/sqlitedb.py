@@ -212,7 +212,7 @@ class SqliteDb(object):
 
         return tuple(uniques)
 
-    def _count_content(self, category, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):  # pylint: disable=too-many-arguments
+    def _count_content(self, category, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):  # noqa pylint: disable=too-many-arguments
         """Count content based on search criteria.
 
         Args:
@@ -480,7 +480,7 @@ class SqliteDb(object):
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented writing into database')
 
-    def _get_query(self, category, sall, scat, stag, sgrp, uuid, digest, data, query_type):  # pylint: disable=too-many-arguments,too-many-locals,too-many-branches
+    def _get_query(self, category, sall, scat, stag, sgrp, uuid, digest, data, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
         """Get query based on defined type."""
 
         query = ()

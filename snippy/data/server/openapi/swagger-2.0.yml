@@ -4,7 +4,7 @@ info:
   version: "1.0"
   title: Snippy JSON RESTish API
   description: >-
-    Snippy provides command and solution snippet management through JSON
+    Snippy provides command, solution, reference and code manager through JSON
     RESTish API. The API follows subset of JSON API specification v1.0.
   termsOfService: "https://github.com/heilaaks/snippy"
   contact:
@@ -15,75 +15,60 @@ info:
 host: "snippettips.com"
 basePath: "/snippy/api/app/v1"
 paths:
-  /snippets:
+  /{category}:
     post:
       tags:
-        - "snippet"
-      summary: "Add new snippets"
+        - "content"
+      summary: "Add new content"
       description: ""
       consumes:
         - "application/vnd.api+json; charset=UTF-8"
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - name: snippet
-          in: body
-          description: "New snippet to be created"
-          required: true
-          schema:
-            $ref: "#/definitions/RequestCollection"
+        - $ref: '#/parameters-path/category'
+        - $ref: '#/parameters-body/snippets'
       responses:
         201:
-          description: "Snippet created"
-          schema:
-            $ref: "#/definitions/ResponseCollectionPost"
+          $ref: "#/components/responses/201"
         400:
-          description: "Request not syntactically correct"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/400"
         403:
-          description: "Using client generated ID is not supported"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/403"
         500:
-          description: "Internal server error"
+          $ref: "#/components/responses/500"
     get:
       tags:
-        - "snippet"
-      summary: "Search snippets"
+        - "content"
+      summary: "Search content"
       description: ""
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - $ref: '#/parameters/sall'
-        - $ref: '#/parameters/stag'
-        - $ref: '#/parameters/sgrp'
-        - $ref: '#/parameters/digest'
-        - $ref: '#/parameters/data'
-        - $ref: '#/parameters/filter'
-        - $ref: '#/parameters/limit'
-        - $ref: '#/parameters/offset'
-        - $ref: '#/parameters/sort'
-        - $ref: '#/parameters/fields'
+        - $ref: '#/parameters-path/category'
+        - $ref: '#/parameters-query/sall'
+        - $ref: '#/parameters-query/stag'
+        - $ref: '#/parameters-query/sgrp'
+        - $ref: '#/parameters-query/digest'
+        - $ref: '#/parameters-query/data'
+        - $ref: '#/parameters-query/filter'
+        - $ref: '#/parameters-query/limit'
+        - $ref: '#/parameters-query/offset'
+        - $ref: '#/parameters-query/sort'
+        - $ref: '#/parameters-query/fields'
       responses:
         200:
-          description: "OK"
-          schema:
-            $ref: "#/definitions/ResponseCollectionGet"
+          $ref: "#/components/responses/200-collection"
         400:
-          description: "Request not syntactically correct"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/400"
         404:
-          description: "Snippet not found"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/404"
         500:
-          description: "Internal server error"
-  /snippets/{digest}:
+          $ref: "#/components/responses/500"
+  /{category}/{digest}:
     post:
       tags:
-        - "snippet"
+        - "content"
       summary: "Override POST with PUT, PATCH or DELETE"
       description: ""
       consumes:
@@ -91,224 +76,347 @@ paths:
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - name: digest
-          in: path
-          type: string
-          required: true
-          description: "Unique snippet identified by message digest."
-          x-example: 6dc4b06991780012
-        - name: X-HTTP-Method-Override
-          in: header
-          description: "Override POST method."
-          type: string
-          enum:
-            - PUT
-            - PATCH
-            - DELETE
-          required: true
-        - name: snippet
-          in: body
-          description: "New snippet to be created"
-          required: true
-          schema:
-            $ref: "#/definitions/RequestCollection"
+        - $ref: '#/parameters-path/category'
+        - $ref: '#/parameters-path/digest'
+        - $ref: '#/parameters-header/x-override'
+        - $ref: '#/parameters-body/snippets'
       responses:
         200:
-          description: "Snippet updated"
+          description: "Content updated"
           schema:
             $ref: "#/definitions/ResponseResource"
         204:
-          description: "Snippet deleted"
+          description: "Content deleted"
         400:
-          description: "Request not syntactically correct"
-          schema:
-            $ref: '#/definitions/Errors'
-        404:
-          description: "Snippet not found"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/400"
         403:
-          description: "Using client generated ID is not supported"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/403"
+        404:
+          $ref: "#/components/responses/404"
         500:
-          description: "Internal server error"
+          $ref: "#/components/responses/500"
     put:
       tags:
-        - "snippet"
-      summary: "Update defined snippet based on digest"
+        - "content"
+      summary: "Update defined content based on digest"
       description: ""
       consumes:
         - "application/vnd.api+json; charset=UTF-8"
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - name: digest
-          in: path
-          type: string
-          required: true
-          description: "Unique snippet identified by message digest."
-          x-example: 6dc4b06991780012
-        - name: snippet
-          in: body
-          description: "Existing snippet that is updated"
-          required: true
-          schema:
-            $ref: "#/definitions/RequestResource"
+        - $ref: '#/parameters-path/category'
+        - $ref: '#/parameters-path/digest'
+        - $ref: '#/parameters-body/snippet'
       responses:
         200:
-          description: "Snippet updated"
-          schema:
-            $ref: "#/definitions/ResponseResource"
+          $ref: "#/components/responses/200-resource"
         400:
-          description: "Request not syntactically correct"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/400"
         403:
-          description: "Using client generated ID is not supported"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/403"
         404:
-          description: "Snippet not found"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/404"
         500:
-          description: "Internal server error"
+          $ref: "#/components/responses/500"
     patch:
       tags:
-        - "snippet"
-      summary: "Update defined snippet based on digest"
+        - "content"
+      summary: "Update defined content based on digest"
       description: ""
       consumes:
         - "application/vnd.api+json; charset=UTF-8"
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - name: digest
-          in: path
-          type: string
-          required: true
-          description: "Unique snippet identified by message digest."
-          x-example: 6dc4b06991780012
-        - name: snippet
-          in: body
-          description: "Existing snippet that is updated"
-          required: true
-          schema:
-            $ref: "#/definitions/RequestResource"
+        - $ref: '#/parameters-path/category'
+        - $ref: '#/parameters-path/digest'
+        - $ref: '#/parameters-body/snippet'
       responses:
         200:
-          description: "Snippet updated"
-          schema:
-            $ref: "#/definitions/ResponseResource"
+          $ref: "#/components/responses/200-resource"
         400:
-          description: "Request not syntactically correct"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/400"
         403:
-          description: "Using client generated ID is not supported"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/403"
         404:
-          description: "Snippet not found"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/404"
         500:
-          description: "Internal server error"
+          $ref: "#/components/responses/500"
     get:
       tags:
-        - "snippet"
-      summary: "Search defined snippet based on digest"
+        - "content"
+      summary: "Search defined content based on digest"
       description: ""
+      consumes:
+        - "application/vnd.api+json; charset=UTF-8"
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - name: digest
-          in: path
-          type: string
-          required: true
-          description: "Unique snippet identified by message digest."
-          x-example: 44afdd0c59e17159
+        - $ref: '#/parameters-path/category'
+        - $ref: '#/parameters-path/digest'
       responses:
         200:
-          description: OK
-          schema:
-            $ref: "#/definitions/ResponseResource"
+          $ref: "#/components/responses/200-resource"
         400:
-          description: "Request not syntactically correct"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/400"
         404:
-          description: "Snippet not found"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/404"
         500:
-          description: "Internal server error"
+          $ref: "#/components/responses/500"
     delete:
       tags:
-      - "snippet"
-      summary: "Delete defined snippet based on digest"
+      - "content"
+      summary: "Delete defined content based on digest"
       description: ""
       parameters:
-        - name: digest
-          in: path
-          type: string
-          required: true
-          description: "Unique snippet identified by message digest."
-          x-example: a516e2d6f8aa5c6f
+        - $ref: '#/parameters-path/category'
+        - $ref: '#/parameters-path/digest'
       responses:
         204:
-          description: "Snippet deleted"
+          $ref: "#/components/responses/204"
         400:
-          description: "Request not syntactically correct"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/400"
         404:
-          description: "Snippet not found"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/404"
         409:
-          description: "More than one snippet found"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/409"
         500:
-          description: "Internal server error"
-  /snippets/{digest}/{field}:
+          $ref: "#/components/responses/500"
+  /{category}/{digest}/{fields}:
     get:
       tags:
-        - "snippet"
-      summary: "Search defined snippet based on digest"
+        - "content"
+      summary: "Search defined content based on digest"
       description: ""
       produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
-        - name: digest
-          in: path
-          type: string
-          required: true
-          description: "Unique snippet identified by message digest."
-          x-example: 44afdd0c59e17159
-        - name: field
-          in: path
-          type: string
-          enum: [data, brief, group, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
-          required: true
-          description: "One of the resource field attributes."
+        - $ref: '#/parameters-path/category'
+        - $ref: '#/parameters-path/digest'
+        - $ref: '#/parameters-path/fields'
       responses:
         200:
-          description: OK
-          schema:
-            $ref: "#/definitions/ResponseResource"
+          $ref: "#/components/responses/200-resource"
         400:
-          description: "Request not syntactically correct"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/400"
         404:
-          description: "Snippet not found"
-          schema:
-            $ref: '#/definitions/Errors'
+          $ref: "#/components/responses/404"
         500:
-          description: "Internal server error"
+          $ref: "#/components/responses/500"
+  /{keywords}:
+    get:
+      tags:
+        - "keywords"
+      summary: "Search content based on given keywords"
+      description: ""
+      consumes:
+        - "application/vnd.api+json; charset=UTF-8"
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - $ref: '#/parameters-path/keywords'
+        - $ref: '#/parameters-query/scat'
+        - $ref: '#/parameters-query/stag'
+        - $ref: '#/parameters-query/sgrp'
+        - $ref: '#/parameters-query/digest'
+        - $ref: '#/parameters-query/data'
+        - $ref: '#/parameters-query/filter'
+        - $ref: '#/parameters-query/limit'
+        - $ref: '#/parameters-query/offset'
+        - $ref: '#/parameters-query/sort'
+        - $ref: '#/parameters-query/fields'
+      responses:
+        200:
+          $ref: "#/components/responses/200-collection"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /group/{groups}:
+    get:
+      tags:
+        - "group"
+      summary: "Search content from defined group or groups"
+      description: ""
+      consumes:
+        - "application/vnd.api+json; charset=UTF-8"
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - $ref: '#/parameters-path/groups'
+        - $ref: '#/parameters-query/sall'
+        - $ref: '#/parameters-query/scat'
+        - $ref: '#/parameters-query/stag'
+        - $ref: '#/parameters-query/digest'
+        - $ref: '#/parameters-query/data'
+        - $ref: '#/parameters-query/filter'
+        - $ref: '#/parameters-query/limit'
+        - $ref: '#/parameters-query/offset'
+        - $ref: '#/parameters-query/sort'
+        - $ref: '#/parameters-query/fields'
+      responses:
+        200:
+          $ref: "#/components/responses/200-collection"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /tags/{tags}:
+    get:
+      tags:
+        - "tags"
+      summary: "Search content with defined tags"
+      description: ""
+      consumes:
+        - "application/vnd.api+json; charset=UTF-8"
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - $ref: '#/parameters-path/tags'
+        - $ref: '#/parameters-query/sall'
+        - $ref: '#/parameters-query/scat'
+        - $ref: '#/parameters-query/sgrp'
+        - $ref: '#/parameters-query/digest'
+        - $ref: '#/parameters-query/data'
+        - $ref: '#/parameters-query/filter'
+        - $ref: '#/parameters-query/limit'
+        - $ref: '#/parameters-query/offset'
+        - $ref: '#/parameters-query/sort'
+        - $ref: '#/parameters-query/fields'
+      responses:
+        200:
+          $ref: "#/components/responses/200-collection"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /uuid/{uuid}:
+    get:
+      tags:
+        - "uuid"
+      summary: "Search content with defined uuid"
+      description: ""
+      consumes:
+        - "application/vnd.api+json; charset=UTF-8"
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - $ref: '#/parameters-path/uuid'
+      responses:
+        200:
+          $ref: "#/components/responses/200-resource"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /uuid/{uuid}{fields}:
+    get:
+      tags:
+        - "uuid"
+      summary: "Search content with defined uuid"
+      description: ""
+      consumes:
+        - "application/vnd.api+json; charset=UTF-8"
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - $ref: '#/parameters-path/uuid'
+        - $ref: '#/parameters-path/fields'
+      responses:
+        200:
+          $ref: "#/components/responses/200-resource"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /digest/{digest}:
+    get:
+      tags:
+        - "digest"
+      summary: "Search content with defined digest"
+      description: ""
+      consumes:
+        - "application/vnd.api+json; charset=UTF-8"
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - $ref: '#/parameters-path/digest'
+      responses:
+        200:
+          $ref: "#/components/responses/200-resource"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+  /digest/{digest}{fields}:
+    get:
+      tags:
+        - "digest"
+      summary: "Search content with defined digest"
+      description: ""
+      consumes:
+        - "application/vnd.api+json; charset=UTF-8"
+      produces:
+        - "application/vnd.api+json; charset=UTF-8"
+      parameters:
+        - $ref: '#/parameters-path/digest'
+        - $ref: '#/parameters-path/fields'
+      responses:
+        200:
+          $ref: "#/components/responses/200-resource"
+        400:
+          $ref: "#/components/responses/400"
+        404:
+          $ref: "#/components/responses/404"
+        500:
+          $ref: "#/components/responses/500"
+components:
+  responses:
+    200-resource:
+      description: OK
+      schema:
+        $ref: "#/definitions/ResponseResource"
+    200-collection:
+      description: OK
+      schema:
+        $ref: "#/definitions/ResponseCollectionGet"
+    201:
+      description: "Content created"
+      schema:
+        $ref: "#/definitions/ResponseCollectionPost"
+    204:
+      description: "Content deleted"
+    400:
+      description: "Request not syntactically correct"
+      schema:
+        $ref: '#/definitions/Errors'
+    403:
+      description: "Using client generated ID is not supported"
+      schema:
+        $ref: '#/definitions/Errors'
+    404:
+      description: "Content not found"
+      schema:
+        $ref: '#/definitions/Errors'
+    409:
+      description: "More than one content found"
+      schema:
+        $ref: '#/definitions/Errors'
+    500:
+      description: "Internal server error"
 definitions:
   RequestResource:
     type: object
@@ -371,9 +479,7 @@ definitions:
     properties:
       type:
         type: string
-        enum:
-          - snippet
-          - solution
+        enum: [snippet, solution, reference]
       attributes:
         $ref: '#/definitions/Attributes'
     required:
@@ -404,9 +510,7 @@ definitions:
     properties:
       type:
         type: string
-        enum:
-          - snippet
-          - solution
+        enum: [snippet, solution, reference]
       id:
         type: string
       attributes:
@@ -468,9 +572,7 @@ definitions:
         description: "Optional list of refrence links."
       category:
         type: string
-        enum:
-          - snippet
-          - solution
+        enum: [snippet, solution, reference]
         description: "Automatically assigned content category."
       name:
         type: string
@@ -485,7 +587,7 @@ definitions:
         description: "Optional list of services and versions related to the content."
       source:
         type: string
-        description: "Optional external source for the snippet."
+        description: "Optional external source for the content."
       uuid:
         type: string
         description: "Automatically assigned UUID for the content."
@@ -549,7 +651,99 @@ definitions:
       - statusString
       - module
       - title
-parameters:
+parameters-path:
+  category:
+    name: category
+    type: string
+    in: path
+    required: true
+    description: "Content category."
+    enum: [snippets, solutions, references]
+    x-example:
+      - "snippets"
+  uuid:
+    name: uuid
+    type: string
+    in: path
+    required: true
+    description: "Uuid that defines the content."
+    x-example:
+      - "27cd5827-b6ef-4067-b5ac-3ceac07dde9f"
+      - "27cd5827-b6ef"
+  digest:
+    name: digest
+    type: string
+    in: path
+    required: true
+    description: "Unique content identified by a message digest."
+    x-example:
+      - "54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319"
+      - "54e41e9b52a02b63"
+  fields:
+    name: fields
+    type: string
+    in: path
+    required: true
+    description: "Field or fields that are returned."
+    enum: [data, brief, group, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
+    x-example:
+      - "brief"
+      - "brief,tags"
+      - "brief,group,tags"
+  groups:
+    name: groups
+    type: string
+    in: path
+    required: true
+    description: "Group or groups where the search is applied."
+    x-example:
+      - "docker"
+      - "docker,python"
+      - "docker,python,security"
+  tags:
+    name: tags
+    type: string
+    in: path
+    required: true
+    description: "Tag or tags where the search is applied."
+    x-example:
+      - "docker"
+      - "docker,mody"
+      - "docker,mody,kubernetes"
+  keywords:
+    name: keywords
+    type: string
+    in: path
+    required: true
+    description: "Keywords used to search all content."
+    x-example:
+      - "docker"
+      - "docker,mody"
+      - "docker,mody,kubernetes"
+parameters-header:
+  x-override:
+    name: X-HTTP-Method-Override
+    type: string
+    in: header
+    description: "Override POST method."
+    enum: [PUT, PATCH, DELETE]
+    required: true
+parameters-body:
+  snippet:
+    name: snippet
+    in: body
+    description: "Existing content that is updated"
+    required: true
+    schema:
+      $ref: "#/definitions/RequestResource"
+  snippets:
+    name: snippets
+    in: body
+    description: "New content to be created"
+    required: true
+    schema:
+      $ref: "#/definitions/RequestCollection"
+parameters-query:
   sall:
     name: sall
     type: array

@@ -40,8 +40,8 @@ from snippy.server.rest.api_fields import ApiDigestField
 from snippy.server.rest.api_fields import ApiGroups
 from snippy.server.rest.api_fields import ApiKeywords
 from snippy.server.rest.api_fields import ApiTags
-#from snippy.server.rest.api_fields import ApiUuid
-#from snippy.server.rest.api_fields import ApiUuidField
+from snippy.server.rest.api_fields import ApiUuid
+from snippy.server.rest.api_fields import ApiUuidField
 from snippy.server.rest.api_hello import ApiHello
 from snippy.server.rest.api_references import ApiReferences
 from snippy.server.rest.api_references import ApiReferencesDigest
@@ -105,7 +105,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'tags/{stag}'), ApiTags(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'digest/{digest}'), ApiDigest(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'digest/{digest}/{field}'), ApiDigestField(fields))
-#        self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}'), ApiDigest(fields))
-#        self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}/{field}'), ApiUuidField(fields))
+        self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}'), ApiUuid(fields))
+        self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}/{field}'), ApiUuidField(fields))
         self.api.add_route(urljoin(Config.base_path_app, '{sall}'), ApiKeywords(fields))
         SnippyServer(self.api, options).run()

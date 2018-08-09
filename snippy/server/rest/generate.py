@@ -41,7 +41,7 @@ class Generate(object):
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def resource(cls, collection, request, digest, field=Const.EMPTY, pagination=False):
+    def resource(cls, collection, request, unique_id, field=Const.EMPTY, pagination=False):
         """Generate JSON API v1.0 resource."""
 
         data = {
@@ -49,12 +49,23 @@ class Generate(object):
             'links': {}
         }
         for resource in collection.resources():
-            # Digest must be always the 16 octet digest, not the one provided
-            # by user in URL. User may have used digest with any length.
+            # Digest or uuid is used in the response self link based on user
+            # selected. It is assumed that if user selected for example uuid
+            # for the resource request, he/she wants to continue to operate
+            # content based on the selected identity.
+            #
+            # If the request was received through content category API that
+            # supports only digest, the 16 octet digest is used always in
+            # the response.
             uri = list(urlparse(request.uri)[:])
-            uri[2] = uri[2][:uri[2].index(digest)]  # Remove all after digest.
+            uri[2] = uri[2][:uri[2].index(unique_id)]  # Remove all after digest or uuid.
             uri = urlunparse(uri)
-            uri = urljoin(uri, resource.digest[:16])
+            if 'digest' in uri:
+                uri = urljoin(uri, resource.digest[:16])
+            elif 'uuid' in uri:
+                uri = urljoin(uri, resource.uuid)
+            else:
+                uri = urljoin(uri, resource.digest[:16])
             if field:
                 uri = urljoin(uri + '/', field)
             data['links'] = {'self': uri}

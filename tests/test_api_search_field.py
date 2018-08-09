@@ -319,7 +319,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/digest/1f9d949600573',
             headers={'accept': 'application/vnd.api+json'})
-        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -346,6 +345,155 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/digest/01010101',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_uuid_001(self, server):
+        """Get specific content based on uuid.
+
+        Call GET /v1/uuid/1f9d949600573 to get specific content based on uuid.
+        The self link must be with the full length UUID because it is assumed
+        that since user requested with UUID, he/she wants to operate content
+        with selected identity.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '758'
+        }
+        result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 20,
+                'offset': 0,
+                'total': 1
+            },
+            'data': {
+                'type': 'reference',
+                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+            }
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
+    def test_api_search_uuid_002(self, server):
+        """Try to get specific content based on uuid.
+
+        Try to call GET /v1/uuid/01010101 with a uuid that is not found.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '334'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/uuid/01010101',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_uuid_003(self, server):
+        """Get specific content field based on uuid.
+
+        Call GET /v1/uuid/1f9d949600573/brief to get specific content field.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '272'
+        }
+        result_json = {
+            'data': {
+                'type': 'reference',
+                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'attributes': {field: Reference.DEFAULTS[Reference.PYTEST][field] for field in ['brief']}
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
+            }
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_uuid_004(self, server):
+        """Get specific content field based on uuid.
+
+        Call GET /v1/uuid/1f9d949600573/brief,tags to get specific content
+        fields.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '315'
+        }
+        result_json = {
+            'data': {
+                'type': 'reference',
+                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'attributes': {field: Reference.DEFAULTS[Reference.PYTEST][field] for field in ['brief', 'tags']}
+            },
+            'links': {
+                'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief,tags'
+            }
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief,tags',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
+    def test_api_search_uuid_005(self, server):
+        """Get specific content field based on uuid.
+
+        Try to call GET /v1/uuid/12345678/brief to get specific content field
+        with unknown uuid.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '334'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/uuid/12345678-b6ef-4067-b5ac-3ceac07dde9f/brief',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)

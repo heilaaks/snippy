@@ -44,7 +44,7 @@ class Storage(object):
 
         return collection
 
-    def search(self, category, sall=None, scat=None, stag=None, sgrp=None, uuid=None, digest=None, data=None):  # pylint: disable=too-many-arguments
+    def search(self, category, sall=None, scat=None, stag=None, sgrp=None, uuid=None, digest=None, data=None):  # noqa pylint: disable=too-many-arguments
         """Search content.
 
         Args:

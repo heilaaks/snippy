@@ -1,4 +1,4 @@
-swagger: "2.0"
+swagger: '2.0'
 
 info:
   version: "1.0"
@@ -385,37 +385,37 @@ paths:
           $ref: "#/components/responses/500"
 components:
   responses:
-    200-resource:
+    "200-resource":
       description: OK
       schema:
         $ref: "#/definitions/ResponseResource"
-    200-collection:
+    "200-collection":
       description: OK
       schema:
         $ref: "#/definitions/ResponseCollectionGet"
-    201:
+    "201":
       description: "Content created"
       schema:
         $ref: "#/definitions/ResponseCollectionPost"
-    204:
+    "204":
       description: "Content deleted"
-    400:
+    "400":
       description: "Request not syntactically correct"
       schema:
         $ref: '#/definitions/Errors'
-    403:
+    "403":
       description: "Using client generated ID is not supported"
       schema:
         $ref: '#/definitions/Errors'
-    404:
+    "404":
       description: "Content not found"
       schema:
         $ref: '#/definitions/Errors'
-    409:
+    "409":
       description: "More than one content found"
       schema:
         $ref: '#/definitions/Errors'
-    500:
+    "500":
       description: "Internal server error"
 definitions:
   RequestResource:

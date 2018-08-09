@@ -1,0 +1,877 @@
+openapi: 3.0.0
+servers:
+  - url: /snippy/api/app/v1
+info:
+  version: "1.0-oas3"
+  title: Snippy JSON RESTish API
+  description: >-
+    Snippy provides command, solution, reference and code manager through JSON
+    RESTish API. The API follows subset of JSON API specification v1.0.
+  termsOfService: 'https://github.com/heilaaks/snippy'
+  contact:
+    email: laaksonen.heikki.j@gmail.com
+  license:
+    name: GNU AGPLv3 or later
+    url: 'https://github.com/heilaaks/snippy/blob/master/LICENSE'
+paths:
+  '/{category}':
+    post:
+      tags:
+        - content
+      summary: Add new content
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/category'
+      responses:
+        '201':
+          $ref: '#/components/responses/201'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        $ref: '#/components/requestBodies/RequestCollection'
+    get:
+      tags:
+        - content
+      summary: Search content
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/category'
+        - $ref: '#/components/parameters/sall'
+        - $ref: '#/components/parameters/stag'
+        - $ref: '#/components/parameters/sgrp'
+        - $ref: '#/components/parameters/digest-query'
+        - $ref: '#/components/parameters/data'
+        - $ref: '#/components/parameters/filter'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-collection'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/{category}/{digest}':
+    post:
+      tags:
+        - content
+      summary: 'Override POST with PUT, PATCH or DELETE'
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/category'
+        - $ref: '#/components/parameters/digest'
+        - $ref: '#/components/parameters/x-override'
+      responses:
+        '200':
+          description: Content updated
+          content:
+            application/vnd.api+json; charset=UTF-8:
+              schema:
+                $ref: '#/components/schemas/ResponseResource'
+        '204':
+          description: Content deleted
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        $ref: '#/components/requestBodies/RequestCollection'
+    put:
+      tags:
+        - content
+      summary: Update defined content based on digest
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/category'
+        - $ref: '#/components/parameters/digest'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-resource'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        $ref: '#/components/requestBodies/RequestResource'
+    patch:
+      tags:
+        - content
+      summary: Update defined content based on digest
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/category'
+        - $ref: '#/components/parameters/digest'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-resource'
+        '400':
+          $ref: '#/components/responses/400'
+        '403':
+          $ref: '#/components/responses/403'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+      requestBody:
+        $ref: '#/components/requestBodies/RequestResource'
+    get:
+      tags:
+        - content
+      summary: Search defined content based on digest
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/category'
+        - $ref: '#/components/parameters/digest'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-resource'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - content
+      summary: Delete defined content based on digest
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/category'
+        - $ref: '#/components/parameters/digest'
+      responses:
+        '204':
+          $ref: '#/components/responses/204'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '409':
+          $ref: '#/components/responses/409'
+        '500':
+          $ref: '#/components/responses/500'
+  '/{category}/{digest}/{fields}':
+    get:
+      tags:
+        - content
+      summary: Search defined content based on digest
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/category'
+        - $ref: '#/components/parameters/digest'
+        - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-resource'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/{keywords}':
+    get:
+      tags:
+        - keywords
+      summary: Search content based on given keywords
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/keywords'
+        - $ref: '#/components/parameters/scat'
+        - $ref: '#/components/parameters/stag'
+        - $ref: '#/components/parameters/sgrp'
+        - $ref: '#/components/parameters/digest-query'
+        - $ref: '#/components/parameters/data'
+        - $ref: '#/components/parameters/filter'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-collection'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/group/{groups}':
+    get:
+      tags:
+        - group
+      summary: Search content from defined group or groups
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/groups'
+        - $ref: '#/components/parameters/sall'
+        - $ref: '#/components/parameters/scat'
+        - $ref: '#/components/parameters/stag'
+        - $ref: '#/components/parameters/digest-query'
+        - $ref: '#/components/parameters/data'
+        - $ref: '#/components/parameters/filter'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-collection'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/tags/{tags}':
+    get:
+      tags:
+        - tags
+      summary: Search content with defined tags
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/tags'
+        - $ref: '#/components/parameters/sall'
+        - $ref: '#/components/parameters/scat'
+        - $ref: '#/components/parameters/sgrp'
+        - $ref: '#/components/parameters/digest-query'
+        - $ref: '#/components/parameters/data'
+        - $ref: '#/components/parameters/filter'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/offset'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-collection'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/uuid/{uuid}':
+    get:
+      tags:
+        - uuid
+      summary: Search content with defined uuid
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/uuid'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-resource'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/uuid/{uuid}{fields}':
+    get:
+      tags:
+        - uuid
+      summary: Search content with defined uuid
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/uuid'
+        - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-resource'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/digest/{digest}':
+    get:
+      tags:
+        - digest
+      summary: Search content with defined digest
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/digest'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-resource'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+  '/digest/{digest}{fields}':
+    get:
+      tags:
+        - digest
+      summary: Search content with defined digest
+      description: ''
+      parameters:
+        - $ref: '#/components/parameters/digest'
+        - $ref: '#/components/parameters/fields'
+      responses:
+        '200':
+          $ref: '#/components/responses/200-resource'
+        '400':
+          $ref: '#/components/responses/400'
+        '404':
+          $ref: '#/components/responses/404'
+        '500':
+          $ref: '#/components/responses/500'
+components:
+  schemas:
+    RequestResource:
+      type: object
+      properties:
+        links:
+          $ref: '#/components/schemas/Links'
+        data:
+          $ref: '#/components/schemas/RequestData'
+      required:
+        - data
+    ResponseResource:
+      type: object
+      properties:
+        data:
+          $ref: '#/components/schemas/ResponseData'
+        links:
+          $ref: '#/components/schemas/Links'
+      required:
+        - data
+    RequestCollection:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestData'
+      required:
+        - data
+    ResponseCollectionPost:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseData'
+      required:
+        - data
+    ResponseCollectionGet:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/ResponseMeta'
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResponseData'
+        links:
+          $ref: '#/components/schemas/ResponseLinks'
+      required:
+        - meta
+        - data
+    Links:
+      type: object
+      properties:
+        self:
+          type: string
+          description: Link pointing to resource.
+    RequestData:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - snippet
+            - solution
+            - reference
+        attributes:
+          $ref: '#/components/schemas/Attributes'
+      required:
+        - type
+        - attributes
+    ResponseMeta:
+      type: object
+      properties:
+        count:
+          type: string
+          description: Number of content items in data list.
+        limit:
+          type: string
+          description: The search limit used in request.
+        offset:
+          type: string
+          description: The search offset used in request.
+        total:
+          type: string
+          description: Total number of search results without limit being applied.
+      required:
+        - count
+        - limit
+        - offset
+        - total
+    ResponseData:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - snippet
+            - solution
+            - reference
+        id:
+          type: string
+        attributes:
+          $ref: '#/components/schemas/Attributes'
+      required:
+        - type
+        - attributes
+    ResponseLinks:
+      type: object
+      properties:
+        self:
+          type: string
+          format: uri
+          description: Pagination link to this page.
+        first:
+          type: string
+          format: uri
+          description: Pagination link to first page.
+        next:
+          type: string
+          format: uri
+          description: Pagination link to next page.
+        prev:
+          type: string
+          format: uri
+          description: Pagination link to previous page.
+        last:
+          type: string
+          format: uri
+          description: Pagination link to last page.
+      required:
+        - self
+        - first
+        - last
+    Attributes:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            type: string
+          description: Mandatory content data in list context with one line per element.
+        brief:
+          type: string
+          description: Optional brief description of the content.
+        group:
+          type: string
+          description: Optional group to which the content belongs.
+          default: default
+        tags:
+          type: array
+          items:
+            type: string
+          description: Optional list of tags.
+        links:
+          type: array
+          items:
+            type: string
+          description: Optional list of refrence links.
+        category:
+          type: string
+          enum:
+            - snippet
+            - solution
+            - reference
+          description: Automatically assigned content category.
+        name:
+          type: string
+          description: Optional name for the content.
+        filename:
+          type: string
+          description: >-
+            Optional filename that that defines automatically used filename when
+            content is exported.
+        versions:
+          type: string
+          description: Optional list of services and versions related to the content.
+        source:
+          type: string
+          description: Optional external source for the content.
+        uuid:
+          type: string
+          description: Automatically assigned UUID for the content.
+        created:
+          type: string
+          description: >-
+            Optional UTC timestamp for creation time in ISO 8601 format that is
+            automatically assigned.
+        updated:
+          type: string
+          description: >-
+            Optional UTC timestamp for the last update time in ISO 8601 format
+            that is automatically assigned.
+        digest:
+          type: string
+          description: >-
+            Automatically assigned message digest that uniquely identifies the
+            content.
+      required:
+        - data
+    Errors:
+      type: object
+      properties:
+        meta:
+          $ref: '#/components/schemas/Meta'
+        errors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Error'
+      required:
+        - meta
+        - errors
+    Meta:
+      type: object
+      properties:
+        version:
+          type: string
+          description: Server version.
+        homepage:
+          type: string
+          description: Server homepage URL.
+      required:
+        - version
+        - homepage
+    Error:
+      type: object
+      properties:
+        status:
+          type: string
+          description: HTTP status code.
+        statusString:
+          type: string
+          description: HTTP status as text string.
+        module:
+          type: string
+          description: Location of error.
+        title:
+          type: string
+          description: Message describing the error.
+      required:
+        - status
+        - statusString
+        - module
+        - title
+  responses:
+    '201':
+      description: Content created
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ResponseCollectionPost'
+    '204':
+      description: Content deleted
+    '400':
+      description: Request not syntactically correct
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '403':
+      description: Using client generated ID is not supported
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '404':
+      description: Content not found
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '409':
+      description: More than one content found
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/Errors'
+    '500':
+      description: Internal server error
+    200-resource:
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ResponseResource'
+    200-collection:
+      description: OK
+      content:
+        '*/*':
+          schema:
+            $ref: '#/components/schemas/ResponseCollectionGet'
+  parameters:
+    category:
+      name: category
+      in: path
+      required: true
+      description: Content category.
+      x-example:
+        - snippets
+      schema:
+        type: string
+        enum:
+          - snippets
+          - solutions
+          - references
+    uuid:
+      name: uuid
+      in: path
+      required: true
+      description: Uuid that defines the content.
+      x-example:
+        - 27cd5827-b6ef-4067-b5ac-3ceac07dde9f
+        - 27cd5827-b6ef
+      schema:
+        type: string
+    digest:
+      name: digest
+      in: path
+      required: true
+      description: Unique content identified by a message digest.
+      x-example:
+        - 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
+        - 54e41e9b52a02b63
+      schema:
+        type: string
+    fields:
+      name: fields
+      in: path
+      required: true
+      description: Field or fields that are returned.
+      x-example:
+        - brief
+        - 'brief,tags'
+        - 'brief,group,tags'
+      schema:
+        type: string
+        enum:
+          - data
+          - brief
+          - group
+          - tags
+          - links
+          - category
+          - name
+          - filename
+          - versions
+          - source
+          - uuid
+          - created
+          - updated
+          - digest
+    groups:
+      name: groups
+      in: path
+      required: true
+      description: Group or groups where the search is applied.
+      x-example:
+        - docker
+        - 'docker,python'
+        - 'docker,python,security'
+      schema:
+        type: string
+    tags:
+      name: tags
+      in: path
+      required: true
+      description: Tag or tags where the search is applied.
+      x-example:
+        - docker
+        - 'docker,mody'
+        - 'docker,mody,kubernetes'
+      schema:
+        type: string
+    keywords:
+      name: keywords
+      in: path
+      required: true
+      description: Keywords used to search all content.
+      x-example:
+        - docker
+        - 'docker,mody'
+        - 'docker,mody,kubernetes'
+      schema:
+        type: string
+    x-override:
+      name: X-HTTP-Method-Override
+      in: header
+      description: Override POST method.
+      required: true
+      schema:
+        type: string
+        enum:
+          - PUT
+          - PATCH
+          - DELETE
+    sall:
+      name: sall
+      in: query
+      required: false
+      description: Search keywords from all fields.
+      schema:
+        type: array
+        items:
+          type: string
+    scat:
+      name: scat
+      in: query
+      required: false
+      description: Search keywords from listed categories.
+      schema:
+        type: array
+        items:
+          type: string
+        enum:
+          - snippet
+          - solution
+          - reference
+        default:
+          - snippet
+          - solution
+          - reference
+    stag:
+      name: stag
+      in: query
+      required: false
+      description: Search keywords only from tag field.
+      schema:
+        type: array
+        items:
+          type: string
+    sgrp:
+      name: sgrp
+      in: query
+      required: false
+      description: Search keywords only from listed groups.
+      schema:
+        type: array
+        items:
+          type: string
+    digest-query:
+      name: digest
+      in: query
+      required: false
+      description: Search only based on message digest field.
+      schema:
+        type: string
+    data:
+      name: data
+      in: query
+      required: false
+      description: Search only from content data.
+      schema:
+        type: string
+    filter:
+      name: filter
+      in: query
+      required: false
+      description: Filter search result with provided regexp.
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      required: false
+      description: Limit query result list.
+      schema:
+        type: string
+        default: 20
+    offset:
+      name: offset
+      in: query
+      required: false
+      description: Offset from the beginning of search results.
+      schema:
+        type: string
+        default: 0
+    sort:
+      name: sort
+      in: query
+      required: false
+      description: Sort based on defined field.
+      schema:
+        type: string
+        enum:
+          - data
+          - brief
+          - group
+          - tags
+          - links
+          - category
+          - name
+          - filename
+          - versions
+          - source
+          - uuid
+          - created
+          - updated
+          - digest
+        default: brief
+    fields-query:
+      name: fields
+      in: query
+      required: false
+      description: Limit fields that are returned in result list.
+      schema:
+        type: array
+        items:
+          type: string
+          enum:
+            - data
+            - brief
+            - group
+            - tags
+            - links
+            - category
+            - name
+            - filename
+            - versions
+            - source
+            - uuid
+            - created
+            - updated
+            - digest
+  requestBodies:
+    RequestCollection:
+      content:
+        application/vnd.api+json; charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/RequestCollection'
+      description: New content to be created
+      required: true
+    RequestResource:
+      content:
+        application/vnd.api+json; charset=UTF-8:
+          schema:
+            $ref: '#/components/schemas/RequestResource'
+      description: Existing content that is updated
+      required: true

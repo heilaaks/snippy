@@ -1,5 +1,5 @@
 ## WORKING
-   - [ ] Fix duplicated paths in swagger specs. The category is enum and it is really /snippets. But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
+   - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
    - [ ] Test if /api/app/v1/group/linux?limit=2&scat=snippets,solutions,references" works.
    - [ ] Test case that fetches specific field with short uuid/digest. This results multiple hits like /v1/uuid/2/brief so it is a question what is returned.
    - [ ] Refactor groups to group since it is only one group (API breaking change).
@@ -148,6 +148,9 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## FOLLOW EXTERNAL BUGS/ISSUES
+   - [ ] The openapi2jsonschema does not work with Python 3. // https://github.com/garethr/openapi2jsonschema/issues/6.
+   - [ ] The openapi2jsonschema does not work with OAS 3.0. // https://github.com/garethr/openapi2jsonschema/issues/6.
+   - [ ] OAS3.0 to JSON schema. // https://github.com/OAI/OpenAPI-Specification/issues/1032
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
    - [ ] Python logging is not following ISO8601 format and it cannot have timezone. Workaround done for Logger().
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313

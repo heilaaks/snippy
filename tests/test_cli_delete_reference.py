@@ -84,7 +84,6 @@ class TestCliDeleteReference(object):
         content_read = {
             Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG]
         }
-        print(Database.print_contents())
         cause = snippy.run(['snippy', 'delete', '-u', '16cd5827'])
         assert cause == Cause.ALL_OK
         assert Database.get_references().size() == 1

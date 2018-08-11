@@ -40,6 +40,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     IMPORT = 'import'
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
+    CATEGORIES = ('snippet', 'solution', 'reference')
     ATTRIBUTES = ('data', 'brief', 'group', 'tags', 'links', 'category', 'name',
                   'filename', 'versions', 'source', 'uuid', 'created', 'updated',
                   'digest', 'key')
@@ -285,9 +286,24 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def scat(self, value):
         """Store 'search categories' keywords.
 
-        The keywords are stored in tuple with one keywords per element."""
+        The keywords are stored in tuple with one keywords per element.
 
-        self._scat = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
+        If all provided search categories are not correct, an error is set.
+        This is simple error handling that fails the operation instead of
+        trying to recover it.
+
+        An empty value is set to scat in case of failure because it minimizes
+        the search results in error scenario. If all categories would be
+        searched, it could lead to large set of results that are searched for
+        no reason in case of failure.
+        """
+
+        scat = Parser.search_keywords(value)
+        if not set(scat).issubset(self.CATEGORIES):
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'search categories: {} : are not a subset of: {}'.format(value, self.CATEGORIES))
+            scat = ()
+
+        self._scat = scat  # pylint: disable=attribute-defined-outside-init
 
     @property
     def stag(self):

@@ -888,6 +888,21 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        I/O operation on closed file. Why? The case seems to work so this is
        caplog or capsys issue? Investigate more.
 
+    ERROR HANDLING
+
+    1. Fail opereration from the first failure
+
+       The operations will flow from the beginning to end and there are no
+       intermediate exists or shortcust. But the error handling must be made
+       simple in order to keep the implemenrtation size in control. The target
+       is not to try to recover all possible errors but fail the operation as
+       soon as the first failure is detected by setting an error cause.
+
+       For example if the search category (scat) parameter is failty for one
+       category, it will fail the whole setting of internal configuration for
+       scat configuration. This for example results empty tuple for the scat
+       that minimizes the search results.
+
     TIME STAMPS
 
     1. Rules to update time stamps
@@ -1259,7 +1274,8 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
            GET /snippy/api/app/v1/group/docker?scat=snippet&uuid=1
 
-         In the above case, the result must be multiple contents.
+         In the above case, the result can be collection of resources if there are
+         resources in snippet category which uuid start with 1.
 
     CLASS HIERARCHY
 

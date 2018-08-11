@@ -162,11 +162,16 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '335'
+            'content-length': '546'
         }
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': "search categories: ['snippets', 'solutions'] : are not a subset of: ('snippet', 'solution', 'reference')"
+            }, {
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
@@ -179,7 +184,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             query_string='sall=test&limit=20&sort=brief&scat=snippets,solutions')
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
-        assert result.status == falcon.HTTP_404
+        assert result.status == falcon.HTTP_400
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_group_005(self, server):
@@ -267,6 +272,41 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
+    def test_api_search_group_008(self, server):
+        """Get specific content based on group field.
+
+        Try to call GET /v1/groups/docker to get all content from the docker
+        group. In this case one of the scat search keywords defining the
+        category is not correct and error must be returned.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '558'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '400',
+                'statusString': '400 Bad Request',
+                'module': 'snippy.testing.testing:123',
+                'title': "search categories: ['snippet', 'solutions', 'reference'] : are not a subset of: ('snippet', 'solution', 'reference')"
+            }, {
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/group/docker',
+            headers={'accept': 'application/vnd.api+json'},
+            query_string='scat=snippet,solutions,reference&uuid=1')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_400
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_tags_001(self, server):

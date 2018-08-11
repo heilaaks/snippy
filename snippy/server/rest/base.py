@@ -142,15 +142,21 @@ class ApiContentDigestBase(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest):
-        """Search content based on digest."""
+        """Search content based on digest.
+
+        If the given uuid matches to multiple resources or no resources at
+        all, an error is returned. This conflicts against the JSON API v1.0
+        specifications. See the Snippy documentation for more information.
+        """
 
         self._logger.debug('run get %s', request.uri)
         local_params = {'digest': digest}
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if self._content.collection.empty():
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
+        if self._content.collection.size() != 1:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'content digest: %s was not unique and matched to: %d resources' %
+                       (digest, self._content.collection.size()))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
             response.body = Generate.resource(self._content.collection, request, digest, pagination=True)
@@ -232,15 +238,21 @@ class ApiContentDigestFieldBase(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest, field):
-        """Get defined content field based on digest."""
+        """Get defined content field based on digest.
+
+        If the given uuid matches to multiple resources or no resources at
+        all, an error is returned. This conflicts against the JSON API v1.0
+        specifications. See the Snippy documentation for more information.
+        """
 
         self._logger.debug('run get %s', request.uri)
         local_params = {'digest': digest, 'fields': field}
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if self._content.collection.empty():
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
+        if self._content.collection.size() != 1:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'content digest: %s was not unique and matched to: %d resources' %
+                       (digest, self._content.collection.size()))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
             response.body = Generate.resource(self._content.collection, request, digest, field=field, pagination=False)
@@ -272,15 +284,21 @@ class ApiContentUuidBase(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, uuid):
-        """Search content based on uuid."""
+        """Search content based on uuid.
+
+        If the given uuid matches to multiple resources or no resources at
+        all, an error is returned. This conflicts against the JSON API v1.0
+        specifications. See the Snippy documentation for more information.
+        """
 
         self._logger.debug('run get %s', request.uri)
         local_params = {'uuid': uuid}
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if self._content.collection.empty():
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
+        if self._content.collection.size() != 1:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'content uuid: %s was not unique and matched to: %d resources' %
+                       (uuid, self._content.collection.size()))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
             response.body = Generate.resource(self._content.collection, request, uuid, pagination=True)
@@ -312,15 +330,21 @@ class ApiContentUuidFieldBase(object):
 
     @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, uuid, field):
-        """Get defined content field based on uuid."""
+        """Get defined content field based on uuid.
+
+        If the given uuid matches to multiple resources or no resources at
+        all, an error is returned. This conflicts against the JSON API v1.0
+        specifications. See the Snippy documentation for more information.
+        """
 
         self._logger.debug('run get %s', request.uri)
         local_params = {'uuid': uuid, 'fields': field}
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if self._content.collection.empty():
-            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resource')
+        if self._content.collection.size() != 1:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'content uuid: %s was not unique and matched to: %d resources' %
+                       (uuid, self._content.collection.size()))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
             response.body = Generate.resource(self._content.collection, request, uuid, field=field, pagination=False)

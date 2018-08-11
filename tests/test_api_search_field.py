@@ -26,6 +26,7 @@ import pytest
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 from tests.testlib.reference_helper import ReferenceHelper as Reference
 
 pytest.importorskip('gunicorn')
@@ -148,6 +149,40 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_group_004(self, server):
+        """Get specific content based on group field.
+
+        Try to call GET /v1/groups/docker,python and limit the search to
+        content categories defined in plural form. This should not work even
+        though this works from the CLI. The reasoning being used is that this
+        enforces strict format for the API and it allows more straightforward
+        implementation. If the plural forms would be accepted, then question
+        would be for example is the result JSON data.type also in plural form
+        in this case?
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '335'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'cannot find resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/group/docker,python',
+            headers={'accept': 'application/vnd.api+json'},
+            query_string='sall=test&limit=20&sort=brief&scat=snippets,solutions')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
+    def test_api_search_group_005(self, server):
         """Try to get specific content based on group field.
 
         Try to call GET /v1/group/missing with a group that is not found.
@@ -174,7 +209,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_404
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_group_005(self, server):
+    def test_api_search_group_006(self, server):
         """Try to get specific content based on group field.
 
         Try to call GET /v1/missing/docker with a field name that is not
@@ -190,6 +225,48 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_group_007(self, server):
+        """Get specific content based on group field.
+
+        Call GET /v1/groups/docker to get all content from the docker group.
+        In this case the search query parameter uuid is defined to match
+        multiple contents and category is limited to snippets only. This is
+        a different situation because the uuid is used as a search parameter,
+        not part of the URI. In case URI, a non unique identity like uuid or
+        digest must return error. But matching multiple contents with unique
+        identity is possible in case of a parameter.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '1497'
+        }
+        result_json = {
+            'meta': {
+                'count': 2,
+                'limit': 20,
+                'offset': 0,
+                'total': 2
+            },
+            'data': [{
+                'type': 'snippet',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippet',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/group/docker',
+            headers={'accept': 'application/vnd.api+json'},
+            query_string='scat=snippet&uuid=1')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_tags_001(self, server):
@@ -332,7 +409,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '334'
+            'content-length': '381'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -340,7 +417,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find resources'
+                'title': 'content uuid: 01010101 was not unique and matched to: 1 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -389,14 +466,14 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_uuid_002(self, server):
-        """Try to get specific content based on uuid.
+        """Get specific content based on uuid.
 
-        Try to call GET /v1/uuid/01010101 with a uuid that is not found.
+        Try to call GET /v1/uuid/1 that matches multiple contents.
         """
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '334'
+            'content-length': '372'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -404,7 +481,34 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find resources'
+                'title': 'content uuid: 1 was not unique and matched to: 3 resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/uuid/1',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
+    def test_api_search_uuid_003(self, server):
+        """Try to get specific content based on uuid.
+
+        Try to call GET /v1/uuid/01010101 with a uuid that is not found.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '379'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content uuid: 01010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -415,7 +519,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_404
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_uuid_003(self, server):
+    def test_api_search_uuid_004(self, server):
         """Get specific content field based on uuid.
 
         Call GET /v1/uuid/1f9d949600573/brief to get specific content field.
@@ -443,7 +547,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_uuid_004(self, server):
+    def test_api_search_uuid_005(self, server):
         """Get specific content field based on uuid.
 
         Call GET /v1/uuid/1f9d949600573/brief,tags to get specific content
@@ -472,16 +576,16 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_uuid_005(self, server):
+    def test_api_search_uuid_006(self, server):
         """Get specific content field based on uuid.
 
-        Try to call GET /v1/uuid/12345678/brief to get specific content field
-        with unknown uuid.
+        Try to call GET /v1/uuid/12345678-b6ef-4067-b5ac-3ceac07dde9f/brief
+        to get specific content field with unknown uuid.
         """
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '334'
+            'content-length': '407'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -489,11 +593,42 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find resources'
+                'title': 'content uuid: 12345678-b6ef-4067-b5ac-3ceac07dde9f was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/uuid/12345678-b6ef-4067-b5ac-3ceac07dde9f/brief',
+            headers={'accept': 'application/vnd.api+json'})
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_404
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
+    def test_api_search_uuid_007(self, server):
+        """Get specific content field based on uuid.
+
+        Try to call GET /v1/uuid/1/brief to get specific content field. In
+        this case the uuid 1 matches to multiple contents and specific field
+        cannot be returned. The 404 Not Found is used to simplify the error
+        handling instead of using multiple causes. The error title describes
+        the error in more detail.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '372'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'content uuid: 1 was not unique and matched to: 3 resources'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/uuid/1/brief',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -573,3 +708,10 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+
+    @classmethod
+    def teardown_class(cls):
+        """Teardown class."""
+
+        Database.delete_all_contents()
+        Database.delete_storage()

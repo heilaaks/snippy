@@ -1,7 +1,5 @@
 ## WORKING
-   - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
-   - [ ] Test if /api/app/v1/group/linux?limit=2&scat=snippets,solutions,references" works.
-   - [ ] Test case that fetches specific field with short uuid/digest. This results multiple hits like /v1/uuid/2/brief so it is a question what is returned.
+   - [ ] Fix add proper error code for non existent category which must be: snippet, solution or referece. There was accidental usage of snippets since it works in CLI which was looked like 20 minutes.
    - [ ] Refactor groups to group since it is only one group (API breaking change).
    - [ ] Fix there is a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().
    - [ ] Fix does api fields on_get print the log at the beginngin twice?
@@ -41,6 +39,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
    - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties
    - [ ] Fix it seems that python can do like Config.parameternewparameter which adds new parameter in case of typo. Can this be prevented?
    - [ ] Fix printing content after 9 since the numebered items from 10 shift the spacing one more right. How?

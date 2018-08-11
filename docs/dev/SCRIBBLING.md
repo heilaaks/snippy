@@ -83,11 +83,11 @@ Random notes and scribling during development.
    $ pypy -m pytest -x ./tests/test_*.py --cov snipp
    $ unset PYTHONPATH
    ```
-   
+
    ```
    # Install pipenv development environment
    $ pipenv install
-   
+
    # install pipenv
    $ pip install --user pipenv
    $ pipenv lock
@@ -99,7 +99,7 @@ Random notes and scribling during development.
    $ pipenv install pytest==3.6.4 --dev
    $ pipenv install pylint==2.0.1 --dev
    $ pipenv lock -r  > requirements.txt
-   
+
    # Pipenv for Python 3.6
    $ pipenv --python 3.6
    $ pipenv install pyyaml==3.12
@@ -131,7 +131,7 @@ Random notes and scribling during development.
    ```
    .. |badge-health| image:: https://landscape.io/github/heilaaks/snippy/master/landscape.svg?style=flat
       :target: https://landscape.io/github/heilaaks/snippy/master
-   
+
    .. |badge-codacy| image:: https://api.codacy.com/project/badge/Grade/170f2ea74ead4f23b574478000ef578a
       :target: https://www.codacy.com/app/heilaaks/snippy?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=heilaaks/snippy&amp;utm_campaign=Badge_Grade
    ```
@@ -316,7 +316,7 @@ http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-
     > http://linuxbrew.sh/
     > https://asciinema.org/
     $ alias docker="sudo /usr/bin/docker"
-    
+
     $ dnf install asciinema
     $ export PYTHONPATH=/usr/lib64/python2.7/site-packages/
     $ pip install . --user
@@ -1219,8 +1219,47 @@ git update-index --no-assume-unchanged FILE_NAME # change back
          code is string.
        - The JSON response fileds are in CamelCase because the expected use
          case is from Javascript that uses CamelCase.
+       - If resource is requested, it always results error or an object.
+       - If GET is used to request explitcit digest in query parmater or with
+         any search keys, the result is always error or list.
 
        /1/ http://jsonapi.org/
+
+    2. Conflicts against JSON API v1.0
+
+       1. If unique resource is not found, an error is returned
+
+          The JSON API v1.0 [1] defines that "null is only an appropriate response
+          when the requested URL is one that might correspond to a single resource,
+          but doesn’t currently". It was considered that it is better to tell end
+          user why the content was not properly returned instead of providing 'null'
+          with 200 OK.
+
+          [1] http://jsonapi.org/format/1.0/
+
+          The above is understood so that in case of multiple hits from unique
+          resource request, a null should be returned. The CLI and API interfaces
+          allow requesting content with partial digest or uuid. If partial digest
+          or uuid is used, it may match to multiple contents in search request.
+          How ever, when user issues request like:
+
+            GET /snippy/api/app/v1/uuid/1/brief
+            GET /snippy/api/app/v1/digest/1/brief
+
+         it is considered that it is better to return error and tell the user why
+         the request failed than return 200 OK with data set to 'null'.
+
+         It is also considered that 404 Not Found in cases when there is no matches
+         or multiple matches is simpler than setting different error codes. The
+         other option for multiple matches could be 409 Conflict that is used in
+         case of import and update operations that require unique content to be
+         operated. The failure reason can be determined from the error title.
+
+         This case is different if uuid or digest is used in query parameter like:
+
+           GET /snippy/api/app/v1/group/docker?scat=snippet&uuid=1
+
+         In the above case, the result must be multiple contents.
 
     CLASS HIERARCHY
 

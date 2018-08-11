@@ -322,7 +322,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '334'
+            'content-length': '388'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -330,7 +330,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find resource'
+                'title': 'content digest: 101010101010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -853,7 +853,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '480'
+            'content-length': '529'
         }
         result_json = {
             'meta': Content.get_api_meta(),
@@ -866,7 +866,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'cannot find resources'
+                'title': 'content digest 0101010101 was not unique and matched to: 3 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(

@@ -1,18 +1,33 @@
 .. :changelog:
 
-Release History
+Release history
 ===============
 
 0.9.0 (development)
 -------------------
 
+Breaking changes
+~~~~~~~~~~~~~~~~
+
+* Change content field group to groups_.
+
+New features
+~~~~~~~~~~~~
+
+* Add `REST API routes`_ for: keywords, groups, tags, uuid and digest.
+* Add support for uuid1 in CLI and REST API.
+
+Bugfixes
+~~~~~~~~
+
+* Fix solution creation from empty template.
 * All commits in `0.9.0`_.
 
 0.8.0 (2018-21-07)
 ------------------
 
-* Add new content category references.
-* Experimental beta release from RESTish API server.
+* Add new content category for references.
+* Add experimental beta release from RESTish API server.
 * All commits in `0.8.0`_.
 
 0.7.0 (2018-24-02)
@@ -45,3 +60,5 @@ Release History
 .. _0.6.0: https://github.com/heilaaks/snippy/compare/v0.5.0...heilaaks:v0.6.0
 .. _0.5.0: https://github.com/heilaaks/snippy/compare/v0.1.0...heilaaks:v0.5.0
 .. _0.1.0: https://github.com/heilaaks/snippy/compare/ce6395137b...heilaaks:v0.1.0
+.. _REST API routes: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+.. _groups: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b

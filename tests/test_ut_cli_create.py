@@ -93,13 +93,13 @@ class TestUtCliCreate(object):
 
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
-        group = 'docker'
+        groups = 'docker'
         tags = 'docker, container, cleanup'
         links = 'https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container'
-        obj = Cli(['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', tags, '-l', links])
+        obj = Cli(['snippy', 'create', '-c', content, '-b', brief, '-g', groups, '-t', tags, '-l', links])
         assert obj.data == (content,)
         assert obj.brief == brief
-        assert obj.group == group
+        assert obj.groups == (groups,)
         assert obj.tags == ('cleanup', 'container', 'docker')
         assert obj.links == (links,)
 

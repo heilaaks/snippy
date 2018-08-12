@@ -34,7 +34,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     # Database column numbers.
     DATA = 0
     BRIEF = 1
-    GROUP = 2
+    GROUPS = 2
     TAGS = 3
     LINKS = 4
     CATEGORY = 5
@@ -49,7 +49,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     METADATA = 14
     KEY = 15
 
-    SOLUTION_TEMPLATE = '844d0d37738ff2d20783f97690f771bb47d81ef3a4bda4ee9d022a17919fd271'
+    SOLUTION_TEMPLATE = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
     REFERENCE_TEMPLATE = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
     TEMPLATES = (SNIPPET_TEMPLATE, SOLUTION_TEMPLATE, REFERENCE_TEMPLATE)
@@ -58,7 +58,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._logger = Logger.get_logger(__name__)
         self._data = ()
         self._brief = ''
-        self._group = Const.DEFAULT_GROUP
+        self._groups = Const.DEFAULT_GROUPS
         self._tags = ()
         self._links = ()
         self._category = category
@@ -85,7 +85,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             # Resource key is defined by database and it is not compared.
             return self.data == resource.data and \
                    self.brief == resource.brief and \
-                   self.group == resource.group and \
+                   self.groups == resource.groups and \
                    self.tags == resource.tags and \
                    self.links == resource.links and \
                    self.category == resource.category and \
@@ -131,16 +131,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._brief = value
 
     @property
-    def group(self):
-        """Get resource group."""
+    def groups(self):
+        """Get resource groups."""
 
-        return self._group
+        return self._groups
 
-    @group.setter
-    def group(self, value):
-        """Resource group."""
+    @groups.setter
+    def groups(self, value):
+        """Resource groups."""
 
-        self._group = value
+        self._groups = value
 
     @property
     def tags(self):
@@ -303,7 +303,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         resource_str = Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data))
         resource_str = resource_str + self.brief
-        resource_str = resource_str + self.group
+        resource_str = resource_str + Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups)))
         resource_str = resource_str + Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
         resource_str = resource_str + Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links))
         resource_str = resource_str + self.category
@@ -341,7 +341,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._logger.debug('migrate to resouce: %.16s', self.digest)
         self.data = source.data
         self.brief = source.brief
-        self.group = source.group
+        self.groups = source.groups
         self.tags = source.tags
         self.links = source.links
         self.name = source.name
@@ -366,8 +366,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.data = source.data
         if source.brief:
             self.brief = source.brief
-        if source.group and source.group != Const.DEFAULT_GROUP:
-            self.group = source.group
+        if source.groups and Const.DEFAULT_GROUPS != source.groups:
+            self.groups = source.groups
         if source.tags:
             self.tags = source.tags
         if source.links:
@@ -390,7 +390,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         self.data = tuple(row[Resource.DATA].split(Const.DELIMITER_DATA))
         self.brief = row[Resource.BRIEF]
-        self.group = row[Resource.GROUP]
+        self.groups = tuple(row[Resource.GROUPS].split(Const.DELIMITER_GROUPS) if row[Resource.GROUPS] else [])
         self.tags = tuple(row[Resource.TAGS].split(Const.DELIMITER_TAGS) if row[Resource.TAGS] else [])
         self.links = tuple(row[Resource.LINKS].split(Const.DELIMITER_LINKS) if row[Resource.LINKS] else [])
         self.category = row[Resource.CATEGORY]
@@ -444,12 +444,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return True if self.category == Const.REFERENCE else False
 
     def dump_qargs(self):
-        """Convert resource for sqlite qargs."""
+        """Convert resource for sqlite qargs.
+
+        Links are not sorted because it is assumed that link order matter
+        for the end user. For example with reference content, it is possible
+        to store multiple links. It is assumed that the first link holds the
+        most valuable information.
+        """
 
         qargs = (
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data)),
             self.brief,
-            self.group,
+            Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups))),
             Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags))),
             Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links)),
             self.category,
@@ -471,7 +477,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         self.data = dictionary.get('data', self.data)
         self.brief = dictionary.get('brief', self.brief)
-        self.group = dictionary.get('group', self.group)
+        self.groups = dictionary.get('groups', self.groups)
         self.tags = dictionary.get('tags', self.tags)
         self.links = dictionary.get('links', self.links)
         self.category = dictionary.get('category', self.category)
@@ -494,7 +500,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         data = {
             'data': self.data,
             'brief': self.brief,
-            'group': self.group,
+            'groups': self.groups,
             'tags': self.tags,
             'links': self.links,
             'category': self.category,
@@ -524,7 +530,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = templates[self.category]
         text = self._add_data(text)
         text = self._add_brief(text)
-        text = self._add_group(text)
+        text = self._add_groups(text)
         text = self._add_tags(text)
         text = self._add_links(text)
         text = self._add_filename(text)
@@ -577,7 +583,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         data = Const.EMPTY
         links = Const.EMPTY
         text = text + Resource._terminal_header(ansi) % (idx, self.brief,
-                                                         self.group,
+                                                         Const.DELIMITER_GROUPS.join(self.groups),
                                                          self.digest)
         text = text + Const.EMPTY.join([Resource._terminal_snippet(ansi) % (data, line)
                                         for line in self.data])
@@ -596,7 +602,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         data = Const.EMPTY
         links = Const.EMPTY
         text = text + Resource._terminal_header(ansi) % (idx, self.brief,
-                                                         self.group,
+                                                         Const.DELIMITER_GROUPS.join(self.groups),
                                                          self.digest)
         text = text + Const.NEWLINE
         text = Resource._terminal_tags(ansi) % (text, Const.DELIMITER_TAGS.join(self.tags))
@@ -616,7 +622,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = Const.EMPTY
         links = Const.EMPTY
         text = text + Resource._terminal_header(ansi) % (idx, self.brief,
-                                                         self.group,
+                                                         Const.DELIMITER_GROUPS.join(self.groups),
                                                          self.digest)
         text = text + Const.NEWLINE
         text = text + Const.EMPTY.join([Resource._terminal_links(ansi) % (links, link)
@@ -648,11 +654,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return template
 
-    def _add_group(self, template):
-        """Add resource group to text template."""
+    def _add_groups(self, template):
+        """Add resource groups to text template."""
 
-        group = self.group
-        template = template.replace('<SNIPPY_GROUP>', group)
+        groups = Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups)))
+        template = template.replace('<SNIPPY_GROUPS>', groups)
 
         return template
 

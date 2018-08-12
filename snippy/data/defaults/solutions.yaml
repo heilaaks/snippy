@@ -4,11 +4,11 @@ data:
   created: 2017-10-30T08:24:28.000001+0000
   data:
   - '################################################################################'
-  - '## BRIEF : Testing docker log drivers'
+  - '## BRIEF  : Testing docker log drivers'
   - '##'
-  - '## GROUP : docker'
-  - '## TAGS  : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka'
-  - '## FILE  : kubernetes-docker-log-driver-kafka.txt'
+  - '## GROUPS : docker'
+  - '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka'
+  - '## FILE   : kubernetes-docker-log-driver-kafka.txt'
   - '################################################################################'
   - ''
   - '################################################################################'
@@ -95,7 +95,8 @@ data:
   - ''
   digest: fd4c0adffa2320834d49d2db5b63dadc9494151449a72f34c18800dab1ebf932
   filename: kubernetes-docker-log-driver-kafka.txt
-  group: docker
+  groups:
+  - docker
   links:
   - https://github.com/MickayG/moby-kafka-logdriver
   - https://github.com/garo/logs2kafka
@@ -119,11 +120,11 @@ data:
   created: 2018-01-11T11:00:32.000001+0000
   data:
   - '################################################################################'
-  - '## BRIEF : Debugging nginx '
+  - '## BRIEF  : Debugging nginx '
   - '##'
-  - '## GROUP : nginx'
-  - '## TAGS  : nginx,debug,logging,howto'
-  - '## FILE  : howto-debug-nginx.txt'
+  - '## GROUPS : nginx'
+  - '## TAGS   : nginx,debug,logging,howto'
+  - '## FILE   : howto-debug-nginx.txt'
   - '################################################################################'
   - ''
   - ''
@@ -328,7 +329,8 @@ data:
   - ''
   digest: cb5a60c299df90a4ec0e6a1580d591d96f93a801ff7b7152caeff08873459b78
   filename: howto-debug-nginx.txt
-  group: nginx
+  groups:
+  - nginx
   links:
   - http://nginx.org/en/CHANGES
   - https://tenzer.dk/nginx-with-dynamic-upstreams/
@@ -349,11 +351,11 @@ data:
   created: 2017-10-30T08:21:40.000001+0000
   data:
   - '################################################################################'
-  - '## BRIEF : Debugging Elastic Beats'
+  - '## BRIEF  : Debugging Elastic Beats'
   - '##'
-  - '## GROUP : beats'
-  - '## TAGS  : Elastic,beats,filebeat,debug,howto'
-  - '## FILE  : howto-debug-elastic-beats.txt'
+  - '## GROUPS : beats'
+  - '## TAGS   : Elastic,beats,filebeat,debug,howto'
+  - '## FILE   : howto-debug-elastic-beats.txt'
   - '################################################################################'
   - ''
   - ''
@@ -461,7 +463,8 @@ data:
   - ''
   digest: f1350f22698a348b44f40dca12dd410f51b4829761126536411d9ce5084dfd4b
   filename: howto-debug-elastic-beats.txt
-  group: beats
+  groups:
+  - beats
   links:
   - https://www.elastic.co/guide/en/beats/filebeat/current/filebeat-configuration-details.html
   - https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html
@@ -481,11 +484,11 @@ data:
   created: 2018-01-11T10:59:24.000001+0000
   data:
   - '################################################################################'
-  - '## BRIEF : Debugging Docker '
+  - '## BRIEF  : Debugging Docker '
   - '##'
-  - '## GROUP : docker'
-  - '## TAGS  : docker,debug,howto,swarm'
-  - '## FILE  : howto-debug-docker.txt'
+  - '## GROUPS : docker'
+  - '## TAGS   : docker,debug,howto,swarm'
+  - '## FILE   : howto-debug-docker.txt'
   - '################################################################################'
   - ''
   - ''
@@ -628,7 +631,8 @@ data:
   - ''
   digest: 8ad814ed3682c39c708c14e9aa4cafeddc68c85fd8a23594acb805564cde7520
   filename: howto-debug-docker.txt
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/release-notes/docker-ce/
   - https://github.com/docker/compose/releases/
@@ -652,11 +656,11 @@ data:
   created: 2018-02-15T13:49:38.000001+0000
   data:
   - '################################################################################'
-  - '## BRIEF : Debugging Kubernetes '
+  - '## BRIEF  : Debugging Kubernetes '
   - '##'
-  - '## GROUP : kubernetes'
-  - '## TAGS  : kubernetes,debug,howto,docker,moby'
-  - '## FILE  : howto-debug-kubernetes.txt'
+  - '## GROUPS : kubernetes'
+  - '## TAGS   : kubernetes,debug,howto,docker,moby'
+  - '## FILE   : howto-debug-kubernetes.txt'
   - '################################################################################'
   - ''
   - ''
@@ -811,7 +815,8 @@ data:
   - ''
   digest: cf7531dd6b79fc2bbff0521342e0cf41f6cc4a8500b234a203c388325a575f4b
   filename: howto-debug-kubernetes.txt
-  group: kubernetes
+  groups:
+  - kubernetes
   links:
   - https://blog.codeship.com/getting-started-with-kubernetes/
   - https://github.com/kubernetes/kubernetes/releases
@@ -832,11 +837,11 @@ data:
   created: 2018-01-10T07:29:35.000001+0000
   data:
   - '################################################################################'
-  - '## BRIEF : Debugging Kafka '
+  - '## BRIEF  : Debugging Kafka '
   - '##'
-  - '## GROUP : kafka'
-  - '## TAGS  : kafka,debug,howto,zookeeper'
-  - '## FILE  : howto-debug-kafka.txt'
+  - '## GROUPS : kafka'
+  - '## TAGS   : kafka,debug,howto,zookeeper'
+  - '## FILE   : howto-debug-kafka.txt'
   - '################################################################################'
   - ''
   - ''
@@ -882,7 +887,8 @@ data:
   - ''
   digest: a7ad528d487158a1a4577d33aea1c06a7493f007a2fbb873220c03f1bc05930b
   filename: howto-debug-kafka.txt
-  group: kafka
+  groups:
+  - kafka
   links:
   - https://kafka.apache.org/downloads
   name: ''
@@ -900,11 +906,11 @@ data:
   created: 2017-10-20T11:11:19.000001+0000
   data:
   - '################################################################################'
-  - '## BRIEF : Debugging Elasticsearch'
+  - '## BRIEF  : Debugging Elasticsearch'
   - '##'
-  - '## GROUP : elasticsearch'
-  - '## TAGS  : elastic,elasticsearch,debug,howto'
-  - '## FILE  : howto-debug-elasticsearch.txt'
+  - '## GROUPS : elasticsearch'
+  - '## TAGS   : elastic,elasticsearch,debug,howto'
+  - '## FILE   : howto-debug-elasticsearch.txt'
   - '################################################################################'
   - ''
   - ''
@@ -1004,7 +1010,8 @@ data:
   - ''
   digest: b0cef24796033e3a193d79a10226e5a1d31f04d57d061355b42f99d2179a4b31
   filename: howto-debug-elasticsearch.txt
-  group: elasticsearch
+  groups:
+  - elasticsearch
   links: []
   name: ''
   source: ''
@@ -1021,11 +1028,11 @@ data:
   created: 2017-01-29T12:31:00.000001+0000
   data:
   - '################################################################################'
-  - '## BRIEF : Debugging LXC containers'
+  - '## BRIEF  : Debugging LXC containers'
   - '##'
-  - '## GROUP : containers'
-  - '## TAGS  : lxc,containers,debug,howto'
-  - '## FILE  : howto-debug-lxc-containers.txt'
+  - '## GROUPS : containers'
+  - '## TAGS   : lxc,containers,debug,howto'
+  - '## FILE   : howto-debug-lxc-containers.txt'
   - '################################################################################'
   - ''
   - ''
@@ -1114,7 +1121,8 @@ data:
   - ''
   digest: a00767626ef20dc6618cda3243f0cec662489e06f2ca140627f9c69099170d05
   filename: howto-debug-lxc-containers.txt
-  group: containers
+  groups:
+  - containers
   links:
   - https://linuxcontainers.org/lxc/downloads/
   - https://serverfault.com/a/438824

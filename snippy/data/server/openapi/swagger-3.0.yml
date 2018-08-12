@@ -212,10 +212,10 @@ paths:
           $ref: '#/components/responses/404'
         '500':
           $ref: '#/components/responses/500'
-  '/group/{groups}':
+  '/groups/{groups}':
     get:
       tags:
-        - group
+        - groups
       summary: Search content from defined group or groups
       description: ''
       parameters:
@@ -482,9 +482,11 @@ components:
         brief:
           type: string
           description: Optional brief description of the content.
-        group:
-          type: string
-          description: Optional group to which the content belongs.
+        groups:
+          type: array
+          items:
+            type: string
+          description: "Optional list of groups to which the content belongs."
           default: default
         tags:
           type: array
@@ -670,13 +672,13 @@ components:
       x-example:
         - brief
         - 'brief,tags'
-        - 'brief,group,tags'
+        - 'brief,groups,tags'
       schema:
         type: string
         enum:
           - data
           - brief
-          - group
+          - groups
           - tags
           - links
           - category
@@ -823,7 +825,7 @@ components:
         enum:
           - data
           - brief
-          - group
+          - groups
           - tags
           - links
           - category
@@ -848,7 +850,7 @@ components:
           enum:
             - data
             - brief
-            - group
+            - groups
             - tags
             - links
             - category

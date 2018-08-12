@@ -52,7 +52,7 @@ class TestApiUpdateSnippet(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                     'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
                 }
@@ -62,7 +62,7 @@ class TestApiUpdateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '780'
+            'content-length': '783'
         }
         result_json = {
             'links': {
@@ -98,7 +98,7 @@ class TestApiUpdateSnippet(object):
                 'type': 'snippet',
                 'attributes': {
                     'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
                     'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
                 }
             }
@@ -106,7 +106,7 @@ class TestApiUpdateSnippet(object):
         content_read = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': '',
-            'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+            'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
             'tags': [],
             'links': Snippet.DEFAULTS[Snippet.REMOVE]['links'],
             'category': 'snippet',
@@ -122,7 +122,7 @@ class TestApiUpdateSnippet(object):
         content = {'e56c2183edcc3a67': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '686'
+            'content-length': '689'
         }
         result_json = {
             'links': {
@@ -164,7 +164,7 @@ class TestApiUpdateSnippet(object):
         content_read = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': '',
-            'group': 'default',
+            'groups': ['default'],
             'tags': [],
             'links': [],
             'category': 'snippet',
@@ -180,7 +180,7 @@ class TestApiUpdateSnippet(object):
         content = {'26128ea95707a3a26': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '629'
+            'content-length': '632'
         }
         result_json = {
             'links': {
@@ -216,7 +216,7 @@ class TestApiUpdateSnippet(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                     'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
                 }
@@ -255,7 +255,7 @@ class TestApiUpdateSnippet(object):
         request_body = {
             'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
             'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-            'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+            'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
             'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
             'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         }
@@ -295,7 +295,7 @@ class TestApiUpdateSnippet(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                     'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
                 }
@@ -304,7 +304,7 @@ class TestApiUpdateSnippet(object):
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '780'
+            'content-length': '783'
         }
         result_json = {
             'links': {
@@ -348,7 +348,7 @@ class TestApiUpdateSnippet(object):
         content_read = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': Snippet.DEFAULTS[Snippet.FORCED]['brief'],
-            'group': Snippet.DEFAULTS[Snippet.FORCED]['group'],
+            'groups': Snippet.DEFAULTS[Snippet.FORCED]['groups'],
             'tags': Snippet.DEFAULTS[Snippet.FORCED]['tags'],
             'links': Snippet.DEFAULTS[Snippet.FORCED]['links'],
             'category': 'snippet',
@@ -364,7 +364,7 @@ class TestApiUpdateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '872'
+            'content-length': '875'
         }
         result_json = {
             'links': {

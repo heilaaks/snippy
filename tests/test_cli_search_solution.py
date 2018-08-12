@@ -38,18 +38,17 @@ class TestCliSearchSolution(object):
         """
 
         output = (
-            '1. Debugging Elastic Beats @beats [a96accc25dd23ac0]',
+            '1. Debugging Elastic Beats @beats [a5dd8f3807e08420]',
             '',
             '   # Elastic,beats,debug,filebeat,howto',
             '   > https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',
             '',
             '   : ################################################################################',
-            '   : ## BRIEF : Debugging Elastic Beats',
+            '   : ## BRIEF  : Debugging Elastic Beats',
             '   : ##',
-            '   : ## DATE  : 2017-10-20 11:11:19',
-            '   : ## GROUP : beats',
-            '   : ## TAGS  : Elastic,beats,filebeat,debug,howto',
-            '   : ## FILE  : howto-debug-elastic-beats.txt',
+            '   : ## GROUPS : beats',
+            '   : ## TAGS   : Elastic,beats,filebeat,debug,howto',
+            '   : ## FILE   : howto-debug-elastic-beats.txt',
             '   : ################################################################################',
             '   : ',
             '   : ',
@@ -144,18 +143,17 @@ class TestCliSearchSolution(object):
         """
 
         output = (
-            '1. Debugging Elastic Beats @beats [a96accc25dd23ac0]',
+            '1. Debugging Elastic Beats @beats [a5dd8f3807e08420]',
             '',
             '   # Elastic,beats,debug,filebeat,howto',
             '   > https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',
             '',
             '   : ################################################################################',
-            '   : ## BRIEF : Debugging Elastic Beats',
+            '   : ## BRIEF  : Debugging Elastic Beats',
             '   : ##',
-            '   : ## DATE  : 2017-10-20 11:11:19',
-            '   : ## GROUP : beats',
-            '   : ## TAGS  : Elastic,beats,filebeat,debug,howto',
-            '   : ## FILE  : howto-debug-elastic-beats.txt',
+            '   : ## GROUPS : beats',
+            '   : ## TAGS   : Elastic,beats,filebeat,debug,howto',
+            '   : ## FILE   : howto-debug-elastic-beats.txt',
             '   : ################################################################################',
             '   : ',
             '   : ',
@@ -195,7 +193,7 @@ class TestCliSearchSolution(object):
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--digest', 'a96accc25dd23ac0', '--no-ansi'])
+        cause = snippy.run(['snippy', 'search', '--solution', '--digest', 'a5dd8f3807e08420', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -211,18 +209,17 @@ class TestCliSearchSolution(object):
         """
 
         output = (
-            '1. Debugging Elastic Beats @beats [a96accc25dd23ac0]',
+            '1. Debugging Elastic Beats @beats [a5dd8f3807e08420]',
             '',
             '   # Elastic,beats,debug,filebeat,howto',
             '   > https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',
             '',
             '   : ################################################################################',
-            '   : ## BRIEF : Debugging Elastic Beats',
+            '   : ## BRIEF  : Debugging Elastic Beats',
             '   : ##',
-            '   : ## DATE  : 2017-10-20 11:11:19',
-            '   : ## GROUP : beats',
-            '   : ## TAGS  : Elastic,beats,filebeat,debug,howto',
-            '   : ## FILE  : howto-debug-elastic-beats.txt',
+            '   : ## GROUPS : beats',
+            '   : ## TAGS   : Elastic,beats,filebeat,debug,howto',
+            '   : ## FILE   : howto-debug-elastic-beats.txt',
             '   : ################################################################################',
             '   : ',
             '   : ',

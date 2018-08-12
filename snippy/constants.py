@@ -46,10 +46,11 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     ALL_CATEGORIES = 'all'
     UNKNOWN_CONTENT = 'unknown'
 
-    # Content delimiters
+    # Content delimiters to convert between string and tuple presentations.
     DELIMITER_DATA = NEWLINE
+    DELIMITER_GROUPS = ','
     DELIMITER_TAGS = ','
     DELIMITER_LINKS = NEWLINE
 
     # Default values for content fields.
-    DEFAULT_GROUP = 'default'
+    DEFAULT_GROUPS = ('default',)

@@ -6,8 +6,8 @@
 # Add optional brief description below.
 <SNIPPY_BRIEF>
 
-# Add optional single group below.
-<SNIPPY_GROUP>
+# Add optional comma separated list of groups below.
+<SNIPPY_GROUPS>
 
 # Add optional comma separated list of tags below.
 <SNIPPY_TAGS>

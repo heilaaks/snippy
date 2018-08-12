@@ -40,7 +40,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_001(self, server, mocker):
         """Update one solution with PUT request.
 
-        Call PUT /v1/solutions/a96accc25dd23ac0 to update existing solution
+        Call PUT /v1/solutions/a5dd8f3807e08420 to update existing solution
         with specified digest. See 'updating content attributes' for the
         attribute list that can be changed by user.
         """
@@ -51,34 +51,34 @@ class TestApiUpdateSolution(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                    'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
                 }
             }
         }
         content_read = Content.compared(Solution.DEFAULTS[Solution.NGINX])
-        content = {'2cd0e794244a07f': content_read}
+        content = {'b862cdea9a2b952': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3057'
+            'content-length': '3030'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/2cd0e794244a07f8'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/b862cdea9a2b952c'
             },
             'data': {
                 'type': 'solution',
-                'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
+                'id': 'b862cdea9a2b952c8f59cc48c34ece4aa4e65e74e8ca8e3bbf0523e9ebaac6c8',
                 'attributes': content_read
             }
         }
         result_json['data']['attributes']['filename'] = Const.EMPTY
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
         result_json['data']['attributes']['updated'] = Content.NGINX_TIME
-        result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
+        result_json['data']['attributes']['digest'] = 'b862cdea9a2b952c8f59cc48c34ece4aa4e65e74e8ca8e3bbf0523e9ebaac6c8'
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -91,7 +91,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_002(self, server, mocker):
         """Update one solution with PUT request.
 
-        Call PUT /v1/solutions/a96accc25dd23ac0 to update existing solution.
+        Call PUT /v1/solutions/a5dd8f3807e08420 to update existing solution.
         The PUT request contains only the mandatory data attribute. All other
         attributes must be set to their default values.
         """
@@ -107,7 +107,7 @@ class TestApiUpdateSolution(object):
         content_read = {
             'data': Solution.DEFAULTS[Solution.NGINX]['data'],
             'brief': '',
-            'group': 'default',
+            'groups': ['default'],
             'tags': [],
             'links': [],
             'category': 'solution',
@@ -118,25 +118,25 @@ class TestApiUpdateSolution(object):
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.BEATS_TIME,
             'updated': Content.NGINX_TIME,
-            'digest': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b'
+            'digest': '352c664d75731a1cfd8cbe1e1392a4405d438352d6eaf0c175d5c1cf5bb82726'
         }
-        content = {'8d400d39568354f9': content_read}
+        content = {'352c664d75731a1c': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2956'
+            'content-length': '2929'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/8d400d39568354f9'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/352c664d75731a1c'
             },
             'data': {
                 'type': 'solution',
-                'id': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b',
+                'id': '352c664d75731a1cfd8cbe1e1392a4405d438352d6eaf0c175d5c1cf5bb82726',
                 'attributes': content_read
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -159,7 +159,7 @@ class TestApiUpdateSolution(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                    'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
                 }
@@ -192,19 +192,19 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_004(self, server):
         """Try to update solution with malformed request.
 
-        Try to call PUT /v1/solutions/a96accc25dd23ac0 to update solution with
+        Try to call PUT /v1/solutions/a5dd8f3807e08420 to update solution with
         malformed JSON request.
         """
 
         request_body = {
             'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
             'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-            'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+            'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
             'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
             'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
         }
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5427'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5237'}
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5362'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5175'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -215,7 +215,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
@@ -227,7 +227,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_005(self, server):
         """Try to update solution with malformed request.
 
-        Try to call PUT /v1/solutions/a96accc25dd23ac0 to update solution with
+        Try to call PUT /v1/solutions/a5dd8f3807e08420 to update solution with
         client generated resource ID. In this case the ID looks like a valid
         message digest.
         """
@@ -235,11 +235,11 @@ class TestApiUpdateSolution(object):
         request_body = {
             'data': {
                 'type': 'solution',
-                'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
+                'id': 'b862cdea9a2b952c8f59cc48c34ece4aa4e65e74e8ca8e3bbf0523e9ebaac6c8',
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                    'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
                 }
@@ -259,7 +259,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -271,7 +271,7 @@ class TestApiUpdateSolution(object):
     def test_api_update_solution_006(self, server):
         """Try to update solution with malformed request.
 
-        Try to call PUT //v1/solutions/a96accc25dd23ac0 to update solution
+        Try to call PUT //v1/solutions/a5dd8f3807e08420 to update solution
         with client generated resource ID. In this case the ID is empty
         string.
         """
@@ -283,7 +283,7 @@ class TestApiUpdateSolution(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                    'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
                 }
@@ -303,7 +303,7 @@ class TestApiUpdateSolution(object):
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -332,7 +332,7 @@ class TestApiUpdateSolution(object):
         content_read = {
             'data': Solution.DEFAULTS[Solution.NGINX]['data'],
             'brief': Solution.DEFAULTS[Solution.BEATS]['brief'],
-            'group': Solution.DEFAULTS[Solution.BEATS]['group'],
+            'groups': Solution.DEFAULTS[Solution.BEATS]['groups'],
             'tags': Solution.DEFAULTS[Solution.BEATS]['tags'],
             'links': Solution.DEFAULTS[Solution.BEATS]['links'],
             'category': Solution.DEFAULTS[Solution.BEATS]['category'],
@@ -343,25 +343,25 @@ class TestApiUpdateSolution(object):
             'uuid': Solution.DEFAULTS[Solution.BEATS]['uuid'],
             'created': Content.BEATS_TIME,
             'updated': Content.NGINX_TIME,
-            'digest': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0'
+            'digest': '2ea79ade8226e8d1f87ad121ce3515de0cfdc2262a7df9983147f43602052760'
         }
-        content = {'21c737e704b97226': content_read}
+        content = {'2ea79ade8226e8d1': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3140'
+            'content-length': '3113'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21c737e704b97226'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/2ea79ade8226e8d1'
             },
             'data': {
                 'type': 'solution',
-                'id': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0',
+                'id': '2ea79ade8226e8d1f87ad121ce3515de0cfdc2262a7df9983147f43602052760',
                 'attributes': content_read
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -390,7 +390,7 @@ class TestApiUpdateSolution(object):
         content_read = {
             'data': Solution.DEFAULTS[Solution.NGINX]['data'],
             'brief': '',
-            'group': 'default',
+            'groups': ['default'],
             'tags': [],
             'links': [],
             'category': 'solution',
@@ -401,25 +401,25 @@ class TestApiUpdateSolution(object):
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.BEATS_TIME,
             'updated': Content.NGINX_TIME,
-            'digest': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b'
+            'digest': '352c664d75731a1cfd8cbe1e1392a4405d438352d6eaf0c175d5c1cf5bb82726'
         }
-        content = {'8d400d39568354f9': content_read}
+        content = {'352c664d75731a1c': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2956'
+            'content-length': '2929'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/8d400d39568354f9'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/352c664d75731a1c'
             },
             'data': {
                 'type': 'solution',
-                'id': '8d400d39568354f90c52f94e1d7f76240e52a39b0ace61d445fe96e0c617524b',
+                'id': '352c664d75731a1cfd8cbe1e1392a4405d438352d6eaf0c175d5c1cf5bb82726',
                 'attributes': content_read
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.headers == result_headers

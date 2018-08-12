@@ -37,7 +37,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     DEFAULTS = ({
         'data': ('', ),
         'brief': 'How to write commit messages',
-        'group': 'git',
+        'groups': ('git',),
         'tags': ('commit', 'git', 'howto'),
         'links': ('https://chris.beams.io/posts/git-commit/', ),
         'category': 'reference',
@@ -52,7 +52,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     }, {
         'data': ('', ),
         'brief': 'Python regular expression',
-        'group': 'python',
+        'groups': ('python',),
         'tags': (' python ', ' regexp  ', '  online   ', 'howto'),
         'links': ('https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
                   'https://pythex.org/'),
@@ -68,7 +68,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     }, {
         'data': ('', ),
         'brief': 'Python pytest framework',
-        'group': 'python',
+        'groups': ('python',),
         'tags': ('python', 'pytest', 'docs'),
         'links': ('https://docs.pytest.org/en/latest/skipping.html', ),
         'category': 'reference',
@@ -91,7 +91,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         '# Add optional brief description below.',
         '',
         '',
-        '# Add optional single group below.',
+        '# Add optional comma separated list of groups below.',
         'default',
         '',
         '# Add optional comma separated list of tags below.',

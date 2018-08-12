@@ -53,7 +53,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '689'
+            'content-length': '692'
         }
         result_json = {
             'data': [{
@@ -88,7 +88,7 @@ class TestApiCreateSnippet(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                     'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
                     'tags': ['cleanup', 'container', 'docker', 'docker-ce', 'moby'],
                     'links': ['https://docs.docker.com/engine/reference/commandline/rm/']
                 }
@@ -98,7 +98,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '689'
+            'content-length': '692'
         }
         result_json = {
             'data': [{
@@ -132,7 +132,7 @@ class TestApiCreateSnippet(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.EXITED]['data']),
                     'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
-                    'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
+                    'groups': Snippet.DEFAULTS[Snippet.EXITED]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])
                 }
@@ -142,7 +142,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '894'
+            'content-length': '897'
         }
         result_json = {
             'data': [{
@@ -178,7 +178,7 @@ class TestApiCreateSnippet(object):
                         'docker images -q --filter dangling=true | xargs docker rmi'
                     ],
                     'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
-                    'group': Snippet.DEFAULTS[Snippet.EXITED]['group'],
+                    'groups': Snippet.DEFAULTS[Snippet.EXITED]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])
                 }
@@ -188,7 +188,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '894'
+            'content-length': '897'
         }
         result_json = {
             'data': [{
@@ -225,7 +225,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': ['docker rm $(docker ps --all -q -f status=exited)'],
             'brief': '',
-            'group': 'default',
+            'groups': ['default'],
             'tags': [],
             'links': [],
             'category': 'snippet',
@@ -241,7 +241,7 @@ class TestApiCreateSnippet(object):
         content = {'3d855210284302d5': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '540'
+            'content-length': '543'
         }
         result_json = {
             'data': [{
@@ -282,7 +282,7 @@ class TestApiCreateSnippet(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1437'
+            'content-length': '1443'
         }
         result_json = {
             'data': [{
@@ -349,8 +349,7 @@ class TestApiCreateSnippet(object):
                 'attributes': {
                     'data': ['docker rm $(docker ps --all -q -f status=exited)'],
                     'brief': '',
-                    'group':
-                    'default',
+                    'groups': ['default'],
                     'tags': [],
                     'links': [],
                     'category': 'snippet',
@@ -509,7 +508,7 @@ class TestApiCreateSnippet(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                     'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group'],
+                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
                 }
@@ -519,7 +518,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '780'
+            'content-length': '783'
         }
         result_json = {
             'links': {
@@ -560,7 +559,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': Snippet.DEFAULTS[Snippet.FORCED]['brief'],
-            'group': Snippet.DEFAULTS[Snippet.FORCED]['group'],
+            'groups': Snippet.DEFAULTS[Snippet.FORCED]['groups'],
             'tags': Snippet.DEFAULTS[Snippet.FORCED]['tags'],
             'links': Snippet.DEFAULTS[Snippet.FORCED]['links'],
             'category': 'snippet',
@@ -576,7 +575,7 @@ class TestApiCreateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '872'
+            'content-length': '875'
         }
         result_json = {
             'links': {
@@ -613,7 +612,7 @@ class TestApiCreateSnippet(object):
                 'attributes': {
                     'data': 'data row1\ndata row2',
                     'brief': 'brief description',
-                    'group': 'solution',
+                    'groups': 'solution',
                     'tags': 'tag1,tag2',
                     'links': 'link1\nlink2',
                     'categeory': 'solution',
@@ -630,7 +629,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': request_body['data']['attributes']['data'].split(Const.DELIMITER_DATA),
             'brief': request_body['data']['attributes']['brief'],
-            'group': request_body['data']['attributes']['group'],
+            'groups': request_body['data']['attributes']['groups'].split(Const.DELIMITER_GROUPS),
             'tags': request_body['data']['attributes']['tags'].split(Const.DELIMITER_TAGS),
             'links': request_body['data']['attributes']['links'].split(Const.DELIMITER_LINKS),
             'category': 'snippet',
@@ -646,7 +645,7 @@ class TestApiCreateSnippet(object):
         content = {'da19017ada97d476': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '710'
+            'content-length': '713'
         }
         result_json = {
             'links': {
@@ -785,7 +784,7 @@ class TestApiCreateSnippet(object):
                 'attributes': {
                     'data': [u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'],
                     'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
-                    'group': u'Düsseldorf',
+                    'groups': u'Düsseldorf',
                     'tags': [u'γλώσσα', u'έδωσαν', u'ελληνική'],
                     'links': [u'http://www.чухонца.edu/~fdc/utf8/']
                 }
@@ -794,7 +793,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': request_body['data'][0]['attributes']['data'],
             'brief': request_body['data'][0]['attributes']['brief'],
-            'group': request_body['data'][0]['attributes']['group'],
+            'groups': [request_body['data'][0]['attributes']['groups']],
             'tags': request_body['data'][0]['attributes']['tags'],
             'links': request_body['data'][0]['attributes']['links'],
             'category': 'snippet',
@@ -810,7 +809,7 @@ class TestApiCreateSnippet(object):
         content = {'a74d83df95d572': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '855'
+            'content-length': '858'
         }
         result_json = {
             'data': [{
@@ -831,7 +830,7 @@ class TestApiCreateSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '915'
+            'content-length': '918'
         }
         result_json = {
             'meta': {

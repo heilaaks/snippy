@@ -50,7 +50,7 @@ class TestUtParser(object):
             '# Add optional brief description below.',
             'Remove docker image with force',
             '',
-            '# Add optional single group below.',
+            '# Add optional comma separated list of groups below.',
             'docker',
             '',
             '# Add optional comma separated list of tags below.',
@@ -65,7 +65,7 @@ class TestUtParser(object):
             'docker images -q --filter dangling=true | xargs docker rm'
         )
         brief = 'Remove docker image with force'
-        group = 'docker'
+        groups = ('docker',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
         links = (
             'https://docs.docker.com/engine/reference/commandline/images/',
@@ -74,7 +74,7 @@ class TestUtParser(object):
         )
         assert data == Parser.content_data(Const.SNIPPET, source)
         assert brief == Parser.content_brief(Const.SNIPPET, source)
-        assert group == Parser.content_group(Const.SNIPPET, source)
+        assert groups == Parser.content_groups(Const.SNIPPET, source)
         assert tags == Parser.content_tags(Const.SNIPPET, source)
         assert links == Parser.content_links(Const.SNIPPET, source)
 
@@ -99,7 +99,7 @@ class TestUtParser(object):
             '# Add optional brief description below.',
             '  How to write commit messages  ',
             '',
-            '# Add optional single group below.',
+            '# Add optional comma separated list of groups below.',
             '  git   ',
             '',
             '# Add optional comma separated list of tags below.',
@@ -110,11 +110,11 @@ class TestUtParser(object):
             'https://chris.beams.io/posts/git-commit/'
         )
         brief = 'How to write commit messages'
-        group = 'git'
+        groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
         assert links == Parser.content_links(Const.REFERENCE, source)
         assert brief == Parser.content_brief(Const.SNIPPET, source)
-        assert group == Parser.content_group(Const.SNIPPET, source)
+        assert groups == Parser.content_groups(Const.SNIPPET, source)
         assert tags == Parser.content_tags(Const.SNIPPET, source)
 
     def test_parser_003(self):
@@ -134,7 +134,7 @@ class TestUtParser(object):
             '# Add optional brief description below.',
             'How to write commit messages',
             '',
-            '# Add optional single group below.',
+            '# Add optional comma separated list of groups below.',
             'git',
             '',
             '# Add optional comma separated list of tags below.',
@@ -145,9 +145,52 @@ class TestUtParser(object):
             'https://chris.beams.io/posts/git-commit/'
         )
         brief = 'How to write commit messages'
-        group = 'git'
+        groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
         assert links == Parser.content_links(Const.REFERENCE, source)
         assert brief == Parser.content_brief(Const.SNIPPET, source)
-        assert group == Parser.content_group(Const.SNIPPET, source)
+        assert groups == Parser.content_groups(Const.SNIPPET, source)
         assert tags == Parser.content_tags(Const.SNIPPET, source)
+
+    def test_parser_004(self):
+        """Test parsing snippet.
+
+        Test case verifies that groups are parsed corrected if there is
+        a list of groups. The groups must be sorted.
+        """
+
+        source = '\n'.join((
+            '# Add mandatory snippet below.',
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker images -q --filter dangling=true | xargs docker rm',
+            '',
+            '# Add optional brief description below.',
+            'Remove docker image with force',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'moby,docker',
+            '',
+            '# Add optional comma separated list of tags below.',
+            '  cleanup,  container,docker,docker-ce,image,moby  ',
+            '# Add optional links below one link per line.',
+            '  https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/rmi/  '
+        ))
+        data = (
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker images -q --filter dangling=true | xargs docker rm'
+        )
+        brief = 'Remove docker image with force'
+        groups = ('docker', 'moby')
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        links = (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/rmi/'
+        )
+        assert data == Parser.content_data(Const.SNIPPET, source)
+        assert brief == Parser.content_brief(Const.SNIPPET, source)
+        assert groups == Parser.content_groups(Const.SNIPPET, source)
+        assert tags == Parser.content_tags(Const.SNIPPET, source)
+        assert links == Parser.content_links(Const.SNIPPET, source)

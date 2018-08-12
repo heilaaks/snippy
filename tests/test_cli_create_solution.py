@@ -43,10 +43,10 @@ class TestCliCreateSolution(object):
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
         data = Const.NEWLINE.join(Solution.DEFAULTS[Solution.BEATS]['data'])
         brief = Solution.DEFAULTS[Solution.BEATS]['brief']
-        group = Solution.DEFAULTS[Solution.BEATS]['group']
+        groups = Const.DELIMITER_GROUPS.join(Solution.DEFAULTS[Solution.BEATS]['groups'])
         tags = Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.BEATS]['tags'])
         links = Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.BEATS]['links'])
-        cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--group', group, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         assert Database.get_solutions().size() == 1
         Content.verified(mocker, snippy, content_read)
@@ -63,7 +63,7 @@ class TestCliCreateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         cause = snippy.run(['snippy', 'create', '--solution'])
-        assert cause == 'NOK: content data already exist with digest: a96accc25dd23ac0'
+        assert cause == 'NOK: content data already exist with digest: a5dd8f3807e08420'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 

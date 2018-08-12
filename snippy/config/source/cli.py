@@ -50,7 +50,7 @@ class Cli(ConfigSourceBase):
         '  -e, --editor                  use vi editor to add content',
         '  -c, --content CONTENT         define example content',
         '  -b, --brief BRIEF             define content brief description',
-        '  -g, --group GROUP             define content group',
+        '  -g, --groups [GROUP,...]      define comma separated list of groups',
         '  -t, --tags [TAG,...]          define comma separated list of tags',
         '  -l, --links [LINK ...]        define space separated list of links',
         '  -d, --digest DIGEST           idenfity content with digest',
@@ -171,7 +171,7 @@ class Cli(ConfigSourceBase):
         options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
         options.add_argument('-c', '--content', type=str, dest='data', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('-b', '--brief', type=str, default=Const.EMPTY, help=argparse.SUPPRESS)
-        options.add_argument('-g', '--group', type=str, default=Const.DEFAULT_GROUP, help=argparse.SUPPRESS)
+        options.add_argument('-g', '--groups', nargs='*', type=str, default=Const.DEFAULT_GROUPS, help=argparse.SUPPRESS)
         options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-l', '--links', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
         options.add_argument('-d', '--digest', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)

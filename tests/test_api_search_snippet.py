@@ -45,7 +45,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1497'
+            'content-length': '1503'
         }
         result_json = {
             'meta': {
@@ -84,7 +84,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1632'
+            'content-length': '1638'
         }
         result_json = {
             'meta': {
@@ -194,7 +194,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1600'
+            'content-length': '1606'
         }
         result_json = {
             'meta': {
@@ -233,7 +233,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1600'
+            'content-length': '1606'
         }
         result_json = {
             'meta': {
@@ -382,9 +382,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_011(self, server):
-        """Search snippet from group fields.
+        """Search snippet from groups fields.
 
-        Call GET /v1/snippets with search group keywords that do not result
+        Call GET /v1/snippets with search groups keywords that do not result
         any matches.
         """
 
@@ -421,7 +421,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '840'
+            'content-length': '843'
         }
         result_json = {
             'meta': {
@@ -484,7 +484,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1497'
+            'content-length': '1503'
         }
         result_json = {
             'meta': {
@@ -523,7 +523,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '817'
+            'content-length': '820'
         }
         result_json = {
             'meta': {
@@ -558,7 +558,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2543'
+            'content-length': '2625'
         }
         result_json = {
             'meta': {
@@ -598,7 +598,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3379'
+            'content-length': '3391'
         }
         result_json = {
             'meta': {
@@ -650,7 +650,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2092'
+            'content-length': '2098'
         }
         result_json = {
             'meta': {
@@ -694,7 +694,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1924'
+            'content-length': '1930'
         }
         result_json = {
             'meta': {
@@ -740,7 +740,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1525'
+            'content-length': '1528'
         }
         result_json = {
             'meta': {
@@ -784,7 +784,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2273'
+            'content-length': '2279'
         }
         result_json = {
             'meta': {
@@ -831,7 +831,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1176'
+            'content-length': '1179'
         }
         result_json = {
             'meta': {
@@ -871,7 +871,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2128'
+            'content-length': '2134'
         }
         result_json = {
             'meta': {
@@ -1152,27 +1152,27 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_search_snippet_field_003(self, server):
         """Get specific snippet field.
 
-        Call GET /v1/snippets/<digest>/group for existing snippet.
+        Call GET /v1/snippets/<digest>/groups for existing snippet.
         """
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '237'
+            'content-length': '241'
         }
         result_json = {
             'data': {
                 'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
                 'attributes': {
-                    'group': Snippet.DEFAULTS[Snippet.REMOVE]['group']
+                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/group'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63/groups'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/snippets/54e41e9b52/group',
+            path='/snippy/api/app/v1/snippets/54e41e9b52/groups',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -1307,7 +1307,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1497'
+            'content-length': '1503'
         }
         result_json = {
             'meta': {
@@ -1346,7 +1346,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1632'
+            'content-length': '1638'
         }
         result_json = {
             'meta': {

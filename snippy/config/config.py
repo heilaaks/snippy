@@ -111,7 +111,7 @@ class Config(object):
         cls.content_category = cls.source.category
         cls.content_data = cls.source.data
         cls.content_brief = cls.source.brief
-        cls.content_group = cls.source.group
+        cls.content_groups = cls.source.groups
         cls.content_tags = cls.source.tags
         cls.content_links = cls.source.links
         cls.content_name = cls.source.name
@@ -257,7 +257,7 @@ class Config(object):
         resource = collection.get_resource(cls.content_category, Config.utcnow())
         resource.data = cls.content_data
         resource.brief = cls.content_brief
-        resource.group = cls.content_group
+        resource.groups = cls.content_groups
         resource.tags = cls.content_tags
         resource.links = cls.content_links
         resource.name = cls.content_name
@@ -517,7 +517,7 @@ class Config(object):
         cls._logger.debug('configured content category: %s', cls.content_category)
         cls._logger.debug('configured content data: %s', cls.content_data)
         cls._logger.debug('configured content brief: %s', cls.content_brief)
-        cls._logger.debug('configured content group: %s', cls.content_group)
+        cls._logger.debug('configured content groups: %s', cls.content_groups)
         cls._logger.debug('configured content tags: %s', cls.content_tags)
         cls._logger.debug('configured content links: %s', cls.content_links)
         cls._logger.debug('configured content name: %s', cls.content_name)

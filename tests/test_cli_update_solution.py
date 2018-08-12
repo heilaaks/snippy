@@ -42,11 +42,11 @@ class TestCliUpdateSolution(object):
         template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         template = template.replace('## description', '## updated content description')
         content_read = {
-            'f8ded660166ebeef': Solution.get_dictionary(template),
+            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0'])
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'a5dd8f3807e08420'])
         assert cause == Cause.ALL_OK
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
@@ -62,11 +62,11 @@ class TestCliUpdateSolution(object):
         template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         template = template.replace('## description', '## updated content description')
         content_read = {
-            'f8ded660166ebeef': Solution.get_dictionary(template),
+            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run(['snippy', 'update', '--solution', '--digest', 'a96ac'])
+        cause = snippy.run(['snippy', 'update', '--solution', '--digest', 'a5dd8'])
         assert cause == Cause.ALL_OK
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
@@ -82,11 +82,11 @@ class TestCliUpdateSolution(object):
         template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         template = template.replace('## description', '## updated content description')
         content_read = {
-            'f8ded660166ebeef': Solution.get_dictionary(template),
+            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8']) # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'update', '--solution', '-d', 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8']) # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
@@ -103,11 +103,11 @@ class TestCliUpdateSolution(object):
         template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         template = template.replace('## description', '## updated content description')
         content_read = {
-            'f8ded660166ebeef': Solution.get_dictionary(template),
+            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run(['snippy', 'update', '--snippet', '-d', 'a96accc25dd23ac0'])
+        cause = snippy.run(['snippy', 'update', '--snippet', '-d', 'a5dd8f3807e08420'])
         assert cause == Cause.ALL_OK
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
@@ -125,11 +125,11 @@ class TestCliUpdateSolution(object):
         template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         template = template.replace('## description', '## updated content description')
         content_read = {
-            'f8ded660166ebeef': Solution.get_dictionary(template),
+            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
-        cause = snippy.run(['snippy', 'update', '-d', 'a96accc25dd23ac0'])
+        cause = snippy.run(['snippy', 'update', '-d', 'a5dd8f3807e08420'])
         assert cause == Cause.ALL_OK
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
@@ -185,7 +185,7 @@ class TestCliUpdateSolution(object):
         template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
         template = template.replace('## description', '## updated content description')
         content_read = {
-            'f8ded660166ebeef': Solution.get_dictionary(template),
+            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         edited_beats.return_value = template
@@ -250,7 +250,7 @@ class TestCliUpdateSolution(object):
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]
         }
         edited_beats.return_value = template
-        cause = snippy.run(['snippy', 'update', '-d', '61a24a156f5e9d2d', '--solution', '--editor'])
+        cause = snippy.run(['snippy', 'update', '-d', '27ddfbc3d289f29a', '--solution', '--editor'])
         edited_beats.assert_called_with(Const.DELIMITER_DATA.join(map(str, Solution.DEFAULTS[Solution.NGINX]['data'])))
         assert cause == Cause.ALL_OK
         assert Database.get_solutions().size() == 1

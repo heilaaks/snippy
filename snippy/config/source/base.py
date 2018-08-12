@@ -41,7 +41,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
     CATEGORIES = ('snippet', 'solution', 'reference')
-    ATTRIBUTES = ('data', 'brief', 'group', 'tags', 'links', 'category', 'name',
+    ATTRIBUTES = ('data', 'brief', 'groups', 'tags', 'links', 'category', 'name',
                   'filename', 'versions', 'source', 'uuid', 'created', 'updated',
                   'digest', 'key')
 
@@ -106,7 +106,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.editor = parameters.get('editor', False)
         self.failure = parameters.get('failure', False)
         self.filename = parameters.get('filename', Const.EMPTY)
-        self.group = parameters.get('group', Const.DEFAULT_GROUP)
+        self.groups = parameters.get('groups', Const.DEFAULT_GROUPS)
         self.links = parameters.get('links', ())
         self.log_json = parameters.get('log_json', False)
         self.log_msg_max = parameters.get('log_msg_max', Logger.DEFAULT_LOG_MSG_MAX)
@@ -179,16 +179,16 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._brief = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
-    def group(self):
-        """Get content group."""
+    def groups(self):
+        """Get content groups."""
 
-        return self._group
+        return self._groups
 
-    @group.setter
-    def group(self, value):
-        """Convert content group to utf-8 encoded unicode string."""
+    @groups.setter
+    def groups(self, value):
+        """Convert content groups to tuple of utf-8 encoded unicode strings."""
 
-        self._group = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+        self._groups = Parser.keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def tags(self):
@@ -321,13 +321,13 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @property
     def sgrp(self):
-        """Get 'search group' keywords."""
+        """Get 'search groups' keywords."""
 
         return self._sgrp
 
     @sgrp.setter
     def sgrp(self, value):
-        """Store 'search group' keywords.
+        """Store 'search groups' keywords.
 
         The keywords are stored in tuple with one keywords per element."""
 

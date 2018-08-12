@@ -101,7 +101,7 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'references'), ApiReferences(reference))
         self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}'), ApiReferencesDigest(reference))
         self.api.add_route(urljoin(Config.base_path_app, 'references/{digest}/{field}'), ApiReferencesField(reference))
-        self.api.add_route(urljoin(Config.base_path_app, 'group/{sgrp}'), ApiGroups(fields))
+        self.api.add_route(urljoin(Config.base_path_app, 'groups/{sgrp}'), ApiGroups(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'tags/{stag}'), ApiTags(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'digest/{digest}'), ApiDigest(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'digest/{digest}/{field}'), ApiDigestField(fields))

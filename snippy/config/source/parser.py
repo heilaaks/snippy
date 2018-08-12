@@ -30,14 +30,14 @@ from snippy.logger import Logger
 class Parser(object):
     """Parse configuration source parameters."""
 
-    SOLUTION_BRIEF = '## BRIEF :'
-    SOLUTION_DATE = '## DATE  :'
+    SOLUTION_BRIEF = '## BRIEF  :'
+    SOLUTION_FILE = '## FILE   :'
     DATA_HEAD = '# Add mandatory snippet below.\n'
     DATA_TAIL = '# Add optional brief description below.\n'
     BRIEF_HEAD = '# Add optional brief description below.\n'
-    BRIEF_TAIL = '# Add optional single group below.\n'
-    GROUP_HEAD = '# Add optional single group below.\n'
-    GROUP_TAIL = '# Add optional comma separated list of tags below.\n'
+    BRIEF_TAIL = '# Add optional comma separated list of groups below.\n'
+    GROUPS_HEAD = '# Add optional comma separated list of groups below.\n'
+    GROUPS_TAIL = '# Add optional comma separated list of tags below.\n'
     SNIPPET_TAGS = '# Add optional comma separated list of tags below.\n'
     SNIPPET_LINKS = '# Add optional links below one link per line.\n'
     REFERENCE_TAGS = SNIPPET_TAGS
@@ -54,7 +54,7 @@ class Parser(object):
         if category == Const.SNIPPET:
             data = Parser._split_source(source, '# Add mandatory snippet below', 2)
         elif category == Const.SOLUTION:
-            data = Parser._split_source(source, '## BRIEF :', 1)
+            data = Parser._split_source(source, Parser.SOLUTION_BRIEF, 1)
         elif category == Const.REFERENCE:
             data = Parser._split_source(source, '# Add mandatory links below one link per line', 2)
         else:
@@ -65,7 +65,7 @@ class Parser(object):
             resource = collection.get_resource(category, timestamp)
             resource.data = Parser.content_data(category, item)
             resource.brief = Parser.content_brief(category, item)
-            resource.group = Parser.content_group(category, item)
+            resource.groups = Parser.content_groups(category, item)
             resource.tags = Parser.content_tags(category, item)
             resource.links = Parser.content_links(category, item)
             resource.category = category
@@ -104,7 +104,7 @@ class Parser(object):
 
         if cls.DATA_HEAD in source and cls.BRIEF_HEAD:
             category = Const.SNIPPET
-        elif cls.SOLUTION_BRIEF in source and cls.SOLUTION_DATE:
+        elif cls.SOLUTION_BRIEF in source and cls.SOLUTION_FILE in source:
             category = Const.SOLUTION
         elif cls.REFERENCE_LINKS in source:
             category = Const.REFERENCE
@@ -126,7 +126,7 @@ class Parser(object):
         elif category == Const.REFERENCE:
             data = ()  # There is no data with the reference.
 
-        cls._logger.debug('parsed content data from "%s"', data)
+        cls._logger.debug('parsed content data from: %s', data)
 
         return data
 
@@ -141,30 +141,29 @@ class Parser(object):
                 lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
                 brief = Const.SPACE.join(lines).strip()
         elif category == Const.SOLUTION:
-            match = re.search(r'## BRIEF :\s*?(.*|$)', source, re.MULTILINE)
+            match = re.search(r'## BRIEF  :\s*?(.*|$)', source, re.MULTILINE)
             if match:
                 brief = match.group(1).strip()
-        cls._logger.debug('parsed content brief from "%s"', brief)
+        cls._logger.debug('parsed content brief from: %s', brief)
 
         return brief
 
     @classmethod
-    def content_group(cls, category, source):
-        """Read content group from text source."""
+    def content_groups(cls, category, source):
+        """Read content groups from text source."""
 
-        group = Const.EMPTY
+        groups = ()
         if category in (Const.SNIPPET, Const.REFERENCE):
-            match = re.search('%s(.*)%s' % (cls.GROUP_HEAD, cls.GROUP_TAIL), source, re.DOTALL)
+            match = re.search('%s(.*)%s' % (cls.GROUPS_HEAD, cls.GROUPS_TAIL), source, re.DOTALL)
             if match and not match.group(1).isspace():
-                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
-                group = Const.SPACE.join(lines).strip()
+                groups = Parser.keywords([match.group(1)])
         elif category == Const.SOLUTION:
-            match = re.search(r'## GROUP :\s*?(\S+|$)', source, re.MULTILINE)
+            match = re.search(r'## GROUPS :\s*?(\S+|$)', source, re.MULTILINE)
             if match:
-                group = match.group(1).strip()
-        cls._logger.debug('parsed content group from "%s"', group)
+                groups = tuple([s.strip() for s in match.group(1).strip().split(Const.DELIMITER_GROUPS)])
+        cls._logger.debug('parsed content groups from: %s', groups)
 
-        return group
+        return groups
 
     @classmethod
     def content_tags(cls, category, source):
@@ -176,10 +175,10 @@ class Parser(object):
             if match and not match.group(1).isspace():
                 tags = Parser.keywords([match.group(1)])
         elif category == Const.SOLUTION:
-            match = re.search(r'## TAGS  :\s*?(.*|$)', source, re.MULTILINE)
+            match = re.search(r'## TAGS   :\s*?(.*|$)', source, re.MULTILINE)
             if match:
                 tags = tuple([s.strip() for s in match.group(1).strip().split(Const.DELIMITER_TAGS)])
-        cls._logger.debug('parsed content tags from "%s"', tags)
+        cls._logger.debug('parsed content tags from: %s', tags)
 
         return tags
 
@@ -206,7 +205,7 @@ class Parser(object):
         # Only solution content uses optional filename field.
         filename = Const.EMPTY
         if category == Const.SOLUTION:
-            match = re.search(r'## FILE  :\s*?(\S+|$)', source, re.MULTILINE)
+            match = re.search(r'## FILE   :\s*?(\S+|$)', source, re.MULTILINE)
             if match and match.group(1):
                 filename = match.group(1)
         cls._logger.debug('parsed content filename from "%s"', filename)

@@ -23,7 +23,6 @@ paths:
       description: ""
       consumes:
         - "application/vnd.api+json; charset=UTF-8"
-      produces:
         - "application/vnd.api+json; charset=UTF-8"
       parameters:
         - $ref: '#/parameters/category'
@@ -235,10 +234,10 @@ paths:
           $ref: "#/responses/404"
         500:
           $ref: "#/responses/500"
-  /group/{groups}:
+  /groups/{groups}:
     get:
       tags:
-        - "group"
+        - "groups"
       summary: "Search content from defined group or groups"
       description: ""
       consumes:
@@ -555,9 +554,11 @@ definitions:
       brief:
         type: string
         description: "Optional brief description of the content."
-      group:
-        type: string
-        description: "Optional group to which the content belongs."
+      groups:
+        type: array
+        items:
+          type: string
+        description: "Optional list of groups to which the content belongs."
         default: default
       tags:
         type: array
@@ -684,11 +685,11 @@ parameters:
     in: path
     required: true
     description: "Field or fields that are returned."
-    enum: [data, brief, group, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
+    enum: [data, brief, groups, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
     x-example:
       - "brief"
       - "brief,tags"
-      - "brief,group,tags"
+      - "brief,groups,tags"
   groups:
     name: groups
     type: string
@@ -810,7 +811,7 @@ parameters:
     name: sort
     type: string
     default: brief
-    enum: [data, brief, group, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
+    enum: [data, brief, groups, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
     in: query
     required: false
     description: "Sort based on defined field."
@@ -819,7 +820,7 @@ parameters:
     type: array
     items:
       type: string
-      enum: [data, brief, group, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
+      enum: [data, brief, groups, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
     in: query
     required: false
     description: "Limit fields that are returned in result list."

@@ -32,17 +32,16 @@ class SolutionHelper(object):
     NGINX = 1
     KAFKA = 2
 
-    BEATS_DIGEST = 'a96accc25dd23ac0'
-    NGINX_DIGEST = '61a24a156f5e9d2d'
-    KAFKA_DIGEST = 'eeef5ca3ec9cd364'
+    BEATS_DIGEST = 'a5dd8f3807e08420'
+    NGINX_DIGEST = '27ddfbc3d289f29a'
+    KAFKA_DIGEST = '15d1688c970fa336'
     DEFAULTS = ({
         'data':('################################################################################',
-                '## BRIEF : Debugging Elastic Beats',
+                '## BRIEF  : Debugging Elastic Beats',
                 '##',
-                '## DATE  : 2017-10-20 11:11:19',
-                '## GROUP : beats',
-                '## TAGS  : Elastic,beats,filebeat,debug,howto',
-                '## FILE  : howto-debug-elastic-beats.txt',
+                '## GROUPS : beats',
+                '## TAGS   : Elastic,beats,filebeat,debug,howto',
+                '## FILE   : howto-debug-elastic-beats.txt',
                 '################################################################################',
                 '',
                 '',
@@ -79,7 +78,7 @@ class SolutionHelper(object):
                 '################################################################################',
                 ''),
         'brief': 'Debugging Elastic Beats',
-        'group': 'beats',
+        'groups': ('beats',),
         'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
         'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
         'category' :'solution',
@@ -90,15 +89,14 @@ class SolutionHelper(object):
         'uuid': '21cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created' :'2017-10-20T11:11:19.000001+0000',
         'updated' :'2017-10-20T11:11:19.000001+0000',
-        'digest':'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8'
+        'digest':'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8'
     }, {
         'data':('################################################################################',
-                '## BRIEF : Debugging nginx ',
+                '## BRIEF  : Debugging nginx ',
                 '##',
-                '## DATE  : 2017-10-20 06:16:27',
-                '## GROUP : nginx',
-                '## TAGS  : nginx,debug,logging,howto',
-                '## FILE  : howto-debug-nginx.txt',
+                '## GROUPS : nginx',
+                '## TAGS   : nginx,debug,logging,howto',
+                '## FILE   : howto-debug-nginx.txt',
                 '################################################################################',
                 '',
                 '',
@@ -155,7 +153,7 @@ class SolutionHelper(object):
                 "    $ docker exec -i -t $(docker ps | egrep -m 1 'petelk/nginx' | awk '{print $1}') /bin/bash",
                 ''),
         'brief': 'Debugging nginx',
-        'group': 'nginx',
+        'groups': ('nginx',),
         'tags': ('debug', 'howto', 'logging', 'nginx'),
         'links': ('https://www.nginx.com/resources/admin-guide/debug/', ),
         'category': 'solution',
@@ -166,15 +164,14 @@ class SolutionHelper(object):
         'uuid': '22cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2017-10-20T06:16:27.000001+0000',
         'updated': '2017-10-20T06:16:27.000001+0000',
-        'digest': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe'
+        'digest': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778'
     }, {
         'data':('################################################################################',
-                '## BRIEF : Testing docker log drivers',
+                '## BRIEF  : Testing docker log drivers',
                 '##',
-                '## DATE  : 2017-10-20 06:16:27',
-                '## GROUP : docker',
-                '## TAGS  : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
-                '## FILE  : kubernetes-docker-log-driver-kafka.txt',
+                '## GROUPS : docker',
+                '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
+                '## FILE   : kubernetes-docker-log-driver-kafka.txt',
                 '################################################################################',
                 '',
                 '################################################################################',
@@ -259,7 +256,7 @@ class SolutionHelper(object):
                 '################################################################################',
                 ''),
         'brief': 'Testing docker log drivers',
-        'group': 'docker',
+        'groups': ('docker',),
         'tags': ('docker', 'moby', 'kubernetes', 'logging', 'plugin', 'driver', 'kafka', 'logs2kafka'),
         'links': ('https://github.com/MickayG/moby-kafka-logdriver',
                   'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
@@ -272,16 +269,16 @@ class SolutionHelper(object):
         'uuid': '23cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2017-10-20T06:16:27.000001+0000',
         'updated': '2017-10-20T06:16:27.000001+0000',
-        'digest': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57'
+        'digest': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8'
     })
 
     TEMPLATE = (
         '################################################################################',
-        '## BRIEF : ',
+        '## BRIEF  : ',
         '##',
-        '## GROUP : default',
-        '## TAGS  : ',
-        '## FILE  : ',
+        '## GROUPS : default',
+        '## TAGS   : ',
+        '## FILE   : ',
         '################################################################################',
         '',
         '',

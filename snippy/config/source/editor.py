@@ -44,7 +44,7 @@ class Editor(object):
             resource = collection.get_resource(category, timestamp)
             resource.data = Parser.content_data(category, source)
             resource.brief = Parser.content_brief(category, source)
-            resource.group = Parser.content_group(category, source)
+            resource.groups = Parser.content_groups(category, source)
             resource.tags = Parser.content_tags(category, source)
             resource.links = Parser.content_links(category, source)
             resource.category = category

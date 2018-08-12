@@ -53,7 +53,7 @@ class TestCliOptions(object):
         '    -e, --editor                  use vi editor to add content',
         '    -c, --content CONTENT         define example content',
         '    -b, --brief BRIEF             define content brief description',
-        '    -g, --group GROUP             define content group',
+        '    -g, --groups [GROUP,...]      define comma separated list of groups',
         '    -t, --tags [TAG,...]          define comma separated list of tags',
         '    -l, --links [LINK ...]        define space separated list of links',
         '    -d, --digest DIGEST           idenfity content with digest',

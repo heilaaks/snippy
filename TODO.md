@@ -1,10 +1,14 @@
 ## WORKING
-   - [ ] Fix add proper error code for non existent category which must be: snippet, solution or referece. There was accidental usage of snippets since it works in CLI which was looked like 20 minutes.
-   - [ ] Refactor groups to group since it is only one group (API breaking change).
-   - [ ] Fix there is a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().
+   - [ ] Check if JSON API allows: 'data': {'type': 'reference','attributes': Reference.DEFAULTS[Reference.GITLOG]} because now this does not work without list [] for data.
+   - [ ] Fix why single data response (search ==> 1) is not sorted but multiple results are? test_api_search_snippet_015/test_api_search_snippet_016
+   - [ ] Why test_api_search_snippet_016 and another TOD case length raised like 100 bytes?
+   - [ ] Fix --all does not print references in search.
+   - [ ] Fix category that has db query the all with snippet, solution, reference.
+   - [ ] Fix a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().
    - [ ] Fix does api fields on_get print the log at the beginngin twice?
    - [ ] Fix if logs after uuid like: please define keyword, digest or content data as search criteria
-   - [ ] Fix group/tags api inherits from base that has e.g. the post which is not good.
+   - [ ] Fix group/tags api now inherits from a base that has e.g. the post which is not good when only get should be available. Is there a way to limit this? Is this even needed?
+   - [ ] Fix running pytest tests/test_cli_create_solution.py -k test_cli_create_solution_006 alone has the Config problem with templates. Config not initialized?
 
 ## PLANNING
    - [ ] Add support to import and export content in markdown format.
@@ -156,6 +160,8 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Removed all traces of DATE field for solutions.
+   - [x] Changed group to groups. This is a breaking change in detauls and templates.
    - [x] Added new fields api and updated OAS specifications.
    - [x] Added UUID handling into database and for migrated JSON or YAML files.
    - [x] Changed link sort in case of reference content. The links are sorted all but reference content.

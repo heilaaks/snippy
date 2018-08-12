@@ -578,7 +578,7 @@ class SqliteDb(object):
         regex = regex[:-4]  # Remove last ' OR ' added by the loop.
         regex = regex + ') '
 
-        # Add optional group search filter.
+        # Add optional group search filters.
         if groups:
             regex = regex + 'AND ('
             for _ in groups:

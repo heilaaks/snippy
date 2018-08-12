@@ -55,7 +55,7 @@ class TestApiCreateReference(object):
         content = {Reference.GITLOG_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '584'}
+            'content-length': '587'}
         result_json = {
             'data': [{
                 'type': 'reference',
@@ -95,7 +95,7 @@ class TestApiCreateReference(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1165'
+            'content-length': '1171'
         }
         result_json = {
             'data': [{
@@ -122,7 +122,7 @@ class TestApiCreateReference(object):
     def test_api_create_reference_003(self, server, mocker):
         """Update reference with POST that maps to PUT.
 
-        Call POST /v1/references/a96accc25dd23ac0 to update existing reference
+        Call POST /v1/references/5c2071094dbfaa33 to update existing reference
         with X-HTTP-Method-Override header that overrides the operation as
         PUT. In this case the created timestamp must remain in initial value
         and the updated timestamp must be updated to reflect the update time.
@@ -134,7 +134,7 @@ class TestApiCreateReference(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Reference.DEFAULTS[Reference.REGEXP]['data']),
                     'brief': Reference.DEFAULTS[Reference.REGEXP]['brief'],
-                    'group': Reference.DEFAULTS[Reference.REGEXP]['group'],
+                    'groups': Reference.DEFAULTS[Reference.REGEXP]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.REGEXP]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Reference.DEFAULTS[Reference.REGEXP]['links'])
                 }
@@ -144,7 +144,7 @@ class TestApiCreateReference(object):
         content = {'cb9225a81eab8ce': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '745'
+            'content-length': '748'
         }
         result_json = {
             'links': {
@@ -174,9 +174,9 @@ class TestApiCreateReference(object):
     def test_api_create_reference_004(self, server, mocker):
         """Update reference with POST that maps to PATCH.
 
-        Call POST /v1/references/a96accc25dd23ac0 to update existing reference
+        Call POST /v1/references/5c2071094dbfaa33 to update existing reference
         with X-HTTP-Method-Override header that overrides the operation as
-        PATCH. Only the updated attribute must change.
+        PATCH. Only the updated attributes must be changed.
         """
 
         request_body = {
@@ -191,7 +191,7 @@ class TestApiCreateReference(object):
         content_read = {
             'data': Reference.DEFAULTS[Reference.GITLOG]['data'],
             'brief': Reference.DEFAULTS[Reference.REGEXP]['brief'],
-            'group': Reference.DEFAULTS[Reference.GITLOG]['group'],
+            'groups': Reference.DEFAULTS[Reference.GITLOG]['groups'],
             'tags': Reference.DEFAULTS[Reference.GITLOG]['tags'],
             'links': Reference.DEFAULTS[Reference.REGEXP]['links'],
             'category': Reference.DEFAULTS[Reference.GITLOG]['category'],
@@ -207,7 +207,7 @@ class TestApiCreateReference(object):
         content = {'ee4a072a5a7a661a': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '729'
+            'content-length': '732'
         }
         result_json = {
             'links': {
@@ -343,6 +343,61 @@ class TestApiCreateReference(object):
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_500
         assert Database.get_references().size() == 0
+
+    @pytest.mark.usefixtures('create-regexp-utc')
+    def test_api_create_reference_008(self, server, mocker):
+        """Create one reference from API.
+
+        Call POST /v1/references to create new reference with two groups.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'reference',
+                'attributes': {
+                    'brief': Reference.DEFAULTS[Reference.REGEXP]['brief'],
+                    'groups': ['python', 'regexp'],
+                    'tags': Reference.DEFAULTS[Reference.REGEXP]['tags'],
+                    'links': Reference.DEFAULTS[Reference.REGEXP]['links']
+                }
+            }]
+        }
+        content_read = {
+            'data': [],
+            'brief': 'Python regular expression',
+            'groups': ['python', 'regexp'],
+            'tags': ['howto', 'online', 'python', 'regexp'],
+            'links': ['https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/', 'https://pythex.org/'],
+            'category': 'reference',
+            'name': '',
+            'filename': '',
+            'versions': '',
+            'source': '',
+            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            'created': Content.REGEXP_TIME,
+            'updated': Content.REGEXP_TIME,
+            'digest': 'e5a94aae97e43273b37142d242e9669b97a899a44b6d73b340b191d3fee4b58a'
+        }
+        content = {'e5a94aae97e43273': content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '665'}
+        result_json = {
+            'data': [{
+                'type': 'reference',
+                'id': 'e5a94aae97e43273b37142d242e9669b97a899a44b6d73b340b191d3fee4b58a',
+                'attributes': content_read
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/references',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_201
+        assert Database.get_references().size() == 1
+        Content.verified(mocker, server, content)
 
     @classmethod
     def teardown_class(cls):

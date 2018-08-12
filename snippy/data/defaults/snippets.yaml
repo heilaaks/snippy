@@ -6,7 +6,8 @@ data:
   - docker rm --volumes $(docker ps --all --quiet)
   digest: 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/engine/reference/commandline/rm/
   name: ''
@@ -29,7 +30,8 @@ data:
   - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
   digest: dd328a21c1941983bbd20be51b0d84e76cafdd0a5b3f5b5e5728e9c9f3d7111c
   filename: ''
-  group: linux
+  groups:
+  - linux
   links:
   - http://www.skrenta.com/rt/man/grep.1.html
   - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux/
@@ -49,7 +51,8 @@ data:
   - docker images -q --filter dangling=true | xargs docker rmi
   digest: e2921a5a2124d046a16f2cae43f24af44267670a85e7b7564548911b1fe96021
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/engine/reference/commandline/images/
   - https://docs.docker.com/engine/reference/commandline/rm/
@@ -76,7 +79,8 @@ data:
   - docker rmi $(docker images -q)
   digest: a516e2d6f8aa5c6fe94a0eac1e4585ab4b29db047e274df4902d03377e43e22c
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/engine/reference/commandline/rm/
   - https://docs.docker.com/engine/reference/commandline/rmi/
@@ -104,7 +108,8 @@ data:
     -t heilaaks/snippy .
   digest: 76e05e954e18f7668faf25ded614b7af79dfed6c4f59dc902f42559357de72d8
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/engine/reference/commandline/build/
   name: ''
@@ -127,7 +132,8 @@ data:
   - docker exec -it $(docker ps | egrep -m 1 'kibana:latest' | awk '{print $1}') /bin/bash
   digest: 4b9882c41365b0ea51b23004b610b2a017ee87156d173482876bb77e59f83b2a
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/engine/reference/commandline/exec/
   - https://docs.docker.com/engine/reference/commandline/run/
@@ -157,7 +163,8 @@ data:
   - 'echo $STY # Response like 13153.pts-3 tells that screen is active'
   digest: 9869a3866df270fc44715ec2d9508c0c65a35a6d69b09f6ce95806a09ef82fb5
   filename: ''
-  group: linux
+  groups:
+  - linux
   links:
   - http://www.skrenta.com/rt/man/screen.1.html
   name: ''
@@ -179,7 +186,8 @@ data:
   - docker-compose --version
   digest: 21161fd9f119935178427b10c5c09fabbe4292982ba205d283bf551df70f6680
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/compose/install/
   - https://github.com/docker/compose/releases/
@@ -210,7 +218,8 @@ data:
   - docker run --rm hello-world
   digest: 90db2db20b7b64e8918d854751fa9221ce754d91aca59a54f69280e2e6af8abf
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/engine/installation/#server
   - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/
@@ -243,7 +252,8 @@ data:
   - docker info | grep Swarm
   digest: 5f4d6ab736055173668d1e985c71ed6ec7ec7df0068940955e06f85e31fe65d7
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/engine/reference/commandline/service_ls/
   - https://docs.docker.com/engine/reference/commandline/stack/
@@ -272,7 +282,8 @@ data:
   - docker network rm y0fdm2xoyuca
   digest: 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://github.com/moby/moby/issues/23302
   name: ''
@@ -299,7 +310,8 @@ data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
   digest: afe4207ef77585206a4e7814fbc8c2abbe2fe071a58bfc78455ffaa4521fdb52
   filename: ''
-  group: elasticsearch
+  groups:
+  - elasticsearch
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/cat.html
   name: ''
@@ -324,7 +336,8 @@ data:
   - kubectl logs nginx-3107262526-k01hd
   digest: 14bc2d09409aba29b447a297cbef932465620348dbe39ad1483af7d4f914839e
   filename: ''
-  group: kubernetes
+  groups:
+  - kubernetes
   links:
   - https://kubernetes.io/docs/user-guide/kubectl-cheatsheet/
   name: ''
@@ -348,7 +361,8 @@ data:
   - curl -XGET -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
   digest: c2ead9de4b955cc67bc14f99e72b7766c6a270a343dd7285e76f3dc13e1ebeec
   filename: ''
-  group: elasticsearch
+  groups:
+  - elasticsearch
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-delete-index.html
   name: ''
@@ -378,7 +392,8 @@ data:
   - openssl s_client -debug -connect kafka:9093 -tls1_2
   digest: 4ec6013e6bca3193d1417d4085049bd8803d446fa33f8fc0f9ecacbf723e2f0d
   filename: ''
-  group: security
+  groups:
+  - security
   links:
   - https://wiki.openssl.org/index.php/Command_Line_Utilities
   name: ''
@@ -400,7 +415,8 @@ data:
   - nmap 10.183.19.189
   digest: f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d
   filename: ''
-  group: linux
+  groups:
+  - linux
   links:
   - https://www.commandlinux.com/man-page/man1/nc.1.html
   name: ''
@@ -428,7 +444,8 @@ data:
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk*"
   digest: 39ec99b4176b9bb7a58919fac5b1efb1ed91dcfdb9b72bd060e418d918812b6d
   filename: ''
-  group: elasticsearch
+  groups:
+  - elasticsearch
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-templates.html
   name: ''
@@ -458,7 +475,8 @@ data:
   - find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull" \;
   digest: ca12adbd62ce818e05ef6d48b5396ba04eaf0b485ffa6c7386d980bf01e408bc
   filename: ''
-  group: git
+  groups:
+  - git
   links:
   - http://snipplr.com/view/62314/perform-git-pull-on-subdirectory-recursive/
   - https://stackoverflow.com/questions/3497123/run-git-pull-over-all-subdirectories
@@ -477,7 +495,8 @@ data:
   - git log --pretty=oneline --abbrev-commit
   digest: 888b1e827db42889b35373f04260304c41b03125d2c1ce0581f0d05b7adb59ed
   filename: ''
-  group: git
+  groups:
+  - git
   links:
   - https://git-scm.com/book/id/v2/Git-Basics-Viewing-the-Commit-History
   - https://github.com/k88hudson/git-flight-rules
@@ -508,7 +527,8 @@ data:
   - docker run --rm hello-world
   digest: 4da15503f5832775571141c7cfb0dc44229082a5c4f64d8a112547796dabe5c8
   filename: ''
-  group: docker
+  groups:
+  - docker
   links:
   - https://docs.docker.com/engine/installation/linux/docker-ce/fedora/#install-using-the-repository
   - https://docs.docker.com/install/linux/docker-ce/fedora/
@@ -533,7 +553,8 @@ data:
   - curl -XPUT -u elastic:changeme "http://${HOSTNAME}:9200/*/_settings" -d '{"number_of_replicas":0}'
   digest: 91ec1e62b12bc1a67716c9ecb6e2be873e506c50a6a8ecf72e78ed76a44764f4
   filename: ''
-  group: elasticsearch
+  groups:
+  - elasticsearch
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-update-settings.html
   name: ''
@@ -571,7 +592,8 @@ data:
   - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_restart"
   digest: 162bc2a7b2776998acb6ee796105444d42e75218dc47e00a3f3b9b18886557d7
   filename: ''
-  group: elasticsearch
+  groups:
+  - elasticsearch
   links:
   - https://www.elastic.co/guide/en/elasticsearch/reference/current/watcher-api.html
   name: ''
@@ -594,7 +616,8 @@ data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_nodes/plugins?filter_path=**.plugins.name&pretty"
   digest: 93ee5c79e510dd65e61a2002a73bddc3c4dbc7d0f04fb2a4f2130445b95d7244
   filename: ''
-  group: elasticsearch
+  groups:
+  - elasticsearch
   links:
   - https://www.elastic.co/guide/en/elasticsearch/plugins/current/intro.html
   name: ''
@@ -617,7 +640,8 @@ data:
     \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
   digest: 9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3
   filename: ''
-  group: git
+  groups:
+  - git
   links:
   - https://gist.github.com/tafkey/664266c00387c98631b3
   name: ''
@@ -636,7 +660,8 @@ data:
   - ps aux | grep -w Z
   digest: 35e39c6477a22de08aeae392f8b1e816bc2d676e0e05c0127e69bd85efc0d548
   filename: ''
-  group: linux
+  groups:
+  - linux
   links:
   - https://stackoverflow.com/a/16944931
   name: ''
@@ -657,7 +682,8 @@ data:
   - umount /tmp/overlayfs/overlay
   digest: 490c913cf941a0bedc14e3d390894958b3db4220dc2b1b856454403c888df17f
   filename: ''
-  group: linux
+  groups:
+  - linux
   links:
   - https://stackoverflow.com/a/7878763
   name: ''
@@ -682,7 +708,8 @@ data:
   - 'tar -xf mytar.tar.gz manifest.json                # Extract only one file.'
   digest: b3841d9a5785952168c4300d60658b1b8028c48a7d120ef4dcca084008217fe3
   filename: ''
-  group: linux
+  groups:
+  - linux
   links: []
   name: ''
   source: ''

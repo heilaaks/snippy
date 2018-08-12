@@ -45,7 +45,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5480'
+            'content-length': '5426'
         }
         result_json = {
             'meta': {
@@ -56,11 +56,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'id': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -87,7 +87,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5479'
+            'content-length': '5425'
         }
         result_json = {
             'meta': {
@@ -98,11 +98,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'id': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -138,7 +138,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'id': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778',
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
@@ -173,7 +173,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'id': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778',
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
@@ -198,7 +198,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7147'
+            'content-length': '7093'
         }
         result_json = {
             'meta': {
@@ -209,11 +209,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
@@ -238,7 +238,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7689'
+            'content-length': '7635'
         }
         result_json = {
             'meta': {
@@ -249,11 +249,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }, {
                 'type': 'solution',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'id': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -316,7 +316,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'id': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778',
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
@@ -425,7 +425,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2596'
+            'content-length': '2569'
         }
         result_json = {
             'meta': {
@@ -436,15 +436,15 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': {
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a5dd8f3807e08420'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -488,7 +488,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5480'
+            'content-length': '5426'
         }
         result_json = {
             'meta': {
@@ -499,11 +499,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'id': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -527,7 +527,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3045'
+            'content-length': '3018'
         }
         result_json = {
             'meta': {
@@ -538,7 +538,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'id': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -562,7 +562,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '8526'
+            'content-length': '8508'
         }
         result_json = {
             'meta': {
@@ -573,11 +573,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '61a24a156f5e9d2d448915eb68ce44b383c8c00e8deadbf27050c6f18cd86afe',
+                'id': '27ddfbc3d289f29a52140581c6a17559be1ceeabd3bf48acc573faf905f1b778',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -631,22 +631,22 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1999'
+            'content-length': '1969'
         }
         result_json = {
             'data': {
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': {
                     'data': Solution.DEFAULTS[Solution.BEATS]['data']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/data'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a5dd8f3807e08420/data'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/data',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420/data',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -666,17 +666,17 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result_json = {
             'data': {
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': {
                     'brief': Solution.DEFAULTS[Solution.BEATS]['brief']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/brief'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a5dd8f3807e08420/brief'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/brief',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420/brief',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -686,27 +686,27 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
     def test_api_search_solution_field_003(self, server):
         """Get specific solution field.
 
-        Call GET /v1/solutions/<digest>/group for existing solution.
+        Call GET /v1/solutions/<digest>/groups for existing solution.
         """
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '238'
+            'content-length': '242'
         }
         result_json = {
             'data': {
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': {
-                    'group': Solution.DEFAULTS[Solution.BEATS]['group']
+                    'groups': Solution.DEFAULTS[Solution.BEATS]['groups']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/group'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a5dd8f3807e08420/groups'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/group',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420/groups',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -726,17 +726,17 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result_json = {
             'data': {
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': {
                     'tags': Solution.DEFAULTS[Solution.BEATS]['tags']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/tags'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a5dd8f3807e08420/tags'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/tags',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420/tags',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -756,17 +756,17 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result_json = {
             'data': {
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': {
                     'links': Solution.DEFAULTS[Solution.BEATS]['links']
                 }
             },
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a96accc25dd23ac0/links'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/a5dd8f3807e08420/links'
             }
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/links',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420/links',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
@@ -794,7 +794,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0/notexist',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420/notexist',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)

@@ -6,7 +6,8 @@ data:
   - ''
   digest: 6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3
   filename: ''
-  group: git
+  groups:
+  - git
   links:
   - https://writingfordevelopers.substack.com/p/how-to-write-commit-messages
   - https://chris.beams.io/posts/git-commit/

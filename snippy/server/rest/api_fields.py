@@ -45,14 +45,14 @@ class ApiKeywords(ApiContentBase):
 
 
 class ApiGroups(ApiContentBase):
-    """Process content based on group field."""
+    """Process content based on groups field."""
 
     def __init__(self, fields):
         super(ApiGroups, self).__init__(fields, Const.ALL_CATEGORIES)
 
     @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
-        """Search content based on group field."""
+        """Search content based on groups field."""
 
         self._logger.debug('run get: %s', request.uri)
         if 'scat' not in request.params:

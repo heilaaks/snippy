@@ -36,7 +36,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     """Test GET /snippy/api/{field} API."""
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_group_001(self, server):
+    def test_api_search_groups_001(self, server):
         """Get specific content based on group field.
 
         Call GET /v1/groups/docker to get all content from the docker group.
@@ -45,7 +45,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6141'
+            'content-length': '6120'
         }
         result_json = {
             'meta': {
@@ -64,19 +64,19 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
                 'type': 'solution',
-                'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/group/docker',
+            path='/snippy/api/app/v1/groups/docker',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_group_002(self, server):
+    def test_api_search_groups_002(self, server):
         """Get specific content based on group field.
 
         Call GET /v1/groups/docker to get content from the docker and python
@@ -85,7 +85,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5295'
+            'content-length': '5271'
         }
         result_json = {
             'meta': {
@@ -100,12 +100,12 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
             }, {
                 'type': 'solution',
-                'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/group/docker,python',
+            path='/snippy/api/app/v1/groups/docker,python',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=test&limit=20&sort=brief')
         assert result.headers == result_headers
@@ -113,7 +113,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_group_003(self, server):
+    def test_api_search_groups_003(self, server):
         """Get specific content based on group field.
 
         Call GET /v1/groups/docker,python to get content from the docker and
@@ -124,7 +124,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4714'
+            'content-length': '4687'
         }
         result_json = {
             'meta': {
@@ -135,12 +135,12 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/group/docker,python',
+            path='/snippy/api/app/v1/groups/docker,python',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=test&limit=20&sort=brief&scat=snippet,solution')
         assert result.headers == result_headers
@@ -148,7 +148,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_group_004(self, server):
+    def test_api_search_groups_004(self, server):
         """Get specific content based on group field.
 
         Try to call GET /v1/groups/docker,python and limit the search to
@@ -179,7 +179,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/group/docker,python',
+            path='/snippy/api/app/v1/groups/docker,python',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=test&limit=20&sort=brief&scat=snippets,solutions')
         assert result.headers == result_headers
@@ -187,10 +187,10 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_400
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_group_005(self, server):
+    def test_api_search_groups_005(self, server):
         """Try to get specific content based on group field.
 
-        Try to call GET /v1/group/missing with a group that is not found.
+        Try to call GET /v1/groups/missing with a group that is not found.
         """
 
         result_headers = {
@@ -207,14 +207,14 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/group/missing',
+            path='/snippy/api/app/v1/groups/missing',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_group_006(self, server):
+    def test_api_search_groups_006(self, server):
         """Try to get specific content based on group field.
 
         Try to call GET /v1/missing/docker with a field name that is not
@@ -232,7 +232,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_404
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_group_007(self, server):
+    def test_api_search_groups_007(self, server):
         """Get specific content based on group field.
 
         Call GET /v1/groups/docker to get all content from the docker group.
@@ -246,7 +246,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1497'
+            'content-length': '1503'
         }
         result_json = {
             'meta': {
@@ -266,7 +266,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/group/docker',
+            path='/snippy/api/app/v1/groups/docker',
             headers={'accept': 'application/vnd.api+json'},
             query_string='scat=snippet&uuid=1')
         assert result.headers == result_headers
@@ -274,7 +274,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
-    def test_api_search_group_008(self, server):
+    def test_api_search_groups_008(self, server):
         """Get specific content based on group field.
 
         Try to call GET /v1/groups/docker to get all content from the docker
@@ -301,7 +301,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/group/docker',
+            path='/snippy/api/app/v1/groups/docker',
             headers={'accept': 'application/vnd.api+json'},
             query_string='scat=snippet,solutions,reference&uuid=1')
         assert result.headers == result_headers
@@ -317,7 +317,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6141'
+            'content-length': '6120'
         }
         result_json = {
             'meta': {
@@ -336,7 +336,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
                 'type': 'solution',
-                'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
@@ -357,7 +357,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '651'
+            'content-length': '654'
         }
         result_json = {
             'meta': {
@@ -415,7 +415,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '740'
+            'content-length': '743'
         }
         result_json = {
             'meta': {
@@ -479,7 +479,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '758'
+            'content-length': '761'
         }
         result_json = {
             'meta': {
@@ -684,7 +684,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2078'
+            'content-length': '2087'
         }
         result_json = {
             'meta': {
@@ -725,7 +725,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '651'
+            'content-length': '654'
         }
         result_json = {
             'meta': {

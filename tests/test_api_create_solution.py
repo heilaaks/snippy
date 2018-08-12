@@ -54,11 +54,11 @@ class TestApiCreateSolution(object):
         content = {Solution.BEATS_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2444'}
+            'content-length': '2417'}
         result_json = {
             'data': [{
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': content_read
             }]
         }
@@ -90,20 +90,20 @@ class TestApiCreateSolution(object):
         }
         content = {
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
-            'eeef5ca': Solution.DEFAULTS[Solution.KAFKA]
+            '15d1688': Solution.DEFAULTS[Solution.KAFKA]
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7088'
+            'content-length': '7034'
         }
         result_json = {
             'data': [{
                 'type': 'solution',
-                'id': 'a96accc25dd23ac0554032e25d773f3931d70b1d986664b13059e5e803df6da8',
+                'id': 'a5dd8f3807e084202be2aa96f4d0494e9295e5b4445b3f97b7990167e03ae3d8',
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': 'eeef5ca3ec9cd364cb7cb0fa085dad92363b5a2ec3569ee7d2257ab5d4884a57',
+                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
@@ -121,7 +121,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_003(self, server, mocker):
         """Update solution with POST that maps to PUT.
 
-        Call POST /v1/solutions/a96accc25dd23ac0 to update existing solution
+        Call POST /v1/solutions/a5dd8f3807e08420 to update existing solution
         with X-HTTP-Method-Override header that overrides the operation as
         PUT. In this case the created timestamp must remain in initial value
         and the updated timestamp must be updated to reflect the update time.
@@ -133,34 +133,34 @@ class TestApiCreateSolution(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'group': Solution.DEFAULTS[Solution.NGINX]['group'],
+                    'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
                 }
             }
         }
         content_read = copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
-        content = {'2cd0e794244a07f': content_read}
+        content = {'b862cdea9a2b952c': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3057'
+            'content-length': '3030'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/2cd0e794244a07f8'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/b862cdea9a2b952c'
             },
             'data': {
                 'type': 'solution',
-                'id': '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d',
+                'id': 'b862cdea9a2b952c8f59cc48c34ece4aa4e65e74e8ca8e3bbf0523e9ebaac6c8',
                 'attributes': content_read
             }
         }
         result_json['data']['attributes']['filename'] = Const.EMPTY
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
         result_json['data']['attributes']['updated'] = Content.NGINX_TIME
-        result_json['data']['attributes']['digest'] = '2cd0e794244a07f81f6ebfd61dffa5c85f09fc7690dc0dc68ee0108be8cc908d'
+        result_json['data']['attributes']['digest'] = 'b862cdea9a2b952c8f59cc48c34ece4aa4e65e74e8ca8e3bbf0523e9ebaac6c8'
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -173,7 +173,7 @@ class TestApiCreateSolution(object):
     def test_api_create_solution_004(self, server, mocker):
         """Update solution with POST that maps to PATCH.
 
-        Call POST /v1/solutions/a96accc25dd23ac0 to update existing solution
+        Call POST /v1/solutions/a5dd8f3807e08420 to update existing solution
         with X-HTTP-Method-Override header that overrides the operation as
         PATCH.
         """
@@ -189,7 +189,7 @@ class TestApiCreateSolution(object):
         content_read = {
             'data': Solution.DEFAULTS[Solution.NGINX]['data'],
             'brief': Solution.DEFAULTS[Solution.BEATS]['brief'],
-            'group': Solution.DEFAULTS[Solution.BEATS]['group'],
+            'groups': Solution.DEFAULTS[Solution.BEATS]['groups'],
             'tags': Solution.DEFAULTS[Solution.BEATS]['tags'],
             'links': Solution.DEFAULTS[Solution.BEATS]['links'],
             'category': Solution.DEFAULTS[Solution.BEATS]['category'],
@@ -200,25 +200,25 @@ class TestApiCreateSolution(object):
             'uuid': Solution.DEFAULTS[Solution.BEATS]['uuid'],
             'created': Content.BEATS_TIME,
             'updated': Content.BEATS_TIME,
-            'digest': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0'
+            'digest': '2ea79ade8226e8d1f87ad121ce3515de0cfdc2262a7df9983147f43602052760'
         }
-        content = {'21c737e704b97226': content_read}
+        content = {'2ea79ade8226e8d1': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3140'
+            'content-length': '3113'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/21c737e704b97226'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/2ea79ade8226e8d1'
             },
             'data': {
                 'type': 'solution',
-                'id': '21c737e704b972268565e23369c6038a7997bae796a6befbf6be88cbdb3721d0',
+                'id': '2ea79ade8226e8d1f87ad121ce3515de0cfdc2262a7df9983147f43602052760',
                 'attributes': content_read
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions/a96accc25dd23ac0',
+            path='/snippy/api/app/v1/solutions/a5dd8f3807e08420',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.headers == result_headers
@@ -242,7 +242,7 @@ class TestApiCreateSolution(object):
         result_headers = {}
         assert Database.get_solutions().size() == 3
         result = testing.TestClient(server.server.api).simulate_post(
-            path='/snippy/api/app/v1/solutions/eeef5ca3ec9cd36',
+            path='/snippy/api/app/v1/solutions/15d1688c970fa33',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.headers == result_headers
         assert not result.text

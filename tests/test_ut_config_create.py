@@ -55,7 +55,7 @@ class TestUtConfigCreate(unittest.TestCase):
         assert isinstance(Config.content_category, str)
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, Const.TEXT_TYPE)
-        assert isinstance(Config.content_group, Const.TEXT_TYPE)
+        assert isinstance(Config.content_groups, tuple)
         assert isinstance(Config.content_tags, tuple)
         assert isinstance(Config.content_links, tuple)
         assert isinstance(Config.content_filename, Const.TEXT_TYPE)
@@ -79,7 +79,7 @@ class TestUtConfigCreate(unittest.TestCase):
         assert Config.content_category == Const.SNIPPET
         assert not Config.content_data
         assert not Config.content_brief
-        assert Config.content_group == Const.DEFAULT_GROUP
+        assert Config.content_groups == Const.DEFAULT_GROUPS
         assert not Config.content_tags
         assert not Config.content_links
         assert not Config.search_all_kws
@@ -158,20 +158,20 @@ class TestUtConfigCreate(unittest.TestCase):
 
         content = 'docker rm $(docker ps -a -q)'
         brief = 'Remove all docker containers'
-        group = 'docker'
+        groups = ('docker',)
         tags = ('cleanup', 'container', 'docker')
         links = ('https://askubuntu.com/questions/574163/how-to-stop-and-remove-a-docker-container',)
         Config.init(None)
-        Config.load(Cli(['snippy', 'create', '-c', content, '-b', brief, '-g', group, '-t', 'docker, container, cleanup',
+        Config.load(Cli(['snippy', 'create', '-c', content, '-b', brief, '-g', 'docker', '-t', 'docker, container, cleanup',
                          '-l', links[0]]))
         assert isinstance(Config.content_data, tuple)
         assert isinstance(Config.content_brief, Const.TEXT_TYPE)
-        assert isinstance(Config.content_group, Const.TEXT_TYPE)
+        assert isinstance(Config.content_groups, tuple)
         assert isinstance(Config.content_tags, tuple)
         assert isinstance(Config.content_links, tuple)
         assert Config.content_data == tuple([content])
         assert Config.content_brief == brief
-        assert Config.content_group == group
+        assert Config.content_groups == groups
         self.assertTupleEqual(Config.content_tags, tags)
         self.assertTupleEqual(Config.content_links, links)
 

@@ -37,7 +37,7 @@ class TestApiDeleteSolution(object):
     def test_api_delete_solution_001(self, server, mocker):
         """Delete solution with digest.
 
-        Call DELETE /solutions/eeef5ca3ec9cd36 that matches one solution
+        Call DELETE /solutions/15d1688c970fa33 that matches one solution
         that is deleted.
         """
 
@@ -48,7 +48,7 @@ class TestApiDeleteSolution(object):
         result_headers = {}
         assert Database.get_solutions().size() == 3
         result = testing.TestClient(server.server.api).simulate_delete(
-            path='/snippy/api/app/v1/solutions/eeef5ca3ec9cd36',
+            path='/snippy/api/app/v1/solutions/15d1688c970fa33',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204

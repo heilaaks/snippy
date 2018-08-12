@@ -1,9 +1,9 @@
 ################################################################################
-## BRIEF : <SNIPPY_BRIEF>
+## BRIEF  : <SNIPPY_BRIEF>
 ##
-## GROUP : <SNIPPY_GROUP>
-## TAGS  : <SNIPPY_TAGS>
-## FILE  : <SNIPPY_FILE>
+## GROUPS : <SNIPPY_GROUPS>
+## TAGS   : <SNIPPY_TAGS>
+## FILE   : <SNIPPY_FILE>
 ################################################################################
 
 <SNIPPY_DATA>

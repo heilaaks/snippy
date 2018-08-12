@@ -41,10 +41,10 @@ class TestCliCreateReferece(object):
         content_read = {Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG]}
         data = 'must not be used'
         brief = Reference.DEFAULTS[Reference.GITLOG]['brief']
-        group = Reference.DEFAULTS[Reference.GITLOG]['group']
+        groups = Reference.DEFAULTS[Reference.GITLOG]['groups']
         tags = Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.GITLOG]['tags'])
         links = Const.DELIMITER_LINKS.join(Reference.DEFAULTS[Reference.GITLOG]['links'])
-        cause = snippy.run(['snippy', 'create', '--references', '--links', links, '-b', brief, '-g', group, '-t', tags, '-c', data])
+        cause = snippy.run(['snippy', 'create', '--references', '--links', links, '-b', brief, '-g', groups, '-t', tags, '-c', data])
         assert cause == Cause.ALL_OK
         assert Database.get_references().size() == 1
         Content.verified(mocker, snippy, content_read)
@@ -57,9 +57,9 @@ class TestCliCreateReferece(object):
 
         data = 'must not be used'
         brief = Reference.DEFAULTS[Reference.GITLOG]['brief']
-        group = Reference.DEFAULTS[Reference.GITLOG]['group']
+        groups = Reference.DEFAULTS[Reference.GITLOG]['groups']
         tags = Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.GITLOG]['tags'])
-        cause = snippy.run(['snippy', 'create', '--references', '--brief', brief, '--group', group, '--tags', tags, '-c', data])
+        cause = snippy.run(['snippy', 'create', '--references', '--brief', brief, '--groups', groups, '--tags', tags, '-c', data])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
         assert not Database.get_references().size()
 

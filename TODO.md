@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Why test_api_search_snippet_016 and another TOD case length raised like 100 bytes?
    - [ ] Fix --all does not print references in search.
    - [ ] Fix category that has db query the all with snippet, solution, reference.
    - [ ] Fix a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().

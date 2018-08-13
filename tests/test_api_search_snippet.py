@@ -554,6 +554,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/snippets and search keywords from all attributes. The
         search query matches to two snippets and both of them are returned.
         The response JSON is sent as pretty printed.
+
+        TODO: The groups refactoring changed the lenght from 2196 to 2278.
+              Why so much? Is there a problem in the result JSON?
         """
 
         result_headers = {

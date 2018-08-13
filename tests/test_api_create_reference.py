@@ -42,7 +42,8 @@ class TestApiCreateReference(object):
     def test_api_create_reference_001(self, server, mocker):
         """Create one reference from API.
 
-        Call POST /v1/references to create new reference.
+        Call POST /v1/references to create new reference. In this case
+        there is a resource object in list context.
         """
 
         request_body = {
@@ -73,8 +74,44 @@ class TestApiCreateReference(object):
         assert Database.get_references().size() == 1
         Content.verified(mocker, server, content)
 
-    @pytest.mark.usefixtures('create-gitlog-utc', 'create-pytest-utc')
+    @pytest.mark.usefixtures('create-gitlog-utc')
     def test_api_create_reference_002(self, server, mocker):
+        """Create one reference from API.
+
+        Call POST /v1/references to create new reference. In this case the
+        created resource is a resource object without list context.
+        """
+
+        request_body = {
+            'data': {
+                'type': 'reference',
+                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+            }
+        }
+        content_read = Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+        content = {Reference.GITLOG_DIGEST: content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '587'}
+        result_json = {
+            'data': [{
+                'type': 'reference',
+                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'attributes': content_read
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/references',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_201
+        assert Database.get_references().size() == 1
+        Content.verified(mocker, server, content)
+
+    @pytest.mark.usefixtures('create-gitlog-utc', 'create-pytest-utc')
+    def test_api_create_reference_003(self, server, mocker):
         """Create multiple references from API.
 
         Call POST /v1/references in list context to create new references.
@@ -119,7 +156,7 @@ class TestApiCreateReference(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
-    def test_api_create_reference_003(self, server, mocker):
+    def test_api_create_reference_004(self, server, mocker):
         """Update reference with POST that maps to PUT.
 
         Call POST /v1/references/5c2071094dbfaa33 to update existing reference
@@ -171,7 +208,7 @@ class TestApiCreateReference(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
-    def test_api_create_reference_004(self, server, mocker):
+    def test_api_create_reference_005(self, server, mocker):
         """Update reference with POST that maps to PATCH.
 
         Call POST /v1/references/5c2071094dbfaa33 to update existing reference
@@ -230,7 +267,7 @@ class TestApiCreateReference(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('default-references', 'import-pytest')
-    def test_api_create_reference_005(self, server, mocker):
+    def test_api_create_reference_006(self, server, mocker):
         """Update reference with POST that maps to DELETE.
 
         Call POST /v1/references with X-HTTP-Method-Override header to delete
@@ -253,7 +290,7 @@ class TestApiCreateReference(object):
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
-    def test_api_create_reference_006(self, server):
+    def test_api_create_reference_007(self, server):
         """Create one reference from API.
 
         Try to call POST /v1/references to create new solutuon with empty
@@ -296,7 +333,7 @@ class TestApiCreateReference(object):
         assert result.json['errors'][0]['title'] == 'content was not stored because mandatory content field links is empty'
 
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
-    def test_api_create_reference_007(self, server_db):
+    def test_api_create_reference_008(self, server_db):
         """Try to create reference.
 
         Try to POST new reference when database throws an integrity error from
@@ -345,7 +382,7 @@ class TestApiCreateReference(object):
         assert Database.get_references().size() == 0
 
     @pytest.mark.usefixtures('create-regexp-utc')
-    def test_api_create_reference_008(self, server, mocker):
+    def test_api_create_reference_009(self, server, mocker):
         """Create one reference from API.
 
         Call POST /v1/references to create new reference with two groups.

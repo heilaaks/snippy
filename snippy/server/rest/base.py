@@ -45,7 +45,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         """Create new content."""
 
         self._logger.debug('run post %s', request.uri)
-        collection = Validate.collection(request)
+        collection = Validate.json_object(request)
         for resource in collection:
             api = Api(self._category, Api.CREATE, resource)
             Config.load(api)

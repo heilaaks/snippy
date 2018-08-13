@@ -21,6 +21,7 @@ Bugfixes
 ~~~~~~~~
 
 * Fix solution creation from empty template.
+* Fix resource object validation in POST.
 * All commits in `0.9.0`_.
 
 0.8.0 (2018-21-07)

@@ -51,8 +51,36 @@ class Validate(object):
     _logger = Logger.get_logger(__name__)
 
     @classmethod
+    def json_object(cls, request, digest=None):
+        """Validate JSON API v1.0 object.
+
+        Args:
+           request (dict): JSON object received from client.
+           digest (str): Message digest or part of it.
+
+        Returns:
+            tuple: List of validated resources received from client.
+        """
+
+        collection = []
+        if JsonSchema.is_collection(request.media):
+            collection = Validate.collection(request)
+        else:
+            collection.append(Validate.resource(request, digest))
+
+        return tuple(collection)
+
+    @classmethod
     def resource(cls, request, digest):
-        """Validate JSON API v1.0 resource."""
+        """Validate JSON API v1.0 resource.
+
+        Args:
+           request (dict): JSON object received from client.
+           digest (str): Message digest or part of it.
+
+        Returns:
+            dict: Validated resource received from client.
+        """
 
         resource_ = {}
         if JsonSchema.validate(JsonSchema.RESOURCE, request.media):
@@ -69,7 +97,14 @@ class Validate(object):
 
     @classmethod
     def collection(cls, request):
-        """Validate JSON API v1.0 collection."""
+        """Validate JSON API v1.0 collection.
+
+        Args:
+           request (dict): JSON object received from client.
+
+        Returns:
+            tuple: List of validated resources received from client.
+        """
 
         collection = []
         if JsonSchema.validate(JsonSchema.COLLECTION, request.media):
@@ -127,6 +162,7 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
         },
         "required": ["data"]
     }
+
     COLLECTION = {
         "type": "object",
         "properties": {
@@ -139,6 +175,28 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
         },
         "required": ["data"]
     }
+
+    IS_COLLECTION = {
+        "type": "object",
+        "properties": {
+            "data": {
+                "type": "array",
+            }
+        }
+    }
+
+    @classmethod
+    def is_collection(cls, media):
+        """Test if media is collection."""
+
+        collection = False
+        try:
+            validate(media, JsonSchema.IS_COLLECTION)
+            collection = True
+        except ValidationError:
+            pass
+
+        return collection
 
     @classmethod
     def validate(cls, schema, media):

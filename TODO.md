@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Check if JSON API allows: 'data': {'type': 'reference','attributes': Reference.DEFAULTS[Reference.GITLOG]} because now this does not work without list [] for data.
-   - [ ] Fix why single data response (search ==> 1) is not sorted but multiple results are? test_api_search_snippet_015/test_api_search_snippet_016
    - [ ] Why test_api_search_snippet_016 and another TOD case length raised like 100 bytes?
    - [ ] Fix --all does not print references in search.
    - [ ] Fix category that has db query the all with snippet, solution, reference.
@@ -160,6 +158,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Fixed validating resource object from POST.
    - [x] Removed all traces of DATE field for solutions.
    - [x] Changed group to groups. This is a breaking change in detauls and templates.
    - [x] Added new fields api and updated OAS specifications.

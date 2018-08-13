@@ -123,9 +123,12 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         return Resource(category, timestamp)
 
     def migrate(self, source):
-        """Migrate resource or collection.
+        """Migrate resource or collection to collection.
 
-        Add new resources or override the originals if they exist.
+        Add new resources or override originals if they exist.
+
+        Args:
+           source (content): Resource or Collection that is migrated.
         """
 
         if isinstance(source, Collection):
@@ -147,13 +150,27 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             self.data['data'][source.digest]['meta']['digest'] = source.digest
 
     def merge(self, source):
-        """Merge resource.
+        """Merge a resource to collection.
 
-        Merge content into existing resource.
+        Merge content into existing resource and return new message digest
+        from the content merger. If the content source does not exist it
+        causes a migrage operation. In case of migrate, the source digest
+        is always correct and it can be directy returned.
+
+        This method cannot merge a collection because so far there has been
+        no need for it.
+
+        Args:
+           source (Resource): Resource to be merged to collection.
+
+        Returns:
+            str: The new message digest after merging the resource.
         """
 
         digest = None
-        if not source:
+        if not source or not isinstance(source, Resource):
+            self._logger.debug('source was not merged to collection {}'.format(Logger.remove_ansi(str(source))))
+
             return digest
 
         if source.digest in self:

@@ -244,6 +244,30 @@ class TestCliSearchReference(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @pytest.mark.usefixtures('default-references')
+    def test_cli_search_reference_010(self, snippy, capsys):
+        """Search reference from all fields.
+
+        Search references from all fields. In this case the category has been
+        set to 'all' which must find also references.
+        """
+
+        output = (
+            '1. Python regular expression @python [cb9225a81eab8ced]',
+            '',
+            '   > https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
+            '   > https://pythex.org/',
+            '   # howto,online,python,regexp',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', 'regexp', '--no-ansi', '--all'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

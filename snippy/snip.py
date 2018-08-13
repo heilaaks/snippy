@@ -76,12 +76,19 @@ class Snippy(object):
         elif Config.is_category_reference:
             Reference(self.storage).run()
         elif Config.is_category_all and Config.is_operation_search:
-            Snippet(self.storage).run()
-            Solution(self.storage).run()
+            self._run_cli_all()
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'content category \'all\' is supported only with search operation')
 
         Cause.print_message()
+
+    def _run_cli_all(self):
+        """Run operation for all categories."""
+
+        collection = Snippet(self.storage, run_cli=False).run()
+        collection.migrate(Solution(self.storage, run_cli=False).run())
+        collection.migrate(Reference(self.storage, run_cli=False).run())
+        collection.dump_term(Config.use_ansi, Config.debug_logs, Config.search_filter)
 
     def _run_server(self):
         """Run API server."""

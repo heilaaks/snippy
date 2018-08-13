@@ -553,7 +553,6 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             '$ docker rm --force redis',
             '$ nc -v 10.183.19.189 443',
             '$ nmap 10.183.19.189',
-            '',
             '$ ./filebeat -e -c config/filebeat.yml -d "*"',
             '$ nginx -V 2>&1 | grep -- \'--with-debug\'',
             '$ ls -al /var/log/nginx/',

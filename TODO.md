@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix --all does not print references in search.
    - [ ] Fix category that has db query the all with snippet, solution, reference.
    - [ ] Fix a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().
    - [ ] Fix does api fields on_get print the log at the beginngin twice?
@@ -157,6 +156,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Fixed printing content with --all category.
    - [x] Fixed validating resource object from POST.
    - [x] Removed all traces of DATE field for solutions.
    - [x] Changed group to groups. This is a breaking change in detauls and templates.

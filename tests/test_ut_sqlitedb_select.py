@@ -50,7 +50,7 @@ class TestUtSqlitedbSelect(object):
         keywords = ['foo', 'bar', 'digitalocean']
         sqlite.insert(collection)
         mock_cause_push.reset_mock()
-        assert collection == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert collection == sqlite.select(sall=keywords, scat=(Const.SNIPPET,))
         assert Database.get_snippets().size() == 1
         mock_cause_push.assert_not_called()
         sqlite.disconnect()

@@ -55,12 +55,12 @@ class TestUtSqlitedbDelete(object):
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
         collection1.migrate(collection2)
-        assert collection1 == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert collection1 == sqlite.select(sall=keywords, scat=(Const.SNIPPET,))
         assert Database.get_snippets().size() == 2
         sqlite.delete('53908d68425c61dc')
         mock_cause_push.assert_called_once_with('204 No Content', 'content deleted successfully')
         mock_cause_push.reset_mock()
-        assert collection2 == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert collection2 == sqlite.select(sall=keywords, scat=(Const.SNIPPET,))
         assert Database.get_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()
@@ -89,12 +89,12 @@ class TestUtSqlitedbDelete(object):
         mock_cause_push.assert_called_once_with('201 Created', 'content created')
         mock_cause_push.reset_mock()
         collection1.migrate(collection2)
-        assert collection1 == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert collection1 == sqlite.select(sall=keywords, scat=(Const.SNIPPET,))
         assert Database.get_snippets().size() == 2
         sqlite.delete('53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5')
         mock_cause_push.assert_called_once_with('204 No Content', 'content deleted successfully')
         mock_cause_push.reset_mock()
-        assert collection2 == sqlite.select(Const.SNIPPET, sall=keywords)
+        assert collection2 == sqlite.select(sall=keywords, scat=(Const.SNIPPET,))
         assert Database.get_snippets().size() == 1
         sqlite.disconnect()
         Database.delete_all_contents()

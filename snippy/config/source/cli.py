@@ -164,7 +164,7 @@ class Cli(ConfigSourceBase):
         content_meg.add_argument('--solution', '--solutions', action='store_const', dest='category', const='solution', help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
         content_meg.add_argument('--reference', '--references', action='store_const', dest='category', const='reference', help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
         content_meg.add_argument('--all', action='store_const', dest='category', const='all', help=argparse.SUPPRESS)
-        content_meg.set_defaults(category='snippet')
+        content_meg.set_defaults(category=Const.SNIPPET)
 
         # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Cli.ARGS_EDITOR))

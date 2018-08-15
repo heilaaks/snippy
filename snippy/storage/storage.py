@@ -44,11 +44,10 @@ class Storage(object):
 
         return collection
 
-    def search(self, category, sall=None, scat=None, stag=None, sgrp=None, uuid=None, digest=None, data=None):  # noqa pylint: disable=too-many-arguments
+    def search(self, sall=None, scat=None, stag=None, sgrp=None, uuid=None, digest=None, data=None):
         """Search content.
 
         Args:
-           category (str): Content category.
            sall (tuple): Search all keyword list.
            scat (tuple): Search category keyword list.
            stag (tuple): Search tag keyword list.
@@ -62,7 +61,7 @@ class Storage(object):
         """
 
         self._logger.debug('search content')
-        collection = self._database.select(category, sall, scat, stag, sgrp, uuid, digest, data)
+        collection = self._database.select(sall, scat, stag, sgrp, uuid, digest, data)
 
         return collection
 

@@ -447,9 +447,14 @@ class Config(object):
 
     @classmethod
     def _is_search_keywords(cls):
-        """Test if search is made with any of the search option."""
+        """Test if search is made with any of the search option.
 
-        return True if cls.search_all_kws or cls.search_cat_kws or cls.search_tag_kws or cls.search_grp_kws else False
+        The seach categories (search_cat_kws) is not considered optional search
+        keywords because this category is set always implicitly if not provided
+        by the user.
+        """
+
+        return True if cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws else False
 
     @classmethod
     def is_content_digest(cls):

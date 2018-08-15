@@ -894,14 +894,14 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        The operations will flow from the beginning to end and there are no
        intermediate exists or shortcust. But the error handling must be made
-       simple in order to keep the implemenrtation size in control. The target
-       is not to try to recover all possible errors but fail the operation as
+       simple in order to keep the implementation size in control. The target
+       is not to try to recover all possible errors but to fail operation as
        soon as the first failure is detected by setting an error cause.
 
        For example if the search category (scat) parameter is failty for one
-       category, it will fail the whole setting of internal configuration for
-       scat configuration. This for example results empty tuple for the scat
-       that minimizes the search results.
+       category, it will fail setting of scat configuration and no search
+       is made from any existing category. This example results no search
+       hits at all and it minimizes the search results.
 
     TIME STAMPS
 

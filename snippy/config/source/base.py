@@ -97,7 +97,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         # must have default value like empty list or string that makes sense.
         self.base_path_app = parameters.get('base_path_app', self.BASE_PATH_APP)
         self.brief = parameters.get('brief', Const.EMPTY)
-        self.category = parameters.get('category')
+        self.category = parameters.get('category', Const.SNIPPET)
         self.compact_json = parameters.get('compact_json', False)
         self.data = parameters.get('data', None)
         self.debug = parameters.get('debug', False)
@@ -288,21 +288,28 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         The keywords are stored in tuple with one keywords per element.
 
+        If user has not defined the search categories, the search is made
+        only from the content category.
+
         If all provided search categories are not correct, an error is set.
         This is simple error handling that fails the operation instead of
         trying to recover it.
 
-        An empty value is set to scat in case of failure because it minimizes
+        An unknown value is set to scat in case of failure because it minimizes
         the search results in error scenario. If all categories would be
         searched, it could lead to large set of results that are searched for
         no reason in case of failure.
         """
 
         scat = Parser.search_keywords(value)
-        if not set(scat).issubset(self.CATEGORIES):
+        if not scat:
+            if self.category == Const.ALL_CATEGORIES:
+                scat = self.CATEGORIES
+            else:
+                scat = (self.category,)
+        elif not set(scat).issubset(self.CATEGORIES):
             Cause.push(Cause.HTTP_BAD_REQUEST, 'search categories: {} : are not a subset of: {}'.format(value, self.CATEGORIES))
-            scat = ()
-
+            scat = (Const.UNKNOWN_CATEGORY,)
         self._scat = scat  # pylint: disable=attribute-defined-outside-init
 
     @property

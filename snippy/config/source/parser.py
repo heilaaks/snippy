@@ -100,7 +100,7 @@ class Parser(object):
     def content_category(cls, source):
         """Read content category from text source."""
 
-        category = Const.UNKNOWN_CONTENT
+        category = Const.UNKNOWN_CATEGORY
 
         if cls.DATA_HEAD in source and cls.BRIEF_HEAD:
             category = Const.SNIPPET

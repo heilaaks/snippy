@@ -61,7 +61,6 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
 
         self._logger.debug('searching: %s', self._category)
         self.collection = self._storage.search(
-            self._category,
             sall=Config.search_all_kws,
             scat=Config.search_cat_kws,
             stag=Config.search_tag_kws,
@@ -77,7 +76,6 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         """Update content."""
 
         collection = self._storage.search(
-            self._category,
             sall=Config.search_all_kws,
             scat=Config.search_cat_kws,
             stag=Config.search_tag_kws,
@@ -103,7 +101,6 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         """Delete content."""
 
         collection = self._storage.search(
-            self._category,
             sall=Config.search_all_kws,
             scat=Config.search_cat_kws,
             stag=Config.search_tag_kws,
@@ -129,7 +126,6 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         elif Config.is_search_criteria():
             self._logger.debug('exporting: %s :based on search criteria', self._category)
             collection = self._storage.search(
-                self._category,
                 sall=Config.search_all_kws,
                 scat=Config.search_cat_kws,
                 stag=Config.search_tag_kws,
@@ -155,7 +151,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         content_digest = Config.operation_digest
         content_uuid = Config.operation_uuid
         if content_digest or content_uuid:
-            collection = self._storage.search(self._category, uuid=content_uuid, digest=content_digest)
+            collection = self._storage.search(uuid=content_uuid, digest=content_digest)
             if collection.size() == 1:
                 resource = next(collection.resources())
                 digest = resource.digest

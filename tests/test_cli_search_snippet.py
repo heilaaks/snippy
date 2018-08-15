@@ -546,13 +546,12 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Search all content with regexp filter. The ansi characters must be
         automatically disabled in when the --filter option is used. This
         must match to snippet and solution commands.
+
+        The content must be selected so that all content is queried at once.
+        This produces the ordered list of commands as below.
         """
 
         output = (
-            '$ docker rm --volumes $(docker ps --all --quiet)',
-            '$ docker rm --force redis',
-            '$ nc -v 10.183.19.189 443',
-            '$ nmap 10.183.19.189',
             '$ ./filebeat -e -c config/filebeat.yml -d "*"',
             '$ nginx -V 2>&1 | grep -- \'--with-debug\'',
             '$ ls -al /var/log/nginx/',
@@ -561,6 +560,10 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             '$ nginx -s reload',
             '$ vi conf.d/default.conf',
             '$ docker exec -i -t $(docker ps | egrep -m 1 \'petelk/nginx\' | awk \'{print $1}\') /bin/bash',
+            '$ docker rm --volumes $(docker ps --all --quiet)',
+            '$ docker rm --force redis',
+            '$ nc -v 10.183.19.189 443',
+            '$ nmap 10.183.19.189',
             '',
             'OK',
             ''

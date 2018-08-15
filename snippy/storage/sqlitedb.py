@@ -128,11 +128,10 @@ class SqliteDb(object):
 
         return error
 
-    def select(self, category, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):  # pylint: disable=too-many-arguments
+    def select(self, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
         """Select content based on search criteria.
 
         Args:
-           category (str): Content category.
            sall (tuple): Search all keyword list.
            scat (tuple): Search category keyword list.
            stag (tuple): Search tag keyword list.
@@ -146,10 +145,10 @@ class SqliteDb(object):
         """
 
         collection = Collection()
-        query, qargs = self._get_query(category, sall, scat, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_REGEX)
+        query, qargs = self._get_query(sall, scat, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_REGEX)
         if query:
             rows = self._get_db(query, qargs)
-            total = self._count_content(category, sall, scat, stag, sgrp, uuid, digest, data)
+            total = self._count_content(sall, scat, stag, sgrp, uuid, digest, data)
             collection.convert(rows)
             collection.total = total
             self._logger.debug('selected %d rows %s', len(rows), rows)
@@ -212,11 +211,10 @@ class SqliteDb(object):
 
         return tuple(uniques)
 
-    def _count_content(self, category, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):  # noqa pylint: disable=too-many-arguments
+    def _count_content(self, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
         """Count content based on search criteria.
 
         Args:
-           category (str): Content category.
            sall (tuple): Search all keyword list.
            scat (tuple): Search category keyword list.
            stag (tuple): Search tag keyword list.
@@ -230,7 +228,7 @@ class SqliteDb(object):
         """
 
         count = 0
-        query, qargs = self._get_query(category, sall, scat, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
+        query, qargs = self._get_query(sall, scat, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
         if query:
             rows = self._get_db(query, qargs)
             try:
@@ -480,22 +478,13 @@ class SqliteDb(object):
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented writing into database')
 
-    def _get_query(self, category, sall, scat, stag, sgrp, uuid, digest, data, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
+    def _get_query(self, sall, scat, stag, sgrp, uuid, digest, data, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
         """Get query based on defined type."""
 
         query = ()
         qargs = []
-        self._logger.debug('query category: %s :sall: %s :scat: %s :stag: %s :sgrp: %s :uuid: %s :digest: %s :and data: %s.20s',
-                           category, sall, scat, stag, sgrp, uuid, digest, data)
-
-        # For database queries, category is always a list that defines from
-        # which categories the search is made. The search always includes the
-        # single defined content category from CLI or from content specific
-        # REST API query.
-        categories = []
-        categories.append(category)
-        if scat:
-            categories = categories + list(scat)
+        self._logger.debug('query sall: %s :scat: %s :stag: %s :sgrp: %s :uuid: %s :digest: %s :and data: %s.20s',
+                           sall, scat, stag, sgrp, uuid, digest, data)
 
         if query_type == SqliteDb.QUERY_TYPE_TOTAL:
             query_pointer = self._query_count
@@ -503,13 +492,13 @@ class SqliteDb(object):
             query_pointer = self._query_regex
         if sall and Config.search_all_kws:
             columns = ['data', 'brief', 'groups', 'tags', 'links', 'digest']
-            query, qargs = query_pointer(sall, columns, sgrp, categories)
+            query, qargs = query_pointer(sall, columns, sgrp, scat)
         elif stag and Config.search_tag_kws:
             columns = ['tags']
-            query, qargs = query_pointer(stag, columns, sgrp, categories)
+            query, qargs = query_pointer(stag, columns, sgrp, scat)
         elif sgrp and Config.search_grp_kws:
             columns = ['groups']
-            query, qargs = query_pointer(sgrp, columns, (), categories)
+            query, qargs = query_pointer(sgrp, columns, (), scat)
         elif Config.is_content_digest() or digest:  # The later condition is for tool internal search based on digest.
             if query_type == SqliteDb.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE digest LIKE ?')
@@ -578,7 +567,6 @@ class SqliteDb(object):
         regex = regex[:-4]  # Remove last ' OR ' added by the loop.
         regex = regex + ') '
 
-        # Add optional group search filters.
         if groups:
             regex = regex + 'AND ('
             for _ in groups:
@@ -586,12 +574,12 @@ class SqliteDb(object):
             regex = regex[:-4]  # Remove last ' OR ' added by the loop.
             regex = regex + ') '
 
-        # Add mandatory categery.
-        regex = regex + 'AND ('
-        for _ in categories:
-            regex = regex + 'category=? OR '
-        regex = regex[:-4]  # Remove last ' OR ' added by the loop.
-        regex = regex + ') '
+        if categories:
+            regex = regex + 'AND ('
+            for _ in categories:
+                regex = regex + 'category=? OR '
+            regex = regex[:-4]  # Remove last ' OR ' added by the loop.
+            regex = regex + ') '
 
         # Generate token for each searched column.
         for token in keywords:

@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix export (select_all) to work with scat like the select.
    - [ ] Fix a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().
    - [ ] Fix does api fields on_get print the log at the beginngin twice?
    - [ ] Fix if logs after uuid like: please define keyword, digest or content data as search criteria
@@ -156,6 +155,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added support for search category (scat) from search and export command line operations.
    - [x] Fixed printing content with --all category.
    - [x] Fixed validating resource object from POST.
    - [x] Removed all traces of DATE field for solutions.

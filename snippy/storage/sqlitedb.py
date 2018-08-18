@@ -155,11 +155,11 @@ class SqliteDb(object):
 
         return collection
 
-    def select_all(self, category):
-        """Select all content from specific category.
+    def select_all(self, scat):
+        """Select all content from specific categories.
 
         Args:
-           category (str): Content category.
+           scat (tuple): Search category keyword list.
 
         Returns:
             Collection: Collection of all content in database.
@@ -167,9 +167,14 @@ class SqliteDb(object):
 
         collection = Collection()
         if self._connection:
-            self._logger.debug('select all contents from category %s', category)
-            query = ('SELECT * FROM contents WHERE category=?')
-            qargs = [category]
+            self._logger.debug('select all contents from categories: %s', scat)
+
+            query = ('SELECT * FROM contents WHERE (')
+            for _ in scat:
+                query = query + 'category=? OR '
+            query = query[:-4]  # Remove last ' OR ' added by the loop.
+            query = query + ')'
+            qargs = list(scat)
             try:
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)

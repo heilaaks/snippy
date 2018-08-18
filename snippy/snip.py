@@ -76,10 +76,10 @@ class Snippy(object):
             Solution(self.storage).run()
         elif Config.is_category_reference:
             Reference(self.storage).run()
-        elif Config.is_category_all and Config.is_operation_search:
+        elif Config.is_category_all and (Config.is_operation_search or Config.is_operation_export):
             AllContent(self.storage).run()
         else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'content category \'all\' is supported only with search operation')
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'content category \'all\' is supported only with search or export operation')
 
         Cause.print_message()
 

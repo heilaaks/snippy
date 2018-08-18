@@ -104,15 +104,15 @@ class Storage(object):
         self._logger.debug('delete content')
         self._database.delete(digest)
 
-    def export_content(self, category):
+    def export_content(self, scat=None):
         """Export content.
 
         Args:
-           category (str): Content category.
+           scat (tuple): Search category keyword list.
         """
 
         self._logger.debug('export content')
-        collection = self._database.select_all(category)
+        collection = self._database.select_all(scat)
 
         return collection
 

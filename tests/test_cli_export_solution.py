@@ -29,6 +29,8 @@ import yaml
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
+from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
@@ -36,7 +38,7 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting solutions."""
 
-    @pytest.mark.usefixtures('yaml', 'default-solutions', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-solutions', 'export-time')
     def test_cli_export_solution_001(self, snippy):
         """Export all solutions.
 
@@ -57,7 +59,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             assert Database.get_solutions().size() == 2
             Content.yaml_dump(yaml, mock_file, './solutions.yaml', content)
 
-    @pytest.mark.usefixtures('yaml', 'default-solutions', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-solutions', 'export-time')
     def test_cli_export_solution_002(self, snippy):
         """Export all solutions.
 
@@ -78,7 +80,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             assert Database.get_solutions().size() == 2
             Content.yaml_dump(yaml, mock_file, './all-solutions.yaml', content)
 
-    @pytest.mark.usefixtures('json', 'default-solutions', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('json', 'default-solutions', 'export-time')
     def test_cli_export_solution_003(self, snippy):
         """Export all solutions.
 
@@ -99,7 +101,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             assert Database.get_solutions().size() == 2
             Content.json_dump(json, mock_file, './all-solutions.json', content)
 
-    @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_004(self, snippy):
         """Export all solutions.
 
@@ -120,7 +122,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             assert Database.get_solutions().size() == 2
             Content.text_dump(mock_file, './all-solutions.txt', content)
 
-    @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_005(self, snippy):
         """Export all solutions.
 
@@ -141,7 +143,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             assert Database.get_solutions().size() == 2
             Content.text_dump(mock_file, './all-solutions.text', content)
 
-    @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_006(self, snippy):
         """Export all solutions.
 
@@ -157,24 +159,8 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('default-solutions', 'export-time', 'export-time')
-    def test_cli_export_solution_007(self, snippy):
-        """Export all solutions.
-
-        Try to export all content by defining the content category to --all.
-        This is not supported with export operation and error cause is
-        returned.
-        """
-
-        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--all'])
-            assert cause == 'NOK: content category \'all\' is supported only with search operation'
-            mock_file.assert_not_called()
-            file_handle = mock_file.return_value.__enter__.return_value
-            file_handle.write.assert_not_called()
-
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_008(self, snippy):
+    def test_cli_export_solution_007(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest. File name is defined
@@ -194,7 +180,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, 'howto-debug-elastic-beats.txt', content)
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_009(self, snippy):
+    def test_cli_export_solution_008(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest. File name is defined
@@ -216,7 +202,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, 'howto-debug-elastic-beats.txt', content)
 
     @pytest.mark.usefixtures('isfile_true', 'default-solutions', 'import-kafka', 'update-kafka-utc', 'export-time')
-    def test_cli_export_solution_010(self, snippy):
+    def test_cli_export_solution_009(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest. Content file name is
@@ -244,7 +230,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, 'solution.text', content)
 
     @pytest.mark.usefixtures('yaml', 'default-solutions', 'export-time')
-    def test_cli_export_solution_011(self, snippy):
+    def test_cli_export_solution_010(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest. File name is defined
@@ -266,7 +252,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.yaml_dump(yaml, mock_file, './defined-solution.yaml', content)
 
     @pytest.mark.usefixtures('yaml', 'default-solutions', 'export-time')
-    def test_cli_export_solution_012(self, snippy):
+    def test_cli_export_solution_011(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest to yaml file without
@@ -286,7 +272,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.yaml_dump(yaml, mock_file, './defined-solution.yaml', content)
 
     @pytest.mark.usefixtures('json', 'default-solutions', 'export-time')
-    def test_cli_export_solution_013(self, snippy):
+    def test_cli_export_solution_012(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest. File name is defined
@@ -308,7 +294,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.json_dump(json, mock_file, './defined-solution.json', content)
 
     @pytest.mark.usefixtures('json', 'default-solutions', 'export-time')
-    def test_cli_export_solution_014(self, snippy):
+    def test_cli_export_solution_013(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest to json file without
@@ -328,7 +314,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.json_dump(json, mock_file, './defined-solution.json', content)
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_015(self, snippy):
+    def test_cli_export_solution_014(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest. File name is defined
@@ -350,7 +336,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, './defined-solution.txt', content)
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_016(self, snippy):
+    def test_cli_export_solution_015(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest to text file without
@@ -370,7 +356,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, './defined-solution.txt', content)
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_017(self, snippy):
+    def test_cli_export_solution_016(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest. File name is defined
@@ -391,7 +377,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, './defined-solution.text', content)
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_018(self, snippy):
+    def test_cli_export_solution_017(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest to text file without
@@ -410,7 +396,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, './defined-solution.text', content)
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_019(self, snippy):
+    def test_cli_export_solution_018(self, snippy):
         """Export defined solution with digest.
 
         Try to export defined solution based on message digest into file
@@ -426,7 +412,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             file_handle.write.assert_not_called()
 
     @pytest.mark.usefixtures('isfile_true', 'default-solutions', 'import-kafka', 'update-kafka-utc', 'export-time')
-    def test_cli_export_solution_020(self, snippy):
+    def test_cli_export_solution_019(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest. File name is not
@@ -454,7 +440,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, 'solution.text', content)
 
     @pytest.mark.usefixtures('isfile_true', 'default-solutions', 'import-kafka-utc', 'export-time')
-    def test_cli_export_solution_021(self, snippy):
+    def test_cli_export_solution_020(self, snippy):
         """Export defined solution with digest.
 
         Export defined solution based on message digest. File name is not
@@ -484,7 +470,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, 'kubernetes-docker-log-driver-kafka.txt', content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_export_solution_022(self, snippy):
+    def test_cli_export_solution_021(self, snippy):
         """Export defined solution with digest.
 
         Try to export defined solution based on message digest that cannot be
@@ -500,7 +486,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             file_handle.write.assert_not_called()
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_023(self, snippy):
+    def test_cli_export_solution_022(self, snippy):
         """Export solution with search keyword.
 
         Export defined solution based on search keyword. File name is defined
@@ -519,7 +505,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, 'howto-debug-elastic-beats.txt', content)
 
     @pytest.mark.usefixtures('yaml', 'default-solutions', 'export-time')
-    def test_cli_export_solution_024(self, snippy):
+    def test_cli_export_solution_023(self, snippy):
         """Export solution with search keyword.
 
         Export defined solution based on search keyword. File name is defined
@@ -540,7 +526,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.yaml_dump(yaml, mock_file, './defined-solution.yaml', content)
 
     @pytest.mark.usefixtures('json', 'default-solutions', 'export-time')
-    def test_cli_export_solution_025(self, snippy):
+    def test_cli_export_solution_024(self, snippy):
         """Export solution with search keyword.
 
         Export defined solution based on search keyword. File name is defined
@@ -561,7 +547,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.json_dump(json, mock_file, './defined-solution.json', content)
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_026(self, snippy):
+    def test_cli_export_solution_025(self, snippy):
         """Export solution with search keyword.
 
         Export defined solution based on search keyword. File name is defined
@@ -582,7 +568,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, './defined-solution.txt', content)
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_027(self, snippy):
+    def test_cli_export_solution_026(self, snippy):
         """Export solution with search keyword.
 
         Export defined solution based on search keyword. In this case the
@@ -603,7 +589,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.text_dump(mock_file, './defined-solutions.txt', content)
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
-    def test_cli_export_solution_028(self, snippy):
+    def test_cli_export_solution_027(self, snippy):
         """Export solution with search keyword.
 
         Try to export snippet based on search keyword that cannot befound.
@@ -615,7 +601,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_not_called()
 
     @pytest.mark.usefixtures('template-utc')
-    def test_cli_export_solution_029(self, snippy):
+    def test_cli_export_solution_028(self, snippy):
         """Export solution template.
 
         Export solution template. This should result file name and format
@@ -630,7 +616,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             file_handle.write.assert_called_with(Const.NEWLINE.join(Solution.TEMPLATE))
 
     @pytest.mark.usefixtures('yaml', 'default-solutions', 'export-time')
-    def test_cli_export_solution_030(self, snippy):
+    def test_cli_export_solution_029(self, snippy):
         """Export solution defaults.
 
         Export solution defaults. All solutions should be exported into
@@ -651,7 +637,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             Content.yaml_dump(yaml, mock_file, defaults_solutions, content)
 
     @pytest.mark.usefixtures('snippy')
-    def test_cli_export_solution_031(self, snippy):
+    def test_cli_export_solution_030(self, snippy):
         """Export solution defaults.
 
         Try to export solution defaults when there are no stored solutions.
@@ -664,6 +650,109 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '--solution', '--defaults'])
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
+
+    @pytest.mark.usefixtures('yaml', 'default-solutions', 'import-remove', 'import-gitlog', 'export-time')
+    def test_cli_export_solution_031(self, snippy):
+        """Export all solutions.
+
+        Export all content by defining the content category to --all. This
+        must export solutions, snippets and references.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX],
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--all'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 4
+            Content.yaml_dump(yaml, mock_file, './content.yaml', content)
+
+    @pytest.mark.usefixtures('yaml', 'default-solutions', 'import-remove', 'import-gitlog', 'export-time')
+    def test_cli_export_solution_032(self, snippy):
+        """Export all solutions.
+
+        Export all content by defining the content category to --scat option.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX],
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--scat', 'snippet,reference,solution'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 4
+            Content.yaml_dump(yaml, mock_file, './content.yaml', content)
+
+    @pytest.mark.usefixtures('yaml', 'default-solutions', 'import-remove', 'import-gitlog', 'export-time')
+    def test_cli_export_solution_033(self, snippy):
+        """Export all solutions.
+
+        Export content only from solution and reference categories.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX],
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--scat', 'solution,reference'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 4
+            Content.yaml_dump(yaml, mock_file, './content.yaml', content)
+
+    @pytest.mark.usefixtures('yaml', 'default-solutions', 'import-remove', 'import-gitlog', 'export-time')
+    def test_cli_export_solution_034(self, snippy):
+        """Export all references.
+
+        Export content only from reference category when the operation
+        category is set to solution. In this case the search category must
+        override the content category and only references are exported.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--solution', '--scat', 'reference'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 4
+            Content.yaml_dump(yaml, mock_file, './references.yaml', content)
+
+    @pytest.mark.usefixtures('default-solutions', 'import-remove', 'import-gitlog')
+    def test_cli_export_solution_035(self, snippy):
+        """Export all solutions.
+
+        Try to export content only from solution and reference categories. The
+        solution category name is not correctly spelled.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--scat', 'solutions,reference'])
+            assert cause == 'NOK: search categories: [\'solutions,reference\'] : are not a subset of: (\'snippet\', \'solution\', \'reference\')'
+            assert Database.get_collection().size() == 4
+            mock_file.assert_not_called()
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_not_called()
 
     @classmethod
     def teardown_class(cls):

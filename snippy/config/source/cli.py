@@ -57,6 +57,7 @@ class Cli(ConfigSourceBase):
         '  -u, --uuid UUID               idenfity content with uuid',
     )
     ARGS_SEARCH = (
+        '  --scat [CATEGORY,...]         search keywords only from categories',
         '  --sall [KW,...]               search keywords from all fields',
         '  --stag [KW,...]               search keywords only from tags',
         '  --sgrp [KW,...]               search keywords only from groups',
@@ -183,6 +184,7 @@ class Cli(ConfigSourceBase):
         search_meg = search.add_mutually_exclusive_group()
         search_meg.add_argument('--sall', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search_meg.add_argument('--stag', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        search.add_argument('--scat', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--sgrp', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--filter', type=str, dest='regexp', default=Const.EMPTY, help=argparse.SUPPRESS)
 

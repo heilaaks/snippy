@@ -142,7 +142,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             Migrate.dump(collection, filename)
         else:
             self._logger.debug('exporting all: %s :content: %s', self._category, filename)
-            collection = self._storage.export_content(self._category)
+            collection = self._storage.export_content(Config.search_cat_kws)
             Migrate.dump(collection, filename)
 
     def import_all(self):

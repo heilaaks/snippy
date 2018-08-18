@@ -340,12 +340,14 @@ class Config(object):
 
         defaults = 'snippets.yaml'
         template = 'snippet-template.txt'
-        if category == Const.SOLUTION:
+        if Const.SOLUTION in cls.search_cat_kws and len(cls.search_cat_kws) == 1:
             defaults = 'solutions.yaml'
             template = 'solution-template.txt'
-        elif category == Const.REFERENCE:
+        elif Const.REFERENCE in cls.search_cat_kws and len(cls.search_cat_kws) == 1:
             defaults = 'references.yaml'
             template = 'reference-template.txt'
+        elif len(cls.search_cat_kws) > 1:
+            defaults = 'content.yaml'
 
         # Run migrate operation with default content.
         if cls.defaults:
@@ -356,7 +358,8 @@ class Config(object):
             filename = os.path.join('./', template)
 
         # Run export operation with specified content without specifying
-        # the operation file.
+        # the operation file. The Const.ALL_CATEGORIES maps to multiple
+        # items in search category keyword list (search_cat_kws).
         if cls.is_operation_export and cls.is_search_criteria():
             if category == Const.SNIPPET and not filename:
                 filename = 'snippet.' + Config.CONTENT_FORMAT_TEXT
@@ -364,6 +367,8 @@ class Config(object):
                 filename = 'solution.' + Config.CONTENT_FORMAT_TEXT
             elif category == Const.REFERENCE and not filename:
                 filename = 'reference.' + Config.CONTENT_FORMAT_TEXT
+            elif len(cls.search_cat_kws) > 1:
+                filename = 'content.' + Config.CONTENT_FORMAT_TEXT
 
         # In case user did not provide filename, set defaults. For example
         # if user defined export or import operation without the file, the

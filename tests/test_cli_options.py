@@ -60,6 +60,7 @@ class TestCliOptions(object):
         '    -u, --uuid UUID               idenfity content with uuid',
         '',
         'search options:',
+        '    --scat [CATEGORY,...]         search keywords only from categories',
         '    --sall [KW,...]               search keywords from all fields',
         '    --stag [KW,...]               search keywords only from tags',
         '    --sgrp [KW,...]               search keywords only from groups',

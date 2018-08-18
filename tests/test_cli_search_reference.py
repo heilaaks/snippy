@@ -23,6 +23,7 @@ import pytest
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
+from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
@@ -267,6 +268,138 @@ class TestCliSearchReference(object):
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
+
+    @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
+    def test_cli_search_reference_011(self, snippy, capsys):
+        """Search reference from all fields.
+
+        Search content from all fields. Search category defines that the
+        search must be made from snippets, solutions and references.
+        """
+
+        output = (
+            '1. Debugging Elastic Beats @beats [a5dd8f3807e08420]',
+            Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
+            '   : ',
+            '',
+            '2. Python regular expression @python [cb9225a81eab8ced]',
+            '',
+            '   > https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
+            '   > https://pythex.org/',
+            '   # howto,online,python,regexp',
+            '',
+            '3. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', 'regexp,docker,beats', '--no-ansi', '--scat', 'reference,solution,snippet'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
+    def test_cli_search_reference_012(self, snippy, capsys):
+        """Search reference from all fields.
+
+        Search content from all fields. Search category defines that the
+        search must be made from snippets and references.
+        """
+
+        output = (
+            '1. Python regular expression @python [cb9225a81eab8ced]',
+            '',
+            '   > https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
+            '   > https://pythex.org/',
+            '   # howto,online,python,regexp',
+            '',
+            '2. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', 'regexp,docker,beats', '--no-ansi', '--scat', 'reference,snippet'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
+    def test_cli_search_reference_013(self, snippy, capsys):
+        """Search reference from all fields.
+
+        Search content from all fields. Category is defined as --all so search
+        must result a hit from each category.
+        """
+
+        #Const.NEWLINE.join(
+        output = (
+            '1. Debugging Elastic Beats @beats [a5dd8f3807e08420]',
+            Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
+            '   : ',
+            '',
+            '2. Python regular expression @python [cb9225a81eab8ced]',
+            '',
+            '   > https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
+            '   > https://pythex.org/',
+            '   # howto,online,python,regexp',
+            '',
+            '3. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', 'regexp,docker,beats', '--no-ansi', '--all'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    @pytest.mark.usefixtures('default-references', 'import-remove', 'import-beats')
+    def test_cli_search_reference_014(self, snippy, capsys):
+        """Search reference from all fields.
+
+        Search content from all fields. Content category is set to --all but
+        the search category defines that the search must be made from snippets
+        and references. This must result hits only from snippets and
+        references.
+        """
+
+        output = (
+            '1. Python regular expression @python [cb9225a81eab8ced]',
+            '',
+            '   > https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
+            '   > https://pythex.org/',
+            '   # howto,online,python,regexp',
+            '',
+            '2. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--all', '--sall', 'regexp,docker,beats', '--no-ansi', '--scat', 'reference,snippet'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
 
     @classmethod
     def teardown_class(cls):

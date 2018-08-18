@@ -67,6 +67,12 @@ clean:
 	rm -f solution*.text
 	rm -f solutions.txt
 	rm -f solution-template.txt
+	rm -f references.json
+	rm -f references.yaml
+	rm -f references.text
+	rm -f references.txt
+	rm -f content.yaml
+	rm -f content.text
 
 clean-db:
 	> snippy/data/storage/snippy.db

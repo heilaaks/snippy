@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix oid refreshing twice because Fields and base both refresh. Only in base is needed.
    - [ ] Fix group/tags api now inherits from a base that has e.g. the post which is not good when only get should be available. Is there a way to limit this? Is this even needed?
    - [ ] Fix running pytest tests/test_cli_create_solution.py -k test_cli_create_solution_006 alone has the Config problem with templates. Config not initialized?
 
@@ -37,6 +36,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?
    - [ ] Fix missing OPTIONS from swagger specs for all routes.
    - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
    - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties

@@ -35,7 +35,6 @@ class ApiKeywords(ApiContentBase):
     def __init__(self, fields):
         super(ApiKeywords, self).__init__(fields, Const.ALL_CATEGORIES)
 
-    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on given keyword list."""
 
@@ -58,7 +57,6 @@ class ApiGroups(ApiContentBase):
     def __init__(self, fields):
         super(ApiGroups, self).__init__(fields, Const.ALL_CATEGORIES)
 
-    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on groups field."""
 
@@ -81,7 +79,6 @@ class ApiTags(ApiContentBase):
     def __init__(self, fields):
         super(ApiTags, self).__init__(fields, Const.ALL_CATEGORIES)
 
-    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on tags field."""
 
@@ -104,7 +101,6 @@ class ApiDigest(ApiContentDigestBase):
     def __init__(self, fields):
         super(ApiDigest, self).__init__(fields, Const.ALL_CATEGORIES)
 
-    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest):
         """Search content based on digest."""
 
@@ -127,7 +123,6 @@ class ApiDigestField(ApiContentDigestFieldBase):
     def __init__(self, fields):
         super(ApiDigestField, self).__init__(fields, Const.ALL_CATEGORIES)
 
-    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, digest, field):
         """Search content based on uuid."""
 
@@ -142,7 +137,6 @@ class ApiUuid(ApiContentUuidBase):
     def __init__(self, fields):
         super(ApiUuid, self).__init__(fields, Const.ALL_CATEGORIES)
 
-    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, uuid):
         """Search content based on digest."""
 
@@ -157,7 +151,6 @@ class ApiUuidField(ApiContentUuidFieldBase):
     def __init__(self, fields):
         super(ApiUuidField, self).__init__(fields, Const.ALL_CATEGORIES)
 
-    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, uuid, field):
         """Search content based on uuid."""
 

@@ -1,5 +1,5 @@
 ## WORKING
-   - [ ] Fix group/tags api now inherits from a base that has e.g. the post which is not good when only get should be available. Is there a way to limit this? Is this even needed?
+   - [ ] Fix group/tags api now inherits from a base that has e.g. the post which is not good when only get should be available. Implement and respond "405 and cache it, thus "assuming" the Not Allowed result is a static or permanent response." https://stackoverflow.com/a/25122954
    - [ ] Fix running pytest tests/test_cli_create_solution.py -k test_cli_create_solution_006 alone has the Config problem with templates. Config not initialized?
 
 ## PLANNING

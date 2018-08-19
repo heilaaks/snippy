@@ -273,40 +273,6 @@ class TestApiHello(object):
         assert not result.text
         assert result.status == falcon.HTTP_200
 
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_013(self, server):
-        """Test fields uuid API with OPTIONS.
-
-        Call GET /v1/uuid/<uuid> to get allowed methods.
-        """
-
-        result_header = {
-            'allow': 'GET',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/uuid/27cd5827')
-        assert result.headers == result_header
-        assert not result.text
-        assert result.status == falcon.HTTP_200
-
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_hello_api_014(self, server):
-        """Test fields uuid API with OPTIONS.
-
-        Call GET /v1/uuid/<uuid>/<field> to get allowed methods.
-        """
-
-        result_header = {
-            'allow': 'GET',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief')
-        assert result.headers == result_header
-        assert not result.text
-        assert result.status == falcon.HTTP_200
-
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

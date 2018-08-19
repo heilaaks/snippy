@@ -105,7 +105,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
-    def on_options(_, response):
+    def on_options(_, response, sall=None, stag=None, sgrp=None):  # pylint: disable=unused-argument
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200

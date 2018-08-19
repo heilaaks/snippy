@@ -19,6 +19,7 @@
 
 """api_fields: JSON REST API for content fields."""
 
+from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from snippy.logger import Logger
 from snippy.server.rest.base import ApiContentBase
@@ -42,6 +43,14 @@ class ApiKeywords(ApiContentBase):
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiKeywords, self).on_get(request, response, sall=sall)
 
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response, sall=None, stag=None, sgrp=None):
+        """Respond with allowed methods."""
+
+        response.status = Cause.HTTP_200
+        response.set_header('Allow', 'GET')
+
 
 class ApiGroups(ApiContentBase):
     """Process content based on groups field."""
@@ -56,6 +65,14 @@ class ApiGroups(ApiContentBase):
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiGroups, self).on_get(request, response, sgrp=sgrp)
+
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response, sall=None, stag=None, sgrp=None):
+        """Respond with allowed methods."""
+
+        response.status = Cause.HTTP_200
+        response.set_header('Allow', 'GET')
 
 
 class ApiTags(ApiContentBase):
@@ -72,6 +89,14 @@ class ApiTags(ApiContentBase):
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiTags, self).on_get(request, response, stag=stag)
 
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response, sall=None, stag=None, sgrp=None):
+        """Respond with allowed methods."""
+
+        response.status = Cause.HTTP_200
+        response.set_header('Allow', 'GET')
+
 
 class ApiDigest(ApiContentDigestBase):
     """Process content based on unique digest."""
@@ -86,6 +111,14 @@ class ApiDigest(ApiContentDigestBase):
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiDigest, self).on_get(request, response, digest)
+
+    @staticmethod
+    @Logger.timeit(refresh_oid=True)
+    def on_options(_, response, digest):  # pylint: disable=unused-argument
+        """Respond with allowed methods."""
+
+        response.status = Cause.HTTP_200
+        response.set_header('Allow', 'GET')
 
 
 class ApiDigestField(ApiContentDigestFieldBase):

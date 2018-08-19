@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix a mismatch in select setting sall=() and calling point has sall=None. This seems to lead to None and never ().
    - [ ] Fix does api fields on_get print the log at the beginngin twice?
    - [ ] Fix if logs after uuid like: please define keyword, digest or content data as search criteria
    - [ ] Fix group/tags api now inherits from a base that has e.g. the post which is not good when only get should be available. Is there a way to limit this? Is this even needed?

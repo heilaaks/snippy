@@ -44,7 +44,7 @@ class Storage(object):
 
         return collection
 
-    def search(self, sall=None, scat=None, stag=None, sgrp=None, uuid=None, digest=None, data=None):
+    def search(self, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
         """Search content.
 
         Args:
@@ -104,7 +104,7 @@ class Storage(object):
         self._logger.debug('delete content')
         self._database.delete(digest)
 
-    def export_content(self, scat=None):
+    def export_content(self, scat=()):
         """Export content.
 
         Args:

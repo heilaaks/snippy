@@ -15,8 +15,8 @@ New features
 ~~~~~~~~~~~~
 
 * Add `REST API routes`_ for: keywords, groups, tags, uuid and digest.
-* Add support for search category (scat) for search and export CLI operations.
-* Add support for uuid1 in CLI and REST API.
+* Add search category (scat) option for CLI operations.
+* Add uuid1 in CLI and REST API operations.
 
 Bugfixes
 ~~~~~~~~

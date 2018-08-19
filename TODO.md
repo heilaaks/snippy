@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix does api fields on_get print the log at the beginngin twice?
    - [ ] Fix if logs after uuid like: please define keyword, digest or content data as search criteria
    - [ ] Fix group/tags api now inherits from a base that has e.g. the post which is not good when only get should be available. Is there a way to limit this? Is this even needed?
    - [ ] Fix running pytest tests/test_cli_create_solution.py -k test_cli_create_solution_006 alone has the Config problem with templates. Config not initialized?
@@ -14,6 +13,7 @@
    - [ ] Add changelog to README.
 
 ## FEATURES
+   - [ ] Add support for import --all.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
@@ -96,7 +96,7 @@
    - [ ] Refactor test case helper functions to export to yaml file instead of text. Yaml allows checking all params and text missed e.g. timestamps and uuid.
    - [ ] Refactor UT tests for single sqlite DB module. Refactor sqlite tests to single test_ut_sqlitedb.py like with the logger and parser.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
-   - [ ] Add test that verifies that OID is not changing duringn one operation. Run two operations and check two OIDs in dict.
+   - [ ] Add test that verifies that OID is not changing duringn one operation. Run two operations and check two OIDs in dict. Add this also for Field API tests because they inherit the base. If Field is printing log, it will cause the OID to refreshed twice.
    - [ ] Test Collection()/Resource() ne - probably UT tests.
    - [ ] Add tests that tries to sort based on non existent field. Is there already such case - migth be?
    - [ ] Refactor API tests based on update tests.

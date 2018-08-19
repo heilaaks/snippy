@@ -429,6 +429,7 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=10&sort=brief&sort=-created" -H "accept: application/json" | python -m json.tool
     $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker,filebeat&limit=20&sort=brief&fields=brief,group" -H  "accept: application/json" | python -m json.tool
     $ curl -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=docker&limit=2" -H "accept: application/json" | python -m json.tool
+    $ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/security?limit=1" -H "accept: application/vnd.api+json"
 
     # Server OPTIONS
     $ curl -i -X OPTIONS http://127.0.0.1:8080

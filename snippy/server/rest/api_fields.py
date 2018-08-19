@@ -38,7 +38,6 @@ class ApiKeywords(ApiContentBase):
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on given keyword list."""
 
-        self._logger.debug('run get: %s', request.uri)
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiKeywords, self).on_get(request, response, sall=sall)
@@ -54,7 +53,6 @@ class ApiGroups(ApiContentBase):
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on groups field."""
 
-        self._logger.debug('run get: %s', request.uri)
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiGroups, self).on_get(request, response, sgrp=sgrp)
@@ -70,7 +68,6 @@ class ApiTags(ApiContentBase):
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on tags field."""
 
-        self._logger.debug('run get: %s', request.uri)
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiTags, self).on_get(request, response, stag=stag)
@@ -86,7 +83,6 @@ class ApiDigest(ApiContentDigestBase):
     def on_get(self, request, response, digest):
         """Search content based on digest."""
 
-        self._logger.debug('run get: %s', request.uri)
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiDigest, self).on_get(request, response, digest)
@@ -102,7 +98,6 @@ class ApiDigestField(ApiContentDigestFieldBase):
     def on_get(self, request, response, digest, field):
         """Search content based on uuid."""
 
-        self._logger.debug('run get: %s', request.uri)
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiDigestField, self).on_get(request, response, digest, field)
@@ -118,7 +113,6 @@ class ApiUuid(ApiContentUuidBase):
     def on_get(self, request, response, uuid):
         """Search content based on digest."""
 
-        self._logger.debug('run get: %s', request.uri)
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiUuid, self).on_get(request, response, uuid)
@@ -134,7 +128,6 @@ class ApiUuidField(ApiContentUuidFieldBase):
     def on_get(self, request, response, uuid, field):
         """Search content based on uuid."""
 
-        self._logger.debug('run get: %s', request.uri)
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiUuidField, self).on_get(request, response, uuid, field)

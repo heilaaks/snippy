@@ -33,7 +33,6 @@ class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abst
         self.options = options or {}
         self.application = app
         super(GunicornServer, self).__init__()
-        Logger.refresh_oid()
 
     def load_config(self):
         """Load configuration."""

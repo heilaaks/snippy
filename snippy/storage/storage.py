@@ -44,12 +44,12 @@ class Storage(object):
 
         return collection
 
-    def search(self, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
+    def search(self, scat=(), sall=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
         """Search content.
 
         Args:
-           sall (tuple): Search all keyword list.
            scat (tuple): Search category keyword list.
+           sall (tuple): Search all keyword list.
            stag (tuple): Search tag keyword list.
            sgrp (tuple): Search group keyword list.
            uuid (str): Search specific uuid or part of it.
@@ -61,7 +61,7 @@ class Storage(object):
         """
 
         self._logger.debug('search content')
-        collection = self._database.select(sall, scat, stag, sgrp, uuid, digest, data)
+        collection = self._database.select(scat, sall, stag, sgrp, uuid, digest, data)
 
         return collection
 

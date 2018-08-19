@@ -61,8 +61,8 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
 
         self._logger.debug('searching: %s', self._category)
         self.collection = self._storage.search(
-            sall=Config.search_all_kws,
             scat=Config.search_cat_kws,
+            sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
             uuid=Config.operation_uuid,
@@ -76,8 +76,8 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         """Update content."""
 
         collection = self._storage.search(
-            sall=Config.search_all_kws,
             scat=Config.search_cat_kws,
+            sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
             uuid=Config.operation_uuid,
@@ -101,8 +101,8 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         """Delete content."""
 
         collection = self._storage.search(
-            sall=Config.search_all_kws,
             scat=Config.search_cat_kws,
+            sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
             uuid=Config.operation_uuid,
@@ -126,8 +126,8 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         elif Config.is_search_criteria():
             self._logger.debug('exporting: %s :based on search criteria', self._category)
             collection = self._storage.search(
-                sall=Config.search_all_kws,
                 scat=Config.search_cat_kws,
+                sall=Config.search_all_kws,
                 stag=Config.search_tag_kws,
                 sgrp=Config.search_grp_kws,
                 uuid=Config.operation_uuid,

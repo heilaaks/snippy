@@ -80,7 +80,7 @@ class SqliteDb(object):
             if error[0] == Cause.HTTP_OK:
                 inserted = inserted + 1
 
-        self._logger.debug('inserted %d out of %d content', inserted, collection.size())
+        self._logger.debug('inserted: %d :out of: %d :content', inserted, collection.size())
         if collection.empty():
             error = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
         elif inserted == collection.size():
@@ -128,12 +128,12 @@ class SqliteDb(object):
 
         return error
 
-    def select(self, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
+    def select(self, scat=(), sall=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
         """Select content based on search criteria.
 
         Args:
-           sall (tuple): Search all keyword list.
            scat (tuple): Search category keyword list.
+           sall (tuple): Search all keyword list.
            stag (tuple): Search tag keyword list.
            sgrp (tuple): Search group keyword list.
            uuid (str): Search specific uuid or part of it.
@@ -145,13 +145,13 @@ class SqliteDb(object):
         """
 
         collection = Collection()
-        query, qargs = self._get_query(sall, scat, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_REGEX)
+        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_REGEX)
         if query:
             rows = self._get_db(query, qargs)
-            total = self._count_content(sall, scat, stag, sgrp, uuid, digest, data)
+            total = self._count_content(scat, sall, stag, sgrp, uuid, digest, data)
             collection.convert(rows)
             collection.total = total
-            self._logger.debug('selected %d rows %s', len(rows), rows)
+            self._logger.debug('selected: %d :rows: %s', len(rows), rows)
 
         return collection
 
@@ -216,12 +216,12 @@ class SqliteDb(object):
 
         return tuple(uniques)
 
-    def _count_content(self, sall=(), scat=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
+    def _count_content(self, scat=(), sall=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
         """Count content based on search criteria.
 
         Args:
-           sall (tuple): Search all keyword list.
            scat (tuple): Search category keyword list.
+           sall (tuple): Search all keyword list.
            stag (tuple): Search tag keyword list.
            sgrp (tuple): Search group keyword list.
            uuid (str): Search specific uuid or part of it.
@@ -233,7 +233,7 @@ class SqliteDb(object):
         """
 
         count = 0
-        query, qargs = self._get_query(sall, scat, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
+        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
         if query:
             rows = self._get_db(query, qargs)
             try:
@@ -290,7 +290,7 @@ class SqliteDb(object):
                     elif cursor.rowcount == 0:
                         Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content to be deleted with digest {:.16}'.format(digest))
                     else:
-                        self._logger.debug('unexpected row count %d while deleting with digest %s', cursor.rowcount, digest)
+                        self._logger.debug('unexpected row count: %d :while deleting with digest: %s', cursor.rowcount, digest)
             except sqlite3.Error as exception:
                 Cause.push(Cause.HTTP_500, 'deleting from database failed with exception {}'.format(exception))
         else:
@@ -360,7 +360,7 @@ class SqliteDb(object):
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
 
-        self._logger.debug('selected rows %s', rows)
+        self._logger.debug('selected rows: %s', rows)
 
         return collection
 
@@ -483,13 +483,13 @@ class SqliteDb(object):
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented writing into database')
 
-    def _get_query(self, sall, scat, stag, sgrp, uuid, digest, data, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
+    def _get_query(self, scat, sall, stag, sgrp, uuid, digest, data, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
         """Get query based on defined type."""
 
         query = ()
         qargs = []
-        self._logger.debug('query sall: %s :scat: %s :stag: %s :sgrp: %s :uuid: %s :digest: %s :and data: %s.20s',
-                           sall, scat, stag, sgrp, uuid, digest, data)
+        self._logger.debug('query scat: %s :sall: %s :stag: %s :sgrp: %s :uuid: %s :digest: %s :and data: %s.20s',
+                           scat, sall, stag, sgrp, uuid, digest, data)
 
         if query_type == SqliteDb.QUERY_TYPE_TOTAL:
             query_pointer = self._query_count
@@ -523,7 +523,7 @@ class SqliteDb(object):
                 query = ('SELECT * FROM contents WHERE data LIKE ?')
             qargs = ['%'+Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, data))+'%']
         else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'please define keyword, digest or content data as search criteria')
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'please define keyword, uuid, digest or content data as search criteria')
 
         return query, qargs
 

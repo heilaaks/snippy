@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix if logs after uuid like: please define keyword, digest or content data as search criteria
    - [ ] Fix group/tags api now inherits from a base that has e.g. the post which is not good when only get should be available. Is there a way to limit this? Is this even needed?
    - [ ] Fix running pytest tests/test_cli_create_solution.py -k test_cli_create_solution_006 alone has the Config problem with templates. Config not initialized?
 

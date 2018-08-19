@@ -923,10 +923,10 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Try to search snippets without defining any search criteria.
         """
 
-        output = 'NOK: please define keyword, digest or content data as search criteria\n'
+        output = 'NOK: please define keyword, uuid, digest or content data as search criteria\n'
         cause = snippy.run(['snippy', 'search'])
         out, err = capsys.readouterr()
-        assert cause == 'NOK: please define keyword, digest or content data as search criteria'
+        assert cause == 'NOK: please define keyword, uuid, digest or content data as search criteria'
         assert out == output
         assert not err
 
@@ -939,10 +939,10 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         is applied.
         """
 
-        output = 'NOK: please define keyword, digest or content data as search criteria\n'
+        output = 'NOK: please define keyword, uuid, digest or content data as search criteria\n'
         cause = snippy.run(['snippy', 'search', '--filter', '.*(\\$\\s.*)'])
         out, err = capsys.readouterr()
-        assert cause == 'NOK: please define keyword, digest or content data as search criteria'
+        assert cause == 'NOK: please define keyword, uuid, digest or content data as search criteria'
         assert out == output
         assert not err
 

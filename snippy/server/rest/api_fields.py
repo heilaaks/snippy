@@ -27,6 +27,7 @@ from snippy.server.rest.base import ApiContentDigestBase
 from snippy.server.rest.base import ApiContentDigestFieldBase
 from snippy.server.rest.base import ApiContentUuidBase
 from snippy.server.rest.base import ApiContentUuidFieldBase
+from snippy.server.rest.generate import Generate
 
 
 class ApiKeywords(ApiContentBase):
@@ -41,6 +42,18 @@ class ApiKeywords(ApiContentBase):
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiKeywords, self).on_get(request, response, sall=sall)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_post(self, request, response, **kwargs):
+        """Create new field."""
+
+        ApiNotImplemented.send(request, response)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_delete(self, request, response, **kwargs):
+        """Delete field."""
+
+        ApiNotImplemented.send(request, response)
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
@@ -64,6 +77,18 @@ class ApiGroups(ApiContentBase):
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiGroups, self).on_get(request, response, sgrp=sgrp)
 
+    @Logger.timeit(refresh_oid=True)
+    def on_post(self, request, response, **kwargs):
+        """Create new field."""
+
+        ApiNotImplemented.send(request, response)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_delete(self, request, response, **kwargs):
+        """Delete field."""
+
+        ApiNotImplemented.send(request, response)
+
     @staticmethod
     @Logger.timeit(refresh_oid=True)
     def on_options(_, response, sall=None, stag=None, sgrp=None):
@@ -85,6 +110,18 @@ class ApiTags(ApiContentBase):
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiTags, self).on_get(request, response, stag=stag)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_post(self, request, response, **kwargs):
+        """Create new field."""
+
+        ApiNotImplemented.send(request, response)
+
+    @Logger.timeit(refresh_oid=True)
+    def on_delete(self, request, response, **kwargs):
+        """Delete field."""
+
+        ApiNotImplemented.send(request, response)
 
     @staticmethod
     @Logger.timeit(refresh_oid=True)
@@ -157,3 +194,16 @@ class ApiUuidField(ApiContentUuidFieldBase):
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiUuidField, self).on_get(request, response, uuid, field)
+
+
+class ApiNotImplemented(object):  # pylint: disable=too-few-public-methods
+    """Stanrard response for not allowed HTTP method."""
+
+    @classmethod
+    def send(cls, request, response):
+        """Send standard 405 Not Allowed response."""
+
+        Cause.push(Cause.HTTP_METHOD_NOT_ALLOWED, 'fields api does not support method: {}'.format(request.method))
+        response.content_type = ApiContentBase.MEDIA_JSON_API
+        response.body = Generate.error(Cause.json_message())
+        response.status = Cause.http_status()

@@ -42,6 +42,7 @@ class Cause(object):
     HTTP_204 = '204 No Content'
     HTTP_400 = '400 Bad Request'
     HTTP_403 = '403 Forbidden'
+    HTTP_405 = '405 Method Not Allowed'
     HTTP_404 = '404 Not Found'
     HTTP_409 = '409 Conflict'
     HTTP_500 = '500 Internal Server Error'
@@ -52,6 +53,7 @@ class Cause(object):
     HTTP_BAD_REQUEST = HTTP_400
     HTTP_FORBIDDEN = HTTP_403
     HTTP_NOT_FOUND = HTTP_404
+    HTTP_METHOD_NOT_ALLOWED = HTTP_405
     HTTP_CONFLICT = HTTP_409
     HTTP_INTERNAL_SERVER_ERROR = HTTP_500
     OK_STATUS_LIST = (HTTP_OK, HTTP_CREATED, HTTP_NO_CONTENT)

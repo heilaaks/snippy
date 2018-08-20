@@ -36,6 +36,82 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     """Test GET /snippy/api/{field} API."""
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_keyword_001(self, server):
+        """Get specific content based on given keywords.
+
+        Call GET /v1/docs,python to get content from any category with
+        docs or python keyword.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '2087'
+        }
+        result_json = {
+            'meta': {
+                'count': 3,
+                'limit': 20,
+                'offset': 0,
+                'total': 3
+            },
+            'data': [{
+                'type': 'reference',
+                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+            }, {
+                'type': 'snippet',
+                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+            }, {
+                'type': 'snippet',
+                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+            }]
+
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/docs,python',
+            headers={'accept': 'application/vnd.api+json'})
+
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-references', 'default-snippets', 'import-kafka', 'import-pytest')
+    def test_api_search_keyword_002(self, server):
+        """Get specific content based on given keywords.
+
+        Call GET /v1/doc to get content from references category with doc
+        keyword.
+        """
+
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '654'
+        }
+        result_json = {
+            'meta': {
+                'count': 1,
+                'limit': 20,
+                'offset': 0,
+                'total': 1
+            },
+            'data': [{
+                'type': 'reference',
+                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+            }]
+
+        }
+        result = testing.TestClient(server.server.api).simulate_get(
+            path='/snippy/api/app/v1/doc',
+            headers={'accept': 'application/vnd.api+json'},
+            query_string='limit=20&sort=brief&scat=reference')
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_001(self, server):
         """Get specific content based on group field.
 
@@ -308,23 +384,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
 
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_search_groups_009(self, server):
-        """Test fields groups API with OPTIONS.
-
-        Call GET /v1/groups to get allowed methods.
-        """
-
-        result_header = {
-            'allow': 'GET',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/groups/docker')
-        assert result.headers == result_header
-        assert not result.text
-        assert result.status == falcon.HTTP_200
-
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_tags_001(self, server):
         """Get specific content based on tags field.
@@ -423,23 +482,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
 
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_search_tags_004(self, server):
-        """Test fields tags API with OPTIONS.
-
-        Call GET /v1/tags to get allowed methods.
-        """
-
-        result_header = {
-            'allow': 'GET',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/tags/docker')
-        assert result.headers == result_header
-        assert not result.text
-        assert result.status == falcon.HTTP_200
-
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_digest_001(self, server):
         """Get specific content based on digest.
@@ -500,23 +542,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_search_digest_003(self, server):
-        """Test fields tags API with OPTIONS.
-
-        Call GET /v1/digest to get allowed methods.
-        """
-
-        result_header = {
-            'allow': 'GET',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/digest/01010101')
-        assert result.headers == result_header
-        assert not result.text
-        assert result.status == falcon.HTTP_200
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_uuid_001(self, server):
@@ -724,135 +749,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_search_uuid_008(self, server):
-        """Test fields uuid API with OPTIONS.
-
-        Call GET /v1/uuid/<uuid> to get allowed methods.
-        """
-
-        result_header = {
-            'allow': 'GET',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/uuid/27cd5827')
-        assert result.headers == result_header
-        assert not result.text
-        assert result.status == falcon.HTTP_200
-
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_search_uuid_009(self, server):
-        """Test fields uuid API with OPTIONS.
-
-        Call GET /v1/uuid/<uuid>/<field> to get allowed methods.
-        """
-
-        result_header = {
-            'allow': 'GET',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief')
-        assert result.headers == result_header
-        assert not result.text
-        assert result.status == falcon.HTTP_200
-
-    @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_keyword_001(self, server):
-        """Get specific content based on given keywords.
-
-        Call GET /v1/docs,python to get content from any category with
-        docs or python keyword.
-        """
-
-        result_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2087'
-        }
-        result_json = {
-            'meta': {
-                'count': 3,
-                'limit': 20,
-                'offset': 0,
-                'total': 3
-            },
-            'data': [{
-                'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
-            }, {
-                'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
-            }, {
-                'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
-            }]
-
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/docs,python',
-            headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
-        assert result.status == falcon.HTTP_200
-
-    @pytest.mark.usefixtures('default-references', 'default-snippets', 'import-kafka', 'import-pytest')
-    def test_api_search_keyword_002(self, server):
-        """Get specific content based on given keywords.
-
-        Call GET /v1/doc to get content from references category with doc
-        keyword.
-        """
-
-        result_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '654'
-        }
-        result_json = {
-            'meta': {
-                'count': 1,
-                'limit': 20,
-                'offset': 0,
-                'total': 1
-            },
-            'data': [{
-                'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
-            }]
-
-        }
-        result = testing.TestClient(server.server.api).simulate_get(
-            path='/snippy/api/app/v1/doc',
-            headers={'accept': 'application/vnd.api+json'},
-            query_string='limit=20&sort=brief&scat=reference')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
-        assert result.status == falcon.HTTP_200
-
-    @pytest.mark.usefixtures('mock-server')
-    def test_api_search_keyword_003(self, server):
-        """Test fields keywords API with OPTIONS.
-
-        Call GET /v1/groups to get allowed methods for keywords API. Note that
-        this does not call the groups API but keywords API. The reason is that
-        the route /groups does not have the parameter and in this case id does
-        not lead to /groups but to /{keywords} API.
-        """
-
-        result_header = {
-            'allow': 'GET',
-            'content-length': '0',
-            'content-type': 'application/vnd.api+json'
-        }
-        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/groups')
-        assert result.headers == result_header
-        assert not result.text
-        assert result.status == falcon.HTTP_200
 
     @classmethod
     def teardown_class(cls):

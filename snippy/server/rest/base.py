@@ -41,7 +41,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         self._content = content
 
     @Logger.timeit(refresh_oid=True)
-    def on_post(self, request, response):
+    def on_post(self, request, response, **kwargs):  # pylint: disable=unused-argument
         """Create new content."""
 
         self._logger.debug('run post %s', request.uri)
@@ -91,7 +91,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger.debug('end get %s', request.uri)
 
     @Logger.timeit(refresh_oid=True)
-    def on_delete(self, request, response):
+    def on_delete(self, request, response, **kwargs):  # pylint: disable=unused-argument
         """Deleting content without resource is not supported."""
 
         self._logger.debug('run delete %s', request.uri)

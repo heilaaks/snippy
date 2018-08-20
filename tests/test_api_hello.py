@@ -273,6 +273,111 @@ class TestApiHello(object):
         assert not result.text
         assert result.status == falcon.HTTP_200
 
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_013(self, server):
+        """Test fields groups API with OPTIONS.
+
+        Call GET /v1/groups to get allowed methods.
+        """
+
+        result_header = {
+            'allow': 'GET',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/groups/docker')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_014(self, server):
+        """Test fields tags API with OPTIONS.
+
+        Call GET /v1/tags to get allowed methods.
+        """
+
+        result_header = {
+            'allow': 'GET',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/tags/docker')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_015(self, server):
+        """Test fields tags API with OPTIONS.
+
+        Call GET /v1/digest to get allowed methods.
+        """
+
+        result_header = {
+            'allow': 'GET',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/digest/01010101')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_016(self, server):
+        """Test fields uuid API with OPTIONS.
+
+        Call GET /v1/uuid/<uuid> to get allowed methods.
+        """
+
+        result_header = {
+            'allow': 'GET',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/uuid/27cd5827')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_017(self, server):
+        """Test fields uuid API with OPTIONS.
+
+        Call GET /v1/uuid/<uuid>/<field> to get allowed methods.
+        """
+
+        result_header = {
+            'allow': 'GET',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
+    @pytest.mark.usefixtures('mock-server')
+    def test_api_hello_api_018(self, server):
+        """Test fields keywords API with OPTIONS.
+
+        Call GET /v1/groups to get allowed methods for keywords API. Note that
+        this does not call the groups API but keywords API. The reason is that
+        the route /groups does not have the parameter and in this case id does
+        not lead to /groups but to /{keywords} API.
+        """
+
+        result_header = {
+            'allow': 'GET',
+            'content-length': '0',
+            'content-type': 'application/vnd.api+json'
+        }
+        result = testing.TestClient(server.server.api).simulate_options('/snippy/api/app/v1/groups')
+        assert result.headers == result_header
+        assert not result.text
+        assert result.status == falcon.HTTP_200
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

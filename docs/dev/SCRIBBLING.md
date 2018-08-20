@@ -874,12 +874,13 @@ git update-index --no-assume-unchanged FILE_NAME # change back
     category           : Content category which can be: 'snippet', 'solution' or 'reference'.
     operation          : Refers to one operation that can be either:
                          A) Command line operation: 'create', 'delete', 'search', 'update', 'export' or 'import'.
-                       : B) REST API operation: POST, PUT, GET, DELETE, PATCH or OPTION.
+                       : B) HTTP methods like: POST, PUT, GET, DELETE, PATCH or OPTION.
     operation category : Referers to 'category' defined for
                          A) command line operation with: --snippet(s), --solution(s), --reference(s) or --all
                          B) REST API operation defined with data.type: ['snippet', 'solution' or 'reference']
     search category    : Refers to categories which are searched when operation or request is executed.
     operation ID (OID) : Unique identifier allocated for all log messages generation from a single operation.
+    HTTP method        : Same as operation when referring to REST API implementation.
 
     content            : Content object: Snippet, Solution or Reference that is stored inside Resource.
     field              : Field that is part of a content definition, same as attribute.

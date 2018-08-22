@@ -103,7 +103,7 @@ class TestCliCreateSolution(object):
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
         assert not Database.get_solutions().size()
 
-    @pytest.mark.usefixtures('edit-beats')
+    @pytest.mark.usefixtures('snippy', 'edit-beats')
     def test_cli_create_solution_006(self, snippy, mocker):
         """Create solution from editor.
 

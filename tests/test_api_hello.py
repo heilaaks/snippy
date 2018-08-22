@@ -230,7 +230,7 @@ class TestApiHello(object):
         """
 
         result_header = {
-            'allow': 'DELETE,GET,POST',
+            'allow': 'DELETE,GET,OPTIONS,POST',
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
@@ -247,7 +247,7 @@ class TestApiHello(object):
         """
 
         result_header = {
-            'allow': 'DELETE,GET,PATCH,POST,PUT',
+            'allow': 'DELETE,GET,OPTIONS,PATCH,POST,PUT',
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
@@ -264,7 +264,7 @@ class TestApiHello(object):
         """
 
         result_header = {
-            'allow': 'GET',
+            'allow': 'GET,OPTIONS',
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
@@ -281,7 +281,7 @@ class TestApiHello(object):
         """
 
         result_header = {
-            'allow': 'GET',
+            'allow': 'GET,OPTIONS',
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
@@ -298,7 +298,7 @@ class TestApiHello(object):
         """
 
         result_header = {
-            'allow': 'GET',
+            'allow': 'GET,OPTIONS',
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
@@ -315,7 +315,7 @@ class TestApiHello(object):
         """
 
         result_header = {
-            'allow': 'GET',
+            'allow': 'GET,OPTIONS',
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
@@ -332,7 +332,7 @@ class TestApiHello(object):
         """
 
         result_header = {
-            'allow': 'GET',
+            'allow': 'GET,OPTIONS',
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
@@ -349,7 +349,7 @@ class TestApiHello(object):
         """
 
         result_header = {
-            'allow': 'GET',
+            'allow': 'GET,OPTIONS',
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }
@@ -369,7 +369,7 @@ class TestApiHello(object):
         """
 
         result_header = {
-            'allow': 'GET',
+            'allow': 'GET,OPTIONS',
             'content-length': '0',
             'content-type': 'application/vnd.api+json'
         }

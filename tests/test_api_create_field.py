@@ -71,6 +71,96 @@ class TestApiCreateField(object):
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_field_002(self, server):
+        """Try to create keyword fields from API.
+
+        Try to call not supported POST operation for /v1/keywords that
+        is overridden as PUT.
+        """
+
+        request_body = {}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '363'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '405',
+                'statusString': '405 Method Not Allowed',
+                'module': 'snippy.testing.testing:123',
+                'title': 'fields api does not support method: POST'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/docs,python',
+            headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'PUT'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_405
+
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_field_003(self, server):
+        """Try to create keyword fields from API.
+
+        Try to call not supported POST operation for /v1/keywords that
+        is overridden as PATCH.
+        """
+
+        request_body = {}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '363'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '405',
+                'statusString': '405 Method Not Allowed',
+                'module': 'snippy.testing.testing:123',
+                'title': 'fields api does not support method: POST'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/docs,python',
+            headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'PATCH'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_405
+
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_field_004(self, server):
+        """Try to create keyword fields from API.
+
+        Try to call not supported POST operation for /v1/keywords that
+        is overridden as DELETE.
+        """
+
+        request_body = {}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '363'
+        }
+        result_json = {
+            'meta': Content.get_api_meta(),
+            'errors': [{
+                'status': '405',
+                'statusString': '405 Method Not Allowed',
+                'module': 'snippy.testing.testing:123',
+                'title': 'fields api does not support method: POST'
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/docs,python',
+            headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_405
+
+    @pytest.mark.usefixtures('caller')
+    def test_api_create_field_005(self, server):
         """Try to create groups fields from API.
 
         Try to call not supported POST operation for /v1/groups.
@@ -104,7 +194,7 @@ class TestApiCreateField(object):
         assert result.status == falcon.HTTP_405
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_field_003(self, server):
+    def test_api_create_field_006(self, server):
         """Try to create tags fields from API.
 
         Try to call not supported POST operation for /v1/tags.

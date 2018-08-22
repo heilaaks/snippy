@@ -27,7 +27,7 @@ from snippy.server.rest.base import ApiContentDigestBase
 from snippy.server.rest.base import ApiContentDigestFieldBase
 from snippy.server.rest.base import ApiContentUuidBase
 from snippy.server.rest.base import ApiContentUuidFieldBase
-from snippy.server.rest.generate import Generate
+from snippy.server.rest.base import ApiNotImplemented
 
 
 class ApiKeywords(ApiContentBase):
@@ -61,7 +61,7 @@ class ApiKeywords(ApiContentBase):
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
+        response.set_header('Allow', 'GET,OPTIONS')
 
 
 class ApiGroups(ApiContentBase):
@@ -95,7 +95,7 @@ class ApiGroups(ApiContentBase):
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
+        response.set_header('Allow', 'GET,OPTIONS')
 
 
 class ApiTags(ApiContentBase):
@@ -129,7 +129,7 @@ class ApiTags(ApiContentBase):
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
+        response.set_header('Allow', 'GET,OPTIONS')
 
 
 class ApiDigest(ApiContentDigestBase):
@@ -151,7 +151,7 @@ class ApiDigest(ApiContentDigestBase):
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
+        response.set_header('Allow', 'GET,OPTIONS')
 
 
 class ApiDigestField(ApiContentDigestFieldBase):
@@ -194,16 +194,3 @@ class ApiUuidField(ApiContentUuidFieldBase):
         if 'scat' not in request.params:
             request.params['scat'] = [Const.SNIPPET, Const.SOLUTION, Const.REFERENCE]
         super(ApiUuidField, self).on_get(request, response, uuid, field)
-
-
-class ApiNotImplemented(object):  # pylint: disable=too-few-public-methods
-    """Stanrard response for not allowed HTTP method."""
-
-    @classmethod
-    def send(cls, request, response):
-        """Send standard 405 Not Allowed response."""
-
-        Cause.push(Cause.HTTP_METHOD_NOT_ALLOWED, 'fields api does not support method: {}'.format(request.method))
-        response.content_type = ApiContentBase.MEDIA_JSON_API
-        response.body = Generate.error(Cause.json_message())
-        response.status = Cause.http_status()

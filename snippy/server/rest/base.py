@@ -63,6 +63,12 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         self._logger.debug('end post %s', request.uri)
 
     @Logger.timeit(refresh_oid=True)
+    def on_put(self, request, response, **kwargs):  # pylint: disable=unused-argument,no-self-use
+        """Update content."""
+
+        ApiNotImplemented.send(request, response)
+
+    @Logger.timeit(refresh_oid=True)
     def on_get(self, request, response, sall=None, stag=None, sgrp=None):
         """Search content based on query parameters."""
 
@@ -109,7 +115,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
-        response.set_header('Allow', 'DELETE,GET,POST')
+        response.set_header('Allow', 'DELETE,GET,OPTIONS,POST')
 
 
 class ApiContentDigestBase(object):
@@ -225,7 +231,7 @@ class ApiContentDigestBase(object):
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
-        response.set_header('Allow', 'DELETE,GET,PATCH,POST,PUT')
+        response.set_header('Allow', 'DELETE,GET,OPTIONS,PATCH,POST,PUT')
 
 
 class ApiContentDigestFieldBase(object):
@@ -271,7 +277,7 @@ class ApiContentDigestFieldBase(object):
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
+        response.set_header('Allow', 'GET,OPTIONS')
 
 
 class ApiContentUuidBase(object):
@@ -317,7 +323,7 @@ class ApiContentUuidBase(object):
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
+        response.set_header('Allow', 'GET,OPTIONS')
 
 
 class ApiContentUuidFieldBase(object):
@@ -363,4 +369,17 @@ class ApiContentUuidFieldBase(object):
         """Respond with allowed methods."""
 
         response.status = Cause.HTTP_200
-        response.set_header('Allow', 'GET')
+        response.set_header('Allow', 'GET,OPTIONS')
+
+
+class ApiNotImplemented(object):  # pylint: disable=too-few-public-methods
+    """Stanrard response for not allowed HTTP method."""
+
+    @classmethod
+    def send(cls, request, response):
+        """Send standard 405 Not Allowed response."""
+
+        Cause.push(Cause.HTTP_METHOD_NOT_ALLOWED, 'fields api does not support method: {}'.format(request.method))
+        response.content_type = ApiContentBase.MEDIA_JSON_API
+        response.body = Generate.error(Cause.json_message())
+        response.status = Cause.http_status()

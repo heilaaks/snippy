@@ -1,28 +1,28 @@
 {
-  "$schema": "http://json-schema.org/schema#", 
-  "required": [
-    "status", 
-    "statusString", 
-    "module", 
-    "title"
-  ], 
-  "type": "object", 
+  "type": "object",
   "properties": {
     "status": {
-      "type": "string", 
+      "type": "string",
       "description": "HTTP status code."
-    }, 
+    },
     "statusString": {
-      "type": "string", 
+      "type": "string",
       "description": "HTTP status as text string."
-    }, 
+    },
     "module": {
-      "type": "string", 
+      "type": "string",
       "description": "Location of error."
-    }, 
+    },
     "title": {
-      "type": "string", 
+      "type": "string",
       "description": "Message describing the error."
     }
-  }
+  },
+  "required": [
+    "status",
+    "statusString",
+    "module",
+    "title"
+  ],
+  "$schema": "http://json-schema.org/schema#"
 }

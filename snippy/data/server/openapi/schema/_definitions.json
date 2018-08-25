@@ -1,336 +1,339 @@
 {
   "definitions": {
-    "ResponseData": {
-      "required": [
-        "type", 
-        "attributes"
-      ], 
-      "type": "object", 
+    "RequestResource": {
+      "type": "object",
       "properties": {
-        "attributes": {
-          "$ref": "#/definitions/Attributes"
-        }, 
-        "type": {
-          "enum": [
-            "snippet", 
-            "solution", 
-            "reference"
-          ], 
-          "type": "string"
-        }, 
-        "id": {
-          "type": "string"
-        }
-      }
-    }, 
-    "Errors": {
-      "required": [
-        "meta", 
-        "errors"
-      ], 
-      "type": "object", 
-      "properties": {
-        "meta": {
-          "$ref": "#/definitions/Meta"
-        }, 
-        "errors": {
-          "items": {
-            "$ref": "#/definitions/Error"
-          }, 
-          "type": "array"
-        }
-      }
-    }, 
-    "Links": {
-      "type": "object", 
-      "properties": {
-        "self": {
-          "type": "string", 
-          "description": "Link pointing to resource."
-        }
-      }
-    }, 
-    "RequestCollection": {
-      "required": [
-        "data"
-      ], 
-      "type": "object", 
-      "properties": {
+        "links": {
+          "$ref": "#/definitions/Links"
+        },
         "data": {
-          "items": {
-            "$ref": "#/definitions/RequestData"
-          }, 
-          "type": "array"
+          "$ref": "#/definitions/RequestData"
         }
-      }
-    }, 
-    "ResponseResource": {
+      },
       "required": [
         "data"
-      ], 
-      "type": "object", 
+      ]
+    },
+    "ResponseResource": {
+      "type": "object",
       "properties": {
         "data": {
           "$ref": "#/definitions/ResponseData"
-        }, 
+        },
         "links": {
           "$ref": "#/definitions/Links"
         }
-      }
-    }, 
-    "ResponseMeta": {
-      "required": [
-        "count", 
-        "limit", 
-        "offset", 
-        "total"
-      ], 
-      "type": "object", 
-      "properties": {
-        "count": {
-          "type": "string", 
-          "description": "Number of content items in data list."
-        }, 
-        "total": {
-          "type": "string", 
-          "description": "Total number of search results without limit being applied."
-        }, 
-        "limit": {
-          "type": "string", 
-          "description": "The search limit used in request."
-        }, 
-        "offset": {
-          "type": "string", 
-          "description": "The search offset used in request."
-        }
-      }
-    }, 
-    "ResponseCollectionPost": {
+      },
       "required": [
         "data"
-      ], 
-      "type": "object", 
+      ]
+    },
+    "RequestCollection": {
+      "type": "object",
       "properties": {
         "data": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/RequestData"
+          }
+        }
+      },
+      "required": [
+        "data"
+      ]
+    },
+    "ResponseCollectionPost": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
           "items": {
             "$ref": "#/definitions/ResponseData"
-          }, 
-          "type": "array"
+          }
         }
-      }
-    }, 
-    "ResponseLinks": {
-      "required": [
-        "self", 
-        "first", 
-        "last"
-      ], 
-      "type": "object", 
-      "properties": {
-        "self": {
-          "type": "string", 
-          "description": "Pagination link to this page.", 
-          "format": "uri"
-        }, 
-        "prev": {
-          "type": "string", 
-          "description": "Pagination link to previous page.", 
-          "format": "uri"
-        }, 
-        "last": {
-          "type": "string", 
-          "description": "Pagination link to last page.", 
-          "format": "uri"
-        }, 
-        "first": {
-          "type": "string", 
-          "description": "Pagination link to first page.", 
-          "format": "uri"
-        }, 
-        "next": {
-          "type": "string", 
-          "description": "Pagination link to next page.", 
-          "format": "uri"
-        }
-      }
-    }, 
-    "RequestData": {
-      "required": [
-        "type", 
-        "attributes"
-      ], 
-      "type": "object", 
-      "properties": {
-        "attributes": {
-          "$ref": "#/definitions/Attributes"
-        }, 
-        "type": {
-          "enum": [
-            "snippet", 
-            "solution", 
-            "reference"
-          ], 
-          "type": "string"
-        }
-      }
-    }, 
-    "Meta": {
-      "required": [
-        "version", 
-        "homepage"
-      ], 
-      "type": "object", 
-      "properties": {
-        "version": {
-          "type": "string", 
-          "description": "Server version."
-        }, 
-        "homepage": {
-          "type": "string", 
-          "description": "Server homepage URL."
-        }
-      }
-    }, 
-    "RequestResource": {
+      },
       "required": [
         "data"
-      ], 
-      "type": "object", 
-      "properties": {
-        "data": {
-          "$ref": "#/definitions/RequestData"
-        }, 
-        "links": {
-          "$ref": "#/definitions/Links"
-        }
-      }
-    }, 
+      ]
+    },
     "ResponseCollectionGet": {
-      "required": [
-        "meta", 
-        "data"
-      ], 
-      "type": "object", 
+      "type": "object",
       "properties": {
         "meta": {
           "$ref": "#/definitions/ResponseMeta"
-        }, 
+        },
         "data": {
+          "type": "array",
           "items": {
             "$ref": "#/definitions/ResponseData"
-          }, 
-          "type": "array"
-        }, 
+          }
+        },
         "links": {
           "$ref": "#/definitions/ResponseLinks"
         }
-      }
-    }, 
-    "Error": {
+      },
       "required": [
-        "status", 
-        "statusString", 
-        "module", 
-        "title"
-      ], 
-      "type": "object", 
+        "meta",
+        "data"
+      ]
+    },
+    "Links": {
+      "type": "object",
       "properties": {
-        "status": {
-          "type": "string", 
-          "description": "HTTP status code."
-        }, 
-        "statusString": {
-          "type": "string", 
-          "description": "HTTP status as text string."
-        }, 
-        "module": {
-          "type": "string", 
-          "description": "Location of error."
-        }, 
-        "title": {
-          "type": "string", 
-          "description": "Message describing the error."
+        "self": {
+          "type": "string",
+          "description": "Link pointing to resource."
         }
       }
-    }, 
+    },
+    "RequestData": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "snippet",
+            "solution",
+            "reference"
+          ]
+        },
+        "attributes": {
+          "$ref": "#/definitions/Attributes"
+        }
+      },
+      "required": [
+        "type",
+        "attributes"
+      ]
+    },
+    "ResponseMeta": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "string",
+          "description": "Number of content items in data list."
+        },
+        "limit": {
+          "type": "string",
+          "description": "The search limit used in request."
+        },
+        "offset": {
+          "type": "string",
+          "description": "The search offset used in request."
+        },
+        "total": {
+          "type": "string",
+          "description": "Total number of search results without limit being applied."
+        }
+      },
+      "required": [
+        "count",
+        "limit",
+        "offset",
+        "total"
+      ]
+    },
+    "ResponseData": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": [
+            "snippet",
+            "solution",
+            "reference"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "attributes": {
+          "$ref": "#/definitions/Attributes"
+        }
+      },
+      "required": [
+        "type",
+        "attributes"
+      ]
+    },
+    "ResponseLinks": {
+      "type": "object",
+      "properties": {
+        "self": {
+          "type": "string",
+          "format": "uri",
+          "description": "Pagination link to this page."
+        },
+        "first": {
+          "type": "string",
+          "format": "uri",
+          "description": "Pagination link to first page."
+        },
+        "next": {
+          "type": "string",
+          "format": "uri",
+          "description": "Pagination link to next page."
+        },
+        "prev": {
+          "type": "string",
+          "format": "uri",
+          "description": "Pagination link to previous page."
+        },
+        "last": {
+          "type": "string",
+          "format": "uri",
+          "description": "Pagination link to last page."
+        }
+      },
+      "required": [
+        "self",
+        "first",
+        "last"
+      ]
+    },
     "Attributes": {
+      "type": "object",
+      "properties": {
+        "data": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Mandatory content data in list context with one line per element."
+        },
+        "brief": {
+          "type": "string",
+          "description": "Optional brief description of the content."
+        },
+        "groups": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional list of groups to which the content belongs.",
+          "default": "default"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional list of tags."
+        },
+        "links": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional list of refrence links."
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "snippet",
+            "solution",
+            "reference"
+          ],
+          "description": "Automatically assigned content category."
+        },
+        "name": {
+          "type": "string",
+          "description": "Optional name for the content."
+        },
+        "filename": {
+          "type": "string",
+          "description": "Optional filename that that defines automatically used filename when content is exported."
+        },
+        "versions": {
+          "type": "string",
+          "description": "Optional list of services and versions related to the content."
+        },
+        "source": {
+          "type": "string",
+          "description": "Optional external source for the content."
+        },
+        "uuid": {
+          "type": "string",
+          "description": "Automatically assigned UUID for the content."
+        },
+        "created": {
+          "type": "string",
+          "description": "Optional UTC timestamp for creation time in ISO 8601 format that is automatically assigned."
+        },
+        "updated": {
+          "type": "string",
+          "description": "Optional UTC timestamp for the last update time in ISO 8601 format that is automatically assigned."
+        },
+        "digest": {
+          "type": "string",
+          "description": "Automatically assigned message digest that uniquely identifies the content."
+        }
+      },
       "required": [
         "data"
-      ], 
-      "type": "object", 
+      ]
+    },
+    "Errors": {
+      "type": "object",
       "properties": {
-        "category": {
-          "enum": [
-            "snippet", 
-            "solution", 
-            "reference"
-          ], 
-          "type": "string", 
-          "description": "Automatically assigned content category."
-        }, 
-        "updated": {
-          "type": "string", 
-          "description": "Optional UTC timestamp for the last update time in ISO 8601 format that is automatically assigned."
-        }, 
-        "group": {
-          "default": "default", 
-          "type": "string", 
-          "description": "Optional group to which the content belongs."
-        }, 
-        "name": {
-          "type": "string", 
-          "description": "Optional name for the content."
-        }, 
-        "links": {
+        "meta": {
+          "$ref": "#/definitions/Meta"
+        },
+        "errors": {
+          "type": "array",
           "items": {
-            "type": "string"
-          }, 
-          "type": "array", 
-          "description": "Optional list of refrence links."
-        }, 
-        "tags": {
-          "items": {
-            "type": "string"
-          }, 
-          "type": "array", 
-          "description": "Optional list of tags."
-        }, 
-        "versions": {
-          "type": "string", 
-          "description": "Optional list of services and versions related to the content."
-        }, 
-        "brief": {
-          "type": "string", 
-          "description": "Optional brief description of the content."
-        }, 
-        "filename": {
-          "type": "string", 
-          "description": "Optional filename that that defines automatically used filename when content is exported."
-        }, 
-        "source": {
-          "type": "string", 
-          "description": "Optional external source for the content."
-        }, 
-        "created": {
-          "type": "string", 
-          "description": "Optional UTC timestamp for creation time in ISO 8601 format that is automatically assigned."
-        }, 
-        "data": {
-          "items": {
-            "type": "string"
-          }, 
-          "type": "array", 
-          "description": "Mandatory content data in list context with one line per element."
-        }, 
-        "digest": {
-          "type": "string", 
-          "description": "Automatically assigned message digest that uniquely identifies the content."
-        }, 
-        "uuid": {
-          "type": "string", 
-          "description": "Automatically assigned UUID for the content."
+            "$ref": "#/definitions/Error"
+          }
         }
-      }
+      },
+      "required": [
+        "meta",
+        "errors"
+      ]
+    },
+    "Meta": {
+      "type": "object",
+      "properties": {
+        "version": {
+          "type": "string",
+          "description": "Server version."
+        },
+        "homepage": {
+          "type": "string",
+          "description": "Server homepage URL."
+        }
+      },
+      "required": [
+        "version",
+        "homepage"
+      ]
+    },
+    "Error": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "HTTP status code."
+        },
+        "statusString": {
+          "type": "string",
+          "description": "HTTP status as text string."
+        },
+        "module": {
+          "type": "string",
+          "description": "Location of error."
+        },
+        "title": {
+          "type": "string",
+          "description": "Message describing the error."
+        }
+      },
+      "required": [
+        "status",
+        "statusString",
+        "module",
+        "title"
+      ]
     }
   }
 }

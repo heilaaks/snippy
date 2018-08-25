@@ -6,7 +6,7 @@ name = "pypi"
 [dev-packages]
 "flake8" = "==3.5.0"
 mock = "==2.0.0"
-"openapi2jsonschema" = "==0.7.1"
+"openapi2jsonschema" = "==0.8.0"
 pprintpp = "==0.4.0"
 pylint = "==2.1.1"
 pytest = "==3.6.4"

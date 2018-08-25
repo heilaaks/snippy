@@ -1,15 +1,15 @@
 {
-  "$schema": "http://json-schema.org/schema#", 
-  "required": [
-    "data"
-  ], 
-  "type": "object", 
+  "type": "object",
   "properties": {
     "data": {
+      "type": "array",
       "items": {
-        "$ref": "_definitions.json#/definitions/ResponseData"
-      }, 
-      "type": "array"
+        "$ref": "#/definitions/ResponseData"
+      }
     }
-  }
+  },
+  "required": [
+    "data"
+  ],
+  "$schema": "http://json-schema.org/schema#"
 }

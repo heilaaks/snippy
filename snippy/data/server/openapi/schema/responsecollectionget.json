@@ -1,22 +1,22 @@
 {
-  "$schema": "http://json-schema.org/schema#", 
-  "required": [
-    "meta", 
-    "data"
-  ], 
-  "type": "object", 
+  "type": "object",
   "properties": {
     "meta": {
-      "$ref": "_definitions.json#/definitions/ResponseMeta"
-    }, 
+      "$ref": "#/definitions/ResponseMeta"
+    },
     "data": {
+      "type": "array",
       "items": {
-        "$ref": "_definitions.json#/definitions/ResponseData"
-      }, 
-      "type": "array"
-    }, 
+        "$ref": "#/definitions/ResponseData"
+      }
+    },
     "links": {
-      "$ref": "_definitions.json#/definitions/ResponseLinks"
+      "$ref": "#/definitions/ResponseLinks"
     }
-  }
+  },
+  "required": [
+    "meta",
+    "data"
+  ],
+  "$schema": "http://json-schema.org/schema#"
 }

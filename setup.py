@@ -27,7 +27,7 @@ requires = (
 )
 extras_dev = (
     'logging_tree==1.8',
-    'openapi2jsonschema==0.7.1',
+    'openapi2jsonschema==0.8.0',
     'pprintpp==0.4.0'
 )
 extras_docs = (

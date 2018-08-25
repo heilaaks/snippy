@@ -1,36 +1,36 @@
 {
-  "$schema": "http://json-schema.org/schema#", 
-  "required": [
-    "self", 
-    "first", 
-    "last"
-  ], 
-  "type": "object", 
+  "type": "object",
   "properties": {
-    "next": {
-      "type": "string", 
-      "description": "Pagination link to next page.", 
-      "format": "uri"
-    }, 
     "self": {
-      "type": "string", 
-      "description": "Pagination link to this page.", 
-      "format": "uri"
-    }, 
-    "prev": {
-      "type": "string", 
-      "description": "Pagination link to previous page.", 
-      "format": "uri"
-    }, 
-    "last": {
-      "type": "string", 
-      "description": "Pagination link to last page.", 
-      "format": "uri"
-    }, 
+      "type": "string",
+      "format": "uri",
+      "description": "Pagination link to this page."
+    },
     "first": {
-      "type": "string", 
-      "description": "Pagination link to first page.", 
-      "format": "uri"
+      "type": "string",
+      "format": "uri",
+      "description": "Pagination link to first page."
+    },
+    "next": {
+      "type": "string",
+      "format": "uri",
+      "description": "Pagination link to next page."
+    },
+    "prev": {
+      "type": "string",
+      "format": "uri",
+      "description": "Pagination link to previous page."
+    },
+    "last": {
+      "type": "string",
+      "format": "uri",
+      "description": "Pagination link to last page."
     }
-  }
+  },
+  "required": [
+    "self",
+    "first",
+    "last"
+  ],
+  "$schema": "http://json-schema.org/schema#"
 }

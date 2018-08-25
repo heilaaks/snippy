@@ -1,7 +1,6 @@
 ## WORKING
-   - [ ] Check that log_msg_max is not list since it has nagrgs
 
-## PLANNING
+## THINKING
    - [ ] Add support to import and export content in markdown format.
    - [ ] Add code content.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.

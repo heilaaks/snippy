@@ -30,21 +30,23 @@ class TestUtCliCreate(object):
         """Test default values when only mandatory arguments are used."""
 
         obj = Cli(['snippy', 'create'])
-        assert obj.operation == 'create'
+        assert obj.brief == ''
         assert obj.category == Const.SNIPPET
         assert obj.data == ()
-        assert obj.brief == ''
-        assert obj.tags == ()
-        assert obj.links == ()
         assert obj.digest is None
-        assert obj.sall == ()
-        assert obj.stag == ()
-        assert obj.sgrp == ()
-        assert obj.regexp == ''
-        assert not obj.editor
         assert obj.filename == ''
-        assert not obj.no_ansi
+        assert obj.links == ()
+        assert obj.log_msg_max == Cli.DEFAULT_LOG_MSG_MAX
+        assert obj.operation == 'create'
+        assert obj.regexp == ''
+        assert obj.sall == ()
+        assert obj.search_limit == Cli.LIMIT_DEFAULT_CLI
+        assert obj.sgrp == ()
+        assert obj.stag == ()
+        assert obj.tags == ()
         assert not obj.defaults
+        assert not obj.editor
+        assert not obj.no_ansi
         assert not obj.template
 
     def test_create_snippet_without_optional_arguments(self):

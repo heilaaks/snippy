@@ -52,6 +52,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     BASE_PATH_AUTH = BASE_PATH + '/auth/v1/'
     LIMIT_DEFAULT_API = 20
     LIMIT_DEFAULT_CLI = 99
+    DEFAULT_LOG_MSG_MAX = Logger.DEFAULT_LOG_MSG_MAX
     OFFSET_DEFAULT = 0
     SERVER_IP = '127.0.0.1'
     SERVER_PORT = '8080'

@@ -26,7 +26,6 @@ import argparse
 
 from snippy.constants import Constants as Const
 from snippy.config.source.base import ConfigSourceBase
-from snippy.logger import Logger
 from snippy.meta import __homepage__
 from snippy.meta import __version__
 
@@ -206,7 +205,7 @@ class Cli(ConfigSourceBase):
         support.add_argument('--profile', dest='profiler', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--no-ansi', dest='no_ansi', action='store_true', default=False, help=argparse.SUPPRESS)
         support.add_argument('--log-json', dest='log_json', action='store_true', default=False, help=argparse.SUPPRESS)
-        support.add_argument('--log-msg-max', nargs=1, type=int, default=Logger.DEFAULT_LOG_MSG_MAX, help=argparse.SUPPRESS)
+        support.add_argument('--log-msg-max', type=int, default=Cli.DEFAULT_LOG_MSG_MAX, help=argparse.SUPPRESS)
 
         # server options
         server = parser.add_argument_group(title='server options')

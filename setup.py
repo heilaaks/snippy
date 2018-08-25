@@ -31,7 +31,7 @@ extras_dev = (
     'pprintpp==0.4.0'
 )
 extras_docs = (
-    'sphinx==1.7.6',
+    'sphinx==1.7.7',
     'sphinxcontrib-openapi==0.3.2',
     'sphinx_rtd_theme==0.4.1',
     'sphinx-autobuild==0.7.1'

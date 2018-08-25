@@ -19,8 +19,11 @@
 
 """all_content: All content management."""
 
+from snippy.cause import Cause
+from snippy.config.config import Config
 from snippy.constants import Constants as Const
 from snippy.content.base import ContentTypeBase
+from snippy.content.migrate import Migrate
 
 
 class AllContent(ContentTypeBase):
@@ -28,3 +31,15 @@ class AllContent(ContentTypeBase):
 
     def __init__(self, storage, run_cli=True):
         super(AllContent, self).__init__(storage, run_cli, Const.ALL_CATEGORIES)
+
+    def import_all(self):
+        """Import content."""
+
+        if Config.defaults:
+            self._logger.debug('importing all default content')
+            collection = Migrate.load(Config.default_content_file(Const.SNIPPET))
+            collection.migrate(Migrate.load(Config.default_content_file(Const.SOLUTION)))
+            collection.migrate(Migrate.load(Config.default_content_file(Const.REFERENCE)))
+            self._storage.import_content(collection)
+        else:
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'import operation for content category \'all\' is supported only with default content')

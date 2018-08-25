@@ -327,6 +327,22 @@ class Config(object):
         return filename
 
     @classmethod
+    def default_content_file(cls, category):
+        """Return default content file."""
+
+        filename = 'snippets.yaml'
+        if category == Const.SNIPPET:
+            filename = 'snippets.yaml'
+        elif category == Const.SOLUTION:
+            filename = 'solutions.yaml'
+        elif category == Const.REFERENCE:
+            filename = 'references.yaml'
+
+        filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/defaults'), filename)
+
+        return filename
+
+    @classmethod
     def _operation_filename(cls, category):
         """Return operation filename
 
@@ -349,11 +365,11 @@ class Config(object):
         elif len(cls.search_cat_kws) > 1:
             defaults = 'content.yaml'
 
-        # Run migrate operation with default content.
+        # Default content filename.
         if cls.defaults:
-            filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/defaults'), defaults)
+            filename = cls.default_content_file(category)
 
-        # Run migrate operation with content template.
+        # Content template.
         if cls.template:
             filename = os.path.join('./', template)
 

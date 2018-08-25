@@ -17,6 +17,7 @@ New features
 * Add `REST API routes`_ for: keywords, groups, tags, uuid and digest.
 * Add search category (scat) option for CLI operations.
 * Add uuid1 in CLI and REST API operations.
+* Add support to import all default content with import operation.
 
 Bugfixes
 ~~~~~~~~
@@ -24,6 +25,7 @@ Bugfixes
 * Fix solution creation from empty template.
 * Fix resource object validation in POST.
 * Fix search from all categories with --all option.
+* Fix REST API HTTP OPTIONS responses.
 * All commits in `0.9.0`_.
 
 0.8.0 (2018-21-07)

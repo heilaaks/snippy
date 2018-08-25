@@ -29,6 +29,8 @@ import yaml
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
+from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
@@ -585,8 +587,34 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             assert not Database.get_collection().size()
             mock_file.assert_called_once_with('./solution-template.txt', 'r')
 
+    @pytest.mark.usefixtures('yaml')
+    def test_cli_import_solution_029(self, snippy, mocker):
+        """Import all content defaults.
+
+        Import snippet, solution and reference defaults.
+        """
+
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX],
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = Content.imported_dict(content)
+            cause = snippy.run(['snippy', 'import', '--all', '--defaults'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 1
+            assert Database.get_solutions().size() == 1
+            assert Database.get_references().size() == 1
+            defaults = []
+            defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml'), 'r'))
+            defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml'), 'r'))
+            defaults.append(mock.call(pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml'), 'r'))
+            mock_file.assert_has_calls(defaults, any_order=True)
+            Content.verified(mocker, snippy, content)
+
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_solution_029(self, snippy):
+    def test_cli_import_solution_030(self, snippy):
         """Import all solutions.
 
         Try to import content with option --all. This is not supported for
@@ -595,10 +623,23 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--all', '-f', './foo.yaml'])
-            assert cause == 'NOK: content category \'all\' is supported only with search or export operation'
+            assert cause == 'NOK: import operation for content category \'all\' is supported only with default content'
             assert not Database.get_collection().size()
             mock_file.assert_not_called()
 
+    @pytest.mark.usefixtures('isfile_true')
+    def test_cli_import_solution_031(self, snippy):
+        """Import all solutions.
+
+        Try to import content with option --all. This is not supported for
+        import operation.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'create', '--all', '-f', './foo.yaml'])
+            assert cause == 'NOK: content category \'all\' is supported only with search, import or export operations'
+            assert not Database.get_collection().size()
+            mock_file.assert_not_called()
 
     @classmethod
     def teardown_class(cls):

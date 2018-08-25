@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Fix import shows 27 but search --sall only 20 snippets? Default result size from REST is 20.
 
 ## PLANNING
    - [ ] Add support to import and export content in markdown format.
@@ -10,7 +11,6 @@
    - [ ] Add changelog to README.
 
 ## FEATURES
-   - [ ] Add support for import --all.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.
@@ -153,6 +153,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added support to import all default content with --all category.
    - [x] Added support for search category (scat) from search and export command line operations.
    - [x] Fixed printing content with --all category.
    - [x] Fixed validating resource object from POST.

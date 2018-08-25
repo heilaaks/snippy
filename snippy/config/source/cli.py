@@ -62,6 +62,7 @@ class Cli(ConfigSourceBase):
         '  --stag [KW,...]               search keywords only from tags',
         '  --sgrp [KW,...]               search keywords only from groups',
         '  --filter REGEXP               filter search output with regexp',
+        '  --limit INT                   maximum number of search results',
         '  --no-ansi                     remove ANSI characters from output'
     )
     ARGS_MIGRATE = (
@@ -187,6 +188,7 @@ class Cli(ConfigSourceBase):
         search.add_argument('--scat', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--sgrp', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--filter', type=str, dest='regexp', default=Const.EMPTY, help=argparse.SUPPRESS)
+        search.add_argument('--limit', type=int, default=Cli.LIMIT_DEFAULT_CLI, help=argparse.SUPPRESS)
 
         # migration options
         migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Cli.ARGS_MIGRATE))

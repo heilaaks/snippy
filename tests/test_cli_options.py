@@ -65,6 +65,7 @@ class TestCliOptions(object):
         '    --stag [KW,...]               search keywords only from tags',
         '    --sgrp [KW,...]               search keywords only from groups',
         '    --filter REGEXP               filter search output with regexp',
+        '    --limit INT                   maximum number of search results',
         '    --no-ansi                     remove ANSI characters from output',
         '',
         'migration options:',

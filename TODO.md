@@ -1,5 +1,5 @@
 ## WORKING
-   - [ ] Fix import shows 27 but search --sall only 20 snippets? Default result size from REST is 20.
+   - [ ] Check that log_msg_max is not list since it has nagrgs
 
 ## PLANNING
    - [ ] Add support to import and export content in markdown format.

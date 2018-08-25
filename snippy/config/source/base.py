@@ -50,7 +50,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     BASE_PATH_APP = BASE_PATH + '/app/v1/'
     BASE_PATH_ADMIN = BASE_PATH + '/admin/v1/'
     BASE_PATH_AUTH = BASE_PATH + '/auth/v1/'
-    LIMIT_DEFAULT = 20
+    LIMIT_DEFAULT_API = 20
+    LIMIT_DEFAULT_CLI = 99
     OFFSET_DEFAULT = 0
     SERVER_IP = '127.0.0.1'
     SERVER_PORT = '8080'
@@ -120,7 +121,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
         self.sall = parameters.get('sall', None)
         self.scat = parameters.get('scat', None)
-        self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT)
+        self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT_API)
         self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
         self.server = parameters.get('server', False)
         self.server_ip = parameters.get('server_ip', self.SERVER_IP)
@@ -368,7 +369,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def search_limit(self, value):
         """Search result limit defines maximum amount of search results."""
 
-        self._search_limit = self.LIMIT_DEFAULT  # pylint: disable=attribute-defined-outside-init
+        self._search_limit = self.LIMIT_DEFAULT_API  # pylint: disable=attribute-defined-outside-init
         try:
             value = int(value)
             if value >= 0:

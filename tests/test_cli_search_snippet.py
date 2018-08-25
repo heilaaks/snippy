@@ -946,6 +946,31 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == output
         assert not err
 
+    @pytest.mark.usefixtures('default-snippets', 'import-netcat')
+    def test_cli_search_snippet_037(self, snippy, capsys):
+        """Limit number of search results.
+
+        Search snippets from tag fields of specific group which would result
+        two hits without limit. With the limit option set to one, there must
+        be only one search result.
+        """
+
+        output = (
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--stag', 'docker-ce,moby', '--sgrp', 'docker', '--no-ansi', '--limit', '1'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

@@ -18,6 +18,7 @@ New features
 * Add search category (scat) option for CLI operations.
 * Add uuid1 in CLI and REST API operations.
 * Add support to import all default content with import operation.
+* Add support for --limit option from CLI interface.
 
 Bugfixes
 ~~~~~~~~

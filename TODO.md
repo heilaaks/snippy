@@ -1,9 +1,18 @@
 ## WORKING
+   - [ ] Fix why default examples with: import --defaults <all> and snippy search -c 'docker ps' matches 8 when there should be 6 matches?
+   - [ ] Refactor sqlite tests to one like others.
+   - [ ] Fix missing OPTIONS from swagger specs for all routes.
+   - [ ] Fix magic regexp not supporting immediate continuation of next tag wihtout new line? add test.
+   - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
+   - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed. This 
+   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.
+   - [ ] Fix Gunicorn info logs to debug somehow?
+   - [ ] Add support to import and export content in limited markdown format.
+   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
+   - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
 
 ## THINKING
-   - [ ] Add support to import and export content in markdown format.
    - [ ] Add code content.
-   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
    - [ ] Add UT tests for class Debug() methods.
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
@@ -34,15 +43,11 @@
 
 ## FIX
    - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?
-   - [ ] Fix missing OPTIONS from swagger specs for all routes.
    - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
    - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties
    - [ ] Fix it seems that python can do like Config.parameternewparameter which adds new parameter in case of typo. Can this be prevented?
    - [ ] Fix printing content after 9 since the numebered items from 10 shift the spacing one more right. How?
-   - [ ] Fix why default examples with: import --defaults <all> and snippy search -c 'docker ps' matches 8 when there should be 6 matches?
    - [ ] Fix test cases hiding that cls.source was _not_ set in init when the Config.init called storage method that used cls.source. How this can be not noticed?
-   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.
-   - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.
    - [ ] Fix docs where it was stated that uuid1 contains hostname. It actually contains mac address. This is different per container by default. Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] Fix test case content.verified methot that does not check other content that what gets dumped to text file. This misses checks for example update timestamps and uuid because those are not in text text file in e.g. test_cli_import_reference_011. Should have been dump to yaml instead of text.
@@ -63,7 +68,6 @@
    - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv
    - [ ] Fix all post responses to have link to created resource. Why this is not always included? Only in updates but not in create?
    - [ ] Fix testing error titles. Some contain the hash which now prevent all checks for title. Some titles should be checked.
-   - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
    - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases? This comes from UT sqlite cases at least.
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix make test if pytest cover leaves hanging files like .coverage.localhost.localdomain.4727.176219. Add --cover-erase in commmand? // https://bitbucket.org/ned/coveragepy/issues/476/coverageexception-cant-add-arcs-to
@@ -83,7 +87,6 @@
    - [ ] Should _add_date in Content() be based on updated when DATE already set? The reason would be that this sets the text template DATE and it should be always latest which is updated?
 
 ## REFACTOR
-   - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed.
    - [ ] Storage update() supports only one resource and this is not in line with others. Change to collection?
    - [ ] Offset based pagination is slow with large data sets (how large?). Measure with test. This was improved in laest sqlite 3.24.0 https://www.sqlite.org/changes.html
    - [ ] Refactor internal class level variables and methods to start with _ prefix.
@@ -144,7 +147,7 @@
 
 ## FOLLOW EXTERNAL BUGS/ISSUES
    - [x] The openapi2jsonschema does not work with Python 3. // https://github.com/garethr/openapi2jsonschema/issues/6.
-   - [ ] The openapi2jsonschema does not work with OAS 3.0. // https://github.com/garethr/openapi2jsonschema/issues/6.
+   - [x] The openapi2jsonschema does not work with OAS 3.0. // https://github.com/garethr/openapi2jsonschema/issues/6.
    - [ ] OAS3.0 to JSON schema. // https://github.com/OAI/OpenAPI-Specification/issues/1032
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
    - [ ] Python logging is not following ISO8601 format and it cannot have timezone. Workaround done for Logger().

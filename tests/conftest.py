@@ -261,6 +261,30 @@ def logger_wrapper(request):
 
     return logger
 
+# Sqlitedb
+@pytest.fixture(scope='function', name='sqlitedb')
+def sqlite_mock(request, mocker):
+    """Mock sqlite for unit testing."""
+
+    from snippy.storage.sqlitedb import SqliteDb
+    Config.init(None)
+
+    mocker.patch.object(Config, 'storage_file', Database.get_storage(), create=True)
+    mocker.patch.object(Config, 'storage_schema', Database.get_schema(), create=True)
+
+    sqlite = SqliteDb()
+    sqlite.init()
+
+    def fin():
+        """Clear the resources at the end."""
+
+        sqlite.disconnect()
+        Database.delete_all_contents()
+        Database.delete_storage()
+    request.addfinalizer(fin)
+
+    return sqlite
+
 @pytest.fixture(scope='function', name='caller')
 def caller(mocker):
     """Mock _caller() used to mark code module and line in logs."""

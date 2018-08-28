@@ -67,7 +67,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
                 return False
 
             for digest in self.keys():
-                if digest in collection and self[digest] != collection[digest]:
+                if digest in collection and self[digest]['data'] != collection[digest]['data']:
                     return False
 
             return True

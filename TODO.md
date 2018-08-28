@@ -1,5 +1,5 @@
 ## WORKING
-   - [ ] Fix why default examples with: import --defaults <all> and snippy search -c 'docker ps' matches 8 when there should be 6 matches?
+   - [ ] Fix link import from Resource.load_dict to handle case in Resources (not sorted) and others (sorted).
    - [ ] Refactor sqlite tests to one like others.
    - [ ] Fix missing OPTIONS from swagger specs for all routes.
    - [ ] Fix magic regexp not supporting immediate continuation of next tag wihtout new line? add test.

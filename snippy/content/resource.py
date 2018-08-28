@@ -477,9 +477,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         self.data = dictionary.get('data', self.data)
         self.brief = dictionary.get('brief', self.brief)
-        self.groups = dictionary.get('groups', self.groups)
-        self.tags = dictionary.get('tags', self.tags)
-        self.links = dictionary.get('links', self.links)
+        self.groups = tuple(sorted(dictionary.get('groups', self.groups)))
+        self.tags = tuple(sorted(dictionary.get('tags', self.tags)))
+        self.links = tuple(dictionary.get('links', self.links))
         self.category = dictionary.get('category', self.category)
         self.name = dictionary.get('name', self.name)
         self.filename = dictionary.get('filename', self.filename)

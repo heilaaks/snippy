@@ -267,8 +267,8 @@ def sqlite_mock(request, mocker):
     """Mock sqlite for unit testing."""
 
     from snippy.storage.sqlitedb import SqliteDb
-    Config.init(None)
 
+    Config.init(None)
     mocker.patch.object(Config, 'storage_file', Database.get_storage(), create=True)
     mocker.patch.object(Config, 'storage_schema', Database.get_schema(), create=True)
 
@@ -285,8 +285,17 @@ def sqlite_mock(request, mocker):
 
     return sqlite
 
+# Cause
+@pytest.fixture(scope='function', name='cause')
+def cause_mock(mocker):
+    """Mock sqlite for unit testing."""
+
+    cause = mocker.patch.object(Cause, 'push')
+
+    return cause
+
 @pytest.fixture(scope='function', name='caller')
-def caller(mocker):
+def caller_mock(mocker):
     """Mock _caller() used to mark code module and line in logs."""
 
     mocker.patch.object(Cause, '_caller', return_value='snippy.testing.testing:123')

@@ -483,45 +483,46 @@ class SqliteDb(object):
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented writing into database')
 
-    def _get_query(self, scat, sall, stag, sgrp, uuid, digest, data, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
+    def _get_query(self, scat, sall, stag, sgrp, suuid, sdigest, sdata, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
         """Get query based on defined type."""
 
         query = ()
         qargs = []
-        self._logger.debug('query scat: %s :sall: %s :stag: %s :sgrp: %s :uuid: %s :digest: %s :and data: %s.20s',
-                           scat, sall, stag, sgrp, uuid, digest, data)
+        self._logger.debug('query scat: %s :sall: %s :stag: %s :sgrp: %s :suuid: %s :sdigest: %s :and sdata: %s.20s',
+                           scat, sall, stag, sgrp, suuid, sdigest, sdata)
 
         if query_type == SqliteDb.QUERY_TYPE_TOTAL:
             query_pointer = self._query_count
         else:
             query_pointer = self._query_regex
-        if sall and Config.search_all_kws:
+
+        if sall:
             columns = ['data', 'brief', 'groups', 'tags', 'links', 'digest']
             query, qargs = query_pointer(sall, columns, sgrp, scat)
-        elif stag and Config.search_tag_kws:
+        elif stag:
             columns = ['tags']
             query, qargs = query_pointer(stag, columns, sgrp, scat)
-        elif sgrp and Config.search_grp_kws:
+        elif sgrp:
             columns = ['groups']
             query, qargs = query_pointer(sgrp, columns, (), scat)
-        elif Config.is_content_digest() or digest:  # The later condition is for tool internal search based on digest.
+        elif sdigest is not None:
             if query_type == SqliteDb.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE digest LIKE ?')
             else:
                 query = ('SELECT * FROM contents WHERE digest LIKE ?')
-            qargs = [digest+'%']
-        elif Config.is_content_uuid():
+            qargs = [sdigest+'%']
+        elif suuid is not None:
             if query_type == SqliteDb.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE uuid LIKE ?')
             else:
                 query = ('SELECT * FROM contents WHERE uuid LIKE ?')
-            qargs = [uuid+'%']
-        elif Config.content_data:
+            qargs = [suuid+'%']
+        elif sdata:
             if query_type == SqliteDb.QUERY_TYPE_TOTAL:
                 query = ('SELECT count(*) FROM contents WHERE data LIKE ?')
             else:
                 query = ('SELECT * FROM contents WHERE data LIKE ?')
-            qargs = ['%'+Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, data))+'%']
+            qargs = ['%'+Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, sdata))+'%']
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'please define keyword, uuid, digest or content data as search criteria')
 

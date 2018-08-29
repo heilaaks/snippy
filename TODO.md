@@ -1,6 +1,6 @@
 ## WORKING
+   - [ ] Fix why sqlite UT tests print the CLI help when only the Sqlite is being tested?
    - [ ] Fix link import from Resource.load_dict to handle case in Resources (not sorted) and others (sorted).
-   - [ ] Refactor sqlite tests to one like others.
    - [ ] Fix missing OPTIONS from swagger specs for all routes.
    - [ ] Fix magic regexp not supporting immediate continuation of next tag wihtout new line? add test.
    - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
@@ -155,6 +155,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Edited Sqlitedb() UT tests to follow new UT test layouts.
    - [x] Added support to import all default content with --all category.
    - [x] Added support for search category (scat) from search and export command line operations.
    - [x] Fixed printing content with --all category.

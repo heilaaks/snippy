@@ -1112,10 +1112,10 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     CONTENT
 
-    1. The tool must know if specific parameters were given
+    1. The tool must know if specific parameters were given from CLI
 
-       The tool must be aware if specific parameters were give at all. These
-       parameters are:
+       The tool must be aware if specific parameters were give at all from
+       command line interface. These parameters are:
 
          - data
          - digest
@@ -1125,9 +1125,15 @@ git update-index --no-assume-unchanged FILE_NAME # change back
          - sgrp
          - uuid
 
-       The default value for these parameters must be None or the must not
-       exist in the parameter set that is give for set_conf in class inherited
+       The default value for these parameters must be None or these must not
+       exist in the parameter set that is given for set_conf in class inherited
        from ConfigSourceBase().
+
+       This is related to special case with CLI interface only. In case user
+       used any of the these search keywords with command line option(s) and
+       did not give any values for the CLI option, it is considered as "match
+       any". For example a CLI option and value combination '--sall ' causes
+       the tool to list all content.
 
     2. All but reference content links are sorted
 

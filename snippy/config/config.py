@@ -423,7 +423,7 @@ class Config(object):
         # validated and invalid keywords are interpreted as 'list all' which
         # is always correct at this point.
         cls._logger.debug('validating search context with %d results', collection.size())
-        if cls.is_content_digest():
+        if cls._is_content_digest():
             if cls.operation_digest:
                 if collection.empty():
                     Cause.push(Cause.HTTP_NOT_FOUND,
@@ -434,7 +434,7 @@ class Config(object):
                                (cls.operation_digest, collection.size(), operation))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest for: %s :operation' % operation)
-        elif cls.is_content_uuid():
+        elif cls._is_content_uuid():
             if cls.operation_uuid:
                 if collection.empty():
                     Cause.push(Cause.HTTP_NOT_FOUND,
@@ -478,13 +478,13 @@ class Config(object):
         return True if cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws else False
 
     @classmethod
-    def is_content_digest(cls):
+    def _is_content_digest(cls):
         """Test if content digest was defined from command line."""
 
         return False if cls.operation_digest is None else True
 
     @classmethod
-    def is_content_uuid(cls):
+    def _is_content_uuid(cls):
         """Test if content uuid was defined from command line."""
 
         return False if cls.operation_uuid is None else True
@@ -494,7 +494,7 @@ class Config(object):
         """Test if any of the search criterias were used."""
 
         criteria = False
-        if cls._is_search_keywords() or cls.is_content_digest() or cls.is_content_uuid() or cls.content_data:
+        if cls._is_search_keywords() or cls._is_content_digest() or cls._is_content_uuid() or cls.content_data:
             criteria = True
 
         return criteria

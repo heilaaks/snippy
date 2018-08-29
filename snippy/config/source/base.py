@@ -94,9 +94,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
             parameters = {}
 
         # There are few parameters like 'data' and 'digest' where the tool
-        # error logic must know if value was defined at all. This kind of
-        # parameters must be set to None by default. All other parameters
-        # must have default value like empty list or string that makes sense.
+        # error logic must know if value was defined at all by the CLI user.
+        # This kind of parameters must be set to None by default. All other
+        # parameters must have default value like empty list or string that
+        # make sense.
         self.base_path_app = parameters.get('base_path_app', self.BASE_PATH_APP)
         self.brief = parameters.get('brief', Const.EMPTY)
         self.category = parameters.get('category', Const.SNIPPET)

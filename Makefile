@@ -16,6 +16,9 @@ dev:
 test:
 	python -m pytest -x ./tests/test_*.py --cov snippy
 
+test-fast:
+	python -m pytest -n auto -x ./tests/test_*.py --cov snippy -m "not serial"
+
 coverage:
 	pytest --cov=snippy --cov-branch --cov-report html tests/
 	pytest --cov=snippy tests/
@@ -77,4 +80,4 @@ clean:
 clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall server dev test coverage outdated docs lint pyflakes docker security-scan clean clean-db
+.PHONY: install upgrade uninstall server dev test test-fast coverage outdated docs lint pyflakes docker security-scan clean clean-db

@@ -19,6 +19,7 @@ tox = "==3.2.1"
 pyflakes = "==1.6.0"
 logging-tree = "==1.8"
 sphinx-rtd-theme = "==0.4.1"
+pytest-xdist = "==1.23.0"
 
 [packages]
 PyYAML = "==3.13"

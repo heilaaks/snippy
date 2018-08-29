@@ -44,6 +44,7 @@ pytest.importorskip('gunicorn')
 class TestApiPerformance(object):
     """Test tool performance."""
 
+    @pytest.mark.serial
     def test_server_performance(self):
         """Test API server performance.
 
@@ -144,6 +145,7 @@ class TestApiPerformance(object):
         assert not err
         assert runtime < 10
 
+    @pytest.mark.serial
     def test_server_logging(self):
         """Test server log configuration.
 

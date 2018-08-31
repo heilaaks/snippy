@@ -134,11 +134,12 @@ def mocked_snippy(mocker, request):
 
     params = []
 
-    # If there are no parameters, the only parameter passed is the tool
-    # name. This creates unnecessary help text that pollutes the debug
-    # output. In order to prevent this, the quiet parameter is set. The
-    # quiet parameter is dynamic and therefore it does not have affect
-    # if a test cases uses additional CLI commands during the test.
+    # If there are no command line arguments, it causes unnecessary help
+    # text that pollutes test case debug prints. In order to prevent this,
+    # the quiet parameter is used. This parameter is dynamic and therefore
+    # it affects only in the first run. If a test cases runs additional
+    # commands for the same Snippy object, the initial value for the quiet
+    # option does not affect anymore.
     if hasattr(request, 'param'):
         params = request.param
     else:
@@ -268,7 +269,7 @@ def sqlite_mock(request, mocker):
 
     from snippy.storage.sqlitedb import SqliteDb
 
-    Config.init(None)
+    Config.init(['snippy', '-q'])  # Prevent unnecessary CLI help output with quiet option.
     mocker.patch.object(Config, 'storage_file', Database.get_storage(), create=True)
     mocker.patch.object(Config, 'storage_schema', Database.get_schema(), create=True)
 

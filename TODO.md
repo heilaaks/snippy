@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix why sqlite UT tests print the CLI help when only the Sqlite is being tested?
    - [ ] Fix link import from Resource.load_dict to handle case in Resources (not sorted) and others (sorted).
    - [ ] Fix missing OPTIONS from swagger specs for all routes.
    - [ ] Fix magic regexp not supporting immediate continuation of next tag wihtout new line? add test.

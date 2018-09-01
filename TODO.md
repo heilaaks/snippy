@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Fix link import from Resource.load_dict to handle case in Resources (not sorted) and others (sorted).
-   - [ ] Fix missing OPTIONS from swagger specs for all routes.
    - [ ] Fix magic regexp not supporting immediate continuation of next tag wihtout new line? add test.
    - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
    - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed. This 

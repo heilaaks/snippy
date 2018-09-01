@@ -23,7 +23,6 @@ paths:
       description: ""
       consumes:
         - "application/vnd.api+json; charset=UTF-8"
-        - "application/vnd.api+json; charset=UTF-8"
       parameters:
         - $ref: '#/parameters/category'
         - $ref: '#/parameters/snippets'

@@ -40,7 +40,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     IMPORT = 'import'
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
-    CATEGORIES = ('snippet', 'solution', 'reference')
     ATTRIBUTES = ('data', 'brief', 'groups', 'tags', 'links', 'category', 'name',
                   'filename', 'versions', 'source', 'uuid', 'created', 'updated',
                   'digest', 'key')
@@ -307,11 +306,11 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         scat = Parser.search_keywords(value)
         if not scat:
             if self.category == Const.ALL_CATEGORIES:
-                scat = self.CATEGORIES
+                scat = Const.CATEGORIES
             else:
                 scat = (self.category,)
-        elif not set(scat).issubset(self.CATEGORIES):
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'search categories: {} : are not a subset of: {}'.format(value, self.CATEGORIES))
+        elif not set(scat).issubset(Const.CATEGORIES):
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'search categories: {} : are not a subset of: {}'.format(value, Const.CATEGORIES))
             scat = (Const.UNKNOWN_CATEGORY,)
         self._scat = scat  # pylint: disable=attribute-defined-outside-init
 

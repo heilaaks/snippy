@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""parser: Parse configuration source parameters."""
+"""parser: Parse content attributes from text source."""
 
 import re
 
@@ -28,28 +28,22 @@ from snippy.logger import Logger
 
 
 class Parser(object):
-    """Parse configuration source parameters."""
-
-    SOLUTION_BRIEF = '## BRIEF  :'
-    SOLUTION_FILE = '## FILE   :'
-    DATA_HEAD = '# Add mandatory snippet below.\n'
-    BRIEF_HEAD = '# Add optional brief description below.\n'
-    REFERENCE_LINKS = '# Add mandatory links below one link per line.\n'
+    """Parse content attributes from text source."""
 
     DATA = {}
-    DATA['snippet'] = '# Add mandatory snippet below.\n'
-    DATA['reference'] = DATA['snippet']
+    DATA[Const.SNIPPET] = '# Add mandatory snippet below.\n'
+    DATA[Const.REFERENCE] = DATA[Const.SNIPPET]
     DATA[Const.SOLUTION] = '## BRIEF  :'
 
     BRIEF = {}
-    BRIEF['snippet'] = '# Add optional brief description below.\n'
-    BRIEF['reference'] = BRIEF['snippet']
+    BRIEF[Const.SNIPPET] = '# Add optional brief description below.\n'
+    BRIEF[Const.REFERENCE] = BRIEF[Const.SNIPPET]
     BRIEF[Const.SOLUTION] = '## BRIEF  :'
 
     GROUPS = {}
-    GROUPS['snippet'] = '# Add optional comma separated list of groups below.\n'
-    GROUPS['reference'] = GROUPS['snippet']
-    GROUPS['solution'] = '## GROUPS :'
+    GROUPS[Const.SNIPPET] = '# Add optional comma separated list of groups below.\n'
+    GROUPS[Const.REFERENCE] = GROUPS[Const.SNIPPET]
+    GROUPS[Const.SOLUTION] = '## GROUPS :'
 
     TAGS = {}
     TAGS[Const.SNIPPET] = '# Add optional comma separated list of tags below.\n'
@@ -138,7 +132,7 @@ class Parser(object):
         if category == Const.SNIPPET:
             data = Parser._split_source(source, '# Add mandatory snippet below', 2)
         elif category == Const.SOLUTION:
-            data = Parser._split_source(source, Parser.SOLUTION_BRIEF, 1)
+            data = Parser._split_source(source, Parser.BRIEF[Const.SOLUTION], 1)
         elif category == Const.REFERENCE:
             data = Parser._split_source(source, '# Add mandatory links below one link per line', 2)
         else:
@@ -206,11 +200,11 @@ class Parser(object):
 
         category = Const.UNKNOWN_CATEGORY
 
-        if cls.DATA_HEAD in source and cls.BRIEF_HEAD:
+        if cls.DATA[Const.SNIPPET] in source and cls.BRIEF[Const.SNIPPET]:
             category = Const.SNIPPET
-        elif cls.SOLUTION_BRIEF in source and cls.SOLUTION_FILE in source:
+        elif cls.BRIEF[Const.SOLUTION] in source and cls.FILENAME[Const.SOLUTION] in source:
             category = Const.SOLUTION
-        elif cls.REFERENCE_LINKS in source:
+        elif cls.LINKS[Const.REFERENCE] in source:
             category = Const.REFERENCE
 
         return category
@@ -232,6 +226,9 @@ class Parser(object):
         """
 
         data = ()
+        if category not in Const.CATEGORIES:
+            return data
+
         match = Parser.REGEXP['data'][category].search(source)
         if match:
             if category == Const.SNIPPET:
@@ -259,6 +256,9 @@ class Parser(object):
         """
 
         brief = ''
+        if category not in Const.CATEGORIES:
+            return brief
+
         match = Parser.REGEXP['brief'][category].search(source)
         if match:
             brief = Parser.to_unicode(match.group('brief').strip())
@@ -281,6 +281,9 @@ class Parser(object):
         """
 
         groups = ()
+        if category not in Const.CATEGORIES:
+            return groups
+
         match = Parser.REGEXP['groups'][category].search(source)
         if match:
             groups = Parser.keywords([match.group('groups')])
@@ -303,6 +306,9 @@ class Parser(object):
         """
 
         tags = ()
+        if category not in Const.CATEGORIES:
+            return tags
+
         match = Parser.REGEXP['tags'][category].search(source)
         if match:
             tags = Parser.keywords([match.group('tags')])
@@ -325,6 +331,9 @@ class Parser(object):
         """
 
         links = ()
+        if category not in Const.CATEGORIES:
+            return links
+
         match = Parser.REGEXP['links'][category].findall(source)
         if match:
             links = Parser.links(match)
@@ -347,6 +356,9 @@ class Parser(object):
         """
 
         filename = ''
+        if category not in Const.CATEGORIES:
+            return filename
+
         match = Parser.REGEXP['filename'][category].search(source)
         if match:
             filename = Parser.to_unicode(match.group('filename').strip())

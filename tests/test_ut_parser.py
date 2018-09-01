@@ -224,12 +224,14 @@ class TestUtParser(object):
             'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
             'https://chris.beams.io/posts/git-commit/'
         )
+        data = ()
         brief = 'How to write commit messages'
         groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
-        assert brief == Parser.content_brief(Const.SNIPPET, source)
-        assert groups == Parser.content_groups(Const.SNIPPET, source)
-        assert tags == Parser.content_tags(Const.SNIPPET, source)
+        assert data == Parser.content_data(Const.REFERENCE, source)
+        assert brief == Parser.content_brief(Const.REFERENCE, source)
+        assert groups == Parser.content_groups(Const.REFERENCE, source)
+        assert tags == Parser.content_tags(Const.REFERENCE, source)
         assert links == Parser.content_links(Const.REFERENCE, source)
 
     def test_parser_reference_002(self):
@@ -259,9 +261,11 @@ class TestUtParser(object):
             'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
             'https://chris.beams.io/posts/git-commit/'
         )
+        data = ()
         brief = 'How to write commit messages'
         groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
+        assert data == Parser.content_data(Const.REFERENCE, source)
         assert brief == Parser.content_brief(Const.REFERENCE, source)
         assert groups == Parser.content_groups(Const.REFERENCE, source)
         assert tags == Parser.content_tags(Const.REFERENCE, source)
@@ -322,6 +326,46 @@ class TestUtParser(object):
         brief = ''
         groups = ()
         tags = ()
+        assert brief == Parser.content_brief(Const.REFERENCE, source)
+        assert groups == Parser.content_groups(Const.REFERENCE, source)
+        assert tags == Parser.content_tags(Const.REFERENCE, source)
+        assert links == Parser.content_links(Const.REFERENCE, source)
+
+
+    def test_parser_reference_005(self):
+        """Test parsing reference.
+
+        Try to parse reference from snippet content
+        """
+
+        source = '\n'.join((
+            '# Add mandatory snippet below.',
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker images -q --filter dangling=true | xargs docker rm',
+            '',
+            '# Add optional brief description below.',
+            'Remove docker image with force',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'docker',
+            '',
+            '# Add optional comma separated list of tags below.',
+            '  cleanup,  container,docker,docker-ce,image,moby  ',
+            '# Add optional links below one link per line.',
+            '  https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/rmi/  '
+        ))
+        data = ()
+        brief = 'Remove docker image with force'
+        groups = ('docker',)
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        links = (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/rmi/'
+        )
+        assert data == Parser.content_data(Const.REFERENCE, source)
         assert brief == Parser.content_brief(Const.REFERENCE, source)
         assert groups == Parser.content_groups(Const.REFERENCE, source)
         assert tags == Parser.content_tags(Const.REFERENCE, source)
@@ -441,3 +485,27 @@ class TestUtParser(object):
         assert tags == Parser.content_tags(Const.SOLUTION, source)
         assert links == Parser.content_links(Const.SOLUTION, source)
         assert filename == Parser.content_filename(Const.SOLUTION, source)
+
+    def test_parser_unknown_001(self):
+        """Test parsing unknown content.
+
+        Try to run parser against content that is not identified.
+        """
+
+        source = '\n'.join((
+            'git, moby',
+            '# unknown 1.',
+            'commit,git,howto,message,scm'
+        ))
+        data = ()
+        brief = ''
+        groups = ()
+        tags = ()
+        links = ()
+        filename = ''
+        assert data == Parser.content_data(Const.UNKNOWN_CATEGORY, source)
+        assert brief == Parser.content_brief(Const.UNKNOWN_CATEGORY, source)
+        assert groups == Parser.content_groups(Const.UNKNOWN_CATEGORY, source)
+        assert tags == Parser.content_tags(Const.UNKNOWN_CATEGORY, source)
+        assert links == Parser.content_links(Const.UNKNOWN_CATEGORY, source)
+        assert filename == Parser.content_filename(Const.UNKNOWN_CATEGORY, source)

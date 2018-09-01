@@ -45,6 +45,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     REFERENCE = 'reference'
     ALL_CATEGORIES = 'all'
     UNKNOWN_CATEGORY = 'unknown'
+    CATEGORIES = (SNIPPET, SOLUTION, REFERENCE)
 
     # Content delimiters to convert between string and tuple presentations.
     DELIMITER_DATA = NEWLINE

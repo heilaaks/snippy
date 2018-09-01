@@ -64,7 +64,7 @@ class SqliteDb(object):
         """Insert collection into database.
 
         Args:
-           collection (Collection): Content container to be stored into database.
+            collection (Collection): Content container to be stored into database.
 
         Returns:
             Collection: Collection of inserted content.
@@ -99,7 +99,7 @@ class SqliteDb(object):
         """Insert one resource into database.
 
         Args:
-           resource (Resource): Stored content in ``Resource()`` container.
+            resource (Resource): Stored content in ``Resource()`` container.
 
         Returns:
             List: Local error that contains cause and message.
@@ -132,13 +132,13 @@ class SqliteDb(object):
         """Select content based on search criteria.
 
         Args:
-           scat (tuple): Search category keyword list.
-           sall (tuple): Search all keyword list.
-           stag (tuple): Search tag keyword list.
-           sgrp (tuple): Search group keyword list.
-           uuid (str): Search specific uuid or part of it.
-           digest (str): Search specific digest or part of it.
-           data (str): Search specific content data or part of it.
+            scat (tuple): Search category keyword list.
+            sall (tuple): Search all keyword list.
+            stag (tuple): Search tag keyword list.
+            sgrp (tuple): Search group keyword list.
+            uuid (str): Search specific uuid or part of it.
+            digest (str): Search specific digest or part of it.
+            data (str): Search specific content data or part of it.
 
         Returns:
             Collection: Collection of selected content.
@@ -159,7 +159,7 @@ class SqliteDb(object):
         """Select all content from specific categories.
 
         Args:
-           scat (tuple): Search category keyword list.
+            scat (tuple): Search category keyword list.
 
         Returns:
             Collection: Collection of all content in database.
@@ -191,7 +191,7 @@ class SqliteDb(object):
         """Select unique values from given column.
 
         Args:
-           column (str): column name.
+            column (str): column name.
 
         Returns:
             tuple: List of unique values in given column.
@@ -220,13 +220,13 @@ class SqliteDb(object):
         """Count content based on search criteria.
 
         Args:
-           scat (tuple): Search category keyword list.
-           sall (tuple): Search all keyword list.
-           stag (tuple): Search tag keyword list.
-           sgrp (tuple): Search group keyword list.
-           uuid (str): Search specific uuid or part of it.
-           digest (str): Search specific digest or part of it.
-           data (str): Search specific content data or part of it.
+            scat (tuple): Search category keyword list.
+            sall (tuple): Search all keyword list.
+            stag (tuple): Search tag keyword list.
+            sgrp (tuple): Search group keyword list.
+            uuid (str): Search specific uuid or part of it.
+            digest (str): Search specific digest or part of it.
+            data (str): Search specific content data or part of it.
 
         Returns:
             Int: Number of content in database based on given filters.
@@ -247,8 +247,8 @@ class SqliteDb(object):
         """Update existing content.
 
         Args:
-           digest (str): Content digest that is udpated.
-           resource (Resource): Stored content in ``Resource()`` container.
+            digest (str): Content digest that is udpated.
+            resource (Resource): Stored content in ``Resource()`` container.
 
         Returns:
             Collection: Collection of updated content.
@@ -275,7 +275,7 @@ class SqliteDb(object):
         """Delete content based on given digest.
 
         Args:
-           digest (str): Content digest that is deleted.
+            digest (str): Content digest that is deleted.
         """
 
         if self._connection:
@@ -310,7 +310,7 @@ class SqliteDb(object):
         """Select content based on data.
 
         Args:
-           data (str): Content data or part of it.
+            data (str): Content data or part of it.
 
         Returns:
             Collection: Collection of selected content.
@@ -339,7 +339,7 @@ class SqliteDb(object):
         """Select content based on uuid.
 
         Args:
-           uuid (str): Content uuid or part of it.
+            uuid (str): Content uuid or part of it.
 
         Returns:
             Collection: Collection of selected content.

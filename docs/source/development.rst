@@ -169,6 +169,17 @@ descriptions of the event.
    :members:
    :member-order: bysource
 
+snippy.config.source.parser
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+Parser class offers a parser to extract content fields from text source.
+
+.. autoclass:: snippy.config.source.parser.Parser
+   :members:
+   :member-order: bysource
+
 snippy.storage.storage
 ~~~~~~~~~~~~~~~~~~~~~~
 
@@ -182,7 +193,7 @@ actual database solution from rest of the implementation.
    :member-order: bysource
 
 snippy.storage.sqlitedb
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~
 
 **Service**
 

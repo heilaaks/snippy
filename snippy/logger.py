@@ -90,7 +90,7 @@ class Logger(object):
         additional logging parameters.
 
         Args:
-           name (str): Name of the module that requests a Logger.
+            name (str): Name of the module that requests a Logger.
         """
 
         logger = logging.getLogger(name)
@@ -216,7 +216,6 @@ class Logger(object):
         """Time method by measuring it latency.
 
         The operation ID (OID) is refreshed at the end.
-
 
         Args:
             method (str): Name of the method calling the timeit.

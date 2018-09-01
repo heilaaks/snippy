@@ -36,7 +36,7 @@ class Storage(object):
         """Create new content.
 
         Args:
-           collection (Collection): Content container to be stored into database.
+            collection (Collection): Content container to be stored into database.
         """
 
         self._logger.debug('store content')
@@ -48,13 +48,13 @@ class Storage(object):
         """Search content.
 
         Args:
-           scat (tuple): Search category keyword list.
-           sall (tuple): Search all keyword list.
-           stag (tuple): Search tag keyword list.
-           sgrp (tuple): Search group keyword list.
-           uuid (str): Search specific uuid or part of it.
-           digest (str): Search specific digest or part of it.
-           data (str): Search specific content data or part of it.
+            scat (tuple): Search category keyword list.
+            sall (tuple): Search all keyword list.
+            stag (tuple): Search tag keyword list.
+            sgrp (tuple): Search group keyword list.
+            uuid (str): Search specific uuid or part of it.
+            digest (str): Search specific digest or part of it.
+            data (str): Search specific content data or part of it.
 
         Returns:
             Collection: Search result in Collection of content.
@@ -69,7 +69,7 @@ class Storage(object):
         """Get unique values for given field.
 
         Args:
-           field (str): Content field which unique values are read.
+            field (str): Content field which unique values are read.
 
         Returns:
             tuple: List of unique values for give field.
@@ -98,7 +98,7 @@ class Storage(object):
         """Delete content.
 
         Args:
-           digest (str): Content digest that is deleted.
+            digest (str): Content digest that is deleted.
         """
 
         self._logger.debug('delete content')
@@ -108,7 +108,7 @@ class Storage(object):
         """Export content.
 
         Args:
-           scat (tuple): Search category keyword list.
+            scat (tuple): Search category keyword list.
         """
 
         self._logger.debug('export content')
@@ -120,7 +120,7 @@ class Storage(object):
         """Import content.
 
         Args:
-           collection (Collection): Content container to be imported into database.
+            collection (Collection): Content container to be imported into database.
         """
 
         self._logger.debug('import content')

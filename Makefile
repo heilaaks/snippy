@@ -1,3 +1,6 @@
+python_version_full := $(wordlist 2,4,$(subst ., ,$(shell python --version 2>&1)))
+python_version_major := $(word 1,${python_version_full})
+
 install:
 	pip install .
 
@@ -17,7 +20,14 @@ test:
 	python -m pytest -x ./tests/test_*.py --cov snippy
 
 test-fast:
+ifeq ($(python_version_major), 3)
 	python -m pytest -n auto -x ./tests/test_*.py --cov snippy -m "not serial"
+else
+	@echo "##########################################################################"
+	@echo "Parallel tests are supported only with Python 3. Executing tests serially."
+	@echo "##########################################################################"
+	make test
+endif
 
 coverage:
 	pytest --cov=snippy --cov-branch --cov-report html tests/

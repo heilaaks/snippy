@@ -1,7 +1,5 @@
 ## WORKING
-   - [ ] Fix magic regexp not supporting immediate continuation of next tag wihtout new line? add test.
    - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
-   - [ ] Add magic regexp from tags and links. This requires strip instead of rstrip to make sure that head and tail spaces removed. This 
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Add support to import and export content in limited markdown format.
@@ -143,6 +141,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## FOLLOW EXTERNAL BUGS/ISSUES
+   - [ ] OpenAPI does not support OPTIONS HTTP method and it cannot be defined. //https://github.com/OAI/OpenAPI-Specification/issues/325
    - [x] The openapi2jsonschema does not work with Python 3. // https://github.com/garethr/openapi2jsonschema/issues/6.
    - [x] The openapi2jsonschema does not work with OAS 3.0. // https://github.com/garethr/openapi2jsonschema/issues/6.
    - [ ] OAS3.0 to JSON schema. // https://github.com/OAI/OpenAPI-Specification/issues/1032
@@ -152,6 +151,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Refactored text parser.
    - [x] Edited Sqlitedb() UT tests to follow new UT test layouts.
    - [x] Added support to import all default content with --all category.
    - [x] Added support for search category (scat) from search and export command line operations.

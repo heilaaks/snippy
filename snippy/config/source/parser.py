@@ -33,21 +33,105 @@ class Parser(object):
     SOLUTION_BRIEF = '## BRIEF  :'
     SOLUTION_FILE = '## FILE   :'
     DATA_HEAD = '# Add mandatory snippet below.\n'
-    DATA_TAIL = '# Add optional brief description below.\n'
     BRIEF_HEAD = '# Add optional brief description below.\n'
-    BRIEF_TAIL = '# Add optional comma separated list of groups below.\n'
-    GROUPS_HEAD = '# Add optional comma separated list of groups below.\n'
-    GROUPS_TAIL = '# Add optional comma separated list of tags below.\n'
-    SNIPPET_TAGS = '# Add optional comma separated list of tags below.\n'
-    SNIPPET_LINKS = '# Add optional links below one link per line.\n'
-    REFERENCE_TAGS = SNIPPET_TAGS
     REFERENCE_LINKS = '# Add mandatory links below one link per line.\n'
+
+    DATA = {}
+    DATA['snippet'] = '# Add mandatory snippet below.\n'
+    DATA['reference'] = DATA['snippet']
+    DATA[Const.SOLUTION] = '## BRIEF  :'
+
+    BRIEF = {}
+    BRIEF['snippet'] = '# Add optional brief description below.\n'
+    BRIEF['reference'] = BRIEF['snippet']
+    BRIEF[Const.SOLUTION] = '## BRIEF  :'
+
+    GROUPS = {}
+    GROUPS['snippet'] = '# Add optional comma separated list of groups below.\n'
+    GROUPS['reference'] = GROUPS['snippet']
+    GROUPS['solution'] = '## GROUPS :'
+
+    TAGS = {}
+    TAGS[Const.SNIPPET] = '# Add optional comma separated list of tags below.\n'
+    TAGS[Const.REFERENCE] = TAGS[Const.SNIPPET]
+    TAGS[Const.SOLUTION] = '## TAGS   :'
+
+    LINKS = {}
+    LINKS[Const.SNIPPET] = '# Add optional links below one link per line.\n'
+    LINKS[Const.REFERENCE] = '# Add mandatory links below one link per line.\n'
+
+    FILENAME = {}
+    FILENAME[Const.SOLUTION] = '## FILE   :'
+
+    REGEXP = {}
+    REGEXP['data'] = {}
+    REGEXP['data'][Const.SNIPPET] = re.compile(
+        r'(?:%s|%s)(?P<data>.*?)(?:\n{2}|#|$)' % (
+            DATA[Const.SNIPPET],
+            DATA[Const.REFERENCE]
+        ),
+        re.DOTALL
+    )
+    REGEXP['data'][Const.REFERENCE] = REGEXP['data'][Const.SNIPPET]
+    REGEXP['data'][Const.SOLUTION] = re.compile(r'(?P<data>.*)', re.DOTALL)
+    REGEXP['brief'] = {}
+    REGEXP['brief'][Const.SNIPPET] = re.compile(
+        r'(?:%s|%s)(?P<brief>.*?)(?:\n{2}|#|$)' % (
+            BRIEF[Const.SNIPPET],
+            BRIEF[Const.REFERENCE]
+        ),
+        re.DOTALL
+    )
+    REGEXP['brief'][Const.REFERENCE] = REGEXP['brief'][Const.SNIPPET]
+    REGEXP['brief'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<brief>.*|$)' % BRIEF[Const.SOLUTION], re.MULTILINE)
+    REGEXP['groups'] = {}
+    REGEXP['groups'][Const.SNIPPET] = re.compile(
+        r'(?:%s|%s)(?P<groups>.*?)(?:\n{2}|#|$)' % (
+            GROUPS[Const.SNIPPET],
+            GROUPS[Const.REFERENCE]
+        ),
+        re.DOTALL
+    )
+    REGEXP['groups'][Const.REFERENCE] = REGEXP['groups'][Const.SNIPPET]
+    REGEXP['groups'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<groups>.*|$)' % GROUPS[Const.SOLUTION], re.MULTILINE)
+    REGEXP['tags'] = {}
+    REGEXP['tags'][Const.SNIPPET] = re.compile(
+        r'(?:%s|%s)(?P<tags>.*?)(?:\n{2}|#|$)' % (
+            TAGS[Const.SNIPPET],
+            TAGS[Const.REFERENCE]
+        ),
+        re.DOTALL
+    )
+    REGEXP['tags'][Const.REFERENCE] = REGEXP['tags'][Const.SNIPPET]
+    REGEXP['tags'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<tags>.*|$)' % TAGS[Const.SOLUTION], re.MULTILINE)
+    REGEXP['links'] = {}
+    REGEXP['links'][Const.SNIPPET] = re.compile(
+        r'(?:%s|%s)(?P<links>.*?)(?:\n{2}|#|$)' % (
+            LINKS[Const.SNIPPET],
+            LINKS[Const.REFERENCE]
+        ),
+        re.DOTALL
+    )
+    REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
+    REGEXP['links'][Const.SOLUTION] = re.compile(r'> (?P<links>http.*)', re.MULTILINE)
+    REGEXP['filename'] = {}
+    REGEXP['filename'][Const.SNIPPET] = re.compile(r'\A(?!x)x')  # Never match anything because there is no filename in content.
+    REGEXP['filename'][Const.REFERENCE] = REGEXP['filename'][Const.SNIPPET]
+    REGEXP['filename'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<filename>.*|$)' % FILENAME[Const.SOLUTION], re.MULTILINE)
 
     _logger = Logger.get_logger(__name__)
 
     @staticmethod
     def read_content(timestamp, source):
-        """Read contents from text source."""
+        """Read contents from text source.
+
+        Args:
+            timestamp (str): UTC time stamp in ISO8601 format.
+            source (str): Contents text source.
+
+        Returns:
+            Collection(): Parsed content in Collection.
+        """
 
         data = []
         category = Parser.content_category(source)
@@ -77,12 +161,25 @@ class Parser(object):
 
     @staticmethod
     def _split_source(source, split, offset):
-        """Split solution content from a text file."""
+        """Split text to multiple contents.
 
-        # Find line numbers that are identified by split tag and offset. The matching
-        # line numbers are substracted with offset to get the first line of the solution.
-        # The first item from the list is popped and used as a head and following items
-        # are treated as as line numbers where the next solution starts.
+        This method parses text files to extract multiple contents from it.
+
+        Find line numbers that are identified by split tag and offset. The
+        matching line numbers are substracted with offset to get the first
+        line of the content. The first item from the list is popped and
+        used as a head and following items are treated as as line numbers
+        where the next solution starts.
+
+        Args:
+            source (str): Contents text source.
+            split (str): Tag in text content that identifies each content
+            offset (int): Offset from head of the text content for split tag.
+
+        Returns:
+            list: List of text contents.
+        """
+
         source_list = source.split(Const.NEWLINE)
         solutions = []
         line_numbers = [i for i, line in enumerate(source_list) if line.startswith(split)]
@@ -98,7 +195,14 @@ class Parser(object):
 
     @classmethod
     def content_category(cls, source):
-        """Read content category from text source."""
+        """Read content category from text source.
+
+        Args:
+            source (str): Content text source.
+
+        Returns:
+            str: Content category.
+        """
 
         category = Const.UNKNOWN_CATEGORY
 
@@ -113,115 +217,193 @@ class Parser(object):
 
     @classmethod
     def content_data(cls, category, source):
-        """Read content data from text source."""
+        """Read content data from text source.
+
+        Each content data line is stored in element in a tuple. Solution
+        content data is stored only by trimming the trailing newlines at the
+        end of the data. In case of snippet content, each line is trimmed.
+
+        Args:
+            category (str): Content category.
+            source (str): Content text source.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded content data.
+        """
 
         data = ()
-        if category == Const.SNIPPET:
-            match = re.search('%s(.*)%s' % (cls.DATA_HEAD, cls.DATA_TAIL), source, re.DOTALL)
-            if match and not match.group(1).isspace():
+        match = Parser.REGEXP['data'][category].search(source)
+        if match:
+            if category == Const.SNIPPET:
                 data = tuple([s.strip() for s in match.group(1).rstrip().split(Const.NEWLINE)])
-        elif category == Const.SOLUTION:
-            # Remove unnecessary newlines at the end and make sure there is one at the end.
-            data = tuple(source.rstrip().split(Const.NEWLINE) + [Const.EMPTY])
-        elif category == Const.REFERENCE:
-            data = ()  # There is no data with the reference.
-
-        cls._logger.debug('parsed content data from: %s', data)
+            elif category == Const.SOLUTION:
+                data = tuple(match.group(1).rstrip().split(Const.NEWLINE) + [Const.EMPTY])
+            elif category == Const.REFERENCE:
+                data = ()  # There is no data with reference content.
+            cls._logger.debug('parsed content data: %s', data)
+        else:
+            cls._logger.debug('parser did not find content for data')
 
         return data
 
     @classmethod
     def content_brief(cls, category, source):
-        """Read content brief from text source."""
+        """Read content brief from text source.
 
-        brief = Const.EMPTY
-        if category in (Const.SNIPPET, Const.REFERENCE):
-            match = re.search('%s(.*)%s' % (cls.BRIEF_HEAD, cls.BRIEF_TAIL), source, re.DOTALL)
-            if match and not match.group(1).isspace():
-                lines = tuple([s.strip() for s in match.group(1).rstrip().split(Const.SPACE)])
-                brief = Const.SPACE.join(lines).strip()
-        elif category == Const.SOLUTION:
-            match = re.search(r'## BRIEF  :\s*?(.*|$)', source, re.MULTILINE)
-            if match:
-                brief = match.group(1).strip()
-        cls._logger.debug('parsed content brief from: %s', brief)
+        Args:
+            category (str): Content category.
+            source (str): Content text source.
+
+        Returns:
+            str: Utf-8 encoded unicode brief string.
+        """
+
+        brief = ''
+        match = Parser.REGEXP['brief'][category].search(source)
+        if match:
+            brief = Parser.to_unicode(match.group('brief').strip())
+            cls._logger.debug('parsed content brief: %s', brief)
+        else:
+            cls._logger.debug('parser did not find content for brief')
 
         return brief
 
     @classmethod
     def content_groups(cls, category, source):
-        """Read content groups from text source."""
+        """Read content groups from text source.
+
+        Args:
+            category (str): Content category.
+            source (str): Content text source.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded groups.
+        """
 
         groups = ()
-        if category in (Const.SNIPPET, Const.REFERENCE):
-            match = re.search('%s(.*)%s' % (cls.GROUPS_HEAD, cls.GROUPS_TAIL), source, re.DOTALL)
-            if match and not match.group(1).isspace():
-                groups = Parser.keywords([match.group(1)])
-        elif category == Const.SOLUTION:
-            match = re.search(r'## GROUPS :\s*?(\S+|$)', source, re.MULTILINE)
-            if match:
-                groups = tuple([s.strip() for s in match.group(1).strip().split(Const.DELIMITER_GROUPS)])
-        cls._logger.debug('parsed content groups from: %s', groups)
+        match = Parser.REGEXP['groups'][category].search(source)
+        if match:
+            groups = Parser.keywords([match.group('groups')])
+            cls._logger.debug('parsed content groups: %s', groups)
+        else:
+            cls._logger.debug('parser did not find content for groups')
 
         return groups
 
     @classmethod
     def content_tags(cls, category, source):
-        """Read content tags from text source."""
+        """Read content tags from text source.
+
+        Args:
+            category (str): Content category.
+            source (str): Content text source.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded tags.
+        """
 
         tags = ()
-        if category in (Const.SNIPPET, Const.REFERENCE):
-            match = re.search('(?:%s|%s)(.*?)(?:\n{2}|#|$)' % (cls.SNIPPET_TAGS, cls.REFERENCE_TAGS), source, re.DOTALL)
-            if match and not match.group(1).isspace():
-                tags = Parser.keywords([match.group(1)])
-        elif category == Const.SOLUTION:
-            match = re.search(r'## TAGS   :\s*?(.*|$)', source, re.MULTILINE)
-            if match:
-                tags = tuple([s.strip() for s in match.group(1).strip().split(Const.DELIMITER_TAGS)])
-        cls._logger.debug('parsed content tags from: %s', tags)
+        match = Parser.REGEXP['tags'][category].search(source)
+        if match:
+            tags = Parser.keywords([match.group('tags')])
+            cls._logger.debug('parsed content tags: %s', tags)
+        else:
+            cls._logger.debug('parser did not find content for tags')
 
         return tags
 
     @classmethod
     def content_links(cls, category, source):
-        """Read content links from text source."""
+        """Read content links from text source.
 
-        # In case of solution, the links are read from the whole content data.
+        Args:
+            category (str): Content category.
+            source (str): Content text source.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded links.
+        """
+
         links = ()
-        if category in (Const.SNIPPET, Const.REFERENCE):
-            match = re.search('(?:%s|%s)(.*?)(?:\n{2}|#|$)' % (cls.SNIPPET_LINKS, cls.REFERENCE_LINKS), source, re.DOTALL)
-            if match and not match.group(1).isspace():
-                links = tuple([s.strip() for s in match.group(1).strip().split(Const.NEWLINE)])
-        elif category == Const.SOLUTION:
-            links = tuple(re.findall('> (http.*)', source))
-        cls._logger.debug('parsed content links from "%s"', links)
+        match = Parser.REGEXP['links'][category].findall(source)
+        if match:
+            links = Parser.links(match)
+            cls._logger.debug('parsed content links: %s', links)
+        else:
+            cls._logger.debug('parser did not find content for links')
 
         return links
 
     @classmethod
     def content_filename(cls, category, source):
-        """Read content filename from text source."""
+        """Read content filename from text source.
 
-        # Only solution content uses optional filename field.
-        filename = Const.EMPTY
-        if category == Const.SOLUTION:
-            match = re.search(r'## FILE   :\s*?(\S+|$)', source, re.MULTILINE)
-            if match and match.group(1):
-                filename = match.group(1)
-        cls._logger.debug('parsed content filename from "%s"', filename)
+        Args:
+            category (str): Content category.
+            source (str): Content text source.
+
+        Returns:
+            str: Utf-8 encoded unicode filename string.
+        """
+
+        filename = ''
+        match = Parser.REGEXP['filename'][category].search(source)
+        if match:
+            filename = Parser.to_unicode(match.group('filename').strip())
+            cls._logger.debug('parsed content filename: %s', filename)
+        else:
+            cls._logger.debug('parser did not find content for filename')
 
         return filename
+
+    @classmethod
+    def search_keywords(cls, value):
+        """Convert search keywords to utf-8 encoded tuple.
+
+        If the value is None it indicates that the search keywords were not
+        given at all.
+
+        The keyword list may be empty or it can contain empty string. Both
+        cases must be evaluated to 'match any'.
+
+        Args:
+            value (str,list): Search keywords in a string or list.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded keywords.
+        """
+
+        keywords = ()
+        if value is not None:
+            keywords = Parser.keywords(value)
+            if not any(keywords):
+                cls._logger.debug('all content listed because keywords were not provided')
+                keywords = ('.')
+        else:
+            keywords = ()
+
+        return keywords
 
     @staticmethod
     def keywords(keywords, sort_=True):
         """Convert keywords to utf-8 encoded list of keywords.
 
-        Parse user provided keyword list. The keywords are tags or search
-        keywords. User may use various formats so each item in a list may be
-        for example a string of comma separated tags.
+        Parse user provided keywords. The keywords are for example groups,
+        tags or search all keywords. User may use string or list context for
+        the keywords. In case of list context for the keywords, each element
+        in the list is split separately.
+
+        The keywords are split in word boundary.
 
         The dot is a special case. It is allowed for the regexp to match and
-        print all records."""
+        print all records.
+
+        Args:
+            keywords (str,list): Any keywords in a string or list.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded keywords.
+        """
 
         # Examples: Support processing of:
         #           1. -t docker container cleanup
@@ -240,32 +422,19 @@ class Parser(object):
 
         return tuple(list_)
 
-    @classmethod
-    def search_keywords(cls, value):
-        """Convert keywords to utf-8 encoded search keywords."""
-
-        # The keyword list may be empty or it can contain empty string.
-        # Both cases must be evaluated to 'match any'.
-        keywords = ()
-        if value is not None:
-            keywords = Parser.keywords(value)
-            if not any(keywords):
-                cls._logger.debug('all content listed because keywords were not provided')
-                keywords = ('.')
-        else:
-            keywords = ()
-
-        return keywords
-
     @staticmethod
     def links(links):
         """Convert links to utf-8 encoded list of links.
 
         Parse user provided link list. Because URL and keyword have different
         forbidden characters, the methods to parse keywords are similar but
-        still they are separated. URLs can be separated only with space and
-        bar. These two characters are defined as 'unsafe characters' in URL
-        character set [1].
+        still they are separated. URLs can be separated only with space, bar
+        or newline. Space and bar characters are defined 'unsafe characters'
+        in URL character set [1]. The newline is always URL encoded so it does
+        not appear as newline.
+
+        The newline is supported here because that is used to separate links
+        in text input.
 
         Links are not sorted. The reason is that the sort is done based on
         content category. The content category is not know for sure when
@@ -274,6 +443,12 @@ class Parser(object):
         for sure.
 
         [1] https://perishablepress.com/stop-using-unsafe-characters-in-urls/
+
+        Args:
+            links (str,list): Links in a string or list.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded links.
         """
 
         # Examples: Support processing of:
@@ -284,10 +459,12 @@ class Parser(object):
         #           5. -l 'link1| link2| link3'
         #           6. -l 'link1|link2|link3'
         #           7. -l '.'
+        #           7. -l 'link1\nlink2'
         list_ = []
         links = Parser._to_list(links)
         for link in links:
             list_ = list_ + re.split(r'\s+|\|', link)
+        list_ = list(filter(None, list_))
 
         return tuple(list_)
 
@@ -296,6 +473,12 @@ class Parser(object):
         """Convert value to utf-8 coded unicode string.
 
         Conversion quarantees only one newline at the end of the string.
+
+        Args:
+            value (str,list): Any value in a string or list.
+
+        Returns:
+            str: Utf-8 encoded unicode string.
         """
 
         string_ = Const.EMPTY
@@ -312,7 +495,14 @@ class Parser(object):
 
     @classmethod
     def _to_list(cls, value):
-        """Return list of UTF-8 encoded unicode strings."""
+        """Return list of UTF-8 encoded unicode strings.
+
+        Args:
+            value (str,list): Any value in a string or list.
+
+        Returns:
+            list: List of Utf-8 encoded unicode strings.
+        """
 
         list_ = []
         if isinstance(value, Const.TEXT_TYPE):

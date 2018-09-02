@@ -10,7 +10,7 @@ Breaking changes
 ~~~~~~~~~~~~~~~~
 
 * Change content field group to groups_.
-* Change --filter option behaviour.
+* Change `filter option`_ behaviour.
 
 New features
 ~~~~~~~~~~~~
@@ -69,3 +69,4 @@ Bugfixes
 .. _0.1.0: https://github.com/heilaaks/snippy/compare/ce6395137b...heilaaks:v0.1.0
 .. _REST API routes: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
 .. _groups: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
+.. _filter option: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe

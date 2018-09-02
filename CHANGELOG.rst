@@ -10,6 +10,7 @@ Breaking changes
 ~~~~~~~~~~~~~~~~
 
 * Change content field group to groups_.
+* Change --filter option behaviour.
 
 New features
 ~~~~~~~~~~~~

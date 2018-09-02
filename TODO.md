@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix regexp filter in Migrate. It is not there in apply_filters? No test for this because the failure is not noticed? Move this from terminal to apply_filter.
    - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Add support to import and export content in limited markdown format.
@@ -39,7 +38,8 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
-   - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
+   - [ ] Fix '--filter 0' maps to None instead of 0?
+   - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
    - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?
    - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
    - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties
@@ -92,6 +92,7 @@
    - [ ] Refactor --editor? Now it always means yes. The code forces yes to some cases like update solution. This parameter could be changed to no/yes to override internals.
 
 ## TESTS
+   - [ ] How to get TypeError for --filter in try re.compile? This is not tested.
    - [ ] Refactor test case helper functions to export to yaml file instead of text. Yaml allows checking all params and text missed e.g. timestamps and uuid.
    - [ ] Refactor UT tests for single sqlite DB module. Refactor sqlite tests to single test_ut_sqlitedb.py like with the logger and parser.
    - [ ] Add test to verify that only TLS1.2 and selected ciphers are active. How and is it fast enough?
@@ -154,6 +155,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Changed --filter option behavior.
    - [x] Refactored text parser.
    - [x] Edited Sqlitedb() UT tests to follow new UT test layouts.
    - [x] Added support to import all default content with --all category.

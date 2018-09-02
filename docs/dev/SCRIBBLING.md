@@ -1121,6 +1121,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
          - digest
          - sall
          - scat
+         - search_filter
          - stag
          - sgrp
          - uuid
@@ -1134,6 +1135,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        did not give any values for the CLI option, it is considered as "match
        any". For example a CLI option and value combination '--sall ' causes
        the tool to list all content.
+
+       For the search_filter the use of None prevents unnecessary usage of the
+       search filter for database search results.
 
     2. All but reference content links are sorted
 
@@ -2144,9 +2148,9 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 > created  : 2017-10-12T11:52:11.000001+0000
 > updated  : 2017-10-12T11:52:11.000001+0000
 > tags     : cleanup, container, docker, docker-ce, moby
-> filename : 
-> name     : 
-> source   : 
+> filename :
+> name     :
+> source   :
 > versions :
 > uuid     : f21c6318-8830-11e8-a114-2c4d54508088
 > digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
@@ -2166,9 +2170,9 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 > created  : 2017-10-12T11:52:11.000001+0000
 > updated  : 2017-10-12T11:52:11.000001+0000
 > tags     : cleanup, container, docker, docker-ce, moby
-> filename : 
-> name     : 
-> source   : 
+> filename :
+> name     :
+> source   :
 > versions :
 > uuid     : f21c6318-8830-11e8-a114-2c4d54508088
 > digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
@@ -2198,9 +2202,9 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 > created  : 2017-10-12T11:52:11.000001+0000
 > updated  : 2017-10-12T11:52:11.000001+0000
 > tags     : cleanup, container, docker, docker-ce, moby
-> filename : 
-> name     : 
-> source   : 
+> filename :
+> name     :
+> source   :
 > versions :
 > uuid     : f21c6318-8830-11e8-a114-2c4d54508088
 > digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319

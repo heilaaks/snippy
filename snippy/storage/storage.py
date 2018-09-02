@@ -44,7 +44,7 @@ class Storage(object):
 
         return collection
 
-    def search(self, scat=(), sall=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
+    def search(self, scat=(), sall=(), stag=(), sgrp=(), search_filter=None, uuid=None, digest=None, data=None):
         """Search content.
 
         Args:
@@ -52,6 +52,7 @@ class Storage(object):
             sall (tuple): Search all keyword list.
             stag (tuple): Search tag keyword list.
             sgrp (tuple): Search group keyword list.
+            search_filter (str): Regexp filter to limit search results.
             uuid (str): Search specific uuid or part of it.
             digest (str): Search specific digest or part of it.
             data (str): Search specific content data or part of it.
@@ -61,7 +62,7 @@ class Storage(object):
         """
 
         self._logger.debug('search content')
-        collection = self._database.select(scat, sall, stag, sgrp, uuid, digest, data)
+        collection = self._database.select(scat, sall, stag, sgrp, search_filter, uuid, digest, data)
 
         return collection
 

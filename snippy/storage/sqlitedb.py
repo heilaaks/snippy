@@ -128,14 +128,19 @@ class SqliteDb(object):
 
         return error
 
-    def select(self, scat=(), sall=(), stag=(), sgrp=(), uuid=None, digest=None, data=None):
+    def select(self, scat=(), sall=(), stag=(), sgrp=(), search_filter=None, uuid=None, digest=None, data=None):
         """Select content based on search criteria.
+
+        The search filter is applied after the result is received from
+        database. The search filter removes all resources from returned
+        collection that do not match to the filter.
 
         Args:
             scat (tuple): Search category keyword list.
             sall (tuple): Search all keyword list.
             stag (tuple): Search tag keyword list.
             sgrp (tuple): Search group keyword list.
+            search_filter (str): Regexp filter to limit search results.
             uuid (str): Search specific uuid or part of it.
             digest (str): Search specific digest or part of it.
             data (str): Search specific content data or part of it.
@@ -148,10 +153,13 @@ class SqliteDb(object):
         query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_REGEX)
         if query:
             rows = self._get_db(query, qargs)
+            self._logger.debug('selected: %d :rows: %s', len(rows), rows)
+            if search_filter:
+                rows = [row for row in rows if any(search_filter.search(str(column)) for column in row)]
+                self._logger.debug('regexp filter applied: %s :resulting: %d :rows: %s', search_filter, len(rows), rows)
             total = self._count_content(scat, sall, stag, sgrp, uuid, digest, data)
             collection.convert(rows)
             collection.total = total
-            self._logger.debug('selected: %d :rows: %s', len(rows), rows)
 
         return collection
 
@@ -240,6 +248,8 @@ class SqliteDb(object):
                 count = rows[0][0]
             except IndexError:
                 pass
+
+        self._logger.debug('content count: %d', count)
 
         return count
 

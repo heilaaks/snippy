@@ -518,22 +518,32 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_020(self, snippy, capsys):
-        """Search snippet with regexp.
+        """Search snippet with regexp filter.
 
-        Search all content with regexp filter. The ansi characters must be
-        automatically disabled in when the --filter option is used.
+        Search all content with regexp filter. The filter removes all content
+        from search results that do not match to the regexp filter in any
+        resource field. In this case there is no regexp conditions around the
+        text.
         """
 
         output = (
-            '$ docker rm --volumes $(docker ps --all --quiet)',
-            '$ docker rm --force redis',
-            '$ nc -v 10.183.19.189 443',
-            '$ nmap 10.183.19.189',
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '   $ docker rm --force redis',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
             '',
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', '.*(\\$\\s.*)'])
+        cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', 'engine', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -541,34 +551,32 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_021(self, snippy, capsys):
-        """Search snippet with regexp.
+        """Search snippet with regexp filter.
 
-        Search all content with regexp filter. The ansi characters must be
-        automatically disabled in when the --filter option is used. This
-        must match to snippet and solution commands.
-
-        The content must be selected so that all content is queried at once.
-        This produces the ordered list of commands as below.
+        Search all content with regexp filter. The filter removes all content
+        from search results that do not match to the regexp filter in any
+        resource field. In this case there are regexp match with '.*' around
+        the searched text.
         """
 
         output = (
-            '$ ./filebeat -e -c config/filebeat.yml -d "*"',
-            '$ nginx -V 2>&1 | grep -- \'--with-debug\'',
-            '$ ls -al /var/log/nginx/',
-            '$ unlink /var/log/nginx/access.log',
-            '$ unlink /var/log/nginx/error.log',
-            '$ nginx -s reload',
-            '$ vi conf.d/default.conf',
-            '$ docker exec -i -t $(docker ps | egrep -m 1 \'petelk/nginx\' | awk \'{print $1}\') /bin/bash',
-            '$ docker rm --volumes $(docker ps --all --quiet)',
-            '$ docker rm --force redis',
-            '$ nc -v 10.183.19.189 443',
-            '$ nmap 10.183.19.189',
+            '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '   $ docker rm --volumes $(docker ps --all --quiet)',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '',
+            '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '   $ docker rm --force redis',
+            '',
+            '   # cleanup,container,docker,docker-ce,moby',
+            '   > https://docs.docker.com/engine/reference/commandline/rm/',
+            '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
             '',
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--all', '--sall', '.', '--filter', '\\.*(\\$\\s.*)'])
+        cause = snippy.run(['snippy', 'search', '--all', '--sall', '.', '--filter', '.*engine.*', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
@@ -576,15 +584,18 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'default-solutions', 'import-netcat')
     def test_cli_search_snippet_022(self, snippy, capsys):
-        """Search snippet with regexp.
+        """Search snippet with regexp filter.
 
-        Search all content with regexp filter. There are no matches.
+        Search all content with regexp filter. The filter removes all content
+        from search results that do not match to the regexp filter in any
+        resource field. In this case none of the content matches to filter and
+        everything is removed.
         """
 
-        output = 'OK\n'
+        output = 'NOK: cannot find content with given search criteria\n'
         cause = snippy.run(['snippy', 'search', '--sall', '.', '--filter', 'not-found'])
         out, err = capsys.readouterr()
-        assert cause == Cause.ALL_OK
+        assert cause == 'NOK: cannot find content with given search criteria'
         assert out == output
         assert not err
 

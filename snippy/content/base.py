@@ -65,12 +65,13 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
+            search_filter=Config.search_filter,
             uuid=Config.operation_uuid,
             digest=Config.operation_digest,
             data=Config.content_data
         )
         if self._run_cli:
-            self.collection.dump_term(Config.use_ansi, Config.debug_logs, Config.search_filter)
+            self.collection.dump_term(Config.use_ansi, Config.debug_logs)
 
     def update(self):
         """Update content."""
@@ -80,6 +81,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
+            search_filter=Config.search_filter,
             uuid=Config.operation_uuid,
             digest=Config.operation_digest,
             data=Config.content_data
@@ -105,6 +107,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             sall=Config.search_all_kws,
             stag=Config.search_tag_kws,
             sgrp=Config.search_grp_kws,
+            search_filter=Config.search_filter,
             uuid=Config.operation_uuid,
             digest=Config.operation_digest,
             data=Config.content_data
@@ -130,6 +133,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 sall=Config.search_all_kws,
                 stag=Config.search_tag_kws,
                 sgrp=Config.search_grp_kws,
+                search_filter=Config.search_filter,
                 uuid=Config.operation_uuid,
                 digest=Config.operation_digest,
                 data=Config.content_data

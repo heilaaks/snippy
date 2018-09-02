@@ -70,24 +70,18 @@ class TestCliSearchSolution(object):
     def test_cli_search_solution_003(self, snippy, capsys):
         """Search solution with regexp.
 
-        Search all content with regexp filter. The ansi characters must be
-        automatically disabled in when the --filter option is used.
+        Search all content with regexp filter.
         """
 
         output = (
-            '$ ./filebeat -e -c config/filebeat.yml -d "*"',
-            '$ nginx -V 2>&1 | grep -- \'--with-debug\'',
-            '$ ls -al /var/log/nginx/',
-            '$ unlink /var/log/nginx/access.log',
-            '$ unlink /var/log/nginx/error.log',
-            '$ nginx -s reload',
-            '$ vi conf.d/default.conf',
-            '$ docker exec -i -t $(docker ps | egrep -m 1 \'petelk/nginx\' | awk \'{print $1}\') /bin/bash',
+            '1. Debugging Elastic Beats @beats [a5dd8f3807e08420]',
+            Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
+            '   :',
             '',
             'OK',
             ''
         )
-        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\\$\\s.*)'])
+        cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--filter', '.*(\\$.*filebeat)', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)

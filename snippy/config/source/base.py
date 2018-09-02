@@ -121,7 +121,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
         self.sall = parameters.get('sall', None)
         self.scat = parameters.get('scat', None)
-        self.search_filter = parameters.get('search_filter', Const.EMPTY)
+        self.search_filter = parameters.get('search_filter', None)
         self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT_API)
         self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
         self.server = parameters.get('server', False)
@@ -350,13 +350,20 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
     @search_filter.setter
     def search_filter(self, value):
-        """Search regexp filter must be Python regexp."""
+        """Search regexp filter must be Python regexp.
+
+        Value None means that it was not set all by the caller.
+        """
+
+        if value is None:
+            self._search_filter = None  # pylint: disable=attribute-defined-outside-init
+
+            return
 
         try:
-            re.compile(value)
-            self._search_filter = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
-        except re.error:
-            self._search_filter = Const.EMPTY  # pylint: disable=attribute-defined-outside-init
+            self._search_filter = re.compile(value)  # pylint: disable=attribute-defined-outside-init
+        except (re.error, TypeError):
+            self._search_filter = None  # pylint: disable=attribute-defined-outside-init
             Cause.push(Cause.HTTP_BAD_REQUEST,
                        'listing matching content without filter because it was not syntactically correct regular expression')
 

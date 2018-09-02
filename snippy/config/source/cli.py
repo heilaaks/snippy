@@ -60,7 +60,7 @@ class Cli(ConfigSourceBase):
         '  --sall [KW,...]               search keywords from all fields',
         '  --stag [KW,...]               search keywords only from tags',
         '  --sgrp [KW,...]               search keywords only from groups',
-        '  --filter REGEXP               filter search output with regexp',
+        '  --filter REGEXP               filter search result with regexp',
         '  --limit INT                   maximum number of search results',
         '  --no-ansi                     remove ANSI characters from output'
     )
@@ -102,7 +102,7 @@ class Cli(ConfigSourceBase):
         '      $ snippy search --snippets --sall . --no-ansi | grep \'\\$\' | sort',
         '      $ snippy search --solutions --sall .',
         '      $ snippy search --solutions --sall . | grep -Ev \'[^\\s]+:\'',
-        '      $ snippy search --all --sall . --filter \'.*(\\$\\s.*)\'',
+        '      $ snippy search --all --sall . --filter \'\\$?.*docker\'',
         '      $ snippy search --all --sall . --no-ansi | grep -E \'[0-9]+\\.\\s\'',
         '',
         '    Updating content:',
@@ -186,7 +186,7 @@ class Cli(ConfigSourceBase):
         search_meg.add_argument('--stag', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--scat', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--sgrp', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        search.add_argument('--filter', type=str, dest='search_filter', default=Const.EMPTY, help=argparse.SUPPRESS)
+        search.add_argument('--filter', type=str, dest='search_filter', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--limit', type=int, default=Cli.LIMIT_DEFAULT_CLI, help=argparse.SUPPRESS)
 
         # migration options

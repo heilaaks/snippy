@@ -21,7 +21,6 @@
 
 from __future__ import print_function
 
-import re
 import sys
 from collections import OrderedDict
 from signal import signal, getsignal, SIGPIPE, SIG_DFL
@@ -223,32 +222,20 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return text
 
-    def dump_term(self, use_ansi, debug_logs, search_filter):
+    def dump_term(self, use_ansi, debug_logs):
         """Convert collection for terminal."""
 
         if not self.size():
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
 
-        # In case user provided regexp filter, the ANSI control characters for
-        # colors are not used in order to make the filter work as expected.
-        ansi = use_ansi
-        if search_filter:
-            ansi = False
-
         text = Const.EMPTY
         for i, resource in enumerate(self.resources(), start=1):
-            text = text + resource.dump_term(index=i, ansi=ansi, debug=debug_logs)
-        # Set only one empty line at the end of string for beautified output.
+            text = text + resource.dump_term(index=i, ansi=use_ansi, debug=debug_logs)
+
+        # Set one empty line at the end of string for beautified output.
         if self.size():
             text = text.rstrip()
             text = text + Const.NEWLINE
-
-        if search_filter:
-            match = re.findall(search_filter, text)
-            if match:
-                text = Const.NEWLINE.join(match) + Const.NEWLINE
-            else:
-                text = Const.EMPTY
 
         self._logger.debug('printing content to terminal stdout')
         self._print_stdout(text)

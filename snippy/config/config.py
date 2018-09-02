@@ -124,7 +124,7 @@ class Config(object):
         cls.search_cat_kws = cls.source.scat
         cls.search_tag_kws = cls.source.stag
         cls.search_grp_kws = cls.source.sgrp
-        cls.search_filter = cls.source.regexp
+        cls.search_filter = cls.source.search_filter
         cls.search_limit = cls.source.search_limit
         cls.search_offset = cls.source.search_offset
         cls.remove_fields = cls.source.remove_fields

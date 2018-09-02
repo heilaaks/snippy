@@ -479,7 +479,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         """Search snippet without search parameters.
 
         Call GET /v1/snippets without defining search parameters. In this
-        case all content should be returned based on filtering parameters.
+        case all content should be returned.
         """
 
         result_headers = {

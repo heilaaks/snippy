@@ -344,8 +344,8 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
     def test_api_search_reference_010(self, server):
         """Search reference without search parameters.
 
-        Call GET /v1/references without defining search parameters. In this
-        case all content should be returned based on filtering parameters.
+        Call GET /v1/references without defining search keywords. In this case
+        all content should be returned.
         """
 
         result_headers = {
@@ -460,10 +460,10 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         Call GET /v1/reference so that pagination is applied with limit zero.
         This is a special case that returns the metadata but the data list
-        is empty. This query uses sall parameter with regexp filter . (dot)
-        which matches to all references. The non-zero offset does not affect
-        to the total count of query result and it is just returned in the
-        meta as it was provided.
+        is empty. This query uses sall parameter with regexp . (dot) which
+        matches to all references. The non-zero offset does not affect to the
+        total count of query result and it is just returned in the meta as it
+        was provided.
         """
 
         result_headers = {

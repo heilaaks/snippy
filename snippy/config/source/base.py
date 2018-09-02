@@ -118,10 +118,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.operation = parameters.get('operation')
         self.profiler = parameters.get('profiler', False)
         self.quiet = parameters.get('quiet', False)
-        self.regexp = parameters.get('regexp', Const.EMPTY)
         self.remove_fields = parameters.get('fields', self.ATTRIBUTES)
         self.sall = parameters.get('sall', None)
         self.scat = parameters.get('scat', None)
+        self.search_filter = parameters.get('search_filter', Const.EMPTY)
         self.search_limit = parameters.get('limit', self.LIMIT_DEFAULT_API)
         self.search_offset = parameters.get('offset', self.OFFSET_DEFAULT)
         self.server = parameters.get('server', False)
@@ -343,20 +343,20 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self._sgrp = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
-    def regexp(self):
+    def search_filter(self):
         """Get search regexp filter."""
 
-        return self._regexp
+        return self._search_filter
 
-    @regexp.setter
-    def regexp(self, value):
+    @search_filter.setter
+    def search_filter(self, value):
         """Search regexp filter must be Python regexp."""
 
         try:
             re.compile(value)
-            self._regexp = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+            self._search_filter = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
         except re.error:
-            self._regexp = Const.EMPTY  # pylint: disable=attribute-defined-outside-init
+            self._search_filter = Const.EMPTY  # pylint: disable=attribute-defined-outside-init
             Cause.push(Cause.HTTP_BAD_REQUEST,
                        'listing matching content without filter because it was not syntactically correct regular expression')
 

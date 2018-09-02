@@ -156,7 +156,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         """Get specific content based on group field.
 
         Call GET /v1/groups/docker to get content from the docker and python
-        groups with filters and limit applied.
+        groups with search all keywords and limit applied.
         """
 
         result_headers = {
@@ -193,9 +193,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         """Get specific content based on group field.
 
         Call GET /v1/groups/docker,python to get content from the docker and
-        python groups with filters and limit applied. In this case the search
-        is limited only to snippet and solution categories and the search hit
-        from references should not be returned.
+        python groups with search all keywords and limit applied. In this case
+        the search is limited only to snippet and solution categories and the
+        search hit from references should not be returned.
         """
 
         result_headers = {

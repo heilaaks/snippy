@@ -38,7 +38,7 @@ class TestUtCliCreate(object):
         assert obj.links == ()
         assert obj.log_msg_max == Cli.DEFAULT_LOG_MSG_MAX
         assert obj.operation == 'create'
-        assert obj.regexp == ''
+        assert obj.search_filter == ''
         assert obj.sall == ()
         assert obj.search_limit == Cli.LIMIT_DEFAULT_CLI
         assert obj.sgrp == ()

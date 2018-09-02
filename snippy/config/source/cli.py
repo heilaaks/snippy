@@ -186,7 +186,7 @@ class Cli(ConfigSourceBase):
         search_meg.add_argument('--stag', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--scat', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--sgrp', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        search.add_argument('--filter', type=str, dest='regexp', default=Const.EMPTY, help=argparse.SUPPRESS)
+        search.add_argument('--filter', type=str, dest='search_filter', default=Const.EMPTY, help=argparse.SUPPRESS)
         search.add_argument('--limit', type=int, default=Cli.LIMIT_DEFAULT_CLI, help=argparse.SUPPRESS)
 
         # migration options

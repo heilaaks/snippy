@@ -1,9 +1,10 @@
 data:
 - brief: Remove all docker containers with volumes
   category: snippet
-  created: 2017-10-12T11:52:11.000001+0000
+  created: 2018-09-08T12:44:23.491495+0000
   data:
   - docker rm --volumes $(docker ps --all --quiet)
+  description: ''
   digest: 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
   filename: ''
   groups:
@@ -18,38 +19,41 @@ data:
   - docker
   - docker-ce
   - moby
-  updated: 2017-10-12T11:52:11.000001+0000
-  uuid: f21c6318-8830-11e8-a114-2c4d54508088
+  updated: 2018-09-08T12:44:23.491495+0000
+  uuid: e9c53316-b364-11e8-83bb-2c4d54508088
   versions: ''
-- brief: Find pattern from files
+- brief: Remove docker image with force
   category: snippet
-  created: 2017-10-16T12:09:34.000001+0000
+  created: 2018-09-08T12:44:23.504865+0000
   data:
-  - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
-  - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'
-  - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
-  digest: dd328a21c1941983bbd20be51b0d84e76cafdd0a5b3f5b5e5728e9c9f3d7111c
+  - docker rm --force redis
+  description: ''
+  digest: 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5
   filename: ''
   groups:
-  - linux
+  - docker
   links:
-  - http://www.skrenta.com/rt/man/grep.1.html
-  - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux/
+  - https://docs.docker.com/engine/reference/commandline/rm/
+  - https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes
   name: ''
   source: ''
   tags:
-  - linux
-  - search
-  updated: 2017-10-16T12:09:34.000001+0000
-  uuid: f21c662e-8830-11e8-a114-2c4d54508088
+  - cleanup
+  - container
+  - docker
+  - docker-ce
+  - moby
+  updated: 2018-09-08T12:44:23.504865+0000
+  uuid: e9c73846-b364-11e8-83bb-2c4d54508088
   versions: ''
 - brief: Remove all exited containers and dangling images
   category: snippet
-  created: 2017-10-24T07:07:05.000001+0000
+  created: 2018-09-08T12:44:23.512780+0000
   data:
   - docker rm $(docker ps --all -q -f status=exited)
   - docker images -q --filter dangling=true | xargs docker rmi
-  digest: e2921a5a2124d046a16f2cae43f24af44267670a85e7b7564548911b1fe96021
+  description: ''
+  digest: 49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73
   filename: ''
   groups:
   - docker
@@ -66,9 +70,54 @@ data:
   - docker-ce
   - image
   - moby
-  - prune
-  updated: 2017-10-24T07:07:05.000001+0000
-  uuid: f21c67fa-8830-11e8-a114-2c4d54508088
+  updated: 2018-09-08T12:44:23.512780+0000
+  uuid: e9c86d42-b364-11e8-83bb-2c4d54508088
+  versions: ''
+- brief: Test if specific port is open
+  category: snippet
+  created: 2018-09-08T12:44:23.520766+0000
+  data:
+  - nc -v 10.183.19.189 443
+  - nmap 10.183.19.189
+  description: ''
+  digest: f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d
+  filename: ''
+  groups:
+  - linux
+  links:
+  - https://www.commandlinux.com/man-page/man1/nc.1.html
+  name: ''
+  source: ''
+  tags:
+  - linux
+  - netcat
+  - networking
+  - port
+  updated: 2018-09-08T12:44:23.520766+0000
+  uuid: e9c9a536-b364-11e8-83bb-2c4d54508088
+  versions: ''
+- brief: Find pattern from files
+  category: snippet
+  created: 2017-10-16T12:09:34.000001+0000
+  data:
+  - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
+  - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'
+  - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
+  description: ''
+  digest: dd328a21c1941983bbd20be51b0d84e76cafdd0a5b3f5b5e5728e9c9f3d7111c
+  filename: ''
+  groups:
+  - linux
+  links:
+  - http://www.skrenta.com/rt/man/grep.1.html
+  - https://stackoverflow.com/questions/16956810/how-do-i-find-all-files-containing-specific-text-on-linux/
+  name: ''
+  source: ''
+  tags:
+  - linux
+  - search
+  updated: 2017-10-16T12:09:34.000001+0000
+  uuid: f21c662e-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Stop and delete all running containers and images
   category: snippet
@@ -77,6 +126,7 @@ data:
   - docker stop $(docker ps -aq)
   - docker rm $(docker ps -a -q)
   - docker rmi $(docker images -q)
+  description: ''
   digest: a516e2d6f8aa5c6fe94a0eac1e4585ab4b29db047e274df4902d03377e43e22c
   filename: ''
   groups:
@@ -106,6 +156,7 @@ data:
   - docker build --no-cache -t heilaaks/snippy .
   - docker build --build-arg http_proxy=${http_proxy} --build-arg https_proxy=${https_proxy}
     -t heilaaks/snippy .
+  description: ''
   digest: 76e05e954e18f7668faf25ded614b7af79dfed6c4f59dc902f42559357de72d8
   filename: ''
   groups:
@@ -130,6 +181,7 @@ data:
   - docker run -td heilaaks/snippy tail -f /dev/null
   - docker exec -it 9782f882ab34 /bin/bash
   - docker exec -it $(docker ps | egrep -m 1 'kibana:latest' | awk '{print $1}') /bin/bash
+  description: ''
   digest: 4b9882c41365b0ea51b23004b610b2a017ee87156d173482876bb77e59f83b2a
   filename: ''
   groups:
@@ -161,6 +213,7 @@ data:
   - screen -r snippy.compile
   - screen -d snippy.compile
   - 'echo $STY # Response like 13153.pts-3 tells that screen is active'
+  description: ''
   digest: 9869a3866df270fc44715ec2d9508c0c65a35a6d69b09f6ce95806a09ef82fb5
   filename: ''
   groups:
@@ -184,6 +237,7 @@ data:
     -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   - chmod +x /usr/local/bin/docker-compose
   - docker-compose --version
+  description: ''
   digest: 21161fd9f119935178427b10c5c09fabbe4292982ba205d283bf551df70f6680
   filename: ''
   groups:
@@ -216,6 +270,7 @@ data:
   - systemctl enable docker.service
   - systemctl start docker
   - docker run --rm hello-world
+  description: ''
   digest: 90db2db20b7b64e8918d854751fa9221ce754d91aca59a54f69280e2e6af8abf
   filename: ''
   groups:
@@ -250,6 +305,7 @@ data:
   - docker-compose -f docker-compose.yml down -v
   - docker swarm leave --force
   - docker info | grep Swarm
+  description: ''
   digest: 5f4d6ab736055173668d1e985c71ed6ec7ec7df0068940955e06f85e31fe65d7
   filename: ''
   groups:
@@ -280,6 +336,7 @@ data:
   - docker network inspect y0fdm2xoyuca
   - docker network disconnect -f y0fdm2xoyuca devstack_logstash.1.7iqgrfd2xwcidj87zbkmauw4l
   - docker network rm y0fdm2xoyuca
+  description: ''
   digest: 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c
   filename: ''
   groups:
@@ -308,6 +365,7 @@ data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/nodes?v"
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/shards?v"
+  description: ''
   digest: afe4207ef77585206a4e7814fbc8c2abbe2fe071a58bfc78455ffaa4521fdb52
   filename: ''
   groups:
@@ -334,6 +392,7 @@ data:
   data:
   - kubectl get pods
   - kubectl logs nginx-3107262526-k01hd
+  description: ''
   digest: 14bc2d09409aba29b447a297cbef932465620348dbe39ad1483af7d4f914839e
   filename: ''
   groups:
@@ -359,6 +418,7 @@ data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
   - curl -XGET -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
   - curl -XGET -u elastic:changeme -XDELETE "http://${HOSTNAME}:9200/.kibana"
+  description: ''
   digest: c2ead9de4b955cc67bc14f99e72b7766c6a270a343dd7285e76f3dc13e1ebeec
   filename: ''
   groups:
@@ -390,6 +450,7 @@ data:
   - openssl s_client -debug -connect 10.183.19.189:443
   - openssl s_client -debug -connect kafka:9093 -tls1
   - openssl s_client -debug -connect kafka:9093 -tls1_2
+  description: ''
   digest: 4ec6013e6bca3193d1417d4085049bd8803d446fa33f8fc0f9ecacbf723e2f0d
   filename: ''
   groups:
@@ -407,28 +468,6 @@ data:
   updated: 2017-10-20T05:42:26.000001+0000
   uuid: f21c7baa-8830-11e8-a114-2c4d54508088
   versions: ''
-- brief: Test if specific port is open
-  category: snippet
-  created: 2017-10-20T07:08:45.000001+0000
-  data:
-  - nc -v 10.183.19.189 443
-  - nmap 10.183.19.189
-  digest: f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d
-  filename: ''
-  groups:
-  - linux
-  links:
-  - https://www.commandlinux.com/man-page/man1/nc.1.html
-  name: ''
-  source: ''
-  tags:
-  - linux
-  - netcat
-  - networking
-  - port
-  updated: 2017-10-20T07:08:45.000001+0000
-  uuid: f21c7d30-8830-11e8-a114-2c4d54508088
-  versions: ''
 - brief: Manage Elasticsearch templates
   category: snippet
   created: 2017-12-11T17:34:23.000001+0000
@@ -442,6 +481,7 @@ data:
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/_template/petelk.counters*"
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk.counters-2017.10.24"
   - curl -XDELETE -u elastic:changeme "http://${HOSTNAME}:9200/petelk*"
+  description: ''
   digest: 39ec99b4176b9bb7a58919fac5b1efb1ed91dcfdb9b72bd060e418d918812b6d
   filename: ''
   groups:
@@ -473,6 +513,7 @@ data:
   created: 2017-11-07T07:58:46.000001+0000
   data:
   - find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull" \;
+  description: ''
   digest: ca12adbd62ce818e05ef6d48b5396ba04eaf0b485ffa6c7386d980bf01e408bc
   filename: ''
   groups:
@@ -493,6 +534,7 @@ data:
   created: 2017-11-12T09:54:23.000001+0000
   data:
   - git log --pretty=oneline --abbrev-commit
+  description: ''
   digest: 888b1e827db42889b35373f04260304c41b03125d2c1ce0581f0d05b7adb59ed
   filename: ''
   groups:
@@ -525,6 +567,7 @@ data:
   - systemctl enable docker.service
   - systemctl start docker
   - docker run --rm hello-world
+  description: ''
   digest: 4da15503f5832775571141c7cfb0dc44229082a5c4f64d8a112547796dabe5c8
   filename: ''
   groups:
@@ -551,6 +594,7 @@ data:
   created: 2017-12-05T06:48:05.000001+0000
   data:
   - curl -XPUT -u elastic:changeme "http://${HOSTNAME}:9200/*/_settings" -d '{"number_of_replicas":0}'
+  description: ''
   digest: 91ec1e62b12bc1a67716c9ecb6e2be873e506c50a6a8ecf72e78ed76a44764f4
   filename: ''
   groups:
@@ -590,6 +634,7 @@ data:
   - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_stop"
   - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_start"
   - curl -XPOST -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher/_restart"
+  description: ''
   digest: 162bc2a7b2776998acb6ee796105444d42e75218dc47e00a3f3b9b18886557d7
   filename: ''
   groups:
@@ -614,6 +659,7 @@ data:
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/plugins"
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_nodes/plugins?filter_path=**.plugins.name&pretty"
+  description: ''
   digest: 93ee5c79e510dd65e61a2002a73bddc3c4dbc7d0f04fb2a4f2130445b95d7244
   filename: ''
   groups:
@@ -638,6 +684,7 @@ data:
   data:
   - find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e
     \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
+  description: ''
   digest: 9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3
   filename: ''
   groups:
@@ -658,6 +705,7 @@ data:
   data:
   - kill - 9 $(ps -A -ostat,ppid | awk '/[zZ]/ && !a[$2]++ {print $2}')
   - ps aux | grep -w Z
+  description: ''
   digest: 35e39c6477a22de08aeae392f8b1e816bc2d676e0e05c0127e69bd85efc0d548
   filename: ''
   groups:
@@ -680,6 +728,7 @@ data:
   - lsof | grep '/tmp/overlayfs/overlay'
   - kill <pid>
   - umount /tmp/overlayfs/overlay
+  description: ''
   digest: 490c913cf941a0bedc14e3d390894958b3db4220dc2b1b856454403c888df17f
   filename: ''
   groups:
@@ -706,6 +755,7 @@ data:
   - 'tar xfO mytar.tar.gz manifest.json                # Cat file in compressed tar.'
   - 'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz" # Extract and exclude one file.'
   - 'tar -xf mytar.tar.gz manifest.json                # Extract only one file.'
+  description: ''
   digest: b3841d9a5785952168c4300d60658b1b8028c48a7d120ef4dcca084008217fe3
   filename: ''
   groups:
@@ -723,5 +773,5 @@ data:
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: 2018-07-15T16:39:10.267698+0000
-  version: 0.8.d
+  updated: 2018-09-08T12:47:00.148877+0000
+  version: 0.9.d

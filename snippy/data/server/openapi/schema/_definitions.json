@@ -205,6 +205,10 @@
           "type": "string",
           "description": "Optional brief description of the content."
         },
+        "description": {
+          "type": "string",
+          "description": "Optional long description of the content."
+        },
         "groups": {
           "type": "array",
           "items": {

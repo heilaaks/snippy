@@ -34,20 +34,21 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     # Database column numbers.
     DATA = 0
     BRIEF = 1
-    GROUPS = 2
-    TAGS = 3
-    LINKS = 4
-    CATEGORY = 5
-    NAME = 6
-    FILENAME = 7
-    VERSIONS = 8
-    SOURCE = 9
-    UUID = 10
-    CREATED = 11
-    UPDATED = 12
-    DIGEST = 13
-    METADATA = 14
-    KEY = 15
+    DESCRIPTION = 2
+    GROUPS = 3
+    TAGS = 4
+    LINKS = 5
+    CATEGORY = 6
+    NAME = 7
+    FILENAME = 8
+    VERSIONS = 9
+    SOURCE = 10
+    UUID = 11
+    CREATED = 12
+    UPDATED = 13
+    DIGEST = 14
+    METADATA = 15
+    KEY = 16
 
     SOLUTION_TEMPLATE = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
@@ -58,6 +59,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._logger = Logger.get_logger(__name__)
         self._data = ()
         self._brief = ''
+        self._description = ''
         self._groups = Const.DEFAULT_GROUPS
         self._tags = ()
         self._links = ()
@@ -85,6 +87,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             # Resource key is defined by database and it is not compared.
             return self.data == resource.data and \
                    self.brief == resource.brief and \
+                   self.description == resource.description and \
                    self.groups == resource.groups and \
                    self.tags == resource.tags and \
                    self.links == resource.links and \
@@ -129,6 +132,18 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Resource brief."""
 
         self._brief = value
+
+    @property
+    def description(self):
+        """Get resource description."""
+
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        """Resource description."""
+
+        self._description = value
 
     @property
     def groups(self):
@@ -303,6 +318,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         resource_str = Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data))
         resource_str = resource_str + self.brief
+        resource_str = resource_str + self.description
         resource_str = resource_str + Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups)))
         resource_str = resource_str + Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
         resource_str = resource_str + Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links))
@@ -341,6 +357,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._logger.debug('migrate to resouce: %.16s', self.digest)
         self.data = source.data
         self.brief = source.brief
+        self.description = source.description
         self.groups = source.groups
         self.tags = source.tags
         self.links = source.links
@@ -366,6 +383,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.data = source.data
         if source.brief:
             self.brief = source.brief
+        if source.description:
+            self.description = source.description
         if source.groups and Const.DEFAULT_GROUPS != source.groups:
             self.groups = source.groups
         if source.tags:
@@ -390,6 +409,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         self.data = tuple(row[Resource.DATA].split(Const.DELIMITER_DATA))
         self.brief = row[Resource.BRIEF]
+        self.description = row[Resource.DESCRIPTION]
         self.groups = tuple(row[Resource.GROUPS].split(Const.DELIMITER_GROUPS) if row[Resource.GROUPS] else [])
         self.tags = tuple(row[Resource.TAGS].split(Const.DELIMITER_TAGS) if row[Resource.TAGS] else [])
         self.links = tuple(row[Resource.LINKS].split(Const.DELIMITER_LINKS) if row[Resource.LINKS] else [])
@@ -455,6 +475,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         qargs = (
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data)),
             self.brief,
+            self.description,
             Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups))),
             Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags))),
             Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links)),
@@ -477,6 +498,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         self.data = dictionary.get('data', self.data)
         self.brief = dictionary.get('brief', self.brief)
+        self.description = dictionary.get('description', self.description)
         self.groups = tuple(sorted(dictionary.get('groups', self.groups)))
         self.tags = tuple(sorted(dictionary.get('tags', self.tags)))
         self.links = tuple(dictionary.get('links', self.links))
@@ -500,6 +522,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         data = {
             'data': self.data,
             'brief': self.brief,
+            'description': self.description,
             'groups': self.groups,
             'tags': self.tags,
             'links': self.links,
@@ -555,6 +578,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             if self.is_reference():
                 text = text + Const.EMPTY.join([Resource._terminal_reference(ansi) % (data, line)
                                                 for line in self.data])
+            text = text + self._terminal_description(ansi) % self.description
             text = text + self._terminal_category(ansi) % self.category
             text = text + self._terminal_name(ansi) % self.name
             text = text + self._terminal_filename(ansi) % self.filename
@@ -729,64 +753,70 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def _terminal_category(ansi=False):
         """Format content category."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m : %s\n' if ansi else '   ! category : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m    : %s\n' if ansi else '   ! category    : %s\n'
 
     @staticmethod
     def _terminal_filename(ansi=False):
         """Format content filename."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m : %s\n' if ansi else '   ! filename : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m    : %s\n' if ansi else '   ! filename    : %s\n'
 
     @staticmethod
     def _terminal_name(ansi=False):
         """Format content name."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mname\x1b[0m     : %s\n' if ansi else '   ! name     : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mname\x1b[0m        : %s\n' if ansi else '   ! name        : %s\n'
 
     @staticmethod
     def _terminal_versions(ansi=False):
         """Format content version list."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m : %s\n' if ansi else '   ! versions : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m    : %s\n' if ansi else '   ! versions    : %s\n'
 
     @staticmethod
     def _terminal_source(ansi=False):
         """Format content source."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2msource\x1b[0m   : %s\n' if ansi else '   ! source   : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2msource\x1b[0m      : %s\n' if ansi else '   ! source      : %s\n'
+
+    @staticmethod
+    def _terminal_description(ansi=False):
+        """Format content description."""
+
+        return '   \x1b[91m!\x1b[0m \x1b[2mdescription\x1b[0m : %s\n' if ansi else '   ! description : %s\n'
 
     @staticmethod
     def _terminal_uuid(ansi=False):
         """Format content uuid."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m     : %s\n' if ansi else '   ! uuid     : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m        : %s\n' if ansi else '   ! uuid        : %s\n'
 
     @staticmethod
     def _terminal_created(ansi=False):
         """Format content creation UTC timestamp."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m  : %s\n' if ansi else '   ! created  : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m     : %s\n' if ansi else '   ! created     : %s\n'
 
     @staticmethod
     def _terminal_updated(ansi=False):
         """Format content UTC timestamp when it was updated."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m  : %s\n' if ansi else '   ! updated  : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m     : %s\n' if ansi else '   ! updated     : %s\n'
 
     @staticmethod
     def _terminal_digest(ansi=False):
         """Format content digest."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m   : %s (%s)\n' if ansi else '   ! digest   : %s (%s)\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m      : %s (%s)\n' if ansi else '   ! digest      : %s (%s)\n'
 
     @staticmethod
     def _terminal_metadata(ansi=False):
         """Format content metadata."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m : %s\n' if ansi else '   ! metadata : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m    : %s\n' if ansi else '   ! metadata    : %s\n'
 
     @staticmethod
     def _terminal_key(ansi=False):
         """Format content key."""
 
-        return '   \x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m      : %s\n' if ansi else '   ! key      : %s\n'
+        return '   \x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m         : %s\n' if ansi else '   ! key         : %s\n'

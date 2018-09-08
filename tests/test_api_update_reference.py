@@ -51,6 +51,7 @@ class TestApiUpdateReference(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Reference.DEFAULTS[Reference.REGEXP]['data']),
                     'brief': Reference.DEFAULTS[Reference.REGEXP]['brief'],
+                    'description': Reference.DEFAULTS[Reference.REGEXP]['description'],
                     'groups': Reference.DEFAULTS[Reference.REGEXP]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.REGEXP]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Reference.DEFAULTS[Reference.REGEXP]['links'])
@@ -61,7 +62,7 @@ class TestApiUpdateReference(object):
         content = {'cb9225a81eab8ce': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '748'
+            'content-length': '767'
         }
         result_json = {
             'links': {
@@ -107,6 +108,7 @@ class TestApiUpdateReference(object):
         content_read = {
             'data': [],
             'brief': '',
+            'description': '',
             'groups': ['default'],
             'tags': [],
             'links': Reference.DEFAULTS[Reference.REGEXP]['links'],
@@ -123,7 +125,7 @@ class TestApiUpdateReference(object):
         content = {'7e274a3e1266ee4f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '687'
+            'content-length': '706'
         }
         result_json = {
             'links': {
@@ -288,6 +290,7 @@ class TestApiUpdateReference(object):
         content_read = {
             'data': [],
             'brief': Reference.DEFAULTS[Reference.GITLOG]['brief'],
+            'description': Reference.DEFAULTS[Reference.GITLOG]['description'],
             'groups': Reference.DEFAULTS[Reference.GITLOG]['groups'],
             'tags': Reference.DEFAULTS[Reference.GITLOG]['tags'],
             'links': Reference.DEFAULTS[Reference.REGEXP]['links'],
@@ -304,7 +307,7 @@ class TestApiUpdateReference(object):
         content = {'915d0aa75703093c': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '735'
+            'content-length': '754'
         }
         result_json = {
             'links': {
@@ -346,6 +349,7 @@ class TestApiUpdateReference(object):
         content_read = {
             'data': [],
             'brief': '',
+            'description': '',
             'groups': ['default'],
             'tags': [],
             'links': Reference.DEFAULTS[Reference.REGEXP]['links'],
@@ -362,7 +366,7 @@ class TestApiUpdateReference(object):
         content = {'7e274a3e1266ee4f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '687'
+            'content-length': '706'
         }
         result_json = {
             'links': {

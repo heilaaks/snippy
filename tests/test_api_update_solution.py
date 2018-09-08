@@ -51,6 +51,7 @@ class TestApiUpdateSolution(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
+                    'description': Solution.DEFAULTS[Solution.NGINX]['description'],
                     'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
@@ -61,7 +62,7 @@ class TestApiUpdateSolution(object):
         content = {'b862cdea9a2b952': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3030'
+            'content-length': '3049'
         }
         result_json = {
             'links': {
@@ -107,6 +108,7 @@ class TestApiUpdateSolution(object):
         content_read = {
             'data': Solution.DEFAULTS[Solution.NGINX]['data'],
             'brief': '',
+            'description': '',
             'groups': ['default'],
             'tags': [],
             'links': [],
@@ -123,7 +125,7 @@ class TestApiUpdateSolution(object):
         content = {'352c664d75731a1c': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2929'
+            'content-length': '2948'
         }
         result_json = {
             'links': {
@@ -332,6 +334,7 @@ class TestApiUpdateSolution(object):
         content_read = {
             'data': Solution.DEFAULTS[Solution.NGINX]['data'],
             'brief': Solution.DEFAULTS[Solution.BEATS]['brief'],
+            'description': Solution.DEFAULTS[Solution.BEATS]['description'],
             'groups': Solution.DEFAULTS[Solution.BEATS]['groups'],
             'tags': Solution.DEFAULTS[Solution.BEATS]['tags'],
             'links': Solution.DEFAULTS[Solution.BEATS]['links'],
@@ -348,7 +351,7 @@ class TestApiUpdateSolution(object):
         content = {'2ea79ade8226e8d1': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3113'
+            'content-length': '3132'
         }
         result_json = {
             'links': {
@@ -390,6 +393,7 @@ class TestApiUpdateSolution(object):
         content_read = {
             'data': Solution.DEFAULTS[Solution.NGINX]['data'],
             'brief': '',
+            'description': '',
             'groups': ['default'],
             'tags': [],
             'links': [],
@@ -406,7 +410,7 @@ class TestApiUpdateSolution(object):
         content = {'352c664d75731a1c': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2929'
+            'content-length': '2948'
         }
         result_json = {
             'links': {

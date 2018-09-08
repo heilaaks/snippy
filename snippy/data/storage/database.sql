@@ -6,6 +6,7 @@
 create table if not exists contents (
     data        text not null unique,
     brief       text default '',
+    description text default '',
     groups      text default '',
     tags        text default '',
     links       text default '',

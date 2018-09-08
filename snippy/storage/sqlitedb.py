@@ -110,9 +110,9 @@ class SqliteDb(object):
 
             return error
 
-        query = ('INSERT OR ROLLBACK INTO contents (data, brief, groups, tags, links, category, name, ' +
+        query = ('INSERT OR ROLLBACK INTO contents (data, brief, description, groups, tags, links, category, name, ' +
                  'filename, versions, source, uuid, created, updated, digest, metadata) ' +
-                 'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+                 'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
         qargs = resource.dump_qargs()
 
         try:
@@ -271,7 +271,7 @@ class SqliteDb(object):
 
             return stored
 
-        query = ('UPDATE contents SET data=?, brief=?, groups=?, tags=?, links=?, category=?, name=?, '
+        query = ('UPDATE contents SET data=?, brief=?, description=?, groups=?, tags=?, links=?, category=?, name=?, '
                  'filename=?, versions=?, source=?, uuid=?, created=?, updated=?, digest=?, metadata=? '
                  'WHERE digest LIKE ?')
         qargs = resource.dump_qargs() + (digest,)
@@ -507,7 +507,7 @@ class SqliteDb(object):
             query_pointer = self._query_regex
 
         if sall:
-            columns = ['data', 'brief', 'groups', 'tags', 'links', 'digest']
+            columns = ['data', 'brief', 'description', 'groups', 'tags', 'links', 'digest']
             query, qargs = query_pointer(sall, columns, sgrp, scat)
         elif stag:
             columns = ['tags']

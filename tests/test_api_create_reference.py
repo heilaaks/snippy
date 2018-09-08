@@ -56,7 +56,7 @@ class TestApiCreateReference(object):
         content = {Reference.GITLOG_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '587'}
+            'content-length': '606'}
         result_json = {
             'data': [{
                 'type': 'reference',
@@ -92,7 +92,7 @@ class TestApiCreateReference(object):
         content = {Reference.GITLOG_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '587'}
+            'content-length': '606'}
         result_json = {
             'data': [{
                 'type': 'reference',
@@ -132,7 +132,7 @@ class TestApiCreateReference(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1171'
+            'content-length': '1209'
         }
         result_json = {
             'data': [{
@@ -181,7 +181,7 @@ class TestApiCreateReference(object):
         content = {'cb9225a81eab8ce': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '748'
+            'content-length': '767'
         }
         result_json = {
             'links': {
@@ -228,6 +228,7 @@ class TestApiCreateReference(object):
         content_read = {
             'data': Reference.DEFAULTS[Reference.GITLOG]['data'],
             'brief': Reference.DEFAULTS[Reference.REGEXP]['brief'],
+            'description': Reference.DEFAULTS[Reference.REGEXP]['description'],
             'groups': Reference.DEFAULTS[Reference.GITLOG]['groups'],
             'tags': Reference.DEFAULTS[Reference.GITLOG]['tags'],
             'links': Reference.DEFAULTS[Reference.REGEXP]['links'],
@@ -244,7 +245,7 @@ class TestApiCreateReference(object):
         content = {'ee4a072a5a7a661a': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '732'
+            'content-length': '751'
         }
         result_json = {
             'links': {
@@ -402,6 +403,7 @@ class TestApiCreateReference(object):
         content_read = {
             'data': [],
             'brief': 'Python regular expression',
+            'description': '',
             'groups': ['python', 'regexp'],
             'tags': ['howto', 'online', 'python', 'regexp'],
             'links': ['https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/', 'https://pythex.org/'],
@@ -418,7 +420,7 @@ class TestApiCreateReference(object):
         content = {'e5a94aae97e43273': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '665'}
+            'content-length': '684'}
         result_json = {
             'data': [{
                 'type': 'reference',
@@ -451,6 +453,7 @@ class TestApiCreateReference(object):
                 'attributes': {
                     'data': ['     first row   ', '   second row  '],
                     'brief': ' short brief  ',
+                    'description': ' longer description  ',
                     'groups': ['    python   ',],
                     'tags': ['  spaces   ', '  tabs    '],
                     'links': ['  link1  ', '    link2   '],
@@ -464,6 +467,7 @@ class TestApiCreateReference(object):
         content_read = {
             'data': [],
             'brief': 'short brief',
+            'description': 'longer description',
             'groups': ['python'],
             'tags': ['spaces', 'tabs'],
             'links': ['link1', 'link2'],
@@ -475,16 +479,16 @@ class TestApiCreateReference(object):
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.REGEXP_TIME,
             'updated': Content.REGEXP_TIME,
-            'digest': '8c2517c9828a6c1bb2eb8d984090d57975f1906238d5d3e8fff012ef1cc663b9'
+            'digest': '8d9f1e1e92e358325fce7bea07ab2b77e2ad82cd960a9bc3146d1e3f10d21bc8'
         }
-        content = {'8c2517c9828a6c1b': content_read}
+        content = {'8d9f1e1e92e35832': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '598'}
+            'content-length': '635'}
         result_json = {
             'data': [{
                 'type': 'reference',
-                'id': '8c2517c9828a6c1bb2eb8d984090d57975f1906238d5d3e8fff012ef1cc663b9',
+                'id': '8d9f1e1e92e358325fce7bea07ab2b77e2ad82cd960a9bc3146d1e3f10d21bc8',
                 'attributes': content_read
             }]
         }

@@ -1,8 +1,8 @@
 ## WORKING
-   - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
    - [ ] Add support to snippet command examplations that translate to headers in MD files: $ docker rm --volumes $(docker ps --all --quiet) # Remove all containers.
+   - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
 
@@ -37,6 +37,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix content import from other than text template and API to trimp content same way? for example yaml? The stored content should load as is likely...
    - [ ] Fix '--filter 0' maps to None instead of 0?
    - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
@@ -75,7 +76,7 @@
    - [ ] Fix indention in snippy: error: argument   {create,search,update,delete,export,import}. This indention is actually "must" in --help
    - [ ] Fix the REST API self link is not always present. It is set only in case of resources and if the digest field is not dropped from response.
    - [ ] Fix if the sys._getframe migth not exist in all Python implementations. Rerring to CPython. There is small performance advance using this. Fix?
-   - [ ] Fix the example string from travis.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
+   - [ ] Fix the example string from travifor templates and s.yml to debug cores. Tee problem is not visible anymore so this requires more investigation.
    - [ ] Why falcon.API fails but the falcon import seems not to produce ImportError when the falcon is not imported?
    - [ ] Why enabling debug logs in pytest fixture for server does not show the logs from mocked REST API call? It only shows fixture imports.
    - [ ] Why 'I/O operation on closed file' is generated as in SCRIBLING.md

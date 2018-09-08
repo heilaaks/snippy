@@ -54,7 +54,7 @@ class TestApiCreateSolution(object):
         content = {Solution.BEATS_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2417'}
+            'content-length': '2436'}
         result_json = {
             'data': [{
                 'type': 'solution',
@@ -94,7 +94,7 @@ class TestApiCreateSolution(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7034'
+            'content-length': '7072'
         }
         result_json = {
             'data': [{
@@ -133,6 +133,7 @@ class TestApiCreateSolution(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
+                    'description': Solution.DEFAULTS[Solution.NGINX]['description'],
                     'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
@@ -143,7 +144,7 @@ class TestApiCreateSolution(object):
         content = {'b862cdea9a2b952c': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3030'
+            'content-length': '3049'
         }
         result_json = {
             'links': {
@@ -189,6 +190,7 @@ class TestApiCreateSolution(object):
         content_read = {
             'data': Solution.DEFAULTS[Solution.NGINX]['data'],
             'brief': Solution.DEFAULTS[Solution.BEATS]['brief'],
+            'description': Solution.DEFAULTS[Solution.BEATS]['description'],
             'groups': Solution.DEFAULTS[Solution.BEATS]['groups'],
             'tags': Solution.DEFAULTS[Solution.BEATS]['tags'],
             'links': Solution.DEFAULTS[Solution.BEATS]['links'],
@@ -205,7 +207,7 @@ class TestApiCreateSolution(object):
         content = {'2ea79ade8226e8d1': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3113'
+            'content-length': '3132'
         }
         result_json = {
             'links': {
@@ -379,6 +381,7 @@ class TestApiCreateSolution(object):
                 'attributes': {
                     'data': ['     first row   ', '   second row  ', '', '', ''],
                     'brief': ' short brief  ',
+                    'description': ' long description  ',
                     'groups': ['    python   ',],
                     'tags': ['  spaces   ', '  tabs    '],
                     'links': ['  link1  ', '    link2   '],
@@ -392,6 +395,7 @@ class TestApiCreateSolution(object):
         content_read = {
             'data': ['     first row', '   second row', ''],
             'brief': 'short brief',
+            'description': 'long description',
             'groups': ['python'],
             'tags': ['spaces', 'tabs'],
             'links': ['link1', 'link2'],
@@ -403,16 +407,16 @@ class TestApiCreateSolution(object):
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.REGEXP_TIME,
             'updated': Content.REGEXP_TIME,
-            'digest': 'c4b966381d1a86313108f7b8e112625526d32661cf329ecab3d2fdc038ff8e5e'
+            'digest': '1cc8d8069441cdae5762d04c7730d18bbac40e0a9994fed060dcffa0a1a83429'
         }
-        content = {'c4b966381d1a863': content_read}
+        content = {'1cc8d8069441cda': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '633'}
+            'content-length': '668'}
         result_json = {
             'data': [{
                 'type': 'solution',
-                'id': 'c4b966381d1a86313108f7b8e112625526d32661cf329ecab3d2fdc038ff8e5e',
+                'id': '1cc8d8069441cdae5762d04c7730d18bbac40e0a9994fed060dcffa0a1a83429',
                 'attributes': content_read
             }]
         }

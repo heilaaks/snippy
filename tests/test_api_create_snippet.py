@@ -53,7 +53,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '692'
+            'content-length': '711'
         }
         result_json = {
             'data': [{
@@ -98,7 +98,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '692'
+            'content-length': '711'
         }
         result_json = {
             'data': [{
@@ -142,7 +142,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '897'
+            'content-length': '916'
         }
         result_json = {
             'data': [{
@@ -188,7 +188,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '897'
+            'content-length': '916'
         }
         result_json = {
             'data': [{
@@ -225,6 +225,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': ['docker rm $(docker ps --all -q -f status=exited)'],
             'brief': '',
+            'description': '',
             'groups': ['default'],
             'tags': [],
             'links': [],
@@ -241,7 +242,7 @@ class TestApiCreateSnippet(object):
         content = {'3d855210284302d5': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '543'
+            'content-length': '562'
         }
         result_json = {
             'data': [{
@@ -282,7 +283,7 @@ class TestApiCreateSnippet(object):
         }
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1443'
+            'content-length': '1481'
         }
         result_json = {
             'data': [{
@@ -518,7 +519,7 @@ class TestApiCreateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '783'
+            'content-length': '802'
         }
         result_json = {
             'links': {
@@ -559,6 +560,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': Snippet.DEFAULTS[Snippet.FORCED]['brief'],
+            'description': Snippet.DEFAULTS[Snippet.FORCED]['description'],
             'groups': Snippet.DEFAULTS[Snippet.FORCED]['groups'],
             'tags': Snippet.DEFAULTS[Snippet.FORCED]['tags'],
             'links': Snippet.DEFAULTS[Snippet.FORCED]['links'],
@@ -575,7 +577,7 @@ class TestApiCreateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '875'
+            'content-length': '894'
         }
         result_json = {
             'links': {
@@ -612,6 +614,7 @@ class TestApiCreateSnippet(object):
                 'attributes': {
                     'data': 'data row1\ndata row2',
                     'brief': 'brief description',
+                    'description': 'long description',
                     'groups': 'solution',
                     'tags': 'tag1,tag2',
                     'links': 'link1\nlink2',
@@ -629,6 +632,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': request_body['data']['attributes']['data'].split(Const.DELIMITER_DATA),
             'brief': request_body['data']['attributes']['brief'],
+            'description': request_body['data']['attributes']['description'],
             'groups': request_body['data']['attributes']['groups'].split(Const.DELIMITER_GROUPS),
             'tags': request_body['data']['attributes']['tags'].split(Const.DELIMITER_TAGS),
             'links': request_body['data']['attributes']['links'].split(Const.DELIMITER_LINKS),
@@ -640,20 +644,20 @@ class TestApiCreateSnippet(object):
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.FORCED_TIME,
             'updated': Content.EXITED_TIME,
-            'digest': 'da19017ada97d4763112dfe08c2555c0efaa6c71f43f17c92c82bdd8f087d117'
+            'digest': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4'
         }
-        content = {'da19017ada97d476': content_read}
+        content = {'ea89da812a610780': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '713'
+            'content-length': '748'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/da19017ada97d476'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/ea89da812a610780'
             },
             'data': {
                 'type': 'snippet',
-                'id': 'da19017ada97d4763112dfe08c2555c0efaa6c71f43f17c92c82bdd8f087d117',
+                'id': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4',
                 'attributes': content_read
             }
         }
@@ -784,6 +788,7 @@ class TestApiCreateSnippet(object):
                 'attributes': {
                     'data': [u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'],
                     'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
+                    'description': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
                     'groups': u'Düsseldorf',
                     'tags': [u'γλώσσα', u'έδωσαν', u'ελληνική'],
                     'links': [u'http://www.чухонца.edu/~fdc/utf8/']
@@ -793,6 +798,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': request_body['data'][0]['attributes']['data'],
             'brief': request_body['data'][0]['attributes']['brief'],
+            'description': request_body['data'][0]['attributes']['description'],
             'groups': [request_body['data'][0]['attributes']['groups']],
             'tags': request_body['data'][0]['attributes']['tags'],
             'links': request_body['data'][0]['attributes']['links'],
@@ -804,17 +810,17 @@ class TestApiCreateSnippet(object):
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': '2017-10-14T19:56:31.000001+0000',
             'updated': '2017-10-14T19:56:31.000001+0000',
-            'digest': 'a74d83df95d5729aceffc472433fea4d5e3fd2d87b510112fac264c741f20438'
+            'digest': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf'
         }
-        content = {'a74d83df95d572': content_read}
+        content = {'c267233096b697': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '858'
+            'content-length': '933'
         }
         result_json = {
             'data': [{
                 'type': 'snippet',
-                'id': 'a74d83df95d5729aceffc472433fea4d5e3fd2d87b510112fac264c741f20438',
+                'id': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf',
                 'attributes': content_read
             }]
         }
@@ -830,7 +836,7 @@ class TestApiCreateSnippet(object):
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '918'
+            'content-length': '993'
         }
         result_json = {
             'meta': {
@@ -841,7 +847,7 @@ class TestApiCreateSnippet(object):
             },
             'data': [{
                 'type': 'snippet',
-                'id': 'a74d83df95d5729aceffc472433fea4d5e3fd2d87b510112fac264c741f20438',
+                'id': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf',
                 'attributes': content_read
             }]
         }
@@ -868,6 +874,7 @@ class TestApiCreateSnippet(object):
                 'attributes': {
                     'data': ['     first row   ', '   second row  '],
                     'brief': ' short brief  ',
+                    'description': ' long description  ',
                     'groups': ['    python   ',],
                     'tags': ['  spaces   ', '  tabs    '],
                     'links': ['  link1  ', '    link2   '],
@@ -881,6 +888,7 @@ class TestApiCreateSnippet(object):
         content_read = {
             'data': ['first row', 'second row'],
             'brief': 'short brief',
+            'description': 'long description',
             'groups': ['python'],
             'tags': ['spaces', 'tabs'],
             'links': ['link1', 'link2'],
@@ -892,16 +900,16 @@ class TestApiCreateSnippet(object):
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.REGEXP_TIME,
             'updated': Content.REGEXP_TIME,
-            'digest': '4b4fbcaabd5590a129ef7113692ca43b0b61ca9528ee86199022c5f825833d47'
+            'digest': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5'
         }
-        content = {'4b4fbcaabd5590a1': content_read}
+        content = {'a861de558c95d7d3': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '619'}
+            'content-length': '654'}
         result_json = {
             'data': [{
                 'type': 'snippet',
-                'id': '4b4fbcaabd5590a129ef7113692ca43b0b61ca9528ee86199022c5f825833d47',
+                'id': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5',
                 'attributes': content_read
             }]
         }

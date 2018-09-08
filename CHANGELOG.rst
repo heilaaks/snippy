@@ -9,6 +9,7 @@ Release history
 Breaking changes
 ~~~~~~~~~~~~~~~~
 
+* Add new content field description.
 * Change content field group to groups_.
 * Change `filter option`_ behaviour.
 

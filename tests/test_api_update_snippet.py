@@ -52,6 +52,7 @@ class TestApiUpdateSnippet(object):
                 'attributes': {
                     'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                     'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
+                    'description': Snippet.DEFAULTS[Snippet.REMOVE]['description'],
                     'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
                     'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
                     'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
@@ -62,7 +63,7 @@ class TestApiUpdateSnippet(object):
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '783'
+            'content-length': '802'
         }
         result_json = {
             'links': {
@@ -106,6 +107,7 @@ class TestApiUpdateSnippet(object):
         content_read = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': '',
+            'description': '',
             'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
             'tags': [],
             'links': Snippet.DEFAULTS[Snippet.REMOVE]['links'],
@@ -122,7 +124,7 @@ class TestApiUpdateSnippet(object):
         content = {'e56c2183edcc3a67': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '689'
+            'content-length': '708'
         }
         result_json = {
             'links': {
@@ -164,6 +166,7 @@ class TestApiUpdateSnippet(object):
         content_read = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': '',
+            'description': '',
             'groups': ['default'],
             'tags': [],
             'links': [],
@@ -180,7 +183,7 @@ class TestApiUpdateSnippet(object):
         content = {'26128ea95707a3a26': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '632'
+            'content-length': '651'
         }
         result_json = {
             'links': {
@@ -304,7 +307,7 @@ class TestApiUpdateSnippet(object):
         content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '783'
+            'content-length': '802'
         }
         result_json = {
             'links': {
@@ -348,6 +351,7 @@ class TestApiUpdateSnippet(object):
         content_read = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': Snippet.DEFAULTS[Snippet.FORCED]['brief'],
+            'description': Snippet.DEFAULTS[Snippet.FORCED]['description'],
             'groups': Snippet.DEFAULTS[Snippet.FORCED]['groups'],
             'tags': Snippet.DEFAULTS[Snippet.FORCED]['tags'],
             'links': Snippet.DEFAULTS[Snippet.FORCED]['links'],
@@ -364,7 +368,7 @@ class TestApiUpdateSnippet(object):
         content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '875'
+            'content-length': '894'
         }
         result_json = {
             'links': {

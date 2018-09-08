@@ -553,6 +553,9 @@ definitions:
       brief:
         type: string
         description: "Optional brief description of the content."
+      description:
+        type: string
+        description: "Optional long description of the content."
       groups:
         type: array
         items:
@@ -684,7 +687,7 @@ parameters:
     in: path
     required: true
     description: "Field or fields that are returned."
-    enum: [data, brief, groups, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
+    enum: [data, brief, description, groups, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
     x-example:
       - "brief"
       - "brief,tags"
@@ -810,7 +813,7 @@ parameters:
     name: sort
     type: string
     default: brief
-    enum: [data, brief, groups, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
+    enum: [data, brief, description, groups, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
     in: query
     required: false
     description: "Sort based on defined field."
@@ -819,7 +822,7 @@ parameters:
     type: array
     items:
       type: string
-      enum: [data, brief, groups, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
+      enum: [data, brief, description, groups, tags, links, category, name, filename, versions, source, uuid, created, updated, digest]
     in: query
     required: false
     description: "Limit fields that are returned in result list."

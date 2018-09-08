@@ -93,7 +93,8 @@ data:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  digest: fd4c0adffa2320834d49d2db5b63dadc9494151449a72f34c18800dab1ebf932
+  description: ''
+  digest: 15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8
   filename: kubernetes-docker-log-driver-kafka.txt
   groups:
   - docker
@@ -327,7 +328,8 @@ data:
   - '      }'
   - '      '' | tee /etc/nginx/conf.d/default.conf && nginx -s reload'
   - ''
-  digest: cb5a60c299df90a4ec0e6a1580d591d96f93a801ff7b7152caeff08873459b78
+  description: ''
+  digest: c8582b4ea905b5236ad0b16aa8666cfd3f11824a5307da97b251839bc21aeab9
   filename: howto-debug-nginx.txt
   groups:
   - nginx
@@ -461,7 +463,8 @@ data:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  digest: f1350f22698a348b44f40dca12dd410f51b4829761126536411d9ce5084dfd4b
+  description: ''
+  digest: cbb91753d0d7e9cb8af648336917bcde7d306dfd1f88cd800e035a83aba86e50
   filename: howto-debug-elastic-beats.txt
   groups:
   - beats
@@ -629,7 +632,8 @@ data:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  digest: 8ad814ed3682c39c708c14e9aa4cafeddc68c85fd8a23594acb805564cde7520
+  description: ''
+  digest: 0b68e8cf8ff4320cfc971862ad7f808c26a8bf4338482e5cc580992d60b9db1b
   filename: howto-debug-docker.txt
   groups:
   - docker
@@ -813,7 +817,8 @@ data:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  digest: cf7531dd6b79fc2bbff0521342e0cf41f6cc4a8500b234a203c388325a575f4b
+  description: ''
+  digest: 08662a9f4393e801ed6e0080abeac6574bd494290d1262e8a3f323c272d425ee
   filename: howto-debug-kubernetes.txt
   groups:
   - kubernetes
@@ -885,7 +890,8 @@ data:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  digest: a7ad528d487158a1a4577d33aea1c06a7493f007a2fbb873220c03f1bc05930b
+  description: ''
+  digest: c11ff5d81fed187f49ad183cbdb05437c7e5a7615cafc42f9b3da20477ad4408
   filename: howto-debug-kafka.txt
   groups:
   - kafka
@@ -1008,7 +1014,8 @@ data:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  digest: b0cef24796033e3a193d79a10226e5a1d31f04d57d061355b42f99d2179a4b31
+  description: ''
+  digest: 33791d799a43798db4d3be253383be7f98872c8e8093432476212d642b93aec6
   filename: howto-debug-elasticsearch.txt
   groups:
   - elasticsearch
@@ -1119,7 +1126,8 @@ data:
   - '## whiteboard'
   - '################################################################################'
   - ''
-  digest: a00767626ef20dc6618cda3243f0cec662489e06f2ca140627f9c69099170d05
+  description: ''
+  digest: 46e4c83f6ac890f05ef6079e7c2a50734e4e5ccb4bca3e6465cc1d821bc41d89
   filename: howto-debug-lxc-containers.txt
   groups:
   - containers
@@ -1139,5 +1147,5 @@ data:
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: 2018-07-15T16:39:16.112543+0000
-  version: 0.8.d
+  updated: 2018-09-08T12:47:04.349149+0000
+  version: 0.9.d

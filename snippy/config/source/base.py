@@ -40,8 +40,8 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     IMPORT = 'import'
     OPERATIONS = ('create', 'search', 'update', 'delete', 'export', 'import')
 
-    ATTRIBUTES = ('data', 'brief', 'groups', 'tags', 'links', 'category', 'name',
-                  'filename', 'versions', 'source', 'uuid', 'created', 'updated',
+    ATTRIBUTES = ('data', 'brief', 'description', 'groups', 'tags', 'links', 'category',
+                  'name', 'filename', 'versions', 'source', 'uuid', 'created', 'updated',
                   'digest', 'key')
 
     # Defaults
@@ -107,6 +107,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.data = parameters.get('data', None)
         self.debug = parameters.get('debug', False)
         self.defaults = parameters.get('defaults', False)
+        self.description = parameters.get('description', Const.EMPTY)
         self.digest = parameters.get('digest', None)
         self.editor = parameters.get('editor', False)
         self.failure = parameters.get('failure', False)
@@ -180,6 +181,18 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         """Convert content brief to utf-8 encoded unicode string."""
 
         self._brief = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
+
+    @property
+    def description(self):
+        """Get content description."""
+
+        return self._description
+
+    @description.setter
+    def description(self, value):
+        """Convert content description to utf-8 encoded unicode string."""
+
+        self._description = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def groups(self):

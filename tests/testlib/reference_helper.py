@@ -37,6 +37,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     DEFAULTS = ({
         'data': ('', ),
         'brief': 'How to write commit messages',
+        'description': '',
         'groups': ('git',),
         'tags': ('commit', 'git', 'howto'),
         'links': ('https://chris.beams.io/posts/git-commit/', ),
@@ -52,6 +53,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     }, {
         'data': ('', ),
         'brief': 'Python regular expression',
+        'description': '',
         'groups': ('python',),
         'tags': (' python ', ' regexp  ', '  online   ', 'howto'),
         'links': ('https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
@@ -68,6 +70,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     }, {
         'data': ('', ),
         'brief': 'Python pytest framework',
+        'description': '',
         'groups': ('python',),
         'tags': ('python', 'pytest', 'docs'),
         'links': ('https://docs.pytest.org/en/latest/skipping.html', ),

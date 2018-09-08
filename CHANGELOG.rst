@@ -9,7 +9,7 @@ Release history
 Breaking changes
 ~~~~~~~~~~~~~~~~
 
-* Add new content field description.
+* Add new content field description_.
 * Change content field group to groups_.
 * Change `filter option`_ behaviour.
 
@@ -71,3 +71,4 @@ Bugfixes
 .. _REST API routes: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
 .. _groups: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
 .. _filter option: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
+.. _description: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed

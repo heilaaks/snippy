@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix content import e.g. yaml does not trim or format the data. This should be ok? Don't change? Does this apply to server as well? If yes, should be fixed.
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
@@ -38,6 +37,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix content import from other than text template and API to trimp content same way? for example yaml? The stored content should load as is likely...
    - [ ] Fix '--filter 0' maps to None instead of 0?
    - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
    - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?
@@ -155,6 +155,7 @@
    - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
+   - [x] Added content parsing from API sources.
    - [x] Changed --filter option behavior.
    - [x] Refactored text parser.
    - [x] Edited Sqlitedb() UT tests to follow new UT test layouts.

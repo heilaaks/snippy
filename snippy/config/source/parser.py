@@ -231,11 +231,8 @@ class Parser(object):
 
         match = Parser.REGEXP['data'][category].search(source)
         if match:
-            if category == Const.SNIPPET:
-                data = tuple([s.strip() for s in match.group(1).rstrip().split(Const.NEWLINE)])
-            elif category == Const.SOLUTION:
-                data = tuple(match.group(1).rstrip().split(Const.NEWLINE) + [Const.EMPTY])
-            elif category == Const.REFERENCE:
+            data = Parser.data(category, match.group(1))
+            if category == Const.REFERENCE:
                 data = ()  # There is no data with reference content.
             cls._logger.debug('parsed content data: %s', data)
         else:
@@ -261,7 +258,7 @@ class Parser(object):
 
         match = Parser.REGEXP['brief'][category].search(source)
         if match:
-            brief = Parser.to_unicode(match.group('brief').strip())
+            brief = Parser.value(match.group('brief'))
             cls._logger.debug('parsed content brief: %s', brief)
         else:
             cls._logger.debug('parser did not find content for brief')
@@ -361,12 +358,54 @@ class Parser(object):
 
         match = Parser.REGEXP['filename'][category].search(source)
         if match:
-            filename = Parser.to_unicode(match.group('filename').strip())
+            filename = Parser.value(match.group('filename'))
             cls._logger.debug('parsed content filename: %s', filename)
         else:
             cls._logger.debug('parser did not find content for filename')
 
         return filename
+
+    @staticmethod
+    def data(category, value):
+        """Convert content data to utf-8 encoded tuple of lines.
+
+        Content data is stored as a tuple with one line per element.
+
+        Solutions are trimmed only from end of the whole solution string but
+        snippets and references from both sides of each line. Solutions are
+        quaranteed to have one newline at the end of solution.
+
+        Any value including empty string is considered valid data.
+
+        Args:
+            value (str,list): Content data in string or list.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded unicode strings.
+        """
+
+        data = Parser.to_unicode(value)
+        if category in [Const.SNIPPET, Const.REFERENCE]:
+            data = [s.strip() for s in data.rstrip().split(Const.DELIMITER_DATA)]
+        elif category == Const.SOLUTION:
+            data = data.rstrip().split(Const.NEWLINE) + [Const.EMPTY]
+
+        return tuple(data)
+
+    @staticmethod
+    def value(value):
+        """Convert content string value to utf-8 encoded string.
+
+        Args:
+            value (str,list,tuple): Content field value in string, list or tuple.
+
+        Returns:
+            str: Utf-8 encoded unicode string.
+        """
+
+        value = Parser.to_unicode(value).strip()
+
+        return value
 
     @classmethod
     def search_keywords(cls, value):
@@ -379,7 +418,7 @@ class Parser(object):
         cases must be evaluated to 'match any'.
 
         Args:
-            value (str,list): Search keywords in a string or list.
+            value (str,list,tuple): Search keywords in string, list or tuple.
 
         Returns:
             tuple: Tuple of utf-8 encoded keywords.
@@ -398,9 +437,9 @@ class Parser(object):
 
     @staticmethod
     def keywords(keywords, sort_=True):
-        """Convert keywords to utf-8 encoded list of keywords.
+        """Convert list of keywords to utf-8 encoded list of strings.
 
-        Parse user provided keywords. The keywords are for example groups,
+        Parse user provided keyword list. The keywords are for example groups,
         tags or search all keywords. User may use string or list context for
         the keywords. In case of list context for the keywords, each element
         in the list is split separately.
@@ -411,7 +450,7 @@ class Parser(object):
         print all records.
 
         Args:
-            keywords (str,list): Any keywords in a string or list.
+            keywords (str,list,tuple): Keywords in string, list or tuple.
 
         Returns:
             tuple: Tuple of utf-8 encoded keywords.
@@ -457,7 +496,7 @@ class Parser(object):
         [1] https://perishablepress.com/stop-using-unsafe-characters-in-urls/
 
         Args:
-            links (str,list): Links in a string or list.
+            links (str,list,tuple): Links in string, list or tuple.
 
         Returns:
             tuple: Tuple of utf-8 encoded links.
@@ -484,10 +523,13 @@ class Parser(object):
     def to_unicode(cls, value):
         """Convert value to utf-8 coded unicode string.
 
+        If the value is already unicode character, the tool always assumes
+        utf-8 encoded unicode characters.
+
         Conversion quarantees only one newline at the end of the string.
 
         Args:
-            value (str,list): Any value in a string or list.
+            value (str,list,tuple): Value in string, list or tuple.
 
         Returns:
             str: Utf-8 encoded unicode string.
@@ -495,7 +537,7 @@ class Parser(object):
 
         string_ = Const.EMPTY
         if isinstance(value, Const.TEXT_TYPE):
-            string_ = value
+            string_ = value  # Already in unicode format.
         elif isinstance(value, Const.BINARY_TYPE):
             string_ = value.decode('utf-8')
         elif isinstance(value, (list, tuple)):
@@ -510,7 +552,7 @@ class Parser(object):
         """Return list of UTF-8 encoded unicode strings.
 
         Args:
-            value (str,list): Any value in a string or list.
+            value (str,list,tuple): Value in string, list or tuple.
 
         Returns:
             list: List of Utf-8 encoded unicode strings.

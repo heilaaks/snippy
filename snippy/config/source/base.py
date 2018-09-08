@@ -92,6 +92,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         if parameters is None:
             parameters = {}
 
+        # Content category aware parsing requires the category to be defined
+        # as early as possible.
+        self.category = parameters.get('category', Const.SNIPPET)
+
         # There are few parameters like 'data' and 'digest' where the tool
         # error logic must know if value was defined at all by the CLI user.
         # This kind of parameters must be set to None by default. All other
@@ -99,7 +103,6 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         # make sense.
         self.base_path_app = parameters.get('base_path_app', self.BASE_PATH_APP)
         self.brief = parameters.get('brief', Const.EMPTY)
-        self.category = parameters.get('category', Const.SNIPPET)
         self.compact_json = parameters.get('compact_json', False)
         self.data = parameters.get('data', None)
         self.debug = parameters.get('debug', False)
@@ -153,16 +156,14 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def data(self, value):
         """Convert content data to tuple of utf-8 encoded unicode strings.
 
-        Content data is stored as a tuple with one line per element. It is
-        quaranteed that each line contains only one newline at the end of
-        string in the tuple.
-
-        Any value including empty string is considered valid data.
+        The tool must be able to idenfity if the value was given at all. This
+        case is idenfigied with value None. With empty value from user, there
+        will be a single element in tuple which is empty string. By doing this,
+        there is no need to check value None each time when accessed.
         """
 
         if value is not None:
-            string_ = Parser.to_unicode(value)
-            data = tuple(string_.split(Const.DELIMITER_DATA))
+            data = Parser.data(self.category, value)
         else:
             data = ()
 
@@ -178,7 +179,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def brief(self, value):
         """Convert content brief to utf-8 encoded unicode string."""
 
-        self._brief = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+        self._brief = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def groups(self):
@@ -226,7 +227,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def filename(self, value):
         """Convert content filename to utf-8 encoded unicode string."""
 
-        self._filename = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+        self._filename = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def name(self):
@@ -238,7 +239,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def name(self, value):
         """Convert content name to utf-8 encoded unicode string."""
 
-        self._name = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+        self._name = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def versions(self):
@@ -250,7 +251,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def versions(self, value):
         """Convert content versions to utf-8 encoded unicode string."""
 
-        self._versions = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+        self._versions = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def source(self):
@@ -262,7 +263,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def source(self, value):
         """Convert content source to utf-8 encoded unicode string."""
 
-        self._source = Parser.to_unicode(value)  # pylint: disable=attribute-defined-outside-init
+        self._source = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sall(self):

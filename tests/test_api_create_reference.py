@@ -436,6 +436,67 @@ class TestApiCreateReference(object):
         assert Database.get_references().size() == 1
         Content.verified(mocker, server, content)
 
+    @pytest.mark.usefixtures('create-regexp-utc')
+    def test_api_create_reference_010(self, server, mocker):
+        """Create one reference from API.
+
+        Call POST /v1/references to create new content. In this case every
+        attribute has additional leading and trailing whitespaces which must
+        be trimmed.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'reference',
+                'attributes': {
+                    'data': ['     first row   ', '   second row  '],
+                    'brief': ' short brief  ',
+                    'groups': ['    python   ',],
+                    'tags': ['  spaces   ', '  tabs    '],
+                    'links': ['  link1  ', '    link2   '],
+                    'name': '  short name   ',
+                    'filename': '  shortfilename.yaml   ',
+                    'versions': '  short versions   ',
+                    'source': '  short source link   '
+                }
+            }]
+        }
+        content_read = {
+            'data': [],
+            'brief': 'short brief',
+            'groups': ['python'],
+            'tags': ['spaces', 'tabs'],
+            'links': ['link1', 'link2'],
+            'category': 'reference',
+            'name': 'short name',
+            'filename': 'shortfilename.yaml',
+            'versions': 'short versions',
+            'source': 'short source link',
+            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            'created': Content.REGEXP_TIME,
+            'updated': Content.REGEXP_TIME,
+            'digest': '8c2517c9828a6c1bb2eb8d984090d57975f1906238d5d3e8fff012ef1cc663b9'
+        }
+        content = {'8c2517c9828a6c1b': content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '598'}
+        result_json = {
+            'data': [{
+                'type': 'reference',
+                'id': '8c2517c9828a6c1bb2eb8d984090d57975f1906238d5d3e8fff012ef1cc663b9',
+                'attributes': content_read
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/references',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_201
+        assert Database.get_references().size() == 1
+        Content.verified(mocker, server, content)
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

@@ -364,6 +364,68 @@ class TestApiCreateSolution(object):
         assert result.status == falcon.HTTP_400
         assert result.json['errors'][0]['title'] == 'content was not stored because mandatory content field data is empty'
 
+    @pytest.mark.usefixtures('create-regexp-utc')
+    def test_api_create_solution_009(self, server, mocker):
+        """Create one solution from API.
+
+        Call POST /v1/solutions to create new content. In this case every
+        attribute has additional leading and trailing whitespaces which must
+        be trimmed from rigth only. There must be one newline at the end.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'solution',
+                'attributes': {
+                    'data': ['     first row   ', '   second row  ', '', '', ''],
+                    'brief': ' short brief  ',
+                    'groups': ['    python   ',],
+                    'tags': ['  spaces   ', '  tabs    '],
+                    'links': ['  link1  ', '    link2   '],
+                    'name': '  short name   ',
+                    'filename': '  shortfilename.yaml   ',
+                    'versions': '  short versions   ',
+                    'source': '  short source link   '
+                }
+            }]
+        }
+        content_read = {
+            'data': ['     first row', '   second row', ''],
+            'brief': 'short brief',
+            'groups': ['python'],
+            'tags': ['spaces', 'tabs'],
+            'links': ['link1', 'link2'],
+            'category': 'solution',
+            'name': 'short name',
+            'filename': 'shortfilename.yaml',
+            'versions': 'short versions',
+            'source': 'short source link',
+            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            'created': Content.REGEXP_TIME,
+            'updated': Content.REGEXP_TIME,
+            'digest': 'c4b966381d1a86313108f7b8e112625526d32661cf329ecab3d2fdc038ff8e5e'
+        }
+        content = {'c4b966381d1a863': content_read}
+        result_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '633'}
+        result_json = {
+            'data': [{
+                'type': 'solution',
+                'id': 'c4b966381d1a86313108f7b8e112625526d32661cf329ecab3d2fdc038ff8e5e',
+                'attributes': content_read
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/solutions',
+            headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
+            body=json.dumps(request_body))
+        assert result.headers == result_headers
+        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.status == falcon.HTTP_201
+        assert Database.get_solutions().size() == 1
+        Content.verified(mocker, server, content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

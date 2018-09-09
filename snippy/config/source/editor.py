@@ -28,7 +28,7 @@ from snippy.content.collection import Collection
 from snippy.logger import Logger
 
 
-class Editor(object):
+class Editor(object):  # pylint: disable=too-few-public-methods
     """Text editor based content management."""
 
     _logger = Logger.get_logger(__name__)

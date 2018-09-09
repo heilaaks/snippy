@@ -115,8 +115,8 @@ class Config(object):
         cls.content_source = cls.source.source
 
         # search
-        cls.search_all_kws = cls.source.sall
         cls.search_cat_kws = cls.source.scat
+        cls.search_all_kws = cls.source.sall
         cls.search_tag_kws = cls.source.stag
         cls.search_grp_kws = cls.source.sgrp
         cls.search_filter = cls.source.search_filter

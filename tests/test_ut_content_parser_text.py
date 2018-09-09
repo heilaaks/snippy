@@ -17,14 +17,14 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_ut_parser: Test Parser() class."""
+"""test_ut_parser: Test ContentParserText() class."""
 
 from snippy.constants import Constants as Const
 from snippy.config.source.parsers.text import ContentParserText as Parser
 
 
 class TestUtContentParserText(object):
-    """Test Parser() class."""
+    """Test ContentParserText() class."""
 
     TIMESTAMP = '2018-09-09T14:44:00.000001+0000'
 

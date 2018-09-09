@@ -103,6 +103,22 @@ class Cause(object):
         })
 
     @classmethod
+    def insert(cls, status, message):
+        """Insert cause as a first cause.
+
+        Args:
+            status (str): One of the predefined HTTP status codes.
+            message (str): Description of the cause.
+
+        Examples
+        --------
+        >>> Cause.insert(Cause.HTTP_CREATED, 'content created')
+        """
+
+        cls.push(status, message)
+        cls._list['errors'].insert(0, cls._list['errors'].pop())
+
+    @classmethod
     def is_ok(cls):
         """Test if errors were detected."""
 

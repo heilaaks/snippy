@@ -180,6 +180,29 @@ Parser class offers a parser to extract content fields from text source.
    :members:
    :member-order: bysource
 
+snippy.config.source.parsers.base
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+Content parser base class offers basic parsing methods.
+
+.. autoclass:: snippy.config.source.parsers.base.ContentParserBase
+   :members:
+   :member-order: bysource
+
+snippy.config.source.parsers.text
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+**Service**
+
+Content parser for text content.
+
+.. autoclass:: snippy.config.source.parsers.text.ContentParserText
+   :members:
+   :member-order: bysource
+
+
 snippy.storage.storage
 ~~~~~~~~~~~~~~~~~~~~~~
 

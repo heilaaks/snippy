@@ -2129,10 +2129,10 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 # Remove all docker containers with volumes @docker
 
 > An email client and Usenet newsgroup program with a pico/nano-inspired interface.
-> Supports most modern email services through IMAP.´
+Supports most modern email services through IMAP.
 
 > \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`
-> \[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
+\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
 
 - List all docker images
 
@@ -2145,44 +2145,44 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 # Meta
 
 > category : snippet
-> created  : 2017-10-12T11:52:11.000001+0000
-> updated  : 2017-10-12T11:52:11.000001+0000
-> tags     : cleanup, container, docker, docker-ce, moby
-> filename :
-> name     :
-> source   :
-> versions :
-> uuid     : f21c6318-8830-11e8-a114-2c4d54508088
-> digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
+created  : 2017-10-12T11:52:11.000001+0000
+updated  : 2017-10-12T11:52:11.000001+0000
+tags     : cleanup, container, docker, docker-ce, moby
+filename :
+name     :
+source   :
+versions :
+uuid     : f21c6318-8830-11e8-a114-2c4d54508088
+digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 =====
 
 # Remove all docker containers with volumes @docker
 
 > An email client and Usenet newsgroup program with a pico/nano-inspired interface.
-> Supports most modern email services through IMAP.´
+Supports most modern email services through IMAP.´
 
 > \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`
-> \[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
+\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
 
 # Meta
 
 > category : snippet
-> created  : 2017-10-12T11:52:11.000001+0000
-> updated  : 2017-10-12T11:52:11.000001+0000
-> tags     : cleanup, container, docker, docker-ce, moby
-> filename :
-> name     :
-> source   :
-> versions :
-> uuid     : f21c6318-8830-11e8-a114-2c4d54508088
-> digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
+created  : 2017-10-12T11:52:11.000001+0000
+updated  : 2017-10-12T11:52:11.000001+0000
+tags     : cleanup, container, docker, docker-ce, moby
+filename :
+name     :
+source   :
+versions :
+uuid     : f21c6318-8830-11e8-a114-2c4d54508088
+digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 
 ===
 
 # Testing docker log drivers @docker
 
 > An email client and Usenet newsgroup program with a pico/nano-inspired interface.
-> Supports most modern email services through IMAP.´
+Supports most modern email services through IMAP.´
 
     ################################################################################
     ## BRIEF  : <SNIPPY_BRIEF>
@@ -2199,14 +2199,14 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 # Meta
 
 > category : snippet
-> created  : 2017-10-12T11:52:11.000001+0000
-> updated  : 2017-10-12T11:52:11.000001+0000
-> tags     : cleanup, container, docker, docker-ce, moby
-> filename :
-> name     :
-> source   :
-> versions :
-> uuid     : f21c6318-8830-11e8-a114-2c4d54508088
-> digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
+created  : 2017-10-12T11:52:11.000001+0000
+updated  : 2017-10-12T11:52:11.000001+0000
+tags     : cleanup, container, docker, docker-ce, moby
+filename :
+name     :
+source   :
+versions :
+uuid     : f21c6318-8830-11e8-a114-2c4d54508088
+digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 
 ===

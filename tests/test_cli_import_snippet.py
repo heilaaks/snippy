@@ -175,7 +175,7 @@ class TestCliImportSnippet(object):
         mocked_open = mock.mock_open(read_data=Const.EMPTY)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
-            assert cause == 'NOK: could not identify text template content category'
+            assert cause == 'NOK: could not identify text source content category: unknown'
             assert not Database.get_collection().size()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 

@@ -39,12 +39,6 @@ from snippy.logger import Logger
 class Config(object):
     """Global configuration object."""
 
-    # Content formats
-    CONTENT_FORMAT_NONE = 'none'
-    CONTENT_FORMAT_YAML = 'yaml'
-    CONTENT_FORMAT_JSON = 'json'
-    CONTENT_FORMAT_TEXT = 'text'
-
     _logger = Logger.get_logger(__name__)
 
     @classmethod
@@ -156,9 +150,9 @@ class Config(object):
         cls.is_category_all = True if cls.content_category == Const.ALL_CATEGORIES else False
         cls.operation_filename = cls._operation_filename(cls.content_category)
         cls.operation_filetype = cls._operation_filetype()
-        cls.is_operation_file_json = True if cls.operation_filetype == Config.CONTENT_FORMAT_JSON else False
-        cls.is_operation_file_text = True if cls.operation_filetype == Config.CONTENT_FORMAT_TEXT else False
-        cls.is_operation_file_yaml = True if cls.operation_filetype == Config.CONTENT_FORMAT_YAML else False
+        cls.is_operation_file_json = True if cls.operation_filetype == Const.CONTENT_FORMAT_JSON else False
+        cls.is_operation_file_text = True if cls.operation_filetype == Const.CONTENT_FORMAT_TEXT else False
+        cls.is_operation_file_yaml = True if cls.operation_filetype == Const.CONTENT_FORMAT_YAML else False
 
         cls.debug()
 
@@ -169,23 +163,39 @@ class Config(object):
         Profiler.disable()
 
     @classmethod
-    def get_collection(cls, updates=None, text=None):
-        """Get collection from configuration source.
+    def get_collection(cls, resource=None, text=None):
+        """Get resource collection from configuration source.
 
-        If updates are provided on top of configured content, the updates are
-        added on top of configured content. For example when existing content
-        is updated, the stored content must be shown on text editor on top of
-        the default template.
+        Get collection of resources from various configuration sources. A
+        configuration source may be for example file defined from command
+        line, a set of CLI parameters or a REST API request.
+
+        If resource updates are provided on top of configured content, the
+        updates are added on top of configured content. For example when
+        existing content is updated, the stored content must be shown on
+        text editor on top of the default template.
+
+        Args:
+            resource (Resource()): Content updates in resource object.
+            text (str): Content source as a text string
+
+        Returns:
+            Collection(): Configured content in Collection object.
         """
 
-        collection = Collection()
         if text is not None:
-            collection = Parser.read_content(Config.utcnow(), text)
+            collection = Parser(
+                cls.operation_filetype,
+                Config.utcnow(),
+                text
+            ).read()
         elif cls.editor:
-            timestamp = Config.utcnow()
-            digest = collection.merge(updates)
-            template = collection.dump_text(digest, cls.content_category, timestamp, Config.templates)
-            collection = Editor.read_content(timestamp, template)
+            collection = Editor.read(
+                cls.content_category,
+                Config.templates,
+                Config.utcnow(),
+                resource
+            )
         else:
             collection = cls._read_collection()
 
@@ -380,13 +390,13 @@ class Config(object):
         # items in search category keyword list (search_cat_kws).
         if cls.is_operation_export and cls.is_search_criteria():
             if category == Const.SNIPPET and not filename:
-                filename = 'snippet.' + Config.CONTENT_FORMAT_TEXT
+                filename = 'snippet.' + Const.CONTENT_FORMAT_TEXT
             elif category == Const.SOLUTION and not filename:
-                filename = 'solution.' + Config.CONTENT_FORMAT_TEXT
+                filename = 'solution.' + Const.CONTENT_FORMAT_TEXT
             elif category == Const.REFERENCE and not filename:
-                filename = 'reference.' + Config.CONTENT_FORMAT_TEXT
+                filename = 'reference.' + Const.CONTENT_FORMAT_TEXT
             elif len(cls.search_cat_kws) > 1:
-                filename = 'content.' + Config.CONTENT_FORMAT_TEXT
+                filename = 'content.' + Const.CONTENT_FORMAT_TEXT
 
         # In case user did not provide filename, set defaults. For example
         # if user defined export or import operation without the file, the
@@ -401,16 +411,16 @@ class Config(object):
         """Operation file type is extracted from operation fiel and it makes
         sure that only supported content types can be operated."""
 
-        filetype = Config.CONTENT_FORMAT_NONE
+        filetype = Const.CONTENT_FORMAT_NONE
 
         # User defined content to/from user specified file.
         name, extension = os.path.splitext(cls.operation_filename)
         if name and ('yaml' in extension or 'yml' in extension):
-            filetype = Config.CONTENT_FORMAT_YAML
+            filetype = Const.CONTENT_FORMAT_YAML
         elif name and 'json' in extension:
-            filetype = Config.CONTENT_FORMAT_JSON
+            filetype = Const.CONTENT_FORMAT_JSON
         elif name and ('txt' in extension or 'text' in extension):
-            filetype = Config.CONTENT_FORMAT_TEXT
+            filetype = Const.CONTENT_FORMAT_TEXT
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file {}'.format(cls.operation_filename))
 

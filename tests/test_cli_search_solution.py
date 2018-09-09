@@ -127,7 +127,6 @@ class TestCliSearchSolution(object):
         )
         cause = snippy.run(['snippy', 'search', '--solution', '--sall', '.', '--sgrp', 'beats', '--no-ansi'])
         out, err = capsys.readouterr()
-        print(out)
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err

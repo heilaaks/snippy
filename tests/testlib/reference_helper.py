@@ -21,6 +21,7 @@
 
 from snippy.config.config import Config
 from snippy.config.source.parser import Parser
+from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
 
 
@@ -121,10 +122,9 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         return resource.dump_text(Config.templates)
 
     @staticmethod
-    def _get_content(source):
+    def _get_content(text):
         """Transform text template to content."""
 
-        timestamp = Config.utcnow()
-        collection = Parser.read_content(timestamp, source)
+        collection = Parser(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), text).read()
 
         return collection

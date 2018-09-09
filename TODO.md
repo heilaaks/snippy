@@ -14,6 +14,7 @@
    - [ ] Add changelog to README.
 
 ## FEATURES
+   - [ ] Add support to edit markup files with cli option.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542
    - [ ] Add test client to measure performance of the server. The PyPy does not seem to work with api_performance test.
    - [ ] Add compression for the response. Default is pretty print, the --compact-json is applied if request header does not request compression.

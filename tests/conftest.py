@@ -347,7 +347,7 @@ def edit_remove_snippet(mocker):
     """Edited 'remove' snippet."""
 
     template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-    mocker.patch.object(Editor, 'call_editor', return_value=template)
+    mocker.patch.object(Editor, '_call_editor', return_value=template)
     mocker.patch.object(Config, 'utcnow', side_effect=EDITED_REMOVE)
 
 @pytest.fixture(scope='function', name='edited_remove')
@@ -478,7 +478,7 @@ def edit_beats_solution(mocker):
     """Edited 'beats' solution."""
 
     template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-    mocker.patch.object(Editor, 'call_editor', return_value=template)
+    mocker.patch.object(Editor, '_call_editor', return_value=template)
     _add_utc_time(mocker, EDITED_BEATS)
 
 @pytest.fixture(scope='function', name='edited_beats')
@@ -561,7 +561,7 @@ def edit_gitlog_solution(mocker):
     """Edited 'gitlog' referece."""
 
     template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
-    mocker.patch.object(Editor, 'call_editor', return_value=template)
+    mocker.patch.object(Editor, '_call_editor', return_value=template)
     _add_utc_time(mocker, EDITED_GITLOG)
 
 @pytest.fixture(scope='function', name='edited_gitlog')
@@ -630,27 +630,27 @@ def edit_snippet_template(mocker):
     """Edited default snippet template."""
 
     template = Const.NEWLINE.join(Snippet.TEMPLATE)
-    mocker.patch.object(Editor, 'call_editor', return_value=template)
+    mocker.patch.object(Editor, '_call_editor', return_value=template)
 
 @pytest.fixture(scope='function', name='edit-solution-template')
 def edit_solution_template(mocker):
     """Edited default solution template."""
 
     template = Const.NEWLINE.join(Solution.TEMPLATE)
-    mocker.patch.object(Editor, 'call_editor', return_value=template)
+    mocker.patch.object(Editor, '_call_editor', return_value=template)
 
 @pytest.fixture(scope='function', name='edit-reference-template')
 def edit_reference_template(mocker):
     """Edited default reference template."""
 
     template = Const.NEWLINE.join(Reference.TEMPLATE)
-    mocker.patch.object(Editor, 'call_editor', return_value=template)
+    mocker.patch.object(Editor, '_call_editor', return_value=template)
 
 @pytest.fixture(scope='function', name='edit-empty')
 def edit_empty_template(mocker):
     """Edited empty template."""
 
-    mocker.patch.object(Editor, 'call_editor', return_value=Const.EMPTY)
+    mocker.patch.object(Editor, '_call_editor', return_value=Const.EMPTY)
 
 @pytest.fixture(scope='function', name='edit-unknown-template')
 def edit_unidentified_template(mocker):
@@ -674,7 +674,7 @@ def edit_unidentified_template(mocker):
         '################################################################################',
         ''
     )
-    mocker.patch.object(Editor, 'call_editor', return_value=template)
+    mocker.patch.object(Editor, '_call_editor', return_value=template)
 
 ## uuid
 
@@ -840,7 +840,7 @@ def _add_utc_time(mocker, timestamps):
 def _editor(mocker, timestamp):
     """Mock editor."""
 
-    editor = mocker.patch.object(Editor, 'call_editor')
+    editor = mocker.patch.object(Editor, '_call_editor')
     _add_utc_time(mocker, timestamp*3)
 
     return editor

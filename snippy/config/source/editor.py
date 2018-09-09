@@ -34,30 +34,21 @@ class Editor(object):
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def read_content(cls, timestamp, template):
+    def read(cls, content_category, templates, timestamp, resource):
         """Read content from editor."""
 
-        source = cls.call_editor(template)
-        category = Parser.content_category(source)
         collection = Collection()
-        if category in (Const.SNIPPET, Const.SOLUTION, Const.REFERENCE):
-            resource = collection.get_resource(category, timestamp)
-            resource.data = Parser.content_data(category, source)
-            resource.brief = Parser.content_brief(category, source)
-            resource.groups = Parser.content_groups(category, source)
-            resource.tags = Parser.content_tags(category, source)
-            resource.links = Parser.content_links(category, source)
-            resource.category = category
-            resource.filename = Parser.content_filename(category, source)
-            resource.digest = resource.compute_digest()
-            collection.migrate(resource)
-        else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
+        digest = collection.merge(resource)
+        template = collection.dump_text(digest, content_category, timestamp, templates)
+        text = cls._call_editor(template)
+        collection = Parser(Const.CONTENT_FORMAT_TEXT, timestamp, text).read()
+        if not collection.size():
+            Cause.insert(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
 
         return collection
 
     @classmethod
-    def call_editor(cls, template):
+    def _call_editor(cls, template):
         """Run editor session."""
 
         import tempfile

@@ -20,11 +20,13 @@
 """test_ut_parser: Test Parser() class."""
 
 from snippy.constants import Constants as Const
-from snippy.config.source.parser import Parser
+from snippy.config.source.parsers.text import ContentParserText as Parser
 
 
-class TestUtParser(object):
+class TestUtContentParserText(object):
     """Test Parser() class."""
+
+    TIMESTAMP = '2018-09-09T14:44:00.000001+0000'
 
     def test_parser_snippet_001(self):
         """Test parsing snippet.

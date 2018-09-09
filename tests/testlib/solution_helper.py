@@ -377,10 +377,9 @@ class SolutionHelper(object):
         return resource.dump_text(Config.templates)
 
     @staticmethod
-    def _get_content(source):
+    def _get_content(text):
         """Transform text template to content."""
 
-        timestamp = Config.utcnow()
-        collection = Parser.read_content(timestamp, source)
+        collection = Parser(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), text).read()
 
         return collection

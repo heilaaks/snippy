@@ -5,6 +5,7 @@
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
+   - [ ] Fix export --defaults --all that exports also solutions and references to same file.
 
 ## THINKING
    - [ ] Add code content.

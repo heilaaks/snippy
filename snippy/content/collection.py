@@ -132,21 +132,18 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         if isinstance(source, Collection):
             for resource in source.resources():
-                if resource.digest not in self.data['data']:
-                    self.data['meta']['total'] = self.data['meta']['total'] + 1
-                resource.seal()
-                self.data['data'][resource.digest] = {}
-                self.data['data'][resource.digest]['data'] = resource
-                self.data['data'][resource.digest]['meta'] = {}
-                self.data['data'][resource.digest]['meta']['digest'] = resource.digest
+                self.migrate(resource)
         elif isinstance(source, Resource):
-            if source.digest not in self.data['data']:
-                self.data['meta']['total'] = self.data['meta']['total'] + 1
-            source.seal()
-            self.data['data'][source.digest] = {}
-            self.data['data'][source.digest]['data'] = source
-            self.data['data'][source.digest]['meta'] = {}
-            self.data['data'][source.digest]['meta']['digest'] = source.digest
+            if source.category in Const.CATEGORIES:
+                if source.digest not in self.data['data']:
+                    self.data['meta']['total'] = self.data['meta']['total'] + 1
+                source.seal()
+                self.data['data'][source.digest] = {}
+                self.data['data'][source.digest]['data'] = source
+                self.data['data'][source.digest]['meta'] = {}
+                self.data['data'][source.digest]['meta']['digest'] = source.digest
+            else:
+                self._logger.debug('resource not merged to collection due to unknown category: {}'.format(Logger.remove_ansi(str(source))))
 
     def merge(self, source):
         """Merge a resource to collection.
@@ -168,7 +165,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         digest = None
         if not source or not isinstance(source, Resource):
-            self._logger.debug('source was not merged to collection {}'.format(Logger.remove_ansi(str(source))))
+            self._logger.debug('source was not merged to collection: {}'.format(Logger.remove_ansi(str(source))))
 
             return digest
 

@@ -21,8 +21,10 @@
 
 import re
 
+from snippy.cause import Cause
 from snippy.config.source.parsers.base import ContentParserBase
 from snippy.constants import Constants as Const
+from snippy.content.collection import Collection
 from snippy.logger import Logger
 
 
@@ -112,48 +114,83 @@ class ContentParserText(ContentParserBase):
     REGEXP['filename'][Const.REFERENCE] = REGEXP['filename'][Const.SNIPPET]
     REGEXP['filename'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<filename>.*|$)' % FILENAME[Const.SOLUTION], re.MULTILINE)
 
-    _logger = Logger.get_logger(__name__)
+    def __init__(self, timestamp, text):
+        """
+        Args:
+            timestamp (str): IS8601 timestamp used with created resources.
+            text (str): Source text that is parsed.
+        """
 
-    @staticmethod
-    def get_contents(text, split, offset):
+        self._logger = Logger.get_logger(__name__)
+        self._timestamp = timestamp
+        self._text = text
+
+    def read_collection(self):
+        """Read collection from the given text source."""
+
+        collection = Collection()
+        contents = self._split_contents()
+        for content in contents:
+            category = self._read_category(content)
+            resource = collection.get_resource(category, self._timestamp)
+            resource.data = self._read_data(category, content)
+            resource.brief = self._read_brief(category, content)
+            resource.groups = self._read_groups(category, content)
+            resource.tags = self._read_tags(category, content)
+            resource.links = self._read_links(category, content)
+            resource.category = category
+            resource.filename = self._read_filename(category, content)
+            resource.digest = resource.compute_digest()
+            collection.migrate(resource)
+
+        return collection
+
+    def _split_contents(self):
         """Split text to multiple contents.
 
-        This method parses text files to extract multiple contents from it.
+        This method parses text string and extracts a list of text contents
+        from it.
 
-        Find line numbers that are identified by split tag and offset. The
-        matching line numbers are substracted with offset to get the first
-        line of the content. The first item from the list is popped and
-        used as a head and following items are treated as as line numbers
-        where the next solution starts.
-
-        Args:
-            text (str): Contents as a text string.
-            split (str): Tag in text content that identifies each content
-            offset (int): Offset from head of the text content for split tag.
+        All line numbers with content specific tag is searched. The tag is
+        the first content field in the text template. The content is then
+        split based on line numbers based on specific tag and the offset.
+        The offset is substracted from the line number that had the content
+        specific tag.
 
         Returns:
             list: List of text contents.
         """
 
-        source_list = text.split(Const.NEWLINE)
-        solutions = []
-        line_numbers = [i for i, line in enumerate(source_list) if line.startswith(split)]
-        line_numbers[:] = [x-offset for x in line_numbers]
+        contents = []
+        category = self._read_category(self._text)
+        if category == Const.SNIPPET:
+            offset = 2
+            tag = '# Add mandatory snippet below'
+        elif category == Const.SOLUTION:
+            offset = 1
+            tag = self.BRIEF[Const.SOLUTION]
+        elif category == Const.REFERENCE:
+            offset = 1
+            tag = '# Add mandatory links below one link per line'
+        else:
+            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text source content category: {}'.format(category))
+
+            return contents
+
+        lines = self._text.split(Const.NEWLINE)
+        line_numbers = [i for i, line in enumerate(lines) if line.startswith(tag)]
+        line_numbers[:] = [max(x-offset, 0) for x in line_numbers]
         if line_numbers:
             head = line_numbers.pop(0)
             for line in line_numbers:
-                solutions.append(Const.NEWLINE.join(source_list[head:line]))
+                contents.append(Const.NEWLINE.join(lines[head:line]))
                 head = line
-            solutions.append(Const.NEWLINE.join(source_list[head:]))
+            contents.append(Const.NEWLINE.join(lines[head:]))
 
-        return solutions
+        return contents
 
-    @classmethod
-    def content_category(cls, text):
+    def _read_category(self, text):
         """Read content category from text string.
-
-        Args:
-            text (str): Content text string.
 
         Returns:
             str: Content category.
@@ -161,17 +198,16 @@ class ContentParserText(ContentParserBase):
 
         category = Const.UNKNOWN_CATEGORY
 
-        if cls.DATA[Const.SNIPPET] in text and cls.BRIEF[Const.SNIPPET]:
+        if self.DATA[Const.SNIPPET] in text and self.BRIEF[Const.SNIPPET]:
             category = Const.SNIPPET
-        elif cls.BRIEF[Const.SOLUTION] in text and cls.FILENAME[Const.SOLUTION] in text:
+        elif self.BRIEF[Const.SOLUTION] in text and self.FILENAME[Const.SOLUTION] in text:
             category = Const.SOLUTION
-        elif cls.LINKS[Const.REFERENCE] in text:
+        elif self.LINKS[Const.REFERENCE] in text:
             category = Const.REFERENCE
 
         return category
 
-    @classmethod
-    def content_data(cls, category, text):
+    def _read_data(self, category, text):
         """Read content data from text string.
 
         Each content data line is stored in element in a tuple. Solution
@@ -190,19 +226,18 @@ class ContentParserText(ContentParserBase):
         if category not in Const.CATEGORIES:
             return data
 
-        match = cls.REGEXP['data'][category].search(text)
+        match = self.REGEXP['data'][category].search(text)
         if match:
-            data = cls.data(category, match.group(1))
+            data = self.data(category, match.group(1))
             if category == Const.REFERENCE:
                 data = ()  # There is no data with reference content.
-            cls._logger.debug('parsed content data: %s', data)
+            self._logger.debug('parsed content data: %s', data)
         else:
-            cls._logger.debug('parser did not find content for data')
+            self._logger.debug('parser did not find content for data')
 
         return data
 
-    @classmethod
-    def content_brief(cls, category, text):
+    def _read_brief(self, category, text):
         """Read content brief from text string.
 
         Args:
@@ -217,17 +252,16 @@ class ContentParserText(ContentParserBase):
         if category not in Const.CATEGORIES:
             return brief
 
-        match = cls.REGEXP['brief'][category].search(text)
+        match = self.REGEXP['brief'][category].search(text)
         if match:
-            brief = cls.value(match.group('brief'))
-            cls._logger.debug('parsed content brief: %s', brief)
+            brief = self.value(match.group('brief'))
+            self._logger.debug('parsed content brief: %s', brief)
         else:
-            cls._logger.debug('parser did not find content for brief')
+            self._logger.debug('parser did not find content for brief')
 
         return brief
 
-    @classmethod
-    def content_groups(cls, category, text):
+    def _read_groups(self, category, text):
         """Read content groups from text string.
 
         Args:
@@ -242,17 +276,16 @@ class ContentParserText(ContentParserBase):
         if category not in Const.CATEGORIES:
             return groups
 
-        match = cls.REGEXP['groups'][category].search(text)
+        match = self.REGEXP['groups'][category].search(text)
         if match:
-            groups = cls.keywords([match.group('groups')])
-            cls._logger.debug('parsed content groups: %s', groups)
+            groups = self.keywords([match.group('groups')])
+            self._logger.debug('parsed content groups: %s', groups)
         else:
-            cls._logger.debug('parser did not find content for groups')
+            self._logger.debug('parser did not find content for groups')
 
         return groups
 
-    @classmethod
-    def content_tags(cls, category, text):
+    def _read_tags(self, category, text):
         """Read content tags from text string.
 
         Args:
@@ -267,17 +300,16 @@ class ContentParserText(ContentParserBase):
         if category not in Const.CATEGORIES:
             return tags
 
-        match = cls.REGEXP['tags'][category].search(text)
+        match = self.REGEXP['tags'][category].search(text)
         if match:
-            tags = cls.keywords([match.group('tags')])
-            cls._logger.debug('parsed content tags: %s', tags)
+            tags = self.keywords([match.group('tags')])
+            self._logger.debug('parsed content tags: %s', tags)
         else:
-            cls._logger.debug('parser did not find content for tags')
+            self._logger.debug('parser did not find content for tags')
 
         return tags
 
-    @classmethod
-    def content_links(cls, category, text):
+    def _read_links(self, category, text):
         """Read content links from text string.
 
         Args:
@@ -292,17 +324,16 @@ class ContentParserText(ContentParserBase):
         if category not in Const.CATEGORIES:
             return links
 
-        match = cls.REGEXP['links'][category].findall(text)
+        match = self.REGEXP['links'][category].findall(text)
         if match:
-            links = cls.links(match)
-            cls._logger.debug('parsed content links: %s', links)
+            links = self.links(match)
+            self._logger.debug('parsed content links: %s', links)
         else:
-            cls._logger.debug('parser did not find content for links')
+            self._logger.debug('parser did not find content for links')
 
         return links
 
-    @classmethod
-    def content_filename(cls, category, text):
+    def _read_filename(self, category, text):
         """Read content filename from text string.
 
         Args:
@@ -317,11 +348,11 @@ class ContentParserText(ContentParserBase):
         if category not in Const.CATEGORIES:
             return filename
 
-        match = cls.REGEXP['filename'][category].search(text)
+        match = self.REGEXP['filename'][category].search(text)
         if match:
-            filename = cls.value(match.group('filename'))
-            cls._logger.debug('parsed content filename: %s', filename)
+            filename = self.value(match.group('filename'))
+            self._logger.debug('parsed content filename: %s', filename)
         else:
-            cls._logger.debug('parser did not find content for filename')
+            self._logger.debug('parser did not find content for filename')
 
         return filename

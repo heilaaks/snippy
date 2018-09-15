@@ -2126,21 +2126,21 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 "links":{"self":"URL?limit=5&offset=10","first":"URL?limit=5&offset=0","prev":"URL?limit=5&offset=5","next":"URL?limit=5&offset=15","last":"URL?limit=5&offset=30",}
 
 ====
-# Remove all docker containers with volumes @docker
+# Remove all exited containers and dangling images @docker
 
-> An email client and Usenet newsgroup program with a pico/nano-inspired interface.
-Supports most modern email services through IMAP.
+> Remove all exited containers and dangling images. The command examples  
+first remove all exited containers and the all dangling images.
 
-> \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`  
+> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`  
 \[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
 
-- List all docker images
+- Remove all exited containers
 
-    `$ docker rm --volumes $(docker ps --all --quiet)`
+    `$ docker rm $(docker ps --all -q -f status=exited)`
 
-- List all docker images
+- Remove all dangling images
 
-    `$ docker rm --volumes $(docker ps --all --quiet)`
+    `$ docker images -q --filter dangling=true | xargs docker rmi`
 
 # Meta
 
@@ -2159,7 +2159,7 @@ digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 # Remove all docker containers with volumes @docker
 
 > An email client and Usenet newsgroup program with a pico/nano-inspired interface.
-Supports most modern email services through IMAP.´
+Supports most modern email services through IMAP.
 
 > \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`  
 \[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`

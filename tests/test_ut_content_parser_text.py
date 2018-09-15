@@ -44,7 +44,7 @@ class TestUtContentParserText(object):
         Test case verifies that all items are parsed correctly from template.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '# Add mandatory snippet below.',
             'docker rm $(docker ps --all -q -f status=exited)',
             'docker images -q --filter dangling=true | xargs docker rm',
@@ -74,11 +74,13 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        assert data == Parser.content_data(Const.SNIPPET, source)
-        assert brief == Parser.content_brief(Const.SNIPPET, source)
-        assert groups == Parser.content_groups(Const.SNIPPET, source)
-        assert tags == Parser.content_tags(Const.SNIPPET, source)
-        assert links == Parser.content_links(Const.SNIPPET, source)
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
 
     def test_parser_snippet_002(self):
         """Test parsing snippet.
@@ -87,7 +89,7 @@ class TestUtContentParserText(object):
         a list of groups. The groups must be sorted.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '# Add mandatory snippet below.',
             'docker rm $(docker ps --all -q -f status=exited)',
             'docker images -q --filter dangling=true | xargs docker rm',
@@ -117,11 +119,13 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        assert data == Parser.content_data(Const.SNIPPET, source)
-        assert brief == Parser.content_brief(Const.SNIPPET, source)
-        assert groups == Parser.content_groups(Const.SNIPPET, source)
-        assert tags == Parser.content_tags(Const.SNIPPET, source)
-        assert links == Parser.content_links(Const.SNIPPET, source)
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
 
     def test_parser_snippet_003(self):
         """Test parsing snippet.
@@ -130,7 +134,7 @@ class TestUtContentParserText(object):
         any newlines after each field.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '# Add mandatory snippet below.',
             'docker rm $(docker ps --all -q -f status=exited)',
             'docker images -q --filter dangling=true | xargs docker rm',
@@ -157,11 +161,13 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        assert data == Parser.content_data(Const.SNIPPET, source)
-        assert brief == Parser.content_brief(Const.SNIPPET, source)
-        assert groups == Parser.content_groups(Const.SNIPPET, source)
-        assert tags == Parser.content_tags(Const.SNIPPET, source)
-        assert links == Parser.content_links(Const.SNIPPET, source)
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
 
     def test_parser_snippet_004(self):
         """Test parsing snippet.
@@ -169,7 +175,7 @@ class TestUtContentParserText(object):
         Try to match content that does not match to any of the snippet tags.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '# unknown 1.',
             'docker rm $(docker ps --all -q -f status=exited)',
             'docker images -q --filter dangling=true | xargs docker rm',
@@ -184,16 +190,39 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/  '
         ))
-        data = ()
-        brief = ''
-        groups = ()
-        tags = ()
-        links = ()
-        assert data == Parser.content_data(Const.SNIPPET, source)
-        assert brief == Parser.content_brief(Const.SNIPPET, source)
-        assert groups == Parser.content_groups(Const.SNIPPET, source)
-        assert tags == Parser.content_tags(Const.SNIPPET, source)
-        assert links == Parser.content_links(Const.SNIPPET, source)
+        collection = Parser(self.TIMESTAMP, text).read_collection()
+        assert collection.empty()
+
+    def test_parser_snippet_005(self):
+        """Test parsing snippet.
+
+        Try to match snippet content where the second snippet content does not
+        match to any of the snippet tags.
+        """
+
+        text = '\n'.join((
+            '# Add mandatory snippet below.',
+            '# unknown 2.',
+            'Remove docker image with force',
+            '# Add optional brief description below.',
+            '# unknown 4.',
+            '  cleanup,  container,docker,docker-ce,image,moby  ',
+            '# unknown 5.',
+            '  https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/',
+            'https://docs.docker.com/engine/reference/commandline/rmi/  ',
+            '# Add mandatory snippet below',
+            '# unknown 2.'
+        ))
+        collection = Parser(self.TIMESTAMP, text).read_collection()
+        assert collection.size() == 1
+        resource = next(collection.resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == ('',)
+        assert resource.brief == ''
+        assert resource.groups == ()
+        assert resource.tags == ()
+        assert resource.links == ()
 
     def test_parser_reference_001(self):
         """Test parsing reference.
@@ -206,7 +235,7 @@ class TestUtContentParserText(object):
         link and category and brief sections.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '# Commented lines will be ignored.',
             '#',
             '# Add mandatory links below one link per line.',
@@ -226,15 +255,16 @@ class TestUtContentParserText(object):
             'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
             'https://chris.beams.io/posts/git-commit/'
         )
-        data = ()
         brief = 'How to write commit messages'
         groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
-        assert data == Parser.content_data(Const.REFERENCE, source)
-        assert brief == Parser.content_brief(Const.REFERENCE, source)
-        assert groups == Parser.content_groups(Const.REFERENCE, source)
-        assert tags == Parser.content_tags(Const.REFERENCE, source)
-        assert links == Parser.content_links(Const.REFERENCE, source)
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.REFERENCE
+        assert resource.data == links
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
 
     def test_parser_reference_002(self):
         """Test parsing reference.
@@ -244,7 +274,7 @@ class TestUtContentParserText(object):
         the links before the next section.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '# Commented lines will be ignored.',
             '#',
             '# Add mandatory links below one link per line.',
@@ -263,15 +293,16 @@ class TestUtContentParserText(object):
             'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',
             'https://chris.beams.io/posts/git-commit/'
         )
-        data = ()
         brief = 'How to write commit messages'
         groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
-        assert data == Parser.content_data(Const.REFERENCE, source)
-        assert brief == Parser.content_brief(Const.REFERENCE, source)
-        assert groups == Parser.content_groups(Const.REFERENCE, source)
-        assert tags == Parser.content_tags(Const.REFERENCE, source)
-        assert links == Parser.content_links(Const.REFERENCE, source)
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.REFERENCE
+        assert resource.data == links
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
 
     def test_parser_reference_003(self):
         """Test parsing reference.
@@ -280,7 +311,7 @@ class TestUtContentParserText(object):
         any newlines after each field.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '# Commented lines will be ignored.',
             '#',
             '# Add mandatory links below one link per line.',
@@ -300,10 +331,13 @@ class TestUtContentParserText(object):
         brief = 'How to write commit messages'
         groups = ('git', 'moby')
         tags = ('commit', 'git', 'howto', 'message', 'scm')
-        assert brief == Parser.content_brief(Const.REFERENCE, source)
-        assert groups == Parser.content_groups(Const.REFERENCE, source)
-        assert tags == Parser.content_tags(Const.REFERENCE, source)
-        assert links == Parser.content_links(Const.REFERENCE, source)
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.REFERENCE
+        assert resource.data == links
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
 
     def test_parser_reference_004(self):
         """Test parsing reference.
@@ -311,7 +345,7 @@ class TestUtContentParserText(object):
         Try to match content that does not match to any of the reference tags.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '# Commented lines will be ignored.',
             '#',
             '# unknown 1.',
@@ -324,15 +358,8 @@ class TestUtContentParserText(object):
             '# unknown 4.',
             'commit,git,howto,message,scm'
         ))
-        links = ()
-        brief = ''
-        groups = ()
-        tags = ()
-        assert brief == Parser.content_brief(Const.REFERENCE, source)
-        assert groups == Parser.content_groups(Const.REFERENCE, source)
-        assert tags == Parser.content_tags(Const.REFERENCE, source)
-        assert links == Parser.content_links(Const.REFERENCE, source)
-
+        collection = Parser(self.TIMESTAMP, text).read_collection()
+        assert collection.empty()
 
     def test_parser_reference_005(self):
         """Test parsing reference.
@@ -340,7 +367,7 @@ class TestUtContentParserText(object):
         Try to parse reference from snippet content
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '# Add mandatory snippet below.',
             'docker rm $(docker ps --all -q -f status=exited)',
             'docker images -q --filter dangling=true | xargs docker rm',
@@ -358,7 +385,10 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/  '
         ))
-        data = ()
+        data = (
+            'docker rm $(docker ps --all -q -f status=exited)',
+            'docker images -q --filter dangling=true | xargs docker rm'
+        )
         brief = 'Remove docker image with force'
         groups = ('docker',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
@@ -367,11 +397,13 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        assert data == Parser.content_data(Const.REFERENCE, source)
-        assert brief == Parser.content_brief(Const.REFERENCE, source)
-        assert groups == Parser.content_groups(Const.REFERENCE, source)
-        assert tags == Parser.content_tags(Const.REFERENCE, source)
-        assert links == Parser.content_links(Const.REFERENCE, source)
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
 
     def test_parser_solution_001(self):
         """Test parsing solution.
@@ -379,7 +411,7 @@ class TestUtContentParserText(object):
         Test case verifies that a solution content can be parsed.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '################################################################################',
             '## BRIEF  : Testing docker log drivers',
             '##',
@@ -422,19 +454,21 @@ class TestUtContentParserText(object):
         ))
         links = (
             'https://github.com/MickayG/moby-kafka-logdriver',
-            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
-            'https://github.com/garo/logs2kafka'
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
         brief = 'Testing docker log drivers'
         groups = ('docker',)
         tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         filename = 'kubernetes-docker-log-driver-kafka.txt'
-        assert source == '\n'.join(Parser.content_data(Const.SOLUTION, source))
-        assert brief == Parser.content_brief(Const.SOLUTION, source)
-        assert groups == Parser.content_groups(Const.SOLUTION, source)
-        assert tags == Parser.content_tags(Const.SOLUTION, source)
-        assert links == Parser.content_links(Const.SOLUTION, source)
-        assert filename == Parser.content_filename(Const.SOLUTION, source)
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == filename
 
     def test_parser_solution_002(self):
         """Test parsing solution.
@@ -442,7 +476,7 @@ class TestUtContentParserText(object):
         Try to match content that does not match to any of the solution tags.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             '################################################################################',
             '## NONE   : Testing docker log drivers',
             '##',
@@ -476,17 +510,8 @@ class TestUtContentParserText(object):
             '################################################################################',
             ''
         ))
-        links = ()
-        brief = ''
-        groups = ()
-        tags = ()
-        filename = ''
-        assert source == '\n'.join(Parser.content_data(Const.SOLUTION, source))
-        assert brief == Parser.content_brief(Const.SOLUTION, source)
-        assert groups == Parser.content_groups(Const.SOLUTION, source)
-        assert tags == Parser.content_tags(Const.SOLUTION, source)
-        assert links == Parser.content_links(Const.SOLUTION, source)
-        assert filename == Parser.content_filename(Const.SOLUTION, source)
+        collection = Parser(self.TIMESTAMP, text).read_collection()
+        assert collection.empty()
 
     def test_parser_unknown_001(self):
         """Test parsing unknown content.
@@ -494,20 +519,10 @@ class TestUtContentParserText(object):
         Try to run parser against content that is not identified.
         """
 
-        source = '\n'.join((
+        text = '\n'.join((
             'git, moby',
             '# unknown 1.',
             'commit,git,howto,message,scm'
         ))
-        data = ()
-        brief = ''
-        groups = ()
-        tags = ()
-        links = ()
-        filename = ''
-        assert data == Parser.content_data(Const.UNKNOWN_CATEGORY, source)
-        assert brief == Parser.content_brief(Const.UNKNOWN_CATEGORY, source)
-        assert groups == Parser.content_groups(Const.UNKNOWN_CATEGORY, source)
-        assert tags == Parser.content_tags(Const.UNKNOWN_CATEGORY, source)
-        assert links == Parser.content_links(Const.UNKNOWN_CATEGORY, source)
-        assert filename == Parser.content_filename(Const.UNKNOWN_CATEGORY, source)
+        collection = Parser(self.TIMESTAMP, text).read_collection()
+        assert collection.empty()

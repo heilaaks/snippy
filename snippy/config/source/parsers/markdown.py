@@ -17,57 +17,46 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""parser: Parse content attributes from text string."""
+"""base: Parse content from text templates."""
 
-from snippy.cause import Cause
+import re
+
 from snippy.config.source.parsers.base import ContentParserBase
-from snippy.config.source.parsers.text import ContentParserText as Text
 from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
 from snippy.logger import Logger
 
 
-class Parser(ContentParserBase):
-    """Parse content attributes from text source."""
+class ContentParserMarkdown(ContentParserBase):
+    """Parse content from Markdown templates."""
 
-    def __init__(self, filetype, timestamp, text):
+    def __init__(self, timestamp, text):
         """
         Args:
-            filetype (str): Filetype that defines used parser.
             timestamp (str): IS8601 timestamp used with created resources.
             text (str): Source text that is parsed.
         """
 
         self._logger = Logger.get_logger(__name__)
-        self._filetype = filetype
-        self._text = text
         self._timestamp = timestamp
-        self._parser = self._parser_factory()
+        self._text = text
 
-    def read(self):
-        """Read content attributes from text source.
+    def read_collection(self):
+        """Read collection from the given text source."""
 
-        Text source specific parser is run against the provided text string.
-        The text source can be either the tool specific text or Markdown
-        template.
-
-        Returns:
-            Collection(): Parsed content in a Collection object.
-        """
-
-        if not self._parser:
-            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not select parser for filetype: {}'.format(self._filetype))
-
-            return Collection()
-
-        collection = self._parser.read_collection()
+        collection = Collection()
+        contents = self._split_contents()
+        for content in contents:
+            category = self._read_category(content)
+            resource = collection.get_resource(category, self._timestamp)
+            resource.data = self._read_data(category, content)
+            resource.brief = self._read_brief(category, content)
+            resource.groups = self._read_groups(category, content)
+            resource.tags = self._read_tags(category, content)
+            resource.links = self._read_links(category, content)
+            resource.category = category
+            resource.filename = self._read_filename(category, content)
+            resource.digest = resource.compute_digest()
+            collection.migrate(resource)
 
         return collection
-
-    def _parser_factory(self):
-        """Parse collection based on filetype."""
-
-        if self._filetype == Const.CONTENT_FORMAT_TEXT:
-            return Text(self._timestamp, self._text)
-
-        return None

@@ -224,6 +224,114 @@ class TestUtContentParserText(object):
         assert resource.tags == ()
         assert resource.links == ()
 
+    def test_parser_solution_001(self):
+        """Test parsing solution.
+
+        Test case verifies that a solution content can be parsed.
+        """
+
+        text = '\n'.join((
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
+            '## FILE   : kubernetes-docker-log-driver-kafka.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## references',
+            '################################################################################',
+            '',
+            '    # Kube Kafka log driver',
+            '    > https://github.com/MickayG/moby-kafka-logdriver',
+            '',
+            '    # Logs2Kafka',
+            '    > https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '    > https://github.com/garo/logs2kafka',
+            '',
+            '################################################################################',
+            '## commands',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## solutions',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## configurations',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## whiteboard',
+            '################################################################################',
+            ''
+        ))
+        links = (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        brief = 'Testing docker log drivers'
+        groups = ('docker',)
+        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        filename = 'kubernetes-docker-log-driver-kafka.txt'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == filename
+
+    def test_parser_solution_002(self):
+        """Test parsing solution.
+
+        Try to match content that does not match to any of the solution tags.
+        """
+
+        text = '\n'.join((
+            '################################################################################',
+            '## NONE   : Testing docker log drivers',
+            '##',
+            '## NONE   : docker',
+            '## NONE   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
+            '## NONE   : kubernetes-docker-log-driver-kafka.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## references',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## commands',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## solutions',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## configurations',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## whiteboard',
+            '################################################################################',
+            ''
+        ))
+        collection = Parser(self.TIMESTAMP, text).read_collection()
+        assert collection.empty()
+
     def test_parser_reference_001(self):
         """Test parsing reference.
 
@@ -404,114 +512,6 @@ class TestUtContentParserText(object):
         assert resource.groups == groups
         assert resource.tags == tags
         assert resource.links == links
-
-    def test_parser_solution_001(self):
-        """Test parsing solution.
-
-        Test case verifies that a solution content can be parsed.
-        """
-
-        text = '\n'.join((
-            '################################################################################',
-            '## BRIEF  : Testing docker log drivers',
-            '##',
-            '## GROUPS : docker',
-            '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
-            '## FILE   : kubernetes-docker-log-driver-kafka.txt',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## description',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## references',
-            '################################################################################',
-            '',
-            '    # Kube Kafka log driver',
-            '    > https://github.com/MickayG/moby-kafka-logdriver',
-            '',
-            '    # Logs2Kafka',
-            '    > https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
-            '    > https://github.com/garo/logs2kafka',
-            '',
-            '################################################################################',
-            '## commands',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## solutions',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## configurations',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## whiteboard',
-            '################################################################################',
-            ''
-        ))
-        links = (
-            'https://github.com/MickayG/moby-kafka-logdriver',
-            'https://github.com/garo/logs2kafka',
-            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
-        )
-        brief = 'Testing docker log drivers'
-        groups = ('docker',)
-        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
-        filename = 'kubernetes-docker-log-driver-kafka.txt'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
-        assert resource.category == Const.SOLUTION
-        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == filename
-
-    def test_parser_solution_002(self):
-        """Test parsing solution.
-
-        Try to match content that does not match to any of the solution tags.
-        """
-
-        text = '\n'.join((
-            '################################################################################',
-            '## NONE   : Testing docker log drivers',
-            '##',
-            '## NONE   : docker',
-            '## NONE   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
-            '## NONE   : kubernetes-docker-log-driver-kafka.txt',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## description',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## references',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## commands',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## solutions',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## configurations',
-            '################################################################################',
-            '',
-            '################################################################################',
-            '## whiteboard',
-            '################################################################################',
-            ''
-        ))
-        collection = Parser(self.TIMESTAMP, text).read_collection()
-        assert collection.empty()
 
     def test_parser_unknown_001(self):
         """Test parsing unknown content.

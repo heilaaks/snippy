@@ -6,6 +6,13 @@
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
    - [ ] Fix export --defaults --all that exports also solutions and references to same file.
+   - [ ] Fix why 'python runner search --sall 'has active end' results two snippets with default content? Should be one.
+   - [ ] Change it not collection.size() to if collection.emtpy() since it is more readable.
+   - [ ] Fix Alpine to 3.8.1
+   - [ ] Set C.UTF-8 to container. Python requires C. something? See alpine docker instructions (somewhere)?
+   - [ ] Use VERBOSE to comment regexp in text template parser.
+   - [ ] Fix Collection __getitem__ with unknown digest that returns key error.
+   - [ ] Fix resource = collection[list(collection.keys())[0]]['data'] to collection[0] and collection[digest] if possible?
 
 ## THINKING
    - [ ] Add code content.

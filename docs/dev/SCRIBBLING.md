@@ -2128,10 +2128,10 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 ====
 # Remove all exited containers and dangling images @docker
 
-> Remove all exited containers and dangling images. The command examples  
+> Remove all exited containers and dangling images. The command examples
 first remove all exited containers and the all dangling images.
 
-> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`  
+> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`
 \[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
 
 - Remove all exited containers
@@ -2144,15 +2144,15 @@ first remove all exited containers and the all dangling images.
 
 # Meta
 
-> category : snippet  
-created  : 2017-10-12T11:52:11.000001+0000  
-updated  : 2017-10-12T11:52:11.000001+0000  
-tags     : cleanup, container, docker, docker-ce, moby  
-filename :  
-name     :  
-source   :  
-versions :  
-uuid     : f21c6318-8830-11e8-a114-2c4d54508088  
+> category : snippet
+created  : 2017-10-12T11:52:11.000001+0000
+updated  : 2017-10-12T11:52:11.000001+0000
+tags     : cleanup, container, docker, docker-ce, moby
+filename :
+name     :
+source   :
+versions :
+uuid     : f21c6318-8830-11e8-a114-2c4d54508088
 digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 =====
 
@@ -2161,40 +2161,8 @@ digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 > An email client and Usenet newsgroup program with a pico/nano-inspired interface.
 Supports most modern email services through IMAP.
 
-> \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`  
+> \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`
 \[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
-
-# Meta
-
-> category : snippet  
-created  : 2017-10-12T11:52:11.000001+0000  
-updated  : 2017-10-12T11:52:11.000001+0000  
-tags     : cleanup, container, docker, docker-ce, moby  
-filename :  
-name     :  
-source   :  
-versions :  
-uuid     : f21c6318-8830-11e8-a114-2c4d54508088  
-digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
-
-===
-
-# Testing docker log drivers @docker
-
-> An email client and Usenet newsgroup program with a pico/nano-inspired interface.
-Supports most modern email services through IMAP.´
-
-    ################################################################################
-    ## BRIEF  : <SNIPPY_BRIEF>
-    ##
-    ## GROUPS : <SNIPPY_GROUPS>
-    ## TAGS   : <SNIPPY_TAGS>
-    ## FILE   : <SNIPPY_FILE>
-    ################################################################################
-
-    ################################################################################
-    ## description
-    ################################################################################
 
 # Meta
 
@@ -2210,3 +2178,89 @@ uuid     : f21c6318-8830-11e8-a114-2c4d54508088
 digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 
 ===
+
+# Testing docker log drivers @docker
+
+> An email client and Usenet newsgroup program with a pico/nano-inspired interface.  
+Supports most modern email services through IMAP.
+
+    ################################################################################
+    ## BRIEF  : Testing docker log drivers
+    ##
+    ## GROUPS : docker
+    ## TAGS   : cleanup, container, docker, docker-ce, moby
+    ## FILE   : docker-example.txt
+    ################################################################################
+
+    ################################################################################
+    ## description
+    ################################################################################
+
+# Meta
+
+> category : snippet  
+created  : 2017-10-12T11:52:11.000001+0000  
+updated  : 2017-10-12T11:52:11.000001+0000  
+tags     : cleanup, container, docker, docker-ce, moby  
+filename :   
+name     :   
+source   :   
+versions :   
+uuid     : f21c6318-8830-11e8-a114-2c4d54508088  
+digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
+
+===
+# Remove all exited containers and dangling images @docker
+
+> Remove all exited containers and dangling images. The command examples  
+first remove all exited containers and the all dangling images.
+
+> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`  
+\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
+
+- Remove all exited containers
+
+    `$ docker rm $(docker ps --all -q -f status=exited)`
+
+- Remove all dangling images
+
+    `$ docker images -q --filter dangling=true | xargs docker rmi`
+
+## Meta
+
+> category : snipet  
+created  : 2017-10-12T11:52:11.000001+0000  
+digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  
+filename :   
+name     :   
+source   :   
+tags     : cleanup, container, docker, docker-ce, moby  
+updated  : 2017-10-12T11:52:11.000001+0000  
+uuid     : f21c6318-8830-11e8-a114-2c4d54508088  
+versions :
+
+----
+
+# Solve docker networking \'has active endpoints\' problem @docker
+
+> Fix docker problem that results \'has active endpoints\' error log.
+
+> \[1\]: `https://github.com/moby/moby/issues/23302`
+
+`$ docker network ls`
+`$ docker network inspect y0fdm2xoyuca`
+`$ docker network disconnect -f y0fdm2xoyuca devstack_logstash.1.7iqgrfd2xwcidj87zbkmauw4l`
+`$ docker network rm y0fdm2xoyuca`
+
+## Meta
+
+> category : snippet  
+created  : 2017-10-12T11:52:11.000001+0000  
+digest   : 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c  
+filename :   
+name     :   
+source   :   
+tags     : container, docker, docker-ce, moby, network, remove, solution, swarm  
+updated  : 2017-10-12T11:52:11.000001+0000  
+uuid     : f21c752e-8830-11e8-a114-2c4d54508088  
+versions :

@@ -110,7 +110,7 @@ class ContentParserText(ContentParserBase):
     REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
     REGEXP['links'][Const.SOLUTION] = re.compile(r'> (?P<links>http.*)', re.MULTILINE)
     REGEXP['filename'] = {}
-    REGEXP['filename'][Const.SNIPPET] = re.compile(r'\A(?!x)x')  # Never match anything because there is no filename in content.
+    REGEXP['filename'][Const.SNIPPET] = re.compile(r'\A(?!x)x')  # Never match anything because there is no filename in the content.
     REGEXP['filename'][Const.REFERENCE] = REGEXP['filename'][Const.SNIPPET]
     REGEXP['filename'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<filename>.*|$)' % FILENAME[Const.SOLUTION], re.MULTILINE)
 
@@ -214,6 +214,9 @@ class ContentParserText(ContentParserBase):
         content data is stored only by trimming the trailing newlines at the
         end of the data. In case of snippet content, each line is trimmed.
 
+        References do not have data field. In case of references, the links
+        are considered as a data.
+
         Args:
             category (str): Content category.
             text (str): Content text string.
@@ -223,14 +226,12 @@ class ContentParserText(ContentParserBase):
         """
 
         data = ()
-        if category not in Const.CATEGORIES:
+        if category not in Const.CATEGORIES or category == Const.REFERENCE:
             return data
 
         match = self.REGEXP['data'][category].search(text)
         if match:
             data = self.data(category, match.group(1))
-            if category == Const.REFERENCE:
-                data = ()  # There is no data with reference content.
             self._logger.debug('parsed content data: %s', data)
         else:
             self._logger.debug('parser did not find content for data')

@@ -1,5 +1,6 @@
 ## WORKING
    - [ ] Fix typo specigic
+   - [ ] Fix doc build: why 'ImportError: cannot import name sqrt' starting from commit: 2f9278c602e92625447be2e03728b01c240f8170? There are more required downloads when failures start compared to previsou success. What dependency changed?
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
    - [ ] Add support to snippet command examplations that translate to headers in MD files: $ docker rm --volumes $(docker ps --all --quiet) # Remove all containers.

@@ -61,12 +61,13 @@ class ContentParserText(ContentParserBase):
     REGEXP = {}
     REGEXP['data'] = {}
     REGEXP['data'][Const.SNIPPET] = re.compile(
-        r'(?:%s|%s)(?P<data>.*?)(?:\n{2}|#|$)' % (
+        r"""(?:%s|%s)(?P<data>.*?)(?:\n{2}|#|$)""" % (
             DATA[Const.SNIPPET],
             DATA[Const.REFERENCE]
         ),
         re.DOTALL
     )
+
     REGEXP['data'][Const.REFERENCE] = REGEXP['data'][Const.SNIPPET]
     REGEXP['data'][Const.SOLUTION] = re.compile(r'(?P<data>.*)', re.DOTALL)
     REGEXP['brief'] = {}
@@ -231,7 +232,7 @@ class ContentParserText(ContentParserBase):
 
         match = self.REGEXP['data'][category].search(text)
         if match:
-            data = self.data(category, match.group(1))
+            data = self.format_data(category, match.group(1))
             self._logger.debug('parsed content data: %s', data)
         else:
             self._logger.debug('parser did not find content for data')
@@ -255,7 +256,7 @@ class ContentParserText(ContentParserBase):
 
         match = self.REGEXP['brief'][category].search(text)
         if match:
-            brief = self.value(match.group('brief'))
+            brief = self.format_string(match.group('brief'))
             self._logger.debug('parsed content brief: %s', brief)
         else:
             self._logger.debug('parser did not find content for brief')
@@ -273,18 +274,7 @@ class ContentParserText(ContentParserBase):
             tuple: Tuple of utf-8 encoded groups.
         """
 
-        groups = ()
-        if category not in Const.CATEGORIES:
-            return groups
-
-        match = self.REGEXP['groups'][category].search(text)
-        if match:
-            groups = self.keywords([match.group('groups')])
-            self._logger.debug('parsed content groups: %s', groups)
-        else:
-            self._logger.debug('parser did not find content for groups')
-
-        return groups
+        return ContentParserBase.parse_groups(category, self.REGEXP['groups'].get(category, None), text)
 
     def _read_tags(self, category, text):
         """Read content tags from text string.
@@ -303,7 +293,7 @@ class ContentParserText(ContentParserBase):
 
         match = self.REGEXP['tags'][category].search(text)
         if match:
-            tags = self.keywords([match.group('tags')])
+            tags = self.format_list([match.group('tags')])
             self._logger.debug('parsed content tags: %s', tags)
         else:
             self._logger.debug('parser did not find content for tags')
@@ -321,18 +311,7 @@ class ContentParserText(ContentParserBase):
             tuple: Tuple of utf-8 encoded links.
         """
 
-        links = ()
-        if category not in Const.CATEGORIES:
-            return links
-
-        match = self.REGEXP['links'][category].findall(text)
-        if match:
-            links = self.links(match)
-            self._logger.debug('parsed content links: %s', links)
-        else:
-            self._logger.debug('parser did not find content for links')
-
-        return links
+        return ContentParserBase.parse_links(category, self.REGEXP['links'].get(category, None), text)
 
     def _read_filename(self, category, text):
         """Read content filename from text string.
@@ -351,7 +330,7 @@ class ContentParserText(ContentParserBase):
 
         match = self.REGEXP['filename'][category].search(text)
         if match:
-            filename = self.value(match.group('filename'))
+            filename = self.format_string(match.group('filename'))
             self._logger.debug('parsed content filename: %s', filename)
         else:
             self._logger.debug('parser did not find content for filename')

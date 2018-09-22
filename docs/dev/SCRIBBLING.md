@@ -2184,6 +2184,10 @@ digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 > An email client and Usenet newsgroup program with a pico/nano-inspired interface.  
 Supports most modern email services through IMAP.
 
+> \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`
+\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
+
+
     ################################################################################
     ## BRIEF  : Testing docker log drivers
     ##
@@ -2195,6 +2199,8 @@ Supports most modern email services through IMAP.
     ################################################################################
     ## description
     ################################################################################
+
+    > https://docs.docker.com/engine/reference/commandline/rm/
 
 # Meta
 

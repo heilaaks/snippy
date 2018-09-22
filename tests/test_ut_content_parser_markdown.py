@@ -35,14 +35,14 @@ class TestUtContentParserMarkdown(object):
         Markdown template.
         """
 
-        text = '\n'.join((
+        text = Const.NEWLINE.join((
             '# Remove all exited containers and dangling images @docker',
             '',
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            '> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`  ',
-            '\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`',
+            "> \\[1\\]: `https://docs.docker.com/engine/reference/commandline/images/`  ",
+            "\\[2\\]: `https://docs.docker.com/engine/reference/commandline/rm/`",
             '',
             '- Remove all exited containers',
             '',
@@ -56,7 +56,7 @@ class TestUtContentParserMarkdown(object):
             '',
             '> category : snippet  ',
             'created  : 2017-10-12T11:52:11.000001+0000  ',
-            'digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  ',
+            'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
@@ -70,27 +70,33 @@ class TestUtContentParserMarkdown(object):
             'docker rm $(docker ps --all -q -f status=exited) # Remove all exited containers',
             'docker images -q --filter dangling=true | xargs docker rmi # Remove all dangling images'
         )
-        brief = 'Remove docker image with force'
+        brief = 'Remove all exited containers and dangling images'
         description = ('Remove all exited containers and dangling images. The command examples ' +
                        'first remove all exited containers and the all dangling images.')
         groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         links = (
             'https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'
+        digest = '0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
-        #assert resource.brief == brief
-        #assert resource.groups == groups
-        #assert resource.description == description
-        #assert resource.tags == tags
-        #assert resource.links == links
-        #assert resource.uuid == uuid
-        #assert resource.digest == digest
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.digest == digest
 
     def test_parser_snippet_002(self):
         """Test parsing two snippets.
@@ -98,16 +104,19 @@ class TestUtContentParserMarkdown(object):
         Test case verifies that standard snippets are parsed correctly from
         Markdown template. In this case the first snippet contains commands
         with headers which are missing from the second snippet.
+
+        The second snippet is part of two groups and it's description is
+        one liner.
         """
 
-        text = '\n'.join((
+        text = Const.NEWLINE.join((
             '# Remove all exited containers and dangling images @docker',
             '',
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            '> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`  ',
-            '\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`',
+            "'> \\[1\\]: `https://docs.docker.com/engine/reference/commandline/images/`  ",
+            "\\[2\\]: `https://docs.docker.com/engine/reference/commandline/rm/`",
             '',
             '- Remove all exited containers',
             '',
@@ -121,7 +130,7 @@ class TestUtContentParserMarkdown(object):
             '',
             '> category : snippet  ',
             'created  : 2017-10-12T11:52:11.000001+0000  ',
-            'digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  ',
+            'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
@@ -132,11 +141,11 @@ class TestUtContentParserMarkdown(object):
             '',
             '---',
             '',
-            '# Solve docker networking \'has active endpoints\' problem @docker',
+            '# Solve docker networking \'has active endpoints\' problem @docker, python',
             '',
             '> Fix docker problem that results \'has active endpoints\' error log.',
             '',
-            '> \[1\]: `https://github.com/moby/moby/issues/23302`',
+            "> \\[1\\]: `https://github.com/moby/moby/issues/23302`",
             '',
             '`$ docker network ls`',
             '`$ docker network inspect y0fdm2xoyuca`',
@@ -147,36 +156,49 @@ class TestUtContentParserMarkdown(object):
             '',
             '> category : snippet  ',
             'created  : 2017-10-12T11:52:11.000001+0000  ',
-            'digest   : 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c  ',
+            'digest   : 0bcf78d5c36a96a556fa3293f9b68c3dca577ea9c7fa5de76b354ccf27885df2  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
-            'tags     : container, docker, docker-ce, moby, network, remove, solution, swarm  ',
+            'tags     :   ',
             'updated  : 2017-10-12T11:52:11.000001+0000  ',
-            'uuid     : f21c752e-8830-11e8-a114-2c4d54508088  ',
+            'uuid     : f31c752e-8830-11e8-a114-2c4d54508088  ',
             'versions :',
-            'docker network rm y0fdm2xoyuca'
+            ''
         ))
         data = (
             'docker rm $(docker ps --all -q -f status=exited) # Remove all exited containers',
             'docker images -q --filter dangling=true | xargs docker rmi # Remove all dangling images'
         )
-        brief = 'Remove docker image with force'
+        brief = 'Remove all exited containers and dangling images'
         description = ('Remove all exited containers and dangling images. The command examples ' +
                        'first remove all exited containers and the all dangling images.')
         groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         links = (
             'https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'
+        digest = '0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69'
         collection = Parser(self.TIMESTAMP, text).read_collection()
         assert collection.size() == 2
         resource = collection[list(collection.keys())[0]]['data']
         assert resource.category == Const.SNIPPET
         assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.digest == digest
 
         data = (
             'docker network ls',
@@ -184,27 +206,31 @@ class TestUtContentParserMarkdown(object):
             'docker network disconnect -f y0fdm2xoyuca devstack_logstash.1.7iqgrfd2xwcidj87zbkmauw4l',
             'docker network rm y0fdm2xoyuca'
         )
-        brief = 'Remove docker image with force'
-        description = ('Remove all exited containers and dangling images. The command examples ' +
-                       'first remove all exited containers and the all dangling images.')
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        brief = 'Solve docker networking \'has active endpoints\' problem'
+        description = ('Fix docker problem that results \'has active endpoints\' error log.')
+        groups = ('docker', 'python')
+        tags = ()
         links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/'
+            'https://github.com/moby/moby/issues/23302',
         )
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'
+        uuid = 'f31c752e-8830-11e8-a114-2c4d54508088'
+        digest = '0bcf78d5c36a96a556fa3293f9b68c3dca577ea9c7fa5de76b354ccf27885df2'
         resource = collection[list(collection.keys())[1]]['data']
         assert resource.category == Const.SNIPPET
         assert resource.data == data
-        #assert resource.brief == brief
-        #assert resource.groups == groups
-        #assert resource.description == description
-        #assert resource.tags == tags
-        #assert resource.links == links
-        #assert resource.uuid == uuid
-        #assert resource.digest == digest
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.digest == digest
 
     def test_parser_solution_001(self):
         """Test parsing solution.
@@ -213,16 +239,22 @@ class TestUtContentParserMarkdown(object):
         Markdown template. In this case the template is fully in Markdown
         format. This causes the solution data field to be just like the input
         Markdown text.
+
+        Because solution data is the whole text including the metadata which
+        contains the digest, the digest cannot be tested without mocks. If
+        the digest is updated, it always changes the digest and thus asserting
+        it is not feasible.
+
         """
 
-        text = '\n'.join((
+        text = Const.NEWLINE.join((
             '# Remove all exited containers and dangling images @docker',
             '',
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            '> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`  ',
-            '\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`',
+            "> \\[1\\]: `https://docs.docker.com/engine/reference/commandline/images/`  ",
+            "\\[2\\]: `https://docs.docker.com/engine/reference/commandline/rm/`",
             '',
             '- Remove all exited containers',
             '',
@@ -236,7 +268,7 @@ class TestUtContentParserMarkdown(object):
             '',
             '> category : solution  ',
             'created  : 2017-10-12T11:52:11.000001+0000  ',
-            'digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  ',
+            'digest   : d72f6dd334a53d28627e3655c41431baf4e8f1209d4fe5f1473f07b9a4e36e40  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
@@ -246,27 +278,31 @@ class TestUtContentParserMarkdown(object):
             'versions :',
             '',
         ))
-        brief = 'Remove docker image with force'
+        brief = 'Remove all exited containers and dangling images'
         description = ('Remove all exited containers and dangling images. The command examples ' +
                        'first remove all exited containers and the all dangling images.')
         groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         links = (
             'https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
-        #assert resource.brief == brief
-        #assert resource.groups == groups
-        #assert resource.description == description
-        #assert resource.tags == tags
-        #assert resource.links == links
-        #assert resource.uuid == uuid
-        #assert resource.digest == digest
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
 
     def test_parser_solution_002(self):
         """Test parsing solution.
@@ -274,13 +310,18 @@ class TestUtContentParserMarkdown(object):
         Test case verifies that standard solution is parsed correctly from
         Markdown template. In this case the input is based on text formatted
         template. In this case there are no optional links used.
+
+        Because solution data is the whole text including the metadata which
+        contains the digest, the digest cannot be tested without mocks. If
+        the digest is updated, it always changes the digest and thus asserting
+        it is not feasible.
         """
 
-        text = '\n'.join((
+        text = Const.NEWLINE.join((
             '# Testing docker log drivers @docker',
             '',
-            '> An email client and Usenet newsgroup program with a pico/nano-inspired interface.  ',
-            'Supports most modern email services through IMAP.',
+            '> Remove all exited containers and dangling images. The command examples  ',
+            'first remove all exited containers and the all dangling images.',
             '',
             '    ################################################################################',
             '    ## BRIEF  : Testing docker log drivers',
@@ -298,7 +339,7 @@ class TestUtContentParserMarkdown(object):
             '',
             '> category : solution  ',
             'created  : 2017-10-12T11:52:11.000001+0000  ',
-            'digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  ',
+            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
@@ -308,27 +349,27 @@ class TestUtContentParserMarkdown(object):
             'versions :',
             '',
         ))
-        brief = 'Remove docker image with force'
+        brief = 'Testing docker log drivers'
         description = ('Remove all exited containers and dangling images. The command examples ' +
                        'first remove all exited containers and the all dangling images.')
         groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/'
-        )
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
-        #assert resource.brief == brief
-        #assert resource.groups == groups
-        #assert resource.description == description
-        #assert resource.tags == tags
-        #assert resource.links == links
-        #assert resource.uuid == uuid
-        #assert resource.digest == digest
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == ()
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
 
     def test_parser_reference_001(self):
         """Test parsing reference.
@@ -337,47 +378,53 @@ class TestUtContentParserMarkdown(object):
         Markdown template.
         """
 
-        text = '\n'.join((
+        text = Const.NEWLINE.join((
             '# Remove all exited containers and dangling images @docker',
             '',
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            '> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`  ',
-            '\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`',
+            "> \\[1\\]: `https://docs.docker.com/engine/reference/commandline/images/`  ",
+            "\\[2\\]: `https://docs.docker.com/engine/reference/commandline/rm/`",
             '',
             '## Meta',
             '',
             '> category : reference  ',
             'created  : 2017-10-12T11:52:11.000001+0000  ',
-            'digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  ',
+            'digest   : ec6ff1c1e8c52bc2ca8de76c71cd2eebd4f5ca07e6bdd9bba42ad2154d40503b  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'tags     : cleanup, container, python, docker-ce, moby  ',
+            'updated  : 2018-10-12T11:52:11.000001+0000  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
         ))
-        brief = 'Remove docker image with force'
+        brief = 'Remove all exited containers and dangling images'
         description = ('Remove all exited containers and dangling images. The command examples ' +
                        'first remove all exited containers and the all dangling images.')
         groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
+        tags = ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         links = (
             'https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'
+        digest = 'ec6ff1c1e8c52bc2ca8de76c71cd2eebd4f5ca07e6bdd9bba42ad2154d40503b'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.REFERENCE
-        assert resource.data == ()
-        #assert resource.brief == brief
-        #assert resource.groups == groups
-        #assert resource.description == description
-        #assert resource.tags == tags
-        #assert resource.links == links
-        #assert resource.uuid == uuid
-        #assert resource.digest == digest
+        assert resource.data == links
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2018-10-12T11:52:11.000001+0000'
+        assert resource.digest == digest

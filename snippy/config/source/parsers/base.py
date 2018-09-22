@@ -31,7 +31,7 @@ class ContentParserBase(object):
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def data(cls, category, value):
+    def format_data(cls, category, value):
         """Convert content data to utf-8 encoded tuple of lines.
 
         Content data is stored as a tuple with one line per element.
@@ -59,7 +59,7 @@ class ContentParserBase(object):
         return tuple(data)
 
     @classmethod
-    def value(cls, value):
+    def format_string(cls, value):
         """Convert content string value to utf-8 encoded string.
 
         Args:
@@ -74,7 +74,7 @@ class ContentParserBase(object):
         return value
 
     @classmethod
-    def search_keywords(cls, value):
+    def format_search_keywords(cls, value):
         """Convert search keywords to utf-8 encoded tuple.
 
         If the value is None it indicates that the search keywords were not
@@ -92,7 +92,7 @@ class ContentParserBase(object):
 
         keywords = ()
         if value is not None:
-            keywords = cls.keywords(value)
+            keywords = cls.format_list(value)
             if not any(keywords):
                 cls._logger.debug('all content listed because keywords were not provided')
                 keywords = ('.')
@@ -102,7 +102,7 @@ class ContentParserBase(object):
         return keywords
 
     @classmethod
-    def keywords(cls, keywords, sort_=True):
+    def format_list(cls, keywords, sort_=True):
         """Convert list of keywords to utf-8 encoded list of strings.
 
         Parse user provided keyword list. The keywords are for example groups,
@@ -141,7 +141,7 @@ class ContentParserBase(object):
         return tuple(list_)
 
     @classmethod
-    def links(cls, links):
+    def format_links(cls, links):
         """Convert links to utf-8 encoded list of links.
 
         Parse user provided link list. Because URL and keyword have different
@@ -185,6 +185,58 @@ class ContentParserBase(object):
         list_ = list(filter(None, list_))
 
         return tuple(list_)
+
+    @classmethod
+    def parse_links(cls, category, regexp, text):
+        """Parse content links from text string.
+
+        Args:
+            category (str): Content category.
+            regexp (re): Compiled regexp to search links.
+            text (str): Content text string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded links.
+        """
+
+        links = ()
+        if category not in Const.CATEGORIES:
+            return links
+
+        match = regexp.findall(text)
+        if match:
+            links = cls.format_links(match)
+            cls._logger.debug('parsed content links: %s', links)
+        else:
+            cls._logger.debug('parser did not find content for links')
+
+        return links
+
+    @classmethod
+    def parse_groups(cls, category, regexp, text):
+        """Parse content groups from text string.
+
+        Args:
+            category (str): Content category.
+            regexp (re): Compiled regexp to search groups.
+            text (str): Content text string.
+
+        Returns:
+            tuple: Tuple of utf-8 encoded groups.
+        """
+
+        groups = ()
+        if category not in Const.CATEGORIES:
+            return groups
+
+        match = regexp.search(text)
+        if match:
+            groups = cls.format_list([match.group('groups')])
+            cls._logger.debug('parsed content groups: %s', groups)
+        else:
+            cls._logger.debug('parser did not find content for groups')
+
+        return groups
 
     @classmethod
     def to_unicode(cls, value):

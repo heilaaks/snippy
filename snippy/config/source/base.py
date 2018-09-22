@@ -164,7 +164,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         """
 
         if value is not None:
-            data = Parser.data(self.category, value)
+            data = Parser.format_data(self.category, value)
         else:
             data = ()
 
@@ -180,7 +180,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def brief(self, value):
         """Convert content brief to utf-8 encoded unicode string."""
 
-        self._brief = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
+        self._brief = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def description(self):
@@ -192,7 +192,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def description(self, value):
         """Convert content description to utf-8 encoded unicode string."""
 
-        self._description = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
+        self._description = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def groups(self):
@@ -204,7 +204,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def groups(self, value):
         """Convert content groups to tuple of utf-8 encoded unicode strings."""
 
-        self._groups = Parser.keywords(value)  # pylint: disable=attribute-defined-outside-init
+        self._groups = Parser.format_list(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def tags(self):
@@ -216,7 +216,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def tags(self, value):
         """Convert content tags to tuple of utf-8 encoded unicode strings."""
 
-        self._tags = Parser.keywords(value)  # pylint: disable=attribute-defined-outside-init
+        self._tags = Parser.format_list(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def links(self):
@@ -228,7 +228,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def links(self, value):
         """Convert content links to tuple of utf-8 encoded unicode strings."""
 
-        self._links = Parser.links(value)  # pylint: disable=attribute-defined-outside-init
+        self._links = Parser.format_links(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def filename(self):
@@ -240,7 +240,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def filename(self, value):
         """Convert content filename to utf-8 encoded unicode string."""
 
-        self._filename = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
+        self._filename = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def name(self):
@@ -252,7 +252,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def name(self, value):
         """Convert content name to utf-8 encoded unicode string."""
 
-        self._name = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
+        self._name = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def versions(self):
@@ -264,7 +264,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def versions(self, value):
         """Convert content versions to utf-8 encoded unicode string."""
 
-        self._versions = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
+        self._versions = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def source(self):
@@ -276,7 +276,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
     def source(self, value):
         """Convert content source to utf-8 encoded unicode string."""
 
-        self._source = Parser.value(value)  # pylint: disable=attribute-defined-outside-init
+        self._source = Parser.format_string(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sall(self):
@@ -290,7 +290,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         The keywords are stored in tuple with one keywords per element."""
 
-        self._sall = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
+        self._sall = Parser.format_search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def scat(self):
@@ -317,7 +317,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         no reason in case of failure.
         """
 
-        scat = Parser.search_keywords(value)
+        scat = Parser.format_search_keywords(value)
         if not scat:
             if self.category == Const.ALL_CATEGORIES:
                 scat = Const.CATEGORIES
@@ -340,7 +340,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         The keywords are stored in tuple with one keywords per element."""
 
-        self._stag = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
+        self._stag = Parser.format_search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def sgrp(self):
@@ -354,7 +354,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         The keywords are stored in tuple with one keywords per element."""
 
-        self._sgrp = Parser.search_keywords(value)  # pylint: disable=attribute-defined-outside-init
+        self._sgrp = Parser.format_search_keywords(value)  # pylint: disable=attribute-defined-outside-init
 
     @property
     def search_filter(self):
@@ -435,7 +435,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         """Sorted fields are stored in internal presentation."""
 
         parsed = OrderedDict()
-        fields = Parser.keywords(value, sort_=False)
+        fields = Parser.format_list(value, sort_=False)
         for field in fields:
             match = re.match(r'(?P<direction>-?)(?P<field>\S+)', field, re.IGNORECASE)
             if match.group('field') and match.group('field') in self.ATTRIBUTES:
@@ -459,7 +459,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         The removed fields are presented as tuple and they are converted from
         requested 'fields' parameter."""
 
-        requested_fields = Parser.keywords(value)
+        requested_fields = Parser.format_list(value)
         valid = True
         for field in requested_fields:
             if field not in self.ATTRIBUTES:

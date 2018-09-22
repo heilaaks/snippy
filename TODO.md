@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Fix typo specigic
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
    - [ ] Add support to snippet command examplations that translate to headers in MD files: $ docker rm --volumes $(docker ps --all --quiet) # Remove all containers.
@@ -155,14 +156,13 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## FOLLOW EXTERNAL BUGS/ISSUES
-   - [ ] OpenAPI does not support OPTIONS HTTP method and it cannot be defined. //https://github.com/OAI/OpenAPI-Specification/issues/325
+   - [ ] OpenAPI does not support OPTIONS HTTP method and it cannot be defined. // https://github.com/OAI/OpenAPI-Specification/issues/325
    - [x] The openapi2jsonschema does not work with Python 3. // https://github.com/garethr/openapi2jsonschema/issues/6.
    - [x] The openapi2jsonschema does not work with OAS 3.0. // https://github.com/garethr/openapi2jsonschema/issues/6.
    - [ ] OAS3.0 to JSON schema. // https://github.com/OAI/OpenAPI-Specification/issues/1032
    - [ ] There is a pylint bug that it does not see see Python properties being used with underscore. // https://github.com/PyCQA/pylint/issues/409
-   - [ ] Python logging is not following ISO8601 format and it cannot have timezone. Workaround done for Logger().
+   - [x] Python logging is not following ISO8601 format and it cannot have timezone. Workaround has been implemented for Snippy Logger() class.
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
-   - [ ] Python module openapi2jsonschema works only in Python 2. // https://github.com/garethr/openapi2jsonschema/issues/6
 
 ## DONE
    - [x] Added content parsing from API sources.

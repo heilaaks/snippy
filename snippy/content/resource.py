@@ -331,7 +331,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return digest
 
     def seal(self):
-        """Seal content by updating digest and run content specigic tasks.
+        """Seal content by updating digest and run content specific tasks.
 
         In case of reference content, the links are treated as content data.
         The tool has been built to expect always the data part and it was

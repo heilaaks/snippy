@@ -242,9 +242,9 @@ class TestUtContentParserMarkdown(object):
         text = Const.NEWLINE.join((
             '# @default',
             '',
-            '>',
+            '> ',
             '',
-            '>',
+            '> ',
             '',
             '- Remove all exited containers',
             '',
@@ -384,7 +384,7 @@ class TestUtContentParserMarkdown(object):
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
-            '>',
+            '> ',
             ''
             '    ################################################################################',
             '    ## BRIEF  : Testing docker log drivers',
@@ -444,9 +444,9 @@ class TestUtContentParserMarkdown(object):
         text = Const.NEWLINE.join((
             '# @default',
             '',
-            '>',
+            '> ',
             '',
-            '>',
+            '> ',
             ''
             '    ################################################################################',
             '    ## BRIEF  : Testing docker log drivers',
@@ -561,9 +561,9 @@ class TestUtContentParserMarkdown(object):
         text = Const.NEWLINE.join((
             '# @default',
             '',
-            '>',
+            '> ',
             '',
-            '>',
+            '> ',
             '',
             '## Meta',
             '',

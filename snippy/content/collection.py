@@ -206,10 +206,16 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         return data
 
     def dump_text(self, digest, category, timestamp, templates):
-        """Convert collection to text.
+        """Convert collection to tool proprietary text format.
 
         Conversion is made from specific resource or from empty template for
         defined category.
+
+        Args:
+           digest (str): Content digest.
+           category (str): Content category.
+           timestamp (str): IS8601 timestamp.
+           templates (dict): Dictionary that contains text templates.
         """
 
         if digest:
@@ -218,6 +224,24 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             text = self.get_resource(category, timestamp).dump_text(templates)
 
         return text
+
+    def dump_mkdn(self, templates):
+        """Convert collection to Markdown.
+
+        All resources inside the collection are converted to Markdown.
+
+        Args:
+           templates (dict): Dictionary that contains text templates.
+        """
+
+        if self.empty():
+            Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
+
+        text = Const.EMPTY
+        for resource in self.resources():
+            text = text + resource.dump_mkdn(templates)
+
+        self._print_stdout(text)
 
     def dump_term(self, use_ansi, debug_logs):
         """Convert collection for terminal."""

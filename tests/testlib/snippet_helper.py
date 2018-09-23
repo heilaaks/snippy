@@ -146,6 +146,7 @@ class SnippetHelper(object):
         '',
         '# Add optional links below one link per line.',
         '',
+        '',
         ''
     )
 

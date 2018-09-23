@@ -1,16 +1,16 @@
 # Commented lines will be ignored.
 #
 # Add mandatory snippet below.
-<SNIPPY_DATA><SNIPPY_DATA>
+<data><data>
 
 # Add optional brief description below.
-<SNIPPY_BRIEF>
+<brief>
 
 # Add optional comma separated list of groups below.
-<SNIPPY_GROUPS>
+<groups>
 
 # Add optional comma separated list of tags below.
-<SNIPPY_TAGS>
+<tags>
 
 # Add optional links below one link per line.
-<SNIPPY_LINKS>
+<links>

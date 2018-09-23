@@ -50,8 +50,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     METADATA = 15
     KEY = 16
 
-    SOLUTION_TEMPLATE = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
+    SOLUTION_TEMPLATE = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
     REFERENCE_TEMPLATE = 'e0cd55c650ef936a66633ee29500e47ee60cc497c342212381c40032ea2850d9'
     TEMPLATES = (SNIPPET_TEMPLATE, SOLUTION_TEMPLATE, REFERENCE_TEMPLATE)
 
@@ -560,6 +560,14 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return text
 
+    def dump_mkdn(self, templates):
+        """Convert resource to Markdown."""
+
+        text = templates[self.category]
+        text = self._add_data(text)
+
+        return text
+
     def dump_term(self, index, ansi, debug):
         """Convert resource to be printed to terminal."""
 
@@ -662,11 +670,11 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         data = Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data))
         if data:
             if self.is_snippet():
-                template = re.sub('<SNIPPY_DATA>.*<SNIPPY_DATA>', data, template, flags=re.DOTALL)
+                template = re.sub('<data>.*<data>', data, template, flags=re.DOTALL)
             if self.is_solution():
                 template = data
         else:
-            template = template.replace('<SNIPPY_DATA>', Const.EMPTY)
+            template = template.replace('<data>', Const.EMPTY)
 
         return template
 
@@ -674,7 +682,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Add resource brief to text template."""
 
         brief = self.brief
-        template = template.replace('<SNIPPY_BRIEF>', brief)
+        template = template.replace('<brief>', brief)
 
         return template
 
@@ -682,7 +690,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Add resource groups to text template."""
 
         groups = Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups)))
-        template = template.replace('<SNIPPY_GROUPS>', groups)
+        template = template.replace('<groups>', groups)
 
         return template
 
@@ -690,7 +698,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Add resource tags to text template."""
 
         tags = Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
-        template = template.replace('<SNIPPY_TAGS>', tags)
+        template = template.replace('<tags>', tags)
 
         return template
 
@@ -700,7 +708,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         links = Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links))
         if self.category == Const.SNIPPET:
             links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds an extra newline at the end.
-        template = template.replace('<SNIPPY_LINKS>', links)
+        template = template.replace('<links>', links)
 
         return template
 
@@ -708,7 +716,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Add resource filename to text template."""
 
         filename = self.filename
-        template = template.replace('<SNIPPY_FILE>', filename)
+        template = template.replace('<filename>', filename)
 
         return template
 

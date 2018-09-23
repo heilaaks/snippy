@@ -1,13 +1,13 @@
 # Commented lines will be ignored.
 #
 # Add mandatory links below one link per line.
-<SNIPPY_LINKS>
+<links>
 
 # Add optional brief description below.
-<SNIPPY_BRIEF>
+<brief>
 
 # Add optional comma separated list of groups below.
-<SNIPPY_GROUPS>
+<groups>
 
 # Add optional comma separated list of tags below.
-<SNIPPY_TAGS>
+<tags>

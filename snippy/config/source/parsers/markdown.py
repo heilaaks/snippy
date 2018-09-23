@@ -46,16 +46,16 @@ class ContentParserMarkdown(ContentParserBase):
         """, re.MULTILINE | re.VERBOSE)
     REGEXP['data'][Const.SOLUTION] = re.compile(
         r"""
-        (?P<data>.*)            # All the content is data.
+        (?P<data>.*)    # All the content is data.
         """, re.DOTALL | re.VERBOSE)
     REGEXP['data'][Const.REFERENCE] = re.compile(r'\A(?!x)x')  # Never match anything because there is no data in the content.
 
     REGEXP['brief'] = {}
     REGEXP['brief'][Const.SNIPPET] = re.compile(
         r"""
-        [#\s]+                  # Match leading comment before brief.
-        (?P<brief>.*)           # Catch brief.
-        \s+[@]{1}               # Match string between brief and groups.
+        [#\s]+          # Match leading comment before brief.
+        (?P<brief>.*)   # Catch brief.
+        \s+[@]{1}       # Match string between brief and groups.
         """, re.VERBOSE
     )
     REGEXP['brief'][Const.SOLUTION] = REGEXP['brief'][Const.SNIPPET]
@@ -64,10 +64,10 @@ class ContentParserMarkdown(ContentParserBase):
     REGEXP['description'] = {}
     REGEXP['description'][Const.SNIPPET] = re.compile(
         r"""
-        [#\s]+.*[@].*                       # Match headline that contains always brief and groups.
-        \n\s*\n                             # Match one empty line.
-        [>\s]?(?P<description>[\S\s\d\n]*?) # Catch optional description after greater than (>) sign.
-        \n\s*\n                             # Match one empty line.
+        [#\s]+.*[@].*                        # Match headline that contains always brief and groups.
+        \n\s*\n                              # Match one empty line.
+        [>\s]?(?P<description>[\S\s\d\n]*?)  # Catch optional description after greater than (>) sign.
+        \n\s*\n                              # Match one empty line.
         """, re.VERBOSE
     )
     REGEXP['description'][Const.SOLUTION] = REGEXP['description'][Const.SNIPPET]
@@ -76,10 +76,10 @@ class ContentParserMarkdown(ContentParserBase):
     REGEXP['groups'] = {}
     REGEXP['groups'][Const.SNIPPET] = re.compile(
         r"""
-        [#\s]+                  # Match leading comment before brief.
-        .*                      # Match brief before groups.
-        \s+[@]{1}               # Match string between brief and groups.
-        (?P<groups>.*)          # Catch groups.
+        [#\s]+          # Match leading comment before brief.
+        .*              # Match brief before groups.
+        \s+[@]{1}       # Match string between brief and groups.
+        (?P<groups>.*)  # Catch groups.
         """, re.VERBOSE
     )
     REGEXP['groups'][Const.SOLUTION] = REGEXP['groups'][Const.SNIPPET]
@@ -88,10 +88,10 @@ class ContentParserMarkdown(ContentParserBase):
     REGEXP['links'] = {}
     REGEXP['links'][Const.SNIPPET] = re.compile(
         r"""
-        [\[\d\]:\\\s]+          # Match link reference number before the link.
-        [`]{1}                  # Match exactly grave accents (`).
-        (?P<links>http.*)       # Catch link.
-        [`]{1}                  # Match exactly grave accents (`).
+        [\[\d\]:\\\s]+      # Match link reference number before the link.
+        [`]{1}              # Match exactly grave accents (`).
+        (?P<links>http.*)   # Catch link.
+        [`]{1}              # Match exactly grave accents (`).
         """, re.VERBOSE
     )
     REGEXP['links'][Const.SOLUTION] = REGEXP['links'][Const.SNIPPET]
@@ -195,11 +195,14 @@ class ContentParserMarkdown(ContentParserBase):
 
         data = Const.EMPTY
         for command in text:
-            match = re.compile(r"""(?:
-                -\s+                            # Match hyphen and spaces before comment
-                (?P<comment>.*$)\n\s*\n)?       # Catch optional one line comment and skip one empty line before command.
+            match = re.compile(r"""
+                (?:                             # Match optional comment inside non-capturing set.
+                    -\s+                        # Match hyphen and spaces before comment
+                    (?P<comment>.*$)            # Catch optional one line comment and skip one empty line before command.
+                    \n\s*\n                     # Match empty line.
+                )?                              # Comment may be matched 0 times.
                 \s+                             # Match spaces in the beginning of the line which has the command.
-                `\$\s(?P<command>.*)`           # Catch one line command indicated by dollar sign between grave accents (`).
+                [`$\s]{3}(?P<command>.*)[`]     # Catch one line command indicated by dollar sign between grave accents (`).
                 """, re.MULTILINE | re.VERBOSE).search(command)
             if match:
                 if match.group('comment'):
@@ -332,7 +335,7 @@ class ContentParserMarkdown(ContentParserBase):
         match = re.compile(r"""
             %s                  # Match metadata key.
             \s+[:]{1}\s         # Match spaces and column between key and value.
-            (?P<value>.*)        # Catch metadata value.
+            (?P<value>.*)       # Catch metadata value.
             """ % key, re.VERBOSE).search(text)
         if match:
             meta = self.format_string(match.group('value'))

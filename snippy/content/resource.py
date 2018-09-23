@@ -21,6 +21,7 @@
 
 import hashlib
 import re
+import textwrap
 import uuid
 
 from snippy.cause import Cause
@@ -550,7 +551,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def dump_text(self, templates):
         """Convert resource to text."""
 
-        text = templates[self.category]
+        text = templates['text'][self.category]
         text = self._add_data(text)
         text = self._add_brief(text)
         text = self._add_groups(text)
@@ -563,10 +564,65 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def dump_mkdn(self, templates):
         """Convert resource to Markdown."""
 
-        text = templates[self.category]
-        text = self._add_data(text)
+        mkdn = templates['mkdn'][self.category]
+        mkdn = mkdn.replace('<data>', self._dump_mkdn_data())
+        mkdn = mkdn.replace('<brief>', self.brief)
+        mkdn = mkdn.replace('<description>', textwrap.fill(self.description, 88))
+        mkdn = mkdn.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
+        mkdn = mkdn.replace('<tags>', Const.DELIMITER_TAGS.join(self.tags))
+        mkdn = mkdn.replace('<links>', self._dump_mkdn_links())
+        mkdn = mkdn.replace('<category>', self.category)
+        mkdn = mkdn.replace('<name>', self.name)
+        mkdn = mkdn.replace('<filename>', self.filename)
+        mkdn = mkdn.replace('<versions>', self.versions)
+        mkdn = mkdn.replace('<source>', self.source)
+        mkdn = mkdn.replace('<uuid>', self.uuid)
+        mkdn = mkdn.replace('<created>', self.created)
+        mkdn = mkdn.replace('<updated>', self.updated)
+        mkdn = mkdn.replace('<digest>', self.digest)
 
-        return text
+        return mkdn
+
+    def _dump_mkdn_data(self):
+        """Dump resource data to Markdown format.
+
+        Snippet data contains commands that may have comment. The comment
+        is extracted from the command string and used as a header in the
+        Markdown formatted data.
+        """
+
+        data = Const.EMPTY
+        if self.is_snippet():
+            for command in self.data:
+                match = re.compile(r"""
+                    (?P<command>.*?)                    # Catch mandatory command.
+                    (?:\s+[#]\s+(?P<comment>.*)|$)      # Catch optional comment.
+                    """, re.VERBOSE).search(command)
+                if match:
+                    if match.group('comment'):
+                        data = data + "- " + match.group('comment') + Const.NEWLINE * 2
+                        data = data + "    `$ " + match.group('command') + "`" + Const.NEWLINE * 2
+                    else:
+                        data = data + "`$ " + match.group('command') + "`" + Const.NEWLINE
+                else:
+                    self._logger.debug('command parsing failed: %s', command)
+            data = data.rstrip()
+
+        return data
+
+    def _dump_mkdn_links(self):
+        """Dump resource links to Markdown format.
+
+        Extra spaces at the end of link is needed to get the Markdown syntax
+        with multiple links to wrap correctly for every link.
+        """
+
+        links = Const.EMPTY
+        for i, link in enumerate(self.links, start=1):
+            links = links + "[%s] " % i + link + '  ' + Const.NEWLINE
+        links = links.rstrip()
+
+        return links
 
     def dump_term(self, index, ansi, debug):
         """Convert resource to be printed to terminal."""

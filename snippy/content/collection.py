@@ -240,6 +240,8 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         text = Const.EMPTY
         for resource in self.resources():
             text = text + resource.dump_mkdn(templates)
+            text = text + '\n---\n\n'
+        text = text[:-6]  # Remove last separator added by the loop.
 
         self._print_stdout(text)
 

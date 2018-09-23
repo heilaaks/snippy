@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] Refactor text dumping from Resource to same style is Markdown.
+   - [ ] Can the terminal output be made with a template? That would simplify the output a lot.
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
    - [ ] Add support to snippet command examplations that translate to headers in MD files: $ docker rm --volumes $(docker ps --all --quiet) # Remove all containers.
@@ -13,6 +15,9 @@
    - [ ] Use VERBOSE to comment regexp in text template parser.
    - [ ] Fix Collection __getitem__ with unknown digest that returns key error.
    - [ ] Fix resource = collection[list(collection.keys())[0]]['data'] to collection[0] and collection[digest] if possible?
+   - [ ] Fix (somehow) the markdown parsing loses manual alignment of comments since the text->mkd -> text adds only one space between command and comment.
+   - [ ] Change pyyaml requiredment to 3.12> and <4. The 3.13. is required by Python3.7 but it is so new. Try to force 3.13 with Python 3.7?
+   - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?
 
 ## THINKING
    - [ ] Add code content.

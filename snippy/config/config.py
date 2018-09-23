@@ -53,20 +53,22 @@ class Config(object):
 
         cls.source = Cli(args)
 
-        # Static storage configuration.
+        # Static storage and template configurations.
         cls.storage_schema = cls._storage_schema()
-        cls.snippet_template = cls._content_template('snippet.txt')
-        cls.solution_template = cls._content_template('solution.txt')
-        cls.reference_template = cls._content_template('reference.txt')
-        cls.templates = {
-            'snippet': cls.snippet_template,
-            'solution': cls.solution_template,
-            'reference': cls.reference_template
-        }
         cls.storage_path = cls.source.storage_path
         cls.storage_file = cls._storage_file()
+        cls.templates = {
+            'text': {
+                'snippet': cls._content_template('snippet.txt'),
+                'solution': cls._content_template('solution.txt'),
+                'reference': cls._content_template('reference.txt')
+            },
+            'mkdn': {
+                'snippet': cls._content_template('snippet.md')
+            }
+        }
 
-        # Static server configuration.
+        # Static server configurations.
         cls.base_path_app = cls.source.base_path_app
         cls.compact_json = cls.source.compact_json
         cls.server = cls.source.server

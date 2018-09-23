@@ -293,6 +293,83 @@ class TestUtContentParserMarkdown(object):
         assert resource.updated == '2017-10-12T11:52:11.000001+0000'
         assert resource.digest == digest
 
+    def test_parser_snippet_004(self):
+        """Test parsing snippet.
+
+        Test case verifies that real content example is parsed correctly.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Manipulate compressed tar files @linux',
+            '',
+            '> ',
+            '',
+            '> ',
+            '',
+            '- Compress folder excluding the tar.',
+            '',
+            '    `$ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./`',
+            '',
+            '- List content of compressed tar.',
+            '',
+            '    `$ tar tvf mytar.tar.gz`',
+            '',
+            '- Cat file in compressed tar.',
+            '',
+            '    `$ tar xfO mytar.tar.gz manifest.json`',
+            '',
+            '- Extract and exclude one file.',
+            '',
+            '    `$ tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"`',
+            '',
+            '- Extract only one file.',
+            '',
+            '    `$ tar -xf mytar.tar.gz manifest.json`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2018-05-07T11:13:17.000001+0000  ',
+            'digest   : 1115c9c843d1ffae45997d68c96d02af83fef49db677a9a7298ba135436e4ca8  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : howto,linux,tar,untar  ',
+            'updated  : 2018-05-07T11:13:17.000001+0000  ',
+            'uuid     : f21c8ed8-8830-11e8-a114-2c4d54508088  ',
+            'versions : ',
+            ''
+        ))
+        data = (
+            'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./ # Compress folder excluding the tar.',
+            'tar tvf mytar.tar.gz # List content of compressed tar.',
+            'tar xfO mytar.tar.gz manifest.json # Cat file in compressed tar.',
+            'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz" # Extract and exclude one file.',
+            'tar -xf mytar.tar.gz manifest.json # Extract only one file.'
+        )
+        brief = 'Manipulate compressed tar files'
+        groups = ('linux',)
+        tags = ('howto', 'linux', 'tar', 'untar')
+        uuid = 'f21c8ed8-8830-11e8-a114-2c4d54508088'
+        digest = '1115c9c843d1ffae45997d68c96d02af83fef49db677a9a7298ba135436e4ca8'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        print(resource.data)
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == Const.EMPTY
+        assert resource.tags == tags
+        assert resource.links == ()
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2018-05-07T11:13:17.000001+0000'
+        assert resource.updated == '2018-05-07T11:13:17.000001+0000'
+        assert resource.digest == digest
+
     def test_parser_solution_001(self):
         """Test parsing solution.
 

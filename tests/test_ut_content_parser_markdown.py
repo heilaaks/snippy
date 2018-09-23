@@ -232,6 +232,67 @@ class TestUtContentParserMarkdown(object):
         assert resource.updated == '2017-10-12T11:52:11.000001+0000'
         assert resource.digest == digest
 
+    def test_parser_snippet_003(self):
+        """Test parsing snippet.
+
+        Test case verifies that optional fields brief, groups, description and
+        links can be ommitted and the content is still parsed correctly.
+        """
+
+        text = Const.NEWLINE.join((
+            '# @default',
+            '',
+            '>',
+            '',
+            '>',
+            '',
+            '- Remove all exited containers',
+            '',
+            '    `$ docker rm $(docker ps --all -q -f status=exited)`',
+            '',
+            '- Remove all dangling images',
+            '',
+            '    `$ docker images -q --filter dangling=true | xargs docker rmi`',
+            '',
+            '## Meta',
+            '',
+            '> category : snippet  ',
+            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'digest   : 852ca349dc05fb75bccfac743318230b7fc5360e8d3d4e61674e71aba2e469ff  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, docker, docker-ce, moby  ',
+            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions :',
+            '',
+        ))
+        data = (
+            'docker rm $(docker ps --all -q -f status=exited) # Remove all exited containers',
+            'docker images -q --filter dangling=true | xargs docker rmi # Remove all dangling images'
+        )
+        groups = ('default',)
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
+        digest = '852ca349dc05fb75bccfac743318230b7fc5360e8d3d4e61674e71aba2e469ff'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == Const.EMPTY
+        assert resource.groups == groups
+        assert resource.description == Const.EMPTY
+        assert resource.tags == tags
+        assert resource.links == ()
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.digest == digest
+
     def test_parser_solution_001(self):
         """Test parsing solution.
 
@@ -323,6 +384,8 @@ class TestUtContentParserMarkdown(object):
             '> Remove all exited containers and dangling images. The command examples  ',
             'first remove all exited containers and the all dangling images.',
             '',
+            '>',
+            ''
             '    ################################################################################',
             '    ## BRIEF  : Testing docker log drivers',
             '    ##',
@@ -361,6 +424,65 @@ class TestUtContentParserMarkdown(object):
         assert resource.brief == brief
         assert resource.groups == groups
         assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == ()
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+
+    def test_parser_solution_003(self):
+        """Test parsing solution.
+
+        Test case verifies that optional fields brief, groups, description and
+        links can be ommitted and the content is still parsed correctly.
+        """
+
+        text = Const.NEWLINE.join((
+            '# @default',
+            '',
+            '>',
+            '',
+            '>',
+            ''
+            '    ################################################################################',
+            '    ## BRIEF  : Testing docker log drivers',
+            '    ##',
+            '    ## GROUPS : docker',
+            '    ## TAGS   : cleanup, container, docker, docker-ce, moby',
+            '    ## FILE   : docker-example.txt',
+            '    ################################################################################',
+            '',
+            '    ################################################################################',
+            '    ## description',
+            '    ################################################################################',
+            '',
+            '# Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, docker, docker-ce, moby  ',
+            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions :',
+            '',
+        ))
+        groups = ('default',)
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.brief == Const.EMPTY
+        assert resource.groups == groups
+        assert resource.description == Const.EMPTY
         assert resource.tags == tags
         assert resource.links == ()
         assert resource.filename == Const.EMPTY
@@ -420,6 +542,55 @@ class TestUtContentParserMarkdown(object):
         assert resource.description == description
         assert resource.tags == tags
         assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2018-10-12T11:52:11.000001+0000'
+        assert resource.digest == digest
+
+    def test_parser_reference_002(self):
+        """Test parsing reference.
+
+        Test case verifies that optional fields brief, groups, description and
+        links can be ommitted and the content is still parsed correctly.
+        """
+
+        text = Const.NEWLINE.join((
+            '# @default',
+            '',
+            '>',
+            '',
+            '>',
+            '',
+            '## Meta',
+            '',
+            '> category : reference  ',
+            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'digest   : 1c7501ac802d98aeb161c973ec51c1b96d56774cdc8936c17df0fa9315d3e1c7  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, python, docker-ce, moby  ',
+            'updated  : 2018-10-12T11:52:11.000001+0000  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions :',
+            '',
+        ))
+        groups = ('default',)
+        tags = ('cleanup', 'container', 'docker-ce', 'moby', 'python')
+        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
+        digest = '1c7501ac802d98aeb161c973ec51c1b96d56774cdc8936c17df0fa9315d3e1c7'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.REFERENCE
+        assert resource.data == ()
+        assert resource.brief == Const.EMPTY
+        assert resource.groups == groups
+        assert resource.description == Const.EMPTY
+        assert resource.tags == tags
+        assert resource.links == ()
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
         assert resource.versions == Const.EMPTY

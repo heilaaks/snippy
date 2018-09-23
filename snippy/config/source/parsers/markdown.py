@@ -66,7 +66,7 @@ class ContentParserMarkdown(ContentParserBase):
         r"""
         [#\s]+.*[@].*                       # Match headline that contains always brief and groups.
         \n\s*\n                             # Match one empty line.
-        [>]\s(?P<description>[\S\s\d\n]*?)  # Catch description.
+        [>\s]?(?P<description>[\S\s\d\n]*?) # Catch optional description after greater than (>) sign.
         \n\s*\n                             # Match one empty line.
         """, re.VERBOSE
     )

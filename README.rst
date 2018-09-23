@@ -1,4 +1,4 @@
-|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-docs| |badge-build|
+|badge-pypiv| |badge-pys| |badge-pyv| |badge-cov| |badge-docs| |badge-build| |badge-pyup|
 
 Features
 ========
@@ -342,6 +342,9 @@ fill a bug report based on contributing_ instructions.
 
 .. |badge-build| image:: https://travis-ci.org/heilaaks/snippy.svg?branch=master
    :target: https://travis-ci.org/heilaaks/snippy
+
+.. |badge-pyup| image:: https://pyup.io/repos/github/heilaaks/snippy/shield.svg
+   :target: https://pyup.io/repos/github/heilaaks/snippy/
 
 .. _Read the Docs: http://snippy.readthedocs.io/en/latest/
 

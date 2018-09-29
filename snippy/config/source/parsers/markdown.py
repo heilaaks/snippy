@@ -53,9 +53,9 @@ class ContentParserMarkdown(ContentParserBase):
     REGEXP['brief'] = {}
     REGEXP['brief'][Const.SNIPPET] = re.compile(
         r"""
-        [#\s]+          # Match leading comment before brief.
-        (?P<brief>.*)   # Catch brief.
-        \s+[@]{1}       # Match string between brief and groups.
+            [#\s]+          # Match leading comment before brief.
+            (?P<brief>.*)   # Catch brief.
+            \s+[@]{1}       # Match string between brief and groups.
         """, re.VERBOSE
     )
     REGEXP['brief'][Const.SOLUTION] = REGEXP['brief'][Const.SNIPPET]
@@ -64,10 +64,10 @@ class ContentParserMarkdown(ContentParserBase):
     REGEXP['description'] = {}
     REGEXP['description'][Const.SNIPPET] = re.compile(
         r"""
-        [#\s]+.*[@].*                        # Match headline that contains always brief and groups.
-        \n\s*\n                              # Match one empty line.
-        [>\s]?(?P<description>[\S\s\d\n]*?)  # Catch optional description after greater than (>) sign.
-        \n\s*\n                              # Match one empty line.
+            [#\s]+.*[@].*                        # Match headline that contains always brief and groups.
+            \n\s*\n                              # Match one empty line.
+            [>\s]?(?P<description>[\S\s\d\n]*?)  # Catch optional description after greater than (>) sign.
+            \n\s*\n                              # Match one empty line.
         """, re.VERBOSE
     )
     REGEXP['description'][Const.SOLUTION] = REGEXP['description'][Const.SNIPPET]
@@ -76,10 +76,10 @@ class ContentParserMarkdown(ContentParserBase):
     REGEXP['groups'] = {}
     REGEXP['groups'][Const.SNIPPET] = re.compile(
         r"""
-        [#\s]+          # Match leading comment before brief.
-        .*              # Match brief before groups.
-        \s+[@]{1}       # Match string between brief and groups.
-        (?P<groups>.*)  # Catch groups.
+            [#\s]+          # Match leading comment before brief.
+            .*              # Match brief before groups.
+            \s+[@]{1}       # Match string between brief and groups.
+            (?P<groups>.*)  # Catch groups.
         """, re.VERBOSE
     )
     REGEXP['groups'][Const.SOLUTION] = REGEXP['groups'][Const.SNIPPET]
@@ -88,10 +88,10 @@ class ContentParserMarkdown(ContentParserBase):
     REGEXP['links'] = {}
     REGEXP['links'][Const.SNIPPET] = re.compile(
         r"""
-        [\[\d\]:\\\s]+      # Match link reference number before the link.
-        [`]{1}              # Match exactly grave accents (`).
-        (?P<links>http.*)   # Catch link.
-        [`]{1}              # Match exactly grave accents (`).
+            [\[\d\]:\\\s]+      # Match link reference number before the link.
+            [`]{1}              # Match exactly grave accents (`).
+            (?P<links>http.*)   # Catch link.
+            [`]{1}              # Match exactly grave accents (`).
         """, re.VERBOSE
     )
     REGEXP['links'][Const.SOLUTION] = REGEXP['links'][Const.SNIPPET]

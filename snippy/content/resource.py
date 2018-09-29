@@ -22,6 +22,7 @@
 import hashlib
 import re
 import textwrap
+import traceback
 import uuid
 
 from snippy.cause import Cause
@@ -552,12 +553,25 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Convert resource to text."""
 
         text = templates['text'][self.category]
-        text = self._add_data(text)
-        text = self._add_brief(text)
-        text = self._add_groups(text)
-        text = self._add_tags(text)
-        text = self._add_links(text)
-        text = self._add_filename(text)
+        if self.data:
+            try:
+                text = re.sub(
+                    r"""
+                        [<data>]{6}         # Match <data> tag.
+                        (.*[<data>]{6})?    # Match optional closing <data> tag and all data between the tags.
+                    """, Const.DELIMITER_DATA.join(self.data), text, flags=re.DOTALL | re.VERBOSE)
+            except (re.error, TypeError):
+                self._logger.info('failed to replace content data in text template: {}'.format(traceback.format_exc()))
+                self._logger.info('failed to replace content data: {}'.format(self.data))
+                self._logger.info('failed to replace content template: {}'.format(text))
+        else:
+            text = text.replace('<data>', Const.EMPTY)
+            text = text.lstrip()
+        text = text.replace('<brief>', self.brief)
+        text = text.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
+        text = text.replace('<tags>', Const.DELIMITER_TAGS.join(self.tags))
+        text = text.replace('<links>', Const.DELIMITER_LINKS.join(self.links))
+        text = text.replace('<filename>', self.filename)
 
         return text
 
@@ -719,63 +733,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = text + Const.NEWLINE
 
         return text
-
-    def _add_data(self, template):
-        """Add resource data to text template."""
-
-        data = Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data))
-        if data:
-            if self.is_snippet():
-                template = re.sub('<data>', data, template, flags=re.DOTALL)
-            if self.is_solution():
-                template = data
-        else:
-            template = template.replace('<data>', Const.EMPTY)
-            template = template.lstrip()
-
-        return template
-
-    def _add_brief(self, template):
-        """Add resource brief to text template."""
-
-        brief = self.brief
-        template = template.replace('<brief>', brief)
-
-        return template
-
-    def _add_groups(self, template):
-        """Add resource groups to text template."""
-
-        groups = Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(self.groups)))
-        template = template.replace('<groups>', groups)
-
-        return template
-
-    def _add_tags(self, template):
-        """Add resource tags to text template."""
-
-        tags = Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(self.tags)))
-        template = template.replace('<tags>', tags)
-
-        return template
-
-    def _add_links(self, template):
-        """Add resource links to text template."""
-
-        links = Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, self.links))
-        if self.category == Const.SNIPPET:
-            links = links + Const.NEWLINE  # Links is the last item in snippet template and this adds an extra newline at the end.
-        template = template.replace('<links>', links)
-
-        return template
-
-    def _add_filename(self, template):
-        """Add resource filename to text template."""
-
-        filename = self.filename
-        template = template.replace('<filename>', filename)
-
-        return template
 
     @staticmethod
     def _terminal_header(ansi=False):

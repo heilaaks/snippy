@@ -353,7 +353,6 @@ class TestUtContentParserMarkdown(object):
         uuid = 'f21c8ed8-8830-11e8-a114-2c4d54508088'
         digest = '1115c9c843d1ffae45997d68c96d02af83fef49db677a9a7298ba135436e4ca8'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
-        print(resource.data)
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief

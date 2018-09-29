@@ -1,7 +1,7 @@
 # Commented lines will be ignored.
 #
 # Add mandatory snippet below.
-<data><data>
+<data>
 
 # Add optional brief description below.
 <brief>

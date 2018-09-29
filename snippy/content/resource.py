@@ -726,11 +726,12 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         data = Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data))
         if data:
             if self.is_snippet():
-                template = re.sub('<data>.*<data>', data, template, flags=re.DOTALL)
+                template = re.sub('<data>', data, template, flags=re.DOTALL)
             if self.is_solution():
                 template = data
         else:
             template = template.replace('<data>', Const.EMPTY)
+            template = template.lstrip()
 
         return template
 

@@ -18,6 +18,7 @@
    - [ ] Fix (somehow) the markdown parsing loses manual alignment of comments since the text->mkd -> text adds only one space between command and comment.
    - [ ] Change pyyaml requiredment to 3.12> and <4. The 3.13. is required by Python3.7 but it is so new. Try to force 3.13 with Python 3.7?
    - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?
+   - [ ] Test test_cli_create_solution_003 that checks 'content was not stored because it was matching to an empty template' does not notice actual failures. The test should use real template now it uses mocked template.
 
 ## THINKING
    - [ ] Add code content.

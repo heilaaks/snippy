@@ -2270,3 +2270,68 @@ tags     : container, docker, docker-ce, moby, network, remove, solution, swarm
 updated  : 2017-10-12T11:52:11.000001+0000  
 uuid     : f21c752e-8830-11e8-a114-2c4d54508088  
 versions :
+
+
+\x1b[96;1m<index>. \x1b[1;92m<brief>\x1b[0m @<groups> \x1b[0;2m[<digest>]\x1b[0m
+{indent}\x1b[91m$\x1b[0m <data>
+
+{indent}\x1b[91m#\x1b[0m \x1b[2m<tags>\x1b[0m
+{indent}\x1b[91m>\x1b[0m \x1b[2m<links>\x1b[0m
+<debug>
+{indent}\x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m    : <category>
+{indent}\x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m     : <created>
+{indent}\x1b[91m!\x1b[0m \x1b[2mdescription\x1b[0m : <description>
+{indent}\x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m      : <digest>
+{indent}\x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m    : <filename>
+{indent}\x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m         : <key>
+{indent}\x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m    : <metadata>
+{indent}\x1b[91m!\x1b[0m \x1b[2mname\x1b[0m        : <name>
+{indent}\x1b[91m!\x1b[0m \x1b[2msource\x1b[0m      : <source>
+{indent}\x1b[91m!\x1b[0m \x1b[2mtags\x1b[0m        : <tags>
+{indent}\x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m     : <updated>
+{indent}\x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m        : <uuid>
+{indent}\x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m    : <versions>
+<debug>
+
+\x1b[96;1m<index>. \x1b[1;92m<brief>\x1b[0m @<groups> \x1b[0;2m[<digest>]\x1b[0m
+
+{indent}\x1b[91m#\x1b[0m \x1b[2m<tags>\x1b[0m
+{indent}\x1b[91m>\x1b[0m \x1b[2m<links>\x1b[0m
+
+{indent}\x1b[91m:\x1b[0m <data>
+<debug>
+{indent}\x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m    : <category>
+{indent}\x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m     : <created>
+{indent}\x1b[91m!\x1b[0m \x1b[2mdescription\x1b[0m : <description>
+{indent}\x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m      : <digest>
+{indent}\x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m    : <filename>
+{indent}\x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m         : <key>
+{indent}\x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m    : <metadata>
+{indent}\x1b[91m!\x1b[0m \x1b[2mname\x1b[0m        : <name>
+{indent}\x1b[91m!\x1b[0m \x1b[2msource\x1b[0m      : <source>
+{indent}\x1b[91m!\x1b[0m \x1b[2mtags\x1b[0m        : <tags>
+{indent}\x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m     : <updated>
+{indent}\x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m        : <uuid>
+{indent}\x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m    : <versions>
+<debug>
+
+\x1b[96;1m<index>. \x1b[1;92m<brief>\x1b[0m @<groups> \x1b[0;2m[<digest>]\x1b[0m
+
+{indent}\x1b[91m#\x1b[0m \x1b[2m<tags>\x1b[0m
+{indent}\x1b[91m>\x1b[0m \x1b[2m<links>\x1b[0m
+
+<debug>
+{indent}\x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m    : <category>
+{indent}\x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m     : <created>
+{indent}\x1b[91m!\x1b[0m \x1b[2mdescription\x1b[0m : <description>
+{indent}\x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m      : <digest>
+{indent}\x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m    : <filename>
+{indent}\x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m         : <key>
+{indent}\x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m    : <metadata>
+{indent}\x1b[91m!\x1b[0m \x1b[2mname\x1b[0m        : <name>
+{indent}\x1b[91m!\x1b[0m \x1b[2msource\x1b[0m      : <source>
+{indent}\x1b[91m!\x1b[0m \x1b[2mtags\x1b[0m        : <tags>
+{indent}\x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m     : <updated>
+{indent}\x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m        : <uuid>
+{indent}\x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m    : <versions>
+<debug>

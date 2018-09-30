@@ -555,11 +555,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         text = templates['text'][self.category]
         if self.data:
             try:
-                text = re.sub(
-                    r"""
-                        [<data>]{6}         # Match <data> tag.
-                        (.*[<data>]{6})?    # Match optional closing <data> tag and all data between the tags.
-                    """, Const.DELIMITER_DATA.join(self.data), text, flags=re.DOTALL | re.VERBOSE)
+                text = re.sub(r'''
+                    [<data>]{6}         # Match <data> tag.
+                    (.*[<data>]{6})?    # Match optional closing <data> tag and all data between the tags.
+                    ''', Const.DELIMITER_DATA.join(self.data), text, flags=re.DOTALL | re.VERBOSE)
             except (re.error, TypeError):
                 self._logger.info('failed to replace content data in text template: {}'.format(traceback.format_exc()))
                 self._logger.info('failed to replace content data: {}'.format(self.data))
@@ -639,36 +638,59 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return links
 
     def dump_term(self, index, ansi, debug):
-        """Convert resource to be printed to terminal."""
+        """Convert resource for terminal output."""
 
-        data = Const.EMPTY
+        # In order to print unicode characters in Python 2, the strings
+        # below must be defined as unicode strings.
+        indent = Const.SPACE * (2 + len(str(index)))
+        header = u'\x1b[96;1m{i}. \x1b[1;92m{brief}\x1b[0m @{groups} \x1b[0;2m[{digest:.16}]\x1b[0m\n' if ansi else u'{i}. {brief} @{groups} [{digest:.16}]\n'  # noqa pylint: disable=line-too-long
+        tags = u'{indent}\x1b[91m#\x1b[0m \x1b[2m{tag}\x1b[0m\n' if ansi else u'{indent}# {tag}\n'
+        links = u'{indent}\x1b[91m>\x1b[0m \x1b[2m{link}\x1b[0m\n' if ansi else u'{indent}> {link}\n'
+        data = u'{indent}\x1b[91m{symbol}\x1b[0m {line}\n' if ansi else u'{indent}{symbol} {line}\n'
+        meta = u'{indent}\x1b[91m!\x1b[0m \x1b[2m{key}\x1b[0m{align}: {value}\n' if ansi else u'{indent}! {key}{align}: {value}\n'
+        digest = u'{indent}\x1b[91m!\x1b[0m \x1b[2m{key}\x1b[0m{align}: {value} ({test})\n' if ansi else u'{indent}! {key}{align}: {value} ({test})\n'  # noqa pylint: disable=line-too-long
+
         text = Const.EMPTY
         if self.is_snippet():
-            text = text + self.get_snippet_text(index, ansi)
+            text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
+            text = text + Const.NEWLINE
+            text = text + Const.EMPTY.join([data.format(indent=indent, symbol='$', line=line) for line in self.data])
+            text = text + Const.NEWLINE
+            text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
+            text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+            text = text + Const.NEWLINE
         elif self.is_solution():
-            text = text + self.get_solution_text(index, ansi)
+            text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
+            text = text + Const.NEWLINE
+            text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
+            text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+            text = text + Const.NEWLINE
+            text = text + Const.EMPTY.join([data.format(indent=indent, symbol=':', line=line) for line in self.data])
+            text = text + Const.NEWLINE
         elif self.is_reference():
-            text = text + self.get_reference_text(index, ansi)
+            text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
+            text = text + Const.NEWLINE
+            text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
+            text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
+            text = text + Const.NEWLINE
         else:
-            self._logger.debug('internal error with content category: s', self.category)
+            self._logger.debug('internal error with content category: %s', self.category)
 
         if debug:
             if self.is_reference():
-                text = text + Const.EMPTY.join([Resource._terminal_reference(ansi) % (data, line)
-                                                for line in self.data])
-            text = text + self._terminal_description(ansi) % self.description
-            text = text + self._terminal_category(ansi) % self.category
-            text = text + self._terminal_name(ansi) % self.name
-            text = text + self._terminal_filename(ansi) % self.filename
-            text = text + self._terminal_versions(ansi) % self.versions
-            text = text + self._terminal_source(ansi) % self.source
-            text = text + self._terminal_uuid(ansi) % self.uuid
-            text = text + self._terminal_created(ansi) % self.created
-            text = text + self._terminal_updated(ansi) % self.updated
-            text = text + self._terminal_digest(ansi) % (self.digest,
-                                                         self.digest == self.compute_digest())
-            text = text + self._terminal_metadata(ansi) % self.metadata
-            text = text + self._terminal_key(ansi) % self.key
+                text = text + Const.EMPTY.join([meta.format(indent=indent, key='data', align=' ' * 8, value=line) for line in self.data])
+            text = text + meta.format(indent=indent, key='category', align=' ' * 4, value=self.category)
+            text = text + meta.format(indent=indent, key='created', align=' ' * 5, value=self.created)
+            text = text + meta.format(indent=indent, key='description', align=' ' * 1, value=self.description)
+            text = text + digest.format(indent=indent, key='digest', align=' ' * 6, value=self.digest, test=self.digest == self.compute_digest())  # noqa pylint: disable=line-too-long
+            text = text + meta.format(indent=indent, key='filename', align=' ' * 4, value=self.filename)
+            text = text + meta.format(indent=indent, key='key', align=' ' * 9, value=self.key)
+            text = text + meta.format(indent=indent, key='metadata', align=' ' * 4, value=self.metadata)
+            text = text + meta.format(indent=indent, key='name', align=' ' * 8, value=self.name)
+            text = text + meta.format(indent=indent, key='source', align=' ' * 6, value=self.source)
+            text = text + meta.format(indent=indent, key='updated', align=' ' * 5, value=self.updated)
+            text = text + meta.format(indent=indent, key='uuid', align=' ' * 8, value=self.uuid)
+            text = text + meta.format(indent=indent, key='versions', align=' ' * 4, value=self.versions)
             text = text + Const.NEWLINE
 
         # Unicode character string must be encoded for Python 2 in order
@@ -677,168 +699,3 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text.encode('utf-8')
 
         return text
-
-    def get_snippet_text(self, idx, ansi=False):
-        """Format snippets for terminal."""
-
-        text = Const.EMPTY
-        data = Const.EMPTY
-        links = Const.EMPTY
-        text = text + Resource._terminal_header(ansi) % (idx, self.brief,
-                                                         Const.DELIMITER_GROUPS.join(self.groups),
-                                                         self.digest)
-        text = text + Const.EMPTY.join([Resource._terminal_snippet(ansi) % (data, line)
-                                        for line in self.data])
-        text = text + Const.NEWLINE
-        text = Resource._terminal_tags(ansi) % (text, Const.DELIMITER_TAGS.join(self.tags))
-        text = text + Const.EMPTY.join([Resource._terminal_links(ansi) % (links, link)
-                                        for link in self.links])
-        text = text + Const.NEWLINE
-
-        return text
-
-    def get_solution_text(self, idx, ansi=False):
-        """Format solutions for terminal."""
-
-        text = Const.EMPTY
-        data = Const.EMPTY
-        links = Const.EMPTY
-        text = text + Resource._terminal_header(ansi) % (idx, self.brief,
-                                                         Const.DELIMITER_GROUPS.join(self.groups),
-                                                         self.digest)
-        text = text + Const.NEWLINE
-        text = Resource._terminal_tags(ansi) % (text, Const.DELIMITER_TAGS.join(self.tags))
-        text = text + Const.EMPTY.join([Resource._terminal_links(ansi) % (links, link)
-                                        for link in self.links])
-        text = text + Const.NEWLINE
-
-        text = text + Const.EMPTY.join([Resource._terminal_solution(ansi) % (data, line)
-                                        for line in self.data])
-        text = text + Const.NEWLINE
-
-        return text
-
-    def get_reference_text(self, idx, ansi=False):
-        """Format references for terminal."""
-
-        text = Const.EMPTY
-        links = Const.EMPTY
-        text = text + Resource._terminal_header(ansi) % (idx, self.brief,
-                                                         Const.DELIMITER_GROUPS.join(self.groups),
-                                                         self.digest)
-        text = text + Const.NEWLINE
-        text = text + Const.EMPTY.join([Resource._terminal_links(ansi) % (links, link)
-                                        for link in self.links])
-        text = Resource._terminal_tags(ansi) % (text, Const.DELIMITER_TAGS.join(self.tags))
-        text = text + Const.NEWLINE
-
-        return text
-
-    @staticmethod
-    def _terminal_header(ansi=False):
-        """Format content text header."""
-
-        return '\x1b[96;1m%d. \x1b[1;92m%s\x1b[0m @%s \x1b[0;2m[%.16s]\x1b[0m\n' if ansi \
-               else '%d. %s @%s [%.16s]\n'
-
-    @staticmethod
-    def _terminal_snippet(ansi=False):
-        """Format snippet text."""
-
-        return '%s   \x1b[91m$\x1b[0m %s\n' if ansi else '%s   $ %s\n'
-
-    @staticmethod
-    def _terminal_solution(ansi=False):
-        """Format solution text."""
-
-        return '%s   \x1b[91m:\x1b[0m %s\n' if ansi else '%s   : %s\n'
-
-    @staticmethod
-    def _terminal_reference(ansi=False):
-        """Format reference data."""
-
-        return '%s   \x1b[91m!\x1b[0m \x1b[2mdata\x1b[0m     : %s\n' if ansi else '   ! data     : %s\n'
-
-    @staticmethod
-    def _terminal_tags(ansi=False):
-        """Format content tags."""
-
-        return '%s   \x1b[91m#\x1b[0m \x1b[2m%s\x1b[0m\n' if ansi else '%s   # %s\n'
-
-    @staticmethod
-    def _terminal_links(ansi=False):
-        """Format content links."""
-
-        return '%s   \x1b[91m>\x1b[0m \x1b[2m%s\x1b[0m\n' if ansi else '%s   > %s\n'
-
-    @staticmethod
-    def _terminal_category(ansi=False):
-        """Format content category."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m    : %s\n' if ansi else '   ! category    : %s\n'
-
-    @staticmethod
-    def _terminal_filename(ansi=False):
-        """Format content filename."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m    : %s\n' if ansi else '   ! filename    : %s\n'
-
-    @staticmethod
-    def _terminal_name(ansi=False):
-        """Format content name."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mname\x1b[0m        : %s\n' if ansi else '   ! name        : %s\n'
-
-    @staticmethod
-    def _terminal_versions(ansi=False):
-        """Format content version list."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m    : %s\n' if ansi else '   ! versions    : %s\n'
-
-    @staticmethod
-    def _terminal_source(ansi=False):
-        """Format content source."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2msource\x1b[0m      : %s\n' if ansi else '   ! source      : %s\n'
-
-    @staticmethod
-    def _terminal_description(ansi=False):
-        """Format content description."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mdescription\x1b[0m : %s\n' if ansi else '   ! description : %s\n'
-
-    @staticmethod
-    def _terminal_uuid(ansi=False):
-        """Format content uuid."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m        : %s\n' if ansi else '   ! uuid        : %s\n'
-
-    @staticmethod
-    def _terminal_created(ansi=False):
-        """Format content creation UTC timestamp."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m     : %s\n' if ansi else '   ! created     : %s\n'
-
-    @staticmethod
-    def _terminal_updated(ansi=False):
-        """Format content UTC timestamp when it was updated."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m     : %s\n' if ansi else '   ! updated     : %s\n'
-
-    @staticmethod
-    def _terminal_digest(ansi=False):
-        """Format content digest."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m      : %s (%s)\n' if ansi else '   ! digest      : %s (%s)\n'
-
-    @staticmethod
-    def _terminal_metadata(ansi=False):
-        """Format content metadata."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m    : %s\n' if ansi else '   ! metadata    : %s\n'
-
-    @staticmethod
-    def _terminal_key(ansi=False):
-        """Format content key."""
-
-        return '   \x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m         : %s\n' if ansi else '   ! key         : %s\n'

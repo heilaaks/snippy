@@ -1,6 +1,6 @@
 ## WORKING
-   - [ ] Refactor text dumping from Resource to same style is Markdown.
-   - [ ] Can the terminal output be made with a template? That would simplify the output a lot.
+   - [ ] Take RE_MATCH_ANSI_ESCAPE_SEQUENCES into use in own commit. See if surrounging () can be removed.
+   - [ ] Create test from snippet: 9e1949c2810df2a5 with newline find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
    - [ ] Add support to snippet command examplations that translate to headers in MD files: $ docker rm --volumes $(docker ps --all --quiet) # Remove all containers.
@@ -61,7 +61,6 @@
    - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
    - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties
    - [ ] Fix it seems that python can do like Config.parameternewparameter which adds new parameter in case of typo. Can this be prevented?
-   - [ ] Fix printing content after 9 since the numebered items from 10 shift the spacing one more right. How?
    - [ ] Fix test cases hiding that cls.source was _not_ set in init when the Config.init called storage method that used cls.source. How this can be not noticed?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.
    - [ ] Fix docs where it was stated that uuid1 contains hostname. It actually contains mac address. This is different per container by default. Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings
@@ -171,6 +170,7 @@
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
 
 ## DONE
+   - [x] Fixed content terminal output indent with more than 9 items.
    - [x] Added content parsing from API sources.
    - [x] Changed --filter option behavior.
    - [x] Refactored text parser.

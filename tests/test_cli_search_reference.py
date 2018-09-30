@@ -170,6 +170,7 @@ class TestCliSearchReference(object):
             '   # howto,online,python,regexp',
             '',
             '3. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
             '   $ nc -v 10.183.19.189 443',
             '   $ nmap 10.183.19.189',
             '',
@@ -206,6 +207,7 @@ class TestCliSearchReference(object):
             '   # howto,online,python,regexp',
             '',
             '3. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
             '   $ nc -v 10.183.19.189 443',
             '   $ nmap 10.183.19.189',
             '',
@@ -289,6 +291,7 @@ class TestCliSearchReference(object):
             '   # howto,online,python,regexp',
             '',
             '3. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -319,6 +322,7 @@ class TestCliSearchReference(object):
             '   # howto,online,python,regexp',
             '',
             '2. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -341,7 +345,6 @@ class TestCliSearchReference(object):
         must result a hit from each category.
         """
 
-        #Const.NEWLINE.join(
         output = (
             '1. Debugging Elastic Beats @beats [a5dd8f3807e08420]',
             Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
@@ -354,6 +357,7 @@ class TestCliSearchReference(object):
             '   # howto,online,python,regexp',
             '',
             '3. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -386,6 +390,7 @@ class TestCliSearchReference(object):
             '   # howto,online,python,regexp',
             '',
             '2. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',

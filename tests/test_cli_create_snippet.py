@@ -163,6 +163,7 @@ class TestCliCreateSnippet(object):
 
         output = (
             u'1. Tagelied of Wolfram von Eschenbach Sîne klâwen @Düsseldorf [a74d83df95d5729a]',
+            u'',
             u'   $ Sîne klâwen durh die wolken sint geslagen',
             u'   $ er stîget ûf mit grôzer kraft',
             u'',
@@ -202,6 +203,7 @@ class TestCliCreateSnippet(object):
 
         output = (
             '1. Remove all docker containers with volumes @docker,dockerfile,moby [03dc5d1629b25627]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',

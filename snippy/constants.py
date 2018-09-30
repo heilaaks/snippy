@@ -19,6 +19,7 @@
 
 """constants: Globals constants for the tool."""
 
+import re
 import sys
 
 
@@ -61,3 +62,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     CONTENT_FORMAT_YAML = 'yaml'
     CONTENT_FORMAT_JSON = 'json'
     CONTENT_FORMAT_TEXT = 'text'
+
+    RE_MATCH_ANSI_ESCAPE_SEQUENCES = re.compile(r'''
+        (\x1b[^m]*m    # match all ANSI escape sequences.
+        )''', re.VERBOSE)

@@ -39,6 +39,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -64,6 +65,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -88,12 +90,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -119,12 +123,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -150,6 +156,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -175,6 +182,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -201,12 +209,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -233,12 +243,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
             '   $ nc -v 10.183.19.189 443',
             '   $ nmap 10.183.19.189',
             '',
@@ -264,12 +276,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -295,12 +309,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -326,12 +342,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -386,6 +404,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
             '   $ nc -v 10.183.19.189 443',
             '   $ nmap 10.183.19.189',
             '',
@@ -425,12 +444,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -456,6 +477,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
             '   $ nc -v 10.183.19.189 443',
             '   $ nmap 10.183.19.189',
             '',
@@ -495,12 +517,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -528,12 +552,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -561,12 +587,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -609,12 +637,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -639,6 +669,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -663,6 +694,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -687,6 +719,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -710,6 +743,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -734,6 +768,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -759,12 +794,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -790,12 +827,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -822,12 +861,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -852,12 +893,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -865,6 +908,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
             '   > https://www.digitalocean.com/community/tutorials/how-to-remove-docker-images-containers-and-volumes',
             '',
             '3. Test if specific port is open @linux [f3fd167c64b6f97e]',
+            '',
             '   $ nc -v 10.183.19.189 443',
             '   $ nmap 10.183.19.189',
             '',
@@ -891,12 +935,14 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
             '   > https://docs.docker.com/engine/reference/commandline/rm/',
             '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
+            '',
             '   $ docker rm --force redis',
             '',
             '   # cleanup,container,docker,docker-ce,moby',
@@ -968,6 +1014,7 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
 
         output = (
             '1. Remove all docker containers with volumes @docker [54e41e9b52a02b63]',
+            '',
             '   $ docker rm --volumes $(docker ps --all --quiet)',
             '',
             '   # cleanup,container,docker,docker-ce,moby',

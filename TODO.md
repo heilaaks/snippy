@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Take RE_MATCH_ANSI_ESCAPE_SEQUENCES into use in own commit. See if surrounging () can be removed.
    - [ ] Create test from snippet: 9e1949c2810df2a5 with newline find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.

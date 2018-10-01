@@ -22,7 +22,6 @@
 from __future__ import print_function
 
 import logging
-import re
 import sys
 import time
 from collections import OrderedDict
@@ -220,6 +219,9 @@ class Logger(object):
         Args:
             method (str): Name of the method calling the timeit.
             refresh_oid (bool): Define if operation ID is refreshed or not.
+
+        Returns:
+            function: Timeit wrapper function for decorators.
         """
 
         def _timeit(method):
@@ -245,13 +247,16 @@ class Logger(object):
 
     @staticmethod
     def remove_ansi(message):
-        """Remove all ANSI escape codes from given string.
+        """Remove all ANSI escape codes from log message.
 
         Args:
             message (str): Log message which ANSI escape codes are removed.
+
+        Returns:
+            str: Same log message but without ANSI escape sequences.
         """
 
-        return re.sub(r'\x1b[^m]*m', '', message)
+        return Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', message)
 
     @staticmethod
     def debug():

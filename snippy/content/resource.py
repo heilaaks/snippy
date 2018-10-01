@@ -80,7 +80,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def __str__(self):
         """Format string from the class object."""
 
-        return self.dump_term(index=1, ansi=True, debug=True)
+        return self.dump_term(index=1, use_ansi=True, debug_logs=True)
 
     def __eq__(self, resource):
         """Compare resources if they are equal."""
@@ -637,18 +637,26 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return links
 
-    def dump_term(self, index, ansi, debug):
+    def dump_term(self, index, use_ansi, debug_logs):  # noqa pylint: disable=too-many-statements
         """Convert resource for terminal output."""
 
         # In order to print unicode characters in Python 2, the strings
-        # below must be defined as unicode strings.
+        # below must be defined as unicode strings with u''.
         indent = Const.SPACE * (2 + len(str(index)))
-        header = u'\x1b[96;1m{i}. \x1b[1;92m{brief}\x1b[0m @{groups} \x1b[0;2m[{digest:.16}]\x1b[0m\n' if ansi else u'{i}. {brief} @{groups} [{digest:.16}]\n'  # noqa pylint: disable=line-too-long
-        tags = u'{indent}\x1b[91m#\x1b[0m \x1b[2m{tag}\x1b[0m\n' if ansi else u'{indent}# {tag}\n'
-        links = u'{indent}\x1b[91m>\x1b[0m \x1b[2m{link}\x1b[0m\n' if ansi else u'{indent}> {link}\n'
-        data = u'{indent}\x1b[91m{symbol}\x1b[0m {line}\n' if ansi else u'{indent}{symbol} {line}\n'
-        meta = u'{indent}\x1b[91m!\x1b[0m \x1b[2m{key}\x1b[0m{align}: {value}\n' if ansi else u'{indent}! {key}{align}: {value}\n'
-        digest = u'{indent}\x1b[91m!\x1b[0m \x1b[2m{key}\x1b[0m{align}: {value} ({test})\n' if ansi else u'{indent}! {key}{align}: {value} ({test})\n'  # noqa pylint: disable=line-too-long
+        if use_ansi:
+            header = u'\x1b[96;1m{i}. \x1b[1;92m{brief}\x1b[0m @{groups} \x1b[0;2m[{digest:.16}]\x1b[0m\n'
+            tags = u'{indent}\x1b[91m#\x1b[0m \x1b[2m{tag}\x1b[0m\n'
+            links = u'{indent}\x1b[91m>\x1b[0m \x1b[2m{link}\x1b[0m\n'
+            data = u'{indent}\x1b[91m{symbol}\x1b[0m {line}\n'
+            meta = u'{indent}\x1b[91m!\x1b[0m \x1b[2m{key}\x1b[0m{align}: {value}\n'
+            digest = u'{indent}\x1b[91m!\x1b[0m \x1b[2m{key}\x1b[0m{align}: {value} ({test})\n'
+        else:
+            header = u'{i}. {brief} @{groups} [{digest:.16}]\n'
+            tags = u'{indent}# {tag}\n'
+            links = u'{indent}> {link}\n'
+            data = u'{indent}{symbol} {line}\n'
+            meta = u'{indent}! {key}{align}: {value}\n'
+            digest = u'{indent}! {key}{align}: {value} ({test})\n'
 
         text = Const.EMPTY
         if self.is_snippet():
@@ -676,7 +684,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         else:
             self._logger.debug('internal error with content category: %s', self.category)
 
-        if debug:
+        if debug_logs:
             if self.is_reference():
                 text = text + Const.EMPTY.join([meta.format(indent=indent, key='data', align=' ' * 8, value=line) for line in self.data])
             text = text + meta.format(indent=indent, key='category', align=' ' * 4, value=self.category)

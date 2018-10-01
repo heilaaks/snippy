@@ -43,7 +43,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         text = Const.EMPTY
         for i, resource in enumerate(self.resources(), start=1):
-            text = text + resource.dump_term(index=i, ansi=True, debug=True)
+            text = text + resource.dump_term(index=i, use_ansi=True, debug_logs=True)
             text = text + '   \x1b[91m!\x1b[0m \x1b[2mcollection-meta-digest\x1b[0m : %s (%s)\n\n' % (
                 self[resource.digest]['meta']['digest'],
                 resource.digest == self[resource.digest]['meta']['digest']
@@ -253,7 +253,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         text = Const.EMPTY
         for i, resource in enumerate(self.resources(), start=1):
-            text = text + resource.dump_term(index=i, ansi=use_ansi, debug=debug_logs)
+            text = text + resource.dump_term(index=i, use_ansi=use_ansi, debug_logs=debug_logs)
 
         # Set one empty line at the end of string for beautified output.
         if self.size():

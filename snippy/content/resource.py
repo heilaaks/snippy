@@ -552,13 +552,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def dump_text(self, templates):
         """Convert resource to text."""
 
+        # Each line is replaced with escape characters so that the user
+        # defined special character combinations like \n for new line
+        # are not interpolated.
         text = templates['text'][self.category]
         if self.data:
             try:
                 text = re.sub(r'''
                     [<data>]{6}         # Match <data> tag.
                     (.*[<data>]{6})?    # Match optional closing <data> tag and all data between the tags.
-                    ''', Const.DELIMITER_DATA.join(self.data), text, flags=re.DOTALL | re.VERBOSE)
+                    ''', Const.DELIMITER_DATA.join([line.replace('\\', '\\\\') for line in self.data]), text, flags=re.DOTALL | re.VERBOSE)
             except (re.error, TypeError):
                 self._logger.info('failed to replace content data in text template: {}'.format(traceback.format_exc()))
                 self._logger.info('failed to replace content data: {}'.format(self.data))
@@ -643,6 +646,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         # In order to print unicode characters in Python 2, the strings
         # below must be defined as unicode strings with u''.
         indent = Const.SPACE * (2 + len(str(index)))
+
         if use_ansi:
             header = u'\x1b[96;1m{i}. \x1b[1;92m{brief}\x1b[0m @{groups} \x1b[0;2m[{digest:.16}]\x1b[0m\n'
             tags = u'{indent}\x1b[91m#\x1b[0m \x1b[2m{tag}\x1b[0m\n'

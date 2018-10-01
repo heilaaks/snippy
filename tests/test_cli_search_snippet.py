@@ -1029,6 +1029,31 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         assert out == Const.NEWLINE.join(output)
         assert not err
 
+    @pytest.mark.usefixtures('import-interp')
+    def test_cli_search_snippet_038(self, snippy, capsys):
+        """Search snippet from all fields.
+
+        Print snippet which content data has ASCII string that is newline.
+        This must not be interpolated to newline but to be printed as is.
+        """
+
+        output = (
+            '1. Perform recursive git status on subdirectories @git [9e1949c2810df2a5]',
+            '',
+            r'''   $ find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done''',  # noqa pylint: disable=line-too-long
+            '',
+            '   # git,status',
+            '   > https://gist.github.com/tafkey/664266c00387c98631b3',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--sall', 'git', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

@@ -633,6 +633,12 @@ def export_time_mock(mocker):
 
     _add_utc_time(mocker, (EXPORT_TIME,))
 
+@pytest.fixture(scope='function', name='export-time-all-categories')
+def export_time_all_categories_mock(mocker):
+    """Mock timestamps to export all categories content."""
+
+    _add_utc_time(mocker, (EXPORT_TIME, EXPORT_TIME, EXPORT_TIME))
+
 ## Templates
 
 @pytest.fixture(scope='function', name='edit-snippet-template')

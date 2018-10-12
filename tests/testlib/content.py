@@ -169,7 +169,7 @@ class Content(object):
         return content
 
     @staticmethod
-    def yaml_dump(yaml_dump, mock_file, filename, content):
+    def yaml_dump(yaml_dump, mock_file, filename, content, call=0):
         """Compare given content against yaml dump.
 
         Both test data and reference data must be validated for UUIDs. The
@@ -185,20 +185,21 @@ class Content(object):
             mock_file (obj): Mocked file object.
             filename (str): Expected filename used to for mocked file.
             content (str): Content expected to be dumped into YAML file.
+            call (int): The call order number for yaml dump.
         """
 
         content = copy.deepcopy(content)
-
-        dictionary = yaml_dump.safe_dump.mock_calls[0][1][0]
         for data in content['data']:
             if Content._any_valid_test_uuid(data):
                 data['uuid'] = Database.VALID_UUID
 
+        dictionary = yaml_dump.safe_dump.mock_calls[call][1][0]
         for data in dictionary['data']:
             if Content._any_valid_test_uuid(data):
                 data['uuid'] = Database.VALID_UUID
-        mock_file.assert_called_once_with(filename, 'w')
-        yaml_dump.safe_dump.assert_called_with(content, mock.ANY, default_flow_style=mock.ANY)
+
+        mock_file.assert_any_call(filename, 'w')
+        yaml_dump.safe_dump.assert_any_call(content, mock.ANY, default_flow_style=mock.ANY)
 
     @staticmethod
     def json_dump(json_dump, mock_file, filename, content):

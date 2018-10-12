@@ -30,10 +30,12 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
-class TestCliExportReference(object):
+class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting references."""
 
     @pytest.mark.usefixtures('yaml', 'default-references', 'export-time', 'export-time')
@@ -392,6 +394,45 @@ class TestCliExportReference(object):
             cause = snippy.run(['snippy', 'export', '--defaults', '--references'])
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
+
+    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time-all-categories')
+    def test_cli_export_reference_020(self, snippy):
+        """Export defaults with --all option.
+
+        Export snippet, solution and reference defaults with category
+        set to --all and so that the defauls will be updated. This must
+        store the content from each category to own file that stores the
+        default content.
+        """
+
+        content1 = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Snippet.DEFAULTS[Snippet.REMOVE]),
+            ]
+        }
+        content2 = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Solution.DEFAULTS[Solution.BEATS])
+            ]
+        }
+        content3 = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--defaults', '--all'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 3
+            defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
+            defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')
+            defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
+            Content.yaml_dump(yaml, mock_file, defaults_snippets, content1, call=0)
+            Content.yaml_dump(yaml, mock_file, defaults_solutions, content2, call=1)
+            Content.yaml_dump(yaml, mock_file, defaults_references, content3, call=2)
 
     @classmethod
     def teardown_class(cls):

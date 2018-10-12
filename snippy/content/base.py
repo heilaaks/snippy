@@ -145,9 +145,16 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 Config.validate_search_context(collection, 'export')
             Migrate.dump(collection, filename)
         else:
-            self._logger.debug('exporting all: %s :content: %s', self._category, filename)
-            collection = self._storage.export_content(Config.search_cat_kws)
-            Migrate.dump(collection, filename)
+            if Config.defaults:
+                for category in Config.search_cat_kws:
+                    filename = Config.get_operation_file(category=category)
+                    self._logger.debug('exporting all: %s :content to: %s', category, filename)
+                    collection = self._storage.export_content((category,))
+                    Migrate.dump(collection, filename)
+            else:
+                self._logger.debug('exporting all: %s :content to: %s', self._category, filename)
+                collection = self._storage.export_content(Config.search_cat_kws)
+                Migrate.dump(collection, filename)
 
     def import_all(self):
         """Import content."""

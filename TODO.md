@@ -1,11 +1,11 @@
 ## WORKING
+   - [ ] Document use cases and scenarios to select operation file.
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
    - [ ] Add support to snippet command examplations that translate to headers in MD files: $ docker rm --volumes $(docker ps --all --quiet) # Remove all containers.
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
-   - [ ] Fix export --defaults --all that exports also solutions and references to same file.
    - [ ] Fix why 'python runner search --sall 'has active end' results two snippets with default content? Should be one.
    - [ ] Change it not collection.size() to if collection.emtpy() since it is more readable.
    - [ ] Fix Alpine to 3.8.1
@@ -169,6 +169,7 @@
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
 
 ## DONE
+   - [x] Fixed export --all --defaults.
    - [x] Fixed content terminal output indent with more than 9 items.
    - [x] Added content parsing from API sources.
    - [x] Changed --filter option behavior.

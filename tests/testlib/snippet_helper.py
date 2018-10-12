@@ -130,7 +130,7 @@ class SnippetHelper(object):
         'updated': '2018-05-07T11:11:55.000001+0000',
         'digest': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'
     }, {
-        'data': ('find . -type d -name \'.git\' | while read dir ; do sh -c "cd $dir/../ && echo -e \\"\\nGIT STATUS IN ${dir//\\.git/}\\" && git status -s" ; done',),
+        'data': ('find . -type d -name \'.git\' | while read dir ; do sh -c "cd $dir/../ && echo -e \\"\\nGIT STATUS IN ${dir//\\.git/}\\" && git status -s" ; done',),  # pylint: disable=line-too-long
         'brief': 'Perform recursive git status on subdirectories',
         'description': '',
         'groups': ('git',),

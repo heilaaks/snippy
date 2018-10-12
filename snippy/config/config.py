@@ -358,7 +358,7 @@ class Config(object):
 
     @classmethod
     def _operation_filename(cls, category):
-        """Return operation filename
+        """Return operation default filename
 
         The filename is set based user input for content filename, operation
         and content. For some operations like import and export with defaults
@@ -514,14 +514,18 @@ class Config(object):
         return criteria
 
     @classmethod
-    def get_operation_file(cls, resource=None):
+    def get_operation_file(cls, resource=None, category=Const.UNKNOWN_CATEGORY):
         """Return file for operation.
 
         Use the content filename only in case of export operation and when
         user did not define target file from command line.
 
+        In case of export operation with more than one search categories,
+        the defined category defines the filename. In case of default
+        content is exported, it overrides the operation filename.
+
         If there are no filename defined in command line or in the resource,
-        content category defines the default file.
+        content category defines the default filename.
         """
 
         filename = cls.operation_filename
@@ -530,6 +534,12 @@ class Config(object):
                 filename = resource.filename
             else:
                 filename = cls._operation_filename(resource.category)
+
+        if cls.is_operation_export and len(cls.search_cat_kws) > 1:
+            if cls.defaults and category in Const.CATEGORIES:
+                filename = Config.default_content_file(category)
+            elif category in Const.CATEGORIES:
+                filename = cls._operation_filename(category)
 
         return filename
 

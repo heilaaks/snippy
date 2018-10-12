@@ -261,6 +261,21 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Move GPG keys. The removal from GIT causes all previous commits to be unverified.
+   > https://stackoverflow.com/a/3176373
+   > https://www.liquidweb.com/kb/how-to-add-a-user-and-grant-root-privileges-on-fedora-23/
+
+   # Move keys
+   $ scp -rp ~/.gnupg user@10.101.102.103:
+   $ cp -rp /home_local/heilaaks/.gnupg/* .gnupg/
+   $ gpg2 --list-secret-keys --keyid-format LONG
+ 
+   # Delete old keys. TEST BEFORE DELETE!
+   $ gpg2 --delete-secret-keys <key>
+   $ gpg2 --delete-keys <key>
+   ```
+
+   ```
    # Why this slows down and starts to consume huge amount of cpu and stalls all cases=
    # The problem is the order of sys.argv that was after the Snippy object was created.
    import sys

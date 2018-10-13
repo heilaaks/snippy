@@ -27,8 +27,7 @@ requires = (
 )
 extras_dev = (
     'logging_tree==1.8',
-    'openapi2jsonschema==0.8.0',
-    'pprintpp==0.4.0'
+    'openapi2jsonschema==0.8.0'
 )
 extras_docs = (
     'sphinx==1.8.1',
@@ -46,6 +45,7 @@ extras_tests = (
     'flake8==3.5.0',
     'logging_tree==1.8',
     'mock==2.0.0',
+    'pprintpp==0.4.0',
     'pyflakes==1.6.0',
     'pylint==1.9.3 ; python_version=="2.7.*"',
     'pylint==2.1.1 ; python_version>"2.7"',

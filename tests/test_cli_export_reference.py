@@ -91,7 +91,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', 'foo.bar'])
-            assert cause == 'NOK: cannot identify file format for file foo.bar'
+            assert cause == 'NOK: cannot identify file format for file: foo.bar'
             assert Database.get_references().size() == 2
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value

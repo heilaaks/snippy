@@ -123,6 +123,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         """Export content."""
 
         filename = Config.get_operation_file()
+        print(filename)
         if Config.template:
             self._logger.debug('exporting: %s :template: %s', self._category, Config.get_operation_file())
             Migrate.dump_template(self._category)
@@ -147,7 +148,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         else:
             if Config.defaults:
                 for category in Config.search_cat_kws:
-                    filename = Config.get_operation_file(category=category)
+                    filename = Config.default_content_file(category)
                     self._logger.debug('exporting all: %s :content to: %s', category, filename)
                     collection = self._storage.export_content((category,))
                     Migrate.dump(collection, filename)

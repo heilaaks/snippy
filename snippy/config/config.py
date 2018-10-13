@@ -151,10 +151,10 @@ class Config(object):
         cls.is_category_reference = True if cls.content_category == Const.REFERENCE else False
         cls.is_category_all = True if cls.content_category == Const.ALL_CATEGORIES else False
         cls.operation_filename = cls._operation_filename(cls.content_category)
-        cls.operation_filetype = cls._operation_filetype()
-        cls.is_operation_file_json = True if cls.operation_filetype == Const.CONTENT_FORMAT_JSON else False
-        cls.is_operation_file_text = True if cls.operation_filetype == Const.CONTENT_FORMAT_TEXT else False
-        cls.is_operation_file_yaml = True if cls.operation_filetype == Const.CONTENT_FORMAT_YAML else False
+        cls.operation_file_format = cls._operation_file_format(cls.operation_filename)
+        cls.is_operation_file_json = True if cls.operation_file_format == Const.CONTENT_FORMAT_JSON else False
+        cls.is_operation_file_text = True if cls.operation_file_format == Const.CONTENT_FORMAT_TEXT else False
+        cls.is_operation_file_yaml = True if cls.operation_file_format == Const.CONTENT_FORMAT_YAML else False
 
         cls.debug()
 
@@ -187,7 +187,7 @@ class Config(object):
 
         if text is not None:
             collection = Parser(
-                cls.operation_filetype,
+                cls.operation_file_format,
                 Config.utcnow(),
                 text
             ).read()
@@ -341,17 +341,47 @@ class Config(object):
         return filename
 
     @classmethod
+    def get_operation_file(cls, resource=None):
+        """Return file for operation.
+
+        Use the resource filename field only in case of export operation and
+        when user did not define target file from command line.
+
+        Args:
+            resource (Resource): Content in Resource container.
+
+        Returns:
+            string: Operation filename.
+        """
+
+        filename = cls.operation_filename
+
+        if cls.is_operation_export and resource and not cls.content_filename:
+            if resource.filename:
+                filename = resource.filename
+            else:
+                filename = cls._operation_filename(resource.category)
+
+        return filename
+
+    @classmethod
+    def is_supported_file_format(cls):
+        """Test if file format is supported."""
+
+        return True if cls.is_operation_file_yaml or cls.is_operation_file_json or cls.is_operation_file_text else False
+
+    @classmethod
     def default_content_file(cls, category):
-        """Return default content file."""
+        """Return default content file.
 
-        filename = 'snippets.yaml'
-        if category == Const.SNIPPET:
-            filename = 'snippets.yaml'
-        elif category == Const.SOLUTION:
-            filename = 'solutions.yaml'
-        elif category == Const.REFERENCE:
-            filename = 'references.yaml'
+        Args:
+            category (str): User defined content category.
 
+        Returns:
+            string: Filename with absolute path.
+        """
+
+        filename = category + 's.yaml'
         filename = os.path.join(pkg_resources.resource_filename('snippy', 'data/defaults'), filename)
 
         return filename
@@ -360,73 +390,61 @@ class Config(object):
     def _operation_filename(cls, category):
         """Return operation default filename
 
-        The filename is set based user input for content filename, operation
-        and content. For some operations like import and export with defaults
-        option cause the filename to be updated automatically to point into
-        correct location that stores e.g. the default content.
+        Filename is set based on priority order of
+        1) command line input
+        2) content template or content defaults operations
+        3) content category specific defaults
         """
 
-        filename = cls.source.filename
+        filename = None
 
-        defaults = 'snippets.yaml'
-        template = 'snippet-template.txt'
-        if Const.SOLUTION in cls.search_cat_kws and len(cls.search_cat_kws) == 1:
-            defaults = 'solutions.yaml'
-            template = 'solution-template.txt'
-        elif Const.REFERENCE in cls.search_cat_kws and len(cls.search_cat_kws) == 1:
-            defaults = 'references.yaml'
-            template = 'reference-template.txt'
-        elif len(cls.search_cat_kws) > 1:
-            defaults = 'content.yaml'
+        # User defined filename.
+        if cls.source.filename:
+            filename = cls.source.filename
 
-        # Default content filename.
         if cls.defaults:
             filename = cls.default_content_file(category)
 
-        # Content template.
         if cls.template:
-            filename = os.path.join('./', template)
+            filename = os.path.join('./', cls.content_category + '-template.txt')
 
-        # Run export operation with specified content without specifying
-        # the operation file. The Const.ALL_CATEGORIES maps to multiple
-        # items in search category keyword list (search_cat_kws).
+        # Run export operation with search criteria.
         if cls.is_operation_export and cls.is_search_criteria() and not filename:
-            if category == Const.SNIPPET:
+            if len(cls.search_cat_kws) > 1:
+                filename = 'content.' + Const.CONTENT_FORMAT_TEXT
+            elif category == Const.SNIPPET:
                 filename = 'snippet.' + Const.CONTENT_FORMAT_TEXT
             elif category == Const.SOLUTION:
                 filename = 'solution.' + Const.CONTENT_FORMAT_TEXT
             elif category == Const.REFERENCE:
                 filename = 'reference.' + Const.CONTENT_FORMAT_TEXT
-            elif len(cls.search_cat_kws) > 1:
-                filename = 'content.' + Const.CONTENT_FORMAT_TEXT
 
-        # In case user did not provide filename, set defaults. For example
-        # if user defined export or import operation without the file, the
-        # default files are used.
+        # Default filename in case user did not provide it.
         if not filename:
+            if len(cls.search_cat_kws) == 1 and cls.search_cat_kws[0] in Const.CATEGORIES:
+                defaults = cls.search_cat_kws[0] + 's.yaml'
+            else:
+                defaults = 'content.yaml'
             filename = os.path.join('./', defaults)
 
         return filename
 
     @classmethod
-    def _operation_filetype(cls):
-        """Operation file type is extracted from operation fiel and it makes
-        sure that only supported content types can be operated."""
+    def _operation_file_format(cls, filename):
+        """Extract operation file format."""
 
-        filetype = Const.CONTENT_FORMAT_NONE
-
-        # User defined content to/from user specified file.
-        name, extension = os.path.splitext(cls.operation_filename)
+        file_format = Const.CONTENT_FORMAT_NONE
+        name, extension = os.path.splitext(filename)
         if name and ('yaml' in extension or 'yml' in extension):
-            filetype = Const.CONTENT_FORMAT_YAML
+            file_format = Const.CONTENT_FORMAT_YAML
         elif name and 'json' in extension:
-            filetype = Const.CONTENT_FORMAT_JSON
-        elif name and ('txt' in extension or 'text' in extension):
-            filetype = Const.CONTENT_FORMAT_TEXT
+            file_format = Const.CONTENT_FORMAT_JSON
+        elif name and ('text' in extension or 'txt' in extension):
+            file_format = Const.CONTENT_FORMAT_TEXT
         else:
-            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file {}'.format(cls.operation_filename))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file: {}'.format(filename))
 
-        return filetype
+        return file_format
 
     @classmethod
     def validate_search_context(cls, collection, operation):  # pylint: disable=too-many-branches
@@ -513,41 +531,6 @@ class Config(object):
 
         return criteria
 
-    @classmethod
-    def get_operation_file(cls, resource=None, category=Const.UNKNOWN_CATEGORY):
-        """Return file for operation.
-
-        Use the content filename field only in case of export operation and
-        when user did not define target file from command line.
-
-        If there is no filename defined in command line or in the resource,
-        content category defines the default filename.
-
-        In case of export operation with more than one search categories,
-        default file for multiple categories is always used.
-        """
-
-        filename = cls.operation_filename
-        if cls.is_operation_export and resource and not cls.source.filename:
-            if resource.filename:
-                filename = resource.filename
-            else:
-                filename = cls._operation_filename(resource.category)
-
-        if cls.is_operation_export and len(cls.search_cat_kws) > 1:
-            filename = cls._operation_filename(category)
-
-        if cls.is_operation_export and cls.defaults:
-            filename = cls._operation_filename(category)
-
-        return filename
-
-    @classmethod
-    def is_supported_file_format(cls):
-        """Test if file format is supported."""
-
-        return True if cls.is_operation_file_yaml or cls.is_operation_file_json or cls.is_operation_file_text else False
-
     @staticmethod
     def utcnow():
         """Get UTC time stamp in ISO8601 format."""
@@ -577,7 +560,7 @@ class Config(object):
         cls._logger.debug('configured operation digest: %s', cls.operation_digest)
         cls._logger.debug('configured operation uuid: %s', cls.operation_uuid)
         cls._logger.debug('configured operation filename: "%s"', cls.operation_filename)
-        cls._logger.debug('configured operation file type: "%s"', cls.operation_filetype)
+        cls._logger.debug('configured operation file format: "%s"', cls.operation_file_format)
         cls._logger.debug('configured search all keywords: %s', cls.search_all_kws)
         cls._logger.debug('configured search cat keywords: %s', cls.search_cat_kws)
         cls._logger.debug('configured search tag keywords: %s', cls.search_tag_kws)

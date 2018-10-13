@@ -1,4 +1,6 @@
 ## WORKING
+   - [ ] Change default filenames and export filenames. They now differ only with s and text/yaml like snippet.text / snippets.yaml. Change default to yaml.
+   - [ ] Fix input fgrom -f access files like yamll beucase the check is that 'yaml' in () in _operation_file_format.
    - [ ] Document use cases and scenarios to select operation file.
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.

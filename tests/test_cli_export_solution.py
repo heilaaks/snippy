@@ -154,7 +154,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './foo.bar'])
-            assert cause == 'NOK: cannot identify file format for file ./foo.bar'
+            assert cause == 'NOK: cannot identify file format for file: ./foo.bar'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
@@ -406,7 +406,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--solution', '-d', 'a5dd8f3807e08420', '-f', './foo.bar'])
-            assert cause == 'NOK: cannot identify file format for file ./foo.bar'
+            assert cause == 'NOK: cannot identify file format for file: ./foo.bar'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()

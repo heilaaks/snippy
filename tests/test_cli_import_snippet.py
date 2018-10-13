@@ -149,7 +149,7 @@ class TestCliImportSnippet(object):
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './foo.bar'])
-            assert cause == 'NOK: cannot identify file format for file ./foo.bar'
+            assert cause == 'NOK: cannot identify file format for file: ./foo.bar'
             assert not Database.get_collection().size()
             mock_file.assert_not_called()
 

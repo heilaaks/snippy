@@ -23,6 +23,7 @@ import copy
 import datetime
 
 import mock
+import pprintpp
 
 from snippy.cause import Cause
 from snippy.config.config import Config
@@ -254,7 +255,16 @@ class Content(object):
             references.append(mock.call(Const.NEWLINE))
         mock_file.assert_called_once_with(filename, 'w')
         handle = mock_file.return_value.__enter__.return_value
-        assert handle.write.mock_calls == references
+        try:
+            assert handle.write.mock_calls == references
+        except AssertionError:
+            print("===REFERENCES===")
+            pprintpp.pprint(references)
+            print("===MOCK_CALLS===")
+            pprintpp.pprint(handle.write.mock_calls)
+            print("================")
+
+            raise AssertionError
 
     @staticmethod
     def get_api_meta():

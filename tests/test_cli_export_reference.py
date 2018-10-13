@@ -97,7 +97,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
+    @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_004(self, snippy):
         """Export all references.
 
@@ -195,7 +195,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
+    @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_009(self, snippy):
         """Export all references.
 
@@ -291,11 +291,11 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-references', 'export-time')
     def test_cli_export_reference_014(self, snippy):
-        """Export defined reference with search keyword.
+        """Export references with search keyword.
 
-        Export defined reference based on search keyword. In this case the
-        search keyword matchies to two references that must be exported to
-        file defined in command line.
+        Export references based on search keyword. In this case the search
+        keyword matchies to two references that must be exported to file
+        defined in command line.
         """
 
         content = {
@@ -433,6 +433,115 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             Content.yaml_dump(yaml, mock_file, defaults_snippets, content1, call=0)
             Content.yaml_dump(yaml, mock_file, defaults_solutions, content2, call=1)
             Content.yaml_dump(yaml, mock_file, defaults_references, content3, call=2)
+
+    @pytest.mark.usefixtures('default-references', 'export-time')
+    def test_cli_export_reference_021(self, snippy):
+        """Export references with search keyword.
+
+        Export references based on search keyword. In this case the search
+        keyword matchies to two references that must be exported to default
+        file since the -f|-file option is not used.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--sall', 'howto', '--references'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            Content.text_dump(mock_file, 'reference.text', content)
+
+    @pytest.mark.usefixtures('import-gitlog', 'import-remove', 'import-beats', 'export-time')
+    def test_cli_export_reference_022(self, snippy):
+        """Export content with search keyword.
+
+        Export content from two category with search keyword. In this case
+        -f|--file option is not used and the content must be stored into
+        a single default file and format.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+                Content.compared(Snippet.DEFAULTS[Snippet.REMOVE])
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--scat', 'reference,snippet', '--sall', 'volumes,git'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 3
+            Content.text_dump(mock_file, 'content.text', content)
+
+    @pytest.mark.usefixtures('import-gitlog', 'import-remove', 'import-beats', 'export-time')
+    def test_cli_export_reference_023(self, snippy):
+        """Export content with search keyword.
+
+        Export content from one category when search category is set to
+        search from two categories. In this case -f|--file option is not
+        used and the content must be stored into a single default file and
+        format.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--scat', 'reference,snippet', '--sall', 'git'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 3
+            Content.text_dump(mock_file, 'content.text', content)
+
+    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time')
+    def test_cli_export_reference_024(self, snippy):
+        """Export content with search keyword.
+
+        Export content from two category with search keyword. In this case
+        -f|--file option is used and the content must be stored into a file
+        defined by user.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+                Content.compared(Snippet.DEFAULTS[Snippet.REMOVE])
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--scat', 'reference,snippet', '--sall', 'volumes,git', '-f', 'defined-content.yaml'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 3
+            Content.yaml_dump(yaml, mock_file, 'defined-content.yaml', content)
+
+    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time')
+    def test_cli_export_reference_025(self, snippy):
+        """Exporting defaults while using search category.
+
+        Export default content by selecting single category with the --scat
+        option.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--scat', 'reference', '--default'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_collection().size() == 3
+            defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
+            Content.yaml_dump(yaml, mock_file, defaults_references, content)
 
     @classmethod
     def teardown_class(cls):

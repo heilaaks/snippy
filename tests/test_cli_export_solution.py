@@ -490,7 +490,8 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         """Export solution with search keyword.
 
         Export defined solution based on search keyword. File name is defined
-        in solution metadata but not by command line -f|--file option.
+        in solution metadata but not by command line -f|--file option. Content
+        filename fields is used because the search result is a single content.
         """
 
         content = {
@@ -511,7 +512,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         Export defined solution based on search keyword. File name is defined
         in solution metadata and in command line -f|--file option. This should
         result the file name and yaml format defined by the command line
-        option.
+        option because the search result is a single content.
         """
 
         content = {
@@ -548,7 +549,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_025(self, snippy):
-        """Export solution with search keyword.
+        """Export solutions with search keyword.
 
         Export defined solution based on search keyword. File name is defined
         in solution metadata and in command line -f|--file option. This should
@@ -569,11 +570,11 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-solutions', 'export-time')
     def test_cli_export_solution_026(self, snippy):
-        """Export solution with search keyword.
+        """Export solutions with search keyword.
 
-        Export defined solution based on search keyword. In this case the
-        search keyword matchies to two solutions that must be exported to
-        file defined in command line.
+        Export solutions based on search keyword. In this case the search
+        keyword matchies to two solutions that must be exported to file
+        defined in command line.
         """
 
         content = {
@@ -753,6 +754,27 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
+
+    @pytest.mark.usefixtures('default-solutions', 'export-time')
+    def test_cli_export_solution_036(self, snippy):
+        """Export solutions with search keyword.
+
+        Export solutions based on search keyword. In this case the search
+        keyword matchies to two solutions that must be exported to default
+        file since the -f|-file option is not used.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'howto'])
+            assert cause == Cause.ALL_OK
+            Content.text_dump(mock_file, 'solution.text', content)
 
     @classmethod
     def teardown_class(cls):

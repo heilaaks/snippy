@@ -390,12 +390,12 @@ class Config(object):
         # Run export operation with specified content without specifying
         # the operation file. The Const.ALL_CATEGORIES maps to multiple
         # items in search category keyword list (search_cat_kws).
-        if cls.is_operation_export and cls.is_search_criteria():
-            if category == Const.SNIPPET and not filename:
+        if cls.is_operation_export and cls.is_search_criteria() and not filename:
+            if category == Const.SNIPPET:
                 filename = 'snippet.' + Const.CONTENT_FORMAT_TEXT
-            elif category == Const.SOLUTION and not filename:
+            elif category == Const.SOLUTION:
                 filename = 'solution.' + Const.CONTENT_FORMAT_TEXT
-            elif category == Const.REFERENCE and not filename:
+            elif category == Const.REFERENCE:
                 filename = 'reference.' + Const.CONTENT_FORMAT_TEXT
             elif len(cls.search_cat_kws) > 1:
                 filename = 'content.' + Const.CONTENT_FORMAT_TEXT
@@ -517,15 +517,14 @@ class Config(object):
     def get_operation_file(cls, resource=None, category=Const.UNKNOWN_CATEGORY):
         """Return file for operation.
 
-        Use the content filename only in case of export operation and when
-        user did not define target file from command line.
+        Use the content filename field only in case of export operation and
+        when user did not define target file from command line.
+
+        If there is no filename defined in command line or in the resource,
+        content category defines the default filename.
 
         In case of export operation with more than one search categories,
-        the defined category defines the filename. In case of default
-        content is exported, it overrides the operation filename.
-
-        If there are no filename defined in command line or in the resource,
-        content category defines the default filename.
+        default file for multiple categories is always used.
         """
 
         filename = cls.operation_filename
@@ -536,10 +535,10 @@ class Config(object):
                 filename = cls._operation_filename(resource.category)
 
         if cls.is_operation_export and len(cls.search_cat_kws) > 1:
-            if cls.defaults and category in Const.CATEGORIES:
-                filename = Config.default_content_file(category)
-            elif category in Const.CATEGORIES:
-                filename = cls._operation_filename(category)
+            filename = cls._operation_filename(category)
+
+        if cls.is_operation_export and cls.defaults:
+            filename = cls._operation_filename(category)
 
         return filename
 

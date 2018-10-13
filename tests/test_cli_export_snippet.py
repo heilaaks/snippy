@@ -335,11 +335,11 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_016(self, snippy):
-        """Export defined snippet with search keyword.
+        """Export snippets with search keyword.
 
-        Export defined snippet based on search keyword. In this case the
-        search keyword matches to two snippets that must be exported to
-        file defined in command line.
+        Export snippets based on search keyword. In this case the search
+        keyword matches to two snippets that must be exported to file
+        defined in command line.
         """
 
         content = {
@@ -513,6 +513,28 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '--defaults'])
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
+
+    @pytest.mark.usefixtures('default-snippets', 'export-time')
+    def test_cli_export_snippet_026(self, snippy):
+        """Export snippets with search keyword.
+
+        Export snippets based on search keyword. In this case the search
+        keyword matches to two snippets that must be exported to default
+        file since the -f|-file option is not used.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--sall', 'docker'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            Content.text_dump(mock_file, 'snippet.text', content)
 
     @classmethod
     def teardown_class(cls):

@@ -269,7 +269,7 @@ Random notes and scribling during development.
    $ scp -rp ~/.gnupg user@10.101.102.103:
    $ cp -rp /home_local/heilaaks/.gnupg/* .gnupg/
    $ gpg2 --list-secret-keys --keyid-format LONG
- 
+
    # Delete old keys. TEST BEFORE DELETE!
    $ gpg2 --delete-secret-keys <key>
    $ gpg2 --delete-keys <key>
@@ -1261,6 +1261,180 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
          1) Creating metadata with export timestamp.
 
+
+    FILE NAME SELECTION
+
+    1. Common rules for selecting filename in export operation
+
+       1. Default file format is always YAML.
+
+       2. Command line -f|--file always overrides other parameters.
+
+       3. Default 'content.yaml' filename is always used with multi-category search
+
+          If result from multi-category search is a single category collection
+          of content, the category specific default file name could be used.
+          Currnently this is used to simplify the implementation and logic.
+
+    2. Exporting files
+
+       A. Single specified content without --file option
+
+          1. Content does not define filename field: <category>.text
+             - python runner export -d 6d221115da7b9540
+             - test_cli_export_reference_004
+
+          2. Content defines filename field: <filename>
+             - python runner export -d 15d1688c970fa336
+             - test_cli_export_solution_022
+
+       B. Single specified content with --file option
+
+          1. Content does not define filename field: <--file>
+             - python runner export -d 6d221115da7b9540 -f testing.txt
+             - python runner export -d 6d221115da7b9540 -f testing.json
+             - test_cli_export_reference_005
+
+          2. Content defines filename field: <--file>
+             - python runner export -d 15d1688c970fa336 -f testing.yaml
+             - test_cli_export_solution_023
+
+       C. Search option (scat, sall, stag, sgrp) without --file option resulting one content
+
+          1. Content does not define filename field: <category>.text
+             - python runner export --references --sall commit
+             - test_cli_export_snippet_011
+
+          2. Content defines filename field: <filename>
+             - python runner export --solution --sall kubeadm reset
+             - test_cli_export_solution_022
+
+       D. Search option (scat, sall, stag, sgrp) with --file option resulting one content
+
+          1. Content does not define filename field: <--file>
+             - python runner export --references --sall commit -f testing.json
+             - test_cli_export_snippet_009
+
+          2. Content defines filename field: <--file>
+             - python runner export --solution --sall kubeadm reset -f testing.yaml
+             - test_cli_export_solution_023
+
+       E. Search option (scat, sall, stag, sgrp) without --file option resulting more than one content from single category
+
+          1. Content does not define filename field: <category>.text
+             - python runner export --sall kube --solution
+             - test_cli_export_reference_021
+             - test_cli_export_solution_036
+             - test_cli_export_snippet_026
+
+          2. Content defines filename field: <category>.text   # Content filename fields do not have any effect.
+
+       F. Search option (scat, sall, stag, sgrp) with --file option resulting more than one content from single category
+
+          1. Content does not define filename field: <--file>
+             - python runner export --sall kube --solution -f testing.yaml
+             - test_cli_export_snippet_016
+
+          2. Content defines filename field: <--file>   # Content filename fields do not have any effect.
+             - python runner export --sall kube --solution -f testing.yaml
+
+       G. Search option (scat, sall, stag, sgrp) without --file option resulting more than one content from more than one category
+
+          1. Content does not define filename field: content.yaml
+             - python runner export --sall kube --scat solution,snippet
+             - test_cli_export_reference_022
+
+          2. Content defines filename field: content.yaml   # Content filename fields do not have any effect.
+
+       H. Search option (scat, sall, stag, sgrp) with --file option resulting more than one content from more than one category
+
+          1. Content does not define filename field: <--file>
+             - python runner export --sall kube --scat solution,snippet -f testing.yaml
+             - test_cli_export_reference_024
+
+          2. Content defines filename field: <--file>   # Content filename fields do not have any effect.
+
+       I. Exporting single category without --file option
+
+          1. Content does not define filename field: <category.yaml>
+             python runner export --reference
+
+          2. Content defines filename field: <category.yaml>   # Content filename fields do not have any effect.
+
+       J. Exporting single category with --file option
+
+          1. Content does not define filename field: <--file>
+             - python runner export --reference -f testing.json
+
+          2. Content defines filename field: <--file>   # Content filename fields do not have any effect.
+
+       K. Exporting more than one category without --file option
+
+          1. Content does not define filename field: content.yaml
+          2. Content defines filename field: content.yaml
+
+       L. Exporting more than one category with --file option
+
+          1. Content does not define filename field: <--file>
+          2. Content defines filename field: <--file>
+
+       M. Exporting all categories without --file option
+
+          1. Content does not define filename field: content.yaml
+          2. Content defines filename field: content.yaml
+
+       N. Exporting all categories with --file option
+
+          1. Content does not define filename field: <--file>
+          2. Content defines filename field: <--file>
+
+       O. Exporting single category with --default option
+
+          1. Content does not define filename field:
+          2. Content defines filename field:
+
+       P. Exporting single category with --default and --scat options
+
+          1. Content does not define filename field: default/<scat>.yaml
+                - python runner export --scat solution --default
+                - test_cli_export_reference_025
+
+          2. Content defines filename field: N/A
+
+       Q. Exporting single category with --default and --file options
+
+          1. Content does not define filename field: Not Allowed
+          2. Content defines filename field: Not Allowed
+
+       R. Exporting more than one category with --default option
+
+          1. Content does not define filename field: Not allowed
+                - python runner export --solution --reference --defaults
+
+          2. Content defines filename field: Content filename field does not affect.
+
+       S. Exporting more than one category with --default and --file options
+
+          1. Content does not define filename field: Not Allowed
+          2. Content defines filename field: Not Allowed
+
+       T. Exporting more than one category with --default and --scat options
+
+          1. Content does not define filename field: default/<scat>.yaml
+                - python runner export --scat solution,reference --default
+
+          2. Content defines filename field: Content filename field does not affect.
+
+       U. Exporting all categories with --default option
+
+          1. Content does not define filename field: default/<scat>.yaml
+          2. Content defines filename field: Content filename field does not affect.
+
+       V. Exporting all categories with --default and --file options
+
+          1. Content does not define filename field: Not Allowed
+          2. Content defines filename field: Not Allowed
+
     JSON API
 
     1. The JSON API responses must follow JSON API v1.0 specifications
@@ -2196,7 +2370,7 @@ digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 
 # Testing docker log drivers @docker
 
-> An email client and Usenet newsgroup program with a pico/nano-inspired interface.  
+> An email client and Usenet newsgroup program with a pico/nano-inspired interface.
 Supports most modern email services through IMAP.
 
 > \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`
@@ -2219,24 +2393,24 @@ Supports most modern email services through IMAP.
 
 # Meta
 
-> category : snippet  
-created  : 2017-10-12T11:52:11.000001+0000  
-updated  : 2017-10-12T11:52:11.000001+0000  
-tags     : cleanup, container, docker, docker-ce, moby  
-filename :   
-name     :   
-source   :   
-versions :   
-uuid     : f21c6318-8830-11e8-a114-2c4d54508088  
+> category : snippet
+created  : 2017-10-12T11:52:11.000001+0000
+updated  : 2017-10-12T11:52:11.000001+0000
+tags     : cleanup, container, docker, docker-ce, moby
+filename :
+name     :
+source   :
+versions :
+uuid     : f21c6318-8830-11e8-a114-2c4d54508088
 digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 
 ===
 # Remove all exited containers and dangling images @docker
 
-> Remove all exited containers and dangling images. The command examples  
+> Remove all exited containers and dangling images. The command examples
 first remove all exited containers and the all dangling images.
 
-> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`  
+> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`
 \[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
 
 - Remove all exited containers
@@ -2249,15 +2423,15 @@ first remove all exited containers and the all dangling images.
 
 ## Meta
 
-> category : snipet  
-created  : 2017-10-12T11:52:11.000001+0000  
-digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319  
-filename :   
-name     :   
-source   :   
-tags     : cleanup, container, docker, docker-ce, moby  
-updated  : 2017-10-12T11:52:11.000001+0000  
-uuid     : f21c6318-8830-11e8-a114-2c4d54508088  
+> category : snipet
+created  : 2017-10-12T11:52:11.000001+0000
+digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
+filename :
+name     :
+source   :
+tags     : cleanup, container, docker, docker-ce, moby
+updated  : 2017-10-12T11:52:11.000001+0000
+uuid     : f21c6318-8830-11e8-a114-2c4d54508088
 versions :
 
 ----
@@ -2275,15 +2449,15 @@ versions :
 
 ## Meta
 
-> category : snippet  
-created  : 2017-10-12T11:52:11.000001+0000  
-digest   : 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c  
-filename :   
-name     :   
-source   :   
-tags     : container, docker, docker-ce, moby, network, remove, solution, swarm  
-updated  : 2017-10-12T11:52:11.000001+0000  
-uuid     : f21c752e-8830-11e8-a114-2c4d54508088  
+> category : snippet
+created  : 2017-10-12T11:52:11.000001+0000
+digest   : 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c
+filename :
+name     :
+source   :
+tags     : container, docker, docker-ce, moby, network, remove, solution, swarm
+updated  : 2017-10-12T11:52:11.000001+0000
+uuid     : f21c752e-8830-11e8-a114-2c4d54508088
 versions :
 
 

@@ -346,6 +346,11 @@ class Config(object):
 
         Use the resource filename field only in case of export operation and
         when user did not define target file from command line.
+        
+        If resource is provided, the operation file is still updated if the
+        resource filename field was not set. The resource might be a search
+        result from different category than originally defined. The resource
+        category always correctly define operation filename.
 
         Args:
             resource (Resource): Content in Resource container.

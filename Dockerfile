@@ -1,6 +1,8 @@
 FROM alpine:3.8
 LABEL maintainer "laaksonen.heikki.j@gmail.com"
 
+ENV LANG C.UTF-8
+
 WORKDIR /usr/local/snippy
 COPY snippy/ snippy/
 COPY setup.py .

@@ -150,6 +150,12 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Test Docker container locale for Python.
+   > https://stackoverflow.com/a/46181663
+   $ docker run snippy python -c 'import sys; print(sys.stdout.encoding)'
+   ```
+
+   ```
    # Example commands for the Python virtualenvwrapper.
    $ lssitepackages
    $ lsvirtualenv
@@ -325,6 +331,7 @@ Random notes and scribling during development.
 
 ## Bling
 
+```
 http://tjelvarolsson.com/blog/five-steps-to-add-the-bling-factor-to-your-python-package/
 
     # Recoding
@@ -360,13 +367,17 @@ curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=security&l
 docker logs snippy
 docker stop snippy
 ctrl-d
+```
 
-    # server
+   # server
 
-    https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
+   ``` 
+   https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
+   ```
 
 ## Travis CI and tooling
 
+```
 Add '[ci skip]' to commitlog in order to prevent the CI build.
 
 https://landscape.io/dashboard
@@ -378,11 +389,13 @@ http://snippy.readthedocs.io/en/latest/
 ## Documents
 
 Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=PA357&dq=Should+I+use+root+or+logger+or+module+name+logger&source=bl&ots=eNYyAjE-IP&sig=MPee2BYjTYu4epc2NlESCG0x3so&hl=en&sa=X&ved=0ahUKEwiylOaLhunVAhXDK5oKHWSaCn04ChDoAQhGMAY#v=onepage&q=Should%20I%20use%20root%20or%20logger%20or%20module%20name%20logger&f=false
+```
 
 #######################################
 ## Server
 #######################################
 
+    ```
     $ pip install gunicorn
     $ pip install falcon
     $ python runner --server
@@ -470,11 +483,13 @@ Good set on loggers: https://books.google.fi/books?id=7U1CIoOs5AkC&pg=PA357&lpg=
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "accept: application/vnd.api+json; charset=UTF-8" -H  "Content-Type: application/vnd.api+json; charset=UTF-8" -d "{  \"data\": [    {      \"type\": \"snippet\",      \"attributes\": {        \"data\": [          \"string\"        ],        \"brief\": \"string\",        \"group\": \"string\",        \"tags\": [          \"string\"        ],        \"links\": [          \"string\"        ],        \"category\": \"snippet\",        \"filename\": \"string\",        \"name\": \"string\",        \"versions\": \"string\",        \"created\": \"string\",        \"updated\": \"string\",        \"digest\": \"string\"      }    }  ]}"
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
     $ curl -X POST "http://127.0.0.1:8080/snippy/api/app/v1/snippets" -H "Content-Type: application/vnd.api+json" -d '{"data":"occaecat veniam aliqua","links":["et dolore ipsum reprehenderit","cupidatat","Lorem aliquip quis dolor cillum","non quis adipisicing sunt esse","in"],"versions":"irure nulla laborum Duis"}'
+    ```
 
 #######################################
 ## Devel
 #######################################
 
+```
 cd devel/snippy
 workon snippy
 make docs
@@ -521,6 +536,7 @@ python runner create --reference -l 'https://writingfordevelopers.substack.com/p
 python runner search --sall . --reference
 python runner export --defaults --reference
 python runner import --defaults --reference
+```
 
 #######################################
 ## Logging

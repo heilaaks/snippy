@@ -17,9 +17,11 @@ RUN apk add --no-cache python3 && \
     pip3 install --upgrade pip setuptools && \
     pip3 install . && \
     pip3 install -e .[server] && \
+    find /usr/lib/python* -type d -name __pycache__ -exec rm -r {} \+ && \
     snippy import --snippet --defaults -q && \
     snippy import --solution --defaults -q && \
-    rm -r /root/.cache
+    pip3 uninstall pip --yes && \
+    rm -rf /root/.cache
 
 RUN chown -R snippy:root .
 

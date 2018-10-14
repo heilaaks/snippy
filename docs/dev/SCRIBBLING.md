@@ -150,6 +150,11 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Docker run lingering container
+   ENTRYPOINT ["tail", "-f","/dev/null"]
+   ```
+
+   ```
    # Test Docker container locale for Python.
    > https://stackoverflow.com/a/46181663
    $ docker run snippy python -c 'import sys; print(sys.stdout.encoding)'

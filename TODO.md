@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Fix input from -f access files like yamll beucase the check is that 'yaml' in () in _operation_file_format.
-   - [ ] Document use cases and scenarios to select operation file.
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
    - [ ] Add support to snippet command examplations that translate to headers in MD files: $ docker rm --volumes $(docker ps --all --quiet) # Remove all containers.

@@ -543,6 +543,57 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             Content.yaml_dump(yaml, mock_file, defaults_references, content)
 
+    @pytest.mark.usefixtures('default-references')
+    def test_cli_export_reference_026(self, snippy):
+        """Export all references.
+
+        Try to export all references into file format that is not supported.
+        In this case the file format contains just one additional letter to
+        supported yaml format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-f', 'foo.yamll'])
+            assert cause == 'NOK: cannot identify file format for file: foo.yamll'
+            assert Database.get_references().size() == 2
+            mock_file.assert_not_called()
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_not_called()
+
+    @pytest.mark.usefixtures('default-references')
+    def test_cli_export_reference_027(self, snippy):
+        """Export all references.
+
+        Try to export all references into file format that is not supported.
+        In this case the file format contains just one additional letter to
+        supported text format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-f', 'foo.itext'])
+            assert cause == 'NOK: cannot identify file format for file: foo.itext'
+            assert Database.get_references().size() == 2
+            mock_file.assert_not_called()
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_not_called()
+
+    @pytest.mark.usefixtures('default-references')
+    def test_cli_export_reference_028(self, snippy):
+        """Export all references.
+
+        Try to export all references into file format that is not supported.
+        In this case the file format contains just one additional letter to
+        supported json format.
+        """
+
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-f', 'foo.jsontext'])
+            assert cause == 'NOK: cannot identify file format for file: foo.jsontext'
+            assert Database.get_references().size() == 2
+            mock_file.assert_not_called()
+            file_handle = mock_file.return_value.__enter__.return_value
+            file_handle.write.assert_not_called()
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

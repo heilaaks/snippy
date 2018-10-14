@@ -433,15 +433,24 @@ class Config(object):
 
     @classmethod
     def _operation_file_format(cls, filename):
-        """Extract operation file format."""
+        """Extract operation file format.
+
+        The file format must be exactly as defined for supported file formats.
+
+        Args:
+            filename (string): Filename with file extension defining the format.
+
+        Returns:
+            string: Operation file format.
+        """
 
         file_format = Const.CONTENT_FORMAT_NONE
         name, extension = os.path.splitext(filename)
-        if name and ('yaml' in extension or 'yml' in extension):
+        if name and (extension == '.yaml' or extension == '.yml'):  # pylint: disable=consider-using-in
             file_format = Const.CONTENT_FORMAT_YAML
-        elif name and 'json' in extension:
+        elif name and extension == '.json':
             file_format = Const.CONTENT_FORMAT_JSON
-        elif name and ('text' in extension or 'txt' in extension):
+        elif name and (extension == '.text' or extension == '.txt'):  # pylint: disable=consider-using-in
             file_format = Const.CONTENT_FORMAT_TEXT
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file: {}'.format(filename))

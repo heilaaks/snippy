@@ -9,7 +9,6 @@ mock = "==2.0.0"
 "openapi2jsonschema" = "==0.8.0"
 pprintpp = "==0.4.0"
 pylint = "==2.1.1"
-pytest = "==3.7.3"
 pytest-cov = "==2.5.1"
 pytest-mock = "==1.10.0"
 sphinx = "==1.7.8"
@@ -20,12 +19,12 @@ pyflakes = "==1.6.0"
 logging-tree = "==1.8"
 sphinx-rtd-theme = "==0.4.1"
 pytest-xdist = "==1.23.0"
+pytest = "==3.7.3"
 
 [packages]
-PyYAML = "==3.13"
+PyYAML = ">=3.12"
 falcon = "==1.4.1"
 gunicorn = "==19.9.0"
 jsonschema = "==2.6.0"
-pytest = "==3.7.2"
 
 [requires]

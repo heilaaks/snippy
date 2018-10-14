@@ -16,6 +16,7 @@
    - [ ] Test test_cli_create_solution_003 that checks 'content was not stored because it was matching to an empty template' does not notice actual failures. The test should use real template now it uses mocked template.
    - [ ] Fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints. Refactor the current implementation.
    - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674
+   - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
 
 ## THINKING
    - [ ] Add code content.

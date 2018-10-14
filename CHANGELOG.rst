@@ -9,15 +9,15 @@ Release history
 Breaking changes
 ~~~~~~~~~~~~~~~~
 
-* Add new content field description_.
-* Change content field group to groups_.
-* Change `filter option`_ behaviour.
-* Change default export file format from text to YAML.
+* Add new content field description `[1]`_.
+* Change content field group to groups `[2]`_.
+* Change filter option behaviour `[3]`_.
+* Change default export file format from text to YAML `[4]`_.
 
 New features
 ~~~~~~~~~~~~
 
-* Add `REST API routes`_ for: keywords, groups, tags, uuid and digest.
+* Add REST API routes for: keywords, groups, tags, uuid and digest `[5]`_.
 * Add search category (scat) option for CLI operations.
 * Add uuid1 in CLI and REST API operations.
 * Add support to import all default content with import operation.
@@ -69,7 +69,8 @@ Bugfixes
 .. _0.6.0: https://github.com/heilaaks/snippy/compare/v0.5.0...heilaaks:v0.6.0
 .. _0.5.0: https://github.com/heilaaks/snippy/compare/v0.1.0...heilaaks:v0.5.0
 .. _0.1.0: https://github.com/heilaaks/snippy/compare/ce6395137b...heilaaks:v0.1.0
-.. _REST API routes: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
-.. _groups: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
-.. _filter option: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
-.. _description: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
+.. _`[1]`: https://github.com/heilaaks/snippy/commit/8d9b0558809e56ce40798f61c8636e04307743ed
+.. _`[2]`: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
+.. _`[3]`: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
+.. _`[4]`: https://github.com/heilaaks/snippy/commit/61f3e55156166427ec45312974ff1ed15a342d37
+.. _`[5]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0

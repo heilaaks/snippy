@@ -21,6 +21,11 @@ RUN apk add --no-cache python3 && \
     snippy import --snippet --defaults -q && \
     snippy import --solution --defaults -q && \
     pip3 uninstall pip --yes && \
+    apk del apk-tools && \
+    rm -rf /etc/apk/ && \
+    rm -rf /lib/apk/ && \
+    rm -rf /usr/share/apk/ && \
+    rm -rf /var/cache/apk/ && \
     rm -rf /root/.cache
 
 RUN chown -R snippy:root .

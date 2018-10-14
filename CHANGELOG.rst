@@ -32,6 +32,11 @@ Bugfixes
 * Fix REST API HTTP OPTIONS responses.
 * All commits in `0.9.0`_.
 
+Security
+~~~~~~~~
+
+* Remove Alpine (apk) and Python (pip) installers from Docker image.
+
 0.8.0 (2018-21-07)
 ------------------
 

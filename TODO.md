@@ -1,22 +1,20 @@
 ## WORKING
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
-   - [ ] Add support to snippet command examplations that translate to headers in MD files: $ docker rm --volumes $(docker ps --all --quiet) # Remove all containers.
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
-   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
-   - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
-   - [ ] Fix why 'python runner search --sall 'has active end' results two snippets with default content? Should be one.
    - [ ] Change it not collection.size() to if collection.emtpy() since it is more readable.
    - [ ] Use VERBOSE to comment regexp in text template parser.
+   - [ ] Test test_cli_create_solution_003 that checks 'content was not stored because it was matching to an empty template' does not notice actual failures. The test should use real template now it uses mocked template.
+   - [ ] Fix why 'python runner search --sall 'has active end' results two snippets with default content? Should be one.
    - [ ] Fix Collection __getitem__ with unknown digest that returns key error.
    - [ ] Fix resource = collection[list(collection.keys())[0]]['data'] to collection[0] and collection[digest] if possible?
    - [ ] Fix (somehow) the markdown parsing loses manual alignment of comments since the text->mkd -> text adds only one space between command and comment.
-   - [ ] Change pyyaml requiredment to 3.12> and <4. The 3.13. is required by Python3.7 but it is so new. Try to force 3.13 with Python 3.7?
    - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?
-   - [ ] Test test_cli_create_solution_003 that checks 'content was not stored because it was matching to an empty template' does not notice actual failures. The test should use real template now it uses mocked template.
    - [ ] Fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints. Refactor the current implementation.
    - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674
    - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
+   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
+   - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
 
 ## THINKING
    - [ ] Add code content.

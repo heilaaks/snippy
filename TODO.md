@@ -1,6 +1,5 @@
 ## WORKING
-   - [ ] Change default filenames and export filenames. They now differ only with s and text/yaml like snippet.text / snippets.yaml. Change default to yaml.
-   - [ ] Fix input fgrom -f access files like yamll beucase the check is that 'yaml' in () in _operation_file_format.
+   - [ ] Fix input from -f access files like yamll beucase the check is that 'yaml' in () in _operation_file_format.
    - [ ] Document use cases and scenarios to select operation file.
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
@@ -19,7 +18,7 @@
    - [ ] Change pyyaml requiredment to 3.12> and <4. The 3.13. is required by Python3.7 but it is so new. Try to force 3.13 with Python 3.7?
    - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?
    - [ ] Test test_cli_create_solution_003 that checks 'content was not stored because it was matching to an empty template' does not notice actual failures. The test should use real template now it uses mocked template.
-   - [ ] Fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints.
+   - [ ] Fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints. Refactor the current implementation.
    - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674
 
 ## THINKING

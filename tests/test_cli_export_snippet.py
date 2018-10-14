@@ -136,7 +136,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_006(self, snippy):
         """Export all snippets.
 
@@ -155,7 +155,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
-            Content.text_dump(mock_file, 'snippet.text', content)
+            Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_007(self, snippy):
@@ -233,7 +233,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_011(self, snippy):
         """Export defined snippet with digest.
 
@@ -252,7 +252,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '--sall', 'force'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
-            Content.text_dump(mock_file, 'snippet.text', content)
+            Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_012(self, snippy):
@@ -367,7 +367,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == 'NOK: cannot find content with given search criteria'
             mock_file.assert_not_called()
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_018(self, snippy):
         """Export defined snippet with content data.
 
@@ -386,7 +386,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
-            Content.text_dump(mock_file, 'snippet.text', content)
+            Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_019(self, snippy):
@@ -514,7 +514,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             mock_file.assert_not_called()
 
-    @pytest.mark.usefixtures('default-snippets', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_026(self, snippy):
         """Export snippets with search keyword.
 
@@ -534,7 +534,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '--sall', 'docker'])
             assert cause == Cause.ALL_OK
             assert Database.get_snippets().size() == 2
-            Content.text_dump(mock_file, 'snippet.text', content)
+            Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
 
     @classmethod
     def teardown_class(cls):

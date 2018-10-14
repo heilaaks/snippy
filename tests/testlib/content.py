@@ -199,8 +199,17 @@ class Content(object):
             if Content._any_valid_test_uuid(data):
                 data['uuid'] = Database.VALID_UUID
 
-        mock_file.assert_any_call(filename, 'w')
-        yaml_dump.safe_dump.assert_any_call(content, mock.ANY, default_flow_style=mock.ANY)
+        try:
+            mock_file.assert_any_call(filename, 'w')
+            yaml_dump.safe_dump.assert_any_call(content, mock.ANY, default_flow_style=mock.ANY)
+        except AssertionError:
+            print("===REFERENCES===")
+            pprintpp.pprint(content)
+            print("===MOCK_CALLS===")
+            pprintpp.pprint(yaml_dump.safe_dump.mock_calls[0][1][0])
+            print("================")
+
+            raise AssertionError
 
     @staticmethod
     def json_dump(json_dump, mock_file, filename, content):
@@ -329,6 +338,7 @@ class Content(object):
         }
         content_read['6363c15263ea0a77']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   : ') for w in content_read['6363c15263ea0a77']['data']])  # pylint: disable=line-too-long
         content_read['6363c15263ea0a77']['filename'] = Const.EMPTY
+        content_read['6363c15263ea0a77']['digest'] = '6363c15263ea0a77c17adbe0ef1e032abe39eb9ceb45b99fb87875df297d2950'
 
         return content_read
 
@@ -342,6 +352,7 @@ class Content(object):
         }
         content_read['981c93230a869f56']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   :') for w in content_read['981c93230a869f56']['data']])  # pylint: disable=line-too-long
         content_read['981c93230a869f56']['filename'] = Const.EMPTY
+        content_read['981c93230a869f56']['digest'] = '981c93230a869f5616bb18046ebd7a3b6c02a1bfcfc03d4a1ca5111b410e165c'
 
         return content_read
 

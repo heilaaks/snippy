@@ -122,8 +122,6 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
     def export_all(self):
         """Export content."""
 
-        filename = Config.get_operation_file()
-        print(filename)
         if Config.template:
             self._logger.debug('exporting: %s :template: %s', self._category, Config.get_operation_file())
             Migrate.dump_template(self._category)
@@ -139,22 +137,22 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 digest=Config.operation_digest,
                 data=Config.content_data
             )
-            if collection.size() == 1:
-                resource = next(collection.resources())
-                filename = Config.get_operation_file(resource=resource)
-            elif collection.empty():
+            if collection.empty():
                 Config.validate_search_context(collection, 'export')
-            Migrate.dump(collection, filename)
+            else:
+                filename = Config.get_operation_file(collection=collection)
+                Migrate.dump(collection, filename)
         else:
             if Config.defaults:
                 for category in Config.search_cat_kws:
+                    collection = self._storage.export_content((category,))
                     filename = Config.default_content_file(category)
                     self._logger.debug('exporting all: %s :content to: %s', category, filename)
-                    collection = self._storage.export_content((category,))
                     Migrate.dump(collection, filename)
             else:
-                self._logger.debug('exporting all: %s :content to: %s', self._category, filename)
                 collection = self._storage.export_content(Config.search_cat_kws)
+                filename = Config.get_operation_file(collection=collection)
+                self._logger.debug('exporting all: %s :content to: %s', self._category, filename)
                 Migrate.dump(collection, filename)
 
     def import_all(self):

@@ -12,6 +12,7 @@ Breaking changes
 * Add new content field description_.
 * Change content field group to groups_.
 * Change `filter option`_ behaviour.
+* Change default export file format from text to YAML.
 
 New features
 ~~~~~~~~~~~~

@@ -121,6 +121,19 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return Resource(category, timestamp)
 
+    def category_list(self):
+        """Return list of categories in collection.
+
+        Returns:
+            tuple: List of unique categories in the collection.
+        """
+
+        categories = {}
+        for resource in self.resources():
+            categories[resource.category] = resource.category
+
+        return tuple(categories.keys())
+
     def migrate(self, source):
         """Migrate resource or collection to collection.
 

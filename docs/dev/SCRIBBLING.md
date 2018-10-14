@@ -1270,17 +1270,29 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        2. Command line -f|--file always overrides other parameters.
 
-       3. Default 'content.yaml' filename is always used with multi-category search
+       3. Default 'content.yaml' filename is used with more than one category
 
-          If result from multi-category search is a single category collection
-          of content, the category specific default file name could be used.
-          Currnently this is used to simplify the implementation and logic.
+          If a collection of resources contains resources from more than one
+          category, default file 'content.yaml' is used. Only if the collection
+          contains resources from a single category, a content category specific
+          filename is used.
+
+       4. When --defaults option is used, the -f|--file option is not allowed
+
+          The --defaults option is intended as a shorthand to export stored
+          content. The same can be done without the option and defining the
+          file with -f|--file option.
+
+       5. When --template option is used, the -f|--file option is not allowed
+
+          Currently only a text template is available. In this case defining
+          the -f|--file could be considered in the future.
 
     2. Exporting files
 
        A. Single specified content without --file option
 
-          1. Content does not define filename field: <category>.text
+          1. Content does not define filename field: <category>.yaml
              - python runner export -d 6d221115da7b9540
              - test_cli_export_reference_004
 
@@ -1301,7 +1313,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        C. Search option (scat, sall, stag, sgrp) without --file option resulting one content
 
-          1. Content does not define filename field: <category>.text
+          1. Content does not define filename field: <category>.yaml
              - python runner export --references --sall commit
              - test_cli_export_snippet_011
 
@@ -1321,13 +1333,13 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        E. Search option (scat, sall, stag, sgrp) without --file option resulting more than one content from single category
 
-          1. Content does not define filename field: <category>.text
+          1. Content does not define filename field: <category>.yaml
              - python runner export --sall kube --solution
              - test_cli_export_reference_021
              - test_cli_export_solution_036
              - test_cli_export_snippet_026
 
-          2. Content defines filename field: <category>.text   # Content filename fields do not have any effect.
+          2. Content defines filename field: <category>.yaml   # Content filename fields do not have any effect.
 
        F. Search option (scat, sall, stag, sgrp) with --file option resulting more than one content from single category
 

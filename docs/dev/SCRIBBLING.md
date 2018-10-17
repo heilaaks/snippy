@@ -17,7 +17,7 @@ Random notes and scribling during development.
    $ virtualenv --version
    $ export WORKON_HOME=${HOME}/devel/python-virtualenvs # Add to ~/.bashrc
    $ export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3    # Add to ~/.bashrc
-   $ source /usr/bin/virtualenvwrapper.sh                # Add to ~/.bashrc
+   $ source /usr/local/bin/virtualenvwrapper.sh          # Add to ~/.bashrc
    $ mkvirtualenv snippy
    ```
 

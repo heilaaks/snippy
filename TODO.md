@@ -22,6 +22,7 @@
    - [ ] Add UT tests for class Debug() methods.
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
    - [ ] Add changelog to README.
+   - [ ] Add tool configs to pyproject.toml.
 
 ## FEATURES
    - [ ] Add support to edit markup files with cli option.
@@ -156,6 +157,7 @@
    - [ ] How to better prevent commits to snippy.db than git hooks or git --assume-unchanged?
 
 ## FOLLOW EXTERNAL BUGS/ISSUES
+   - [ ] Pytest support for PEP-518 pyproject.toml is missing // https://github.com/pytest-dev/pytest/issues/1556
    - [ ] OpenAPI does not support OPTIONS HTTP method and it cannot be defined. // https://github.com/OAI/OpenAPI-Specification/issues/325
    - [x] The openapi2jsonschema does not work with Python 3. // https://github.com/garethr/openapi2jsonschema/issues/6.
    - [x] The openapi2jsonschema does not work with OAS 3.0. // https://github.com/garethr/openapi2jsonschema/issues/6.

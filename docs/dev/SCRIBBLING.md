@@ -85,6 +85,11 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Upgrade pip tools.
+   $ pip install pip setuptools wheel --upgrade
+   ```
+
+   ```
    # Install pipenv development environment
    $ pipenv install
 

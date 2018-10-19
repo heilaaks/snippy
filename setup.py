@@ -17,6 +17,8 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+"""setup: Install Snippy tool."""
+
 import io
 import os
 from setuptools import setup, find_packages
@@ -66,15 +68,15 @@ with io.open('README.rst', mode='r', encoding='utf-8') as f:
     readme = f.read()
 
 setup(
-    name = meta['__title__'],
-    version = meta['__version__'],
-    description = meta['__description__'],
-    long_description = readme,
+    name=meta['__title__'],
+    version=meta['__version__'],
+    description=meta['__description__'],
+    long_description=readme,
     long_description_content_type='text/x-rst',
-    author = meta['__author__'],
-    author_email = meta['__email__'],
-    url = meta['__homepage__'],
-    license= meta['__license__'],
+    author=meta['__author__'],
+    author_email=meta['__email__'],
+    url=meta['__homepage__'],
+    license=meta['__license__'],
     keywords='command solution snippet reference link snippet manager server console',
     packages=find_packages(exclude=['tests', 'tests.testlib']),
     package_dir={'snippy': 'snippy'},

@@ -31,7 +31,7 @@ extras_dev = (
     'openapi2jsonschema==0.8.0'
 )
 extras_docs = (
-    'sphinx==1.7.9',
+    'sphinx==1.8.1',
     'sphinxcontrib-openapi==0.3.2',
     'sphinx_rtd_theme==0.4.2',
     'sphinx-autobuild==0.7.1'

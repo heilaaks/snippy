@@ -1560,11 +1560,83 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     CHARACTER ENCODING
 
-    1. In Python 2.7, unicode defaults to decoding 'ascii'.
+       1. In Python 2.7, unicode defaults to decoding 'ascii'.
 
-    2. All strings are automatically encoded to TEXT_TYPE
+       2. All strings are automatically encoded to TEXT_TYPE
 
-       In Python 2, the text type is unicode and in Python 3 it si str.
+          In Python 2, the text type is unicode and in Python 3 it si str.
+
+    LOCALES
+
+       Testing
+
+       Starting from Sphinx 1.8.0 the LC_ALL must be set [6]. This variable seems
+       to overrides all other localisation settings with few exceptions [1]. With
+       Python 3 setting the LC_ALL=C causes problems with Click Python module.
+       This also causes problems with Python 3 itself. The reason is likely that
+       the value C forces the environment character set to ASCII [3]. This has
+       been improved in Python 3.7 with PEP 538 and PEP 540 [3].
+
+       Based on above, setting LC_ALL=C is a problem in Python 3 ... 3.6.
+
+       There are ways to set the environment variable LC_ALL for virtualenv [4]
+       and pipenv [5] but these are not provided with git repository code.
+
+       Deployment
+
+       The Alpine based container delivery sets the LANG to C.UTF-8 which is the
+       same as official Python 3 Docker distribution.
+
+       It seems that Alpine defines C.utf-8 by default but there is proposal
+       to add support for LANG [10]. But Alpine uses MUSL which does not support
+       support locales LC_* and LANG [11] but defaults [12].
+
+       Because of the above, it seems that current definition of LANG in Alpine
+       container does not have any effect and thus it is unnecessary.
+
+       Solution (testing problem)
+
+       This should work by defining the LC_ALL=C.UTF-8. See explanation of locale
+       environment variable settings [8]
+
+       ```
+       $ export LC_ALL=C.UTF-8
+       ```
+
+       Other solution alternative would be setting the value of LC_ALL as empty
+       which selects implementation defined native environment [7]. An empty value
+       does not override all settings like C and POSIX do. With empty value the
+       LC_ALL falls back to LC_* or then LANG. How ever, the supported locales
+       define what values can be defined in LC_*, LANG or LC_ALL. If the LANG is
+       not defined from list of supported locales, the below will fail
+
+       ```
+       $ export LC_ALL=
+       $ export LANG=C.UTF-8
+       ```
+
+       Commands
+
+       ```
+       # list locales
+       $ locale
+
+       # list supported locales
+       $ locale -a
+       ```
+
+       [1] https://unix.stackexchange.com/a/87763
+       [2] http://www.sphinx-doc.org/en/master/changes.html
+       [3] https://bugs.python.org/issue19846
+       [4] https://stackoverflow.com/a/11134336
+       [5] https://github.com/pypa/pipenv/blob/master/docs/advanced.rst#-support-for-environment-variables
+       [6] https://github.com/sphinx-doc/sphinx/pull/4674
+       [7] http://pubs.opengroup.org/onlinepubs/009695399/functions/setlocale.html
+       [8] http://pubs.opengroup.org/onlinepubs/7908799/xbd/envvar.html
+       [9] https://bugs.alpinelinux.org/issues/7374
+       [10] https://bugs.alpinelinux.org/issues/7374
+       [11] https://github.com/gliderlabs/docker-alpine/issues/144
+       [12] https://wiki.musl-libc.org/functional-differences-from-glibc.html
 
     SECURITY HARDENING
 
@@ -1653,6 +1725,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        of UUIDs' The snippet range starts with 1, solution with 2 and reference
        with 3.
 
+    2. Locales for testing
+
+       See chapter LOCALES.
 
     DOCUMENTATION
 

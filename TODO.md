@@ -49,6 +49,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix content import from other than text template and API to trimp content same way? for example yaml? The stored content should load as is likely...
    - [ ] Fix '--filter 0' maps to None instead of 0?

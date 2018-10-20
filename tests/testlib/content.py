@@ -21,6 +21,7 @@
 
 import copy
 import datetime
+import re
 
 import mock
 import pprintpp
@@ -59,6 +60,11 @@ class Content(object):
     GITLOG_TIME = '2018-06-22T13:11:13.678729+0000'
     REGEXP_TIME = '2018-05-21T13:11:13.678729+0000'
     PYTEST_TIME = '2016-04-21T12:10:11.678729+0000'
+
+    JSON = Const.CONTENT_FORMAT_JSON
+    MKDN = Const.CONTENT_FORMAT_MKDN
+    TEXT = Const.CONTENT_FORMAT_TEXT
+    YAML = Const.CONTENT_FORMAT_YAML
 
     @staticmethod
     def verified(mocker, snippy, content):
@@ -170,6 +176,157 @@ class Content(object):
         return content
 
     @staticmethod
+    def json_dump(json_dump, mock_file, filename, content):
+        """Compare given content against yaml dump.
+
+        Both test data and reference data must be validated for UUIDs. The
+        list of UUIDs is predefined but it must be unique so each content may
+        have any of the valid UUIDs.
+
+        Because the 'content' parameter may be modified in here, the data
+        structure is always deep copied in order to avoid modifying the
+        original which may be the content helper default JSON data.
+
+        Args:
+            json_dump (obj): Mocked yaml object.
+            mock_file (obj): Mocked file object.
+            filename (str): Expected filename used to for mocked file.
+            content (str): Content expected to be dumped into JSON file.
+        """
+
+        content = copy.deepcopy(content)
+
+        dictionary = json_dump.dump.mock_calls[0][1][0]
+        for data in content['data']:
+            if Content._any_valid_test_uuid(data):
+                data['uuid'] = Database.VALID_UUID
+
+        for data in dictionary['data']:
+            if Content._any_valid_test_uuid(data):
+                data['uuid'] = Database.VALID_UUID
+        mock_file.assert_called_once_with(filename, 'w')
+        json_dump.dump.assert_called_with(content, mock.ANY)
+
+    @staticmethod
+    def compare_mkdn(mock_file, filename, content):
+        """Compare Markdown content against reference content.
+
+        Reference content and calls to file mock are modified so that the
+        UUID's can be compated.
+
+        The reference content is modifed in a local copy in order to avoid
+        changing the given reference content which may affect to sequential
+        tests.
+
+        Args:
+            mock_file (obj): Mocked file where the Markdown content was saved.
+            filename (str): Expected filename.
+            content (dict): Excepted content.
+        """
+
+        references = Const.EMPTY
+        content = copy.deepcopy(content)
+        for data in content['data']:
+            if Content._any_valid_test_uuid(data):
+                data['uuid'] = Database.VALID_UUID
+            references = references + Reference.dump(data, Content.MKDN)
+            references = references + '\n---\n\n'
+        references = references[:-6]  # Remove last separator added by the loop.
+        references = [references]
+
+        mock_calls = []
+        handle = mock_file.return_value.__enter__.return_value
+        for call in handle.write.mock_calls:
+            match = re.compile(r'''
+                uuid\s+[:]\s+    # Match tag for uuid.
+                (?P<uuids>\S+)   # Catch uuid.
+                \s+
+                ''', re.VERBOSE).findall(call[1][0])
+            if match:
+                if set(match) < set(Database.TEST_UUIDS_STR):
+                    mock_calls.append(re.sub(r'uuid     : \S+', 'uuid     : ' + Database.VALID_UUID, call[1][0]))
+        try:
+            mock_file.assert_called_once_with(filename, 'w')
+            assert mock_calls == references
+        except AssertionError:
+            Content._print_compare(mock_file, mock_calls, references, filename)
+            raise AssertionError
+
+    @staticmethod
+    def _print_compare(mock_file, mock_calls, references, filename):
+        """Print comparison data.
+
+        Compare mock and references so that the first difference is searched
+        and then add few extra lines after first failure. The failure and all
+        following lines are colored differently from standard line color.
+
+        The comparing output is printed side by side from mock and references.
+        """
+
+        # Color code lengths must be equal to align output correctly. Also when
+        # the failure colors are added, the normal coloring is removed in order
+        # to maintain correct text alignment.
+        fail = '\033[1m'
+        succ = '\x1b[2m'
+        endc = '\x1b[0m'
+        references = references[0].splitlines()
+        mock_calls = mock_calls[0].splitlines()
+        references = [succ + line + endc for line in references]
+        mock_calls = [succ + line + endc for line in mock_calls]
+        idx = 0
+        for idx, line in enumerate(references):
+            if line != mock_calls[idx]:
+                break
+        references = references[0:idx+5]
+        mock_calls = mock_calls[0:idx+5]
+        for i in range(idx, len(references)):
+            references[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', references[i]) + endc
+            mock_calls[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', mock_calls[i]) + endc
+        max_len = len(max(references+mock_calls, key=len))
+        compare = Const.NEWLINE.join("| {:<{len}} | {:{len}}".format(x, y, len=max_len) for x, y in zip(references, mock_calls))
+
+        print('+' + "=" *(80*2))
+        reference_file = filename + ' - w'
+        mock_call_file = mock_file.mock_calls[0][1][0] + ' - ' + mock_file.mock_calls[0][1][1]
+        max_len_header = max_len-len(succ)-len(endc)- len('references: ')
+        print("| references: {:<{len}} | mock calls: {:{len}}".format(reference_file, mock_call_file, len=max_len_header))
+        print('+' + "=" *(80*2))
+        print(compare)
+        print('+' + "=" *(80*2))
+
+    @staticmethod
+    def text_dump(mock_file, filename, contents):
+        """Compare given content against yaml dump.
+
+        Args:
+            mock_file (obj): Mocked file object.
+            filename (str): Expected filename used to for mocked file.
+            contents (dict): Content expected to be dumped into text file.
+        """
+
+        # Note: The assert_has_calls does not see if one item from given list
+        #       is missing. The mock_calls works by verifying all calls.
+        #
+        # Note: The reference content has meta but in case of text dump, that
+        #       is not produced and it is not compared here.
+        references = []
+        for content in contents['data']:
+            references.append(mock.call(Reference.dump(content, Content.TEXT)))
+            references.append(mock.call(Const.NEWLINE))
+        mock_file.assert_called_once_with(filename, 'w')
+        handle = mock_file.return_value.__enter__.return_value
+        try:
+            assert handle.write.mock_calls == references
+        except AssertionError:
+            print("===REFERENCES===")
+            pprintpp.pprint(references)
+            print("===MOCK_CALLS===")
+            pprintpp.pprint(handle.write.mock_calls)
+            print("================")
+
+            raise AssertionError
+
+    @staticmethod
     def yaml_dump(yaml_dump, mock_file, filename, content, call=0):
         """Compare given content against yaml dump.
 
@@ -207,70 +364,6 @@ class Content(object):
             pprintpp.pprint(content)
             print("===MOCK_CALLS===")
             pprintpp.pprint(yaml_dump.safe_dump.mock_calls[0][1][0])
-            print("================")
-
-            raise AssertionError
-
-    @staticmethod
-    def json_dump(json_dump, mock_file, filename, content):
-        """Compare given content against yaml dump.
-
-        Both test data and reference data must be validated for UUIDs. The
-        list of UUIDs is predefined but it must be unique so each content may
-        have any of the valid UUIDs.
-
-        Because the 'content' parameter may be modified in here, the data
-        structure is always deep copied in order to avoid modifying the
-        original which may be the content helper default JSON data.
-
-        Args:
-            json_dump (obj): Mocked yaml object.
-            mock_file (obj): Mocked file object.
-            filename (str): Expected filename used to for mocked file.
-            content (str): Content expected to be dumped into JSON file.
-        """
-
-        content = copy.deepcopy(content)
-
-        dictionary = json_dump.dump.mock_calls[0][1][0]
-        for data in content['data']:
-            if Content._any_valid_test_uuid(data):
-                data['uuid'] = Database.VALID_UUID
-
-        for data in dictionary['data']:
-            if Content._any_valid_test_uuid(data):
-                data['uuid'] = Database.VALID_UUID
-        mock_file.assert_called_once_with(filename, 'w')
-        json_dump.dump.assert_called_with(content, mock.ANY)
-
-    @staticmethod
-    def text_dump(mock_file, filename, contents):
-        """Compare given content against yaml dump.
-
-        Args:
-            mock_file (obj): Mocked file object.
-            filename (str): Expected filename used to for mocked file.
-            content (str): Content expected to be dumped into text file.
-        """
-
-        # Note: The assert_has_calls does not see if one item from given list
-        #       is missing. The mock_calls works by verifying all calls.
-        #
-        # Note: The reference content has meta but in case of text dump, that
-        #       is not produced and it is not comapred here.
-        references = []
-        for content in contents['data']:
-            references.append(mock.call(Reference.get_template(content)))
-            references.append(mock.call(Const.NEWLINE))
-        mock_file.assert_called_once_with(filename, 'w')
-        handle = mock_file.return_value.__enter__.return_value
-        try:
-            assert handle.write.mock_calls == references
-        except AssertionError:
-            print("===REFERENCES===")
-            pprintpp.pprint(references)
-            print("===MOCK_CALLS===")
-            pprintpp.pprint(handle.write.mock_calls)
             print("================")
 
             raise AssertionError

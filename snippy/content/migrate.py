@@ -69,6 +69,8 @@ class Migrate(object):
                 elif Config.is_operation_file_json:
                     json.dump(dictionary, outfile)
                     outfile.write(Const.NEWLINE)
+                elif Config.is_operation_file_mkdn:
+                    outfile.write(collection.dump_mkdn(Config.templates))
                 elif Config.is_operation_file_yaml:
                     yaml.safe_dump(dictionary, outfile, default_flow_style=False)
                 else:

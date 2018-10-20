@@ -18,10 +18,12 @@ New features
 ~~~~~~~~~~~~
 
 * Add REST API routes for: keywords, groups, tags, uuid and digest `[5]`_.
+* Add support to use uuid1 in CLI and REST API operations.
+* Add support to export and import Markdown formatted content.
+* Add support to import all default content with one command.
+* Add support to export all default content with one command.
+* Add support for --limit option in CLI operations.
 * Add search category (scat) option for CLI operations.
-* Add uuid1 in CLI and REST API operations.
-* Add support to import all default content with import operation.
-* Add support for --limit option from CLI interface.
 
 Bugfixes
 ~~~~~~~~

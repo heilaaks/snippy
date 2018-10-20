@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Add mkdn tests for exporting snippet, solution. Test importing for all cats.
    - [ ] Add support to import and export content in limited markdown format.
    - [ ] Add support for description on top of brief.
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.

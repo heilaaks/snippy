@@ -64,7 +64,9 @@ class Config(object):
                 'reference': cls._content_template('reference.txt')
             },
             'mkdn': {
-                'snippet': cls._content_template('snippet.md')
+                'snippet': cls._content_template('snippet.md'),
+                'solution': cls._content_template('solution.md'),
+                'reference': cls._content_template('reference.md')
             }
         }
 
@@ -82,7 +84,7 @@ class Config(object):
         cls.load(cls.source)
 
     @classmethod
-    def load(cls, source):
+    def load(cls, source):  # pylint: disable=too-many-statements
         """Load dynamic configuration from source."""
 
         cls.source = source
@@ -153,6 +155,7 @@ class Config(object):
         cls.operation_filename = cls._operation_filename((cls.content_category,))
         cls.operation_file_format = cls._operation_file_format(cls.operation_filename)
         cls.is_operation_file_json = True if cls.operation_file_format == Const.CONTENT_FORMAT_JSON else False
+        cls.is_operation_file_mkdn = True if cls.operation_file_format == Const.CONTENT_FORMAT_MKDN else False
         cls.is_operation_file_text = True if cls.operation_file_format == Const.CONTENT_FORMAT_TEXT else False
         cls.is_operation_file_yaml = True if cls.operation_file_format == Const.CONTENT_FORMAT_YAML else False
 
@@ -369,6 +372,7 @@ class Config(object):
             cls.operation_filename = filename
             cls.operation_file_format = cls._operation_file_format(filename)
             cls.is_operation_file_json = True if cls.operation_file_format == Const.CONTENT_FORMAT_JSON else False
+            cls.is_operation_file_mkdn = True if cls.operation_file_format == Const.CONTENT_FORMAT_MKDN else False
             cls.is_operation_file_text = True if cls.operation_file_format == Const.CONTENT_FORMAT_TEXT else False
             cls.is_operation_file_yaml = True if cls.operation_file_format == Const.CONTENT_FORMAT_YAML else False
 
@@ -378,7 +382,11 @@ class Config(object):
     def is_supported_file_format(cls):
         """Test if file format is supported."""
 
-        return True if cls.is_operation_file_yaml or cls.is_operation_file_json or cls.is_operation_file_text else False
+        return True if cls.is_operation_file_json or \
+                       cls.is_operation_file_mkdn or \
+                       cls.is_operation_file_text or \
+                       cls.is_operation_file_yaml    \
+                       else False
 
     @classmethod
     def default_content_file(cls, category):
@@ -446,12 +454,14 @@ class Config(object):
 
         file_format = Const.CONTENT_FORMAT_NONE
         name, extension = os.path.splitext(filename)
-        if name and (extension == '.yaml' or extension == '.yml'):  # pylint: disable=consider-using-in
-            file_format = Const.CONTENT_FORMAT_YAML
-        elif name and extension == '.json':
+        if name and extension == '.json':
             file_format = Const.CONTENT_FORMAT_JSON
+        elif name and (extension == '.md' or extension == '.mkdn'):  # pylint: disable=consider-using-in
+            file_format = Const.CONTENT_FORMAT_MKDN
         elif name and (extension == '.text' or extension == '.txt'):  # pylint: disable=consider-using-in
             file_format = Const.CONTENT_FORMAT_TEXT
+        elif name and (extension == '.yaml' or extension == '.yml'):  # pylint: disable=consider-using-in
+            file_format = Const.CONTENT_FORMAT_YAML
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot identify file format for file: {}'.format(filename))
 

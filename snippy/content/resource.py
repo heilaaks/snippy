@@ -516,6 +516,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.metadata = None
         self.key = None
 
+        if self.is_reference():
+            self.data = tuple(dictionary.get('links', self.links))
+
         self.digest = self.compute_digest()
 
     def dump_dict(self, remove_fields):
@@ -617,12 +620,16 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 if match:
                     if match.group('comment'):
                         data = data + "- " + match.group('comment') + Const.NEWLINE * 2
-                        data = data + "    `$ " + match.group('command') + "`" + Const.NEWLINE * 2
+                        data = data + "    `$ " + match.group('command') + "`" + Const.NEWLINE * 2
                     else:
-                        data = data + "`$ " + match.group('command') + "`" + Const.NEWLINE
+                        data = data + "`$ " + match.group('command') + "`" + Const.NEWLINE
                 else:
                     self._logger.debug('command parsing failed: %s', command)
             data = data.rstrip()
+        elif self.is_solution():
+            data = '```\n'
+            data = data + Const.DELIMITER_DATA.join(self.data)
+            data = data + '```'
 
         return data
 

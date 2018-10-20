@@ -113,13 +113,26 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         return resource.dump_dict(Config.remove_fields)
 
     @staticmethod
-    def get_template(dictionary):
-        """Transform dictionary to text template."""
+    def dump(content, content_format):
+        """Dump content in requested format.
 
-        resource = Collection.get_resource(dictionary['category'], '2018-10-20T06:16:27.000001+0000')
-        resource.load_dict(dictionary)
+        Args:
+            content (dict): Content in dictionary.
+            content_format (str): Content format.
 
-        return resource.dump_text(Config.templates)
+        Returns:
+            str: content in requested format.
+        """
+
+        dump = Const.EMPTY
+        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+0000')
+        resource.load_dict(content)
+        if content_format == Const.CONTENT_FORMAT_TEXT:
+            dump = resource.dump_text(Config.templates)
+        elif content_format == Const.CONTENT_FORMAT_MKDN:
+            dump = resource.dump_mkdn(Config.templates)
+
+        return dump
 
     @staticmethod
     def _get_content(text):

@@ -20,7 +20,7 @@
 """test_ut_parser: Test ContentParserMarkdown() class."""
 
 from snippy.constants import Constants as Const
-from snippy.config.source.parsers.markdown import ContentParserMarkdown as Parser
+from snippy.config.source.parsers.mkdn import ContentParserMkdn as Parser
 
 
 class TestUtContentParserMarkdown(object):

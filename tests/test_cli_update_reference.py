@@ -38,7 +38,7 @@ class TestCliUpdateReference(object):
         are updated.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             '1fc34e79a4d2bac5': Reference.get_dictionary(template),
@@ -58,7 +58,7 @@ class TestCliUpdateReference(object):
         to a single reference that must be updated.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             '1fc34e79a4d2bac5': Reference.get_dictionary(template),
@@ -79,7 +79,7 @@ class TestCliUpdateReference(object):
         reference is updated properly regardless of incorrect category.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             '1fc34e79a4d2bac5': Reference.get_dictionary(template),
@@ -101,7 +101,7 @@ class TestCliUpdateReference(object):
         properly regardless of incorrect category.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             '1fc34e79a4d2bac5': Reference.get_dictionary(template),
@@ -121,7 +121,7 @@ class TestCliUpdateReference(object):
         changes must be made to stored content.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
@@ -142,7 +142,7 @@ class TestCliUpdateReference(object):
         one reference. Only one content can be updated at the time.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
@@ -161,7 +161,7 @@ class TestCliUpdateReference(object):
         Update reference based on short uuid. Only content links are updated.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             '1fc34e79a4d2bac5': Reference.get_dictionary(template),
@@ -180,7 +180,7 @@ class TestCliUpdateReference(object):
         Try to update reference based on uuid that cannot be found.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
@@ -200,7 +200,7 @@ class TestCliUpdateReference(object):
         Update reference based on content links.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             '1fc34e79a4d2bac5': Reference.get_dictionary(template),
@@ -220,7 +220,7 @@ class TestCliUpdateReference(object):
         Try to update reference based on content links that is not found.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
         content_read = {
             Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
@@ -241,7 +241,7 @@ class TestCliUpdateReference(object):
         content.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         template = template.replace('https://chris.beams.io/posts/git-commit/', '')
         content_read = {
             Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
@@ -264,13 +264,13 @@ class TestCliUpdateReference(object):
         shows the regexp reference and not an empty reference template.
         """
 
-        template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
+        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
         content_read = {
             Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG]
         }
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--reference', '--editor'])
-        edited_gitlog.assert_called_with(Reference.get_template(Content.compared(Reference.DEFAULTS[Reference.REGEXP])))
+        edited_gitlog.assert_called_with(Reference.dump(Content.compared(Reference.DEFAULTS[Reference.REGEXP]), Content.TEXT))
         assert cause == Cause.ALL_OK
         assert Database.get_references().size() == 1
         Content.verified(mocker, snippy, content_read)

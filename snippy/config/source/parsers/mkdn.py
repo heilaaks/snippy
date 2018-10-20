@@ -27,7 +27,7 @@ from snippy.content.collection import Collection
 from snippy.logger import Logger
 
 
-class ContentParserMarkdown(ContentParserBase):
+class ContentParserMkdn(ContentParserBase):
     """Parse content from Markdown templates."""
 
     # Example 1: Capture optional comment and mandatory command.

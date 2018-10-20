@@ -36,7 +36,7 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting snippets."""
 
-    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_001(self, snippy):
         """Export all snippets.
 
@@ -57,7 +57,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert Database.get_snippets().size() == 2
             Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
 
-    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_002(self, snippy):
         """Export all snippets.
 
@@ -78,7 +78,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert Database.get_snippets().size() == 2
             Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
 
-    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_003(self, snippy):
         """Export all snippets.
 
@@ -98,7 +98,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert Database.get_snippets().size() == 2
             Content.yaml_dump(yaml, mock_file, './defined-snippets.yaml', content)
 
-    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_004(self, snippy):
         """Export all snippets.
 

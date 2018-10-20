@@ -229,6 +229,9 @@ class Collection(object):  # pylint: disable=too-many-public-methods
            category (str): Content category.
            timestamp (str): IS8601 timestamp.
            templates (dict): Dictionary that contains text templates.
+
+        Returns:
+            string: Requested resource or template as a text string.
         """
 
         if digest:
@@ -245,6 +248,9 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         Args:
            templates (dict): Dictionary that contains text templates.
+
+        Returns:
+            string: Collection in Markdown format.
         """
 
         if self.empty():
@@ -256,7 +262,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             text = text + '\n---\n\n'
         text = text[:-6]  # Remove last separator added by the loop.
 
-        self._print_stdout(text)
+        return text
 
     def dump_term(self, use_ansi, debug_logs):
         """Convert collection for terminal."""

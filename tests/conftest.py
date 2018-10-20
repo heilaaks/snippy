@@ -566,14 +566,6 @@ def update_gitlog_time_mock(mocker):
 
     _add_utc_time(mocker, UPDATE_GITLOG)
 
-@pytest.fixture(scope='function', name='edit-gitlog')
-def edit_gitlog_solution(mocker):
-    """Edited 'gitlog' referece."""
-
-    template = Reference.get_template(Reference.DEFAULTS[Reference.GITLOG])
-    mocker.patch.object(Editor, '_call_editor', return_value=template)
-    _add_utc_time(mocker, EDITED_GITLOG)
-
 @pytest.fixture(scope='function', name='edited_gitlog')
 def edited_gitlog(mocker):
     """Mock edited 'gitlog' referece."""

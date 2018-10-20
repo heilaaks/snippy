@@ -38,7 +38,7 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
     """Test workflows for exporting references."""
 
-    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
     def test_cli_export_reference_001(self, snippy):
         """Export all references.
 
@@ -59,7 +59,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             assert Database.get_references().size() == 2
             Content.yaml_dump(yaml, mock_file, './references.yaml', content)
 
-    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time', 'export-time')
+    @pytest.mark.usefixtures('yaml', 'default-references', 'export-time')
     def test_cli_export_reference_002(self, snippy):
         """Export all references.
 
@@ -593,6 +593,26 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
             file_handle.write.assert_not_called()
+
+    @pytest.mark.usefixtures('default-references', 'export-time')
+    def test_cli_export_reference_029(self, snippy):
+        """Export all references.
+
+        Export all references in Markdown format.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Content.compared(Content.compared(Reference.DEFAULTS[Reference.GITLOG])),
+                Content.compared(Content.compared(Reference.DEFAULTS[Reference.REGEXP]))
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--references', '--file', 'references.mkdn'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            Content.compare_mkdn(mock_file, 'references.mkdn', content)
 
     @classmethod
     def teardown_class(cls):

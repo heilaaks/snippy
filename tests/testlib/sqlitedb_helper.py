@@ -98,6 +98,7 @@ class SqliteDbHelper(object):
         uuid.UUID(hex='4ecd5827b6ef4067b5ac3ceac07dde9f'),
         uuid.UUID(hex='4fcd5827b6ef4067b5ac3ceac07dde9f')
     )
+    TEST_UUIDS_STR = [str(uuid_) for uuid_ in TEST_UUIDS]
 
     @staticmethod
     def print_contents():

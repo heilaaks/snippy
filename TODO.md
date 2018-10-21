@@ -16,7 +16,11 @@
    - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
-   - [ ] Fix new compare that does not see if the last newline is missing. Comment adding newline in text_dump/comare and pytest tests/test_cli_export_reference.py -k test_cli_export_reference_012
+   - [ ] Fix new compare that does not see if the last newline is missing? Comment adding newline in text_dump/comare and pytest tests/test_cli_export_reference.py -k test_cli_export_reference_012. This seems to be mismatch in filename?
+   - [ ] Fix new compare when the mock file is shorter than references.
+   - [ ] Fix new compare to highlight filename mismatch. This incorrect highlights the last line.
+   - [ ] Add tests for new compare.
+   - [ ] Add own package from text highlighting. pytest plugin https://docs.pytest.org/en/latest/writing_plugins.html#writing-plugins
    - [ ] Fix migrate and dump. The dump_dict is not needed in case of text and mkdn.
 
 ## THINKING

@@ -776,6 +776,26 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             assert cause == Cause.ALL_OK
             Content.yaml_dump(yaml, mock_file, './solutions.yaml', content)
 
+    @pytest.mark.usefixtures('default-solutions', 'export-time')
+    def test_cli_export_solution_037(self, snippy):
+        """Export all solutions.
+
+        Export all snippets in Markdown format.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.md'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_solutions().size() == 2
+            Content.compare_mkdn(mock_file, './all-solutions.md', content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

@@ -536,6 +536,26 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert Database.get_snippets().size() == 2
             Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
 
+    @pytest.mark.usefixtures('default-snippets', 'export-time')
+    def test_cli_export_snippet_027(self, snippy):
+        """Export all snippets.
+
+        Export all snippets in Markdown format.
+        """
+
+        content = {
+            'meta': Content.get_cli_meta(),
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            Content.compare_mkdn(mock_file, './snippets.mkdn', content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

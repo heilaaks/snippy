@@ -463,7 +463,7 @@ class Content(object):
         return False
 
     @staticmethod
-    def _print_compare(mock_file, mock_calls, references, filename):
+    def _print_compare(mock_file, mock_calls, references, filename):  # pylint: disable=too-many-locals
         """Print comparison data.
 
         Compare mock and references so that the first difference is searched
@@ -480,29 +480,35 @@ class Content(object):
         succ = '\x1b[2m'
         endc = '\x1b[0m'
         references = references[0].splitlines()
-        mock_calls = mock_calls[0].splitlines()
+        if mock_calls:
+            mock_calls = mock_calls[0].splitlines()
+        else:
+            mock_calls = [Const.EMPTY] * len(references)
         references = [succ + line + endc for line in references]
         mock_calls = [succ + line + endc for line in mock_calls]
         idx = 0
+        failure = False
         for idx, line in enumerate(references):
             if line != mock_calls[idx]:
+                failure = True
                 break
-        references = references[0:idx+5]
-        mock_calls = mock_calls[0:idx+5]
-        for i in range(idx, len(references)):
-            references[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', references[i]) + endc
-            mock_calls[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', mock_calls[i]) + endc
+        if failure:
+            references = references[0:idx+5]
+            mock_calls = mock_calls[0:idx+5]
+            for i in range(idx, len(references)):
+                references[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', references[i]) + endc
+                mock_calls[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', mock_calls[i]) + endc
         max_len = len(max(references+mock_calls, key=len))
         compare = Const.NEWLINE.join("| {:<{len}} | {:{len}}".format(x, y, len=max_len) for x, y in zip(references, mock_calls))
 
-        print('+' + "=" *(80*2))
+        print('+' + "=" *(max_len*2))
         reference_file = filename + ' - w'
         mock_call_file = mock_file.mock_calls[0][1][0] + ' - ' + mock_file.mock_calls[0][1][1]
         max_len_header = max_len-len(succ)-len(endc)- len('references: ')
         print("| references: {:<{len}} | mock calls: {:{len}}".format(reference_file, mock_call_file, len=max_len_header))
-        print('+' + "=" *(80*2))
+        print('+' + "=" *(max_len*2))
         print(compare)
-        print('+' + "=" *(80*2))
+        print('+' + "=" *(max_len*2))
 
 
 class Field(object):  # pylint: disable=too-few-public-methods

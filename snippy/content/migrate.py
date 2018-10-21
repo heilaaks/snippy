@@ -62,10 +62,7 @@ class Migrate(object):
                                        'homepage': __homepage__},
                               'data': collection.dump_dict(Config.remove_fields)}
                 if Config.is_operation_file_text:
-                    for resource in collection.resources():
-                        template = resource.dump_text(Config.templates)
-                        outfile.write(template)
-                        outfile.write(Const.NEWLINE)
+                    outfile.write(collection.dump_text(Config.templates))
                 elif Config.is_operation_file_json:
                     json.dump(dictionary, outfile)
                     outfile.write(Const.NEWLINE)

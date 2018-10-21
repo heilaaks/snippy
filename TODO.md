@@ -16,6 +16,8 @@
    - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
+   - [ ] Fix new compare that does not see if the last newline is missing. Comment adding newline in text_dump/comare and pytest tests/test_cli_export_reference.py -k test_cli_export_reference_012
+   - [ ] Fix migrate and dump. The dump_dict is not needed in case of text and mkdn.
 
 ## THINKING
    - [ ] Add code content.

@@ -80,8 +80,7 @@ class Content(object):
                 mock_file.assert_called_once_with('content.txt', 'w')
                 file_handle = mock_file.return_value.__enter__.return_value
                 content[digest] = Content.compared(content[digest])
-                file_handle.write.assert_has_calls([mock.call(Snippet.get_template(content[digest])),
-                                                    mock.call(Const.NEWLINE)])
+                file_handle.write.assert_has_calls([mock.call(Snippet.get_template(content[digest]) + Const.NEWLINE)])
 
     @staticmethod
     def ordered(contents):
@@ -253,77 +252,31 @@ class Content(object):
             raise AssertionError
 
     @staticmethod
-    def _print_compare(mock_file, mock_calls, references, filename):
-        """Print comparison data.
-
-        Compare mock and references so that the first difference is searched
-        and then add few extra lines after first failure. The failure and all
-        following lines are colored differently from standard line color.
-
-        The comparing output is printed side by side from mock and references.
-        """
-
-        # Color code lengths must be equal to align output correctly. Also when
-        # the failure colors are added, the normal coloring is removed in order
-        # to maintain correct text alignment.
-        fail = '\033[1m'
-        succ = '\x1b[2m'
-        endc = '\x1b[0m'
-        references = references[0].splitlines()
-        mock_calls = mock_calls[0].splitlines()
-        references = [succ + line + endc for line in references]
-        mock_calls = [succ + line + endc for line in mock_calls]
-        idx = 0
-        for idx, line in enumerate(references):
-            if line != mock_calls[idx]:
-                break
-        references = references[0:idx+5]
-        mock_calls = mock_calls[0:idx+5]
-        for i in range(idx, len(references)):
-            references[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', references[i]) + endc
-            mock_calls[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', mock_calls[i]) + endc
-        max_len = len(max(references+mock_calls, key=len))
-        compare = Const.NEWLINE.join("| {:<{len}} | {:{len}}".format(x, y, len=max_len) for x, y in zip(references, mock_calls))
-
-        print('+' + "=" *(80*2))
-        reference_file = filename + ' - w'
-        mock_call_file = mock_file.mock_calls[0][1][0] + ' - ' + mock_file.mock_calls[0][1][1]
-        max_len_header = max_len-len(succ)-len(endc)- len('references: ')
-        print("| references: {:<{len}} | mock calls: {:{len}}".format(reference_file, mock_call_file, len=max_len_header))
-        print('+' + "=" *(80*2))
-        print(compare)
-        print('+' + "=" *(80*2))
-
-    @staticmethod
-    def text_dump(mock_file, filename, contents):
+    def text_dump(mock_file, filename, content):
         """Compare given content against yaml dump.
 
         Args:
-            mock_file (obj): Mocked file object.
-            filename (str): Expected filename used to for mocked file.
-            contents (dict): Content expected to be dumped into text file.
+            mock_file (obj): Mocked file where the text content was saved.
+            filename (str): Expected filename.
+            content (dict): Excepted content.
         """
 
-        # Note: The assert_has_calls does not see if one item from given list
-        #       is missing. The mock_calls works by verifying all calls.
-        #
-        # Note: The reference content has meta but in case of text dump, that
-        #       is not produced and it is not compared here.
-        references = []
-        for content in contents['data']:
-            references.append(mock.call(Reference.dump(content, Content.TEXT)))
-            references.append(mock.call(Const.NEWLINE))
-        mock_file.assert_called_once_with(filename, 'w')
-        handle = mock_file.return_value.__enter__.return_value
-        try:
-            assert handle.write.mock_calls == references
-        except AssertionError:
-            print("===REFERENCES===")
-            pprintpp.pprint(references)
-            print("===MOCK_CALLS===")
-            pprintpp.pprint(handle.write.mock_calls)
-            print("================")
+        references = Const.EMPTY
+        content = copy.deepcopy(content)
+        for data in content['data']:
+            references = references + Reference.dump(data, Content.TEXT)
+            references = references + '\n'
+        references = [references]
 
+        mock_calls = []
+        handle = mock_file.return_value.__enter__.return_value
+        for call in handle.write.mock_calls:
+            mock_calls.append(call[1][0])
+        try:
+            mock_file.assert_called_once_with(filename, 'w')
+            assert mock_calls == references
+        except AssertionError:
+            Content._print_compare(mock_file, mock_calls, references, filename)
             raise AssertionError
 
     @staticmethod
@@ -508,6 +461,48 @@ class Content(object):
 
 
         return False
+
+    @staticmethod
+    def _print_compare(mock_file, mock_calls, references, filename):
+        """Print comparison data.
+
+        Compare mock and references so that the first difference is searched
+        and then add few extra lines after first failure. The failure and all
+        following lines are colored differently from standard line color.
+
+        The comparing output is printed side by side from mock and references.
+        """
+
+        # Color code lengths must be equal to align output correctly. Also when
+        # the failure colors are added, the normal coloring is removed in order
+        # to maintain correct text alignment.
+        fail = '\033[1m'
+        succ = '\x1b[2m'
+        endc = '\x1b[0m'
+        references = references[0].splitlines()
+        mock_calls = mock_calls[0].splitlines()
+        references = [succ + line + endc for line in references]
+        mock_calls = [succ + line + endc for line in mock_calls]
+        idx = 0
+        for idx, line in enumerate(references):
+            if line != mock_calls[idx]:
+                break
+        references = references[0:idx+5]
+        mock_calls = mock_calls[0:idx+5]
+        for i in range(idx, len(references)):
+            references[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', references[i]) + endc
+            mock_calls[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', mock_calls[i]) + endc
+        max_len = len(max(references+mock_calls, key=len))
+        compare = Const.NEWLINE.join("| {:<{len}} | {:{len}}".format(x, y, len=max_len) for x, y in zip(references, mock_calls))
+
+        print('+' + "=" *(80*2))
+        reference_file = filename + ' - w'
+        mock_call_file = mock_file.mock_calls[0][1][0] + ' - ' + mock_file.mock_calls[0][1][1]
+        max_len_header = max_len-len(succ)-len(endc)- len('references: ')
+        print("| references: {:<{len}} | mock calls: {:{len}}".format(reference_file, mock_call_file, len=max_len_header))
+        print('+' + "=" *(80*2))
+        print(compare)
+        print('+' + "=" *(80*2))
 
 
 class Field(object):  # pylint: disable=too-few-public-methods

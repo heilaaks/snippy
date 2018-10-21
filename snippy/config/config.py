@@ -188,21 +188,23 @@ class Config(object):
             Collection(): Configured content in Collection object.
         """
 
+        timestamp = Config.utcnow()
         if text is not None:
             collection = Parser(
                 cls.operation_file_format,
-                Config.utcnow(),
+                timestamp,
                 text
             ).read()
         elif cls.editor:
+            if not resource:
+                resource = Collection().get_resource(cls.content_category, timestamp)
             collection = Editor.read(
-                cls.content_category,
+                timestamp,
                 Config.templates,
-                Config.utcnow(),
                 resource
             )
         else:
-            collection = cls._read_collection()
+            collection = cls._read_collection(timestamp)
 
         return collection
 
@@ -266,11 +268,11 @@ class Config(object):
         )
 
     @classmethod
-    def _read_collection(cls):
+    def _read_collection(cls, timestamp):
         """Read configurared content."""
 
         collection = Collection()
-        resource = collection.get_resource(cls.content_category, Config.utcnow())
+        resource = collection.get_resource(cls.content_category, timestamp)
         resource.data = cls.content_data
         resource.brief = cls.content_brief
         resource.description = cls.content_description

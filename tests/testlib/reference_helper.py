@@ -121,7 +121,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
             content_format (str): Content format.
 
         Returns:
-            str: content in requested format.
+            str: Content in requested format.
         """
 
         dump = Const.EMPTY

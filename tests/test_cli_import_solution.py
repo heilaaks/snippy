@@ -641,6 +641,27 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             assert not Database.get_collection().size()
             mock_file.assert_not_called()
 
+    @pytest.mark.skip(reason="NOK: metadata cumulates in each export and import.")
+    @pytest.mark.usefixtures('isfile_true')
+    def test_cli_import_solution_032(self, snippy, mocker):
+        """Import all solutions.
+
+        Import all solutions from Markdown formatted file.
+        """
+
+        content = {
+            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
+            Solution.KAFKA_DIGEST: Solution.DEFAULTS[Solution.KAFKA]
+        }
+        mocked_open = Content.mocked_file(content, Content.MKDN)
+        print(Database.print_contents())
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
+            cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.md'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_solutions().size() == 2
+            mock_file.assert_called_once_with('./all-solutions.md', 'r')
+            Content.verified(mocker, snippy, content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

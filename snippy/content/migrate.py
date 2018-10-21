@@ -107,6 +107,8 @@ class Migrate(object):
                 try:
                     if Config.is_operation_file_text:
                         collection = Config.get_collection(text=infile.read())
+                    elif Config.is_operation_file_mkdn:
+                        collection = Config.get_collection(text=infile.read())
                     elif Config.is_operation_file_json:
                         dictionary = json.load(infile)
                         collection.load_dict(dictionary)

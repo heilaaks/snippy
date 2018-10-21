@@ -89,9 +89,7 @@ class ContentParserMkdn(ContentParserBase):
     REGEXP['links'][Const.SNIPPET] = re.compile(
         r"""
             [\[\d\]:\\\s]+      # Match link reference number before the link.
-            [`]{1}              # Match exactly grave accents (`).
             (?P<links>http.*)   # Catch link.
-            [`]{1}              # Match exactly grave accents (`).
         """, re.VERBOSE
     )
     REGEXP['links'][Const.SOLUTION] = REGEXP['links'][Const.SNIPPET]

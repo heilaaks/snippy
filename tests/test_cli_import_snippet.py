@@ -34,7 +34,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
-class TestCliImportSnippet(object):
+class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing snippets."""
 
     @pytest.mark.usefixtures('isfile_true', 'yaml')
@@ -412,6 +412,25 @@ class TestCliImportSnippet(object):
             assert Database.get_snippets().size() == 2
             mock_file.assert_not_called()
             yaml.safe_load.assert_not_called()
+            Content.verified(mocker, snippy, content)
+
+    @pytest.mark.usefixtures('isfile_true')
+    def test_cli_import_snippet_020(self, snippy, mocker):
+        """Import all snippets.
+
+        Import all snippets from Markdown formatted file.
+        """
+
+        content = {
+            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
+            Snippet.NETCAT_DIGEST: Snippet.DEFAULTS[Snippet.NETCAT]
+        }
+        mocked_open = Content.mocked_file(content, Content.MKDN)
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
+            cause = snippy.run(['snippy', 'import', '-f', './all-snippets.md'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_snippets().size() == 2
+            mock_file.assert_called_once_with('./all-snippets.md', 'r')
             Content.verified(mocker, snippy, content)
 
     @classmethod

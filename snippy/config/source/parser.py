@@ -22,6 +22,7 @@
 from snippy.cause import Cause
 from snippy.config.source.parsers.base import ContentParserBase
 from snippy.config.source.parsers.text import ContentParserText as Text
+from snippy.config.source.parsers.mkdn import ContentParserMkdn as Mkdn
 from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
 from snippy.logger import Logger
@@ -67,7 +68,10 @@ class Parser(ContentParserBase):
     def _parser_factory(self):
         """Parse collection based on filetype."""
 
+        parser = None
         if self._filetype == Const.CONTENT_FORMAT_TEXT:
-            return Text(self._timestamp, self._text)
+            parser = Text(self._timestamp, self._text)
+        elif self._filetype == Const.CONTENT_FORMAT_MKDN:
+            parser = Mkdn(self._timestamp, self._text)
 
-        return None
+        return parser

@@ -188,6 +188,28 @@ class SnippetHelper(object):
         return resource.dump_dict(Config.remove_fields)
 
     @staticmethod
+    def dump(content, content_format):
+        """Dump one content into requested format.
+
+        Args:
+            content (dict): Content in dictionary.
+            content_format (str): Content format.
+
+        Returns:
+            str: Content in requested format.
+        """
+
+        dump = Const.EMPTY
+        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+0000')
+        resource.load_dict(content)
+        if content_format == Const.CONTENT_FORMAT_TEXT:
+            dump = resource.dump_text(Config.templates)
+        elif content_format == Const.CONTENT_FORMAT_MKDN:
+            dump = resource.dump_mkdn(Config.templates)
+
+        return dump
+
+    @staticmethod
     def get_template(dictionary):
         """Transform dictionary to text template."""
 

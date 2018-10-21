@@ -33,7 +33,7 @@ from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
-class TestCliImportReference(object):
+class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
     """Test workflows for importing references."""
 
     @pytest.mark.usefixtures('isfile_true', 'yaml')
@@ -408,6 +408,25 @@ class TestCliImportReference(object):
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == 'NOK: content uuid already exist with digest: 5c2071094dbfaa33'
             assert Database.get_references().size() == 1
+            Content.verified(mocker, snippy, content)
+
+    @pytest.mark.usefixtures('isfile_true')
+    def test_cli_import_reference_020(self, snippy, mocker):
+        """Import all references.
+
+        Import all references from Markdown formatted file.
+        """
+
+        content = {
+            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+        }
+        mocked_open = Content.mocked_file(content, Content.MKDN)
+        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
+            cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.mkdn'])
+            assert cause == Cause.ALL_OK
+            assert Database.get_references().size() == 2
+            mock_file.assert_called_once_with('./all-references.mkdn', 'r')
             Content.verified(mocker, snippy, content)
 
     @classmethod

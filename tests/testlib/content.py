@@ -363,6 +363,32 @@ class Content(object):
         return mock.mock_open(read_data=mocked_open)
 
     @staticmethod
+    def mocked_file(content, content_format):
+        """Return mocked file.
+
+        The method returns a mocked file which returns a string in requested
+        content format.
+
+        Args:
+            content (dict): Content in dictionary.
+            content_format (str): Content format.
+
+        Returns:
+            str: Mocked file open.
+        """
+
+        mocked_file = Const.EMPTY
+        for item in content.values():
+            mocked_file = mocked_file + Snippet.dump(item, content_format)
+            if content_format == Content.MKDN:
+                mocked_file = mocked_file + '\n---\n\n'
+
+        if content_format == Content.MKDN:
+            mocked_file = mocked_file[:-6]  # Remove last separator for Markdown content.
+
+        return mock.mock_open(read_data=mocked_file)
+
+    @staticmethod
     def updated_nginx():
         """Return updated nginx solution."""
 

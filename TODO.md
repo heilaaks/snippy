@@ -1,4 +1,7 @@
 ## WORKING
+   - [ ] Fix remove > \\[1\\]: from http links from md since the : is not used.
+   - [ ] Fix remove second header level from MD Meta header.
+   - [ ] Fix the solition codef block with: [\[\d\]\\\s]\shttp.*\n\s*\n(?=[`]{3}|[#]{1}\sSolution)(:?[`]{3})?(?P<data>(?:[#]{1}\sSolution)?.*?)(:?[`]{3}|[#]{1}\sMeta) Does not work without links FIX
    - [ ] Fix mkdn import/export where solution metadata cumulates in each export/import. test_cli_import_solution_032
    - [ ] Change the collection.size to collection.empty().
    - [ ] Add support for description on top of brief.

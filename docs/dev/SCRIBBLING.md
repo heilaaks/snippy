@@ -381,7 +381,7 @@ ctrl-d
 
    # server
 
-   ``` 
+   ```
    https://asciinema.org/a/wc6jSncHMWpD5RbODxQHtqElO
    ```
 
@@ -1203,6 +1203,62 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        even when the operation category is defined to --solution or it defaults
        to --snippet. The same logic applies when the operation category is
        defined to --all.
+
+    4. Markdown
+
+       The Markdown content can use either code block or solution header. This
+       allows using text based solution content inside code block that renders
+       nicely or totally Markdup based solution.
+
+       Example with code block:
+
+            # Testing docker log drivers @docker
+
+            >
+
+            >
+
+            ```
+            #######################
+            ## BRIEF  : Testing
+            ######################
+            ```
+
+            # Meta
+
+        Example with solution header:
+
+            # Testing docker log drivers @docker
+
+            >
+
+            >
+
+            # Solution
+
+            Descirption of the solution
+
+            ## Commands
+
+            Commands
+
+            # Meta
+
+        The first example will render the solution as:
+
+            #######################
+            ## BRIEF  : Testing
+            ######################
+
+        The later example will render the solution as.
+
+            # Solution
+
+            Descirption of the solution
+
+            ## Commands
+
+            Commands
 
     UPDATING CONTENT ATTRIBUTES
 
@@ -2637,3 +2693,67 @@ versions :
 {indent}\x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m        : <uuid>
 {indent}\x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m    : <versions>
 <debug>
+
+==
+
+[\[\d\]\\\s]\shttps.*\n\s*\n(?=[`]{3}|[#]{1}\sSolution)(?:(:?[`]{3}))?(?P<data>(?:[#]{1}\sSolution)?.*?)(:?[`]{3}|[#]{1}\sMeta)
+
+==
+
+# Testing docker log drivers @docker
+
+>
+
+> [1] https://github.com/MickayG/moby-kafka-logdriver
+[2] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ
+[3] https://github.com/garo/logs2kafka
+
+# Solution
+
+testing
+
+## Solution2
+
+testing
+
+# Meta
+
+> category : solution
+created  : 2017-10-20T06:16:27.000001+0000
+digest   : c9917866761c013ac8504f551c81e4be7ce7bc9ac5c100d713541e072b1de3cd
+filename : kubernetes-docker-log-driver-kafka.txt
+name     :
+source   :
+tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin
+updated  : 2017-10-20T06:16:27.000001+0000
+uuid     : 23cd5827-b6ef-4067-b5ac-3ceac07dde9f
+versions :
+
+==
+
+# Testing docker log drivers @docker
+
+>
+
+> [1] https://github.com/MickayG/moby-kafka-logdriver
+[2] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ
+[3] https://github.com/garo/logs2kafka
+
+```
+#######################
+## BRIEF  : Testing docker l
+######################
+```
+
+# Meta
+
+> category : solution
+created  : 2017-10-20T06:16:27.000001+0000
+digest   : c9917866761c013ac8504f551c81e4be7ce7bc9ac5c100d713541e072b1de3cd
+filename : kubernetes-docker-log-driver-kafka.txt
+name     :
+source   :
+tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin
+updated  : 2017-10-20T06:16:27.000001+0000
+uuid     : 23cd5827-b6ef-4067-b5ac-3ceac07dde9f
+versions :

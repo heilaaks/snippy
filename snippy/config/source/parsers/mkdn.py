@@ -47,6 +47,15 @@ class ContentParserMkdn(ContentParserBase):
     REGEXP['data'][Const.SOLUTION] = re.compile(
         r"""
         (?P<data>.*)    # All the content is data.
+        ##[`]{3}          # Match Markdown code block.
+        ##(?P<data>.*)    # Catch content.
+        ##[`]{3}          # Match Markdown code block.
+        #[\[\d\]\\\s]\shttp.*                    # Match HTTP links before the content data.
+        #\n\s*\n                                 # Match one newline before solution data.
+        #(?=[`]{3}|[#]{1}\sSolution)             # Match either code block or solution header ahead of current position. This prevents greedy match reading all the content and makes the whole regexp possible.
+        #(:?[`]{3})?                             # Match optional code block.
+        #(?P<data>(?:[#]{1}\sSolution)?.*?)      # Catch the code data without the codef blocks or with the solution header.
+        #(:?[`]{3}|[#]{1}\sMeta)                 # Match end of code block or meta header.
         """, re.DOTALL | re.VERBOSE)
     REGEXP['data'][Const.REFERENCE] = re.compile(r'\A(?!x)x')  # Never match anything because there is no data in the content.
 

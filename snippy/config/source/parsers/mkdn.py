@@ -46,16 +46,9 @@ class ContentParserMkdn(ContentParserBase):
         """, re.MULTILINE | re.VERBOSE)
     REGEXP['data'][Const.SOLUTION] = re.compile(
         r"""
-        (?P<data>.*)    # All the content is data.
-        ##[`]{3}          # Match Markdown code block.
-        ##(?P<data>.*)    # Catch content.
-        ##[`]{3}          # Match Markdown code block.
-        #[\[\d\]\\\s]\shttp.*                    # Match HTTP links before the content data.
-        #\n\s*\n                                 # Match one newline before solution data.
-        #(?=[`]{3}|[#]{1}\sSolution)             # Match either code block or solution header ahead of current position. This prevents greedy match reading all the content and makes the whole regexp possible.
-        #(:?[`]{3})?                             # Match optional code block.
-        #(?P<data>(?:[#]{1}\sSolution)?.*?)      # Catch the code data without the codef blocks or with the solution header.
-        #(:?[`]{3}|[#]{1}\sMeta)                 # Match end of code block or meta header.
+            (?=[`]{3}|[#]{1,}\sSolution)    # Lookahead code block or solution header.
+            (?P<data>.*?)                   # Catch the code data with extra code blocks marks and with the solution header.
+            (?=[#]{1,}\sMeta)               # Lookahead Meta header.
         """, re.DOTALL | re.VERBOSE)
     REGEXP['data'][Const.REFERENCE] = re.compile(r'\A(?!x)x')  # Never match anything because there is no data in the content.
 
@@ -97,7 +90,7 @@ class ContentParserMkdn(ContentParserBase):
     REGEXP['links'] = {}
     REGEXP['links'][Const.SNIPPET] = re.compile(
         r"""
-            [\[\d\]:\\\s]+      # Match link reference number before the link.
+            [\[\d\]:\\\s]{5,}   # Match link reference number before the link.
             (?P<links>http.*)   # Catch link.
         """, re.VERBOSE
     )
@@ -166,9 +159,7 @@ class ContentParserMkdn(ContentParserBase):
     def _read_data(self, category, text):
         """Read content data from text string.
 
-        Each content data line is stored in element in a tuple. Solution
-        content data is stored only by trimming the trailing newlines at the
-        end of the data. In case of snippet content, each line is trimmed.
+        Each content data line is stored in own element in a tuple.
 
         References do not have data field. In case of references, the links
         are considered as a data.
@@ -190,7 +181,10 @@ class ContentParserMkdn(ContentParserBase):
             if category == Const.SNIPPET:
                 data = self._snippet_data(match)
             elif category == Const.SOLUTION:
-                data = self.format_data(category, match[0])
+                data = match[0].strip()
+                if data.startswith("```") and data.endswith("```"):
+                    data = data[3:-3]
+                data = self.format_data(category, data.strip())
             self._logger.debug('parsed content data: %s', data)
         else:
             self._logger.debug('parser did not find content for data: %s', text)
@@ -340,10 +334,10 @@ class ContentParserMkdn(ContentParserBase):
             return meta
 
         match = re.compile(r"""
-            %s                  # Match metadata key.
+            ^%s                 # Match metadata key at the beginning of line.
             \s+[:]{1}\s         # Match spaces and column between key and value.
-            (?P<value>.*)       # Catch metadata value.
-            """ % key, re.VERBOSE).search(text)
+            (?P<value>.*$)      # Catch metadata value till end of the line.
+            """ % key, re.MULTILINE | re.VERBOSE).search(text)
         if match:
             meta = self.format_string(match.group('value'))
             self._logger.debug('parsed content metadata: %s : with value: %s', key, meta)

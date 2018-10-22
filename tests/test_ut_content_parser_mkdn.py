@@ -372,86 +372,8 @@ class TestUtContentParserMarkdown(object):
     def test_parser_solution_001(self):
         """Test parsing solution.
 
-        Test case verifies that standard solution is parsed correctly from
-        Markdown template. In this case the template is fully in Markdown
-        format. This causes the solution data field to be just like the input
-        Markdown text.
-
-        Because solution data is the whole text including the metadata which
-        contains the digest, the digest cannot be tested without mocks. If
-        the digest is updated, it always changes the digest and thus asserting
-        it is not feasible.
-
-        """
-
-        text = Const.NEWLINE.join((
-            '# Remove all exited containers and dangling images @docker',
-            '',
-            '> Remove all exited containers and dangling images. The command examples  ',
-            'first remove all exited containers and the all dangling images.',
-            '',
-            "> \\[1\\]: https://docs.docker.com/engine/reference/commandline/images/  ",
-            "\\[2\\]: https://docs.docker.com/engine/reference/commandline/rm/",
-            '',
-            '- Remove all exited containers',
-            '',
-            '    `$ docker rm $(docker ps --all -q -f status=exited)`',
-            '',
-            '- Remove all dangling images',
-            '',
-            '    `$ docker images -q --filter dangling=true | xargs docker rmi`',
-            '',
-            '## Meta',
-            '',
-            '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
-            'digest   : d72f6dd334a53d28627e3655c41431baf4e8f1209d4fe5f1473f07b9a4e36e40  ',
-            'filename :   ',
-            'name     :   ',
-            'source   :   ',
-            'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
-            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
-            'versions :',
-            '',
-        ))
-        brief = 'Remove all exited containers and dangling images'
-        description = ('Remove all exited containers and dangling images. The command examples ' +
-                       'first remove all exited containers and the all dangling images.')
-        groups = ('docker',)
-        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
-        links = (
-            'https://docs.docker.com/engine/reference/commandline/images/',
-            'https://docs.docker.com/engine/reference/commandline/rm/'
-        )
-        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
-        assert resource.category == Const.SOLUTION
-        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
-        assert resource.brief == brief
-        assert resource.groups == groups
-        assert resource.description == description
-        assert resource.tags == tags
-        assert resource.links == links
-        assert resource.filename == Const.EMPTY
-        assert resource.name == Const.EMPTY
-        assert resource.versions == Const.EMPTY
-        assert resource.source == Const.EMPTY
-        assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
-
-    def test_parser_solution_002(self):
-        """Test parsing solution.
-
-        Test case verifies that standard solution is parsed correctly from
-        Markdown template. In this case the input is based on text formatted
-        template. In this case there are no optional links used.
-
-        Because solution data is the whole text including the metadata which
-        contains the digest, the digest cannot be tested without mocks. If
-        the digest is updated, it always changes the digest and thus asserting
-        it is not feasible.
+        Test case verifies that Snippy text formatted solution is parsed correctly
+        from Markdown source. In this case there are no optional links defined.
         """
 
         text = Const.NEWLINE.join((
@@ -461,18 +383,20 @@ class TestUtContentParserMarkdown(object):
             'first remove all exited containers and the all dangling images.',
             '',
             '> ',
-            ''
-            '    ################################################################################',
-            '    ## BRIEF  : Testing docker log drivers',
-            '    ##',
-            '    ## GROUPS : docker',
-            '    ## TAGS   : cleanup, container, docker, docker-ce, moby',
-            '    ## FILE   : docker-example.txt',
-            '    ################################################################################',
             '',
-            '    ################################################################################',
-            '    ## description',
-            '    ################################################################################',
+            '```',
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : cleanup, container, docker, docker-ce, moby',
+            '## FILE   : docker-example.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '```',
             '',
             '# Meta',
             '',
@@ -489,14 +413,30 @@ class TestUtContentParserMarkdown(object):
             '',
         ))
         brief = 'Testing docker log drivers'
-        description = ('Remove all exited containers and dangling images. The command examples ' +
-                       'first remove all exited containers and the all dangling images.')
+        description = (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        data = (
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : cleanup, container, docker, docker-ce, moby',
+            '## FILE   : docker-example.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+        )
         groups = ('docker',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.SOLUTION
-        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.data == data
         assert resource.brief == brief
         assert resource.groups == groups
         assert resource.description == description
@@ -510,31 +450,42 @@ class TestUtContentParserMarkdown(object):
         assert resource.created == '2017-10-12T11:52:11.000001+0000'
         assert resource.updated == '2017-10-12T11:52:11.000001+0000'
 
-    def test_parser_solution_003(self):
+    def test_parser_solution_002(self):
         """Test parsing solution.
 
-        Test case verifies that optional fields brief, groups, description and
-        links can be ommitted and the content is still parsed correctly.
+        Test case verifies that Snippy Markdown formatted solution is parsed
+        correctly from Markdown source. In this case the Markdown formatted
+        solution data contains code block which must be stored correctly with
+        the content data.
         """
 
         text = Const.NEWLINE.join((
-            '# @default',
+            '# Testing docker log drivers @docker',
             '',
-            '> ',
+            '> Remove all exited containers and dangling images. The command examples  ',
+            'first remove all exited containers and the all dangling images.',
             '',
-            '> ',
-            ''
-            '    ################################################################################',
-            '    ## BRIEF  : Testing docker log drivers',
-            '    ##',
-            '    ## GROUPS : docker',
-            '    ## TAGS   : cleanup, container, docker, docker-ce, moby',
-            '    ## FILE   : docker-example.txt',
-            '    ################################################################################',
+            "'> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
+            "\\[2\\] https://docs.docker.com/engine/reference/commandline/rm/",
             '',
-            '    ################################################################################',
-            '    ## description',
-            '    ################################################################################',
+            '# Solution',
+            '',
+            '## Description',
+            '',
+            'Testing docker log drivers',
+            '',
+            '## Commands',
+            '',
+            '```',
+            '# Get logs from pods',
+            '$ kubectl get pods',
+            '$ kubectl logs kafka-0',
+            '```',
+            '',
+            '## Configurations',
+            '',
+            '## Whiteboard',
+            '',
             '',
             '# Meta',
             '',
@@ -550,12 +501,215 @@ class TestUtContentParserMarkdown(object):
             'versions :',
             '',
         ))
+        brief = 'Testing docker log drivers'
+        description = (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        data = (
+            '# Solution',
+            '',
+            '## Description',
+            '',
+            'Testing docker log drivers',
+            '',
+            '## Commands',
+            '',
+            '```',
+            '# Get logs from pods',
+            '$ kubectl get pods',
+            '$ kubectl logs kafka-0',
+            '```',
+            '',
+            '## Configurations',
+            '',
+            '## Whiteboard',
+            '',
+        )
+        groups = ('docker',)
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        links = (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/'
+        )
+        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+
+    def test_parser_solution_003(self):
+        """Test parsing solution.
+
+        Test case verifies that Snippy Markdown formatted solution is parsed
+        correctly from Markdown source. In this case the Markdown formatted
+        solution data contains code block just before the Meta heaader which
+        indicates the end of the solution data.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Testing docker log drivers @docker',
+            '',
+            '> Remove all exited containers and dangling images. The command examples  ',
+            'first remove all exited containers and the all dangling images.',
+            '',
+            "'> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
+            "\\[2\\] https://docs.docker.com/engine/reference/commandline/rm/",
+            '',
+            '# Solution',
+            '',
+            '## Description',
+            '',
+            'Testing docker log drivers',
+            '',
+            '## Commands',
+            '',
+            '',
+            '## Configurations',
+            '',
+            '## Whiteboard',
+            '```',
+            '# Get logs from pods',
+            '$ kubectl get pods',
+            '$ kubectl logs kafka-0',
+            '```',
+            '',
+            '# Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, docker, docker-ce, moby  ',
+            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions :',
+            '',
+        ))
+        brief = 'Testing docker log drivers'
+        description = (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        data = (
+            '# Solution',
+            '',
+            '## Description',
+            '',
+            'Testing docker log drivers',
+            '',
+            '## Commands',
+            '',
+            '',
+            '## Configurations',
+            '',
+            '## Whiteboard',
+            '```',
+            '# Get logs from pods',
+            '$ kubectl get pods',
+            '$ kubectl logs kafka-0',
+            '```',
+            '',
+        )
+        groups = ('docker',)
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        links = (
+            'https://docs.docker.com/engine/reference/commandline/images/',
+            'https://docs.docker.com/engine/reference/commandline/rm/'
+        )
+        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+
+    def test_parser_solution_004(self):
+        """Test parsing solution.
+
+        Test case verifies that optional fields brief, groups, description and
+        links can be ommitted and the content is still parsed correctly with
+        text based solution content in Markdown format.
+        """
+
+        text = Const.NEWLINE.join((
+            '# @default',
+            '',
+            '> ',
+            '',
+            '> ',
+            '',
+            '```',
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : cleanup, container, docker, docker-ce, moby',
+            '## FILE   : docker-example.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '```',
+            '',
+            '# Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, docker, docker-ce, moby  ',
+            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions :',
+            '',
+        ))
+        data = (
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : cleanup, container, docker, docker-ce, moby',
+            '## FILE   : docker-example.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+        )
         groups = ('default',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.SOLUTION
-        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.data == data
         assert resource.brief == Const.EMPTY
         assert resource.groups == groups
         assert resource.description == Const.EMPTY
@@ -568,6 +722,195 @@ class TestUtContentParserMarkdown(object):
         assert resource.uuid == uuid
         assert resource.created == '2017-10-12T11:52:11.000001+0000'
         assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+
+    def test_parser_solution_005(self):
+        """Test parsing solution.
+
+        Test case verifies that optional fields brief, groups, description and
+        links can be ommitted and the content is still parsed correctly with
+        Markdown based solution content in Markdown format.
+        """
+
+        text = Const.NEWLINE.join((
+            '# @default',
+            '',
+            '> ',
+            '',
+            '> ',
+            '',
+            '# Solution',
+            '',
+            '## Description',
+            '',
+            'Testing docker log drivers',
+            '',
+            '## Commands',
+            '',
+            '## Configurations',
+            '',
+            '## Whiteboard',
+            '```',
+            '# Get logs from pods',
+            '$ kubectl get pods',
+            '$ kubectl logs kafka-0',
+            '```',
+            '',
+            '# Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename :   ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, docker, docker-ce, moby  ',
+            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions :',
+            '',
+        ))
+        data = (
+            '# Solution',
+            '',
+            '## Description',
+            '',
+            'Testing docker log drivers',
+            '',
+            '## Commands',
+            '',
+            '## Configurations',
+            '',
+            '## Whiteboard',
+            '```',
+            '# Get logs from pods',
+            '$ kubectl get pods',
+            '$ kubectl logs kafka-0',
+            '```',
+            '',
+        )
+        groups = ('default',)
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == data
+        assert resource.brief == Const.EMPTY
+        assert resource.groups == groups
+        assert resource.description == Const.EMPTY
+        assert resource.tags == tags
+        assert resource.links == ()
+        assert resource.filename == Const.EMPTY
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+
+    def test_parser_solution_006(self):
+        """Test parsing solution.
+
+        Test case verifies that Snippy text formatted solution is parsed correctly
+        from Markdown source. In this case there are links in the Markdown header
+        and in the solution data. Only the links from Markdown header must be read
+        in order to avoid duplicating the links. The links in the header must be
+        previously parsed from the content data and thus they must be the same in
+        the Markdown header as well as in the content data.
+
+        Same comment than for the links apply also other metadata like filename.
+        """
+
+        text = Const.NEWLINE.join((
+            '# Testing docker log drivers @docker',
+            '',
+            '> Remove all exited containers and dangling images. The command examples  ',
+            'first remove all exited containers and the all dangling images.',
+            '',
+            "'> \\[1\\] https://github.com/MickayG/moby-kafka-logdriver  ",
+            "\\[2\\] https://github.com/garo/logs2kafka",
+            "\\[3\\] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ",
+            '',
+            '```',
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : cleanup, container, docker, docker-ce, moby',
+            '## FILE   : docker-example.txt',
+            '################################################################################',
+            '',
+            '# Kube Kafka log driver',
+            '> https://github.com/MickayG/moby-kafka-logdriver',
+            '',
+            '# Logs2Kafka',
+            '> https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '> https://github.com/garo/logs2kafka',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '```',
+            '',
+            '# Meta',
+            '',
+            '> category : solution  ',
+            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
+            'filename :  docker-example.txt ',
+            'name     :   ',
+            'source   :   ',
+            'tags     : cleanup, container, docker, docker-ce, moby  ',
+            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
+            'versions :',
+            '',
+        ))
+        brief = 'Testing docker log drivers'
+        description = (
+            'Remove all exited containers and dangling images. The command examples ' +
+            'first remove all exited containers and the all dangling images.'
+        )
+        data = (
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : cleanup, container, docker, docker-ce, moby',
+            '## FILE   : docker-example.txt',
+            '################################################################################',
+            '',
+            '# Kube Kafka log driver',
+            '> https://github.com/MickayG/moby-kafka-logdriver',
+            '',
+            '# Logs2Kafka',
+            '> https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '> https://github.com/garo/logs2kafka',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+        )
+        groups = ('docker',)
+        tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
+        links = (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.groups == groups
+        assert resource.description == description
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == 'docker-example.txt'
+        assert resource.name == Const.EMPTY
+        assert resource.versions == Const.EMPTY
+        assert resource.source == Const.EMPTY
+        assert resource.uuid == uuid
+        assert resource.created == '2017-10-12T11:52:11.000001+0000'
 
     def test_parser_reference_001(self):
         """Test parsing reference.

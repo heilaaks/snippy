@@ -1,8 +1,6 @@
 ## WORKING
+   - [ ] Fix the Meta and solution headers back to seconde level. This looks better when multiple content are printed in one file this also sets all the data below the header
    - [ ] Fix remove > \\[1\\]: from http links from md since the : is not used.
-   - [ ] Fix remove second header level from MD Meta header.
-   - [ ] Fix the solition codef block with: [\[\d\]\\\s]\shttp.*\n\s*\n(?=[`]{3}|[#]{1}\sSolution)(:?[`]{3})?(?P<data>(?:[#]{1}\sSolution)?.*?)(:?[`]{3}|[#]{1}\sMeta) Does not work without links FIX
-   - [ ] Fix mkdn import/export where solution metadata cumulates in each export/import. test_cli_import_solution_032
    - [ ] Change the collection.size to collection.empty().
    - [ ] Add support for description on top of brief.
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
@@ -32,6 +30,7 @@
    - [ ] Fix new compare when the mock file is shorter than references.
    - [ ] Fix new compare to highlight filename mismatch. This incorrect highlights the last line.
    - [ ] Add tests for new compare.
+   - [ ] Fix (optimize) digst calculation for import. Print the digest string from digest compute and see that it computes digest 4 times for same content.
 
 ## THINKING
    - [ ] Add code content.

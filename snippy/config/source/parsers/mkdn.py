@@ -90,7 +90,7 @@ class ContentParserMkdn(ContentParserBase):
     REGEXP['links'] = {}
     REGEXP['links'][Const.SNIPPET] = re.compile(
         r"""
-            [\[\d\]:\\\s]{5,}   # Match link reference number before the link.
+            [\[\d\]\\\s]{4,}    # Match link reference number before the link.
             (?P<links>http.*)   # Catch link.
         """, re.VERBOSE
     )

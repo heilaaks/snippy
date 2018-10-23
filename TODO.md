@@ -1,6 +1,4 @@
 ## WORKING
-   - [ ] Fix the Meta and solution headers back to seconde level. This looks better when multiple content are printed in one file this also sets all the data below the header
-   - [ ] Fix remove > \\[1\\]: from http links from md since the : is not used.
    - [ ] Change the collection.size to collection.empty().
    - [ ] Add support for description on top of brief.
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.

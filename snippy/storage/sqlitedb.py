@@ -450,7 +450,7 @@ class SqliteDb(object):
         digest = 'not found'
         category = resource.category
         collection = self._select_data(resource.data)
-        if not collection.size():
+        if collection.empty():
             collection = self._select_uuid(resource.uuid)
 
         if collection.size() == 1:

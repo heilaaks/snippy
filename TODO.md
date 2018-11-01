@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Change the collection.size to collection.empty().
    - [ ] Add support for description on top of brief.
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
    - [ ] Use VERBOSE to comment regexp in text template parser.

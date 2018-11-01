@@ -48,7 +48,7 @@ class Editor(object):  # pylint: disable=too-few-public-methods
         template = resource.dump_text(templates)
         text = cls._call_editor(template)
         collection = Parser(Const.CONTENT_FORMAT_TEXT, timestamp, text).read()
-        if not collection.size():
+        if collection.empty():
             Cause.insert(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
 
         return collection

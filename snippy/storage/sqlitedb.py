@@ -498,7 +498,7 @@ class SqliteDb(object):
 
         query = ()
         qargs = []
-        self._logger.debug('query scat: %s :sall: %s :stag: %s :sgrp: %s :suuid: %s :sdigest: %s :and sdata: %s.20s',
+        self._logger.debug('query scat: %s :sall: %s :stag: %s :sgrp: %s :suuid: %s :sdigest: %s :and sdata: %.20s',
                            scat, sall, stag, sgrp, suuid, sdigest, sdata)
 
         if query_type == SqliteDb.QUERY_TYPE_TOTAL:

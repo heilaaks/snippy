@@ -3,7 +3,6 @@
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
    - [ ] Use VERBOSE to comment regexp in text template parser.
    - [ ] Test test_cli_create_solution_003 that checks 'content was not stored because it was matching to an empty template' does not notice actual failures. The test should use real template now it uses mocked template.
-   - [ ] Fix why 'python runner search --sall 'has active end' results two snippets with default content? Should be one.
    - [ ] Fix Collection __getitem__ with unknown digest that returns key error.
    - [ ] Fix resource = collection[list(collection.keys())[0]]['data'] to collection[0] and collection[digest] if possible?
    - [ ] Fix (somehow) the markdown parsing loses manual alignment of comments since the text->mkd -> text adds only one space between command and comment. 1. Add spaces at the end of title # <title> <spaces> and read them back to indent. 2. automatically align comments (better) possiblity to disable this as well.
@@ -38,6 +37,7 @@
    - [ ] Add tool configs to pyproject.toml.
 
 ## FEATURES
+   - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
    - [ ] Add support to find dead links.
    - [ ] Add support to edit markup files with cli option.
    - [ ] Add Travis CI for PyPy version v6.0 for Python 3 when it comes https://github.com/travis-ci/travis-ci/issues/9542

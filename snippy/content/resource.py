@@ -613,10 +613,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         data = Const.EMPTY
         if self.is_snippet():
             for command in self.data:
-                match = re.compile(r"""
-                    (?P<command>.*?)                    # Catch mandatory command.
-                    (?:\s+[#]\s+(?P<comment>.*)|$)      # Catch optional comment.
-                    """, re.VERBOSE).search(command)
+                match = re.compile(r'''
+                    (?P<command>.*?)                # Catch mandatory command.
+                    (?:\s+[#]\s+(?P<comment>.*)|$)  # Catch optional comment.
+                    ''', re.VERBOSE).search(command)
                 if match:
                     if match.group('comment'):
                         data = data + "- " + match.group('comment') + Const.NEWLINE * 2

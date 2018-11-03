@@ -28,72 +28,64 @@ from snippy.logger import Logger
 
 
 class ContentParserMkdn(ContentParserBase):
-    """Parse content from Markdown templates."""
+    """Parse content from Markdown template."""
 
-    # Example 1: Capture optional comment and mandatory command.
+    # Example 1: Capture optional comment and mandatory command for content data.
     #
     #            - Remove all exited containers
     #
     #              `$ docker rm $(docker ps --all -q -f status=exited)`
     REGEXP = {}
     REGEXP['data'] = {}
-    REGEXP['data'][Const.SNIPPET] = re.compile(
-        r"""(
+    REGEXP['data'][Const.SNIPPET] = re.compile(r'''
+        (
             (?:-\s+.*$\n\s*\n)?     # Catch one line optional comment followed by one empty line.
             \s.*`\$.*`              # Catch one line mandatory command indicated by dollar sign between grave accents (`).
-            )
-            {1}                     # Catch only one optional command and mandatory command.
-        """, re.MULTILINE | re.VERBOSE)
-    REGEXP['data'][Const.SOLUTION] = re.compile(
-        r"""
-            (?=[`]{3}|[#]{1,}\sSolution)   # Lookahead code block or solution header. Support Solution as 1st or 2nd level header.
-            (?P<data>.*?)                  # Catch the code data with extra code blocks marks and with the solution header.
-            (?=[#]{1,}\sMeta)              # Lookahead Meta header. Support Meta header as first or second level header
-        """, re.DOTALL | re.VERBOSE)
-    REGEXP['data'][Const.REFERENCE] = re.compile(r'\A(?!x)x')  # Never match anything because there is no data in the content.
+        ){1}                        # Catch only one optional command and mandatory command.
+        ''', re.MULTILINE | re.VERBOSE)
+    REGEXP['data'][Const.SOLUTION] = re.compile(r'''
+        (?=[`]{3}|[#]{1,}\sSolution)    # Lookahead code block or solution header. Support Solution as 1st or 2nd level header.
+        (?P<data>.*?)                   # Catch the code data with extra code blocks marks and with the solution header.
+        (?=[#]{1,}\sMeta)               # Lookahead Meta header. Support Meta header as first or second level header
+        ''', re.DOTALL | re.VERBOSE)
+    REGEXP['data'][Const.REFERENCE] = re.compile(r'''
+        \A(?!x)x'       # Never match anything because there is no data in the content.
+        ''', re.VERBOSE)
 
     REGEXP['brief'] = {}
-    REGEXP['brief'][Const.SNIPPET] = re.compile(
-        r"""
-            [#\s]+          # Match leading comment before brief.
-            (?P<brief>.*)   # Catch brief.
-            \s+[@]{1}       # Match string between brief and groups.
-        """, re.VERBOSE
-    )
+    REGEXP['brief'][Const.SNIPPET] = re.compile(r'''
+        [#\s]+          # Match leading comment before brief.
+        (?P<brief>.*)   # Catch brief.
+        \s+[@]{1}       # Match string between brief and groups.
+        ''', re.VERBOSE)
     REGEXP['brief'][Const.SOLUTION] = REGEXP['brief'][Const.SNIPPET]
     REGEXP['brief'][Const.REFERENCE] = REGEXP['brief'][Const.SNIPPET]
 
     REGEXP['description'] = {}
-    REGEXP['description'][Const.SNIPPET] = re.compile(
-        r"""
-            [#\s]+.*[@].*                        # Match headline that contains always brief and groups.
-            \n\s*\n                              # Match one empty line.
-            [>\s]?(?P<description>[\S\s\d\n]*?)  # Catch optional description after greater than (>) sign.
-            \n\s*\n                              # Match one empty line.
-        """, re.VERBOSE
-    )
+    REGEXP['description'][Const.SNIPPET] = re.compile(r'''
+        [#\s]+.*[@].*                        # Match headline that contains always brief and groups.
+        \n\s*\n                              # Match one empty line.
+        [>\s]?(?P<description>[\S\s\d\n]*?)  # Catch optional description after greater than (>) sign.
+        \n\s*\n                              # Match one empty line.
+        ''', re.VERBOSE)
     REGEXP['description'][Const.SOLUTION] = REGEXP['description'][Const.SNIPPET]
     REGEXP['description'][Const.REFERENCE] = REGEXP['description'][Const.SNIPPET]
 
     REGEXP['groups'] = {}
-    REGEXP['groups'][Const.SNIPPET] = re.compile(
-        r"""
-            [#\s]+          # Match leading comment before brief.
-            .*              # Match brief before groups.
-            \s+[@]{1}       # Match string between brief and groups.
-            (?P<groups>.*)  # Catch groups.
-        """, re.VERBOSE
-    )
+    REGEXP['groups'][Const.SNIPPET] = re.compile(r'''
+        [#\s]+          # Match leading comment before brief.
+        .*              # Match brief before groups.
+        \s+[@]{1}       # Match string between brief and groups.
+        (?P<groups>.*)  # Catch groups.
+        ''', re.VERBOSE)
     REGEXP['groups'][Const.SOLUTION] = REGEXP['groups'][Const.SNIPPET]
     REGEXP['groups'][Const.REFERENCE] = REGEXP['groups'][Const.SNIPPET]
 
     REGEXP['links'] = {}
-    REGEXP['links'][Const.SNIPPET] = re.compile(
-        r"""
-            [\[\d\]\\\s]{4,}    # Match link reference number before the link.
-            (?P<links>http.*)   # Catch link.
-        """, re.VERBOSE
-    )
+    REGEXP['links'][Const.SNIPPET] = re.compile(r'''
+        [\[\d\]\\\s]{4,}    # Match link reference number before the link.
+        (?P<links>http.*)   # Catch link.
+        ''', re.VERBOSE)
     REGEXP['links'][Const.SOLUTION] = REGEXP['links'][Const.SNIPPET]
     REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
 
@@ -143,7 +135,10 @@ class ContentParserMkdn(ContentParserBase):
         """
 
         category = Const.UNKNOWN_CATEGORY
-        match = re.compile(r'> category : (?P<category>.*|$)').search(text)
+        match = re.compile(r'''
+            [>\s]{2}category\s:\s   # Match category metadata field.
+            (?P<category>.*|$)      # Catch category.
+            ''', re.VERBOSE).search(text)
         if match:
             category = self.format_string(match.group('category'))
             self._logger.debug('parsed content category: %s', category)
@@ -196,7 +191,7 @@ class ContentParserMkdn(ContentParserBase):
 
         data = Const.EMPTY
         for command in text:
-            match = re.compile(r"""
+            match = re.compile(r'''
                 (?:                             # Match optional comment inside non-capturing set.
                     -\s+                        # Match hyphen and spaces before comment
                     (?P<comment>.*$)            # Catch optional one line comment and skip one empty line before command.
@@ -204,7 +199,7 @@ class ContentParserMkdn(ContentParserBase):
                 )?                              # Comment may be matched 0 times.
                 \s+                             # Match spaces in the beginning of the line which has the command.
                 [`$\s]{3}(?P<command>.*)[`]     # Catch one line command indicated by dollar sign between grave accents (`).
-                """, re.MULTILINE | re.VERBOSE).search(command)
+                ''', re.MULTILINE | re.VERBOSE).search(command)
             if match:
                 if match.group('comment'):
                     data = data + match.group('command') + ' # ' + match.group('comment') + Const.NEWLINE
@@ -333,11 +328,11 @@ class ContentParserMkdn(ContentParserBase):
         if category not in Const.CATEGORIES:
             return meta
 
-        match = re.compile(r"""
+        match = re.compile(r'''
             ^%s                 # Match metadata key at the beginning of line.
             \s+[:]{1}\s         # Match spaces and column between key and value.
             (?P<value>.*$)      # Catch metadata value till end of the line.
-            """ % key, re.MULTILINE | re.VERBOSE).search(text)
+            ''' % re.escape(key), re.MULTILINE | re.VERBOSE).search(text)
         if match:
             meta = self.format_string(match.group('value'))
             self._logger.debug('parsed content metadata: %s : with value: %s', key, meta)

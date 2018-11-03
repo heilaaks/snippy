@@ -437,7 +437,10 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         parsed = OrderedDict()
         fields = Parser.format_list(value, sort_=False)
         for field in fields:
-            match = re.match(r'(?P<direction>-?)(?P<field>\S+)', field, re.IGNORECASE)
+            match = re.match(r'''
+            (?P<direction>-?)   # Catch sort direction sign (+/-).
+            (?P<field>\S+)      # Catch fields.
+            ''', field, re.IGNORECASE | re.VERBOSE)
             if match.group('field') and match.group('field') in self.ATTRIBUTES:
                 parsed[match.group('field')] = 'DESC' if match.group('direction') == '-' else 'ASC'
             else:

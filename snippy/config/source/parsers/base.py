@@ -133,7 +133,9 @@ class ContentParserBase(object):
         list_ = []
         keywords = cls._to_list(keywords)
         for tag in keywords:
-            list_ = list_ + re.findall(u'[\\w–\\-\\.]+', tag, flags=re.UNICODE)  # Python 2 and 3 compatible unicode regexp.
+            list_ = list_ + re.findall(u'''
+                [\\w–\\-\\.]+   # Python 2 and 3 compatible unicode regexp.
+                ''', tag, re.UNICODE | re.VERBOSE)
 
         if sort_:
             list_ = sorted(list_)

@@ -29,7 +29,7 @@ from snippy.logger import Logger
 
 
 class ContentParserText(ContentParserBase):
-    """Parse content from text templates."""
+    """Parse content from text template."""
 
     DATA = {}
     DATA[Const.SNIPPET] = '# Add mandatory snippet below.\n'
@@ -60,60 +60,73 @@ class ContentParserText(ContentParserBase):
 
     REGEXP = {}
     REGEXP['data'] = {}
-    REGEXP['data'][Const.SNIPPET] = re.compile(
-        r"""(?:%s|%s)(?P<data>.*?)(?:\n{2}|#|$)""" % (
-            DATA[Const.SNIPPET],
-            DATA[Const.REFERENCE]
-        ),
-        re.DOTALL
-    )
-
+    REGEXP['data'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)           # Match snippet or reference data header.
+        (?P<data>.*?)       # Catch data.
+        (?:\n{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        ''' % (re.escape(DATA[Const.SNIPPET]), re.escape(DATA[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['data'][Const.REFERENCE] = REGEXP['data'][Const.SNIPPET]
-    REGEXP['data'][Const.SOLUTION] = re.compile(r'(?P<data>.*)', re.DOTALL)
+    REGEXP['data'][Const.SOLUTION] = re.compile(r'''
+        (?P<data>.*)        # Catch all the content to data.
+        ''', re.DOTALL | re.VERBOSE)
+
     REGEXP['brief'] = {}
-    REGEXP['brief'][Const.SNIPPET] = re.compile(
-        r'(?:%s|%s)(?P<brief>.*?)(?:\n{2}|#|$)' % (
-            BRIEF[Const.SNIPPET],
-            BRIEF[Const.REFERENCE]
-        ),
-        re.DOTALL
-    )
+    REGEXP['brief'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)           # Match snippet or reference brief header.
+        (?P<brief>.*?)      # Catch brief.
+        (?:\n{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        ''' % (re.escape(BRIEF[Const.SNIPPET]), re.escape(BRIEF[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['brief'][Const.REFERENCE] = REGEXP['brief'][Const.SNIPPET]
-    REGEXP['brief'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<brief>.*|$)' % BRIEF[Const.SOLUTION], re.MULTILINE)
+    REGEXP['brief'][Const.SOLUTION] = re.compile(r'''
+        %s\s*?              # Match solution brief header.
+        (?P<brief>.*|$)     # Catch brief.
+        ''' % re.escape(BRIEF[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
+
     REGEXP['groups'] = {}
-    REGEXP['groups'][Const.SNIPPET] = re.compile(
-        r'(?:%s|%s)(?P<groups>.*?)(?:\n{2}|#|$)' % (
-            GROUPS[Const.SNIPPET],
-            GROUPS[Const.REFERENCE]
-        ),
-        re.DOTALL
-    )
+    REGEXP['groups'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)           # Match snippet or reference groups header.
+        (?P<groups>.*?)     # Catch groups.
+        (?:\n{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        ''' % (re.escape(GROUPS[Const.SNIPPET]), re.escape(GROUPS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['groups'][Const.REFERENCE] = REGEXP['groups'][Const.SNIPPET]
-    REGEXP['groups'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<groups>.*|$)' % GROUPS[Const.SOLUTION], re.MULTILINE)
+    REGEXP['groups'][Const.SOLUTION] = re.compile(r'''
+        %s\s*?              # Match groups tag from solution.
+        (?P<groups>.*|$)    # Catch groups.
+        ''' % re.escape(GROUPS[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
+
     REGEXP['tags'] = {}
-    REGEXP['tags'][Const.SNIPPET] = re.compile(
-        r'(?:%s|%s)(?P<tags>.*?)(?:\n{2}|#|$)' % (
-            TAGS[Const.SNIPPET],
-            TAGS[Const.REFERENCE]
-        ),
-        re.DOTALL
-    )
+    REGEXP['tags'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)           # Match snippet or reference tags header.
+        (?P<tags>.*?)       # Catch tags.
+        (?:\n{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        ''' % (re.escape(TAGS[Const.SNIPPET]), re.escape(TAGS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['tags'][Const.REFERENCE] = REGEXP['tags'][Const.SNIPPET]
-    REGEXP['tags'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<tags>.*|$)' % TAGS[Const.SOLUTION], re.MULTILINE)
+    REGEXP['tags'][Const.SOLUTION] = re.compile(r'''
+        %s\s*?              # Match tags tag from solution.
+        (?P<tags>.*|$)      # Catch tags.
+        ''' % re.escape(TAGS[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
+
     REGEXP['links'] = {}
-    REGEXP['links'][Const.SNIPPET] = re.compile(
-        r'(?:%s|%s)(?P<links>.*?)(?:\n{2}|#|$)' % (
-            LINKS[Const.SNIPPET],
-            LINKS[Const.REFERENCE]
-        ),
-        re.DOTALL
-    )
+    REGEXP['links'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)           # Match snippet or reference links header.
+        (?P<links>.*?)      # Catch links.
+        (?:[\n]{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        ''' % (re.escape(LINKS[Const.SNIPPET]), re.escape(LINKS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
-    REGEXP['links'][Const.SOLUTION] = re.compile(r'> (?P<links>http.*)', re.MULTILINE)
+    REGEXP['links'][Const.SOLUTION] = re.compile(r'''
+        [> ]{2}             # Match fixed tag preceding all links in solution.
+        (?P<links>http.*)   # Catch link.
+        ''', re.MULTILINE | re.VERBOSE)
+
     REGEXP['filename'] = {}
-    REGEXP['filename'][Const.SNIPPET] = re.compile(r'\A(?!x)x')  # Never match anything because there is no filename in the content.
+    REGEXP['filename'][Const.SNIPPET] = re.compile(r'''
+        \A(?!x)x            # Never match anything because there is no filename in the content.
+        ''', re.VERBOSE)
     REGEXP['filename'][Const.REFERENCE] = REGEXP['filename'][Const.SNIPPET]
-    REGEXP['filename'][Const.SOLUTION] = re.compile(r'%s\s*?(?P<filename>.*|$)' % FILENAME[Const.SOLUTION], re.MULTILINE)
+    REGEXP['filename'][Const.SOLUTION] = re.compile(r'''
+        %s\s*?              # Match filename tag from solution.
+        (?P<filename>.*|$)  # Catch filename.
+        ''' % re.escape(FILENAME[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
 
     def __init__(self, timestamp, text):
         """

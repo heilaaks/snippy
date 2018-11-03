@@ -1,7 +1,6 @@
 ## WORKING
    - [ ] Add support for description on top of brief.
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
-   - [ ] Use VERBOSE to comment regexp in text template parser.
    - [ ] Test test_cli_create_solution_003 that checks 'content was not stored because it was matching to an empty template' does not notice actual failures. The test should use real template now it uses mocked template.
    - [ ] Fix Collection __getitem__ with unknown digest that returns key error.
    - [ ] Fix resource = collection[list(collection.keys())[0]]['data'] to collection[0] and collection[digest] if possible?
@@ -19,7 +18,8 @@
    - [ ] Refactor tests with Content.verified, Content.ordered, Content.compare_dump|Content.****_dump. Two cases: import (check after import with YAML) and export (compare in target format.
    - [ ] Refactor tests 1. Content.compare_mkdn, Content.compare_text, Content.compare_yaml, Content.compare_json  # compare exported data
    - [ ] Refactor tests 2. Content.compare_data    # Compare created, updated or imported data in database against YAML formatted reference.
-   - [ ] Refactor tests 3. #  remove reference failures and add the faults in test cases. This removes the need for Content.compared
+   - [ ] Refactor tests 3. REST API result needs Content.ordered. No changes to this?
+   - [ ] Refactor tests 3. #  remove reference failures from default data (e.g. GITLOG) and add the faults in test cases. This removes the need for Content.compared.
    - [ ] Refactor tests 4. Change file mocks to new mocked_file which allows defining the return format for the mock.
    - [ ] Refactor compare to own pytest plugin.
    - [ ] Fix new compare that does not see if the last newline is missing? Comment adding newline in text_dump/comare and pytest tests/test_cli_export_reference.py -k test_cli_export_reference_012. This seems to be mismatch in filename?

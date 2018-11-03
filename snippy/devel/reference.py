@@ -64,7 +64,9 @@ class Reference(object):
         # Test case file mock does not support iterators. Because of this, the
         # file is read directly to list where it is parsed.
         tests = pkg_resources.resource_listdir('tests', Const.EMPTY)
-        regex = re.compile(r'test_wf.*\.py')
+        regex = re.compile(r'''
+            test_wf.*\.py
+            ''', re.VERBOSE)
         tests = [filename for filename in tests if regex.match(filename)]
         for filename in tests:
             testfile = pkg_resources.resource_filename('tests', filename)
@@ -131,14 +133,20 @@ class Reference(object):
 
         brief = Const.EMPTY
         line_brief = line
-        match = re.search(r'## Brief:\s+(.*)', line)
+        match = re.search(r'''
+            [##]{2}\sBrief:\s+  # Match brief description.
+            (.*)                # Catch brief description.
+            ''', line, re.VERBOSE)
         if match:
             brief = match.group(1)
             brief = brief.strip()
             line_nbr = line_nbr + 1
             for line_brief in testcase[line_nbr:]:
                 # Avoid matching the '  ## workflow' tag with leading spaces.
-                match = re.search(r'\s{3,}##\s+(.*)', line_brief)
+                match = re.search(r'''
+                    \s{3,}[##]{2}\s+    # Match brief description line tag.
+                    (.*)                # Catch brief description line.
+                    ''', line_brief, re.VERBOSE)
                 if match:
                     brief = brief + ' ' + match.group(1).strip()
                 else:
@@ -158,7 +166,10 @@ class Reference(object):
         # Example 1: main(['snippy', 'search', '--sall', '.', '--profile'])  ## workflow
         # Example 2: Snippy(['snippy', 'search', '--sall', '.', '-q'])  ## workflow
         # Example 3: snippy.run(['snippy', 'search'])  ## workflow
-        match = re.search(r'\[(.*)\][\)\s]+##\s+workflow', line)
+        match = re.search(r'''
+            \[(.*)\][\)\s]+     # Match anything before the workflow tag.
+            [##]{2}\s+workflow  # Match workflow tag.
+            ''', line, re.VERBOSE)
         if match:
             command = match.group(1).strip()
             command = command.replace('\'', Const.EMPTY).replace(',', Const.EMPTY)

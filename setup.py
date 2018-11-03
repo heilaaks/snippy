@@ -52,11 +52,11 @@ extras_tests = (
     'pyflakes==1.6.0',
     'pylint==1.9.3 ; python_version=="2.7.*"',
     'pylint==2.1.1 ; python_version>"2.7"',
-    'pytest==3.9.1',
+    'pytest==3.9.3',
     'pytest-cov==2.6.0',
     'pytest-mock==1.10.0',
-    'pytest-xdist==1.23.2',
-    'tox==3.5.2'
+    'pytest-xdist==1.24.0',
+    'tox==3.5.3'
 )
 
 meta = {}

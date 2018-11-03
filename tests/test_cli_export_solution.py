@@ -605,7 +605,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_solution_028(self, snippy):
         """Export solution template.
 
-        Export solution template. This should result file name and format
+        Export solution template. This should result filename and format
         based on tool internal settings.
         """
 

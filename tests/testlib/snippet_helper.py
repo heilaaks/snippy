@@ -23,6 +23,7 @@ from snippy.config.config import Config
 from snippy.constants import Constants as Const
 from snippy.config.source.parser import Parser
 from snippy.content.collection import Collection
+from tests.testlib.helper import Helper
 
 
 class SnippetHelper(object):
@@ -147,25 +148,7 @@ class SnippetHelper(object):
         'digest': '9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3'
     })
 
-    TEMPLATE = (
-        '# Commented lines will be ignored.',
-        '#',
-        '# Add mandatory snippet below.',
-        '',
-        '',
-        '# Add optional brief description below.',
-        '',
-        '',
-        '# Add optional comma separated list of groups below.',
-        'default',
-        '',
-        '# Add optional comma separated list of tags below.',
-        '',
-        '',
-        '# Add optional links below one link per line.',
-        '',
-        ''
-    )
+    TEMPLATE = Helper.read_template('snippet.txt').split(Const.NEWLINE)
 
     @staticmethod
     def get_collection(snippet=None):

@@ -23,9 +23,10 @@ from snippy.config.config import Config
 from snippy.config.source.parser import Parser
 from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
+from tests.testlib.helper import Helper
 
 
-class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
+class ReferenceHelper(object):
     """Helper methods for reference testing."""
 
     GITLOG = 0
@@ -86,22 +87,7 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         'digest': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e'
     })
 
-    TEMPLATE = (
-        '# Commented lines will be ignored.',
-        '#',
-        '# Add mandatory links below one link per line.',
-        '',
-        '',
-        '# Add optional brief description below.',
-        '',
-        '',
-        '# Add optional comma separated list of groups below.',
-        'default',
-        '',
-        '# Add optional comma separated list of tags below.',
-        '',
-        ''
-    )
+    TEMPLATE = Helper.read_template('reference.txt').split(Const.NEWLINE)
 
     @staticmethod
     def get_dictionary(template):

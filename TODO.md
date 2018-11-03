@@ -1,13 +1,10 @@
 ## WORKING
    - [ ] Add support for description on top of brief.
    - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
-   - [ ] Test test_cli_create_solution_003 that checks 'content was not stored because it was matching to an empty template' does not notice actual failures. The test should use real template now it uses mocked template.
    - [ ] Fix Collection __getitem__ with unknown digest that returns key error.
    - [ ] Fix resource = collection[list(collection.keys())[0]]['data'] to collection[0] and collection[digest] if possible?
    - [ ] Fix (somehow) the markdown parsing loses manual alignment of comments since the text->mkd -> text adds only one space between command and comment. 1. Add spaces at the end of title # <title> <spaces> and read them back to indent. 2. automatically align comments (better) possiblity to disable this as well.
    - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?
-   - [ ] Fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints. Refactor the current implementation.
-   - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674
    - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
@@ -22,6 +19,9 @@
    - [ ] Refactor tests 3. #  remove reference failures from default data (e.g. GITLOG) and add the faults in test cases. This removes the need for Content.compared.
    - [ ] Refactor tests 4. Change file mocks to new mocked_file which allows defining the return format for the mock.
    - [ ] Refactor compare to own pytest plugin.
+   - [ ] Refactor tests and fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints. Refactor the current implementation.
+   - [ ] Refactor tests and move common items to Helper class in testlib. Do not copy from code because it creates dependency to tested code which cause problems in test case imports.
+   - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674
    - [ ] Fix new compare that does not see if the last newline is missing? Comment adding newline in text_dump/comare and pytest tests/test_cli_export_reference.py -k test_cli_export_reference_012. This seems to be mismatch in filename?
    - [ ] Fix new compare when the mock file is shorter than references.
    - [ ] Fix new compare to highlight filename mismatch. This incorrect highlights the last line.

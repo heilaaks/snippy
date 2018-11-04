@@ -1,9 +1,6 @@
 ## WORKING
-   - [ ] Fix solution import export to text and import. The http links are not read correctly for e.g. Debugging nginx
    - [ ] Fix (somehow) the markdown parsing loses manual alignment of comments since the text->mkd -> text adds only one space between command and comment. 1. Add spaces at the end of title # <title> <spaces> and read them back to indent. 2. automatically align comments (better) possiblity to disable this as well.
    - [ ] Add --align config for print? The terminal is the only place where the alignment matters? This allows <command> <separator> <comment> in snippet. User can then format how pleases.
-   - [ ] Add support for description on top of brief.
-   - [ ] Add support for inserting desciption from text template (snippet, reference and solution). The decription is parsed in case of solution.
    - [ ] Fix Collection __getitem__ with unknown digest that returns key error.
    - [ ] Fix resource = collection[list(collection.keys())[0]]['data'] to collection[0] and collection[digest] if possible?
    - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?

@@ -24,6 +24,7 @@ New features
 * Add support to export all default content with one command.
 * Add support for --limit option in CLI operations.
 * Add search category (scat) option for CLI operations.
+* Add support to use description field in content text templates.
 
 Bugfixes
 ~~~~~~~~

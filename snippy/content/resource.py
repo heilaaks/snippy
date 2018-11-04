@@ -573,6 +573,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text.replace('<data>', Const.EMPTY)
             text = text.lstrip()
         text = text.replace('<brief>', self.brief)
+        text = text.replace('<description>', self.description)
         text = text.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
         text = text.replace('<tags>', Const.DELIMITER_TAGS.join(self.tags))
         text = text.replace('<links>', Const.DELIMITER_LINKS.join(self.links))

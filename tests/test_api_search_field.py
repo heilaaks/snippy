@@ -121,7 +121,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6177'
+            'content-length': '6241'
         }
         result_json = {
             'meta': {
@@ -140,7 +140,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
                 'type': 'solution',
-                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
+                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
@@ -161,7 +161,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5309'
+            'content-length': '5373'
         }
         result_json = {
             'meta': {
@@ -176,7 +176,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
             }, {
                 'type': 'solution',
-                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
+                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
@@ -200,7 +200,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '4706'
+            'content-length': '4770'
         }
         result_json = {
             'meta': {
@@ -211,7 +211,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
+                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
@@ -393,7 +393,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '6177'
+            'content-length': '6241'
         }
         result_json = {
             'meta': {
@@ -412,7 +412,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
                 'type': 'solution',
-                'id': '15d1688c970fa336ad6d0b8c705aff18f3d89b49c48e1d6160d77ddccd75f5a8',
+                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }

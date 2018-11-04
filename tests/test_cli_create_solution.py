@@ -63,7 +63,7 @@ class TestCliCreateSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         cause = snippy.run(['snippy', 'create', '--solution'])
-        assert cause == 'NOK: content data already exist with digest: a5dd8f3807e08420'
+        assert cause == 'NOK: content data already exist with digest: db712a82662d6932'
         assert Database.get_solutions().size() == 2
         Content.verified(mocker, snippy, content_read)
 

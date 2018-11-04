@@ -394,9 +394,10 @@ class Content(object):
 
         # Generate updated nginx solution.
         content_read = {
-            '95f16957636d5da3': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
+            '63ed3e66d109245c': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
         }
-        content_read['95f16957636d5da3']['data'] = tuple([w.replace('# Instructions how to debug nginx', '# Changed instruction set') for w in content_read['95f16957636d5da3']['data']])  # pylint: disable=line-too-long
+        content_read['63ed3e66d109245c']['data'] = tuple([w.replace('# Instructions how to debug nginx.', '# Changed instruction set.') for w in content_read['63ed3e66d109245c']['data']])  # pylint: disable=line-too-long
+        content_read['63ed3e66d109245c']['description'] = 'Changed instruction set.'
 
         return content_read
 
@@ -406,11 +407,11 @@ class Content(object):
 
         # Generate updated kafka solution. No FILE defined.
         content_read = {
-            '6363c15263ea0a77': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
+            '3cbade9454ac80d2': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
         }
-        content_read['6363c15263ea0a77']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   : ') for w in content_read['6363c15263ea0a77']['data']])  # pylint: disable=line-too-long
-        content_read['6363c15263ea0a77']['filename'] = Const.EMPTY
-        content_read['6363c15263ea0a77']['digest'] = '6363c15263ea0a77c17adbe0ef1e032abe39eb9ceb45b99fb87875df297d2950'
+        content_read['3cbade9454ac80d2']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   : ') for w in content_read['3cbade9454ac80d2']['data']])  # pylint: disable=line-too-long
+        content_read['3cbade9454ac80d2']['filename'] = Const.EMPTY
+        content_read['3cbade9454ac80d2']['digest'] = '3cbade9454ac80d20eb1b8300dc7537a3851c078791b6e69af48e289c9d62e09'
 
         return content_read
 
@@ -420,11 +421,11 @@ class Content(object):
 
         # Generate updated kafka solution. No space after FILE.
         content_read = {
-            '981c93230a869f56': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
+            'fb657e3b49deb5b8': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
         }
-        content_read['981c93230a869f56']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   :') for w in content_read['981c93230a869f56']['data']])  # pylint: disable=line-too-long
-        content_read['981c93230a869f56']['filename'] = Const.EMPTY
-        content_read['981c93230a869f56']['digest'] = '981c93230a869f5616bb18046ebd7a3b6c02a1bfcfc03d4a1ca5111b410e165c'
+        content_read['fb657e3b49deb5b8']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   :') for w in content_read['fb657e3b49deb5b8']['data']])  # pylint: disable=line-too-long
+        content_read['fb657e3b49deb5b8']['filename'] = Const.EMPTY
+        content_read['fb657e3b49deb5b8']['digest'] = 'fb657e3b49deb5b8e55bb2aa3e81aef4fe54a161a26be728791fb6d4a423f560'
 
         return content_read
 

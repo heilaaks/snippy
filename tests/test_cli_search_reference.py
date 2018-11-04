@@ -280,7 +280,7 @@ class TestCliSearchReference(object):
         """
 
         output = (
-            '1. Debugging Elastic Beats @beats [a5dd8f3807e08420]',
+            '1. Debugging Elastic Beats @beats [db712a82662d6932]',
             Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
             '   : ',
             '',
@@ -346,7 +346,7 @@ class TestCliSearchReference(object):
         """
 
         output = (
-            '1. Debugging Elastic Beats @beats [a5dd8f3807e08420]',
+            '1. Debugging Elastic Beats @beats [db712a82662d6932]',
             Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
             '   : ',
             '',

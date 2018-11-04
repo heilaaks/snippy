@@ -6,6 +6,9 @@
 # Add optional brief description below.
 <brief>
 
+# Add optional description below.
+<description>
+
 # Add optional comma separated list of groups below.
 <groups>
 

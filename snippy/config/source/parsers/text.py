@@ -41,6 +41,11 @@ class ContentParserText(ContentParserBase):
     BRIEF[Const.REFERENCE] = BRIEF[Const.SNIPPET]
     BRIEF[Const.SOLUTION] = '## BRIEF  :'
 
+    DESCRIPTION = {}
+    DESCRIPTION[Const.SNIPPET] = '# Add optional description below.\n'
+    DESCRIPTION[Const.REFERENCE] = DESCRIPTION[Const.SNIPPET]
+    DESCRIPTION[Const.SOLUTION] = '## DESCRIPTION  :'
+
     GROUPS = {}
     GROUPS[Const.SNIPPET] = '# Add optional comma separated list of groups below.\n'
     GROUPS[Const.REFERENCE] = GROUPS[Const.SNIPPET]
@@ -61,71 +66,84 @@ class ContentParserText(ContentParserBase):
     REGEXP = {}
     REGEXP['data'] = {}
     REGEXP['data'][Const.SNIPPET] = re.compile(r'''
-        (?:%s|%s)           # Match snippet or reference data header.
-        (?P<data>.*?)       # Catch data.
-        (?:\n{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        (?:%s|%s)               # Match snippet or reference data header.
+        (?P<data>.*?)           # Catch data.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
         ''' % (re.escape(DATA[Const.SNIPPET]), re.escape(DATA[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['data'][Const.REFERENCE] = REGEXP['data'][Const.SNIPPET]
     REGEXP['data'][Const.SOLUTION] = re.compile(r'''
-        (?P<data>.*)        # Catch all the content to data.
+        (?P<data>.*)            # Catch all the content to data.
         ''', re.DOTALL | re.VERBOSE)
 
     REGEXP['brief'] = {}
     REGEXP['brief'][Const.SNIPPET] = re.compile(r'''
-        (?:%s|%s)           # Match snippet or reference brief header.
-        (?P<brief>.*?)      # Catch brief.
-        (?:\n{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        (?:%s|%s)               # Match snippet or reference brief.
+        (?P<brief>.*?)          # Catch brief.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
         ''' % (re.escape(BRIEF[Const.SNIPPET]), re.escape(BRIEF[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['brief'][Const.REFERENCE] = REGEXP['brief'][Const.SNIPPET]
     REGEXP['brief'][Const.SOLUTION] = re.compile(r'''
-        %s\s*?              # Match solution brief header.
-        (?P<brief>.*|$)     # Catch brief.
+        %s\s*?                  # Match solution brief header.
+        (?P<brief>.*|$)         # Catch brief.
         ''' % re.escape(BRIEF[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
+
+    REGEXP['description'] = {}
+    REGEXP['description'][Const.SNIPPET] = re.compile(r'''
+        (?:%s|%s)               # Match snippet or reference description.
+        (?P<description>.*?)    # Catch description.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the line.
+        ''' % (re.escape(DESCRIPTION[Const.SNIPPET]), re.escape(DESCRIPTION[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
+    REGEXP['description'][Const.REFERENCE] = REGEXP['description'][Const.SNIPPET]
+    REGEXP['description'][Const.SOLUTION] = re.compile(r'''
+        (?:\#\#\s+description\n[#]+\n)  # Match solution description header.
+        (?P<description>.*?)            # Catch description.
+        (?:\n{2}|[#]{2,}|$)             # Match newlines or next header indicated by hashes or end of the string.
+        ''', re.DOTALL | re.VERBOSE)
 
     REGEXP['groups'] = {}
     REGEXP['groups'][Const.SNIPPET] = re.compile(r'''
-        (?:%s|%s)           # Match snippet or reference groups header.
-        (?P<groups>.*?)     # Catch groups.
-        (?:\n{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        (?:%s|%s)               # Match snippet or reference groups.
+        (?P<groups>.*?)         # Catch groups.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
         ''' % (re.escape(GROUPS[Const.SNIPPET]), re.escape(GROUPS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['groups'][Const.REFERENCE] = REGEXP['groups'][Const.SNIPPET]
     REGEXP['groups'][Const.SOLUTION] = re.compile(r'''
-        %s\s*?              # Match groups tag from solution.
-        (?P<groups>.*|$)    # Catch groups.
+        %s\s*?                  # Match groups tag from solution.
+        (?P<groups>.*|$)        # Catch groups.
         ''' % re.escape(GROUPS[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
 
     REGEXP['tags'] = {}
     REGEXP['tags'][Const.SNIPPET] = re.compile(r'''
-        (?:%s|%s)           # Match snippet or reference tags header.
-        (?P<tags>.*?)       # Catch tags.
-        (?:\n{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        (?:%s|%s)               # Match snippet or reference tags.
+        (?P<tags>.*?)           # Catch tags.
+        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
         ''' % (re.escape(TAGS[Const.SNIPPET]), re.escape(TAGS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['tags'][Const.REFERENCE] = REGEXP['tags'][Const.SNIPPET]
     REGEXP['tags'][Const.SOLUTION] = re.compile(r'''
-        %s\s*?              # Match tags tag from solution.
-        (?P<tags>.*|$)      # Catch tags.
+        %s\s*?                  # Match tags tag from solution.
+        (?P<tags>.*|$)          # Catch tags.
         ''' % re.escape(TAGS[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
 
     REGEXP['links'] = {}
     REGEXP['links'][Const.SNIPPET] = re.compile(r'''
-        (?:%s|%s)           # Match snippet or reference links header.
-        (?P<links>.*?)      # Catch links.
-        (?:[\n]{2}|[#]|$)     # Match newlines or next header indicated by hash or end of the line.
+        (?:%s|%s)               # Match snippet or reference links.
+        (?P<links>.*?)          # Catch links.
+        (?:[\n]{2}|[#]|$)       # Match newlines or next header indicated by hash or end of the string.
         ''' % (re.escape(LINKS[Const.SNIPPET]), re.escape(LINKS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
     REGEXP['links'][Const.SOLUTION] = re.compile(r'''
-        [> ]{2}             # Match fixed tag preceding all links in solution.
-        (?P<links>http.*)   # Catch link.
+        [> ]{2}                 # Match fixed tag preceding all links in solution.
+        (?P<links>http.*)       # Catch link.
         ''', re.MULTILINE | re.VERBOSE)
 
     REGEXP['filename'] = {}
     REGEXP['filename'][Const.SNIPPET] = re.compile(r'''
-        \A(?!x)x            # Never match anything because there is no filename in the content.
+        \A(?!x)x                # Never match anything because there is no filename in the content.
         ''', re.VERBOSE)
     REGEXP['filename'][Const.REFERENCE] = REGEXP['filename'][Const.SNIPPET]
     REGEXP['filename'][Const.SOLUTION] = re.compile(r'''
-        %s\s*?              # Match filename tag from solution.
-        (?P<filename>.*|$)  # Catch filename.
+        %s\s*?                  # Match filename tag from solution.
+        (?P<filename>.*|$)      # Catch filename.
         ''' % re.escape(FILENAME[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
 
     def __init__(self, timestamp, text):
@@ -149,6 +167,7 @@ class ContentParserText(ContentParserBase):
             resource = collection.get_resource(category, self._timestamp)
             resource.data = self._read_data(category, content)
             resource.brief = self._read_brief(category, content)
+            resource.description = self._read_description(category, content)
             resource.groups = self._read_groups(category, content)
             resource.tags = self._read_tags(category, content)
             resource.links = self._read_links(category, content)
@@ -275,6 +294,38 @@ class ContentParserText(ContentParserBase):
             self._logger.debug('parser did not find content for brief')
 
         return brief
+
+    def _read_description(self, category, text):
+        """Read content description from text string.
+
+        Args:
+            category (str): Content category.
+            text (str): Content text string.
+
+        Returns:
+            str: Utf-8 encoded unicode description string.
+        """
+
+        description = ''
+        if category not in Const.CATEGORIES:
+            return description
+
+        match = self.REGEXP['description'][category].search(text)
+        if match:
+            description = self.format_string(match.group('description'))
+            self._logger.debug('parsed content description: %s', description)
+        else:
+            self._logger.debug('parser did not find content for description')
+
+        # Remove comment marks from each line in case of solution description.
+        description = re.sub(r'''
+            ^\s*[#]{1}\s    # Match start of each line (MULTILINE) with optional whitespaces in front of one hash.
+            ''', '', description, flags=re.MULTILINE | re.VERBOSE)
+
+        # Remove newlines, tabs and replace multiple spaces with one space.
+        description = re.sub(r'\s+', ' ', description).strip()
+
+        return description
 
     def _read_groups(self, category, text):
         """Read content groups from text string.

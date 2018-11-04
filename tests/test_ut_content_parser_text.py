@@ -52,6 +52,9 @@ class TestUtContentParserText(object):
             '# Add optional brief description below.',
             'Remove docker image with force',
             '',
+            '# Add optional description below.',
+            'Remove all hanging docker images.',
+            '',
             '# Add optional comma separated list of groups below.',
             'docker',
             '',
@@ -67,6 +70,7 @@ class TestUtContentParserText(object):
             'docker images -q --filter dangling=true | xargs docker rm'
         )
         brief = 'Remove docker image with force'
+        description = 'Remove all hanging docker images.'
         groups = ('docker',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
         links = (
@@ -78,6 +82,7 @@ class TestUtContentParserText(object):
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
+        assert resource.description == description
         assert resource.groups == groups
         assert resource.tags == tags
         assert resource.links == links
@@ -85,8 +90,10 @@ class TestUtContentParserText(object):
     def test_parser_snippet_002(self):
         """Test parsing snippet.
 
-        Test case verifies that groups are parsed corrected if there is
-        a list of groups. The groups must be sorted.
+        Test case verifies that groups are parsed correctly if there is a list
+        of groups. The groups must be sorted. This case has also multiline
+        description with multiple sequential spaces. In this case there is
+        empty line before next content tag.
         """
 
         text = '\n'.join((
@@ -96,6 +103,10 @@ class TestUtContentParserText(object):
             '',
             '# Add optional brief description below.',
             'Remove docker image with force',
+            '',
+            '# Add optional description below.',
+            'Remove all hanging docker images. This uses force',
+            'command and it removes all with force.',
             '',
             '# Add optional comma separated list of groups below.',
             'moby,docker',
@@ -112,6 +123,7 @@ class TestUtContentParserText(object):
             'docker images -q --filter dangling=true | xargs docker rm'
         )
         brief = 'Remove docker image with force'
+        description = 'Remove all hanging docker images. This uses force command and it removes all with force.'
         groups = ('docker', 'moby')
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
         links = (
@@ -123,6 +135,7 @@ class TestUtContentParserText(object):
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
+        assert resource.description == description
         assert resource.groups == groups
         assert resource.tags == tags
         assert resource.links == links
@@ -131,7 +144,7 @@ class TestUtContentParserText(object):
         """Test parsing snippet.
 
         Test case verifies that a snippet content can be parsed without
-        any newlines after each field.
+        any newlines after each content tag field.
         """
 
         text = '\n'.join((
@@ -140,6 +153,9 @@ class TestUtContentParserText(object):
             'docker images -q --filter dangling=true | xargs docker rm',
             '# Add optional brief description below.',
             'Remove docker image with force',
+            '# Add optional description below.',
+            '  Remove all hanging docker images. This uses force',
+            'command and it removes all with force.  ',
             '# Add optional comma separated list of groups below.',
             'moby,   docker',
             '# Add optional comma separated list of tags below.',
@@ -154,6 +170,7 @@ class TestUtContentParserText(object):
             'docker images -q --filter dangling=true | xargs docker rm'
         )
         brief = 'Remove docker image with force'
+        description = 'Remove all hanging docker images. This uses force command and it removes all with force.'
         groups = ('docker', 'moby')
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
         links = (
@@ -165,6 +182,7 @@ class TestUtContentParserText(object):
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
+        assert resource.description == description
         assert resource.groups == groups
         assert resource.tags == tags
         assert resource.links == links
@@ -182,10 +200,12 @@ class TestUtContentParserText(object):
             '# unknown 2.',
             'Remove docker image with force',
             '# unknown 3.',
-            'moby,   docker',
+            'Remove docker image.',
             '# unknown 4.',
-            '  cleanup,  container,docker,docker-ce,image,moby  ',
+            'moby,   docker',
             '# unknown 5.',
+            '  cleanup,  container,docker,docker-ce,image,moby  ',
+            '# unknown 6.',
             '  https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/  '
@@ -197,7 +217,8 @@ class TestUtContentParserText(object):
         """Test parsing snippet.
 
         Try to match snippet content where the second snippet content does not
-        match to any of the snippet tags.
+        match to any of the snippet tags. In this case the description field is
+        missing totally.
         """
 
         text = '\n'.join((
@@ -220,6 +241,7 @@ class TestUtContentParserText(object):
         assert resource.category == Const.SNIPPET
         assert resource.data == ('',)
         assert resource.brief == ''
+        assert resource.description == ''
         assert resource.groups == ()
         assert resource.tags == ()
         assert resource.links == ()
@@ -228,6 +250,215 @@ class TestUtContentParserText(object):
         """Test parsing solution.
 
         Test case verifies that a solution content can be parsed.
+        """
+
+        text = '\n'.join((
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
+            '## FILE   : kubernetes-docker-log-driver-kafka.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+            '    # This is a one line solution description.',
+            '',
+            '################################################################################',
+            '## references',
+            '################################################################################',
+            '',
+            '    # Kube Kafka log driver',
+            '    > https://github.com/MickayG/moby-kafka-logdriver',
+            '',
+            '    # Logs2Kafka',
+            '    > https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '    > https://github.com/garo/logs2kafka',
+            '',
+            '################################################################################',
+            '## commands',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## solutions',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## configurations',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## whiteboard',
+            '################################################################################',
+            ''
+        ))
+        links = (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        brief = 'Testing docker log drivers'
+        description = 'This is a one line solution description.'
+        groups = ('docker',)
+        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        filename = 'kubernetes-docker-log-driver-kafka.txt'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.brief == brief
+        assert resource.description == description
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == filename
+
+    def test_parser_solution_002(self):
+        """Test parsing solution.
+
+        Test case verifies that multiline solution description can be parsed.
+        """
+
+        text = '\n'.join((
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
+            '## FILE   : kubernetes-docker-log-driver-kafka.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+            '    # This is two line  ',
+            '    # solution description.',
+            '',
+            '################################################################################',
+            '## references',
+            '################################################################################',
+            '',
+            '    # Kube Kafka log driver',
+            '    > https://github.com/MickayG/moby-kafka-logdriver',
+            '',
+            '    # Logs2Kafka',
+            '    > https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '    > https://github.com/garo/logs2kafka',
+            '',
+            '################################################################################',
+            '## commands',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## solutions',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## configurations',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## whiteboard',
+            '################################################################################',
+            ''
+        ))
+        links = (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        brief = 'Testing docker log drivers'
+        description = 'This is two line solution description.'
+        groups = ('docker',)
+        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        filename = 'kubernetes-docker-log-driver-kafka.txt'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.brief == brief
+        assert resource.description == description
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == filename
+
+    def test_parser_solution_003(self):
+        """Test parsing solution.
+
+        Test case verifies that multiline solution description can be parsed.
+        """
+
+        text = '\n'.join((
+            '################################################################################',
+            '## BRIEF  : Testing docker log drivers',
+            '##',
+            '## GROUPS : docker',
+            '## TAGS   : docker,moby,kubernetes,logging,plugin,driver,kafka,logs2kafka',
+            '## FILE   : kubernetes-docker-log-driver-kafka.txt',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## description',
+            '################################################################################',
+            '',
+            '    # This is two line  ',
+            '    # solution description without newline before next header.',
+            '################################################################################',
+            '## references',
+            '################################################################################',
+            '',
+            '    # Kube Kafka log driver',
+            '    > https://github.com/MickayG/moby-kafka-logdriver',
+            '',
+            '    # Logs2Kafka',
+            '    > https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
+            '    > https://github.com/garo/logs2kafka',
+            '',
+            '################################################################################',
+            '## commands',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## solutions',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## configurations',
+            '################################################################################',
+            '',
+            '################################################################################',
+            '## whiteboard',
+            '################################################################################',
+            ''
+        ))
+        links = (
+            'https://github.com/MickayG/moby-kafka-logdriver',
+            'https://github.com/garo/logs2kafka',
+            'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
+        )
+        brief = 'Testing docker log drivers'
+        description = 'This is two line solution description without newline before next header.'
+        groups = ('docker',)
+        tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
+        filename = 'kubernetes-docker-log-driver-kafka.txt'
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SOLUTION
+        assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
+        assert resource.brief == brief
+        assert resource.description == description
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
+        assert resource.filename == filename
+
+    def test_parser_solution_004(self):
+        """Test parsing solution.
+
+        Test case verifies that multiline solution description can be parsed.
+        In this case the description is not defined.
         """
 
         text = '\n'.join((
@@ -284,12 +515,13 @@ class TestUtContentParserText(object):
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
         assert resource.brief == brief
+        assert resource.description == ''
         assert resource.groups == groups
         assert resource.tags == tags
         assert resource.links == links
         assert resource.filename == filename
 
-    def test_parser_solution_002(self):
+    def test_parser_solution_005(self):
         """Test parsing solution.
 
         Try to match content that does not match to any of the solution tags.
@@ -353,6 +585,10 @@ class TestUtContentParserText(object):
             '# Add optional brief description below.',
             '  How to write commit messages  ',
             '',
+            '# Add optional description below.',
+            '  How to write  ',
+            '  git   ',
+            ' commit.  ',
             '# Add optional comma separated list of groups below.',
             '  git   ',
             '',
@@ -364,12 +600,14 @@ class TestUtContentParserText(object):
             'https://chris.beams.io/posts/git-commit/'
         )
         brief = 'How to write commit messages'
+        description = 'How to write git commit.'
         groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
         assert resource.brief == brief
+        assert resource.description == description
         assert resource.groups == groups
         assert resource.tags == tags
         assert resource.links == links
@@ -391,6 +629,8 @@ class TestUtContentParserText(object):
             '# Add optional brief description below.',
             'How to write commit messages',
             '',
+            '# Add optional description below.',
+            'How to write git commit.',
             '# Add optional comma separated list of groups below.',
             'git',
             '',
@@ -402,12 +642,14 @@ class TestUtContentParserText(object):
             'https://chris.beams.io/posts/git-commit/'
         )
         brief = 'How to write commit messages'
+        description = 'How to write git commit.'
         groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
         assert resource.brief == brief
+        assert resource.description == description
         assert resource.groups == groups
         assert resource.tags == tags
         assert resource.links == links
@@ -427,6 +669,8 @@ class TestUtContentParserText(object):
             'https://chris.beams.io/posts/git-commit/',
             '# Add optional brief description below.',
             'How to write commit messages',
+            '# Add optional description below.',
+            'How to write git commit.',
             '# Add optional comma separated list of groups below.',
             'git, moby',
             '# Add optional comma separated list of tags below.',
@@ -437,12 +681,14 @@ class TestUtContentParserText(object):
             'https://chris.beams.io/posts/git-commit/'
         )
         brief = 'How to write commit messages'
+        description = 'How to write git commit.'
         groups = ('git', 'moby')
         tags = ('commit', 'git', 'howto', 'message', 'scm')
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
         assert resource.brief == brief
+        assert resource.description == description
         assert resource.groups == groups
         assert resource.tags == tags
         assert resource.links == links
@@ -472,7 +718,7 @@ class TestUtContentParserText(object):
     def test_parser_reference_005(self):
         """Test parsing reference.
 
-        Try to parse reference from snippet content
+        Try to parse reference from snippet template.
         """
 
         text = '\n'.join((
@@ -483,6 +729,9 @@ class TestUtContentParserText(object):
             '# Add optional brief description below.',
             'Remove docker image with force',
             '',
+            '# Add optional description below.',
+            'Remove docker image.',
+            ''
             '# Add optional comma separated list of groups below.',
             'docker',
             '',
@@ -498,6 +747,7 @@ class TestUtContentParserText(object):
             'docker images -q --filter dangling=true | xargs docker rm'
         )
         brief = 'Remove docker image with force'
+        description = 'Remove docker image.'
         groups = ('docker',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'image', 'moby')
         links = (
@@ -509,6 +759,7 @@ class TestUtContentParserText(object):
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
+        assert resource.description == description
         assert resource.groups == groups
         assert resource.tags == tags
         assert resource.links == links

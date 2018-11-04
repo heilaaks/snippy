@@ -75,9 +75,9 @@ class TestCliPerformance(object):
             assert cause == Cause.ALL_OK
             cause = snippy_perf.run(['snippy', 'delete', '-d', '53908d68425c61dc'])
             assert cause == Cause.ALL_OK
-            cause = snippy_perf.run(['snippy', 'delete', '-d', 'a5dd8f3807e08420'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', 'db712a82662d6932'])
             assert cause == Cause.ALL_OK
-            cause = snippy_perf.run(['snippy', 'delete', '-d', '27ddfbc3d289f29a'])
+            cause = snippy_perf.run(['snippy', 'delete', '-d', '7c226ee33a088381'])
             assert cause == Cause.ALL_OK
             assert not Database.get_collection().size()
 

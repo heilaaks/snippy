@@ -67,9 +67,9 @@ class ContentParserText(ContentParserBase):
     REGEXP['data'] = {}
     REGEXP['data'][Const.SNIPPET] = re.compile(r'''
         (?:%s|%s)               # Match snippet or reference data header.
-        (?P<data>.*?)           # Catch data.
-        (?:\n{2}|[#]|$)         # Match newlines or next header indicated by hash or end of the string.
-        ''' % (re.escape(DATA[Const.SNIPPET]), re.escape(DATA[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
+        (?P<data>[\s\S]*?)      # Catch multiline data untill next match.
+        (?:\n{2}|^[#])          # Match newlines or next header indicated by hash at the beginning of line.
+        ''' % (re.escape(DATA[Const.SNIPPET]), re.escape(DATA[Const.REFERENCE])), re.MULTILINE | re.VERBOSE)
     REGEXP['data'][Const.REFERENCE] = REGEXP['data'][Const.SNIPPET]
     REGEXP['data'][Const.SOLUTION] = re.compile(r'''
         (?P<data>.*)            # Catch all the content to data.

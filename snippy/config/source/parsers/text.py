@@ -174,7 +174,6 @@ class ContentParserText(ContentParserBase):
             resource.category = category
             resource.filename = self._read_filename(category, content)
             resource.digest = resource.compute_digest()
-            print(resource)
             collection.migrate(resource)
 
         return collection

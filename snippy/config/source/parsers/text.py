@@ -132,7 +132,7 @@ class ContentParserText(ContentParserBase):
         ''' % (re.escape(LINKS[Const.SNIPPET]), re.escape(LINKS[Const.REFERENCE])), re.DOTALL | re.VERBOSE)
     REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
     REGEXP['links'][Const.SOLUTION] = re.compile(r'''
-        [> ]{2}                 # Match fixed tag preceding all links in solution.
+        \s+[>]{1}\s             # Match only links that contain fixed tag preceding the link.
         (?P<links>http.*)       # Catch link.
         ''', re.MULTILINE | re.VERBOSE)
 
@@ -174,6 +174,7 @@ class ContentParserText(ContentParserBase):
             resource.category = category
             resource.filename = self._read_filename(category, content)
             resource.digest = resource.compute_digest()
+            print(resource)
             collection.migrate(resource)
 
         return collection

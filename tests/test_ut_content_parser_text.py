@@ -249,7 +249,8 @@ class TestUtContentParserText(object):
     def test_parser_solution_001(self):
         """Test parsing solution.
 
-        Test case verifies that a solution content can be parsed.
+        Test case verifies that a solution content can be parsed. Links that
+        are not starting with tag '> ' must not be read to resource links.
         """
 
         text = '\n'.join((
@@ -278,6 +279,35 @@ class TestUtContentParserText(object):
             '    > https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ',
             '    > https://github.com/garo/logs2kafka',
             '',
+            '    # Fake links below with incorrect preceding tags that must not be read.',
+            '    >  https://github.com/garo/logs2kafka',
+            '    #  https://github.com/garo/logs2kafka',
+            '    #  https://github.com/garo/logs2kafka',
+            '  https://github.com/garo/logs2kafka',
+            '    >  http://github.com/garo/logs2kafka',
+            '    >> http://github.com/garo/logs2kafka',
+            '    >>http://github.com/garo/logs2kafka',
+            '',
+            '    # /1/ https://github.com/elastic/kibana/issues/5230#issuecomment-288737969'
+            '    $ vi kibana.yaml'
+            '      server.basePath: "/kibana"'
+            '      xpack.reporting.kibanaApp: "/kibana/app/kibana"'
+            '    $ vi default.conf'
+            '      server {'
+            '          location /kibana/ {'
+            '              proxy_pass  http://kibana:5601;'
+            '              proxy_http_version 1.1;'
+            '              proxy_set_header Upgrade $http_upgrade;'
+            '              proxy_set_header Connection "upgrade";'
+            '              proxy_set_header Host $host;'
+            '              rewrite /kibana/(.*)$ /$1 break;'
+            '          }'
+            '          # Handle landing url without trailing slash.'
+            '          location = /kibana {'
+            '             return 302 /kibana/;'
+            '          }'
+            '      }'
+            ''
             '################################################################################',
             '## commands',
             '################################################################################',
@@ -285,6 +315,42 @@ class TestUtContentParserText(object):
             '################################################################################',
             '## solutions',
             '################################################################################',
+            '',
+            '    # Passing query parameter',
+            '    # =======================',
+            '    #',
+            '    # Pass query parameters from nginx location by adding $is_args$args:',
+            '    location ~ /elastic(/|$)(.*) {',
+            '        set $elasticsearch_servers elasticsearch;',
+            '        proxy_pass                 http://$elasticsearch_servers:9200/$2$is_args$args;',
+            '    }',
+            '',
+            '    # Configure Kibana behind specific base path',
+            '    # ==========================================',
+            '    #',
+            '    # It may be that the Kibana does not working correctly with base',
+            '    # path. Because of this /1/, a rewrite is currently needed. It',
+            '    # may be because of reroute below, the forwarding with 302 does',
+            '    # not work. It is left as an example here.',
+            '    # /1/  https://github.com/elastic/kibana/issues/5230#issuecomment-288737969',
+            '    $ vi kibana.yaml',
+            '      server.basePath: "/kibana"',
+            '      xpack.reporting.kibanaApp: "/kibana/app/kibana"',
+            '    $ vi default.conf',
+            '      server {',
+            '          location /kibana/ {',
+            '              proxy_pass http://kibana:5601;',
+            '              proxy_http_version 1.1;',
+            '              proxy_set_header Upgrade $http_upgrade;',
+            '              proxy_set_header Connection "upgrade";',
+            '              proxy_set_header Host $host;',
+            '              rewrite /kibana/(.*)$ /$1 break;',
+            '          }',
+            '          # Handle landing url without trailing slash.',
+            '          location = /kibana {',
+            '             return 302 /kibana/;',
+            '          }',
+            '      }',
             '',
             '################################################################################',
             '## configurations',
@@ -319,6 +385,7 @@ class TestUtContentParserText(object):
         """Test parsing solution.
 
         Test case verifies that multiline solution description can be parsed.
+        In this case there is an empty line after the description.
         """
 
         text = '\n'.join((
@@ -389,6 +456,7 @@ class TestUtContentParserText(object):
         """Test parsing solution.
 
         Test case verifies that multiline solution description can be parsed.
+        In this case there is no empty line after the description.
         """
 
         text = '\n'.join((
@@ -457,8 +525,8 @@ class TestUtContentParserText(object):
     def test_parser_solution_004(self):
         """Test parsing solution.
 
-        Test case verifies that multiline solution description can be parsed.
-        In this case the description is not defined.
+        Test case verifies that solution is parsed correctly when the
+        description is not defined.this case the description is not defined.
         """
 
         text = '\n'.join((

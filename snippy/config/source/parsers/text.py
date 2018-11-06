@@ -269,6 +269,17 @@ class ContentParserText(ContentParserBase):
         else:
             self._logger.debug('parser did not find content for data')
 
+        # Format snippet command comments to internal format.
+        if category == Const.SNIPPET:
+            commands = []
+            for command in data:
+                match = Const.RE_CATCH_COMMAND_AND_COMMENT.search(command)
+                if match and match.group('comment'):
+                    commands.append('{}{}{}'.format(match.group('command'), Const.SNIPPET_COMMENT, match.group('comment')))
+                else:
+                    commands.append(command)
+            data = tuple(commands)
+
         return data
 
     def _read_brief(self, category, text):

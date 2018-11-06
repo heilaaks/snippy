@@ -54,6 +54,10 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     DELIMITER_TAGS = ','
     DELIMITER_LINKS = NEWLINE
 
+    # Separate snippet data from optional comment.
+    SNIPPET_COMMENT = '  #  '
+    SNIPPET_COMMENT_COLOR = '  \x1b[91m#\x1b[0m  '
+
     # Default values for content fields.
     DEFAULT_GROUPS = ('default',)
 
@@ -67,4 +71,10 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     # Regexp patterns.
     RE_MATCH_ANSI_ESCAPE_SEQUENCES = re.compile(r'''
         \x1b[^m]*m    # Match all ANSI escape sequences.
+        ''', re.VERBOSE)
+
+    RE_CATCH_COMMAND_AND_COMMENT = re.compile(r'''
+        (?P<command>[\s\S]+?)     # Catch command untill following separator.
+        (:?\s{1,}[#]{1}\s{1,}|$)  # Match optional separator between command and comment or end of line.
+        (?P<comment>[\s\S]+|$)    # Catch optional comment. Force empty string instead of None in optional group.
         ''', re.VERBOSE)

@@ -27,7 +27,16 @@ import pkg_resources
 
 
 class Helper(object):  # pylint: disable=too-few-public-methods
-    """Generic helpers testing."""
+    """Generic helpers testing.
+
+    This class intentionally copies some of the implementation from the
+    code. The intention is to avoid dependencies in this module to be
+    able to import this module anywhere.
+    """
+
+    RE_MATCH_ANSI_ESCAPE_SEQUENCES = re.compile(r'''
+        \x1b[^m]*m    # Match all ANSI escape sequences.
+        ''', re.VERBOSE)
 
     @staticmethod
     def read_template(filename):
@@ -63,3 +72,16 @@ class Helper(object):  # pylint: disable=too-few-public-methods
         template = template.lstrip()
 
         return template
+
+    @staticmethod
+    def remove_ansi(message):
+        """Remove all ANSI escape codes from given string.
+
+        Args:
+            message (str): Message which ANSI escape codes are removed.
+
+        Returns:
+            str: Same message but without ANSI escape sequences.
+        """
+
+        return Helper.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', message)

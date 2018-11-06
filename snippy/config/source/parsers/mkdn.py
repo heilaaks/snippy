@@ -202,7 +202,7 @@ class ContentParserMkdn(ContentParserBase):
                 ''', re.MULTILINE | re.VERBOSE).search(command)
             if match:
                 if match.group('comment'):
-                    data = data + match.group('command') + ' # ' + match.group('comment') + Const.NEWLINE
+                    data = data + match.group('command') + Const.SNIPPET_COMMENT + match.group('comment') + Const.NEWLINE
                 else:
                     data = data + match.group('command') + Const.NEWLINE
                 self._logger.debug('parsed snippet data: %s', data)

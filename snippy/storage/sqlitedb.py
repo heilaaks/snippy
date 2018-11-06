@@ -114,7 +114,6 @@ class SqliteDb(object):
                  'filename, versions, source, uuid, created, updated, digest, metadata) ' +
                  'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
         qargs = resource.dump_qargs()
-
         try:
             self._put_db(query, qargs)
         except sqlite3.IntegrityError:

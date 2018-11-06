@@ -21,8 +21,6 @@
 
 from __future__ import print_function
 
-import re
-
 import pytest
 
 from snippy.cause import Cause
@@ -31,6 +29,7 @@ from snippy.meta import __homepage__
 from snippy.meta import __version__
 from snippy.snip import Snippy
 from snippy.snip import main
+from tests.testlib.helper import Helper
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
@@ -518,7 +517,7 @@ class TestCliOptions(object):
         )
         print(Database.get_snippets())  # Part of the test.
         out, err = capsys.readouterr()
-        out = re.sub(r'\x1b[^m]*m', '', out)  # Remove all color codes from output for comparison.
+        out = Helper.remove_ansi(out)
         print(out)
         assert Const.NEWLINE.join(output) in out
         assert not err

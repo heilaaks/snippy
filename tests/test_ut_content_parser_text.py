@@ -249,18 +249,20 @@ class TestUtContentParserText(object):
     def test_parser_snippet_006(self):
         """Test parsing snippet.
 
-        Test case verifies that snippet data with links is parsed correctly.
+        Test case verifies that snippet data with links is parsed
+        correctly. This case also verifies that the aligned comments
+        are parsed correctly to internal format.
         """
 
         text = '\n'.join((
             '# Commented lines will be ignored.',
             '#',
             '# Add mandatory snippet below.',
-            'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./ # Compress folder excluding the tar.',
-            'tar tvf mytar.tar.gz                              # List content of compressed tar.',
-            'tar xfO mytar.tar.gz manifest.json                # Cat file in compressed tar.',
-            'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz" # Extract and exclude one file.',
-            'tar -xf mytar.tar.gz manifest.json                # Extract only one file.',
+            'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
+            'tar tvf mytar.tar.gz                               #  List content of compressed tar.',
+            'tar xfO mytar.tar.gz manifest.json                 #  Cat file in compressed tar.',
+            'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
+            'tar -xf mytar.tar.gz manifest.json                 #  Extract only one file.',
             '',
             '# Add optional brief description below.',
             'Manipulate compressed tar files',
@@ -279,11 +281,64 @@ class TestUtContentParserText(object):
             ''
         ))
         data = (
+            'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
+            'tar tvf mytar.tar.gz  #  List content of compressed tar.',
+            'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.',
+            'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
+            'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.',
+        )
+        brief = 'Manipulate compressed tar files'
+        groups = ('linux',)
+        tags = ('howto', 'linux', 'tar', 'untar')
+        links = ()
+        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        assert resource.category == Const.SNIPPET
+        assert resource.data == data
+        assert resource.brief == brief
+        assert resource.description == ''
+        assert resource.groups == groups
+        assert resource.tags == tags
+        assert resource.links == links
+
+    def test_parser_snippet_007(self):
+        """Test parsing snippet.
+
+        Test case verifies that snippet data with explaining comments is parsed
+        correctly. In this case the comments are not aligned.
+        """
+
+        text = '\n'.join((
+            '# Commented lines will be ignored.',
+            '#',
+            '# Add mandatory snippet below.',
             'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./ # Compress folder excluding the tar.',
-            'tar tvf mytar.tar.gz                              # List content of compressed tar.',
-            'tar xfO mytar.tar.gz manifest.json                # Cat file in compressed tar.',
-            'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz" # Extract and exclude one file.',
-            'tar -xf mytar.tar.gz manifest.json                # Extract only one file.',
+            'tar tvf mytar.tar.gz # List content of compressed tar.',
+            'tar xfO mytar.tar.gz manifest.json # Cat file in compressed tar.',
+            'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
+            'tar -xf mytar.tar.gz manifest.json # Extract only one file.',
+            '',
+            '# Add optional brief description below.',
+            'Manipulate compressed tar files',
+            '',
+            '# Add optional description below.',
+            '',
+            '',
+            '# Add optional comma separated list of groups below.',
+            'linux',
+            '',
+            '# Add optional comma separated list of tags below.',
+            'howto,linux,tar,untar',
+            '',
+            '# Add optional links below one link per line.',
+            '',
+            ''
+        ))
+        data = (
+            'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
+            'tar tvf mytar.tar.gz  #  List content of compressed tar.',
+            'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.',
+            'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
+            'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.',
         )
         brief = 'Manipulate compressed tar files'
         groups = ('linux',)

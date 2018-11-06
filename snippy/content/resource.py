@@ -672,9 +672,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         text = Const.EMPTY
         if self.is_snippet():
+            aligned_data = self._align_snippet_comments(self.data, use_ansi)
             text = text + header.format(i=index, brief=self.brief, groups=Const.DELIMITER_GROUPS.join(self.groups), digest=self.digest)
             text = text + Const.NEWLINE
-            text = text + Const.EMPTY.join([data.format(indent=indent, symbol='$', line=line) for line in self.data])
+            text = text + Const.EMPTY.join([data.format(indent=indent, symbol='$', line=line) for line in aligned_data])
             text = text + Const.NEWLINE
             text = text + tags.format(indent=indent, tag=Const.DELIMITER_TAGS.join(self.tags))
             text = text + Const.EMPTY.join([links.format(indent=indent, link=link) for link in self.links])
@@ -719,3 +720,37 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text.encode('utf-8')
 
         return text
+
+    def _align_snippet_comments(self, data, use_ansi):
+        """Align comments in multiple lines of snippet data.
+
+        Alignment is made only based on commands which have comment. This
+        avoids too long lines in case the snippet without comment is very
+        long.
+
+        Original order of commands must not be changed.
+        """
+
+        max_len = 0
+        aligned = ()
+        snippets = []
+        for command in data:
+            match = Const.RE_CATCH_COMMAND_AND_COMMENT.search(command)
+            if match:
+                snippets.append({'command': match.group('command').strip(), 'comment': match.group('comment').strip()})
+                if match.group('comment'):
+                    max_len = max(max_len, len(match.group('command')))
+            else:
+                self._logger.debug('parser did not match command for comment alignment: %s', command)
+                snippets.append({'command': command, 'comment': Const.EMPTY})
+
+        separator = Const.SNIPPET_COMMENT
+        if use_ansi:
+            separator = Const.SNIPPET_COMMENT_COLOR
+        for snippet in snippets:
+            if snippet['comment']:
+                aligned = aligned + ('{:<{len}}{}{}'.format(snippet['command'], separator, snippet['comment'], len=max_len), )
+            else:
+                aligned = aligned + (snippet['command'],)
+
+        return aligned

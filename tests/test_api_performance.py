@@ -140,7 +140,6 @@ class TestApiPerformance(object):
         print("There are %d rows in stdout" % len(out))
         print("There are %d rows in stderr" % len(err))
         print("====================================")
-
         assert out == [b'snippy server running at 127.0.0.1:8080\n', b'snippy server stopped at 127.0.0.1:8080\n']
         assert not err
         assert runtime < 10

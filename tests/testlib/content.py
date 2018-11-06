@@ -67,6 +67,16 @@ class Content(object):
     YAML = Const.CONTENT_FORMAT_YAML
 
     @staticmethod
+    def store(content):
+        """Store content into database.
+
+        Args:
+            content (dict): Content in a dictionary.
+        """
+
+        Database.store(content)
+
+    @staticmethod
     def verified(mocker, snippy, content):
         """Compare given content against content stored in database."""
 

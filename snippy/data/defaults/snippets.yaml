@@ -100,11 +100,11 @@ data:
   category: snippet
   created: 2017-10-16T12:09:34.000001+0000
   data:
-  - 'grep -rn ./ -e ''pattern''  # recursive, line numbers, not case-sensitive'
-  - 'grep -rni ./ -e ''pattern'' # recursive, line numbers, case-sensitive'
+  - 'grep -rn ./ -e ''pattern''  #  recursive, line numbers, case sensitive'
+  - 'grep -rni ./ -e ''pattern''  #  recursive, line numbers, case insensitive'
   - grep -rni ./ -e 'pattern' --include=\*.{ini,xml,cfg,conf,yaml}
   description: ''
-  digest: dd328a21c1941983bbd20be51b0d84e76cafdd0a5b3f5b5e5728e9c9f3d7111c
+  digest: adba4298f8e4773c0c29d6c2f892b17d5cace472c47dc708b2e246b40b997158
   filename: ''
   groups:
   - linux
@@ -116,7 +116,7 @@ data:
   tags:
   - linux
   - search
-  updated: 2017-10-16T12:09:34.000001+0000
+  updated: 2018-11-06T12:43:25.774128+0000
   uuid: f21c662e-8830-11e8-a114-2c4d54508088
   versions: ''
 - brief: Stop and delete all running containers and images
@@ -748,15 +748,15 @@ data:
   category: snippet
   created: 2018-05-07T11:13:17.000001+0000
   data:
-  - 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./ # Compress folder excluding
+  - 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding
     the tar.'
-  - 'tar tvf mytar.tar.gz                              # List content of compressed
-    tar.'
-  - 'tar xfO mytar.tar.gz manifest.json                # Cat file in compressed tar.'
-  - 'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz" # Extract and exclude one file.'
-  - 'tar -xf mytar.tar.gz manifest.json                # Extract only one file.'
+  - 'tar tvf mytar.tar.gz  #  List content of compressed tar.'
+  - 'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.'
+  - 'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one
+    file.'
+  - 'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.'
   description: ''
-  digest: b3841d9a5785952168c4300d60658b1b8028c48a7d120ef4dcca084008217fe3
+  digest: 61014e2d1ec56a9ae6fa71f781221b2706f69c8bd3090bf35af179c7a87f284a
   filename: ''
   groups:
   - linux
@@ -768,10 +768,10 @@ data:
   - linux
   - tar
   - untar
-  updated: 2018-05-07T11:13:17.000001+0000
+  updated: 2018-11-06T12:43:55.884902+0000
   uuid: f21c8ed8-8830-11e8-a114-2c4d54508088
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: 2018-09-08T12:47:00.148877+0000
+  updated: 2018-11-06T12:44:13.530018+0000
   version: 0.9.d

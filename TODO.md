@@ -1,6 +1,6 @@
 ## WORKING
-   - [ ] Fix (somehow) the markdown parsing loses manual alignment of comments since the text->mkd -> text adds only one space between command and comment. 1. Add spaces at the end of title # <title> <spaces> and read them back to indent. 2. automatically align comments (better) possiblity to disable this as well.
-   - [ ] Add --align config for print? The terminal is the only place where the alignment matters? This allows <command> <separator> <comment> in snippet. User can then format how pleases.
+   - [ ] Fix? There is no link tag printed in terminal output if content does not have link. The tag with empty value might ease parsing. Same with other fields? Fix/change?
+   - [ ] Fix and remove extra non ASCII characters from test_parser_snippet_004
    - [ ] Fix Collection __getitem__ with unknown digest that returns key error.
    - [ ] Fix resource = collection[list(collection.keys())[0]]['data'] to collection[0] and collection[digest] if possible?
    - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?
@@ -19,6 +19,7 @@
    - [ ] Refactor tests 4. Change file mocks to new mocked_file which allows defining the return format for the mock.
    - [ ] Refactor compare to own pytest plugin.
    - [ ] Refactor tests and fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints. Refactor the current implementation.
+   - [ ] Refactor tests so that the Content is used instead of sqlite_helper. Only use Content or Helper (?). The content is a wrapper for content related operations.
    - [ ] Refactor tests and move common items to Helper class in testlib. Do not copy from code because it creates dependency to tested code which cause problems in test case imports.
    - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674
    - [ ] Fix new compare that does not see if the last newline is missing? Comment adding newline in text_dump/comare and pytest tests/test_cli_export_reference.py -k test_cli_export_reference_012. This seems to be mismatch in filename?

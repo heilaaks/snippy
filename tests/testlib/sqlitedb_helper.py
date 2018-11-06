@@ -169,6 +169,43 @@ class SqliteDbHelper(object):
         return storage
 
     @staticmethod
+    def store(content):
+        """Store content into database.
+
+        Args:
+            content (dict): Content in a dictionary.
+        """
+
+        query = ('INSERT OR ROLLBACK INTO contents (data, brief, description, groups, tags, links, category, name, ' +
+                 'filename, versions, source, uuid, created, updated, digest, metadata) ' +
+                 'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+        qargs = (
+            Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, content.get('data', ()))),
+            content.get('brief', ''),
+            content.get('description', ''),
+            Const.DELIMITER_GROUPS.join(map(Const.TEXT_TYPE, sorted(content.get('groups', ('default',))))),
+            Const.DELIMITER_TAGS.join(map(Const.TEXT_TYPE, sorted(content.get('tags', ())))),
+            Const.DELIMITER_LINKS.join(map(Const.TEXT_TYPE, content.get('links', ()))),
+            content.get('category', ''),
+            content.get('name', ''),
+            content.get('filename', ''),
+            content.get('versions', ''),
+            content.get('source', ''),
+            content.get('uuid', ''),
+            content.get('created', ''),
+            content.get('updated', ''),
+            content.get('digest', ''),
+            content.get('metadata', '')
+        )
+        try:
+            connection = SqliteDbHelper._connect()
+            with closing(connection.cursor()) as cursor:
+                cursor.execute(query, qargs)
+                connection.commit()
+        except sqlite3.OperationalError:
+            pass
+
+    @staticmethod
     def delete_all_contents():
         """Delete all content from database."""
 

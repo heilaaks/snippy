@@ -67,8 +67,8 @@ class TestUtContentParserMarkdown(object):
             '',
         ))
         data = (
-            'docker rm $(docker ps --all -q -f status=exited) # Remove all exited containers',
-            'docker images -q --filter dangling=true | xargs docker rmi # Remove all dangling images'
+            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
+            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
         )
         brief = 'Remove all exited containers and dangling images'
         description = ('Remove all exited containers and dangling images. The command examples ' +
@@ -80,7 +80,7 @@ class TestUtContentParserMarkdown(object):
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69'
+        digest = '9dcf81a0484d6551a3a0a0cf892d22bfba6b25b0f0ec6ef7080a617e3cf0b092'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
@@ -167,8 +167,8 @@ class TestUtContentParserMarkdown(object):
             ''
         ))
         data = (
-            'docker rm $(docker ps --all -q -f status=exited) # Remove all exited containers',
-            'docker images -q --filter dangling=true | xargs docker rmi # Remove all dangling images'
+            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
+            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
         )
         brief = 'Remove all exited containers and dangling images'
         description = ('Remove all exited containers and dangling images. The command examples ' +
@@ -180,7 +180,7 @@ class TestUtContentParserMarkdown(object):
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69'
+        digest = '9dcf81a0484d6551a3a0a0cf892d22bfba6b25b0f0ec6ef7080a617e3cf0b092'
         collection = Parser(self.TIMESTAMP, text).read_collection()
         assert collection.size() == 2
         resource = collection[list(collection.keys())[0]]['data']
@@ -269,13 +269,13 @@ class TestUtContentParserMarkdown(object):
             '',
         ))
         data = (
-            'docker rm $(docker ps --all -q -f status=exited) # Remove all exited containers',
-            'docker images -q --filter dangling=true | xargs docker rmi # Remove all dangling images'
+            'docker rm $(docker ps --all -q -f status=exited)  #  Remove all exited containers',
+            'docker images -q --filter dangling=true | xargs docker rmi  #  Remove all dangling images'
         )
         groups = ('default',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '852ca349dc05fb75bccfac743318230b7fc5360e8d3d4e61674e71aba2e469ff'
+        digest = 'd8cc7d0f05108952002ab2dffab29e60bdb1b7a8abc41416ff4e43812eb5bb14'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
@@ -341,17 +341,17 @@ class TestUtContentParserMarkdown(object):
             ''
         ))
         data = (
-            'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./ # Compress folder excluding the tar.',
-            'tar tvf mytar.tar.gz # List content of compressed tar.',
-            'tar xfO mytar.tar.gz manifest.json # Cat file in compressed tar.',
-            'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz" # Extract and exclude one file.',
-            'tar -xf mytar.tar.gz manifest.json # Extract only one file.'
+            'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
+            'tar tvf mytar.tar.gz  #  List content of compressed tar.',
+            'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.',
+            'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
+            'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.'
         )
         brief = 'Manipulate compressed tar files'
         groups = ('linux',)
         tags = ('howto', 'linux', 'tar', 'untar')
         uuid = 'f21c8ed8-8830-11e8-a114-2c4d54508088'
-        digest = '1115c9c843d1ffae45997d68c96d02af83fef49db677a9a7298ba135436e4ca8'
+        digest = '61014e2d1ec56a9ae6fa71f781221b2706f69c8bd3090bf35af179c7a87f284a'
         resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data

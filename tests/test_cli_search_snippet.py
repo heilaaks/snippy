@@ -23,6 +23,8 @@ import pytest
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
+from tests.testlib.content import Content
+from tests.testlib.helper import Helper
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
@@ -1050,6 +1052,130 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
         )
         cause = snippy.run(['snippy', 'search', '--sall', 'git', '--no-ansi'])
         out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    def test_cli_search_snippet_039(self, snippy, capsys):
+        """Print snippet with aligned comments.
+
+        Print snippet which has commends on every command. In this case the
+        comments must be all aligned.
+        """
+
+        Content.store({
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
+                'tar tvf mytar.tar.gz  #  List content of compressed tar.',
+                'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.',
+                'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
+                'tar -xf mytar.tar.gz manifest.json  #  Extract only one file.'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'category': Const.SNIPPET,
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [61014e2d1ec56a9a]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.',
+            '   $ tar tvf mytar.tar.gz                               #  List content of compressed tar.',
+            '   $ tar xfO mytar.tar.gz manifest.json                 #  Cat file in compressed tar.',
+            '   $ tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"  #  Extract and exclude one file.',
+            '   $ tar -xf mytar.tar.gz manifest.json                 #  Extract only one file.',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--stag', 'tar', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    def test_cli_search_snippet_040(self, snippy, capsys):
+        """Print snippet with aligned comments.
+
+        Print snippet which do not have comments after every command. In
+        this case the comments must be all aligned only based on commands
+        that have comments.
+        """
+
+        Content.store({
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+                'tar tvf mytar.tar.gz  #  List content of compressed tar.',
+                'tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.',
+                'tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"',
+                'tar -xf mytar.tar.gz manifest.json'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'category': Const.SNIPPET,
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [c1b9987e1dbfd51d]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '   $ tar tvf mytar.tar.gz                #  List content of compressed tar.',
+            '   $ tar xfO mytar.tar.gz manifest.json  #  Cat file in compressed tar.',
+            '   $ tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"',
+            '   $ tar -xf mytar.tar.gz manifest.json',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--stag', 'tar', '--no-ansi'])
+        out, err = capsys.readouterr()
+        assert cause == Cause.ALL_OK
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+    def test_cli_search_snippet_041(self, snippy, capsys):
+        """Print snippet with various incorrect comments.
+
+        Print snippet with comments that should not trigger comment
+        aligment. This case tests also that only one aligned comment
+        is aligned correctly.
+
+        In this case, a colored print is used.
+        """
+
+        Content.store({
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+                'tar tvf mytar.tar.gz # List content of compressed tar.',
+                'tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.',
+                't',
+                '',
+                'tar -xf mytar.tar.gz manifest.json'],
+            'brief': 'Manipulate compressed tar files',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'category': Const.SNIPPET,
+        })
+        output = (
+            '1. Manipulate compressed tar files @linux [0897e0e180afa68f]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '   $ tar tvf mytar.tar.gz  #  List content of compressed tar.',
+            '   $ tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.',
+            '   $ t',
+            '   $ ',
+            '   $ tar -xf mytar.tar.gz manifest.json',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            'OK',
+            ''
+        )
+        cause = snippy.run(['snippy', 'search', '--stag', 'tar'])
+        out, err = capsys.readouterr()
+        out = Helper.remove_ansi(out)
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err

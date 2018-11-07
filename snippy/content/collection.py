@@ -35,6 +35,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     """Store list of contents in collection."""
 
     def __init__(self):
+        self._i = 0
         self._logger = Logger.get_logger(__name__)
         self._data = self._init()
 
@@ -78,11 +79,22 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return not self == collection
 
-    def __getitem__(self, digest):
-        return self.data['data'][digest]
+    def __len__(self):
+        """Return length of the collection."""
+
+        return len(self.data['data'])
 
     def __iter__(self):
-        return iter(self.data['data'])
+        """Return iterable from object."""
+
+        resources = iter(self.data['data'])
+
+        return resources
+
+    def __getitem__(self, digest):
+        """Return item from object based on message digest."""
+
+        return self.data['data'][digest]
 
     def size(self):
         """Return count of resources in collection."""

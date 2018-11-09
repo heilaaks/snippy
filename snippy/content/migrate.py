@@ -49,7 +49,7 @@ class Migrate(object):
 
             return
 
-        if collection.empty():
+        if not collection:
             cls._logger.debug('no content to be exported')
 
             return

@@ -45,10 +45,6 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         text = Const.EMPTY
         for i, resource in enumerate(self.resources(), start=1):
             text = text + resource.dump_term(index=i, use_ansi=True, debug_logs=True)
-            text = text + '   \x1b[91m!\x1b[0m \x1b[2mcollection-meta-digest\x1b[0m : %s (%s)\n\n' % (
-                self[resource.digest]['meta']['digest'],
-                resource.digest == self[resource.digest]['meta']['digest']
-            )
 
         text = text + '\x1b[96;1m# \x1b[1;92mcollection meta\x1b[0m\n'
         text = text + '   \x1b[91m!\x1b[0m \x1b[2mtotal\x1b[0m : %d\n' % self.data['meta']['total']
@@ -63,11 +59,10 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         # [1] https://stackoverflow.com/a/30676267
         # [2] https://stackoverflow.com/a/390640
         if type(collection) is type(self):
-            if self.size() != collection.size():
+            if len(self) != len(collection):
                 return False
-
             for digest in self.keys():
-                if not (digest in collection and self[digest]['data'] == collection[digest]['data']):
+                if not (digest in collection.keys() and self[digest] == collection[digest]):
                     return False
 
             return True
@@ -85,47 +80,30 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         return len(self.data['data'])
 
     def __iter__(self):
-        """Return iterable from object."""
+        """Return iterable resources from object."""
 
-        resources = iter(self.data['data'])
-
-        return resources
+        return iter([self[digest] for digest in self.data['data'].keys()])
 
     def __getitem__(self, digest):
         """Return item from object based on message digest."""
 
-        return self.data['data'][digest]
-
-    def size(self):
-        """Return count of resources in collection."""
-
-        return len(self.data['data'])
-
-    def empty(self):
-        """Test if collection is empty."""
-
-        return True if self.size() == 0 else False
+        return self.data['data'][digest]['data']
 
     def keys(self):
-        """Iterate over keys stored in collection."""
+        """Return list of digests in collection."""
 
-        return self.data['data'].keys()
-
-    def items(self):
-        """Iterate over items stored in collection."""
-
-        return self.data['data'].items()
+        return list(self.data['data'].keys())
 
     def values(self):
-        """Iterate over values stored in collection."""
+        """Return list of resources in collection."""
 
-        return self.data['data'].values()
+        return list([self[digest] for digest in self.data['data'].keys()])
 
     def resources(self):
-        """Iterate over resources stored in collection."""
+        """Return generator for resources in collection."""
 
         for digest in self.keys():
-            yield self.data['data'][digest]['data']
+            yield self[digest]
 
     @classmethod
     def get_resource(cls, category, timestamp):
@@ -165,8 +143,6 @@ class Collection(object):  # pylint: disable=too-many-public-methods
                 source.seal()
                 self.data['data'][source.digest] = {}
                 self.data['data'][source.digest]['data'] = source
-                self.data['data'][source.digest]['meta'] = {}
-                self.data['data'][source.digest]['meta']['digest'] = source.digest
             else:
                 self._logger.debug('resource not merged to collection due to unknown category: {}'.format(Logger.remove_ansi(str(source))))
 
@@ -242,7 +218,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             string: Collection in text format.
         """
 
-        if self.empty():
+        if not self:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
 
         text = Const.EMPTY
@@ -264,7 +240,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             string: Collection in Markdown format.
         """
 
-        if self.empty():
+        if not self:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
 
         text = Const.EMPTY
@@ -278,7 +254,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def dump_term(self, use_ansi, debug_logs):
         """Convert collection for terminal."""
 
-        if not self.size():
+        if not self:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
 
         text = Const.EMPTY
@@ -286,7 +262,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             text = text + resource.dump_term(index=i, use_ansi=use_ansi, debug_logs=debug_logs)
 
         # Set one empty line at the end of string for beautified output.
-        if self.size():
+        if self:
             text = text.rstrip()
             text = text + Const.NEWLINE
 

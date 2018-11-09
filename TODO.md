@@ -1,8 +1,5 @@
 ## WORKING
-   - [ ] Fix? There is no link tag printed in terminal output if content does not have link. The tag with empty value might ease parsing. Same with other fields? Fix/change?
    - [ ] Fix and remove extra non ASCII characters from test_parser_snippet_004
-   - [ ] Fix Collection __getitem__ with unknown digest that returns key error.
-   - [ ] Fix resource = collection[list(collection.keys())[0]]['data'] to collection[0] and collection[digest] if possible?
    - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?
    - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.

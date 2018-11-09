@@ -80,10 +80,10 @@ class SqliteDb(object):
             if error[0] == Cause.HTTP_OK:
                 inserted = inserted + 1
 
-        self._logger.debug('inserted: %d :out of: %d :content', inserted, collection.size())
-        if collection.empty():
+        self._logger.debug('inserted: %d :out of: %d :content', inserted, len(collection))
+        if not collection:
             error = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
-        elif inserted == collection.size():
+        elif inserted == len(collection):
             Cause.push(Cause.HTTP_CREATED, 'content created')
 
         if not inserted and error[0] != Cause.HTTP_OK:
@@ -429,13 +429,13 @@ class SqliteDb(object):
             return error
 
         if not update:
-            if self._select_data(resource.data).size():
+            if self._select_data(resource.data):
                 error = (Cause.HTTP_CONFLICT, 'content data already exist with digest: {:.16}'.format(self._get_digest(resource)))
                 self._logger.debug(error[1])
 
                 return error
 
-            if self._select_uuid(resource.uuid).size():
+            if self._select_uuid(resource.uuid):
                 error = (Cause.HTTP_CONFLICT, 'content uuid already exist with digest: {:.16}'.format(self._get_digest(resource)))
                 self._logger.debug(error[1])
 
@@ -449,15 +449,15 @@ class SqliteDb(object):
         digest = 'not found'
         category = resource.category
         collection = self._select_data(resource.data)
-        if collection.empty():
+        if not collection:
             collection = self._select_uuid(resource.uuid)
 
-        if collection.size() == 1:
+        if len(collection) == 1:
             digest = next(collection.resources()).digest
         else:
             Cause.push(Cause.HTTP_500, 'internal error when searching content possibly violating database unique constraints')
             self._logger.debug('internal server error searching resource from database: {}'.format(Logger.remove_ansi(str(resource))))
-            self._logger.debug('internal server error searching unique digest hits: %d :from category: %s', collection.size(), category)
+            self._logger.debug('internal server error searching unique digest hits: %d :from category: %s', len(collection), category)
 
         return digest
 

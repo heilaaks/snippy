@@ -53,7 +53,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 2
+            assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -73,7 +73,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.yaml'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 2
+            assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -93,7 +93,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             json.load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.json'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 2
+            assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.json', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -114,7 +114,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 2
+            assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -135,7 +135,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.text'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 2
+            assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.text', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -150,7 +150,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './foo.bar'])
             assert cause == 'NOK: cannot identify file format for file: ./foo.bar'
-            assert not Database.get_collection().size()
+            assert not Database.get_collection()
             mock_file.assert_not_called()
 
     def test_cli_import_snippet_007(self, snippy):
@@ -163,7 +163,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.os.path.isfile', return_value=False):
             cause = snippy.run(['snippy', 'import', '-f', './foo.yaml'])
             assert cause == 'NOK: cannot read file ./foo.yaml'
-            assert not Database.get_collection().size()
+            assert not Database.get_collection()
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_snippet_008(self, snippy):
@@ -176,7 +176,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
             assert cause == 'NOK: could not identify text source content category: unknown'
-            assert not Database.get_collection().size()
+            assert not Database.get_collection()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'import-remove-utc')
@@ -195,7 +195,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 1
+            assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -216,7 +216,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 1
+            assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -237,7 +237,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             json.load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.json'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 1
+            assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.json', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -258,7 +258,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.txt'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 1
+            assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.txt', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -279,7 +279,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.text'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 1
+            assert len(Database.get_snippets()) == 1
             mock_file.assert_called_once_with('one-snippet.text', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -298,7 +298,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-d', '123456789abcdef0', '-f', 'one-snippet.text'])
             assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
-            assert Database.get_snippets().size() == 1
+            assert len(Database.get_snippets()) == 1
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, content)
 
@@ -318,7 +318,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--defaults'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 2
+            assert len(Database.get_snippets()) == 2
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'r')
             Content.verified(mocker, snippy, content)
@@ -345,7 +345,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'import', '--defaults'])
             assert cause in ('NOK: content data already exist with digest: 53908d68425c61dc',
                              'NOK: content data already exist with digest: 54e41e9b52a02b63')
-            assert Database.get_snippets().size() == 2
+            assert len(Database.get_snippets()) == 2
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'r')
             Content.verified(mocker, snippy, content)
@@ -363,7 +363,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--template'])
             assert cause == 'NOK: content was not stored because mandatory content field data is empty'
-            assert not Database.get_snippets().size()
+            assert not Database.get_snippets()
             mock_file.assert_called_once_with('./snippet-template.txt', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'default-snippets', 'import-remove-utc', 'import-netcat-utc')
@@ -387,7 +387,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             content[Snippet.FORCED_DIGEST] = Snippet.DEFAULTS[Snippet.FORCED]
             cause = snippy.run(['snippy', 'import', '-f', './snippets.yaml'])
             assert cause == Cause.ALL_OK
-            assert Database.get_collection().size() == 3
+            assert len(Database.get_collection()) == 3
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -409,7 +409,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '-d', '5', '-f', 'one-snippet.yaml'])
             assert cause == 'NOK: content digest: 5 :matched more than once: 2 :preventing: import :operation'
-            assert Database.get_snippets().size() == 2
+            assert len(Database.get_snippets()) == 2
             mock_file.assert_not_called()
             yaml.safe_load.assert_not_called()
             Content.verified(mocker, snippy, content)
@@ -429,7 +429,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.md'])
             assert cause == Cause.ALL_OK
-            assert Database.get_snippets().size() == 2
+            assert len(Database.get_snippets()) == 2
             mock_file.assert_called_once_with('./all-snippets.md', 'r')
             Content.verified(mocker, snippy, content)
 

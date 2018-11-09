@@ -211,7 +211,7 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rmi/  '
         ))
         collection = Parser(self.TIMESTAMP, text).read_collection()
-        assert collection.empty()
+        assert not collection
 
     def test_parser_snippet_005(self):
         """Test parsing snippet.
@@ -236,7 +236,7 @@ class TestUtContentParserText(object):
             '# unknown 2.'
         ))
         collection = Parser(self.TIMESTAMP, text).read_collection()
-        assert collection.size() == 1
+        assert len(collection) == 1
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == ('',)
@@ -737,7 +737,7 @@ class TestUtContentParserText(object):
             ''
         ))
         collection = Parser(self.TIMESTAMP, text).read_collection()
-        assert collection.empty()
+        assert not collection
 
     def test_parser_reference_001(self):
         """Test parsing reference.
@@ -888,7 +888,7 @@ class TestUtContentParserText(object):
             'commit,git,howto,message,scm'
         ))
         collection = Parser(self.TIMESTAMP, text).read_collection()
-        assert collection.empty()
+        assert not collection
 
     def test_parser_reference_005(self):
         """Test parsing reference.
@@ -951,4 +951,4 @@ class TestUtContentParserText(object):
             'commit,git,howto,message,scm'
         ))
         collection = Parser(self.TIMESTAMP, text).read_collection()
-        assert collection.empty()
+        assert not collection

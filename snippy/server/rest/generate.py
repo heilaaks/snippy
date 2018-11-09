@@ -104,7 +104,7 @@ class Generate(object):
             })
         if pagination:
             data['meta'] = {}
-            data['meta']['count'] = collection.size()
+            data['meta']['count'] = len(collection)
             data['meta']['limit'] = Config.search_limit
             data['meta']['offset'] = Config.search_offset
             data['meta']['total'] = collection.total

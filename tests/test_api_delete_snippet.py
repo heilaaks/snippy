@@ -46,13 +46,13 @@ class TestApiDeleteSnippet(object):
             Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
         }
         result_headers = {}
-        assert Database.get_snippets().size() == 3
+        assert len(Database.get_snippets()) == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, server, content_read)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'caller')
@@ -75,14 +75,14 @@ class TestApiDeleteSnippet(object):
                 'title': 'cannot find content with message digest: beefbeef'
             }]
         }
-        assert Database.get_snippets().size() == 3
+        assert len(Database.get_snippets()) == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/snippets/beefbeef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_snippets().size() == 3
+        assert len(Database.get_snippets()) == 3
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_delete_snippet_003(self, server, mocker):
@@ -109,14 +109,14 @@ class TestApiDeleteSnippet(object):
                 'title': 'cannot delete content without identified resource'
             }]
         }
-        assert Database.get_collection().size() == 2
+        assert len(Database.get_collection()) == 2
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, server, content_read)
 
     @classmethod

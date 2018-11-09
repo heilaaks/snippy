@@ -182,8 +182,8 @@ class TestUtContentParserMarkdown(object):
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         digest = '9dcf81a0484d6551a3a0a0cf892d22bfba6b25b0f0ec6ef7080a617e3cf0b092'
         collection = Parser(self.TIMESTAMP, text).read_collection()
-        assert collection.size() == 2
-        resource = collection[list(collection.keys())[0]]['data']
+        assert len(collection) == 2
+        resource = collection[digest]
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
@@ -215,7 +215,7 @@ class TestUtContentParserMarkdown(object):
         )
         uuid = 'f31c752e-8830-11e8-a114-2c4d54508088'
         digest = '0bcf78d5c36a96a556fa3293f9b68c3dca577ea9c7fa5de76b354ccf27885df2'
-        resource = collection[list(collection.keys())[1]]['data']
+        resource = collection[digest]
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief

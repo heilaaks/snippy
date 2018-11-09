@@ -85,7 +85,7 @@ class TestApiUpdateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_solutions().size() == 1
+        assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
@@ -144,7 +144,7 @@ class TestApiUpdateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_solutions().size() == 1
+        assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-beats', 'caller')
@@ -187,7 +187,7 @@ class TestApiUpdateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_solutions().size() == 1
+        assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-beats', 'caller')
@@ -223,7 +223,7 @@ class TestApiUpdateSolution(object):
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
-        assert Database.get_solutions().size() == 1
+        assert len(Database.get_solutions()) == 1
 
     @pytest.mark.usefixtures('import-beats', 'caller')
     def test_api_update_solution_005(self, server):
@@ -267,7 +267,7 @@ class TestApiUpdateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_403
-        assert Database.get_solutions().size() == 1
+        assert len(Database.get_solutions()) == 1
 
     @pytest.mark.usefixtures('import-beats', 'caller')
     def test_api_update_solution_006(self, server):
@@ -311,7 +311,7 @@ class TestApiUpdateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_403
-        assert Database.get_solutions().size() == 1
+        assert len(Database.get_solutions()) == 1
 
     @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
     def test_api_update_solution_007(self, server, mocker):
@@ -370,7 +370,7 @@ class TestApiUpdateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_solutions().size() == 1
+        assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
@@ -429,7 +429,7 @@ class TestApiUpdateSolution(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_solutions().size() == 1
+        assert len(Database.get_solutions()) == 1
         Content.verified(mocker, server, content)
 
     @classmethod

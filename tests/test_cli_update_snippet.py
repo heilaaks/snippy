@@ -47,7 +47,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63'])
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -67,7 +67,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '54e41'])
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -87,7 +87,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'])
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -107,7 +107,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '--snippets', '-d', '54e41e9b52a02b63'])
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -128,7 +128,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63'])
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -148,7 +148,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -169,7 +169,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest for: update :operation'
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -191,7 +191,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '5'])
         assert cause == 'NOK: content digest: 5 :matched more than once: 2 :preventing: update :operation'
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -210,7 +210,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)'])
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -229,7 +229,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-c', 'snippet not existing'])
         assert cause == 'NOK: cannot find content with content data: snippet not existing'
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -249,7 +249,7 @@ class TestCliUpdateSnippet(object):
         edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-c', ''])
         assert cause == 'NOK: cannot use empty content data for: update :operation'
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-snippets')
@@ -267,7 +267,7 @@ class TestCliUpdateSnippet(object):
         }
         cause = snippy.run(['snippy', 'update', '-c', 'docker'])
         assert cause == 'NOK: content data: docker :matched more than once: 2 :preventing: update :operation'
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
     @classmethod
     def teardown_class(cls):

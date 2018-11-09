@@ -47,7 +47,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -67,7 +67,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '--digest', '5c2071'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -88,7 +88,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', '5c2071094dbfaa33'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -110,7 +110,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -130,7 +130,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -151,7 +151,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest for: update :operation'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -170,7 +170,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-u', '12cd5827-b6ef-4067-b5ac'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -189,7 +189,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-u', '9999994'])
         assert cause == 'NOK: cannot find content with content uuid: 9999994'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.skip(reason='not supported yet')
@@ -209,7 +209,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-l', 'https://chris.beams.io/posts/git-commit/'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.skip(reason='not supported yet')
@@ -229,7 +229,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '--links', 'links-not-exist'])
         assert cause == 'NOK: cannot find content with content data: reference not existing'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -250,7 +250,7 @@ class TestCliUpdateReference(object):
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('import-regexp', 'update-gitlog-utc')
@@ -272,7 +272,7 @@ class TestCliUpdateReference(object):
         cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--reference', '--editor'])
         edited_gitlog.assert_called_with(Reference.dump(Content.compared(Reference.DEFAULTS[Reference.REGEXP]), Content.TEXT))
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @classmethod

@@ -46,13 +46,13 @@ class TestApiDeleteSolution(object):
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
         }
         result_headers = {}
-        assert Database.get_solutions().size() == 3
+        assert len(Database.get_solutions()) == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions/fffeaf31e98e68a',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
-        assert Database.get_solutions().size() == 2
+        assert len(Database.get_solutions()) == 2
         Content.verified(mocker, server, content_read)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka', 'caller')
@@ -74,14 +74,14 @@ class TestApiDeleteSolution(object):
                 'title': 'cannot find content with message digest: beefbeef'
             }]
         }
-        assert Database.get_solutions().size() == 3
+        assert len(Database.get_solutions()) == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions/beefbeef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_solutions().size() == 3
+        assert len(Database.get_solutions()) == 3
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_delete_solution_003(self, server, mocker):
@@ -108,14 +108,14 @@ class TestApiDeleteSolution(object):
                 'title': 'cannot delete content without identified resource'
             }]
         }
-        assert Database.get_collection().size() == 2
+        assert len(Database.get_collection()) == 2
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_solutions().size() == 2
+        assert len(Database.get_solutions()) == 2
         Content.verified(mocker, server, content_read)
 
     @classmethod

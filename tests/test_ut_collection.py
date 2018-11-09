@@ -29,7 +29,7 @@ from tests.testlib.helper import Helper
 class TestUtCollection(object):
     """Test Collection() class."""
 
-    def test_collection_operations_001(self, snippy, capsys):
+    def test_collection_operations_001(self, capsys):
         """Test collection data class operations.
 
         Verify that collection class implements the data class properties
@@ -39,7 +39,7 @@ class TestUtCollection(object):
         collection = Collection()
 
         # Collection with len().
-        assert len(collection) == 0
+        assert not collection
 
         # Collection with condition.
         if collection:
@@ -66,9 +66,21 @@ class TestUtCollection(object):
         else:
             assert 1
 
-        # Collection with loop.
+        # Iterate resources in collection.
         for resource in collection:
+            resource.digest = resource.digest
             assert 0
+
+        # Get list of keys (digest) from collection.
+        assert not collection.keys()
+
+        # Get list of values (resources) from collection.
+        assert not collection.values()
+
+        # Test generator.
+        resources = collection.resources()
+        with pytest.raises(StopIteration):
+            next(resources)
 
         # Printing collection.
         output = (
@@ -77,17 +89,17 @@ class TestUtCollection(object):
             '',
             ''
         )
-        print(collection)
+        print(collection)  # Part of the test.
         out, err = capsys.readouterr()
         out = Helper.remove_ansi(out)
-        print(out)
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-        with pytest.raises(Exception):
-            collection[0]
+        with pytest.raises(KeyError):
+            resource = collection[0]
 
-    def test_collection_operations_002(self, snippy, capsys):
+    @pytest.mark.usefixtures('uuid')
+    def test_collection_operations_002(self, capsys):  # pylint: disable=too-many-branches
         """Test collection data class operations.
 
         Verify that collection class implements the data class properties
@@ -106,11 +118,112 @@ class TestUtCollection(object):
                 'category': Const.SNIPPET
             }]
         })
+
+        # Collection with len().
         assert len(collection) == 1
 
-        #for resource in collection:
-        #    print("HERE")
-        #    print(resource)
-        #print(collection)
+        # Collection with condition.
+        if collection:
+            assert 1
+        else:
+            assert 0
 
-        #assert 0
+        # Collection with negative condition.
+        if not collection:
+            assert 0
+        else:
+            assert 1
+
+        # Equality of two different collections where the UUID differs.
+        collection2 = Collection()
+        collection2.load_dict({
+            'data': [{
+                'data': [
+                    'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+                    'tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.'],
+                'brief': 'Manipulate compressed tar files',
+                'groups': ['linux'],
+                'tags': ['howto', 'linux', 'tar', 'untar'],
+                'category': Const.SNIPPET
+            }]
+        })
+        if collection == collection2:
+            assert 0
+        else:
+            assert 1
+
+        # Non equality of two different collections.
+        if collection != collection2:
+            assert 1
+        else:
+            assert 0
+
+        # Equality of two same collections.
+        collection2 = collection
+        if collection == collection2:
+            assert 1
+        else:
+            assert 0
+
+        # Non equality of same collections.
+        if collection != collection2:
+            assert 0
+        else:
+            assert 1
+
+        # Iterate resources in collection.
+        i = 0
+        for resource in collection:
+            resource.digest = resource.digest
+            i = i + 1
+        assert i == 1
+
+        # Get list of keys (digest) from collection.
+        assert len(collection.keys()) == 1
+        assert collection.keys() == list(['e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240'])
+
+        # Get list of values (resources) from collection.
+        assert len(collection.values()) == 1
+        assert collection.values()[0] == collection['e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240']
+
+        # Test generator.
+        resources = collection.resources()
+        assert next(resources) == collection['e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240']
+        with pytest.raises(StopIteration):
+            next(resources)
+
+        # Printing collection.
+        output = (
+            '1. Manipulate compressed tar files @linux [e79ae51895908c5a]',
+            '',
+            '   $ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+            '   $ tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.',
+            '',
+            '   # howto,linux,tar,untar',
+            '',
+            '   ! category    : snippet',
+            '   ! created     : ',
+            '   ! description : ',
+            '   ! digest      : e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240 (True)',
+            '   ! filename    : ',
+            '   ! key         : None',
+            '   ! metadata    : None',
+            '   ! name        : ',
+            '   ! source      : ',
+            '   ! updated     : ',
+            '   ! uuid        : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            '   ! versions    : ',
+            '',
+            '# collection meta',
+            '   ! total : 1',
+            '',
+            ''
+        )
+        print(collection)  # Part of the test.
+        out, err = capsys.readouterr()
+        out = Helper.remove_ansi(out)
+        assert out == Const.NEWLINE.join(output)
+        assert not err
+
+        with pytest.raises(KeyError):
+            resource = collection[0]

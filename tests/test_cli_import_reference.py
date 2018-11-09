@@ -52,7 +52,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 2
+            assert len(Database.get_references()) == 2
             mock_file.assert_called_once_with('./references.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -73,7 +73,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.yaml'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 2
+            assert len(Database.get_references()) == 2
             mock_file.assert_called_once_with('./all-references.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -94,8 +94,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '-f', './all-references.yaml'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 2
-            assert not Database.get_snippets().size()
+            assert len(Database.get_references()) == 2
+            assert not Database.get_snippets()
             mock_file.assert_called_once_with('./all-references.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -115,7 +115,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             json.load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.json'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 2
+            assert len(Database.get_references()) == 2
             mock_file.assert_called_once_with('./all-references.json', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -136,7 +136,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.txt'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 2
+            assert len(Database.get_references()) == 2
             mock_file.assert_called_once_with('./all-references.txt', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -157,7 +157,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-references.txt'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 2
+            assert len(Database.get_references()) == 2
             mock_file.assert_called_once_with('./all-references.txt', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -178,7 +178,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-references.text'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 2
+            assert len(Database.get_references()) == 2
             mock_file.assert_called_once_with('./all-references.text', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -194,7 +194,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './reference-template.txt'])
             assert cause == 'NOK: content was not stored because mandatory content field links is empty'
-            assert not Database.get_collection().size()
+            assert not Database.get_collection()
             mock_file.assert_called_once_with('./reference-template.txt', 'r')
 
     def test_cli_import_reference_009(self, snippy):
@@ -207,7 +207,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './foo.bar'])
             assert cause == 'NOK: cannot identify file format for file: ./foo.bar'
-            assert not Database.get_collection().size()
+            assert not Database.get_collection()
             mock_file.assert_not_called()
 
     @pytest.mark.usefixtures('yaml', 'import-gitlog', 'update-regexp-utc', 'isfile_true')
@@ -225,7 +225,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--reference', '-d', '5c2071094dbfaa33', '-f', 'one-reference.yaml'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 1
+            assert len(Database.get_references()) == 1
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -243,8 +243,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '-d', '5c2071094dbfaa33', '-f', 'one-reference.yaml'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 1
-            assert not Database.get_snippets().size()
+            assert len(Database.get_references()) == 1
+            assert not Database.get_snippets()
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -262,8 +262,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--snippet', '-d', '5c2071094dbfaa33', '-f', 'one-reference.text'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 1
-            assert not Database.get_snippets().size()
+            assert len(Database.get_references()) == 1
+            assert not Database.get_snippets()
             mock_file.assert_called_once_with('one-reference.text', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -280,8 +280,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-d', '123456789abcdef0', '-f', 'one-reference.text'])
             assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
-            assert Database.get_references().size() == 1
-            assert not Database.get_snippets().size()
+            assert len(Database.get_references()) == 1
+            assert not Database.get_snippets()
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, {Reference.PYTEST_DIGEST: Reference.DEFAULTS[Reference.PYTEST]})
 
@@ -297,7 +297,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--reference', '-u', '12c', '-f', 'one-reference.yaml'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 1
+            assert len(Database.get_references()) == 1
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
@@ -313,8 +313,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-u', '1234567', '-f', 'one-reference.text'])
             assert cause == 'NOK: cannot find content with content uuid: 1234567'
-            assert Database.get_references().size() == 1
-            assert not Database.get_snippets().size()
+            assert len(Database.get_references()) == 1
+            assert not Database.get_snippets()
             mock_file.assert_not_called()
             Content.verified(mocker, snippy, {Reference.PYTEST_DIGEST: Reference.DEFAULTS[Reference.PYTEST]})
 
@@ -334,7 +334,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 2
+            assert len(Database.get_references()) == 2
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             mock_file.assert_called_once_with(defaults_references, 'r')
             Content.verified(mocker, snippy, content)
@@ -359,7 +359,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
             assert cause in ('NOK: content data already exist with digest: 5c2071094dbfaa33',
                              'NOK: content data already exist with digest: cb9225a81eab8ced')
-            assert Database.get_references().size() == 2
+            assert len(Database.get_references()) == 2
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             mock_file.assert_called_once_with(defaults_references, 'r')
             Content.verified(mocker, snippy, content)
@@ -378,7 +378,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '--template'])
             assert cause == 'NOK: content was not stored because mandatory content field links is empty'
-            assert not Database.get_collection().size()
+            assert not Database.get_collection()
             mock_file.assert_called_once_with('./reference-template.txt', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-gitlog-utc')
@@ -396,7 +396,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 1
+            assert len(Database.get_references()) == 1
 
         content_uuid = {
             Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False),
@@ -407,7 +407,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             yaml.safe_load.return_value = Content.imported_dict(content_uuid)
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == 'NOK: content uuid already exist with digest: 5c2071094dbfaa33'
-            assert Database.get_references().size() == 1
+            assert len(Database.get_references()) == 1
             Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
@@ -425,7 +425,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.mkdn'])
             assert cause == Cause.ALL_OK
-            assert Database.get_references().size() == 2
+            assert len(Database.get_references()) == 2
             mock_file.assert_called_once_with('./all-references.mkdn', 'r')
             Content.verified(mocker, snippy, content)
 

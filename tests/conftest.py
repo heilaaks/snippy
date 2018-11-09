@@ -780,7 +780,7 @@ def devel_file_data(mocker):
         '            snippy = Snippy()',
         '            cause = snippy.run([\'snippy\', \'import\', \'--filter\', \'.*(\\$\\s.*)\'])  ## workflow',
         '            assert cause == Cause.ALL_OK',
-        '            assert Database.get_collection().size() == 2',
+        '            assert len(Database.get_collection()) == 2',
         '            mock_file.assert_called_once_with(\'./snippets.yaml\', \'r\')',
         '            Snippet.test_content(snippy, mock_file, compare_content)',
         '            snippy.release()',
@@ -826,14 +826,14 @@ def _import_content(snippy, mocker, contents, timestamps):
     """Import requested content."""
 
     mocker.patch.object(Config, 'utcnow', side_effect=timestamps)
-    start = Database.get_collection().size() + 1
+    start = len(Database.get_collection()) + 1
     with mock.patch('snippy.content.migrate.os.path.isfile', return_value=True):
         for idx, content in enumerate(contents, start=start):
             mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
             mocker.patch('snippy.content.migrate.open', mocked_open, create=True)
             cause = snippy.run(['snippy', 'import', '-f', 'content.txt'])
             assert cause == Cause.ALL_OK
-            assert Database.get_collection().size() == idx
+            assert len(Database.get_collection()) == idx
 
 def _add_utc_time(mocker, timestamps):
     """Add UTC time mock as side effect."""

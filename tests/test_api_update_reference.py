@@ -85,7 +85,7 @@ class TestApiUpdateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
@@ -144,7 +144,7 @@ class TestApiUpdateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-gitlog', 'caller')
@@ -187,7 +187,7 @@ class TestApiUpdateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-gitlog', 'caller')
@@ -223,7 +223,7 @@ class TestApiUpdateReference(object):
         assert result.headers == result_headers_p2 or result.headers == result_headers_p3
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
 
     @pytest.mark.usefixtures('import-gitlog', 'caller')
     def test_api_update_reference_005(self, server):
@@ -267,7 +267,7 @@ class TestApiUpdateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_403
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
 
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
     def test_api_update_reference_006(self, server, mocker):
@@ -326,7 +326,7 @@ class TestApiUpdateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
@@ -385,7 +385,7 @@ class TestApiUpdateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @classmethod

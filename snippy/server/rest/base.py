@@ -82,7 +82,7 @@ class ApiContentBase(object):  # pylint: disable=too-many-instance-attributes
         api = Api(self._category, Api.SEARCH, request.params)
         Config.load(api)
         self._content.run()
-        if self._content.collection.empty() and Config.search_limit != 0:
+        if not self._content.collection and Config.search_limit != 0:
             Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find resources')
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
@@ -160,9 +160,9 @@ class ApiContentDigestBase(object):
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if self._content.collection.size() != 1:
+        if len(self._content.collection) != 1:
             Cause.push(Cause.HTTP_NOT_FOUND, 'content digest: %s was not unique and matched to: %d resources' %
-                       (digest, self._content.collection.size()))
+                       (digest, len(self._content.collection)))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
             response.body = Generate.resource(self._content.collection, request, digest, pagination=True)
@@ -256,9 +256,9 @@ class ApiContentDigestFieldBase(object):
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if self._content.collection.size() != 1:
+        if len(self._content.collection) != 1:
             Cause.push(Cause.HTTP_NOT_FOUND, 'content digest: %s was not unique and matched to: %d resources' %
-                       (digest, self._content.collection.size()))
+                       (digest, len(self._content.collection)))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
             response.body = Generate.resource(self._content.collection, request, digest, field=field, pagination=False)
@@ -302,9 +302,9 @@ class ApiContentUuidBase(object):
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if self._content.collection.size() != 1:
+        if len(self._content.collection) != 1:
             Cause.push(Cause.HTTP_NOT_FOUND, 'content uuid: %s was not unique and matched to: %d resources' %
-                       (uuid, self._content.collection.size()))
+                       (uuid, len(self._content.collection)))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
             response.body = Generate.resource(self._content.collection, request, uuid, pagination=True)
@@ -348,9 +348,9 @@ class ApiContentUuidFieldBase(object):
         api = Api(self._category, Api.SEARCH, local_params)
         Config.load(api)
         self._content.run()
-        if self._content.collection.size() != 1:
+        if len(self._content.collection) != 1:
             Cause.push(Cause.HTTP_NOT_FOUND, 'content uuid: %s was not unique and matched to: %d resources' %
-                       (uuid, self._content.collection.size()))
+                       (uuid, len(self._content.collection)))
         if Cause.is_ok():
             response.content_type = ApiContentBase.MEDIA_JSON_API
             response.body = Generate.resource(self._content.collection, request, uuid, field=field, pagination=False)

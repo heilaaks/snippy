@@ -37,7 +37,7 @@ class TestUtSqlitedb(object):
         sqlitedb.insert(collection)
         cause.assert_called_once_with('201 Created', 'content created')
         assert collection == Database.get_snippets()
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
 
     def test_sqlitedb_insert_002(self, sqlitedb, cause):
         """Test SqliteDb basic insert.
@@ -53,7 +53,7 @@ class TestUtSqlitedb(object):
         sqlitedb.insert(collection)
         cause.assert_called_once_with('201 Created', 'content created')
         assert collection == Database.get_snippets()
-        assert Database.get_snippets().size() == 4
+        assert len(Database.get_snippets()) == 4
 
     def test_sqlitedb_select_001(self, sqlitedb, cause):
         """Test SqliteDb basic select.
@@ -85,7 +85,7 @@ class TestUtSqlitedb(object):
         results.append(mocker.call('204 No Content', 'content deleted successfully'))
         cause.assert_has_calls(results)
         assert Database.get_snippets() == Snippet.get_collection(snippet=Snippet.REMOVE)
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
 
     def test_sqlitedb_delete_001(self, sqlitedb, cause, mocker):
         """Test SqliteDb basic delete.
@@ -102,4 +102,4 @@ class TestUtSqlitedb(object):
         results.append(mocker.call('204 No Content', 'content deleted successfully'))
         cause.assert_has_calls(results)
         assert Database.get_snippets() == Snippet.get_collection(snippet=Snippet.REMOVE)
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1

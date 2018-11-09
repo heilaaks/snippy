@@ -487,8 +487,6 @@ class TestCliOptions(object):
             '   ! uuid        : 12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! versions    : ',
             '',
-            '   ! collection-meta-digest : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319 (True)',
-            '',
             '2. Remove docker image with force @docker [53908d68425c61dc]',
             '',
             '   $ docker rm --force redis',
@@ -510,15 +508,12 @@ class TestCliOptions(object):
             '   ! uuid        : 16cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! versions    : ',
             '',
-            '   ! collection-meta-digest : 53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5 (True)',
-            '',
             '# collection meta',
             '   ! total : 2'
         )
         print(Database.get_snippets())  # Part of the test.
         out, err = capsys.readouterr()
         out = Helper.remove_ansi(out)
-        print(out)
         assert Const.NEWLINE.join(output) in out
         assert not err
 

@@ -82,7 +82,7 @@ class TestApiUpdateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
@@ -143,7 +143,7 @@ class TestApiUpdateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
@@ -202,7 +202,7 @@ class TestApiUpdateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-forced', 'caller')
@@ -245,7 +245,7 @@ class TestApiUpdateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
 
     @pytest.mark.usefixtures('import-forced', 'caller')
     def test_api_update_snippet_005(self, server):
@@ -280,7 +280,7 @@ class TestApiUpdateSnippet(object):
         assert result.headers == result_headers_p3 or result.headers == result_headers_p2
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
 
     @pytest.mark.usefixtures('import-forced', 'update-netcat-utc')
     def test_api_update_snippet_006(self, server, mocker):
@@ -327,7 +327,7 @@ class TestApiUpdateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content_read)
 
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
@@ -387,7 +387,7 @@ class TestApiUpdateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, server, content)
 
     @classmethod

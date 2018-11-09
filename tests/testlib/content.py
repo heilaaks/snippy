@@ -81,7 +81,7 @@ class Content(object):
         """Compare given content against content stored in database."""
 
         mocker.patch.object(Config, 'utcnow', side_effect=(Content.EXPORT_TIME,)*len(content))
-        assert Database.get_collection().size() == len(content)
+        assert len(Database.get_collection()) == len(content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open()) as mock_file:
             for digest in content:
                 mock_file.reset_mock()

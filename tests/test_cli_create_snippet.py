@@ -46,7 +46,7 @@ class TestCliCreateSnippet(object):
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
     def test_cli_create_snippet_002(self, snippy, mocker):
@@ -65,7 +65,7 @@ class TestCliCreateSnippet(object):
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
     def test_cli_create_snippet_003(self, snippy):
@@ -80,7 +80,7 @@ class TestCliCreateSnippet(object):
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
-        assert not Database.get_snippets().size()
+        assert not Database.get_snippets()
 
     @pytest.mark.usefixtures('edit-snippet-template')
     def test_cli_create_snippet_004(self, snippy):
@@ -91,7 +91,7 @@ class TestCliCreateSnippet(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
-        assert not Database.get_snippets().size()
+        assert not Database.get_snippets()
 
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_snippet_005(self, snippy):
@@ -103,7 +103,7 @@ class TestCliCreateSnippet(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
-        assert not Database.get_snippets().size()
+        assert not Database.get_snippets()
 
     @pytest.mark.usefixtures('default-snippets', 'edit-remove')
     def test_cli_create_snippet_006(self, snippy, mocker):
@@ -124,7 +124,7 @@ class TestCliCreateSnippet(object):
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == 'NOK: content data already exist with digest: 54e41e9b52a02b63'
-        assert Database.get_snippets().size() == 2
+        assert len(Database.get_snippets()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('create-remove-utc')
@@ -158,7 +158,7 @@ class TestCliCreateSnippet(object):
         content = {'a74d83df95d572': content_read}
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content)
 
         output = (
@@ -198,7 +198,7 @@ class TestCliCreateSnippet(object):
         links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert Database.get_snippets().size() == 1
+        assert len(Database.get_snippets()) == 1
         Content.verified(mocker, snippy, content_read)
 
         output = (

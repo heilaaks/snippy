@@ -46,7 +46,7 @@ class TestCliCreateReferece(object):
         links = Const.DELIMITER_LINKS.join(Reference.DEFAULTS[Reference.GITLOG]['links'])
         cause = snippy.run(['snippy', 'create', '--references', '--links', links, '-b', brief, '-g', groups, '-t', tags, '-c', data])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, snippy, content_read)
 
     def test_cli_create_reference_002(self, snippy):
@@ -61,7 +61,7 @@ class TestCliCreateReferece(object):
         tags = Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.GITLOG]['tags'])
         cause = snippy.run(['snippy', 'create', '--references', '--brief', brief, '--groups', groups, '--tags', tags, '-c', data])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
-        assert not Database.get_references().size()
+        assert not Database.get_references()
 
     @pytest.mark.usefixtures('edit-reference-template')
     def test_cli_create_reference_003(self, snippy):
@@ -72,7 +72,7 @@ class TestCliCreateReferece(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
-        assert not Database.get_references().size()
+        assert not Database.get_references()
 
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_reference_004(self, snippy):
@@ -84,7 +84,7 @@ class TestCliCreateReferece(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
-        assert not Database.get_references().size()
+        assert not Database.get_references()
 
     @classmethod
     def teardown_class(cls):

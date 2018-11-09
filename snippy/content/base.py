@@ -86,7 +86,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             digest=Config.operation_digest,
             data=Config.content_data
         )
-        if collection.size() == 1:
+        if len(collection) == 1:
             stored = next(collection.resources())
             digest = stored.digest
             self._logger.debug('updating stored: %s :with digest: %.16s', self._category, digest)
@@ -112,7 +112,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             digest=Config.operation_digest,
             data=Config.content_data
         )
-        if collection.size() == 1:
+        if len(collection) == 1:
             resource = next(collection.resources())
             self._logger.debug('deleting: %s :with digest: %.16s', resource.category, resource.digest)
             self._storage.delete(resource.digest)
@@ -137,7 +137,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
                 digest=Config.operation_digest,
                 data=Config.content_data
             )
-            if collection.empty():
+            if not collection:
                 Config.validate_search_context(collection, 'export')
             else:
                 filename = Config.get_operation_file(collection=collection)
@@ -162,7 +162,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         content_uuid = Config.operation_uuid
         if content_digest or content_uuid:
             collection = self._storage.search(uuid=content_uuid, digest=content_digest)
-            if collection.size() == 1:
+            if len(collection) == 1:
                 resource = next(collection.resources())
                 digest = resource.digest
                 self._logger.debug('importing: %s %s', resource.category,

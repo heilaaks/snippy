@@ -46,13 +46,13 @@ class TestApiDeleteReference(object):
             Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         result_headers = {}
-        assert Database.get_references().size() == 3
+        assert len(Database.get_references()) == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/references/1f9d9496005736ef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert result.status == falcon.HTTP_204
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, server, content_read)
 
     @pytest.mark.usefixtures('default-references', 'import-pytest', 'caller')
@@ -74,14 +74,14 @@ class TestApiDeleteReference(object):
                 'title': 'cannot find content with message digest: beefbeef'
             }]
         }
-        assert Database.get_references().size() == 3
+        assert len(Database.get_references()) == 3
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/references/beefbeef',
             headers={'accept': 'application/json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_references().size() == 3
+        assert len(Database.get_references()) == 3
 
     @pytest.mark.usefixtures('default-references', 'caller')
     def test_api_delete_reference_003(self, server, mocker):
@@ -108,14 +108,14 @@ class TestApiDeleteReference(object):
                 'title': 'cannot delete content without identified resource'
             }]
         }
-        assert Database.get_collection().size() == 2
+        assert len(Database.get_collection()) == 2
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json'})
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, server, content_read)
 
     @classmethod

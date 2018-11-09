@@ -71,7 +71,7 @@ class TestApiCreateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('create-gitlog-utc')
@@ -107,7 +107,7 @@ class TestApiCreateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('create-gitlog-utc', 'create-pytest-utc')
@@ -152,7 +152,7 @@ class TestApiCreateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
@@ -204,7 +204,7 @@ class TestApiCreateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('import-gitlog', 'update-regexp-utc')
@@ -264,7 +264,7 @@ class TestApiCreateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('default-references', 'import-pytest')
@@ -280,14 +280,14 @@ class TestApiCreateReference(object):
             Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         result_headers = {}
-        assert Database.get_references().size() == 3
+        assert len(Database.get_references()) == 3
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references/1f9d9496005736ef',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.headers == result_headers
         assert not result.text
         assert result.status == falcon.HTTP_204
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('create-gitlog-utc', 'caller')
@@ -380,7 +380,7 @@ class TestApiCreateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_500
-        assert Database.get_references().size() == 0
+        assert not Database.get_references()
 
     @pytest.mark.usefixtures('create-regexp-utc')
     def test_api_create_reference_009(self, server, mocker):
@@ -435,7 +435,7 @@ class TestApiCreateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
 
     @pytest.mark.usefixtures('create-regexp-utc')
@@ -499,7 +499,7 @@ class TestApiCreateReference(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, server, content)
     @classmethod
     def teardown_class(cls):

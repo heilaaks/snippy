@@ -42,7 +42,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '-d', 'cb9225a81eab8ced'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('import-remove')
@@ -56,7 +56,7 @@ class TestCliDeleteReference(object):
 
         cause = snippy.run(['snippy', 'delete', '-d', ''])
         assert cause == Cause.ALL_OK
-        assert not Database.get_references().size()
+        assert not Database.get_references()
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_delete_reference_003(self, snippy, mocker):
@@ -71,7 +71,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -86,7 +86,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '-u', '16cd5827'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -102,7 +102,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '-u', ''])
         assert cause == 'NOK: cannot use empty content uuid for: delete :operation'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -118,7 +118,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '-u', '1234567'])
         assert cause == 'NOK: cannot find content with content uuid: 1234567'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -136,7 +136,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '-u', '1'])
         assert cause == 'NOK: content uuid: 1 :matched more than once: 2 :preventing: delete :operation'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -151,7 +151,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '--content', 'https://chris.beams.io/posts/git-commit/'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -168,7 +168,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '--content', 'not found content'])
         assert cause == 'NOK: cannot find content with content data: not found content'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.skip(reason='not supported yet')
@@ -184,7 +184,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '--links', 'https://chris.beams.io/posts/git-commit/'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -201,7 +201,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '--content', ''])
         assert cause == 'NOK: cannot use empty content data for: delete :operation'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -217,7 +217,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '--sall', 'chris', '--references'])
         assert cause == Cause.ALL_OK
-        assert Database.get_references().size() == 1
+        assert len(Database.get_references()) == 1
         Content.verified(mocker, snippy, content_read)
 
     @pytest.mark.usefixtures('default-references')
@@ -235,7 +235,7 @@ class TestCliDeleteReference(object):
         }
         cause = snippy.run(['snippy', 'delete', '--sall', 'chris'])
         assert cause == 'NOK: cannot find content with given search criteria'
-        assert Database.get_references().size() == 2
+        assert len(Database.get_references()) == 2
         Content.verified(mocker, snippy, content_read)
 
     @classmethod

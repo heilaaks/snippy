@@ -366,7 +366,7 @@ class Config(object):
 
         filename = cls.operation_filename
         if cls.is_operation_export and collection and not cls.content_filename:
-            if collection.size() == 1 and next(collection.resources()).filename:
+            if len(collection) == 1 and next(collection.resources()).filename:
                 filename = next(collection.resources()).filename
             else:
                 categories = collection.category_list()
@@ -477,47 +477,47 @@ class Config(object):
         # 3) content data and 4) search keywords. Search keywords are already
         # validated and invalid keywords are interpreted as 'list all' which
         # is always correct at this point.
-        cls._logger.debug('validating search context with %d results', collection.size())
+        cls._logger.debug('validating search context with %d results', len(collection))
         if cls._is_content_digest():
             if cls.operation_digest:
-                if collection.empty():
+                if not collection:
                     Cause.push(Cause.HTTP_NOT_FOUND,
                                'cannot find content with message digest: %s' % cls.operation_digest)
-                elif collection.size() > 1:
+                elif len(collection) > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
                                'content digest: %.16s :matched more than once: %d :preventing: %s :operation' %
-                               (cls.operation_digest, collection.size(), operation))
+                               (cls.operation_digest, len(collection), operation))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty message digest for: %s :operation' % operation)
         elif cls._is_content_uuid():
             if cls.operation_uuid:
-                if collection.empty():
+                if not collection:
                     Cause.push(Cause.HTTP_NOT_FOUND,
                                'cannot find content with content uuid: %s' % cls.operation_uuid)
-                elif collection.size() > 1:
+                elif len(collection) > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
                                'content uuid: %.16s :matched more than once: %d :preventing: %s :operation' %
-                               (cls.operation_uuid, collection.size(), operation))
+                               (cls.operation_uuid, len(collection), operation))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content uuid for: %s :operation' % operation)
         elif cls.content_data:
             if any(cls.content_data):
                 data = Const.EMPTY.join(cls.content_data)
                 data = data[:30] + (data[30:] and '...')
-                if collection.empty():
+                if not collection:
                     Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with content data: %s' % data)
-                elif collection.size() > 1:
+                elif len(collection) > 1:
                     Cause.push(Cause.HTTP_CONFLICT,
                                'content data: %s :matched more than once: %d :preventing: %s :operation' %
-                               (data, collection.size(), operation))
+                               (data, len(collection), operation))
             else:
                 Cause.push(Cause.HTTP_BAD_REQUEST, 'cannot use empty content data for: %s :operation' % operation)
         elif cls._is_search_keywords():
-            if collection.empty():
+            if not collection:
                 Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content with given search criteria')
-            elif collection.size() > 1:
+            elif len(collection) > 1:
                 Cause.push(Cause.HTTP_CONFLICT,
-                           'search keywords matched more than once: %d :preventing: %s :operation' % (collection.size(), operation))
+                           'search keywords matched more than once: %d :preventing: %s :operation' % (len(collection), operation))
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'no message digest, content data or search keywords were provided')
 

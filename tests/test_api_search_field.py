@@ -155,8 +155,8 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_groups_002(self, server):
         """Get specific content based on group field.
 
-        Call GET /v1/groups/docker to get content from the docker and python
-        groups with search all keywords and limit applied.
+        Call GET /v1/groups/docker,python to get content from the docker and
+        python groups with search all keywords and content limit applied.
         """
 
         result_headers = {
@@ -427,7 +427,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_tags_002(self, server):
         """Get specific content based on tags field.
 
-        Call GET /v1/tags/moby,python to get all content with a volume or
+        Call GET /v1/tags/volume,python to get all content with a volume or
         python tag.
         """
 

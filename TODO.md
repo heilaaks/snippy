@@ -1,10 +1,5 @@
 ## WORKING
-   - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
-   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
-   - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
-   - [ ] Add own package from text highlighting. pytest plugin https://docs.pytest.org/en/latest/writing_plugins.html#writing-plugins
-   - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
-   - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
+   - [ ] Refactor tests to remove the need for Content.compared. The specific failure in content is set in test case. The default contents are correctly set.
    - [ ] Change the test with dump_text (or vise versa) to Content.compare_text like with compare_mkdn().
    - [ ] Refactor tests with Content.verified, Content.ordered, Content.compare_dump|Content.****_dump. Two cases: import (check after import with YAML) and export (compare in target format.
    - [ ] Refactor tests 1. Content.compare_mkdn, Content.compare_text, Content.compare_yaml, Content.compare_json  # compare exported data
@@ -21,7 +16,13 @@
    - [ ] Fix new compare when the mock file is shorter than references.
    - [ ] Fix new compare to highlight filename mismatch. This incorrect highlights the last line.
    - [ ] Add tests for new compare.
-   - [ ] Fix (optimize) digst calculation for import. Print the digest string from digest compute and see that it computes digest 4 times for same content.
+   - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
+   - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
+   - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
+   - [ ] Add own package from text highlighting. pytest plugin https://docs.pytest.org/en/latest/writing_plugins.html#writing-plugins
+   - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
+   - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
+   - [ ] Fix (optimize) digest calculation for import. Print the digest string from digest compute and see that it computes digest 4 times for same content.
 
 ## THINKING
    - [ ] Add code content.

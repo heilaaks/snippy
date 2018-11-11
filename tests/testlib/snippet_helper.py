@@ -36,6 +36,10 @@ class SnippetHelper(object):
     UMOUNT = 4
     INTERP = 5
 
+    # Default content must be always set so that it reflects content stored
+    # into a database. For example the tags must be sorted correct here. This
+    # forces creating special error cases in each test case and enforces more
+    # controlled failure testing.
     REMOVE_DIGEST = '54e41e9b52a02b63'
     FORCED_DIGEST = '53908d68425c61dc'
     EXITED_DIGEST = '49d6916b6711f13d'

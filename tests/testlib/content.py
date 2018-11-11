@@ -77,6 +77,22 @@ class Content(object):
         Database.store(content)
 
     @staticmethod
+    def deepcopy(content):
+        """Return a deepcopy from given content.
+
+        This allows user to modify content without changing the original
+        content.
+
+        Args:
+            content (dict): Single content that is copied.
+
+        Returns:
+            dict: Deepcopy of the content.
+        """
+
+        return copy.deepcopy(content)
+
+    @staticmethod
     def verified(mocker, snippy, content):
         """Compare given content against content stored in database."""
 

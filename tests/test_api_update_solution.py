@@ -58,7 +58,7 @@ class TestApiUpdateSolution(object):
                 }
             }
         }
-        content_read = Content.compared(Solution.DEFAULTS[Solution.NGINX])
+        content_read = Content.deepcopy(Solution.DEFAULTS[Solution.NGINX])
         content = {'c4933bb898c40ca': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',

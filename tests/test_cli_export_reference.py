@@ -408,13 +408,13 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content1 = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Snippet.DEFAULTS[Snippet.REMOVE]),
+                Snippet.DEFAULTS[Snippet.REMOVE],
             ]
         }
         content2 = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Solution.DEFAULTS[Solution.BEATS])
+                Solution.DEFAULTS[Solution.BEATS]
             ]
         }
         content3 = {
@@ -469,7 +469,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             'meta': Content.get_cli_meta(),
             'data': [
                 Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-                Content.compared(Snippet.DEFAULTS[Snippet.REMOVE])
+                Snippet.DEFAULTS[Snippet.REMOVE]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -513,7 +513,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             'meta': Content.get_cli_meta(),
             'data': [
                 Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-                Content.compared(Snippet.DEFAULTS[Snippet.REMOVE])
+                Snippet.DEFAULTS[Snippet.REMOVE]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:

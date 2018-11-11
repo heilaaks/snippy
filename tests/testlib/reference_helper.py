@@ -33,6 +33,10 @@ class ReferenceHelper(object):
     REGEXP = 1
     PYTEST = 2
 
+    # Default content must be always set so that it reflects content stored
+    # into a database. For example the tags must be sorted correct here. This
+    # forces creating special error cases in each test case and enforces more
+    # controlled failure testing.
     GITLOG_DIGEST = '5c2071094dbfaa33'
     REGEXP_DIGEST = 'cb9225a81eab8ced'
     PYTEST_DIGEST = '1f9d9496005736ef'

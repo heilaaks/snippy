@@ -33,6 +33,10 @@ class SolutionHelper(object):
     NGINX = 1
     KAFKA = 2
 
+    # Default content must be always set so that it reflects content stored
+    # into a database. For example the tags must be sorted correct here. This
+    # forces creating special error cases in each test case and enforces more
+    # controlled failure testing.
     BEATS_DIGEST = 'db712a82662d6932'
     NGINX_DIGEST = '7c226ee33a088381'
     KAFKA_DIGEST = 'fffeaf31e98e68a3'

@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix and remove extra non ASCII characters from test_parser_snippet_004
    - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?
    - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.

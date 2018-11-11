@@ -556,6 +556,31 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             assert len(Database.get_snippets()) == 2
             Content.compare_mkdn(mock_file, './snippets.mkdn', content)
 
+    @pytest.mark.usefixtures('export-time')
+    def test_cli_export_snippet_028(self, snippy):
+        """Export all snippets.
+
+        Export snippet with two line content description. There must be two
+        spaces after the newline in order to force a newline in Mardown format
+        for the long description.
+        """
+
+        Content.store({
+            'data': [
+                'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding the tar.'],
+            'brief': 'Manipulate compressed tar files',
+            'description': 'Manipulate compressed tar files and define very long descrption for the content to extend to two lines.',
+            'groups': ['linux'],
+            'tags': ['howto', 'linux', 'tar', 'untar'],
+            'category': Const.SNIPPET,
+        })
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            cause = snippy.run(['snippy', 'export', '-f', './snippets.md'])
+            assert cause == Cause.ALL_OK
+            assert len(Database.get_snippets()) == 1
+            call = mock_file.return_value.__enter__.return_value.write.mock_calls[0][1][0]
+            assert 'Manipulate compressed tar files and define very long descrption for the content to\n  extend to two lines.\n\n' in call
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

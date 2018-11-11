@@ -582,12 +582,17 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return text
 
     def dump_mkdn(self, templates):
-        """Convert resource to Markdown."""
+        """Convert resource to Markdown.
+
+        Long lines are wrapped so that there are two spaces at the end of
+        newline. This same approach with the trailing spaces is used with
+        the metadata in the Markdown template.
+        """
 
         mkdn = templates['mkdn'][self.category]
         mkdn = mkdn.replace('<data>', self._dump_mkdn_data())
         mkdn = mkdn.replace('<brief>', self.brief)
-        mkdn = mkdn.replace('<description>', textwrap.fill(self.description, 88))
+        mkdn = mkdn.replace('<description>', textwrap.fill(self.description, 88).replace('\n', '\n  '))
         mkdn = mkdn.replace('<groups>', Const.DELIMITER_GROUPS.join(self.groups))
         mkdn = mkdn.replace('<tags>', Const.DELIMITER_TAGS.join(self.tags))
         mkdn = mkdn.replace('<links>', self._dump_mkdn_links())

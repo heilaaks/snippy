@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Fix export to Markdown and the description with multiple lines. All but last line must have 2 spaces at the end to wrap the lines with github? This works now with online MD but not with github?
    - [ ] Fix what is from pipenv: Ignoring typed-ast: markers 'python_version < "3.7" and implementation_name == "cpython"' don't match your environment?
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
@@ -59,6 +58,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok?
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix content import from other than text template and API to trimp content same way? for example yaml? The stored content should load as is likely...

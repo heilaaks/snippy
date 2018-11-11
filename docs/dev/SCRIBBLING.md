@@ -2484,276 +2484,43 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 "links":{"self":"URL?limit=5&offset=10","first":"URL?limit=5&offset=0","prev":"URL?limit=5&offset=5","next":"URL?limit=5&offset=15","last":"URL?limit=5&offset=30",}
 
 ====
-# Remove all exited containers and dangling images @docker
+# Manipulate compressed tar files @linux
 
-> Remove all exited containers and dangling images. The command examples
-first remove all exited containers and the all dangling images.
+> This is a very long testing description that is supposed to extend to several lines in
+order to test how this goes in Markdown.
 
-> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`
-\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
+> 
 
-- Remove all exited containers
+- Compress folder excluding the tar.
 
-    `$ docker rm $(docker ps --all -q -f status=exited)`
+    `$ tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./`
 
-- Remove all dangling images
+- List content of compressed tar.
 
-    `$ docker images -q --filter dangling=true | xargs docker rmi`
+    `$ tar tvf mytar.tar.gz`
 
-# Meta
+- Cat file in compressed tar.
 
-> category : snippet
-created  : 2017-10-12T11:52:11.000001+0000
-updated  : 2017-10-12T11:52:11.000001+0000
-tags     : cleanup, container, docker, docker-ce, moby
-filename :
-name     :
-source   :
+    `$ tar xfO mytar.tar.gz manifest.json`
+
+- Extract and exclude one file.
+
+    `$ tar -zxvf mytar.tar.gz --exclude "./mytar.tar.gz"`
+
+- Extract only one file.
+
+    `$ tar -xf mytar.tar.gz manifest.json`
+
+## Meta
+
+> category : snippet  
+created  : 2018-05-07T11:13:17.000001+0000  
+digest   : b890ba7be5c03b2008aa2160d34d14f651f22eb6f319df2ac06837c01bcf68e1  
+filename :   
+name     :   
+source   :   
+tags     : howto,linux,tar,untar  
+updated  : 2018-11-11T10:51:33.675848+0000  
+uuid     : f21c8ed8-8830-11e8-a114-2c4d54508088  
 versions :
-uuid     : f21c6318-8830-11e8-a114-2c4d54508088
-digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
 =====
-
-# Remove all docker containers with volumes @docker
-
-> An email client and Usenet newsgroup program with a pico/nano-inspired interface.
-Supports most modern email services through IMAP.
-
-> \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`
-\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
-
-# Meta
-
-> category : snippet
-created  : 2017-10-12T11:52:11.000001+0000
-updated  : 2017-10-12T11:52:11.000001+0000
-tags     : cleanup, container, docker, docker-ce, moby
-filename :
-name     :
-source   :
-versions :
-uuid     : f21c6318-8830-11e8-a114-2c4d54508088
-digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
-
-===
-
-# Testing docker log drivers @docker
-
-> An email client and Usenet newsgroup program with a pico/nano-inspired interface.
-Supports most modern email services through IMAP.
-
-> \[1\]: `https://docs.docker.com/engine/reference/commandline/rm/`
-\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
-
-
-    ################################################################################
-    ## BRIEF  : Testing docker log drivers
-    ##
-    ## GROUPS : docker
-    ## TAGS   : cleanup, container, docker, docker-ce, moby
-    ## FILE   : docker-example.txt
-    ################################################################################
-
-    ################################################################################
-    ## description
-    ################################################################################
-
-    > https://docs.docker.com/engine/reference/commandline/rm/
-
-# Meta
-
-> category : snippet
-created  : 2017-10-12T11:52:11.000001+0000
-updated  : 2017-10-12T11:52:11.000001+0000
-tags     : cleanup, container, docker, docker-ce, moby
-filename :
-name     :
-source   :
-versions :
-uuid     : f21c6318-8830-11e8-a114-2c4d54508088
-digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
-
-===
-# Remove all exited containers and dangling images @docker
-
-> Remove all exited containers and dangling images. The command examples
-first remove all exited containers and the all dangling images.
-
-> \[1\]: `https://docs.docker.com/engine/reference/commandline/images/`
-\[2\]: `https://docs.docker.com/engine/reference/commandline/rm/`
-
-- Remove all exited containers
-
-    `$ docker rm $(docker ps --all -q -f status=exited)`
-
-- Remove all dangling images
-
-    `$ docker images -q --filter dangling=true | xargs docker rmi`
-
-## Meta
-
-> category : snipet
-created  : 2017-10-12T11:52:11.000001+0000
-digest   : 54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319
-filename :
-name     :
-source   :
-tags     : cleanup, container, docker, docker-ce, moby
-updated  : 2017-10-12T11:52:11.000001+0000
-uuid     : f21c6318-8830-11e8-a114-2c4d54508088
-versions :
-
-----
-
-# Solve docker networking \'has active endpoints\' problem @docker
-
-> Fix docker problem that results \'has active endpoints\' error log.
-
-> \[1\]: `https://github.com/moby/moby/issues/23302`
-
-`$ docker network ls`
-`$ docker network inspect y0fdm2xoyuca`
-`$ docker network disconnect -f y0fdm2xoyuca devstack_logstash.1.7iqgrfd2xwcidj87zbkmauw4l`
-`$ docker network rm y0fdm2xoyuca`
-
-## Meta
-
-> category : snippet
-created  : 2017-10-12T11:52:11.000001+0000
-digest   : 6dc4b06991780012f02f89d2490e6a51b5ef83723a23da2b0aa697355e4f876c
-filename :
-name     :
-source   :
-tags     : container, docker, docker-ce, moby, network, remove, solution, swarm
-updated  : 2017-10-12T11:52:11.000001+0000
-uuid     : f21c752e-8830-11e8-a114-2c4d54508088
-versions :
-
-
-\x1b[96;1m<index>. \x1b[1;92m<brief>\x1b[0m @<groups> \x1b[0;2m[<digest>]\x1b[0m
-{indent}\x1b[91m$\x1b[0m <data>
-
-{indent}\x1b[91m#\x1b[0m \x1b[2m<tags>\x1b[0m
-{indent}\x1b[91m>\x1b[0m \x1b[2m<links>\x1b[0m
-<debug>
-{indent}\x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m    : <category>
-{indent}\x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m     : <created>
-{indent}\x1b[91m!\x1b[0m \x1b[2mdescription\x1b[0m : <description>
-{indent}\x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m      : <digest>
-{indent}\x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m    : <filename>
-{indent}\x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m         : <key>
-{indent}\x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m    : <metadata>
-{indent}\x1b[91m!\x1b[0m \x1b[2mname\x1b[0m        : <name>
-{indent}\x1b[91m!\x1b[0m \x1b[2msource\x1b[0m      : <source>
-{indent}\x1b[91m!\x1b[0m \x1b[2mtags\x1b[0m        : <tags>
-{indent}\x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m     : <updated>
-{indent}\x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m        : <uuid>
-{indent}\x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m    : <versions>
-<debug>
-
-\x1b[96;1m<index>. \x1b[1;92m<brief>\x1b[0m @<groups> \x1b[0;2m[<digest>]\x1b[0m
-
-{indent}\x1b[91m#\x1b[0m \x1b[2m<tags>\x1b[0m
-{indent}\x1b[91m>\x1b[0m \x1b[2m<links>\x1b[0m
-
-{indent}\x1b[91m:\x1b[0m <data>
-<debug>
-{indent}\x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m    : <category>
-{indent}\x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m     : <created>
-{indent}\x1b[91m!\x1b[0m \x1b[2mdescription\x1b[0m : <description>
-{indent}\x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m      : <digest>
-{indent}\x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m    : <filename>
-{indent}\x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m         : <key>
-{indent}\x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m    : <metadata>
-{indent}\x1b[91m!\x1b[0m \x1b[2mname\x1b[0m        : <name>
-{indent}\x1b[91m!\x1b[0m \x1b[2msource\x1b[0m      : <source>
-{indent}\x1b[91m!\x1b[0m \x1b[2mtags\x1b[0m        : <tags>
-{indent}\x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m     : <updated>
-{indent}\x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m        : <uuid>
-{indent}\x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m    : <versions>
-<debug>
-
-\x1b[96;1m<index>. \x1b[1;92m<brief>\x1b[0m @<groups> \x1b[0;2m[<digest>]\x1b[0m
-
-{indent}\x1b[91m#\x1b[0m \x1b[2m<tags>\x1b[0m
-{indent}\x1b[91m>\x1b[0m \x1b[2m<links>\x1b[0m
-
-<debug>
-{indent}\x1b[91m!\x1b[0m \x1b[2mcategory\x1b[0m    : <category>
-{indent}\x1b[91m!\x1b[0m \x1b[2mcreated\x1b[0m     : <created>
-{indent}\x1b[91m!\x1b[0m \x1b[2mdescription\x1b[0m : <description>
-{indent}\x1b[91m!\x1b[0m \x1b[2mdigest\x1b[0m      : <digest>
-{indent}\x1b[91m!\x1b[0m \x1b[2mfilename\x1b[0m    : <filename>
-{indent}\x1b[91m!\x1b[0m \x1b[2mkey\x1b[0m         : <key>
-{indent}\x1b[91m!\x1b[0m \x1b[2mmetadata\x1b[0m    : <metadata>
-{indent}\x1b[91m!\x1b[0m \x1b[2mname\x1b[0m        : <name>
-{indent}\x1b[91m!\x1b[0m \x1b[2msource\x1b[0m      : <source>
-{indent}\x1b[91m!\x1b[0m \x1b[2mtags\x1b[0m        : <tags>
-{indent}\x1b[91m!\x1b[0m \x1b[2mupdated\x1b[0m     : <updated>
-{indent}\x1b[91m!\x1b[0m \x1b[2muuid\x1b[0m        : <uuid>
-{indent}\x1b[91m!\x1b[0m \x1b[2mversions\x1b[0m    : <versions>
-<debug>
-
-==
-
-[\[\d\]\\\s]\shttps.*\n\s*\n(?=[`]{3}|[#]{1}\sSolution)(?:(:?[`]{3}))?(?P<data>(?:[#]{1}\sSolution)?.*?)(:?[`]{3}|[#]{1}\sMeta)
-
-==
-
-# Testing docker log drivers @docker
-
->
-
-> [1] https://github.com/MickayG/moby-kafka-logdriver
-[2] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ
-[3] https://github.com/garo/logs2kafka
-
-# Solution
-
-testing
-
-## Solution2
-
-testing
-
-# Meta
-
-> category : solution
-created  : 2017-10-20T06:16:27.000001+0000
-digest   : c9917866761c013ac8504f551c81e4be7ce7bc9ac5c100d713541e072b1de3cd
-filename : kubernetes-docker-log-driver-kafka.txt
-name     :
-source   :
-tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin
-updated  : 2017-10-20T06:16:27.000001+0000
-uuid     : 23cd5827-b6ef-4067-b5ac-3ceac07dde9f
-versions :
-
-==
-
-# Testing docker log drivers @docker
-
->
-
-> [1] https://github.com/MickayG/moby-kafka-logdriver
-[2] https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ
-[3] https://github.com/garo/logs2kafka
-
-```
-#######################
-## BRIEF  : Testing docker l
-######################
-```
-
-# Meta
-
-> category : solution
-created  : 2017-10-20T06:16:27.000001+0000
-digest   : c9917866761c013ac8504f551c81e4be7ce7bc9ac5c100d713541e072b1de3cd
-filename : kubernetes-docker-log-driver-kafka.txt
-name     :
-source   :
-tags     : docker,driver,kafka,kubernetes,logging,logs2kafka,moby,plugin
-updated  : 2017-10-20T06:16:27.000001+0000
-uuid     : 23cd5827-b6ef-4067-b5ac-3ceac07dde9f
-versions :

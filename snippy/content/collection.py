@@ -46,7 +46,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             text = text + resource.dump_term(index=i, use_ansi=True, debug_logs=True)
 
         text = text + '\x1b[96;1m# \x1b[1;92mcollection meta\x1b[0m\n'
-        text = text + '   \x1b[91m!\x1b[0m \x1b[2mtotal\x1b[0m : %d\n' % self.data['meta']['total']
+        text = text + '   \x1b[91m!\x1b[0m \x1b[2mtotal\x1b[0m : %d\n' % self._data['meta']['total']
 
         return text
 
@@ -76,7 +76,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def __len__(self):
         """Return length of the collection."""
 
-        return len(self.data['data'])
+        return len(self._data['data'])
 
     def __iter__(self):
         """Return iterable resources from object."""
@@ -86,12 +86,12 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def __getitem__(self, digest):
         """Return item from object based on message digest."""
 
-        return self.data['data'][digest]['data']
+        return self._data['data'][digest]['data']
 
     def keys(self):
         """Return list of digests in collection."""
 
-        return list(self.data['data'].keys())
+        return list(self._data['data'].keys())
 
     def values(self):
         """Return list of resources in collection."""
@@ -138,12 +138,12 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         elif isinstance(source, Resource):
             if source.category in Const.CATEGORIES:
                 if source.digest not in self.keys():
-                    self.data['meta']['total'] = self.data['meta']['total'] + 1
+                    self._data['meta']['total'] = self._data['meta']['total'] + 1
                 source.seal()
-                self.data['data'][source.digest] = {}
-                self.data['data'][source.digest]['data'] = source
+                self._data['data'][source.digest] = {}
+                self._data['data'][source.digest]['data'] = source
             else:
-                self._logger.debug('resource not merged to collection due to unknown category: {}'.format(Logger.remove_ansi(str(source))))
+                self._logger.debug('migrate to collection failed due to unknown category: {}'.format(Logger.remove_ansi(str(source))))
 
     def merge(self, source):
         """Merge a resource to collection.
@@ -169,7 +169,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
             return digest
 
-        if source.digest in self:
+        if source.digest in self.keys():
             digest = self[source.digest].merge(source)
         else:
             self.migrate(source)
@@ -269,28 +269,16 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         self._print_stdout(text)
 
     @property
-    def data(self):
-        """Get collection data."""
-
-        return self._data
-
-    @data.setter
-    def data(self, value):
-        """Collection data contains resources with metadata."""
-
-        self._data = value
-
-    @property
     def total(self):
         """Get total amount of resources without filters."""
 
-        return self.data['meta']['total']
+        return self._data['meta']['total']
 
     @total.setter
     def total(self, value):
         """Total amount of resources without filters."""
 
-        self.data['meta']['total'] = value
+        self._data['meta']['total'] = value
 
     def _init(self):
         """Wrap content list with metadata."""

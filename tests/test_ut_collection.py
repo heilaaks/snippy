@@ -171,6 +171,19 @@ class TestUtCollection(object):
         else:
             assert 1
 
+        # Equality of two collection with different length.
+        collection2 = Collection()
+        if collection == collection2:
+            assert 0
+        else:
+            assert 1
+
+        # Equality collection and random type.
+        if collection == 1:
+            assert 0
+        else:
+            assert 1
+
         # Iterate resources in collection.
         i = 0
         for resource in collection:
@@ -227,3 +240,45 @@ class TestUtCollection(object):
 
         with pytest.raises(KeyError):
             resource = collection[0]
+
+    @pytest.mark.usefixtures('uuid')
+    def test_collection_operations_003(self):
+        """Test merging resources and collections.
+
+        Verify that merging collection or resource to collection works.
+        """
+
+        collection1 = Collection()
+        collection2 = Collection()
+        collection1.load_dict({
+            'data': [{
+                'data': [
+                    'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
+                    'tar xfO mytar.tar.gz manifest.json# Cat file in compressed tar.'],
+                'brief': 'Manipulate compressed tar files',
+                'groups': ['linux'],
+                'tags': ['howto', 'linux', 'tar', 'untar'],
+                'category': Const.SNIPPET
+            }]
+        })
+
+        # Try to merge two collections that is not supported.
+        assert len(collection1) == 1
+        assert not collection2
+        digest = collection2.merge(collection1)
+        assert not collection2
+        assert digest is None
+
+        # Merge resource to collection.
+        digest = collection2.merge(collection1['e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240'])
+        assert len(collection2) == 1
+        assert digest == 'e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240'
+
+        # Merge already existing resource to collection.
+        digest = collection2.merge(collection1['e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240'])
+        assert len(collection2) == 1
+        assert digest == 'e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240'
+
+        # Try to migrate random type to collection.
+        collection2.migrate('string')
+        assert len(collection2) == 1

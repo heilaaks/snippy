@@ -32,8 +32,8 @@ class TestUtCollection(object):
     def test_collection_operations_001(self, capsys):
         """Test collection data class operations.
 
-        Verify that collection class implements the data class properties
-        correctly. In this case there are no resources in collection.
+        Verify that collection class implements data class methods correctly.
+        In this case there are no resources in collection.
         """
 
         collection = Collection()
@@ -53,7 +53,7 @@ class TestUtCollection(object):
         else:
             assert 0
 
-        # Equality of two emtpy collections.
+        # Equality of two empty collections.
         collection2 = Collection()
         if collection == collection2:
             assert 1
@@ -102,8 +102,8 @@ class TestUtCollection(object):
     def test_collection_operations_002(self, capsys):  # pylint: disable=too-many-branches
         """Test collection data class operations.
 
-        Verify that collection class implements the data class properties
-        correctly. In this case there is only one resource in collection.
+        Verify that collection class implements data class methods correctly.
+        In this case there is only one resource in collection.
         """
 
         collection = Collection()

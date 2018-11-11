@@ -35,7 +35,6 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     """Store list of contents in collection."""
 
     def __init__(self):
-        self._i = 0
         self._logger = Logger.get_logger(__name__)
         self._data = self._init()
 
@@ -82,7 +81,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def __iter__(self):
         """Return iterable resources from object."""
 
-        return iter([self[digest] for digest in self.data['data'].keys()])
+        return iter([self[digest] for digest in self.keys()])
 
     def __getitem__(self, digest):
         """Return item from object based on message digest."""
@@ -97,7 +96,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
     def values(self):
         """Return list of resources in collection."""
 
-        return list([self[digest] for digest in self.data['data'].keys()])
+        return list([self[digest] for digest in self.keys()])
 
     def resources(self):
         """Return generator for resources in collection."""
@@ -138,7 +137,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
                 self.migrate(resource)
         elif isinstance(source, Resource):
             if source.category in Const.CATEGORIES:
-                if source.digest not in self.data['data']:
+                if source.digest not in self.keys():
                     self.data['meta']['total'] = self.data['meta']['total'] + 1
                 source.seal()
                 self.data['data'][source.digest] = {}

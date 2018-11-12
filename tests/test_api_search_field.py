@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_field: Test GET /snippy/api/{field} API."""
+"""test_api_search_field: Test GET /snippy/api/app/v1/{field} API."""
 
 from falcon import testing
 import falcon
@@ -57,7 +57,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+                'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }, {
                 'type': 'snippet',
                 'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
@@ -72,7 +72,6 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/docs,python',
             headers={'accept': 'application/vnd.api+json'})
-
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
@@ -99,7 +98,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+                'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }]
 
         }
@@ -173,7 +172,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+                'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }, {
                 'type': 'solution',
                 'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
@@ -445,7 +444,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+                'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -486,7 +485,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_digest_001(self, server):
         """Get specific content based on digest.
 
-        Call GET /v1/digest/1f9d949600573 to get specific content based on digest.
+        Call GET /v1/digest/<digest> to get specific content based on digest.
         """
 
         result_headers = {
@@ -503,7 +502,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'reference',
                 'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+                'attributes': Reference.DEFAULTS[Reference.PYTEST]
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/digest/1f9d9496005736ef'
@@ -520,7 +519,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_digest_002(self, server):
         """Try to get specific content based on digest.
 
-        Try to call GET /v1/digest/01010101 with a digest that is not found.
+        Try to call GET /v1/digest/<digest> with a digest that is not found.
         """
 
         result_headers = {
@@ -547,8 +546,8 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_uuid_001(self, server):
         """Get specific content based on uuid.
 
-        Call GET /v1/uuid/1f9d949600573 to get specific content based on uuid.
-        The self link must be with the full length UUID because it is assumed
+        Call GET /v1/uuid/<uuid> to get specific content based on uuid. The
+        self link must be with the full length UUID because it is assumed
         that since user requested with UUID, he/she wants to operate content
         with selected identity.
         """
@@ -567,7 +566,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'reference',
                 'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+                'attributes': Reference.DEFAULTS[Reference.PYTEST]
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f'
@@ -584,7 +583,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_uuid_002(self, server):
         """Get specific content based on uuid.
 
-        Try to call GET /v1/uuid/1 that matches multiple contents.
+        Try to call GET /v1/uuid/<uuid> that matches multiple contents.
         """
 
         result_headers = {
@@ -611,7 +610,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_uuid_003(self, server):
         """Try to get specific content based on uuid.
 
-        Try to call GET /v1/uuid/01010101 with a uuid that is not found.
+        Try to call GET /v1/uuid/<uuid> with a uuid that is not found.
         """
 
         result_headers = {
@@ -638,7 +637,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_uuid_004(self, server):
         """Get specific content field based on uuid.
 
-        Call GET /v1/uuid/1f9d949600573/brief to get specific content field.
+        Call GET /v1/uuid/<uuid>/brief to get specific content field.
         """
 
         result_headers = {
@@ -666,8 +665,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_uuid_005(self, server):
         """Get specific content field based on uuid.
 
-        Call GET /v1/uuid/1f9d949600573/brief,tags to get specific content
-        fields.
+        Call GET /v1/uuid/<uuid>/brief,tags to get specific content fields.
         """
 
         result_headers = {
@@ -695,8 +693,8 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_uuid_006(self, server):
         """Get specific content field based on uuid.
 
-        Try to call GET /v1/uuid/12345678-b6ef-4067-b5ac-3ceac07dde9f/brief
-        to get specific content field with unknown uuid.
+        Try to call GET /v1/uuid/<uuid>/brief to get specific content field
+        with unknown uuid.
         """
 
         result_headers = {
@@ -723,11 +721,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
     def test_api_search_uuid_007(self, server):
         """Get specific content field based on uuid.
 
-        Try to call GET /v1/uuid/1/brief to get specific content field. In
-        this case the uuid 1 matches to multiple contents and specific field
-        cannot be returned. The 404 Not Found is used to simplify the error
-        handling instead of using multiple causes. The error title describes
-        the error in more detail.
+        Try to call GET /v1/uuid/<uuid>/brief to get specific content field.
+        In this case the uuid 1 matches to multiple contents and specific
+        field cannot be returned. The 404 Not Found is used to simplify the
+        error handling instead of using multiple causes. The error title
+        describes the error in more detail.
         """
 
         result_headers = {

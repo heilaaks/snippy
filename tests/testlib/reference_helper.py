@@ -74,11 +74,11 @@ class ReferenceHelper(object):
         'updated': '2018-05-21T13:11:13.678729+0000',
         'digest': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832'
     }, {
-        'data': ('', ),
+        'data': (),
         'brief': 'Python pytest framework',
         'description': '',
         'groups': ('python',),
-        'tags': ('python', 'pytest', 'docs'),
+        'tags': ('docs', 'pytest', 'python'),
         'links': ('https://docs.pytest.org/en/latest/skipping.html', ),
         'category': 'reference',
         'name': '',

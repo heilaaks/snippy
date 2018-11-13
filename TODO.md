@@ -2,7 +2,7 @@
    - [ ] Change the test with dump_text (or vise versa) to Content.compare_text like with compare_mkdn().
    - [ ] Refactor tests with Content.verified, Content.ordered, Content.compare_dump|Content.****_dump. Cases: import (check after import with YAML) and export (compare in target format.
    - [ ] Refactor tests 1. Content.compare_mkdn, Content.compare_text, Content.compare_yaml, Content.compare_json  # compare exported data
-   - [ ] Refactor tests 2. Content.compare_data    # Compare created, updated or imported data in database against YAML formatted reference.
+   - [ ] Refactor tests 2. Content.compare_data (replaces Content.verified) # Compare created, updated or imported data in database against YAML formatted reference.
    - [ ] Refactor tests 3. REST API result needs Content.ordered. No changes to this?
    - [ ] Refactor tests 4. Change file mocks to new mocked_file which allows defining the return format for the mock.
    - [ ] Refactor compare to own pytest plugin.

@@ -33,6 +33,7 @@ from snippy.meta import __docs__
 from snippy.meta import __homepage__
 from snippy.meta import __openapi__
 from snippy.meta import __version__
+from tests.testlib.helper import Helper
 from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
@@ -92,6 +93,46 @@ class Content(object):
 
         return copy.deepcopy(content)
 
+    @classmethod
+    def compare_mkdn(cls, mkdn_file, filename, content):
+        """Compare Markdown content in file against expected content.
+
+        Both the expected content and calls to the file mock are modified
+        so that the UUID's can be compated.
+
+        The expected content is modifed in a local copy in order to avoid
+        changing the content which is in most cases is default content
+        shared by all test cases.
+
+        Args:
+            mock_file (obj): Mocked file where the Markdown content was saved.
+            filename (str): Expected filename.
+            content (dict): Excepted content.
+        """
+
+        references = Const.EMPTY
+        content = copy.deepcopy(content)
+        for data in content['data']:
+            if cls._is_valid_uuid(data):
+                data['uuid'] = Database.VALID_UUID
+            references = references + Reference.dump(data, Content.MKDN)
+            references = references + '\n---\n\n'
+        references = references[:-6]  # Remove last separator added by the loop.
+        references = [references]
+
+        mock_calls = []
+        handle = mkdn_file.return_value.__enter__.return_value
+        for call in handle.write.mock_calls:
+            match = Helper.RE_CATCH_MKDN_UUID_METADATA.search(call[1][0])
+            if match and match.group('uuid') in Database.TEST_UUIDS_STR:
+                mock_calls.append(re.sub(r'uuid     : \S+', 'uuid     : ' + Database.VALID_UUID, call[1][0]))
+        try:
+            mkdn_file.assert_called_once_with(filename, 'w')
+            assert mock_calls == references
+        except AssertionError:
+            cls._print_compare(mkdn_file, mock_calls, references, filename)
+            raise AssertionError
+
     @staticmethod
     def verified(mocker, snippy, content):
         """Compare given content against content stored in database."""
@@ -133,10 +174,10 @@ class Content(object):
         if 'data' in contents:
             if isinstance(contents['data'], list):
                 for data in contents['data']:
-                    if Content._any_valid_test_uuid(data['attributes']):
+                    if Content._is_valid_uuid(data['attributes']):
                         data['attributes']['uuid'] = Database.VALID_UUID
             else:
-                if Content._any_valid_test_uuid(contents['data']['attributes']):
+                if Content._is_valid_uuid(contents['data']['attributes']):
                     contents['data']['attributes']['uuid'] = Database.VALID_UUID
 
         # Sort the content structure in order to be able to compare it.
@@ -175,59 +216,14 @@ class Content(object):
 
         dictionary = json_dump.dump.mock_calls[0][1][0]
         for data in content['data']:
-            if Content._any_valid_test_uuid(data):
+            if Content._is_valid_uuid(data):
                 data['uuid'] = Database.VALID_UUID
 
         for data in dictionary['data']:
-            if Content._any_valid_test_uuid(data):
+            if Content._is_valid_uuid(data):
                 data['uuid'] = Database.VALID_UUID
         mock_file.assert_called_once_with(filename, 'w')
         json_dump.dump.assert_called_with(content, mock.ANY)
-
-    @staticmethod
-    def compare_mkdn(mock_file, filename, content):
-        """Compare Markdown content against reference content.
-
-        Reference content and calls to file mock are modified so that the
-        UUID's can be compated.
-
-        The reference content is modifed in a local copy in order to avoid
-        changing the given reference content which may affect to sequential
-        tests.
-
-        Args:
-            mock_file (obj): Mocked file where the Markdown content was saved.
-            filename (str): Expected filename.
-            content (dict): Excepted content.
-        """
-
-        references = Const.EMPTY
-        content = copy.deepcopy(content)
-        for data in content['data']:
-            if Content._any_valid_test_uuid(data):
-                data['uuid'] = Database.VALID_UUID
-            references = references + Reference.dump(data, Content.MKDN)
-            references = references + '\n---\n\n'
-        references = references[:-6]  # Remove last separator added by the loop.
-        references = [references]
-
-        mock_calls = []
-        handle = mock_file.return_value.__enter__.return_value
-        for call in handle.write.mock_calls:
-            match = re.compile(r'''
-                uuid\s+[:]\s+    # Match tag for uuid.
-                (?P<uuids>\S+)   # Catch uuid.
-                \s+
-                ''', re.VERBOSE).findall(call[1][0])
-            if match:
-                if set(match) < set(Database.TEST_UUIDS_STR):
-                    mock_calls.append(re.sub(r'uuid     : \S+', 'uuid     : ' + Database.VALID_UUID, call[1][0]))
-        try:
-            mock_file.assert_called_once_with(filename, 'w')
-            assert mock_calls == references
-        except AssertionError:
-            Content._print_compare(mock_file, mock_calls, references, filename)
-            raise AssertionError
 
     @staticmethod
     def text_dump(mock_file, filename, content):
@@ -279,12 +275,12 @@ class Content(object):
 
         content = copy.deepcopy(content)
         for data in content['data']:
-            if Content._any_valid_test_uuid(data):
+            if Content._is_valid_uuid(data):
                 data['uuid'] = Database.VALID_UUID
 
         dictionary = yaml_dump.safe_dump.mock_calls[call][1][0]
         for data in dictionary['data']:
-            if Content._any_valid_test_uuid(data):
+            if Content._is_valid_uuid(data):
                 data['uuid'] = Database.VALID_UUID
 
         try:
@@ -444,24 +440,23 @@ class Content(object):
         return json
 
     @staticmethod
-    def _any_valid_test_uuid(content):
-        """Test if content UUID is any of the valid test UUIDs.
+    def _is_valid_uuid(content):
+        """Test if content UUID is valid.
 
-        Uuid can be any of the allocated UUIDs for testing. Because the test
-        case can contain any order of content, the test UUIDs can in random
-        order. Because of this, the test sets always the correct UUID based
-        on test. There is no way to ignore specific element and this seems
-        to be the only way.
+        UUID can be any of the UUID's allocated for testing. Because the test
+        case can contain contentn in any order, the test UUID's can be used in
+        random order. Therefore the content UUID must be checked from list of
+        valid UUID's.
 
-        It may be that the uuid field is not returned by the server for
-        example when user limits the returned fields. Because of this,
-        missing filed is considered valid.
+        It may be that the UUDI field is not returned by a server for example
+        when user limits the returned fields. Because of this, missing field is
+        considered valid.
         """
 
         if 'uuid' not in content:
             return True
 
-        if any(content['uuid'] in str(uuid_) for uuid_ in Database.TEST_UUIDS):
+        if content['uuid'] in Database.TEST_UUIDS_STR:
             return True
 
         return False

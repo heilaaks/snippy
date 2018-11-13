@@ -52,7 +52,7 @@ class TestApiCreateReference(object):
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }]
         }
-        content_read = Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+        content_read = Reference.DEFAULTS[Reference.GITLOG]
         content = {Reference.GITLOG_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -88,7 +88,7 @@ class TestApiCreateReference(object):
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }
         }
-        content_read = Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+        content_read = Reference.DEFAULTS[Reference.GITLOG]
         content = {Reference.GITLOG_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -138,11 +138,11 @@ class TestApiCreateReference(object):
             'data': [{
                 'type': 'reference',
                 'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
                 'type': 'reference',
                 'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+                'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -178,7 +178,7 @@ class TestApiCreateReference(object):
             }
         }
         content_read = copy.deepcopy(Reference.DEFAULTS[Reference.REGEXP])
-        content = {'cb9225a81eab8ce': content_read}
+        content = {Reference.REGEXP_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '767'
@@ -190,7 +190,7 @@ class TestApiCreateReference(object):
             'data': {
                 'type': 'reference',
                 'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
-                'attributes': Content.compared(content_read)
+                'attributes': content_read
             }
         }
         result_json['data']['attributes']['filename'] = Const.EMPTY
@@ -254,7 +254,7 @@ class TestApiCreateReference(object):
             'data': {
                 'type': 'reference',
                 'id': 'ee4a072a5a7a661a8c5d8e8f2aac88267c47fbf0b26db19b97d0b72bae3d74f0',
-                'attributes': Content.compared(content_read)
+                'attributes': content_read
             }
         }
         result = testing.TestClient(server.server.api).simulate_post(

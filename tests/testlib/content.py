@@ -105,7 +105,6 @@ class Content(object):
                 assert cause == Cause.ALL_OK
                 mock_file.assert_called_once_with('content.txt', 'w')
                 file_handle = mock_file.return_value.__enter__.return_value
-                content[digest] = Content.compared(content[digest])
                 file_handle.write.assert_has_calls([mock.call(Snippet.get_template(content[digest]) + Const.NEWLINE)])
 
     @staticmethod
@@ -152,53 +151,6 @@ class Content(object):
             contents.append(Content._sorter(content))
 
         return tuple(contents)
-
-    @staticmethod
-    def compared(content, validate_uuid=True):
-        """Organize reference resource so that it is comparable.
-
-        The content default helpers contains errors in the default input data
-        on purpose. Running Snippy formats the input data and outputs it in a
-        controlled manner. In order to be able to compare the helper default
-        input content to Snippy output, the input content must be formatted
-        here.
-
-        Because the 'content' parameter may be modified in here, the data
-        structure is always deep copied in order to avoid modifying the
-        original which may be the content helper default JSON data.
-
-        Args:
-            content (dict): Server response or content helper default JSON data.
-            validate_uuid (bool): Defines if the UUID is validated or not.
-
-        Returns:
-            dict: Modified copy from original content for Snippy output reference.
-        """
-
-        content = copy.deepcopy(content)
-
-        if 'tags' in content:
-            # Remove white spaces around the tags.
-            content['tags'] = tuple([tag.strip() for tag in content['tags']])
-
-            # Tags are always sorted for all content.
-            content['tags'] = tuple(sorted(content['tags']))
-
-        if Content._any_valid_test_uuid(content) and validate_uuid:
-            content['uuid'] = Database.VALID_UUID
-
-        # The helper data may contain links in unsorted order. The links are
-        # sorted based on content. Since comparison is made against the helper
-        # data and the tools sorts the links in case of snippets and solutions,
-        # the other than referece content must be sorted here.
-        if content['category'] != Const.REFERENCE:
-            content['links'] = tuple(sorted(content['links']))
-
-        # Content data is always empty in reference response.
-        if content['category'] == Const.REFERENCE and 'data' in content:
-            content['data'] = ()
-
-        return content
 
     @staticmethod
     def json_dump(json_dump, mock_file, filename, content):
@@ -511,7 +463,6 @@ class Content(object):
 
         if any(content['uuid'] in str(uuid_) for uuid_ in Database.TEST_UUIDS):
             return True
-
 
         return False
 

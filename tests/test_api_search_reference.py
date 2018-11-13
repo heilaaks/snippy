@@ -57,11 +57,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
                 'type': 'reference',
                 'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                'attributes': Reference.DEFAULTS[Reference.REGEXP]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -99,11 +99,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
                 'type': 'reference',
                 'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.PYTEST])
+                'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -139,7 +139,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
-                'attributes': Content.compared({field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']})
+                'attributes': {field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -174,7 +174,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
-                'attributes': Content.compared({field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']})
+                'attributes': {field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -208,7 +208,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
-                'attributes': Content.compared({field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']})
+                'attributes': {field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -299,7 +299,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'reference',
                 'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                'attributes': Reference.DEFAULTS[Reference.GITLOG]
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33'
@@ -362,11 +362,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
                 'type': 'reference',
                 'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                'attributes': Reference.DEFAULTS[Reference.REGEXP]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -401,7 +401,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                'attributes': Reference.DEFAULTS[Reference.REGEXP]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -439,11 +439,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
                 'type': 'reference',
                 'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
-                'attributes': Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                'attributes': Reference.DEFAULTS[Reference.REGEXP]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(

@@ -270,7 +270,7 @@ class TestCliUpdateReference(object):
         }
         edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--reference', '--editor'])
-        edited_gitlog.assert_called_with(Reference.dump(Content.compared(Reference.DEFAULTS[Reference.REGEXP]), Content.TEXT))
+        edited_gitlog.assert_called_with(Reference.dump(Reference.DEFAULTS[Reference.REGEXP], Content.TEXT))
         assert cause == Cause.ALL_OK
         assert len(Database.get_references()) == 1
         Content.verified(mocker, snippy, content_read)

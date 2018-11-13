@@ -1,11 +1,9 @@
 ## WORKING
-   - [ ] Refactor tests to remove the need for Content.compared. The specific failure in content is set in test case. The default contents are correctly set.
    - [ ] Change the test with dump_text (or vise versa) to Content.compare_text like with compare_mkdn().
-   - [ ] Refactor tests with Content.verified, Content.ordered, Content.compare_dump|Content.****_dump. Two cases: import (check after import with YAML) and export (compare in target format.
+   - [ ] Refactor tests with Content.verified, Content.ordered, Content.compare_dump|Content.****_dump. Cases: import (check after import with YAML) and export (compare in target format.
    - [ ] Refactor tests 1. Content.compare_mkdn, Content.compare_text, Content.compare_yaml, Content.compare_json  # compare exported data
    - [ ] Refactor tests 2. Content.compare_data    # Compare created, updated or imported data in database against YAML formatted reference.
    - [ ] Refactor tests 3. REST API result needs Content.ordered. No changes to this?
-   - [ ] Refactor tests 3. #  remove reference failures from default data (e.g. GITLOG) and add the faults in test cases. This removes the need for Content.compared.
    - [ ] Refactor tests 4. Change file mocks to new mocked_file which allows defining the return format for the mock.
    - [ ] Refactor compare to own pytest plugin.
    - [ ] Refactor tests and fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints. Refactor the current implementation.
@@ -59,6 +57,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
    - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok?
    - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix Gunicorn info logs to debug somehow?

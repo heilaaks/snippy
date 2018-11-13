@@ -40,9 +40,9 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_001(self, server, mocker):
         """Update one reference with PUT request.
 
-        Call PUT /v1/references/5c2071094dbfaa33 to update existing reference
-        with specified digest. See 'updating content attributes' for the
-        attribute list that can be changed by user.
+        Call PUT /v1/references/<digest> to update existing reference with
+        specified digest. See 'updating content attributes' for the attribute
+        list that can be changed by user.
         """
 
         request_body = {
@@ -58,8 +58,8 @@ class TestApiUpdateReference(object):
                 }
             }
         }
-        content_read = Content.compared(Reference.DEFAULTS[Reference.REGEXP])
-        content = {'cb9225a81eab8ce': content_read}
+        content_read = Content.deepcopy(Reference.DEFAULTS[Reference.REGEXP])
+        content = {Reference.REGEXP_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '767'
@@ -92,8 +92,8 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_002(self, server, mocker):
         """Update one reference with PUT request.
 
-        Call PUT /v1/references/5c2071094dbfaa33 to update existing reference.
-        The PUT request contains only the mandatory links attribute. All other
+        Call PUT /v1/references/<digest> to update existing reference. The PUT
+        request contains only the mandatory links attribute. All other
         attributes must be set to their default values.
         """
 
@@ -151,8 +151,8 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_003(self, server, mocker):
         """Update one reference with PUT request.
 
-        Try to call PUT /v1/references/101010101010101 to update reference with
-        digest that cannot be found.
+        Try to call PUT /v1/references/<digest> to update reference with digest
+        that cannot be found.
         """
 
         request_body = {
@@ -194,7 +194,7 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_004(self, server):
         """Try to update reference with malformed request.
 
-        Try to call PUT /v1/references/5c2071094dbfaa33 to update reference with
+        Try to call PUT /v1/references/<digest> to update reference with
         malformed JSON request.
         """
 
@@ -229,9 +229,9 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_005(self, server):
         """Try to update reference with malformed request.
 
-        Try to call PUT /v1/references/5c2071094dbfaa33 to update reference with
-        client generated resource ID. In this case the ID looks like a valid
-        message digest.
+        Try to call PUT /v1/references/<digest> to update reference with client
+        generated resource ID. In this case the ID looks like a valid message
+        digest.
         """
 
         request_body = {
@@ -273,8 +273,8 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_006(self, server, mocker):
         """Update one reference with PATCH request.
 
-        Call PATCH /v1/references/53908d68425c61dc to update existing snippet
-        with specified digest. The PATCH request contains only mandatory links
+        Call PATCH /v1/references/<digest> to update existing snippet with
+        specified digest. The PATCH request contains only mandatory links
         attribute. All other attributes that can be updated must be returned
         with their previous values.
         """
@@ -333,8 +333,8 @@ class TestApiUpdateReference(object):
     def test_api_update_reference_007(self, server, mocker):
         """Update one reference with PUT request.
 
-        Try to update reference uuid by calling PUT /v1/references. This must
-        not be done because the uuid is not changed once allocated.
+        Try to update reference uuid by calling PUT /v1/references/<digest>.
+        This must not be done because the uuid is not changed once allocated.
         """
 
         request_body = {

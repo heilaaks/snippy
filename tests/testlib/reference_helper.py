@@ -41,7 +41,7 @@ class ReferenceHelper(object):
     REGEXP_DIGEST = 'cb9225a81eab8ced'
     PYTEST_DIGEST = '1f9d9496005736ef'
     DEFAULTS = ({
-        'data': ('', ),
+        'data': (),
         'brief': 'How to write commit messages',
         'description': '',
         'groups': ('git',),
@@ -57,11 +57,11 @@ class ReferenceHelper(object):
         'updated': '2018-06-22T13:11:13.678729+0000',
         'digest': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f'
     }, {
-        'data': ('', ),
+        'data': (),
         'brief': 'Python regular expression',
         'description': '',
         'groups': ('python',),
-        'tags': (' python ', ' regexp  ', '  online   ', 'howto'),
+        'tags': ('howto', 'online', 'python', 'regexp'),
         'links': ('https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/',
                   'https://pythex.org/'),
         'category': 'reference',

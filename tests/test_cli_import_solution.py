@@ -595,7 +595,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
             Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX],
             Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]
         }

@@ -221,7 +221,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(content_read['3cbade9454ac80d2'])
+                content_read['3cbade9454ac80d2']
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -431,7 +431,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(content_read['fb657e3b49deb5b8'])
+                content_read['fb657e3b49deb5b8']
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -666,7 +666,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX],
                 Snippet.DEFAULTS[Snippet.REMOVE],
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                Reference.DEFAULTS[Reference.GITLOG]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -688,7 +688,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX],
                 Snippet.DEFAULTS[Snippet.REMOVE],
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                Reference.DEFAULTS[Reference.GITLOG]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -709,7 +709,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             'data': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX],
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                Reference.DEFAULTS[Reference.GITLOG]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -730,7 +730,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                Reference.DEFAULTS[Reference.GITLOG]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:

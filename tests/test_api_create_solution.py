@@ -373,6 +373,8 @@ class TestApiCreateSolution(object):
         Call POST /v1/solutions to create new content. In this case every
         attribute has additional leading and trailing whitespaces which must
         be trimmed from rigth only. There must be one newline at the end.
+
+        Tags and links must be sorted after parsing.
         """
 
         request_body = {
@@ -383,8 +385,8 @@ class TestApiCreateSolution(object):
                     'brief': ' short brief  ',
                     'description': ' long description  ',
                     'groups': ['    python   ',],
-                    'tags': ['  spaces   ', '  tabs    '],
-                    'links': ['  link1  ', '    link2   '],
+                    'tags': ['  bspaces   ', '  atabs    '],
+                    'links': ['  blink1  ', '    alink2   '],
                     'name': '  short name   ',
                     'filename': '  shortfilename.yaml   ',
                     'versions': '  short versions   ',
@@ -397,8 +399,8 @@ class TestApiCreateSolution(object):
             'brief': 'short brief',
             'description': 'long description',
             'groups': ['python'],
-            'tags': ['spaces', 'tabs'],
-            'links': ['link1', 'link2'],
+            'tags': ['atabs', 'bspaces'],
+            'links': ['alink2', 'blink1'],
             'category': 'solution',
             'name': 'short name',
             'filename': 'shortfilename.yaml',
@@ -407,16 +409,16 @@ class TestApiCreateSolution(object):
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.REGEXP_TIME,
             'updated': Content.REGEXP_TIME,
-            'digest': '1cc8d8069441cdae5762d04c7730d18bbac40e0a9994fed060dcffa0a1a83429'
+            'digest': '958d2fbdcb6bec27db25a50ff0da71efb2126100a9624bfa25c268a8fe753033'
         }
-        content = {'1cc8d8069441cda': content_read}
+        content = {'958d2fbdcb6bec2': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '668'}
+            'content-length': '672'}
         result_json = {
             'data': [{
                 'type': 'solution',
-                'id': '1cc8d8069441cdae5762d04c7730d18bbac40e0a9994fed060dcffa0a1a83429',
+                'id': '958d2fbdcb6bec27db25a50ff0da71efb2126100a9624bfa25c268a8fe753033',
                 'attributes': content_read
             }]
         }
@@ -424,6 +426,7 @@ class TestApiCreateSolution(object):
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
+        print(result.json)
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201

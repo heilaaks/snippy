@@ -49,8 +49,8 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -70,8 +70,8 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -110,7 +110,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -130,7 +130,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -150,7 +150,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -171,7 +171,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -205,7 +205,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -240,7 +240,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -260,7 +260,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -280,7 +280,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -301,8 +301,8 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -334,7 +334,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                Reference.DEFAULTS[Reference.GITLOG]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -370,8 +370,8 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -420,7 +420,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content3 = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG])
+                Reference.DEFAULTS[Reference.GITLOG]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -446,8 +446,8 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
-                Content.compared(Reference.DEFAULTS[Reference.REGEXP])
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -468,7 +468,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.GITLOG],
                 Snippet.DEFAULTS[Snippet.REMOVE]
             ]
         }
@@ -491,7 +491,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.GITLOG],
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -512,7 +512,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.GITLOG],
                 Snippet.DEFAULTS[Snippet.REMOVE]
             ]
         }
@@ -533,7 +533,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.GITLOG],
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -604,8 +604,8 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Content.compared(Content.compared(Reference.DEFAULTS[Reference.GITLOG])),
-                Content.compared(Content.compared(Reference.DEFAULTS[Reference.REGEXP]))
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:

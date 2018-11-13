@@ -45,8 +45,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
@@ -66,8 +66,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
@@ -87,8 +87,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
@@ -108,8 +108,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             json.load.return_value = Content.imported_dict(content)
@@ -129,8 +129,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -150,8 +150,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -171,8 +171,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
@@ -327,8 +327,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.PYTEST_DIGEST: Content.compared(Reference.DEFAULTS[Reference.PYTEST], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.PYTEST_DIGEST: Reference.DEFAULTS[Reference.PYTEST]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
@@ -351,8 +351,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
@@ -389,7 +389,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
         }
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
@@ -399,7 +399,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             assert len(Database.get_references()) == 1
 
         content_uuid = {
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False),
+            Reference.REGEXP_DIGEST: Content.deepcopy(Reference.DEFAULTS[Reference.REGEXP]),
         }
         content_uuid[Reference.REGEXP_DIGEST]['uuid'] = Reference.DEFAULTS[Reference.GITLOG]['uuid']
         mocked_open = Content.mocked_open(content_uuid)
@@ -418,8 +418,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Content.compared(Reference.DEFAULTS[Reference.GITLOG], validate_uuid=False),
-            Reference.REGEXP_DIGEST: Content.compared(Reference.DEFAULTS[Reference.REGEXP], validate_uuid=False)
+            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
         }
         mocked_open = Content.mocked_file(content, Content.MKDN)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:

@@ -19,6 +19,7 @@
 
 """test_api_create_snippet: Test POST /snippets API."""
 
+
 import json
 
 from falcon import testing
@@ -80,6 +81,8 @@ class TestApiCreateSnippet(object):
         and list are defined as list in the JSON message. Note that the
         default input for tags and links from Snippet.REMOVE maps to a string
         but the syntax in this case maps to lists with multiple items.
+
+        The tags must be sorted and trimmed after parsing.
         """
 
         request_body = {
@@ -89,7 +92,7 @@ class TestApiCreateSnippet(object):
                     'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
                     'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
                     'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
-                    'tags': ['cleanup', 'container', 'docker', 'docker-ce', 'moby'],
+                    'tags': [' moby ', 'cleanup  ', '  container', 'docker', 'docker-ce'],
                     'links': ['https://docs.docker.com/engine/reference/commandline/rm/']
                 }
             }]

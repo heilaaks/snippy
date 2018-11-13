@@ -36,10 +36,10 @@ class TestUtContentParserText(object):
         end of the last link.
 
         Test case verifies that tags are parsed correctly when there is no
-        newline after the next item.
+        newline after the next item. Also tags must be sorted after parsing.
 
         Test case verifies that the trailing whitespaces are removed from each
-        tag and link.
+        tag and link. Also links must be sorted after parsing.
 
         Test case verifies that all items are parsed correctly from template.
         """
@@ -59,10 +59,10 @@ class TestUtContentParserText(object):
             'docker',
             '',
             '# Add optional comma separated list of tags below.',
-            '  cleanup,  container,docker,docker-ce,image,moby  ',
+            '  moby,cleanup,  container,docker,docker-ce,image  ',
             '# Add optional links below one link per line.',
-            '  https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rm/',
+            '  https://docs.docker.com/engine/reference/commandline/images/',
             'https://docs.docker.com/engine/reference/commandline/rmi/  '
         ))
         data = (
@@ -91,9 +91,11 @@ class TestUtContentParserText(object):
         """Test parsing snippet.
 
         Test case verifies that groups are parsed correctly if there is a list
-        of groups. The groups must be sorted. This case has also multiline
-        description with multiple sequential spaces. In this case there is
-        empty line before next content tag.
+        of groups. The groups must be sorted after parsing.
+
+        This case has also multiline description with multiple sequential
+        spaces. In this case there is empty line after the description before
+        the next content tag.
         """
 
         text = '\n'.join((
@@ -249,9 +251,9 @@ class TestUtContentParserText(object):
     def test_parser_snippet_006(self):
         """Test parsing snippet.
 
-        Test case verifies that snippet data with links is parsed
-        correctly. This case also verifies that the aligned comments
-        are parsed correctly to internal format.
+        Test case verifies that snippet data with links is parsed correctly.
+        This case also verifies that the aligned comments are parsed correctly
+        to internal format.
         """
 
         text = '\n'.join((
@@ -356,8 +358,12 @@ class TestUtContentParserText(object):
     def test_parser_solution_001(self):
         """Test parsing solution.
 
-        Test case verifies that a solution content can be parsed. Links that
-        are not starting with tag '> ' must not be read to resource links.
+        Test case verifies that a solution content can be parsed.
+
+        Links that are not starting with tag '> ' must not be read to resource
+        links. Links must be sorted after parsing.
+
+        Tags must be sorted after parsing.
         """
 
         text = '\n'.join((
@@ -793,6 +799,8 @@ class TestUtContentParserText(object):
         Test case verifies that links are parsed from reference template where
         the links are the first item in the template. There is no newline after
         the links before the next section.
+
+        Tags must be sorted after parsing.
         """
 
         text = '\n'.join((
@@ -810,7 +818,7 @@ class TestUtContentParserText(object):
             'git',
             '',
             '# Add optional comma separated list of tags below.',
-            'commit,git,howto,message,scm'
+            'git,howto,message,scm,commit'
         ))
         links = (
             'https://writingfordevelopers.substack.com/p/how-to-write-commit-messages',

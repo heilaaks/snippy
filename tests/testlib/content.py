@@ -29,6 +29,7 @@ import pprintpp
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.constants import Constants as Const
+from snippy.content.collection import Collection
 from snippy.meta import __docs__
 from snippy.meta import __homepage__
 from snippy.meta import __openapi__
@@ -92,6 +93,38 @@ class Content(object):
         """
 
         return copy.deepcopy(content)
+
+    @classmethod
+    def compare_storage(cls, content):
+        """Compare content stored in database.
+
+        The comparison uses equality implemented for collection data class.
+        This quarantees that the count of resources in collection is tested
+        to be the same between expected content and collection in database.
+
+        The comparison tests all but the key attribute in between references.
+        The key attribute is an index in database and it cannot be compared.
+
+        Because the default content can be inserted in any order, the UUID's
+        can differ between contents. Because of this, the UUID is masked
+        away with a valid UUID.
+
+        Args:
+            content (dict): Excepted content compared against database.
+        """
+
+        references = Collection()
+        references.load_dict({'data': content.values()})
+        collection = Database.get_collection()
+        for digest in references.keys():
+            references[digest].uuid = Database.VALID_UUID
+            collection[digest].uuid = Database.VALID_UUID
+        try:
+            assert references == collection
+        except AssertionError:
+            print(references)
+            print(collection)
+            raise AssertionError
 
     @classmethod
     def compare_mkdn(cls, mkdn_file, filename, content):

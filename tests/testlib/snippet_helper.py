@@ -37,17 +37,11 @@ class SnippetHelper(object):
     INTERP = 5
 
     # Default content must be always set so that it reflects content stored
-    # into a database. For example the tags must be sorted correct here. This
-    # forces creating special error cases in each test case and enforces more
-    # controlled failure testing.
-    REMOVE_DIGEST = '54e41e9b52a02b63'
-    FORCED_DIGEST = '53908d68425c61dc'
-    EXITED_DIGEST = '49d6916b6711f13d'
-    NETCAT_DIGEST = 'f3fd167c64b6f97e'
-    UMOUNT_DIGEST = '490c913cf941a0be'
-    INTERP_DIGEST = '9e1949c2810df2a5'
+    # into database. For example the tags must be sorted in correct order.
+    # This forces defining erroneous content in each test case. This improves
+    # the readability and maintainability of failure testing.
     DEFAULTS = ({
-        'data': ('docker rm --volumes $(docker ps --all --quiet)', ),
+        'data': ('docker rm --volumes $(docker ps --all --quiet)',),
         'brief': 'Remove all docker containers with volumes',
         'description': '',
         'groups': ('docker',),
@@ -133,7 +127,7 @@ class SnippetHelper(object):
         'uuid': '15cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2018-05-07T11:11:55.000001+0000',
         'updated': '2018-05-07T11:11:55.000001+0000',
-        'digest': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'
+        'digest': '490c913cf941a0bedc14e3d390894958b3db4220dc2b1b856454403c888df17f'
     }, {
         'data': ('find . -type d -name \'.git\' | while read dir ; do sh -c "cd $dir/../ && echo -e \\"\\nGIT STATUS IN ${dir//\\.git/}\\" && git status -s" ; done',),  # pylint: disable=line-too-long
         'brief': 'Perform recursive git status on subdirectories',
@@ -151,6 +145,13 @@ class SnippetHelper(object):
         'updated': '2018-01-11T07:59:46.000001+0000',
         'digest': '9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3'
     })
+
+    REMOVE_DIGEST = DEFAULTS[REMOVE]['digest']
+    FORCED_DIGEST = DEFAULTS[FORCED]['digest']
+    EXITED_DIGEST = DEFAULTS[EXITED]['digest']
+    NETCAT_DIGEST = DEFAULTS[NETCAT]['digest']
+    UMOUNT_DIGEST = DEFAULTS[UMOUNT]['digest']
+    INTERP_DIGEST = DEFAULTS[INTERP]['digest']
 
     TEMPLATE = Helper.read_template('snippet.txt').split(Const.NEWLINE)
 

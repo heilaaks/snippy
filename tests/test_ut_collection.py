@@ -220,7 +220,7 @@ class TestUtCollection(object):
             '   ! digest      : e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240 (True)',
             '   ! filename    : ',
             '   ! key         : None',
-            '   ! metadata    : None',
+            '   ! metadata    : ',
             '   ! name        : ',
             '   ! source      : ',
             '   ! updated     : ',

@@ -34,12 +34,9 @@ class SolutionHelper(object):
     KAFKA = 2
 
     # Default content must be always set so that it reflects content stored
-    # into a database. For example the tags must be sorted correct here. This
-    # forces creating special error cases in each test case and enforces more
-    # controlled failure testing.
-    BEATS_DIGEST = 'db712a82662d6932'
-    NGINX_DIGEST = '7c226ee33a088381'
-    KAFKA_DIGEST = 'fffeaf31e98e68a3'
+    # into database. For example the tags must be sorted in correct order.
+    # This forces defining erroneous content in each test case. This improves
+    # the readability and maintainability of failure testing.
     DEFAULTS = ({
         'data':('################################################################################',
                 '## BRIEF  : Debugging Elastic Beats',
@@ -279,6 +276,10 @@ class SolutionHelper(object):
         'updated': '2017-10-20T06:16:27.000001+0000',
         'digest': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee'
     })
+
+    BEATS_DIGEST = DEFAULTS[BEATS]['digest']
+    NGINX_DIGEST = DEFAULTS[NGINX]['digest']
+    KAFKA_DIGEST = DEFAULTS[KAFKA]['digest']
 
     TEMPLATE = Helper.read_template('solution.txt').split(Const.NEWLINE)
 

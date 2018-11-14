@@ -11,6 +11,7 @@
    - [ ] Refactor tests and move common items to Helper class in testlib. Do not copy from code because it creates dependency to tested code which cause problems in test case imports.
    - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674
    - [ ] Fix new compare that does not see if the last newline is missing? Comment adding newline in text_dump/comare and pytest tests/test_cli_export_reference.py -k test_cli_export_reference_012. This seems to be mismatch in filename?
+   - [ ] Fix Collection.load_dict() that now assumes that input value is tuple. With list this causes different results like in test_api_create_snippet_005i (change data to list in case)
    - [ ] Fix new compare when the mock file is shorter than references.
    - [ ] Fix new compare to highlight filename mismatch. This incorrect highlights the last line.
    - [ ] Add tests for new compare.

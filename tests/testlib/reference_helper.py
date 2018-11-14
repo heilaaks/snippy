@@ -34,12 +34,9 @@ class ReferenceHelper(object):
     PYTEST = 2
 
     # Default content must be always set so that it reflects content stored
-    # into a database. For example the tags must be sorted correct here. This
-    # forces creating special error cases in each test case and enforces more
-    # controlled failure testing.
-    GITLOG_DIGEST = '5c2071094dbfaa33'
-    REGEXP_DIGEST = 'cb9225a81eab8ced'
-    PYTEST_DIGEST = '1f9d9496005736ef'
+    # into database. For example the tags must be sorted in correct order.
+    # This forces defining erroneous content in each test case. This improves
+    # the readability and maintainability of failure testing.
     DEFAULTS = ({
         'data': (),
         'brief': 'How to write commit messages',
@@ -90,6 +87,10 @@ class ReferenceHelper(object):
         'updated': '2016-04-21T12:10:11.678729+0000',
         'digest': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e'
     })
+
+    GITLOG_DIGEST = DEFAULTS[GITLOG]['digest']
+    REGEXP_DIGEST = DEFAULTS[REGEXP]['digest']
+    PYTEST_DIGEST = DEFAULTS[PYTEST]['digest']
 
     TEMPLATE = Helper.read_template('reference.txt').split(Const.NEWLINE)
 

@@ -41,16 +41,17 @@ class TestApiCreateSnippet(object):
     def test_api_create_snippet_001(self, server, mocker):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet.
+        Call POST /v1/snippets to create new snippet. The snippet is sent in
+        list context in POST request.
         """
 
+        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': content_read
             }]
         }
-        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -59,7 +60,7 @@ class TestApiCreateSnippet(object):
         result_json = {
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': content_read
             }]
         }
@@ -70,21 +71,19 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content)
+        Content.compare_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_002(self, server, mocker):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. In this case the links
-        and list are defined as list in the JSON message. Note that the
-        default input for tags and links from Snippet.REMOVE maps to a string
-        but the syntax in this case maps to lists with multiple items.
+        Call POST /v1/snippets to create new snippet. In this case the there
+        are only part of the content attributes defined.
 
         The tags must be sorted and trimmed after parsing.
         """
 
+        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -97,7 +96,6 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
         content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -106,7 +104,7 @@ class TestApiCreateSnippet(object):
         result_json = {
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': content_read
             }]
         }
@@ -117,8 +115,7 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content)
+        Content.compare_storage(content)
 
     @pytest.mark.usefixtures('create-exited-utc')
     def test_api_create_snippet_003(self, server, mocker):
@@ -129,6 +126,7 @@ class TestApiCreateSnippet(object):
         newline.
         """
 
+        content_read = Snippet.DEFAULTS[Snippet.EXITED]
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -141,7 +139,6 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        content_read = Snippet.DEFAULTS[Snippet.EXITED]
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -150,7 +147,7 @@ class TestApiCreateSnippet(object):
         result_json = {
             'data': [{
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
@@ -161,8 +158,7 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content)
+        Content.compare_storage(content)
 
     @pytest.mark.usefixtures('create-exited-utc')
     def test_api_create_snippet_004(self, server, mocker):
@@ -172,6 +168,7 @@ class TestApiCreateSnippet(object):
         data is defined in list context where each line is an item in a list.
         """
 
+        content_read = Snippet.DEFAULTS[Snippet.EXITED]
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -187,7 +184,6 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        content_read = Snippet.DEFAULTS[Snippet.EXITED]
         content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
@@ -196,7 +192,7 @@ class TestApiCreateSnippet(object):
         result_json = {
             'data': [{
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
@@ -207,8 +203,7 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content)
+        Content.compare_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_005(self, server, mocker):
@@ -226,12 +221,12 @@ class TestApiCreateSnippet(object):
             }]
         }
         content_read = {
-            'data': ['docker rm $(docker ps --all -q -f status=exited)'],
+            'data': ('docker rm $(docker ps --all -q -f status=exited)',),
             'brief': '',
             'description': '',
-            'groups': ['default'],
-            'tags': [],
-            'links': [],
+            'groups': ('default',),
+            'tags': (),
+            'links': (),
             'category': 'snippet',
             'name': '',
             'filename': '',
@@ -261,8 +256,7 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content)
+        Content.compare_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
     def test_api_create_snippet_006(self, server, mocker):

@@ -74,7 +74,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._created = timestamp
         self._updated = timestamp
         self._metadata = ''
-        self._key = ''
+        self._key = None
         self._digest = self.compute_digest()
 
     def __str__(self):
@@ -513,8 +513,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.created = dictionary.get('created', self.created)
         self.updated = dictionary.get('updated', self.updated)
         self.digest = dictionary.get('digest', self.digest)
-        self.metadata = None
-        self.key = None
 
         if self.is_reference():
             self.data = tuple(dictionary.get('links', self.links))

@@ -794,7 +794,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '--solution', '-f', './all-solutions.md'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
-            Content.compare_mkdn(mock_file, './all-solutions.md', content)
+            Content.assert_mkdn(mock_file, './all-solutions.md', content)
 
     @classmethod
     def teardown_class(cls):

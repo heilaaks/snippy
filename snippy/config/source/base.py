@@ -24,7 +24,7 @@ from collections import OrderedDict
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
-from snippy.config.source.parser import Parser
+from snippy.content.parser import Parser
 from snippy.logger import Logger
 from snippy.meta import __version__
 

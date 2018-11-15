@@ -20,7 +20,8 @@
 """test_ut_parser: Test ContentParserText() class."""
 
 from snippy.constants import Constants as Const
-from snippy.config.source.parsers.text import ContentParserText as Parser
+from snippy.content.parsers.text import ContentParserText as Parser
+from snippy.content.collection import Collection
 
 
 class TestUtContentParserText(object):
@@ -78,7 +79,9 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
@@ -133,7 +136,9 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
@@ -180,7 +185,9 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
@@ -212,7 +219,8 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/  '
         ))
-        collection = Parser(self.TIMESTAMP, text).read_collection()
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
         assert not collection
 
     def test_parser_snippet_005(self):
@@ -237,7 +245,8 @@ class TestUtContentParserText(object):
             '# Add mandatory snippet below',
             '# unknown 2.'
         ))
-        collection = Parser(self.TIMESTAMP, text).read_collection()
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
         assert len(collection) == 1
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
@@ -293,7 +302,9 @@ class TestUtContentParserText(object):
         groups = ('linux',)
         tags = ('howto', 'linux', 'tar', 'untar')
         links = ()
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
@@ -346,7 +357,9 @@ class TestUtContentParserText(object):
         groups = ('linux',)
         tags = ('howto', 'linux', 'tar', 'untar')
         links = ()
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
@@ -484,7 +497,9 @@ class TestUtContentParserText(object):
         groups = ('docker',)
         tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         filename = 'kubernetes-docker-log-driver-kafka.txt'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
         assert resource.brief == brief
@@ -555,7 +570,9 @@ class TestUtContentParserText(object):
         groups = ('docker',)
         tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         filename = 'kubernetes-docker-log-driver-kafka.txt'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
         assert resource.brief == brief
@@ -625,7 +642,9 @@ class TestUtContentParserText(object):
         groups = ('docker',)
         tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         filename = 'kubernetes-docker-log-driver-kafka.txt'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
         assert resource.brief == brief
@@ -692,7 +711,9 @@ class TestUtContentParserText(object):
         groups = ('docker',)
         tags = ('docker', 'driver', 'kafka', 'kubernetes', 'logging', 'logs2kafka', 'moby', 'plugin')
         filename = 'kubernetes-docker-log-driver-kafka.txt'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == tuple(text.split(Const.DELIMITER_DATA))
         assert resource.brief == brief
@@ -742,7 +763,8 @@ class TestUtContentParserText(object):
             '################################################################################',
             ''
         ))
-        collection = Parser(self.TIMESTAMP, text).read_collection()
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
         assert not collection
 
     def test_parser_reference_001(self):
@@ -784,7 +806,9 @@ class TestUtContentParserText(object):
         description = 'How to write git commit.'
         groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
         assert resource.brief == brief
@@ -828,7 +852,9 @@ class TestUtContentParserText(object):
         description = 'How to write git commit.'
         groups = ('git',)
         tags = ('commit', 'git', 'howto', 'message', 'scm')
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
         assert resource.brief == brief
@@ -867,7 +893,9 @@ class TestUtContentParserText(object):
         description = 'How to write git commit.'
         groups = ('git', 'moby')
         tags = ('commit', 'git', 'howto', 'message', 'scm')
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
         assert resource.brief == brief
@@ -895,7 +923,8 @@ class TestUtContentParserText(object):
             '# unknown 4.',
             'commit,git,howto,message,scm'
         ))
-        collection = Parser(self.TIMESTAMP, text).read_collection()
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
         assert not collection
 
     def test_parser_reference_005(self):
@@ -938,7 +967,9 @@ class TestUtContentParserText(object):
             'https://docs.docker.com/engine/reference/commandline/rm/',
             'https://docs.docker.com/engine/reference/commandline/rmi/'
         )
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
@@ -958,5 +989,6 @@ class TestUtContentParserText(object):
             '# unknown 1.',
             'commit,git,howto,message,scm'
         ))
-        collection = Parser(self.TIMESTAMP, text).read_collection()
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
         assert not collection

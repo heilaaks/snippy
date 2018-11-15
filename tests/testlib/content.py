@@ -21,7 +21,6 @@
 
 import copy
 import datetime
-import re
 
 import mock
 import pprintpp
@@ -34,7 +33,6 @@ from snippy.meta import __docs__
 from snippy.meta import __homepage__
 from snippy.meta import __openapi__
 from snippy.meta import __version__
-from tests.testlib.helper import Helper
 from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
@@ -95,7 +93,7 @@ class Content(object):
         return copy.deepcopy(content)
 
     @classmethod
-    def compare_storage(cls, content):
+    def assert_storage(cls, content):
         """Compare content stored in database.
 
         The comparison uses equality implemented for collection data class.
@@ -127,43 +125,29 @@ class Content(object):
             raise AssertionError
 
     @classmethod
-    def compare_mkdn(cls, mkdn_file, filename, content):
+    def assert_mkdn(cls, mkdn_file, filename, content):
         """Compare Markdown content in file against expected content.
 
-        Both the expected content and calls to the file mock are modified
-        so that the UUID's can be compated.
-
-        The expected content is modifed in a local copy in order to avoid
-        changing the content which is in most cases is default content
-        shared by all test cases.
+        See description for assert_storage method.
 
         Args:
-            mock_file (obj): Mocked file where the Markdown content was saved.
+            mkdn_file (obj): Mocked file where the Markdown content was saved.
             filename (str): Expected filename.
             content (dict): Excepted content.
         """
 
-        references = Const.EMPTY
-        content = copy.deepcopy(content)
-        for data in content['data']:
-            if cls._is_valid_uuid(data):
-                data['uuid'] = Database.VALID_UUID
-            references = references + Reference.dump(data, Content.MKDN)
-            references = references + '\n---\n\n'
-        references = references[:-6]  # Remove last separator added by the loop.
-        references = [references]
-
-        mock_calls = []
-        handle = mkdn_file.return_value.__enter__.return_value
-        for call in handle.write.mock_calls:
-            match = Helper.RE_CATCH_MKDN_UUID_METADATA.search(call[1][0])
-            if match and match.group('uuid') in Database.TEST_UUIDS_STR:
-                mock_calls.append(re.sub(r'uuid     : \S+', 'uuid     : ' + Database.VALID_UUID, call[1][0]))
+        references = Collection()
+        references.load_dict({'data': content['data']})
+        collection = cls._read_mock_file(Const.CONTENT_FORMAT_MKDN, mkdn_file)
+        for digest in references.keys():
+            references[digest].uuid = Database.VALID_UUID
+            collection[digest].uuid = Database.VALID_UUID
         try:
             mkdn_file.assert_called_once_with(filename, 'w')
-            assert mock_calls == references
+            assert references == collection
         except AssertionError:
-            cls._print_compare(mkdn_file, mock_calls, references, filename)
+            print(references)
+            print(collection)
             raise AssertionError
 
     @staticmethod
@@ -460,6 +444,25 @@ class Content(object):
         content_read[Reference.GITLOG_DIGEST]['data'] = tuple([w.replace('# Instructions how to debug nginx', '# Changed instruction set') for w in content_read[Reference.GITLOG_DIGEST]['data']])  # pylint: disable=line-too-long
 
         return content_read
+
+    @staticmethod
+    def _read_mock_file(content_format, file_mock):
+        """Return collection from mocked file content.
+
+        Args:
+            content_format (Enum): File content format.
+            file_mock (obj): Mocked file where the Markdown content was saved.
+
+        Returns:
+            Collection(): Collection of resources read from the file.
+        """
+
+        collection = Collection()
+        handle = file_mock.return_value.__enter__.return_value
+        for call in handle.write.mock_calls:
+            collection.load(content_format, Content.EXPORT_TIME, call[1][0])
+
+        return collection
 
     @staticmethod
     def _sorter(json):

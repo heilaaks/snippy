@@ -20,7 +20,8 @@
 """test_ut_parser: Test ContentParserMarkdown() class."""
 
 from snippy.constants import Constants as Const
-from snippy.config.source.parsers.mkdn import ContentParserMkdn as Parser
+from snippy.content.collection import Collection
+from snippy.content.parsers.mkdn import ContentParserMkdn as Parser
 
 
 class TestUtContentParserMarkdown(object):
@@ -81,7 +82,9 @@ class TestUtContentParserMarkdown(object):
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         digest = '9dcf81a0484d6551a3a0a0cf892d22bfba6b25b0f0ec6ef7080a617e3cf0b092'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
@@ -181,7 +184,8 @@ class TestUtContentParserMarkdown(object):
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         digest = '9dcf81a0484d6551a3a0a0cf892d22bfba6b25b0f0ec6ef7080a617e3cf0b092'
-        collection = Parser(self.TIMESTAMP, text).read_collection()
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
         assert len(collection) == 2
         resource = collection[digest]
         assert resource.category == Const.SNIPPET
@@ -276,7 +280,9 @@ class TestUtContentParserMarkdown(object):
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         digest = 'd8cc7d0f05108952002ab2dffab29e60bdb1b7a8abc41416ff4e43812eb5bb14'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == Const.EMPTY
@@ -352,7 +358,9 @@ class TestUtContentParserMarkdown(object):
         tags = ('howto', 'linux', 'tar', 'untar')
         uuid = 'f21c8ed8-8830-11e8-a114-2c4d54508088'
         digest = '61014e2d1ec56a9ae6fa71f781221b2706f69c8bd3090bf35af179c7a87f284a'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
         assert resource.data == data
         assert resource.brief == brief
@@ -434,7 +442,9 @@ class TestUtContentParserMarkdown(object):
         groups = ('docker',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
         assert resource.brief == brief
@@ -533,7 +543,9 @@ class TestUtContentParserMarkdown(object):
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
         assert resource.brief == brief
@@ -637,7 +649,9 @@ class TestUtContentParserMarkdown(object):
             'https://docs.docker.com/engine/reference/commandline/rm/'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
         assert resource.brief == brief
@@ -713,7 +727,9 @@ class TestUtContentParserMarkdown(object):
         groups = ('default',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
         assert resource.brief == Const.EMPTY
@@ -797,7 +813,9 @@ class TestUtContentParserMarkdown(object):
         groups = ('default',)
         tags = ('cleanup', 'container', 'docker', 'docker-ce', 'moby')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
         assert resource.brief == Const.EMPTY
@@ -903,7 +921,9 @@ class TestUtContentParserMarkdown(object):
             'https://groups.google.com/forum/#!topic/kubernetes-users/iLDsG85exRQ'
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.SOLUTION
         assert resource.data == data
         assert resource.brief == brief
@@ -959,7 +979,9 @@ class TestUtContentParserMarkdown(object):
         )
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         digest = 'ec6ff1c1e8c52bc2ca8de76c71cd2eebd4f5ca07e6bdd9bba42ad2154d40503b'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == links
         assert resource.brief == brief
@@ -1008,7 +1030,9 @@ class TestUtContentParserMarkdown(object):
         tags = ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
         digest = '1c7501ac802d98aeb161c973ec51c1b96d56774cdc8936c17df0fa9315d3e1c7'
-        resource = next(Parser(self.TIMESTAMP, text).read_collection().resources())
+        collection = Collection()
+        Parser(self.TIMESTAMP, text, collection).read_collection()
+        resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
         assert resource.data == ()
         assert resource.brief == Const.EMPTY

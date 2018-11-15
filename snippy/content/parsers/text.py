@@ -22,9 +22,8 @@
 import re
 
 from snippy.cause import Cause
-from snippy.config.source.parsers.base import ContentParserBase
 from snippy.constants import Constants as Const
-from snippy.content.collection import Collection
+from snippy.content.parsers.base import ContentParserBase
 from snippy.logger import Logger
 
 
@@ -146,25 +145,26 @@ class ContentParserText(ContentParserBase):
         (?P<filename>.*|$)      # Catch filename.
         ''' % re.escape(FILENAME[Const.SOLUTION]), re.MULTILINE | re.VERBOSE)
 
-    def __init__(self, timestamp, text):
+    def __init__(self, timestamp, text, collection):
         """
         Args:
             timestamp (str): IS8601 timestamp used with created resources.
             text (str): Source text that is parsed.
+            collection (Collection()): Collection where the content is stored.
         """
 
         self._logger = Logger.get_logger(__name__)
         self._timestamp = timestamp
         self._text = text
+        self._collection = collection
 
     def read_collection(self):
         """Read collection from the given text source."""
 
-        collection = Collection()
         contents = self._split_contents()
         for content in contents:
             category = self._read_category(content)
-            resource = collection.get_resource(category, self._timestamp)
+            resource = self._collection.get_resource(category, self._timestamp)
             resource.data = self._read_data(category, content)
             resource.brief = self._read_brief(category, content)
             resource.description = self._read_description(category, content)
@@ -174,9 +174,7 @@ class ContentParserText(ContentParserBase):
             resource.category = category
             resource.filename = self._read_filename(category, content)
             resource.digest = resource.compute_digest()
-            collection.migrate(resource)
-
-        return collection
+            self._collection.migrate(resource)
 
     def _split_contents(self):
         """Split text to multiple contents.

@@ -21,7 +21,6 @@
 
 from snippy.config.config import Config
 from snippy.constants import Constants as Const
-from snippy.config.source.parser import Parser
 from snippy.content.collection import Collection
 from tests.testlib.helper import Helper
 
@@ -210,6 +209,7 @@ class SnippetHelper(object):
     def _get_content(text):
         """Transform text template to content."""
 
-        collection = Parser(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), text).read()
+        collection = Collection()
+        collection.load(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), text)
 
         return collection

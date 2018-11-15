@@ -612,7 +612,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '--references', '--file', 'references.mkdn'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_references()) == 2
-            Content.compare_mkdn(mock_file, 'references.mkdn', content)
+            Content.assert_mkdn(mock_file, 'references.mkdn', content)
 
     @classmethod
     def teardown_class(cls):

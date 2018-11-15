@@ -21,9 +21,8 @@
 
 import re
 
-from snippy.config.source.parsers.base import ContentParserBase
 from snippy.constants import Constants as Const
-from snippy.content.collection import Collection
+from snippy.content.parsers.base import ContentParserBase
 from snippy.logger import Logger
 
 
@@ -89,25 +88,26 @@ class ContentParserMkdn(ContentParserBase):
     REGEXP['links'][Const.SOLUTION] = REGEXP['links'][Const.SNIPPET]
     REGEXP['links'][Const.REFERENCE] = REGEXP['links'][Const.SNIPPET]
 
-    def __init__(self, timestamp, text):
+    def __init__(self, timestamp, text, collection):
         """
         Args:
             timestamp (str): IS8601 timestamp used with created resources.
             text (str): Source text that is parsed.
+            collection (Collection()): Collection where the content is stored.
         """
 
         self._logger = Logger.get_logger(__name__)
         self._timestamp = timestamp
         self._text = text
+        self._collection = collection
 
     def read_collection(self):
         """Read collection from the given text source."""
 
-        collection = Collection()
         contents = self._text.split('---')
         for content in contents:
             category = self._read_category(content)
-            resource = collection.get_resource(category, self._timestamp)
+            resource = self._collection.get_resource(category, self._timestamp)
             resource.data = self._read_data(category, content)
             resource.brief = self._read_brief(category, content)
             resource.description = self._read_description(category, content)
@@ -123,9 +123,7 @@ class ContentParserMkdn(ContentParserBase):
             resource.created = self._read_meta_value(category, 'created', content)
             resource.updated = self._read_meta_value(category, 'updated', content)
             resource.digest = self._read_meta_value(category, 'digest', content)
-            collection.migrate(resource)
-
-        return collection
+            self._collection.migrate(resource)
 
     def _read_category(self, text):
         """Read content category from text string.

@@ -554,7 +554,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_snippets()) == 2
-            Content.compare_mkdn(mock_file, './snippets.mkdn', content)
+            Content.assert_mkdn(mock_file, './snippets.mkdn', content)
 
     @pytest.mark.usefixtures('export-time')
     def test_cli_export_snippet_028(self, snippy):

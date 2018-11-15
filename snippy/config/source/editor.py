@@ -23,7 +23,7 @@ import os
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
-from snippy.config.source.parser import Parser
+from snippy.content.parser import Parser
 from snippy.logger import Logger
 
 
@@ -33,25 +33,21 @@ class Editor(object):  # pylint: disable=too-few-public-methods
     _logger = Logger.get_logger(__name__)
 
     @classmethod
-    def read(cls, timestamp, templates, resource):
+    def read(cls, timestamp, templates, resource, collection):
         """Read content from editor.
 
         Args:
             timestamp (str): IS8601 timestamp used with created resources.
             templates (dict): Empty content default templates.
             resource (Resource()): Empty or existing resource displayed to user.
-
-        Returns:
-            Collection(): Parsed content in Collection object.
+            collection (Collection()): Collection where the content is stored.
         """
 
         template = resource.dump_text(templates)
         text = cls._call_editor(template)
-        collection = Parser(Const.CONTENT_FORMAT_TEXT, timestamp, text).read()
+        Parser(Const.CONTENT_FORMAT_TEXT, timestamp, text, collection).read()
         if not collection:
             Cause.insert(Cause.HTTP_BAD_REQUEST, 'could not identify edited content category - please keep tags in place')
-
-        return collection
 
     @classmethod
     def _call_editor(cls, template):

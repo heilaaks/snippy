@@ -30,7 +30,6 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from snippy.config.source.cli import Cli
 from snippy.config.source.editor import Editor
-from snippy.config.source.parser import Parser
 from snippy.content.collection import Collection
 from snippy.devel.profiler import Profiler
 from snippy.logger import Logger
@@ -189,20 +188,13 @@ class Config(object):
         """
 
         timestamp = Config.utcnow()
+        collection = Collection()
         if text is not None:
-            collection = Parser(
-                cls.operation_file_format,
-                timestamp,
-                text
-            ).read()
+            collection.load(cls.operation_file_format, timestamp, text)
         elif cls.editor:
             if not resource:
                 resource = Collection().get_resource(cls.content_category, timestamp)
-            collection = Editor.read(
-                timestamp,
-                Config.templates,
-                resource
-            )
+            Editor.read(timestamp, Config.templates, resource, collection)
         else:
             collection = cls._read_collection(timestamp)
 

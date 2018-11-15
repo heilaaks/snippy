@@ -38,7 +38,7 @@ class TestApiCreateSnippet(object):
     """Test POST snippets collection API."""
 
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_001(self, server, mocker):
+    def test_api_create_snippet_001(self, server):
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet. The snippet is sent in
@@ -71,10 +71,10 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.compare_storage(content)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_002(self, server, mocker):
+    def test_api_create_snippet_002(self, server):
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet. In this case the there
@@ -115,10 +115,10 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.compare_storage(content)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-exited-utc')
-    def test_api_create_snippet_003(self, server, mocker):
+    def test_api_create_snippet_003(self, server):
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet. In this case the content
@@ -158,10 +158,10 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.compare_storage(content)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-exited-utc')
-    def test_api_create_snippet_004(self, server, mocker):
+    def test_api_create_snippet_004(self, server):
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet. In this case the content
@@ -203,10 +203,10 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.compare_storage(content)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_005(self, server, mocker):
+    def test_api_create_snippet_005(self, server):
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet with only data.
@@ -256,7 +256,7 @@ class TestApiCreateSnippet(object):
         assert result.headers == result_headers
         assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.compare_storage(content)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
     def test_api_create_snippet_006(self, server, mocker):

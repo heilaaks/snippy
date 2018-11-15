@@ -27,6 +27,7 @@ from signal import signal, getsignal, SIGPIPE, SIG_DFL
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
+from snippy.content.parser import Parser
 from snippy.content.resource import Resource
 from snippy.logger import Logger
 
@@ -185,6 +186,20 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             resource.convert(row)
             self.migrate(resource)
 
+    def load(self, content_format, timestamp, content):
+        """Load content into collection.
+
+        Args:
+           content_format (Enum): Content format.
+           timestamp (str): IS8601 timestamp used with created resources.
+           content (str): Content to be read.
+        """
+
+        if content_format == Const.CONTENT_FORMAT_MKDN:
+            self.load_mkdn(timestamp, content)
+        elif content_format == Const.CONTENT_FORMAT_TEXT:
+            self.load_text(timestamp, content)
+
     def load_dict(self, dictionary):
         """Convert dictionary to collection."""
 
@@ -226,6 +241,24 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             text = text + Const.NEWLINE
 
         return text
+
+    def load_mkdn(self, timestamp, mkdn):
+        """Load content from Markdown file.
+
+        Args:
+           mkdn (str): Markdown formatted string.
+        """
+
+        Parser(Const.CONTENT_FORMAT_MKDN, timestamp, mkdn, self).read()
+
+    def load_text(self, timestamp, text):
+        """Load content from Markdown file.
+
+        Args:
+           text (str): Text formatted string.
+        """
+
+        Parser(Const.CONTENT_FORMAT_TEXT, timestamp, text, self).read()
 
     def dump_mkdn(self, templates):
         """Convert collection to Markdown format.

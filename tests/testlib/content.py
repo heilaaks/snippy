@@ -77,6 +77,13 @@ class Content(object):
         Database.store(content)
 
     @staticmethod
+    def delete():
+        """Delete all existing content and the database."""
+
+        Database.delete_all_contents()
+        Database.delete_storage()
+
+    @staticmethod
     def deepcopy(content):
         """Return a deepcopy from given content.
 
@@ -111,6 +118,11 @@ class Content(object):
             content (dict): Excepted content compared against database.
         """
 
+        if not content:
+            assert not Database.get_collection()
+
+            return
+
         references = Collection()
         references.load_dict({'data': content.values()})
         collection = Database.get_collection()
@@ -122,6 +134,7 @@ class Content(object):
         except AssertionError:
             print(references)
             print(collection)
+            Content._print_assert(references, collection)
             raise AssertionError
 
     @classmethod
@@ -496,6 +509,20 @@ class Content(object):
             return True
 
         return False
+
+    @staticmethod
+    def _print_assert(references, collection):
+        """Compare details for two collections.
+
+        Args:
+            references (Collection()): Expected references in collection.
+            collection (Collection()): Resulted collection from test case.
+        """
+
+        for digest in references.keys():
+            if references[digest].data != collection[digest].data:
+                print("references[{:.8}].data ({})".format(digest, references[digest].data))
+                print("collection[{:.8}].data ({})".format(digest, collection[digest].data))
 
     @staticmethod
     def _print_compare(mock_file, mock_calls, references, filename):  # pylint: disable=too-many-locals

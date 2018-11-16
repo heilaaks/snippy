@@ -220,6 +220,15 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return data
 
+    def load_text(self, timestamp, text):
+        """Load content from Markdown file.
+
+        Args:
+           text (str): Text formatted string.
+        """
+
+        Parser(Const.CONTENT_FORMAT_TEXT, timestamp, text, self).read()
+
     def dump_text(self, templates):
         """Convert collection to text format.
 
@@ -250,15 +259,6 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         """
 
         Parser(Const.CONTENT_FORMAT_MKDN, timestamp, mkdn, self).read()
-
-    def load_text(self, timestamp, text):
-        """Load content from Markdown file.
-
-        Args:
-           text (str): Text formatted string.
-        """
-
-        Parser(Const.CONTENT_FORMAT_TEXT, timestamp, text, self).read()
 
     def dump_mkdn(self, templates):
         """Convert collection to Markdown format.

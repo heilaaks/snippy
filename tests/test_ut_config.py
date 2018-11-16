@@ -77,7 +77,7 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.remove_fields == ()
         assert Config.sort_fields == OrderedDict([('brief', 'ASC')])
         assert isinstance(Config.get_operation_file(), str)
-        assert Config.get_resource().dump_dict([]), resource
+        assert Config.get_resource(None).dump_dict([]), resource
         assert next(Config.get_collection().resources()).dump_dict([]), resource
         assert Config.is_operation_create
         assert not Config.is_operation_search

@@ -90,7 +90,7 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             stored = next(collection.resources())
             digest = stored.digest
             self._logger.debug('updating stored: %s :with digest: %.16s', self._category, digest)
-            updates = Config.get_resource(updates=stored)
+            updates = Config.get_resource(stored)
             if Config.merge:
                 stored.merge(updates)
             else:

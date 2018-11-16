@@ -106,9 +106,11 @@ class Migrate(object):
             with open(filename, 'r') as infile:
                 try:
                     if Config.is_operation_file_text:
-                        collection = Config.get_collection(text=infile.read())
+                        timestamp = Config.utcnow()
+                        collection.load(Config.operation_file_format, timestamp, infile.read())
                     elif Config.is_operation_file_mkdn:
-                        collection = Config.get_collection(text=infile.read())
+                        timestamp = Config.utcnow()
+                        collection.load(Config.operation_file_format, timestamp, infile.read())
                     elif Config.is_operation_file_json:
                         dictionary = json.load(infile)
                         collection.load_dict(dictionary)

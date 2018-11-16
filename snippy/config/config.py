@@ -167,44 +167,48 @@ class Config(object):
         Profiler.disable()
 
     @classmethod
-    def get_collection(cls, resource=None, text=None):
+    def get_collection(cls, resource=None):
         """Get resource collection from configuration source.
 
         Get collection of resources from various configuration sources. A
-        configuration source may be for example file defined from command
-        line, a set of CLI parameters or a REST API request.
+        configuration source can be a set of CLI parameters or a REST API
+        request.
 
         If resource updates are provided on top of configured content, the
         updates are added on top of configured content. For example when
         existing content is updated, the stored content must be shown on
-        text editor on top of the default template.
+        text editor.
 
         Args:
-            resource (Resource()): Content updates in resource object.
-            text (str): Content source as a text string
+            resource (Resource()): Content updates on top of configured content.
 
         Returns:
             Collection(): Configured content in Collection object.
         """
 
-        timestamp = Config.utcnow()
         collection = Collection()
-        if text is not None:
-            collection.load(cls.operation_file_format, timestamp, text)
-        elif cls.editor:
+        timestamp = Config.utcnow()
+        if cls.editor:
             if not resource:
                 resource = Collection().get_resource(cls.content_category, timestamp)
             Editor.read(timestamp, Config.templates, resource, collection)
         else:
-            collection = cls._read_collection(timestamp)
+            cls._read_collection(timestamp, collection)
 
         return collection
 
     @classmethod
-    def get_resource(cls, updates=None, text=None):
-        """Get resource from configuration source."""
+    def get_resource(cls, updates):
+        """Get resource from configuration source.
 
-        collection = cls.get_collection(updates, text)
+        The configuration source is updated with given in the Resource()
+        object.
+
+        Args:
+            resource (Resource()): Content updates on top of configured content.
+        """
+
+        collection = cls.get_collection(updates)
         resource = next(collection.resources())
 
         return resource
@@ -260,10 +264,9 @@ class Config(object):
         )
 
     @classmethod
-    def _read_collection(cls, timestamp):
+    def _read_collection(cls, timestamp, collection):
         """Read configurared content."""
 
-        collection = Collection()
         resource = collection.get_resource(cls.content_category, timestamp)
         resource.data = cls.content_data
         resource.brief = cls.content_brief
@@ -277,8 +280,6 @@ class Config(object):
         resource.source = cls.content_source
         resource.digest = resource.compute_digest()
         collection.migrate(resource)
-
-        return collection
 
     @classmethod
     def _storage_schema(cls):

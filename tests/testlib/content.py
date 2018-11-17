@@ -38,7 +38,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
-class Content(object):
+class Content(object):  # pylint: disable=too-many-public-methods
     """Helper methods for content testing."""
 
     # Contents
@@ -103,16 +103,19 @@ class Content(object):
     def assert_storage(cls, content):
         """Compare content stored in database.
 
-        The comparison uses equality implemented for collection data class.
-        This quarantees that the count of resources in collection is tested
-        to be the same between expected content and collection in database.
+        The assert comparisons use equality implemented for collection data
+        class. This quarantees that the count of resources in collection is
+        same between expected content and in collection created from database.
 
         The comparison tests all but the key attribute in between references.
         The key attribute is an index in database and it cannot be compared.
 
-        Because the default content can be inserted in any order, the UUID's
-        can differ between contents. Because of this, the UUID is masked
-        away with a valid UUID.
+        The content UUID must be unique for the database. UUID's are allocated
+        in order where content is stored which can be random between different
+        tests. Because of this, content UUID is always masked away.
+
+        The original content must not be changed because it is pointing to the
+        default content shared between all the tests.
 
         Args:
             content (dict): Excepted content compared against database.
@@ -123,44 +126,60 @@ class Content(object):
 
             return
 
-        references = Collection()
-        references.load_dict({'data': content.values()})
+        references = cls._read_refs(content)
         collection = Database.get_collection()
-        for digest in references.keys():
-            references[digest].uuid = Database.VALID_UUID
-            collection[digest].uuid = Database.VALID_UUID
         try:
             assert references == collection
         except AssertionError:
-            print(references)
-            print(collection)
             Content._print_assert(references, collection)
             raise AssertionError
 
     @classmethod
-    def assert_mkdn(cls, mkdn_file, filename, content):
-        """Compare Markdown content in file against expected content.
+    def assert_mkdn(cls, mkdn, filename, content):
+        """Compare Markdown against expected content.
 
         See description for assert_storage method.
 
         Args:
-            mkdn_file (obj): Mocked file where the Markdown content was saved.
+            mkdn (obj): Mocked file where the Markdown content was saved.
             filename (str): Expected filename.
-            content (dict): Excepted content.
+            content (dict): Excepted content compared against Markdown file.
         """
 
-        references = Collection()
-        references.load_dict({'data': content['data']})
-        collection = cls._read_mock_file(Const.CONTENT_FORMAT_MKDN, mkdn_file)
-        for digest in references.keys():
-            references[digest].uuid = Database.VALID_UUID
-            collection[digest].uuid = Database.VALID_UUID
+        references = cls._read_refs(content)
+        collection = cls._read_mock(Const.CONTENT_FORMAT_MKDN, mkdn)
         try:
-            mkdn_file.assert_called_once_with(filename, 'w')
+            mkdn.assert_called_once_with(filename, 'w')
             assert references == collection
         except AssertionError:
-            print(references)
-            print(collection)
+            Content._print_assert(references, collection)
+            raise AssertionError
+
+    @classmethod
+    def assert_yaml(cls, yaml, yaml_file, filename, content):
+        """Compare YAML against expected content.
+
+        See description for assert_storage method.
+
+        Args:
+            yaml (obj): Mocked YAML dump method.
+            yaml_file (obj): Mocked file where the YAML content was saved.
+            filename (str): Expected filename.
+            content (dict): Excepted content compared against generated YAML.
+        """
+
+        content = cls._mask_uuid(content)
+        references = cls._read_refs(content)
+        collection = cls._read_mock(Const.CONTENT_FORMAT_YAML, yaml)
+        dictionary = cls._read_dict(Const.CONTENT_FORMAT_YAML, yaml)
+        try:
+            assert len(references) == len(Database.get_collection())
+            assert references == collection
+            assert dictionary == content
+            yaml_file.assert_called_once_with(filename, 'w')
+        except AssertionError:
+            Content._print_assert(references, collection)
+            Content._print_assert(content, dictionary)
             raise AssertionError
 
     @staticmethod
@@ -458,24 +477,96 @@ class Content(object):
 
         return content_read
 
-    @staticmethod
-    def _read_mock_file(content_format, file_mock):
-        """Return collection from mocked file content.
+    @classmethod
+    def _mask_uuid(cls, content):
+        """Mask UUID from given content.
+
+        See description for assert_storage method.
 
         Args:
-            content_format (Enum): File content format.
-            file_mock (obj): Mocked file where the Markdown content was saved.
+            content (dict): Reference content.
+
+        Returns:
+            content (dict): Reference content with constant UUDI.
+        """
+
+        content = cls.deepcopy(content)
+        for data in content['data']:
+            data['uuid'] = Database.VALID_UUID
+
+        return content
+
+    @staticmethod
+    def _read_refs(content):
+        """Return collection from content.
+
+        See description for assert_storage method.
+
+        Args:
+            content (dict): Reference content.
+
+        Returns:
+            Collection(): Collection of resources read from content.
+        """
+
+        references = Collection()
+        references.load_dict({'data': content['data']})
+
+        for digest in references.keys():
+            references[digest].uuid = Database.VALID_UUID
+
+        return references
+
+    @staticmethod
+    def _read_mock(content_format, mock_object):
+        """Return collection from mock.
+
+        See description for assert_storage method.
+
+        Args:
+            content_format (str): Content format stored in mock.
+            mock_object (obj): Mock object where content was stored.
 
         Returns:
             Collection(): Collection of resources read from the file.
         """
 
         collection = Collection()
-        handle = file_mock.return_value.__enter__.return_value
-        for call in handle.write.mock_calls:
-            collection.load(content_format, Content.EXPORT_TIME, call[1][0])
+        if content_format == Const.CONTENT_FORMAT_MKDN:
+            handle = mock_object.return_value.__enter__.return_value
+            for call in handle.write.mock_calls:
+                collection.load(content_format, Content.EXPORT_TIME, call[1][0])
+        elif content_format == Const.CONTENT_FORMAT_YAML:
+            for call in mock_object.safe_dump.mock_calls:
+                collection.load_dict(call[1][0])
+
+        for digest in collection.keys():
+            collection[digest].uuid = Database.VALID_UUID
 
         return collection
+
+    @staticmethod
+    def _read_dict(content_format, mock_object):
+        """Return dictionary from mock.
+
+        See description for assert_storage method.
+
+        Args:
+            content_format (str): Content format stored in mock.
+            mock_object (obj): Mock object where content was stored.
+
+        Returns:
+            dict: Dictinary from the mocked object.
+        """
+
+        dictionary = {}
+        if content_format == Const.CONTENT_FORMAT_YAML:
+            dictionary = mock_object.safe_dump.mock_calls[0][1][0]
+
+        for data in dictionary['data']:
+            data['uuid'] = Database.VALID_UUID
+
+        return dictionary
 
     @staticmethod
     def _sorter(json):
@@ -511,18 +602,63 @@ class Content(object):
         return False
 
     @staticmethod
-    def _print_assert(references, collection):
-        """Compare details for two collections.
+    def _print_assert(expect, actual):
+        """Find and print differences between expected and actual values.
 
         Args:
-            references (Collection()): Expected references in collection.
-            collection (Collection()): Resulted collection from test case.
+            expect: Expected value.
+            actual: Actual value
         """
 
-        for digest in references.keys():
-            if references[digest].data != collection[digest].data:
-                print("references[{:.8}].data ({})".format(digest, references[digest].data))
-                print("collection[{:.8}].data ({})".format(digest, collection[digest].data))
+        print("=" * 120)
+        if type(expect) is not type(actual):
+            print("Cannot compare different types.")
+
+            return
+
+        if expect == actual:
+            print("Comparing expexted and actual types of {} which are equal.".format(type(expect)))
+
+            return
+
+        if isinstance(expect, Collection):
+            if expect.keys() != actual.keys():
+                print("Asserted collections do not have same resources.")
+                print("expect")
+                for digest in expect.keys():
+                    pprintpp.pprint(expect[digest].dump_dict([]))
+                print("actual")
+                for digest in actual.keys():
+                    pprintpp.pprint(actual[digest].dump_dict([]))
+                print("=" * 120)
+
+                return
+
+            for digest in expect.keys():
+                content1 = expect[digest].dump_dict([])
+                content2 = actual[digest].dump_dict([]) if digest in actual.keys() else {}
+                pprintpp.pprint(content1)
+                pprintpp.pprint(content2)
+                fields = [field for field in content1 if content1[field] != content2[field]]
+                print("Differences in resource: {:.16}".format(digest))
+                print("=" * 120)
+                for field in fields:
+                    print("expect[{:.16}].{}:".format(digest, field))
+                    pprintpp.pprint(content1[field])
+                    print("actual[{:.16}].{}:".format(digest, field))
+                    pprintpp.pprint(content2[field])
+        if isinstance(expect, dict):
+            print("Comparing expexted and actual types of {} which are different.".format(type(expect)))
+            pprintpp.pprint(expect)
+            pprintpp.pprint(actual)
+            fields = [field for field in expect if expect[field] != actual[field]]
+            print("=" * 120)
+            for field in fields:
+                print("expect {}:".format(field))
+                pprintpp.pprint(expect[field])
+                print("actual {}:".format(field))
+                pprintpp.pprint(expect[field])
+        print("=" * 120)
 
     @staticmethod
     def _print_compare(mock_file, mock_calls, references, filename):  # pylint: disable=too-many-locals

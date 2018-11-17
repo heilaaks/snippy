@@ -51,7 +51,6 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
-        content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '711'
@@ -63,6 +62,7 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
@@ -95,7 +95,6 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '711'
@@ -107,6 +106,7 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -138,7 +138,6 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '916'
@@ -147,9 +146,10 @@ class TestApiCreateSnippet(object):
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': content_read
             }]
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -183,7 +183,6 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        content = {Snippet.EXITED_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '916'
@@ -192,9 +191,10 @@ class TestApiCreateSnippet(object):
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': content_read
             }]
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -236,7 +236,6 @@ class TestApiCreateSnippet(object):
             'updated': '2017-10-14T19:56:31.000001+0000',
             'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
         }
-        content = {'3d855210284302d5': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '562'
@@ -248,6 +247,7 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -264,10 +264,6 @@ class TestApiCreateSnippet(object):
         Call POST /v1/snippets in list context to create new snippets.
         """
 
-        content = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
-        }
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -291,6 +287,12 @@ class TestApiCreateSnippet(object):
                 'id': Snippet.FORCED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
+        }
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
@@ -514,7 +516,6 @@ class TestApiCreateSnippet(object):
                 }
             }
         }
-        content = {Snippet.REMOVE_DIGEST: content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '802'
@@ -529,6 +530,7 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PUT'},
@@ -571,7 +573,6 @@ class TestApiCreateSnippet(object):
             'updated': Content.FORCED_TIME,
             'digest': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         }
-        content = {'a9e137c08aee0985': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '894'
@@ -586,6 +587,7 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
@@ -642,7 +644,6 @@ class TestApiCreateSnippet(object):
             'updated': Content.EXITED_TIME,
             'digest': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4'
         }
-        content = {'ea89da812a610780': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '748'
@@ -657,6 +658,7 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
@@ -674,11 +676,13 @@ class TestApiCreateSnippet(object):
         snippet. In this case the resource exists and the content is deleted.
         """
 
-        content = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
-        }
         result_headers = {}
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
@@ -807,7 +811,6 @@ class TestApiCreateSnippet(object):
             'updated': '2017-10-14T19:56:31.000001+0000',
             'digest': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf'
         }
-        content = {'c267233096b697': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '933'
@@ -819,6 +822,7 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
@@ -896,7 +900,6 @@ class TestApiCreateSnippet(object):
             'updated': Content.REGEXP_TIME,
             'digest': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5'
         }
-        content = {'a861de558c95d7d3': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '654'}
@@ -907,6 +910,7 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
+        content = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},

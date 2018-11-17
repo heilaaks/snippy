@@ -54,8 +54,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_snippets()) == 2
-            Content.yaml_dump(yaml, mock_file, './snippets.yaml', content)
+            Content.assert_yaml(yaml, mock_file, './snippets.yaml', content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_002(self, snippy):

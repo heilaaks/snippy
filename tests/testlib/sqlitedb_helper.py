@@ -114,8 +114,8 @@ class SqliteDbHelper(object):
         collection.convert(rows)
         print(collection)
 
-    @staticmethod
-    def get_collection():
+    @classmethod
+    def get_collection(cls):
         """Return database rows as collection."""
 
         rows = ()
@@ -126,6 +126,9 @@ class SqliteDbHelper(object):
             rows = cursor.fetchall()
         connection.close()
         collection.convert(rows)
+
+        for digest in collection.keys():
+            collection[digest].uuid = cls.VALID_UUID
 
         return collection
 

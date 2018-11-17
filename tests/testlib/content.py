@@ -21,6 +21,7 @@
 
 import copy
 import datetime
+import re
 
 import mock
 import pprintpp
@@ -114,6 +115,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
         in order where content is stored which can be random between different
         tests. Because of this, content UUID is always masked away.
 
+        Text formatted content does not have created and updated fields in the
+        text. Because of this, they cannot be compared against reference and
+        these two fields are masked away when comparing text content.
+
         The original content must not be changed because it is pointing to the
         default content shared between all the tests.
 
@@ -126,12 +131,38 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
             return
 
-        references = cls._read_refs(content)
+        references = cls._read_refs(Const.CONTENT_FORMAT_NONE, content)
         collection = Database.get_collection()
         try:
             assert references == collection
         except AssertionError:
             Content._print_assert(references, collection)
+            raise AssertionError
+
+    @classmethod
+    def assert_json(cls, json, json_file, filename, content):
+        """Compare JSON against expected content.
+
+        See description for assert_storage method.
+
+        Args:
+            json (obj): Mocked JSON dump method.
+            json_file (obj): Mocked file where the JSON content was saved.
+            filename (str): Expected filename.
+            content (dict): Excepted content compared against generated JSON.
+        """
+
+        references = cls._read_refs(Const.CONTENT_FORMAT_JSON, content)
+        match_dict = cls._mask_uuid(content)
+        collection = cls._read_mock(Const.CONTENT_FORMAT_JSON, json)
+        saved_dict = cls._read_dict(Const.CONTENT_FORMAT_JSON, json)
+        try:
+            assert references == collection
+            assert match_dict == saved_dict
+            json_file.assert_called_once_with(filename, 'w')
+        except AssertionError:
+            Content._print_assert(references, collection)
+            Content._print_assert(match_dict, saved_dict)
             raise AssertionError
 
     @classmethod
@@ -146,13 +177,48 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Excepted content compared against Markdown file.
         """
 
-        references = cls._read_refs(content)
+        references = cls._read_refs(Const.CONTENT_FORMAT_MKDN, content)
+        match_mkdn = references.dump_mkdn(Config.templates)
         collection = cls._read_mock(Const.CONTENT_FORMAT_MKDN, mkdn)
+        saved_mkdn = cls._read_text(Const.CONTENT_FORMAT_MKDN, mkdn)
         try:
             mkdn.assert_called_once_with(filename, 'w')
+            assert match_mkdn == saved_mkdn
             assert references == collection
         except AssertionError:
             Content._print_assert(references, collection)
+            Content._print_assert(match_mkdn, saved_mkdn)
+            raise AssertionError
+
+    @classmethod
+    def assert_text(cls, text, filename, content):
+        """Compare proprietary text format against expected content.
+
+        See description for assert_storage method.
+
+        Args:
+            text (obj): Mocked file where the Markdown content was saved.
+            filename (str): Expected filename.
+            content (dict): Excepted content compared against Markdown file.
+        """
+
+        if not filename:
+            text.assert_not_called()
+            text.return_value.__enter__.return_value.write.assert_not_called()
+
+            return
+
+        references = cls._read_refs(Const.CONTENT_FORMAT_TEXT, content)
+        match_text = references.dump_text(Config.templates)
+        collection = cls._read_mock(Const.CONTENT_FORMAT_TEXT, text)
+        saved_text = cls._read_text(Const.CONTENT_FORMAT_TEXT, text)
+        try:
+            text.assert_called_once_with(filename, 'w')
+            assert match_text == saved_text
+            assert references == collection
+        except AssertionError:
+            Content._print_assert(references, collection)
+            Content._print_assert(match_text, saved_text)
             raise AssertionError
 
     @classmethod
@@ -168,18 +234,17 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Excepted content compared against generated YAML.
         """
 
-        content = cls._mask_uuid(content)
-        references = cls._read_refs(content)
+        references = cls._read_refs(Const.CONTENT_FORMAT_YAML, content)
+        match_dict = cls._mask_uuid(content)
         collection = cls._read_mock(Const.CONTENT_FORMAT_YAML, yaml)
-        dictionary = cls._read_dict(Const.CONTENT_FORMAT_YAML, yaml)
+        saved_dict = cls._read_dict(Const.CONTENT_FORMAT_YAML, yaml)
         try:
-            assert len(references) == len(Database.get_collection())
             assert references == collection
-            assert dictionary == content
+            assert saved_dict == match_dict
             yaml_file.assert_called_once_with(filename, 'w')
         except AssertionError:
             Content._print_assert(references, collection)
-            Content._print_assert(content, dictionary)
+            Content._print_assert(match_dict, saved_dict)
             raise AssertionError
 
     @staticmethod
@@ -497,25 +562,29 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return content
 
     @staticmethod
-    def _read_refs(content):
-        """Return collection from content.
+    def _read_dict(content_format, mock_object):
+        """Return dictionary from mock.
 
         See description for assert_storage method.
 
         Args:
-            content (dict): Reference content.
+            content_format (str): Content format stored in mock.
+            mock_object (obj): Mock object where content was stored.
 
         Returns:
-            Collection(): Collection of resources read from content.
+            dict: Dictinary from the mocked object.
         """
 
-        references = Collection()
-        references.load_dict({'data': content['data']})
+        dictionary = {}
+        if content_format == Const.CONTENT_FORMAT_JSON:
+            dictionary = mock_object.dump.mock_calls[0][1][0]
+        elif content_format == Const.CONTENT_FORMAT_YAML:
+            dictionary = mock_object.safe_dump.mock_calls[0][1][0]
 
-        for digest in references.keys():
-            references[digest].uuid = Database.VALID_UUID
+        for data in dictionary['data']:
+            data['uuid'] = Database.VALID_UUID
 
-        return references
+        return dictionary
 
     @staticmethod
     def _read_mock(content_format, mock_object):
@@ -532,7 +601,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """
 
         collection = Collection()
-        if content_format == Const.CONTENT_FORMAT_MKDN:
+        if content_format == Const.CONTENT_FORMAT_JSON:
+            for call in mock_object.dump.mock_calls:
+                collection.load_dict(call[1][0])
+        elif content_format in (Const.CONTENT_FORMAT_MKDN, Const.CONTENT_FORMAT_TEXT):
             handle = mock_object.return_value.__enter__.return_value
             for call in handle.write.mock_calls:
                 collection.load(content_format, Content.EXPORT_TIME, call[1][0])
@@ -546,8 +618,35 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return collection
 
     @staticmethod
-    def _read_dict(content_format, mock_object):
-        """Return dictionary from mock.
+    def _read_refs(content_format, content):
+        """Return collection from content.
+
+        See description for assert_storage method.
+
+        Args:
+            content_format (str): Content format stored in mock.
+            content (dict): Reference content.
+
+        Returns:
+            Collection(): Collection of resources read from content.
+        """
+
+        references = Collection()
+        references.load_dict({'data': content['data']})
+
+        for digest in references.keys():
+            references[digest].uuid = Database.VALID_UUID
+
+        if content_format == Const.CONTENT_FORMAT_TEXT:
+            for digest in references.keys():
+                references[digest].created = Content.EXPORT_TIME
+                references[digest].updated = Content.EXPORT_TIME
+
+        return references
+
+    @staticmethod
+    def _read_text(content_format, mock_object):
+        """Return text saved in mock.
 
         See description for assert_storage method.
 
@@ -556,17 +655,18 @@ class Content(object):  # pylint: disable=too-many-public-methods
             mock_object (obj): Mock object where content was stored.
 
         Returns:
-            dict: Dictinary from the mocked object.
+            str: String from the mocked object.
         """
 
-        dictionary = {}
-        if content_format == Const.CONTENT_FORMAT_YAML:
-            dictionary = mock_object.safe_dump.mock_calls[0][1][0]
+        text = Const.EMPTY
+        if content_format in (Const.CONTENT_FORMAT_MKDN, Const.CONTENT_FORMAT_TEXT):
+            handle = mock_object.return_value.__enter__.return_value
+            for call in handle.write.mock_calls:
+                text = text + call[1][0]
 
-        for data in dictionary['data']:
-            data['uuid'] = Database.VALID_UUID
+            text = re.sub(r'uuid     : \S+', 'uuid     : ' + Database.VALID_UUID, text)
 
-        return dictionary
+        return text
 
     @staticmethod
     def _sorter(json):
@@ -647,7 +747,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                     pprintpp.pprint(content1[field])
                     print("actual[{:.16}].{}:".format(digest, field))
                     pprintpp.pprint(content2[field])
-        if isinstance(expect, dict):
+        elif isinstance(expect, dict):
             print("Comparing expexted and actual types of {} which are different.".format(type(expect)))
             pprintpp.pprint(expect)
             pprintpp.pprint(actual)
@@ -658,6 +758,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
                 pprintpp.pprint(expect[field])
                 print("actual {}:".format(field))
                 pprintpp.pprint(expect[field])
+        elif isinstance(expect, str):
+            print("Comparing expexted and actual types of {} which are different.".format(type(expect)))
+            print(expect)
+            print(actual)
         print("=" * 120)
 
     @staticmethod

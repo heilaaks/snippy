@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Fix test_cli_export_snippet_028 and two line description. The second line is indented with two spaces when should not.
    - [ ] Change the test with dump_text (or vise versa) to Content.compare_text like with compare_mkdn().
    - [ ] Refactor tests with Content.verified, Content.ordered, Content.compare_dump|Content.****_dump. Cases: import (check after import with YAML) and export (compare in target format.
    - [ ] Refactor tests 1. Content.compare_mkdn, Content.compare_text, Content.compare_yaml, Content.compare_json  # compare exported data

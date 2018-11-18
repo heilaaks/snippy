@@ -5,7 +5,7 @@
    - [ ] Refactor tests 2. Content.compare_data (replaces Content.verified) # Compare created, updated or imported data in database against YAML formatted reference.
    - [ ] Refactor tests 3. REST API result needs Content.ordered. No changes to this?
    - [ ] Refactor tests 4. Change file mocks to new mocked_file which allows defining the return format for the mock.
-   - [ ] Refactor compare to own pytest plugin.
+   - [ ] Refactor compare to own pytest plugin. (maybe not?)
    - [ ] Refactor tests and fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints. Refactor the current implementation.
    - [ ] Refactor tests so that the Content is used instead of sqlite_helper. Only use Content or Helper (?). The content is a wrapper for content related operations.
    - [ ] Refactor tests and move common items to Helper class in testlib. Do not copy from code because it creates dependency to tested code which cause problems in test case imports.
@@ -17,9 +17,7 @@
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
    - [ ] Add own package from text highlighting. pytest plugin https://docs.pytest.org/en/latest/writing_plugins.html#writing-plugins
-   - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
-   - [ ] Fix (optimize) digest calculation for import. Print the digest string from digest compute and see that it computes digest 4 times for same content.
 
 ## THINKING
    - [ ] Add code content.
@@ -28,6 +26,11 @@
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
    - [ ] Add changelog to README.
    - [ ] Add tool configs to pyproject.toml.
+
+## OPTIMIZATIONS
+   - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
+   - [ ] Fix (optimize) digest calculation for import. Print the digest string from digest compute and see that it computes digest 4 times for same content.
+   - [ ] Fix (optimize) POST API with multiple contents. Now each content in collection is *.run with own resources. The create supports collection so this should work.
 
 ## FEATURES
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.

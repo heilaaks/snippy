@@ -19,6 +19,8 @@
 
 """server: JSON RESTish API server."""
 
+import sys
+from signal import signal, getsignal, SIGPIPE, SIG_DFL
 import ssl
 
 import falcon
@@ -108,4 +110,17 @@ class Server(object):  # pylint: disable=too-few-public-methods
         self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}'), ApiUuid(fields))
         self.api.add_route(urljoin(Config.base_path_app, 'uuid/{uuid}/{field}'), ApiUuidField(fields))
         self.api.add_route(urljoin(Config.base_path_app, '{sall}'), ApiKeywords(fields))
+
+        # The signal handler manipulation and the flush below prevent the
+        # 'broken pipe' errors with grep /1,2/. The code allows clean exit
+        # from server with ctrl-c when grepping logs like with the example:
+        #
+        #   $ snippy --server -vv | grep -A2 -B2 'operation: run :'
+        #
+        # /1/ https://stackoverflow.com/a/16865106
+        # /2/ https://stackoverflow.com/a/26738736
+        signal_sigpipe = getsignal(SIGPIPE)
+        signal(SIGPIPE, SIG_DFL)
         SnippyServer(self.api, options).run()
+        sys.stdout.flush()
+        signal(SIGPIPE, signal_sigpipe)

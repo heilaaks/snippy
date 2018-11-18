@@ -258,14 +258,14 @@ class ContentParserText(ContentParserBase):
 
         data = ()
         if category not in Const.CATEGORIES or category == Const.REFERENCE:
-            return data
+            return self.format_data(category, data)
 
         match = self.REGEXP['data'][category].search(text)
         if match:
             data = self.format_data(category, match.group(1))
             self._logger.debug('parsed content data: %s', data)
         else:
-            self._logger.debug('parser did not find content for data')
+            self._logger.debug('parser did not find content for data: {}'.format(text))
 
         # Format snippet command comments to internal format.
         if category == Const.SNIPPET:
@@ -276,9 +276,9 @@ class ContentParserText(ContentParserBase):
                     commands.append('{}{}{}'.format(match.group('command'), Const.SNIPPET_COMMENT, match.group('comment')))
                 else:
                     commands.append(command)
-            data = tuple(commands)
+            data = commands
 
-        return data
+        return self.format_data(category, data)
 
     def _read_brief(self, category, text):
         """Read content brief from text string.
@@ -293,16 +293,16 @@ class ContentParserText(ContentParserBase):
 
         brief = ''
         if category not in Const.CATEGORIES:
-            return brief
+            return self.format_string(brief)
 
         match = self.REGEXP['brief'][category].search(text)
         if match:
-            brief = self.format_string(match.group('brief'))
+            brief = match.group('brief')
             self._logger.debug('parsed content brief: %s', brief)
         else:
-            self._logger.debug('parser did not find content for brief')
+            self._logger.debug('parser did not find content for brief: {}'.format(text))
 
-        return brief
+        return self.format_string(brief)
 
     def _read_description(self, category, text):
         """Read content description from text string.
@@ -317,14 +317,14 @@ class ContentParserText(ContentParserBase):
 
         description = ''
         if category not in Const.CATEGORIES:
-            return description
+            return self.format_string(description)
 
         match = self.REGEXP['description'][category].search(text)
         if match:
-            description = self.format_string(match.group('description'))
+            description = match.group('description')
             self._logger.debug('parsed content description: %s', description)
         else:
-            self._logger.debug('parser did not find content for description')
+            self._logger.debug('parser did not find content for description: {}'.format(text))
 
         # Remove comment marks from each line in case of solution description.
         description = re.sub(r'''
@@ -334,7 +334,7 @@ class ContentParserText(ContentParserBase):
         # Remove newlines, tabs and replace multiple spaces with one space.
         description = re.sub(r'\s+', ' ', description).strip()
 
-        return description
+        return self.format_string(description)
 
     def _read_groups(self, category, text):
         """Read content groups from text string.
@@ -347,7 +347,7 @@ class ContentParserText(ContentParserBase):
             tuple: Tuple of utf-8 encoded groups.
         """
 
-        return ContentParserBase.parse_groups(category, self.REGEXP['groups'].get(category, None), text)
+        return self.parse_groups(category, self.REGEXP['groups'].get(category, None), text)
 
     def _read_tags(self, category, text):
         """Read content tags from text string.
@@ -362,16 +362,16 @@ class ContentParserText(ContentParserBase):
 
         tags = ()
         if category not in Const.CATEGORIES:
-            return tags
+            return self.format_list(tags)
 
         match = self.REGEXP['tags'][category].search(text)
         if match:
-            tags = self.format_list([match.group('tags')])
+            tags = [match.group('tags')]
             self._logger.debug('parsed content tags: %s', tags)
         else:
-            self._logger.debug('parser did not find content for tags')
+            self._logger.debug('parser did not find content for tags: {}'.format(text))
 
-        return tags
+        return self.format_list(tags)
 
     def _read_links(self, category, text):
         """Read content links from text string.
@@ -384,7 +384,7 @@ class ContentParserText(ContentParserBase):
             tuple: Tuple of utf-8 encoded links.
         """
 
-        return ContentParserBase.parse_links(category, self.REGEXP['links'].get(category, None), text)
+        return self.parse_links(category, self.REGEXP['links'].get(category, None), text)
 
     def _read_filename(self, category, text):
         """Read content filename from text string.
@@ -399,13 +399,13 @@ class ContentParserText(ContentParserBase):
 
         filename = ''
         if category not in Const.CATEGORIES:
-            return filename
+            return self.format_string(filename)
 
         match = self.REGEXP['filename'][category].search(text)
         if match:
-            filename = self.format_string(match.group('filename'))
+            filename = match.group('filename')
             self._logger.debug('parsed content filename: %s', filename)
         else:
-            self._logger.debug('parser did not find content for filename')
+            self._logger.debug('parser did not find content for filename: {}'.format(text))
 
-        return filename
+        return self.format_string(filename)

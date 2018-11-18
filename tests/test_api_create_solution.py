@@ -371,8 +371,10 @@ class TestApiCreateSolution(object):
         """Create one solution from API.
 
         Call POST /v1/solutions to create new content. In this case every
-        attribute has additional leading and trailing whitespaces which must
-        be trimmed from rigth only. There must be one newline at the end.
+        attribute has additional leading and trailing whitespaces. Trimming
+        must be done all fields with the exception of data field. In case of
+        data field, there must be only one newline at the end of solution and
+        the extra white spaces must be left as is.
 
         Tags and links must be sorted after parsing.
         """
@@ -395,7 +397,7 @@ class TestApiCreateSolution(object):
             }]
         }
         content_read = {
-            'data': ['     first row', '   second row', ''],
+            'data': ['     first row   ', '   second row  ', ''],
             'brief': 'short brief',
             'description': 'long description',
             'groups': ['python'],
@@ -409,16 +411,16 @@ class TestApiCreateSolution(object):
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.REGEXP_TIME,
             'updated': Content.REGEXP_TIME,
-            'digest': '958d2fbdcb6bec27db25a50ff0da71efb2126100a9624bfa25c268a8fe753033'
+            'digest': '13c08502972d72e0e9b355313bc3b14eddac5c7a80b34ca2b7f401ad57048c61'
         }
-        content = {'958d2fbdcb6bec2': content_read}
+        content = {'13c08502972d72e': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '672'}
+            'content-length': '677'}
         result_json = {
             'data': [{
                 'type': 'solution',
-                'id': '958d2fbdcb6bec27db25a50ff0da71efb2126100a9624bfa25c268a8fe753033',
+                'id': '13c08502972d72e0e9b355313bc3b14eddac5c7a80b34ca2b7f401ad57048c61',
                 'attributes': content_read
             }]
         }

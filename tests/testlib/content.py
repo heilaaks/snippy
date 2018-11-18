@@ -86,6 +86,12 @@ class Content(object):  # pylint: disable=too-many-public-methods
         Database.delete_storage()
 
     @staticmethod
+    def output():
+        """Print all content stored in database."""
+
+        Database.print_contents()
+
+    @staticmethod
     def deepcopy(content):
         """Return a deepcopy from given content.
 

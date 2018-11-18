@@ -36,11 +36,12 @@ class ContentParserBase(object):
 
         Content data is stored as a tuple with one line per element.
 
-        Solutions are trimmed only from end of the whole solution string but
-        snippets and references from both sides of each line. Solutions are
-        quaranteed to have one newline at the end of solution.
+        All but solution data is trimmed from right for every line. In case
+        of solution data, it is considered that user wants to leave it as is.
+        Solutions are trimmed only so that there will be only one newline at
+        the end of the solution data.
 
-        Any value including empty string is considered valid data.
+        Any value including empty string is considered as a valid data.
 
         Args:
             category (str): Content category.
@@ -50,11 +51,12 @@ class ContentParserBase(object):
             tuple: Tuple of utf-8 encoded unicode strings.
         """
 
-        data = cls.to_unicode(value)
+        data = ()
         if category in [Const.SNIPPET, Const.REFERENCE]:
-            data = [s.strip() for s in data.rstrip().split(Const.DELIMITER_DATA)]
+            data = cls.to_unicode(value).rstrip().split(Const.DELIMITER_DATA)
         elif category == Const.SOLUTION:
-            data = data.rstrip().split(Const.NEWLINE) + [Const.EMPTY]
+            data = cls.to_unicode(value, strip_lines=False)
+            data = data.rstrip('\r\n').split(Const.NEWLINE) + [Const.EMPTY]
 
         return tuple(data)
 
@@ -241,16 +243,17 @@ class ContentParserBase(object):
         return groups
 
     @classmethod
-    def to_unicode(cls, value):
+    def to_unicode(cls, value, strip_lines=True):
         """Convert value to utf-8 coded unicode string.
 
-        If the value is already unicode character, the tool always assumes
-        utf-8 encoded unicode characters.
+        If the value is already an unicode character, it is assumed that it is
+        a valid utf-8 encoded unicode character.
 
-        Conversion quarantees only one newline at the end of the string.
+        The conversion quarantees one newline at the end of string.
 
         Args:
-            value (str,list,tuple): Value in string, list or tuple.
+            value (str,list,tuple): Value in a string, list or tuple.
+            strip_lines (bool): Defines if all lines are stripped.
 
         Returns:
             str: Utf-8 encoded unicode string.
@@ -262,7 +265,10 @@ class ContentParserBase(object):
         elif isinstance(value, Const.BINARY_TYPE):
             string_ = value.decode('utf-8')
         elif isinstance(value, (list, tuple)):
-            string_ = Const.NEWLINE.join([cls.to_unicode(x.rstrip()) for x in value])  # Enforce only one newline at the end.
+            if strip_lines:
+                string_ = Const.NEWLINE.join([cls.to_unicode(line.strip()) for line in value])
+            else:
+                string_ = Const.NEWLINE.join([cls.to_unicode(line) for line in value])
         else:
             cls._logger.debug('conversion to unicode string failed with unknown type %s : %s', type(value), value)
 

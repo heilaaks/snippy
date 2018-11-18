@@ -167,7 +167,7 @@ class ContentParserMkdn(ContentParserBase):
 
         data = ()
         if category not in Const.CATEGORIES or category == Const.REFERENCE:
-            return data
+            return self.format_data(category, data)
 
         match = self.REGEXP['data'][category].findall(text)
         if match:
@@ -177,17 +177,17 @@ class ContentParserMkdn(ContentParserBase):
                 data = match[0].strip()
                 if data.startswith("```") and data.endswith("```"):
                     data = data[3:-3]
-                data = self.format_data(category, data.strip())
+                data = data.strip()
             self._logger.debug('parsed content data: %s', data)
         else:
-            self._logger.debug('parser did not find content for data: %s', text)
+            self._logger.debug('parser did not find content for data: {}'.format(text))
 
-        return data
+        return self.format_data(category, data)
 
     def _snippet_data(self, text):
         """Parse snippet data from Markdown formatted string."""
 
-        data = Const.EMPTY
+        data = ''
         for command in text:
             match = re.compile(r'''
                 (?:                             # Match optional comment inside non-capturing set.
@@ -206,7 +206,6 @@ class ContentParserMkdn(ContentParserBase):
                 self._logger.debug('parsed snippet data: %s', data)
             else:
                 self._logger.debug('parser did not find snippet data data: %s', command)
-        data = self.format_data(Const.SNIPPET, data)
 
         return data
 
@@ -223,16 +222,16 @@ class ContentParserMkdn(ContentParserBase):
 
         brief = ''
         if category not in Const.CATEGORIES:
-            return brief
+            return self.format_string(brief)
 
         match = self.REGEXP['brief'][category].search(text)
         if match:
-            brief = self.format_string(match.group('brief'))
+            brief = match.group('brief')
             self._logger.debug('parsed content brief: %s', brief)
         else:
-            self._logger.debug('parser did not find content for brief')
+            self._logger.debug('parser did not find content for brief: {}'.format(text))
 
-        return brief
+        return self.format_string(brief)
 
     def _read_description(self, category, text):
         """Read content description from text string.
@@ -247,18 +246,16 @@ class ContentParserMkdn(ContentParserBase):
 
         description = ''
         if category not in Const.CATEGORIES:
-            return description
+            return self.format_string(description)
 
         match = self.REGEXP['description'][category].search(text)
         if match:
-            # Replace newline with spaces and replace multiple spaces with one space.
             description = Const.SPACE.join(match.group('description').replace('\n', ' ').split())
-            description = self.format_string(description)
             self._logger.debug('parsed content description: %s', description)
         else:
-            self._logger.debug('parser did not find content for description')
+            self._logger.debug('parser did not find content for description: {}'.format(text))
 
-        return description
+        return self.format_string(description)
 
     def _read_groups(self, category, text):
         """Read content groups from text string.
@@ -271,7 +268,7 @@ class ContentParserMkdn(ContentParserBase):
             tuple: Tuple of utf-8 encoded groups.
         """
 
-        return ContentParserBase.parse_groups(category, self.REGEXP['groups'].get(category, None), text)
+        return self.parse_groups(category, self.REGEXP['groups'].get(category, None), text)
 
     def _read_tags(self, category, text):
         """Read content tags from text string.
@@ -286,16 +283,16 @@ class ContentParserMkdn(ContentParserBase):
 
         tags = ()
         if category not in Const.CATEGORIES:
-            return tags
+            return self.format_list(tags)
 
         match = self._read_meta_value(category, 'tags', text)
         if match:
-            tags = self.format_list([match])
+            tags = [match]
             self._logger.debug('parsed content tags: %s', tags)
         else:
-            self._logger.debug('parser did not find content for tags')
+            self._logger.debug('parser did not find content for tags: {}'.format(text))
 
-        return tags
+        return self.format_list(tags)
 
     def _read_links(self, category, text):
         """Read content links from text string.
@@ -308,7 +305,7 @@ class ContentParserMkdn(ContentParserBase):
             tuple: Tuple of utf-8 encoded links.
         """
 
-        return ContentParserBase.parse_links(category, self.REGEXP['links'].get(category, None), text)
+        return self.parse_links(category, self.REGEXP['links'].get(category, None), text)
 
     def _read_meta_value(self, category, key, text):
         """Read content metadata value from text string.
@@ -324,7 +321,7 @@ class ContentParserMkdn(ContentParserBase):
 
         meta = ''
         if category not in Const.CATEGORIES:
-            return meta
+            return self.format_string(meta)
 
         match = re.compile(r'''
             ^%s                 # Match metadata key at the beginning of line.
@@ -332,9 +329,9 @@ class ContentParserMkdn(ContentParserBase):
             (?P<value>.*$)      # Catch metadata value till end of the line.
             ''' % re.escape(key), re.MULTILINE | re.VERBOSE).search(text)
         if match:
-            meta = self.format_string(match.group('value'))
-            self._logger.debug('parsed content metadata: %s : with value: %s', key, meta)
+            meta = match.group('value')
+            self._logger.debug('parsed content metadata: {} : with value: {}'.format(key, text))
         else:
-            self._logger.debug('parser did not find content for metadata: %s', key)
+            self._logger.debug('parser did not find content for key: {} :from metadata: {}'.format(key, text))
 
-        return meta
+        return self.format_string(meta)

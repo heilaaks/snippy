@@ -38,7 +38,7 @@ class TestCliDeleteSolution(object):
         """
 
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '7c226ee33a088381'])
+        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '5dee85bedb7f4d3a'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, snippy, content_read)
@@ -51,7 +51,7 @@ class TestCliDeleteSolution(object):
         """
 
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
-        cause = snippy.run(['snippy', 'delete', '-d', '7c226ee33a088381'])
+        cause = snippy.run(['snippy', 'delete', '-d', '5dee85bedb7f4d3a'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, snippy, content_read)
@@ -65,7 +65,7 @@ class TestCliDeleteSolution(object):
         """
 
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '7c226'])
+        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '5dee8'])
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, snippy, content_read)
@@ -78,7 +78,7 @@ class TestCliDeleteSolution(object):
         """
 
         content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
-        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175'])  # pylint: disable=line-too-long
+        cause = snippy.run(['snippy', 'delete', '--solution', '-d', '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea'])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1
         Content.verified(mocker, snippy, content_read)

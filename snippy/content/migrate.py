@@ -105,18 +105,17 @@ class Migrate(object):
         if os.path.isfile(filename):
             with open(filename, 'r') as infile:
                 try:
+                    timestamp = Config.utcnow()
                     if Config.is_operation_file_text:
-                        timestamp = Config.utcnow()
-                        collection.load(Config.operation_file_format, timestamp, infile.read())
+                        collection.load_text(timestamp, infile.read())
                     elif Config.is_operation_file_mkdn:
-                        timestamp = Config.utcnow()
-                        collection.load(Config.operation_file_format, timestamp, infile.read())
+                        collection.load_mkdn(timestamp, infile.read())
                     elif Config.is_operation_file_json:
                         dictionary = json.load(infile)
-                        collection.load_dict(dictionary)
+                        collection.load_dict(timestamp, dictionary)
                     elif Config.is_operation_file_yaml:
                         dictionary = yaml.safe_load(infile)
-                        collection.load_dict(dictionary)
+                        collection.load_dict(timestamp, dictionary)
                     else:
                         cls._logger.debug('unknown import file format')
                 except (TypeError, ValueError, yaml.YAMLError) as exception:

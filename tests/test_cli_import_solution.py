@@ -276,7 +276,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
             assert not Database.get_collection()
             mock_file.assert_not_called()
 
-    @pytest.mark.usefixtures('yaml', 'import-nginx', 'import-nginx-utc', 'isfile_true')
+    @pytest.mark.usefixtures('yaml', 'import-nginx', 'update-nginx-utc', 'isfile_true')
     def test_cli_import_solution_013(self, snippy, mocker):
         """Import solution based on message digest.
 
@@ -288,13 +288,13 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content = Content.updated_nginx()
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
-            cause = snippy.run(['snippy', 'import', '--solution', '-d', '7c226ee33a088381', '-f', 'one-solution.yaml'])
+            cause = snippy.run(['snippy', 'import', '--solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.yaml'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('yaml', 'import-nginx', 'import-nginx-utc', 'isfile_true')
+    @pytest.mark.usefixtures('yaml', 'import-nginx', 'update-nginx-utc', 'isfile_true')
     def test_cli_import_solution_014(self, snippy, mocker):
         """Import solution based on message digest.
 
@@ -305,14 +305,14 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content = Content.updated_nginx()
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
-            cause = snippy.run(['snippy', 'import', '-d', '7c226ee33a088381', '-f', 'one-solution.yaml'])
+            cause = snippy.run(['snippy', 'import', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.yaml'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
             mock_file.assert_called_once_with('one-solution.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('json', 'import-nginx', 'import-nginx-utc', 'isfile_true')
+    @pytest.mark.usefixtures('json', 'import-nginx', 'update-nginx-utc', 'isfile_true')
     def test_cli_import_solution_015(self, snippy, mocker):
         """Import solution based on message digest.
 
@@ -324,7 +324,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content = Content.updated_nginx()
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             json.load.return_value = Content.imported_dict(content)
-            cause = snippy.run(['snippy', 'import', '--solution', '-d', '7c226ee33a088381', '-f', 'one-solution.json'])
+            cause = snippy.run(['snippy', 'import', '--solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.json'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.json', 'r')
@@ -343,7 +343,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content = Content.updated_nginx()
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--solution', '-d', '7c226ee33a088381', '-f', 'one-solution.txt'])
+            cause = snippy.run(['snippy', 'import', '--solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.txt', 'r')
@@ -362,7 +362,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content = Content.updated_nginx()
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--solution', '-d', '7c226ee33a088381', '-f', 'one-solution.text'])
+            cause = snippy.run(['snippy', 'import', '--solution', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             mock_file.assert_called_once_with('one-solution.text', 'r')
@@ -380,7 +380,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         content = Content.updated_nginx()
         mocked_open = Content.mocked_open(content)
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
-            cause = snippy.run(['snippy', 'import', '--snippet', '-d', '7c226ee33a088381', '-f', 'one-solution.text'])
+            cause = snippy.run(['snippy', 'import', '--snippet', '-d', '5dee85bedb7f4d3a', '-f', 'one-solution.text'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 1
             assert not Database.get_snippets()
@@ -538,7 +538,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = Content.imported_dict(content)
             cause = snippy.run(['snippy', 'import', '--solution', '--defaults'])
-            assert cause in ('NOK: content data already exist with digest: 7c226ee33a088381',
+            assert cause in ('NOK: content data already exist with digest: 5dee85bedb7f4d3a',
                              'NOK: content data already exist with digest: db712a82662d6932')
             assert len(Database.get_solutions()) == 2
             defaults_solutions = pkg_resources.resource_filename('snippy', 'data/defaults/solutions.yaml')

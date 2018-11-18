@@ -59,25 +59,25 @@ class TestApiUpdateSolution(object):
             }
         }
         content_read = Content.deepcopy(Solution.DEFAULTS[Solution.NGINX])
-        content = {'c4933bb898c40ca': content_read}
+        content = {'59c5861b51701c2': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3081'
+            'content-length': '3080'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/c4933bb898c40ca9'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/59c5861b51701c2f'
             },
             'data': {
                 'type': 'solution',
-                'id': 'c4933bb898c40ca98716e9ebfff05b45f427285bef9cb5f1e801ac8fa6be2114',
+                'id': '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970',
                 'attributes': content_read
             }
         }
         result_json['data']['attributes']['filename'] = Const.EMPTY
         result_json['data']['attributes']['created'] = Content.BEATS_TIME
         result_json['data']['attributes']['updated'] = Content.NGINX_TIME
-        result_json['data']['attributes']['digest'] = 'c4933bb898c40ca98716e9ebfff05b45f427285bef9cb5f1e801ac8fa6be2114'
+        result_json['data']['attributes']['digest'] = '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970'
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/solutions/db712a82662d6932',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -120,20 +120,20 @@ class TestApiUpdateSolution(object):
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.BEATS_TIME,
             'updated': Content.NGINX_TIME,
-            'digest': '352c664d75731a1cfd8cbe1e1392a4405d438352d6eaf0c175d5c1cf5bb82726'
+            'digest': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874'
         }
-        content = {'352c664d75731a1c': content_read}
+        content = {'6cd48521a898357f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2948'
+            'content-length': '2947'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/352c664d75731a1c'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/6cd48521a898357f'
             },
             'data': {
                 'type': 'solution',
-                'id': '352c664d75731a1cfd8cbe1e1392a4405d438352d6eaf0c175d5c1cf5bb82726',
+                'id': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874',
                 'attributes': content_read
             }
         }
@@ -205,8 +205,8 @@ class TestApiUpdateSolution(object):
             'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
             'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
         }
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5362'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5175'}
+        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5360'}
+        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5173'}
         result_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -237,7 +237,7 @@ class TestApiUpdateSolution(object):
         request_body = {
             'data': {
                 'type': 'solution',
-                'id': 'c4933bb898c40ca98716e9ebfff05b45f427285bef9cb5f1e801ac8fa6be2114',
+                'id': '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970',
                 'attributes': {
                     'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
                     'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
@@ -346,20 +346,20 @@ class TestApiUpdateSolution(object):
             'uuid': Solution.DEFAULTS[Solution.BEATS]['uuid'],
             'created': Content.BEATS_TIME,
             'updated': Content.NGINX_TIME,
-            'digest': '7a87e9ea5a5da87857dbab4e96a82e04a3238594eae39092efcb4d1a73888687'
+            'digest': '02533ef592b8d26c557e1e365b3cc1bd9f54ca5599a5cb5aaf44a54cb7d6a310'
         }
-        content = {'7a87e9ea5a5da878': content_read}
+        content = {'02533ef592b8d26c': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3151'
+            'content-length': '3150'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/7a87e9ea5a5da878'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/02533ef592b8d26c'
             },
             'data': {
                 'type': 'solution',
-                'id': '7a87e9ea5a5da87857dbab4e96a82e04a3238594eae39092efcb4d1a73888687',
+                'id': '02533ef592b8d26c557e1e365b3cc1bd9f54ca5599a5cb5aaf44a54cb7d6a310',
                 'attributes': content_read
             }
         }
@@ -405,20 +405,20 @@ class TestApiUpdateSolution(object):
             'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             'created': Content.BEATS_TIME,
             'updated': Content.NGINX_TIME,
-            'digest': '352c664d75731a1cfd8cbe1e1392a4405d438352d6eaf0c175d5c1cf5bb82726'
+            'digest': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874'
         }
-        content = {'352c664d75731a1c': content_read}
+        content = {'6cd48521a898357f': content_read}
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2948'
+            'content-length': '2947'
         }
         result_json = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/352c664d75731a1c'
+                'self': 'http://falconframework.org/snippy/api/app/v1/solutions/6cd48521a898357f'
             },
             'data': {
                 'type': 'solution',
-                'id': '352c664d75731a1cfd8cbe1e1392a4405d438352d6eaf0c175d5c1cf5bb82726',
+                'id': '6cd48521a898357f5f088c3cd5a8614c6291ef98733cd7e52ab2cdedb146a874',
                 'attributes': content_read
             }
         }

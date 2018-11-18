@@ -22,6 +22,7 @@
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from snippy.content.parsers.base import ContentParserBase
+from snippy.content.parsers.dict import ContentParserDict as Dict
 from snippy.content.parsers.text import ContentParserText as Text
 from snippy.content.parsers.mkdn import ContentParserMkdn as Mkdn
 from snippy.logger import Logger
@@ -30,19 +31,19 @@ from snippy.logger import Logger
 class Parser(ContentParserBase):
     """Parse content attributes from text source."""
 
-    def __init__(self, filetype, timestamp, text, collection):
+    def __init__(self, filetype, timestamp, source, collection):
         """
         Args:
             filetype (str): Filetype that defines used parser.
             timestamp (str): IS8601 timestamp used with created resources.
-            text (str): Source text that is parsed.
-            collection (Collection()): Collection where the content is stored.
+            source (str|dict): Source text or dictionary that is parsed.
+            collection (Collection): Collection object where content is stored.
         """
 
         self._logger = Logger.get_logger(__name__)
         self._filetype = filetype
         self._timestamp = timestamp
-        self._text = text
+        self._source = source
         self._collection = collection
         self._parser = self._parser_factory()
 
@@ -65,9 +66,11 @@ class Parser(ContentParserBase):
         """Parse collection based on filetype."""
 
         parser = None
-        if self._filetype == Const.CONTENT_FORMAT_TEXT:
-            parser = Text(self._timestamp, self._text, self._collection)
+        if self._filetype == Const.CONTENT_FORMAT_DICT:
+            parser = Dict(self._timestamp, self._source, self._collection)
+        elif self._filetype == Const.CONTENT_FORMAT_TEXT:
+            parser = Text(self._timestamp, self._source, self._collection)
         elif self._filetype == Const.CONTENT_FORMAT_MKDN:
-            parser = Mkdn(self._timestamp, self._text, self._collection)
+            parser = Mkdn(self._timestamp, self._source, self._collection)
 
         return parser

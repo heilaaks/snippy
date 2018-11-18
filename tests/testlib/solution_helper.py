@@ -94,7 +94,7 @@ class SolutionHelper(object):
         'digest':'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151'
     }, {
         'data':('################################################################################',
-                '## BRIEF  : Debugging nginx ',
+                '## BRIEF  : Debugging nginx',
                 '##',
                 '## GROUPS : nginx',
                 '## TAGS   : nginx,debug,logging,howto',
@@ -167,7 +167,7 @@ class SolutionHelper(object):
         'uuid': '22cd5827-b6ef-4067-b5ac-3ceac07dde9f',
         'created': '2017-10-20T06:16:27.000001+0000',
         'updated': '2017-10-20T06:16:27.000001+0000',
-        'digest': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175'
+        'digest': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea'
     }, {
         'data':('################################################################################',
                 '## BRIEF  : Testing docker log drivers',

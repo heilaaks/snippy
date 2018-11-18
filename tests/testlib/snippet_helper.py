@@ -159,9 +159,7 @@ class SnippetHelper(object):
         """Transform text template to content."""
 
         collection = Collection()
-        resource = collection.get_resource(Const.SNIPPET, Config.utcnow())
-        resource.load_dict(SnippetHelper.DEFAULTS[snippet])
-        collection.migrate(resource)
+        collection.load(Const.CONTENT_FORMAT_DICT, Config.utcnow(), {'data': [SnippetHelper.DEFAULTS[snippet]]})
 
         return collection
 

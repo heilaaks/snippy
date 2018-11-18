@@ -498,7 +498,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def load_dict(self, dictionary):
         """Convert dictionary to resource."""
 
-        self.data = dictionary.get('data', self.data)
+        self.data = tuple(dictionary.get('data', self.data))
         self.brief = dictionary.get('brief', self.brief)
         self.description = dictionary.get('description', self.description)
         self.groups = tuple(sorted(dictionary.get('groups', self.groups)))

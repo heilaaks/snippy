@@ -62,10 +62,11 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     DEFAULT_GROUPS = ('default',)
 
     # Content formats
-    CONTENT_FORMAT_YAML = 'yaml'
+    CONTENT_FORMAT_DICT = 'dict'
     CONTENT_FORMAT_JSON = 'json'
     CONTENT_FORMAT_MKDN = 'mkdn'
     CONTENT_FORMAT_TEXT = 'text'
+    CONTENT_FORMAT_YAML = 'yaml'
     CONTENT_FORMAT_NONE = 'none'
 
     # Regexp patterns.

@@ -45,7 +45,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5515'
+            'content-length': '5514'
         }
         result_json = {
             'meta': {
@@ -60,7 +60,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175',
+                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -87,7 +87,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5514'
+            'content-length': '5513'
         }
         result_json = {
             'meta': {
@@ -102,7 +102,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175',
+                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -138,7 +138,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175',
+                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
@@ -173,7 +173,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175',
+                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
@@ -238,7 +238,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7769'
+            'content-length': '7768'
         }
         result_json = {
             'meta': {
@@ -253,7 +253,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }, {
                 'type': 'solution',
-                'id': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175',
+                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -316,7 +316,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175',
+                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
@@ -488,7 +488,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '5515'
+            'content-length': '5514'
         }
         result_json = {
             'meta': {
@@ -503,7 +503,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175',
+                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -527,7 +527,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '3069'
+            'content-length': '3068'
         }
         result_json = {
             'meta': {
@@ -538,7 +538,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175',
+                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -562,7 +562,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         result_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '8629'
+            'content-length': '8628'
         }
         result_json = {
             'meta': {
@@ -577,7 +577,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '7c226ee33a0883815f3dee7ad70f000dfeb34ed3fae78691ace5c4dca6bcb175',
+                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }

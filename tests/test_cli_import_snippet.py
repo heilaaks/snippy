@@ -179,7 +179,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             assert not Database.get_collection()
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
-    @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'update-remove-utc')
     def test_cli_import_snippet_009(self, snippy, mocker):
         """Import defined snippet.
 
@@ -199,7 +199,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'update-remove-utc')
     def test_cli_import_snippet_010(self, snippy, mocker):
         """Import defined snippet.
 
@@ -220,7 +220,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
             Content.verified(mocker, snippy, content)
 
-    @pytest.mark.usefixtures('isfile_true', 'json', 'import-remove', 'import-remove-utc')
+    @pytest.mark.usefixtures('isfile_true', 'json', 'import-remove', 'update-remove-utc')
     def test_cli_import_snippet_011(self, snippy, mocker):
         """Import defined snippet.
 

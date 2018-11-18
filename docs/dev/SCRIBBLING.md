@@ -1319,7 +1319,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        Content creation:
 
-         1) Create resource from each configured content.
+         1) Create collection from given input.
 
        Content updating:
 
@@ -1328,11 +1328,11 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        Content importing from file:
 
-         1) Create resource from each configured content.
+         1) Create collection from given input.
 
        Content importing (=update) based on digest:
 
-         1) Create resource from each configured content.
+         1) Create collection from given input.
          2) Update 'updated' timestamp.
 
        Content editing:

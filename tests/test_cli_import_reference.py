@@ -381,7 +381,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             assert not Database.get_collection()
             mock_file.assert_called_once_with('./reference-template.txt', 'r')
 
-    @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-gitlog-utc')
+    @pytest.mark.usefixtures('isfile_true', 'yaml', 'update-gitlog-utc')
     def test_cli_import_reference_019(self, snippy, mocker):
         """Try to import reference which uuid collides.
 

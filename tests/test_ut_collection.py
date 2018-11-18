@@ -107,7 +107,7 @@ class TestUtCollection(object):
         """
 
         collection = Collection()
-        collection.load_dict({
+        collection.load_dict(Helper.EXPORT_TIME, {
             'data': [{
                 'data': [
                     'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
@@ -136,7 +136,7 @@ class TestUtCollection(object):
 
         # Equality of two different collections where the UUID differs.
         collection2 = Collection()
-        collection2.load_dict({
+        collection2.load_dict(Helper.EXPORT_TIME, {
             'data': [{
                 'data': [
                     'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',
@@ -215,7 +215,7 @@ class TestUtCollection(object):
             '   # howto,linux,tar,untar',
             '',
             '   ! category    : snippet',
-            '   ! created     : ',
+            '   ! created     : 2018-02-02T02:02:02.000001+0000',
             '   ! description : ',
             '   ! digest      : e79ae51895908c5a40e570dc60a4dd594febdecf781c77c7b3cad37f9e0b7240 (True)',
             '   ! filename    : ',
@@ -223,7 +223,7 @@ class TestUtCollection(object):
             '   ! metadata    : ',
             '   ! name        : ',
             '   ! source      : ',
-            '   ! updated     : ',
+            '   ! updated     : 2018-02-02T02:02:02.000001+0000',
             '   ! uuid        : 11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             '   ! versions    : ',
             '',
@@ -250,7 +250,7 @@ class TestUtCollection(object):
 
         collection1 = Collection()
         collection2 = Collection()
-        collection1.load_dict({
+        collection1.load_dict(Helper.EXPORT_TIME, {
             'data': [{
                 'data': [
                     'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./',

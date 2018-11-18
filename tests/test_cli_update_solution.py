@@ -250,7 +250,7 @@ class TestCliUpdateSolution(object):
             Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]
         }
         edited_beats.return_value = template
-        cause = snippy.run(['snippy', 'update', '-d', '7c226ee33a088381', '--solution', '--editor'])
+        cause = snippy.run(['snippy', 'update', '-d', '5dee85bedb7f4d3a', '--solution', '--editor'])
         edited_beats.assert_called_with(Const.DELIMITER_DATA.join(map(str, Solution.DEFAULTS[Solution.NGINX]['data'])))
         assert cause == Cause.ALL_OK
         assert len(Database.get_solutions()) == 1

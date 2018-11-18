@@ -1,5 +1,5 @@
 ## WORKING
-   - [ ] Fix Collection.load_dict() that now assumes that input value is tuple. With list this causes different results like in test_api_create_snippet_005i (change data to list in case)
+   - [ ] Markdonw and text input are not sanitized like e.g config and dictionary.
    - [ ] Change the test with dump_text (or vise versa) to Content.compare_text like with compare_mkdn().
    - [ ] Refactor tests with Content.verified, Content.ordered, Content.compare_dump|Content.****_dump. Cases: import (check after import with YAML) and export (compare in target format.
    - [ ] Refactor tests 1. Content.compare_mkdn, Content.compare_text, Content.compare_yaml, Content.compare_json  # compare exported data

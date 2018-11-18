@@ -17,15 +17,15 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_ut_parser: Test ContentParserMarkdown() class."""
+"""test_ut_content_parser_mkdn: Test ContentParserMkdn() class."""
 
 from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
 from snippy.content.parsers.mkdn import ContentParserMkdn as Parser
 
 
-class TestUtContentParserMarkdown(object):
-    """Test ContentParserMarkdown() class."""
+class TestUtContentParserMkdn(object):
+    """Test ContentParserMkdn() class."""
 
     TIMESTAMP = '2018-09-09T14:44:00.000001+0000'
 

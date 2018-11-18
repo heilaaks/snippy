@@ -195,21 +195,17 @@ class Collection(object):  # pylint: disable=too-many-public-methods
            content (str): Content to be read.
         """
 
-        if content_format == Const.CONTENT_FORMAT_MKDN:
+        if content_format == Const.CONTENT_FORMAT_DICT:
+            self.load_dict(timestamp, content)
+        elif content_format == Const.CONTENT_FORMAT_MKDN:
             self.load_mkdn(timestamp, content)
         elif content_format == Const.CONTENT_FORMAT_TEXT:
             self.load_text(timestamp, content)
 
-    def load_dict(self, dictionary):
+    def load_dict(self, timestamp, dictionary):
         """Convert dictionary to collection."""
 
-        if 'data' in dictionary:
-            for content in dictionary['data']:
-                resource = Resource()
-                resource.load_dict(content)
-                self.migrate(resource)
-        else:
-            self._logger.debug('json format not indentified: %s', dictionary)
+        Parser(Const.CONTENT_FORMAT_DICT, timestamp, dictionary, self).read()
 
     def dump_dict(self, remove_fields):
         """Convert collection to dictionary."""

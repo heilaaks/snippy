@@ -44,6 +44,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
     # Contents
     EXPORT_TIME = '2018-02-02T02:02:02.000001+0000'
+    IMPORT_TIME = '2018-03-02T02:02:02.000001+0000'
 
     # Snippets
     REMOVE_TIME = '2017-10-14T19:56:31.000001+0000'
@@ -482,10 +483,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         # Generate updated nginx solution.
         content_read = {
-            '63ed3e66d109245c': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
+            'af2c51570a909031': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
         }
-        content_read['63ed3e66d109245c']['data'] = tuple([w.replace('# Instructions how to debug nginx.', '# Changed instruction set.') for w in content_read['63ed3e66d109245c']['data']])  # pylint: disable=line-too-long
-        content_read['63ed3e66d109245c']['description'] = 'Changed instruction set.'
+        content_read['af2c51570a909031']['data'] = tuple([w.replace('# Instructions how to debug nginx.', '# Changed instruction set.') for w in content_read['af2c51570a909031']['data']])  # pylint: disable=line-too-long
+        content_read['af2c51570a909031']['description'] = 'Changed instruction set.'
 
         return content_read
 
@@ -603,14 +604,14 @@ class Content(object):  # pylint: disable=too-many-public-methods
         collection = Collection()
         if content_format == Const.CONTENT_FORMAT_JSON:
             for call in mock_object.dump.mock_calls:
-                collection.load_dict(call[1][0])
+                collection.load_dict(Content.IMPORT_TIME, call[1][0])
         elif content_format in (Const.CONTENT_FORMAT_MKDN, Const.CONTENT_FORMAT_TEXT):
             handle = mock_object.return_value.__enter__.return_value
             for call in handle.write.mock_calls:
-                collection.load(content_format, Content.EXPORT_TIME, call[1][0])
+                collection.load(content_format, Content.IMPORT_TIME, call[1][0])
         elif content_format == Const.CONTENT_FORMAT_YAML:
             for call in mock_object.safe_dump.mock_calls:
-                collection.load_dict(call[1][0])
+                collection.load_dict(Content.IMPORT_TIME, call[1][0])
 
         for digest in collection.keys():
             collection[digest].uuid = Database.VALID_UUID
@@ -632,15 +633,15 @@ class Content(object):  # pylint: disable=too-many-public-methods
         """
 
         references = Collection()
-        references.load_dict({'data': content['data']})
+        references.load_dict(Content.IMPORT_TIME, {'data': content['data']})
 
         for digest in references.keys():
             references[digest].uuid = Database.VALID_UUID
 
         if content_format == Const.CONTENT_FORMAT_TEXT:
             for digest in references.keys():
-                references[digest].created = Content.EXPORT_TIME
-                references[digest].updated = Content.EXPORT_TIME
+                references[digest].created = Content.IMPORT_TIME
+                references[digest].updated = Content.IMPORT_TIME
 
         return references
 

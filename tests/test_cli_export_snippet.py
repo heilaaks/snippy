@@ -554,7 +554,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '-f', './snippets.md'])
             assert cause == Cause.ALL_OK
             call = mock_file.return_value.__enter__.return_value.write.mock_calls[0][1][0]
-            assert 'Manipulate compressed tar files and define very long descrption for the content to\n  extend to two lines.\n\n' in call
+            assert 'Manipulate compressed tar files and define very long descrption for the content to  \nextend to two lines.\n\n' in call
 
     @classmethod
     def teardown_class(cls):

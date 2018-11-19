@@ -147,6 +147,24 @@ class Content(object):  # pylint: disable=too-many-public-methods
             raise AssertionError
 
     @classmethod
+    def assert_restapi(cls, result, expect):
+        """Compare content received from REST API.
+
+         Args:
+            result (dict): Result JSON from REST API.
+            expect (dict): Excepted JSON in REST API response.
+        """
+
+        result = Content._mask_result(result)
+        expect = Content._copy_expect(expect)
+        try:
+            assert result == expect
+        except AssertionError:
+            pprintpp.pprint(result)
+            pprintpp.pprint(expect)
+            raise AssertionError
+
+    @classmethod
     def assert_json(cls, json, json_file, filename, content):
         """Compare JSON against expected content.
 
@@ -159,17 +177,17 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Excepted content compared against generated JSON.
         """
 
-        references = cls._read_refs(Const.CONTENT_FORMAT_JSON, content)
-        match_dict = cls._mask_uuid(content)
-        collection = cls._read_mock(Const.CONTENT_FORMAT_JSON, json)
-        saved_dict = cls._read_dict(Const.CONTENT_FORMAT_JSON, json)
+        result_collection = cls._read_mock(Const.CONTENT_FORMAT_JSON, json)
+        result_dictionary = cls._read_dict(Const.CONTENT_FORMAT_JSON, json)
+        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_JSON, content)
+        expect_dictionary = cls._mask_uuid(content)
         try:
-            assert references == collection
-            assert match_dict == saved_dict
+            assert result_collection == expect_collection
+            assert result_dictionary == expect_dictionary
             json_file.assert_called_once_with(filename, 'w')
         except AssertionError:
-            Content._print_assert(references, collection)
-            Content._print_assert(match_dict, saved_dict)
+            Content._print_assert(result_collection, expect_collection)
+            Content._print_assert(result_dictionary, expect_dictionary)
             raise AssertionError
 
     @classmethod
@@ -184,17 +202,17 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Excepted content compared against Markdown file.
         """
 
-        references = cls._read_refs(Const.CONTENT_FORMAT_MKDN, content)
-        match_mkdn = references.dump_mkdn(Config.templates)
-        collection = cls._read_mock(Const.CONTENT_FORMAT_MKDN, mkdn)
-        saved_mkdn = cls._read_text(Const.CONTENT_FORMAT_MKDN, mkdn)
+        result_collection = cls._read_mock(Const.CONTENT_FORMAT_MKDN, mkdn)
+        result_markdown = cls._read_text(Const.CONTENT_FORMAT_MKDN, mkdn)
+        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_MKDN, content)
+        expect_markdown = result_collection.dump_mkdn(Config.templates)
         try:
+            assert result_collection == expect_collection
+            assert result_markdown == expect_markdown
             mkdn.assert_called_once_with(filename, 'w')
-            assert match_mkdn == saved_mkdn
-            assert references == collection
         except AssertionError:
-            Content._print_assert(references, collection)
-            Content._print_assert(match_mkdn, saved_mkdn)
+            Content._print_assert(result_collection, expect_collection)
+            Content._print_assert(result_markdown, expect_markdown)
             raise AssertionError
 
     @classmethod
@@ -215,17 +233,17 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
             return
 
-        references = cls._read_refs(Const.CONTENT_FORMAT_TEXT, content)
-        match_text = references.dump_text(Config.templates)
-        collection = cls._read_mock(Const.CONTENT_FORMAT_TEXT, text)
-        saved_text = cls._read_text(Const.CONTENT_FORMAT_TEXT, text)
+        result_collection = cls._read_mock(Const.CONTENT_FORMAT_TEXT, text)
+        result_text = cls._read_text(Const.CONTENT_FORMAT_TEXT, text)
+        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_TEXT, content)
+        expect_text = expect_collection.dump_text(Config.templates)
         try:
+            assert result_collection == expect_collection
+            assert result_text == expect_text
             text.assert_called_once_with(filename, 'w')
-            assert match_text == saved_text
-            assert references == collection
         except AssertionError:
-            Content._print_assert(references, collection)
-            Content._print_assert(match_text, saved_text)
+            Content._print_assert(result_collection, expect_collection)
+            Content._print_assert(result_text, expect_text)
             raise AssertionError
 
     @classmethod
@@ -241,17 +259,17 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Excepted content compared against generated YAML.
         """
 
-        references = cls._read_refs(Const.CONTENT_FORMAT_YAML, content)
-        match_dict = cls._mask_uuid(content)
-        collection = cls._read_mock(Const.CONTENT_FORMAT_YAML, yaml)
-        saved_dict = cls._read_dict(Const.CONTENT_FORMAT_YAML, yaml)
+        result_collection = cls._read_mock(Const.CONTENT_FORMAT_YAML, yaml)
+        result_dictionary = cls._read_dict(Const.CONTENT_FORMAT_YAML, yaml)
+        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_YAML, content)
+        expect_dictionary = cls._mask_uuid(content)
         try:
-            assert references == collection
-            assert saved_dict == match_dict
+            assert result_collection == expect_collection
+            assert result_dictionary == expect_dictionary
             yaml_file.assert_called_once_with(filename, 'w')
         except AssertionError:
-            Content._print_assert(references, collection)
-            Content._print_assert(match_dict, saved_dict)
+            Content._print_assert(result_collection, expect_collection)
+            Content._print_assert(result_dictionary, expect_dictionary)
             raise AssertionError
 
     @staticmethod
@@ -549,6 +567,81 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         return content_read
 
+    @staticmethod
+    def _copy_expect(expect):
+        """Copy expected default content.
+
+        The expected dictionary is a default content defined for testing. The
+        default content is defined to be in storage format which uses tuples
+        instead of lists which are used in the REST API. This method converts
+        and copies the expected content to REST API format.
+
+        The original expected data must not be changed because it is shared
+        between all tests.
+
+        Args:
+            expect (dict): Excepted JSON in REST API response.
+        Returns:
+            dict: Expected JSON in REST API format.
+        """
+
+        def _convert(content):
+            """Convert content attributes to list."""
+
+            content['data'] = list(content['data'])
+            content['groups'] = list(content['groups'])
+            content['tags'] = list(content['tags'])
+            content['links'] = list(content['links'])
+            content['uuid'] = Database.VALID_UUID
+
+        expect = copy.deepcopy(expect)
+        try:
+            print(expect)
+            if isinstance(expect['data'], list):
+                for data in expect['data']:
+                    _convert(data['attributes'])
+            else:
+                _convert(expect['data']['attributes'])
+        except KeyError:
+            pass
+
+        return expect
+
+    @staticmethod
+    def _mask_result(result):
+        """Mask fields that are not comparable.
+
+        Error response from JSON API can contain error string resulted from
+        REST API schema validation. This error string can be a long JSON
+        structure. For simplicity and test case maintainability reasons,
+        the schema validation error is masked away.
+
+        See description for assert_storage method.
+
+        Args:
+            result (dict): Result JSON from REST API.
+        Returns:
+            dict: Dictionary with valid UUID.
+        """
+
+        try:
+            if isinstance(result['data'], list):
+                for data in result['data']:
+                    data['attributes']['uuid'] = Database.VALID_UUID
+            else:
+                result['data']['attributes']['uuid'] = Database.VALID_UUID
+        except KeyError:
+            pass
+
+        try:
+            for error in result['errors']:
+                if 'json media validation failed' in error['title']:
+                    error['title'] = 'json media validation failed'
+        except KeyError:
+            pass
+
+        return result
+
     @classmethod
     def _mask_uuid(cls, content):
         """Mask UUID from given content.
@@ -562,7 +655,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Reference content with constant UUDI.
         """
 
-        content = cls.deepcopy(content)
+        content = copy.deepcopy(content)
         for data in content['data']:
             data['uuid'] = Database.VALID_UUID
 
@@ -709,66 +802,66 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return False
 
     @staticmethod
-    def _print_assert(expect, actual):
-        """Find and print differences between expected and actual values.
+    def _print_assert(result, expect):
+        """Print differences between results and expected values.
 
         Args:
-            expect: Expected value.
-            actual: Actual value
+            result: Result value from test.
+            expect: Expected value defined in test.
         """
 
         print("=" * 120)
-        if type(expect) is not type(actual):
+        if type(result) is not type(expect):
             print("Cannot compare different types.")
 
             return
 
-        if expect == actual:
-            print("Comparing expexted and actual types of {} which are equal.".format(type(expect)))
+        if result == expect:
+            print("Comparing result and expected types of {} which are equal.".format(type(expect)))
 
             return
 
-        if isinstance(expect, Collection):
-            if expect.keys() != actual.keys():
+        if isinstance(result, Collection):
+            if expect.keys() != result.keys():
                 print("Asserted collections do not have same resources.")
+                print("result")
+                for digest in result.keys():
+                    pprintpp.pprint(result[digest].dump_dict([]))
+                print("=" * 120)
                 print("expect")
                 for digest in expect.keys():
                     pprintpp.pprint(expect[digest].dump_dict([]))
-                print("actual")
-                for digest in actual.keys():
-                    pprintpp.pprint(actual[digest].dump_dict([]))
-                print("=" * 120)
 
                 return
 
             for digest in expect.keys():
-                content1 = expect[digest].dump_dict([])
-                content2 = actual[digest].dump_dict([]) if digest in actual.keys() else {}
+                content1 = result[digest].dump_dict([]) if digest in result.keys() else {}
+                content2 = expect[digest].dump_dict([])
                 pprintpp.pprint(content1)
                 pprintpp.pprint(content2)
                 fields = [field for field in content1 if content1[field] != content2[field]]
                 print("Differences in resource: {:.16}".format(digest))
                 print("=" * 120)
                 for field in fields:
+                    print("result[{:.16}].{}:".format(digest, field))
+                    pprintpp.pprint(content1[field])
                     print("expect[{:.16}].{}:".format(digest, field))
                     pprintpp.pprint(content1[field])
-                    print("actual[{:.16}].{}:".format(digest, field))
-                    pprintpp.pprint(content2[field])
-        elif isinstance(expect, dict):
-            print("Comparing expexted and actual types of {} which are different.".format(type(expect)))
+        elif isinstance(result, dict):
+            print("Comparing result and expected types of {} which are different.".format(type(expect)))
+            pprintpp.pprint(result)
             pprintpp.pprint(expect)
-            pprintpp.pprint(actual)
-            fields = [field for field in expect if expect[field] != actual[field]]
+            fields = [field for field in expect if expect[field] != result[field]]
             print("=" * 120)
             for field in fields:
+                print("result {}:".format(field))
+                pprintpp.pprint(expect[field])
                 print("expect {}:".format(field))
                 pprintpp.pprint(expect[field])
-                print("actual {}:".format(field))
-                pprintpp.pprint(expect[field])
-        elif isinstance(expect, str):
-            print("Comparing expexted and actual types of {} which are different.".format(type(expect)))
+        elif isinstance(result, str):
+            print("Comparing result and expected types of {} which are different.".format(type(expect)))
+            print(result)
             print(expect)
-            print(actual)
         print("=" * 120)
 
     @staticmethod

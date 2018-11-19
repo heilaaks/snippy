@@ -5,18 +5,11 @@
    - [ ] Refactor tests 2. Content.compare_data (replaces Content.verified) # Compare created, updated or imported data in database against YAML formatted reference.
    - [ ] Refactor tests 3. REST API result needs Content.ordered. No changes to this?
    - [ ] Refactor tests 4. Change file mocks to new mocked_file which allows defining the return format for the mock.
-   - [ ] Refactor compare to own pytest plugin. (maybe not?)
-   - [ ] Refactor tests and fix assert handle.write.mock_calls == references and text_dump in content.py to produce logs what went wrong. Now just AssertError which always requires setting prints. Refactor the current implementation.
    - [ ] Refactor tests so that the Content is used instead of sqlite_helper. Only use Content or Helper (?). The content is a wrapper for content related operations.
    - [ ] Refactor tests and move common items to Helper class in testlib. Do not copy from code because it creates dependency to tested code which cause problems in test case imports.
    - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674
-   - [ ] Fix new compare that does not see if the last newline is missing? Comment adding newline in text_dump/comare and pytest tests/test_cli_export_reference.py -k test_cli_export_reference_012. This seems to be mismatch in filename?
-   - [ ] Fix new compare when the mock file is shorter than references.
-   - [ ] Fix new compare to highlight filename mismatch. This incorrect highlights the last line.
-   - [ ] Add tests for new compare.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
-   - [ ] Add own package from text highlighting. pytest plugin https://docs.pytest.org/en/latest/writing_plugins.html#writing-plugins
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
 
 ## THINKING

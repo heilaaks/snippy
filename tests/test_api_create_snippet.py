@@ -33,7 +33,7 @@ from tests.testlib.snippet_helper import SnippetHelper as Snippet
 pytest.importorskip('gunicorn')
 
 
-class TestApiCreateSnippet(object):
+class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     """Test POST snippets collection API."""
 
     @pytest.mark.usefixtures('create-remove-utc')
@@ -51,26 +51,26 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '711'
         }
-        result_json = {
+        expect_json = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
                 'attributes': content_read
             }]
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_002(self, server):
@@ -95,26 +95,26 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '711'
         }
-        result_json = {
+        expect_json = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
                 'attributes': content_read
             }]
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('create-exited-utc')
     def test_api_create_snippet_003(self, server):
@@ -138,26 +138,26 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '916'
         }
-        result_json = {
+        expect_json = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
                 'attributes': content_read
             }]
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('create-exited-utc')
     def test_api_create_snippet_004(self, server):
@@ -183,26 +183,26 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '916'
         }
-        result_json = {
+        expect_json = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
                 'attributes': content_read
             }]
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_005(self, server):
@@ -236,26 +236,26 @@ class TestApiCreateSnippet(object):
             'updated': '2017-10-14T19:56:31.000001+0000',
             'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '562'
         }
-        result_json = {
+        expect_json = {
             'data': [{
                 'type': 'snippet',
                 'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
                 'attributes': content_read
             }]
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
     def test_api_create_snippet_006(self, server):
@@ -273,11 +273,11 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1481'
         }
-        result_json = {
+        expect_json = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
@@ -288,7 +288,7 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
-        content = {
+        expect_storage = {
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -298,10 +298,10 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_007(self, server):
@@ -312,24 +312,24 @@ class TestApiCreateSnippet(object):
         """
 
         request_body = Snippet.DEFAULTS[Snippet.REMOVE]
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '889'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '891'}
-        result_json = {
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '889'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '891'}
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'not compared because of hash structure in random order inside the string'
+                'title': 'json media validation failed'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers_p3 or result.headers == result_headers_p2
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers_p3 or result.headers == expect_headers_p2
+        Content.assert_restapi(result.json, expect_json)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -357,24 +357,24 @@ class TestApiCreateSnippet(object):
                     'versions': '',
                     'utc': '2017-10-14T19:56:31.000001+0000',
                     'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '582'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
-        result_json = {
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '582'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': "json media validation failed: top level data object type must be 'snippet' or 'solution'"
+                'title': 'json media validation failed'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers_p2 or result.headers == result_headers_p3
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers_p2 or result.headers == expect_headers_p3
+        Content.assert_restapi(result.json, expect_json)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -392,11 +392,11 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '382'
         }
-        result_json = {
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '403',
@@ -409,9 +409,9 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_403
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -433,24 +433,24 @@ class TestApiCreateSnippet(object):
                 'attributes': {'brief': ''}
             }]
         }
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '754'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '758'}
-        result_json = {
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '754'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '758'}
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'not compared because of hash structure in random order inside the string'
+                'title': 'json media validation failed'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers_p3 or result.headers == result_headers_p2
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers_p3 or result.headers == expect_headers_p2
+        Content.assert_restapi(result.json, expect_json)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -476,8 +476,8 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        result_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '382'}
-        result_json = {
+        expect_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '382'}
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '403',
@@ -490,9 +490,9 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_403
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
@@ -516,11 +516,11 @@ class TestApiCreateSnippet(object):
                 }
             }
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '802'
         }
-        result_json = {
+        expect_json = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
             },
@@ -530,15 +530,15 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
     def test_api_create_snippet_013(self, server):
@@ -573,11 +573,11 @@ class TestApiCreateSnippet(object):
             'updated': Content.FORCED_TIME,
             'digest': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '894'
         }
-        result_json = {
+        expect_json = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
             },
@@ -587,15 +587,15 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_json)
 
     @pytest.mark.usefixtures('import-forced', 'update-exited-utc')
     def test_api_create_snippet_014(self, server):
@@ -644,11 +644,11 @@ class TestApiCreateSnippet(object):
             'updated': Content.EXITED_TIME,
             'digest': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4'
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '748'
         }
-        result_json = {
+        expect_json = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/ea89da812a610780'
             },
@@ -658,15 +658,15 @@ class TestApiCreateSnippet(object):
                 'attributes': content_read
             }
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
     def test_api_create_snippet_015(self, server):
@@ -676,8 +676,8 @@ class TestApiCreateSnippet(object):
         snippet. In this case the resource exists and the content is deleted.
         """
 
-        result_headers = {}
-        content = {
+        expect_headers = {}
+        expect_storage = {
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -686,10 +686,10 @@ class TestApiCreateSnippet(object):
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
-        assert result.headers == result_headers
-        assert not result.text
         assert result.status == falcon.HTTP_204
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        assert not result.text
+        Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_snippet_016(self, server):
@@ -706,11 +706,11 @@ class TestApiCreateSnippet(object):
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '398'
         }
-        result_json = {
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -723,9 +723,9 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('create-exited-utc', 'caller')
@@ -744,11 +744,11 @@ class TestApiCreateSnippet(object):
                 }
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '558'
         }
-        result_json = {
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -766,10 +766,9 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
-        assert result.json['errors'][0]['title'] == 'content was not stored because mandatory content field data is empty'
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('create-remove-utc')
@@ -789,7 +788,7 @@ class TestApiCreateSnippet(object):
                     'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
                     'description': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
                     'groups': u'Düsseldorf',
-                    'tags': [u'γλώσσα', u'έδωσαν', u'ελληνική'],
+                    'tags': [u'έδωσαν', u'γλώσσα', u'ελληνική'],
                     'links': [u'http://www.чухонца.edu/~fdc/utf8/']
                 }
             }]
@@ -811,32 +810,32 @@ class TestApiCreateSnippet(object):
             'updated': '2017-10-14T19:56:31.000001+0000',
             'digest': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf'
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '933'
         }
-        result_json = {
+        expect_json = {
             'data': [{
                 'type': 'snippet',
                 'id': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf',
                 'attributes': content_read
             }]
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '993'
         }
-        result_json = {
+        expect_json = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -853,9 +852,9 @@ class TestApiCreateSnippet(object):
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=Düsseldorf&limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
 
     @pytest.mark.usefixtures('create-regexp-utc')
     def test_api_create_snippet_019(self, server):
@@ -900,25 +899,80 @@ class TestApiCreateSnippet(object):
             'updated': Content.REGEXP_TIME,
             'digest': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5'
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '654'}
-        result_json = {
+        expect_json = {
             'data': [{
                 'type': 'snippet',
                 'id': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5',
                 'attributes': content_read
             }]
         }
-        content = {'data': [content_read]}
+        expect_storage = {'data': [content_read]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_201
-        Content.assert_storage(content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
+
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_api_create_snippet_020(self, server):
+        """Create one snippet with POST.
+
+        Call POST /v1/snippets to create new snippet with data that have line
+        breaks in the middle of the snippet. In this case the line breaks in
+        middle of the snippet must not be interpolated.
+        """
+
+        request_body = {
+            'data': [{
+                'type': 'snippet',
+                'attributes': {
+                    'data': ['docker rm $(docker\\nps \\n --all -q -f status=exited)\n']
+                }
+            }]
+        }
+        content_read = {
+            'data': ('docker rm $(docker\\nps \\n --all -q -f status=exited)',),
+            'brief': '',
+            'description': '',
+            'groups': ('default',),
+            'tags': (),
+            'links': (),
+            'category': 'snippet',
+            'name': '',
+            'filename': '',
+            'versions': '',
+            'source': '',
+            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+            'created': '2017-10-14T19:56:31.000001+0000',
+            'updated': '2017-10-14T19:56:31.000001+0000',
+            'digest': 'c10b8614d264ed75ad3b671526efb9718895974291627b4fd21307051c6928c1'
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '568'
+        }
+        expect_json = {
+            'data': [{
+                'type': 'snippet',
+                'id': 'c10b8614d264ed75ad3b671526efb9718895974291627b4fd21307051c6928c1',
+                'attributes': content_read
+            }]
+        }
+        expect_storage = {'data': [content_read]}
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/snippets',
+            headers={'accept': 'application/json'},
+            body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_201
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(expect_storage)
 
     @classmethod
     def teardown_class(cls):

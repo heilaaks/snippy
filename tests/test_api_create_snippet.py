@@ -44,11 +44,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         list context in POST request.
         """
 
-        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = Snippet.DEFAULTS[Snippet.REMOVE]
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': content_read
+                'attributes': content
             }]
         }
         expect_headers = {
@@ -59,10 +59,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': content_read
+                'attributes': content
             }]
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
@@ -82,7 +82,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         The tags must be sorted and trimmed after parsing.
         """
 
-        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = Snippet.DEFAULTS[Snippet.REMOVE]
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -103,10 +103,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': content_read
+                'attributes': content
             }]
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -125,7 +125,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         newline.
         """
 
-        content_read = Snippet.DEFAULTS[Snippet.EXITED]
+        content = Snippet.DEFAULTS[Snippet.EXITED]
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -146,10 +146,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': content_read
+                'attributes': content
             }]
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -167,7 +167,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         data is defined in list context where each line is an item in a list.
         """
 
-        content_read = Snippet.DEFAULTS[Snippet.EXITED]
+        content = Snippet.DEFAULTS[Snippet.EXITED]
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -191,10 +191,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': content_read
+                'attributes': content
             }]
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -219,7 +219,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }]
         }
-        content_read = {
+        content = {
             'data': ('docker rm $(docker ps --all -q -f status=exited)',),
             'brief': '',
             'description': '',
@@ -244,10 +244,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
-                'attributes': content_read
+                'attributes': content
             }]
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -503,7 +503,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         snippet. In this case the resource exists and the content is updated.
         """
 
-        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = Snippet.DEFAULTS[Snippet.REMOVE]
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -527,10 +527,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': content_read
+                'attributes': content
             }
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PUT'},
@@ -556,7 +556,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }
         }
-        content_read = {
+        content = {
             'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
             'brief': Snippet.DEFAULTS[Snippet.FORCED]['brief'],
             'description': Snippet.DEFAULTS[Snippet.FORCED]['description'],
@@ -584,10 +584,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'snippet',
                 'id': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2',
-                'attributes': content_read
+                'attributes': content
             }
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
@@ -627,7 +627,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }
         }
-        content_read = {
+        content = {
             'data': tuple(request_body['data']['attributes']['data'].split(Const.DELIMITER_DATA)),
             'brief': request_body['data']['attributes']['brief'],
             'description': request_body['data']['attributes']['description'],
@@ -655,10 +655,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'snippet',
                 'id': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4',
-                'attributes': content_read
+                'attributes': content
             }
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
@@ -793,7 +793,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }]
         }
-        content_read = {
+        content = {
             'data': tuple(request_body['data'][0]['attributes']['data']),
             'brief': request_body['data'][0]['attributes']['brief'],
             'description': request_body['data'][0]['attributes']['description'],
@@ -818,10 +818,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf',
-                'attributes': content_read
+                'attributes': content
             }]
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
@@ -845,7 +845,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf',
-                'attributes': content_read
+                'attributes': content
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -882,7 +882,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }]
         }
-        content_read = {
+        content = {
             'data': ('first row', 'second row'),
             'brief': 'short brief',
             'description': 'long description',
@@ -906,10 +906,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5',
-                'attributes': content_read
+                'attributes': content
             }]
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -936,7 +936,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }]
         }
-        content_read = {
+        content = {
             'data': ('docker rm $(docker\\nps \\n --all -q -f status=exited)',),
             'brief': '',
             'description': '',
@@ -961,10 +961,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': 'c10b8614d264ed75ad3b671526efb9718895974291627b4fd21307051c6928c1',
-                'attributes': content_read
+                'attributes': content
             }]
         }
-        expect_storage = {'data': [content_read]}
+        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},

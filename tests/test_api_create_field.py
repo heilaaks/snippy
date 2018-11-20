@@ -27,7 +27,6 @@ import pytest
 
 from tests.testlib.content import Content
 from tests.testlib.reference_helper import ReferenceHelper as Reference
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 pytest.importorskip('gunicorn')
 
@@ -48,11 +47,11 @@ class TestApiCreateField(object):
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        result_json = {
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -65,9 +64,10 @@ class TestApiCreateField(object):
             path='/snippy/api/app/v1/docs,python',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_405
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_field_002(self, server):
@@ -78,11 +78,11 @@ class TestApiCreateField(object):
         """
 
         request_body = {}
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        result_json = {
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -95,9 +95,10 @@ class TestApiCreateField(object):
             path='/snippy/api/app/v1/docs,python',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_405
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_field_003(self, server):
@@ -108,11 +109,11 @@ class TestApiCreateField(object):
         """
 
         request_body = {}
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        result_json = {
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -125,9 +126,10 @@ class TestApiCreateField(object):
             path='/snippy/api/app/v1/docs,python',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_405
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_field_004(self, server):
@@ -138,11 +140,11 @@ class TestApiCreateField(object):
         """
 
         request_body = {}
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        result_json = {
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -155,9 +157,10 @@ class TestApiCreateField(object):
             path='/snippy/api/app/v1/docs,python',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_405
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_field_005(self, server):
@@ -172,11 +175,11 @@ class TestApiCreateField(object):
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        result_json = {
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -189,9 +192,10 @@ class TestApiCreateField(object):
             path='/snippy/api/app/v1/groups/docs',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_405
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_field_006(self, server):
@@ -206,11 +210,11 @@ class TestApiCreateField(object):
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        result_json = {
+        expect_json = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -223,13 +227,13 @@ class TestApiCreateField(object):
             path='/snippy/api/app/v1/tags/python,docs',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_405
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(None)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

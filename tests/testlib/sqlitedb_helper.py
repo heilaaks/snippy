@@ -120,13 +120,18 @@ class SqliteDbHelper(object):
 
         rows = ()
         collection = Collection()
-        connection = SqliteDbHelper._connect()
-        with closing(connection.cursor()) as cursor:
-            cursor.execute('SELECT * FROM contents')
-            rows = cursor.fetchall()
-        connection.close()
-        collection.convert(rows)
+        try:
+            connection = SqliteDbHelper._connect()
+            with closing(connection.cursor()) as cursor:
+                cursor.execute('SELECT * FROM contents')
+                rows = cursor.fetchall()
+            connection.close()
+            collection.convert(rows)
+        except sqlite3.Error:
+            pass
 
+        # UUID is masked away in order to compare resulted and expected
+        # collections.
         for digest in collection.keys():
             collection[digest].uuid = cls.VALID_UUID
 

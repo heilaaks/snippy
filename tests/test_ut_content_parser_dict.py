@@ -61,7 +61,6 @@ class TestUtContentParserDict(object):
         collection = Collection()
         Parser(self.TIMESTAMP, dictionary, collection).read_collection()
         resource = next(collection.resources())
-        print(resource)
         assert resource.category == Const.SNIPPET
         assert resource.data == ('docker rm $(docker ps --all -q -f status=exited)',)
         assert resource.brief == 'strip spaces'

@@ -138,12 +138,12 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
             return
 
-        references = cls._read_refs(Const.CONTENT_FORMAT_NONE, content)
-        collection = Database.get_collection()
+        result_collection = Database.get_collection()
+        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_NONE, content)
         try:
-            assert references == collection
+            assert result_collection == expect_collection
         except AssertionError:
-            Content._print_assert(references, collection)
+            Content._print_assert(result_collection, expect_collection)
             raise AssertionError
 
     @classmethod
@@ -596,7 +596,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         expect = copy.deepcopy(expect)
         try:
-            print(expect)
             if isinstance(expect['data'], list):
                 for data in expect['data']:
                     _convert(data['attributes'])
@@ -835,18 +834,18 @@ class Content(object):  # pylint: disable=too-many-public-methods
                 return
 
             for digest in expect.keys():
-                content1 = result[digest].dump_dict([]) if digest in result.keys() else {}
-                content2 = expect[digest].dump_dict([])
-                pprintpp.pprint(content1)
-                pprintpp.pprint(content2)
-                fields = [field for field in content1 if content1[field] != content2[field]]
+                result_dict = result[digest].dump_dict([]) if digest in result.keys() else {}
+                expect_dcit = expect[digest].dump_dict([])
+                pprintpp.pprint(result_dict)
+                pprintpp.pprint(expect_dcit)
+                fields = [field for field in result_dict if result_dict[field] != expect_dcit[field]]
                 print("Differences in resource: {:.16}".format(digest))
                 print("=" * 120)
                 for field in fields:
                     print("result[{:.16}].{}:".format(digest, field))
-                    pprintpp.pprint(content1[field])
+                    pprintpp.pprint(result_dict[field])
                     print("expect[{:.16}].{}:".format(digest, field))
-                    pprintpp.pprint(content1[field])
+                    pprintpp.pprint(expect_dcit[field])
         elif isinstance(result, dict):
             print("Comparing result and expected types of {} which are different.".format(type(expect)))
             pprintpp.pprint(result)

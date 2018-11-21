@@ -43,7 +43,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         line.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
@@ -53,7 +53,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './snippets.yaml', content)
+            Content.assert_yaml(yaml, mock_file, './snippets.yaml', expect_content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_002(self, snippy):
@@ -63,7 +63,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         line. In this case the content category is defined explicitly.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
@@ -73,7 +73,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--snippets'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './snippets.yaml', content)
+            Content.assert_yaml(yaml, mock_file, './snippets.yaml', expect_content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_003(self, snippy):
@@ -82,7 +82,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         Export all snippets into yaml file defined from command line.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
@@ -92,7 +92,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yaml'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './defined-snippets.yaml', content)
+            Content.assert_yaml(yaml, mock_file, './defined-snippets.yaml', expect_content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_004(self, snippy):
@@ -102,7 +102,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         category and file name from command line.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
@@ -112,7 +112,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', './defined-snippets.yaml', '--snippet'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './defined-snippets.yaml', content)
+            Content.assert_yaml(yaml, mock_file, './defined-snippets.yaml', expect_content)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_cli_export_snippet_005(self, snippy):
@@ -139,7 +139,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         of default file name and format
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -148,7 +148,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './snippets.yaml', content)
+            Content.assert_yaml(yaml, mock_file, './snippets.yaml', expect_content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_007(self, snippy):
@@ -158,7 +158,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as yaml file.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -167,7 +167,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.yaml'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', content)
+            Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', expect_content)
 
     @pytest.mark.usefixtures('json', 'default-snippets', 'export-time')
     def test_cli_export_snippet_008(self, snippy):
@@ -177,7 +177,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as json file.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -186,7 +186,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.json'])
             assert cause == Cause.ALL_OK
-            Content.assert_json(json, mock_file, 'defined-snippet.json', content)
+            Content.assert_json(json, mock_file, 'defined-snippet.json', expect_content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_009(self, snippy):
@@ -197,7 +197,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         line option -f|--file.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -206,7 +206,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-d', '53908d68425c61dc', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
-            Content.assert_text(mock_file, 'defined-snippet.txt', content)
+            Content.assert_text(mock_file, 'defined-snippet.txt', expect_content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_010(self, snippy):
@@ -230,7 +230,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         of default file name and format snippet.text.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -239,7 +239,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './snippets.yaml', content)
+            Content.assert_yaml(yaml, mock_file, './snippets.yaml', expect_content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_012(self, snippy):
@@ -249,7 +249,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as yaml file.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -258,7 +258,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.yaml'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', content)
+            Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', expect_content)
 
     @pytest.mark.usefixtures('json', 'default-snippets', 'export-time')
     def test_cli_export_snippet_013(self, snippy):
@@ -268,7 +268,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as json file.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -277,7 +277,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.json'])
             assert cause == Cause.ALL_OK
-            Content.assert_json(json, mock_file, 'defined-snippet.json', content)
+            Content.assert_json(json, mock_file, 'defined-snippet.json', expect_content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_014(self, snippy):
@@ -287,7 +287,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as text file with *.txt file extension.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -296,7 +296,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.txt'])
             assert cause == Cause.ALL_OK
-            Content.assert_text(mock_file, 'defined-snippet.txt', content)
+            Content.assert_text(mock_file, 'defined-snippet.txt', expect_content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_015(self, snippy):
@@ -306,7 +306,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         in command line as text file with *.text file extension.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.FORCED]
@@ -315,7 +315,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'force', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
-            Content.assert_text(mock_file, 'defined-snippet.text', content)
+            Content.assert_text(mock_file, 'defined-snippet.text', expect_content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_016(self, snippy):
@@ -326,7 +326,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         defined in command line.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
@@ -336,7 +336,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'docker', '-f', 'defined-snippet.text'])
             assert cause == Cause.ALL_OK
-            Content.assert_text(mock_file, 'defined-snippet.text', content)
+            Content.assert_text(mock_file, 'defined-snippet.text', expect_content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_017(self, snippy):
@@ -359,7 +359,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         file name and format snippet.text.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
@@ -368,7 +368,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--content', 'docker rm --volumes $(docker ps --all --quiet)'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './snippets.yaml', content)
+            Content.assert_yaml(yaml, mock_file, './snippets.yaml', expect_content)
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')
     def test_cli_export_snippet_019(self, snippy):
@@ -378,7 +378,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         command line as yaml file.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
@@ -387,7 +387,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.yaml'])  # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', content)
+            Content.assert_yaml(yaml, mock_file, 'defined-snippet.yaml', expect_content)
 
     @pytest.mark.usefixtures('json', 'default-snippets', 'export-time')
     def test_cli_export_snippet_020(self, snippy):
@@ -397,7 +397,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         command line as json file.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
@@ -406,7 +406,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.json'])  # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
-            Content.assert_json(json, mock_file, 'defined-snippet.json', content)
+            Content.assert_json(json, mock_file, 'defined-snippet.json', expect_content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_021(self, snippy):
@@ -416,7 +416,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         command line as text file with *.txt file extension.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE]
@@ -425,7 +425,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-c', 'docker rm --volumes $(docker ps --all --quiet)', '-f', 'defined-snippet.txt'])  # pylint: disable=line-too-long
             assert cause == Cause.ALL_OK
-            Content.assert_text(mock_file, 'defined-snippet.txt', content)
+            Content.assert_text(mock_file, 'defined-snippet.txt', expect_content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_022(self, snippy):
@@ -465,7 +465,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         predefined file location under tool data folder in yaml format.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
@@ -476,7 +476,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
             cause = snippy.run(['snippy', 'export', '--defaults'])
             assert cause == Cause.ALL_OK
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
-            Content.assert_yaml(yaml, mock_file, defaults_snippets, content)
+            Content.assert_yaml(yaml, mock_file, defaults_snippets, expect_content)
 
     @pytest.mark.usefixtures('export-time')
     def test_cli_export_snippet_025(self, snippy):
@@ -501,7 +501,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         file since the -f|-file option is not used.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
@@ -511,7 +511,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--sall', 'docker'])
             assert cause == Cause.ALL_OK
-            Content.assert_yaml(yaml, mock_file, './snippets.yaml', content)
+            Content.assert_yaml(yaml, mock_file, './snippets.yaml', expect_content)
 
     @pytest.mark.usefixtures('default-snippets', 'export-time')
     def test_cli_export_snippet_027(self, snippy):
@@ -520,7 +520,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         Export all snippets in Markdown format.
         """
 
-        content = {
+        expect_content = {
             'meta': Content.get_cli_meta(),
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
@@ -530,7 +530,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
             assert cause == Cause.ALL_OK
-            Content.assert_mkdn(mock_file, './snippets.mkdn', content)
+            Content.assert_mkdn(mock_file, './snippets.mkdn', expect_content)
 
     @pytest.mark.usefixtures('export-time')
     def test_cli_export_snippet_028(self, snippy):

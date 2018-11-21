@@ -11,6 +11,7 @@
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
+   - [ ] Fix storage collection comparison assert. The new way masks away the test case dict because the collection e.g. sorts and trims tags, etc. The case should be exactly, check dict.
 
 ## THINKING
    - [ ] Add code content.

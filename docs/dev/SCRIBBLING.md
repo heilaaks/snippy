@@ -1328,7 +1328,9 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        Content importing from file:
 
-         1) Create collection from given input.
+         1) Create collection from given input. Same timestamp
+            is used for all created resources.
+
 
        Content importing (=update) based on digest:
 

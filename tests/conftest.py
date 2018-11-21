@@ -50,7 +50,8 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 #
 # Content importing from file:
 #
-#   1) Create collection from given input.
+#   1) Create collection from given input. Same timestamp
+#      is used for all created resources.
 #
 # Content importing (=update) based on digest:
 #
@@ -66,6 +67,7 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 #   1) Creating metadata with export timestamp.
 
 # Snippets
+IMPORT_CONTENT = '2017-10-14T19:56:31.000001+0000'
 REMOVE_CREATED = '2017-10-14T19:56:31.000001+0000'
 FORCED_CREATED = '2017-10-14T19:56:31.000001+0000'
 EXITED_CREATED = '2017-10-20T07:08:45.000001+0000'
@@ -312,6 +314,12 @@ def import_default_snippets(mocker, snippy):
 
     contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
+
+@pytest.fixture(scope='function', name='import-content-utc')
+def import_content_time_mock(mocker):
+    """Mock timestamps to create content."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=(IMPORT_CONTENT,))
 
 @pytest.fixture(scope='function', name='import-exited')
 def import_exited_snippet(mocker, snippy):

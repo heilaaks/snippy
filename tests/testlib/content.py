@@ -139,11 +139,15 @@ class Content(object):  # pylint: disable=too-many-public-methods
             return
 
         result_collection = Database.get_collection()
+        result_dictionary = result_collection.dump_dict([])
         expect_collection = cls._read_refs(Const.CONTENT_FORMAT_NONE, content)
+        expect_dictionary = cls._mask_uuid(content)
         try:
             assert result_collection == expect_collection
+            #assert result_dictionary == expect_dictionary['data']
         except AssertionError:
             Content._print_assert(result_collection, expect_collection)
+            Content._print_assert(result_dictionary, expect_dictionary)
             raise AssertionError
 
     @classmethod
@@ -155,13 +159,13 @@ class Content(object):  # pylint: disable=too-many-public-methods
             expect (dict): Excepted JSON in REST API response.
         """
 
-        result = Content._mask_result(result)
-        expect = Content._copy_expect(expect)
+        result_dict = Content._mask_result(result)
+        expect_dict = Content._copy_expect(expect)
         try:
-            assert result == expect
+            assert result_dict == expect_dict
         except AssertionError:
-            pprintpp.pprint(result)
-            pprintpp.pprint(expect)
+            pprintpp.pprint(result_dict)
+            pprintpp.pprint(expect_dict)
             raise AssertionError
 
     @classmethod
@@ -476,23 +480,28 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return mock.mock_open(read_data=mocked_open)
 
     @staticmethod
-    def mocked_file(content, content_format):
+    def get_file_content(content_format, contents):
         """Return mocked file.
 
-        The method returns a mocked file which returns a string in requested
-        content format.
+        The method returns file content for different content formats. Returned
+        type changes depending on the content format. For example JSON and YAML
+        require simple dictionary for the file content but text files require a
+        Mocked open.
 
         Args:
-            content (dict): Content in dictionary.
             content_format (str): Content format.
+            contents (list): Content list.
 
         Returns:
-            str: Mocked file open.
+            Mock or dict: Dictionary or mocked file open depending on content.
         """
 
+        if content_format in (Content.JSON, Content.YAML):
+            return {'data': contents}
+
         mocked_file = Const.EMPTY
-        for item in content.values():
-            mocked_file = mocked_file + Snippet.dump(item, content_format)
+        for content in contents:
+            mocked_file = mocked_file + Snippet.dump(content, content_format)
             if content_format == Content.MKDN:
                 mocked_file = mocked_file + '\n---\n\n'
 
@@ -581,6 +590,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         Args:
             expect (dict): Excepted JSON in REST API response.
+
         Returns:
             dict: Expected JSON in REST API format.
         """
@@ -619,6 +629,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         Args:
             result (dict): Result JSON from REST API.
+
         Returns:
             dict: Dictionary with valid UUID.
         """
@@ -854,7 +865,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             print("=" * 120)
             for field in fields:
                 print("result {}:".format(field))
-                pprintpp.pprint(expect[field])
+                pprintpp.pprint(result[field])
                 print("expect {}:".format(field))
                 pprintpp.pprint(expect[field])
         elif isinstance(result, str):

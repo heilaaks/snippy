@@ -417,17 +417,17 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         Import all references from Markdown formatted file.
         """
 
-        content = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
-        }
-        mocked_open = Content.mocked_file(content, Content.MKDN)
-        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
+        content = [
+            Reference.DEFAULTS[Reference.GITLOG],
+            Reference.DEFAULTS[Reference.REGEXP]
+        ]
+        expect_storage = {'data': content}
+        file_content = Content.get_file_content(Content.MKDN, content)
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './all-references.mkdn'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_references()) == 2
+            Content.assert_storage(expect_storage)
             mock_file.assert_called_once_with('./all-references.mkdn', 'r')
-            Content.verified(mocker, snippy, content)
 
     @classmethod
     def teardown_class(cls):

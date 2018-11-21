@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_performance: Verify API server."""
+"""test_api_performance: Test REST API server performance."""
 
 from __future__ import print_function
 
@@ -30,8 +30,8 @@ from subprocess import PIPE
 import pytest
 
 from snippy.cause import Cause
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 try:
     import http.client as httplib
@@ -42,7 +42,7 @@ pytest.importorskip('gunicorn')
 
 
 class TestApiPerformance(object):
-    """Test tool performance."""
+    """Test REST API server performance."""
 
     @pytest.mark.serial
     def test_server_performance(self):
@@ -78,7 +78,7 @@ class TestApiPerformance(object):
         # Clear the real database and run the real server.
         call(['make', 'clean-db'])
         server = Popen(['python', './runner', '--server', '--compact-json'], stdout=PIPE, stderr=PIPE)
-        time.sleep(1)  # Wait untill server up.
+        time.sleep(1)  # Wait untill server is up.
         snippets = {'data': [{'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]},
                              {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]},
@@ -192,5 +192,4 @@ class TestApiPerformance(object):
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

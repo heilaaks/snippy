@@ -207,8 +207,15 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         Parser(Const.CONTENT_FORMAT_DICT, timestamp, dictionary, self).read()
 
-    def dump_dict(self, remove_fields):
-        """Convert collection to dictionary."""
+    def dump_dict(self, remove_fields=None):
+        """Convert collection to dictionary.
+
+        Args:
+            remove_fields (list): List of content fields removed.
+        """
+
+        if remove_fields is None:
+            remove_fields = []
 
         data = []
         for resource in self.resources():

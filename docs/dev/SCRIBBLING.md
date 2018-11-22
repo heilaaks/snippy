@@ -1824,6 +1824,199 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        that verify the Collection() dump and load methods (text and Markdown format
        parsers).
 
+    4. Test case layouts and data structures
+
+       The file format that tool uses to store JSON or YAML content into a file uses
+       'data' and 'meta' keys in dictionary. The 'data' key contains list of contents.
+       The 'meta' key is optional and it is not always used.
+
+       It is considered better to align test cases in same manner that the data passed
+       to test case helpers in Collection always use the 'data' and optinal 'meta' keys.
+       This allows for example adding new kind of data on top of the existing keys.
+       
+       Test cases must pass a dictionary with 'data' and optional 'meta' keys when
+       comparing expected content stored in created file, database or JSON REST API
+       response. The 'data' key must contain a list of dictionaries where each
+       dictionary is a content with content specific attributes as keys.
+
+       The content format in test case must follow the format that is stored in database.
+       This is, for example the data and tags fields must use tuples and the tags must
+       be sorted correctly in each test case.
+
+       These rules align the test case data presentation in every test case and make
+       the test cases more readable and maintainable.
+
+       Test cases can be divided into following scenarios that create at least slightly
+       different content tests.
+
+           1. Creating, updating and importing data => assert storage (collection, dictionary)
+
+           2. Exporting data => assert file (yaml, json, text, mkdn) => (text, dictionary)
+
+           3. REST API => assert JSON API response (dictionary)
+
+        # Example 1: Assert content creation, updating and importing.
+        
+        @pytest.mark.usefixtures('isfile_true', 'yaml')
+        def test_cli_import_snippet_999(self, snippy):
+            """Import content from mocked YAML file.
+        
+            The YAML file contains created and updated timestamps and there
+            is no need to mock these. The 'yaml' fixture returns a variable
+            to a mock that can be used define input for the test case as well
+            as reading the test case result.
+        
+            The Python YAML module uses file handles. This requires that the
+            file handle where the YAML data is going to be written must be
+            mocked with the used Python YAML API.
+        
+            Same applies also to JSON content.
+            """
+        
+            expect_content = {
+                'data': [
+                    Snippet.DEFAULTS[Snippet.REMOVE],
+                    Snippet.DEFAULTS[Snippet.NETCAT]
+                ]
+            }
+            file_content = Content.get_file_content(Content.YAML, expect_content)
+            with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+                yaml.safe_load.return_value = file_content
+                cause = snippy.run(['snippy', 'import'])
+                assert cause == Cause.ALL_OK
+                Content.assert_storage(content)
+                mock_file.assert_called_once_with('./snippets.yaml', 'r')
+        
+        @pytest.mark.usefixtures('isfile_true', 'import-content-utc')
+        def test_cli_import_snippet_999(self, snippy):
+            """Import content from mocked text file.
+        
+            The text file does not contain timestamp fields. Because of this,
+            the timestamp must be mocked and it must match the given content.
+        
+            Same applies also to Markdown content.
+            """
+        
+            expect_content = {
+                'data': [
+                    Snippet.DEFAULTS[Snippet.REMOVE],
+                    Snippet.DEFAULTS[Snippet.NETCAT]
+                ]
+            }
+            file_content = Content.get_file_content(Content.TEXT, content)
+            with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
+                cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
+                Content.output()
+                assert cause == Cause.ALL_OK
+                Content.assert_storage(expect_content)
+                mock_file.assert_called_once_with('./all-snippets.txt', 'r')
+        
+        
+        # Example 2: Assert exporting content.
+        
+        @pytest.mark.usefixtures('default-snippets', 'export-time')
+        def test_cli_export_snippet_999(self, snippy):
+            """Export content to Markdown format."""
+        
+            expect_content = {
+                'meta': Content.get_cli_meta(),
+                'data': [
+                    Snippet.DEFAULTS[Snippet.REMOVE],
+                    Snippet.DEFAULTS[Snippet.FORCED]
+                ]
+            }
+            with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+                cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
+                assert cause == Cause.ALL_OK
+                Content.assert_mkdn(mock_file, './snippets.mkdn', expect_content)
+        
+        
+        # Example 3: Assert REST API response.
+        
+        @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
+        def test_api_create_snippet_999(self, server):
+        
+            expect_content = {
+                'data': [
+                    Snippet.DEFAULTS[Snippet.REMOVE],
+                    Snippet.DEFAULTS[Snippet.FORCED]
+                ]
+            }
+            request_body = {
+                'data': [{
+                    'type': 'snippet',
+                    'attributes': expect_content['data'][0]
+                }, {
+                    'type': 'snippet',
+                    'attributes': expect_content['data'][1]
+                }]
+            }
+            expect_headers = {
+                'content-type': 'application/vnd.api+json; charset=UTF-8',
+                'content-length': '1481'
+            }
+            expect_json = {
+                'data': [{
+                    'type': 'snippet',
+                    'id': Snippet.REMOVE_DIGEST,
+                    'attributes': expect_content['data'][0]
+                }, {
+                    'type': 'snippet',
+                    'id': Snippet.FORCED_DIGEST,
+                    'attributes': expect_content['data'][0]
+                }]
+            }
+            result = testing.TestClient(server.server.api).simulate_post(
+                path='/snippy/api/app/v1/snippets',
+                headers={'accept': 'application/json'},
+                body=json.dumps(request_body))
+            assert result.status == falcon.HTTP_201
+            assert result.headers == expect_headers
+            Content.assert_restapi(result.json, expect_json)
+            Content.assert_storage(expect_content)
+            
+            @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
+            def test_api_create_snippet_013(self, server):
+        
+            expect_content = {
+                'data': [
+                    Snippet.DEFAULTS[Snippet.FORCED]
+                ]
+            }
+            expect_content['data'][0]['data'] = Snippet.DEFAULTS[Snippet.REMOVE]['data']
+            expect_content['data'][0]['digest'] = a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
+            request_body = {
+                'data': {
+                    'type': 'snippet',
+                    'attributes': {
+                        'data': Const.NEWLINE.join(content['data'][0]['data'])
+                    }
+                }
+            }
+            expect_headers = {
+                'content-type': 'application/vnd.api+json; charset=UTF-8',
+                'content-length': '894'
+            }
+            expect_json = {
+                'links': {
+                    'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
+                },
+                'data': {
+                    'type': 'snippet',
+                    'id': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2',
+                    'attributes': content
+                }
+            }
+            expect_storage = {'data': [content]}
+            result = testing.TestClient(server.server.api).simulate_post(
+                path='/snippy/api/app/v1/snippets/53908d68425c61dc',
+                headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
+                body=json.dumps(request_body))
+            assert result.status == falcon.HTTP_200
+            assert result.headers == expect_headers
+            Content.assert_storage(expect_storage)
+            Content.assert_restapi(result.json, expect_json)
+
     DOCUMENTATION
 
     1. Code documentation follows Goolge docstring format

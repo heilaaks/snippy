@@ -402,12 +402,12 @@ class TestApiCreateSolution(object):
             }]
         }
         content = {
-            'data': ['     first row   ', '   second row  ', ''],
+            'data': ('     first row   ', '   second row  ', ''),
             'brief': 'short brief',
             'description': 'long description',
-            'groups': ['python'],
-            'tags': ['atabs', 'bspaces'],
-            'links': ['alink2', 'blink1'],
+            'groups': ('python',),
+            'tags': ('atabs', 'bspaces'),
+            'links': ('alink2', 'blink1'),
             'category': 'solution',
             'name': 'short name',
             'filename': 'shortfilename.yaml',

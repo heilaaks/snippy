@@ -113,21 +113,29 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         The assert comparisons use equality implemented for collection data
         class. This quarantees that the count of resources in collection is
-        same between expected content and in collection created from database.
+        same between expected content and collection created from database.
 
-        The comparison tests all but the key attribute in between references.
-        The key attribute is an index in database and it cannot be compared.
+        The comparison tests all but the key attribute between references
+        stored in collection. The key attribute is an index in database and
+        it cannot be compared.
 
         The content UUID must be unique for the database. UUID's are allocated
         in order where content is stored which can be random between different
-        tests. Because of this, content UUID is always masked away.
+        tests. Because of this, the content UUID is always masked away.
 
-        Text formatted content does not have created and updated fields in the
-        text. Because of this, they cannot be compared against reference and
-        these two fields are masked away when comparing text content.
+        Text formatted content does not have all fields. For example created
+        and updated fields are missing and cannot be compared. Because of this,
+        some fields are masked away when comparing text content.
 
-        The original content must not be changed because it is pointing to the
-        default content shared between all the tests.
+        If the result and expected content are compared only as collections,
+        there are cases that are not noticed. A content fields in collection
+        are for example sorted and trimmed in some cases. The given content
+        dictionary format from test cases must be set correctly in order to
+        keep the content definitions in test correct. Because of this, the
+        content must be compared also in dictionary format.
+
+        The original content must not be changed because it is in most cases
+        default content shared between all tests.
 
         Args:
             content (dict): Excepted content compared against database.
@@ -138,13 +146,13 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
             return
 
-        result_collection = Database.get_collection()
-        result_dictionary = result_collection.dump_dict([])
-        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_NONE, content)
-        expect_dictionary = cls._mask_uuid(content)
+        result_collection = cls._get_db_collection()
+        result_dictionary = cls._get_db_dictionary(result_collection)
+        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_DICT, content)
+        expect_dictionary = cls._get_expect_dictionary(content)
         try:
             assert result_collection == expect_collection
-            #assert result_dictionary == expect_dictionary['data']
+            assert result_dictionary == expect_dictionary
         except AssertionError:
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_dictionary, expect_dictionary)
@@ -154,13 +162,15 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def assert_restapi(cls, result, expect):
         """Compare content received from REST API.
 
-         Args:
+        See the description for assert_storage method.
+
+        Args:
             result (dict): Result JSON from REST API.
             expect (dict): Excepted JSON in REST API response.
         """
 
-        result_dict = Content._mask_result(result)
-        expect_dict = Content._copy_expect(expect)
+        result_dict = Content._get_result_restapi(result)
+        expect_dict = Content._get_expect_restapi(expect)
         try:
             assert result_dict == expect_dict
         except AssertionError:
@@ -172,7 +182,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def assert_json(cls, json, json_file, filename, content):
         """Compare JSON against expected content.
 
-        See description for assert_storage method.
+        See the description for assert_storage method.
 
         Args:
             json (obj): Mocked JSON dump method.
@@ -181,10 +191,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Excepted content compared against generated JSON.
         """
 
-        result_collection = cls._read_mock(Const.CONTENT_FORMAT_JSON, json)
-        result_dictionary = cls._read_dict(Const.CONTENT_FORMAT_JSON, json)
-        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_JSON, content)
-        expect_dictionary = cls._mask_uuid(content)
+        result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_JSON, json)
+        result_dictionary = cls._get_result_dictionary(Const.CONTENT_FORMAT_JSON, json)
+        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_JSON, content)
+        expect_dictionary = cls._get_expect_dictionary(content)
         try:
             assert result_collection == expect_collection
             assert result_dictionary == expect_dictionary
@@ -198,7 +208,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
     def assert_mkdn(cls, mkdn, filename, content):
         """Compare Markdown against expected content.
 
-        See description for assert_storage method.
+        See the description for assert_storage method.
 
         Args:
             mkdn (obj): Mocked file where the Markdown content was saved.
@@ -206,9 +216,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Excepted content compared against Markdown file.
         """
 
-        result_collection = cls._read_mock(Const.CONTENT_FORMAT_MKDN, mkdn)
+        result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_MKDN, mkdn)
         result_markdown = cls._read_text(Const.CONTENT_FORMAT_MKDN, mkdn)
-        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_MKDN, content)
+        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_MKDN, content)
         expect_markdown = result_collection.dump_mkdn(Config.templates)
         try:
             assert result_collection == expect_collection
@@ -237,9 +247,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
             return
 
-        result_collection = cls._read_mock(Const.CONTENT_FORMAT_TEXT, text)
+        result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_TEXT, text)
         result_text = cls._read_text(Const.CONTENT_FORMAT_TEXT, text)
-        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_TEXT, content)
+        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_TEXT, content)
         expect_text = expect_collection.dump_text(Config.templates)
         try:
             assert result_collection == expect_collection
@@ -263,10 +273,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content (dict): Excepted content compared against generated YAML.
         """
 
-        result_collection = cls._read_mock(Const.CONTENT_FORMAT_YAML, yaml)
-        result_dictionary = cls._read_dict(Const.CONTENT_FORMAT_YAML, yaml)
-        expect_collection = cls._read_refs(Const.CONTENT_FORMAT_YAML, content)
-        expect_dictionary = cls._mask_uuid(content)
+        result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_YAML, yaml)
+        result_dictionary = cls._get_result_dictionary(Const.CONTENT_FORMAT_YAML, yaml)
+        expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_YAML, content)
+        expect_dictionary = cls._get_expect_dictionary(content)
         try:
             assert result_collection == expect_collection
             assert result_dictionary == expect_dictionary
@@ -577,8 +587,8 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return content_read
 
     @staticmethod
-    def _copy_expect(expect):
-        """Copy expected default content.
+    def _get_expect_restapi(expect):
+        """Return comparable dictionary from expected content.
 
         The expected dictionary is a default content defined for testing. The
         default content is defined to be in storage format which uses tuples
@@ -592,7 +602,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             expect (dict): Excepted JSON in REST API response.
 
         Returns:
-            dict: Expected JSON in REST API format.
+            dict: Comparable JSON REST API dictionary from expected content.
         """
 
         def _convert(content):
@@ -617,21 +627,21 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return expect
 
     @staticmethod
-    def _mask_result(result):
-        """Mask fields that are not comparable.
+    def _get_result_restapi(result):
+        """Return comparable dictionary from test case result.
 
         Error response from JSON API can contain error string resulted from
         REST API schema validation. This error string can be a long JSON
         structure. For simplicity and test case maintainability reasons,
         the schema validation error is masked away.
 
-        See description for assert_storage method.
+        See the description for assert_storage method.
 
         Args:
             result (dict): Result JSON from REST API.
 
         Returns:
-            dict: Dictionary with valid UUID.
+            dict: Comparable JSON REST API dictionary frm test case result.
         """
 
         try:
@@ -653,16 +663,47 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return result
 
     @classmethod
-    def _mask_uuid(cls, content):
-        """Mask UUID from given content.
+    def _get_db_collection(cls):
+        """Return comparable collection from database.
 
-        See description for assert_storage method.
+        See the description for assert_storage method.
+
+        Returns:
+            Collection(): Comparable collection from database.
+        """
+
+        collection = Database.get_collection()
+        for digest in collection.keys():
+            collection[digest].uuid = Database.VALID_UUID
+
+        return collection
+
+    @classmethod
+    def _get_db_dictionary(cls, collection):
+        """Return comparable dictionary from database.
+
+        See the description for assert_storage method.
+
+        Returns:
+            dict: Comparable dictionary from database.
+        """
+
+        dict = {}
+        dict['data'] = collection.dump_dict()
+
+        return dict
+
+    @classmethod
+    def _get_expect_dictionary(cls, content):
+        """Return comparable dictionary from expected content.
+
+        See the description for assert_storage method.
 
         Args:
             content (dict): Reference content.
 
         Returns:
-            content (dict): Reference content with constant UUDI.
+            content (dict): Comparable reference content.
         """
 
         content = copy.deepcopy(content)
@@ -672,17 +713,17 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return content
 
     @staticmethod
-    def _read_dict(content_format, mock_object):
-        """Return dictionary from mock.
+    def _get_result_dictionary(content_format, mock_object):
+        """Return comparable dictionary from test case result.
 
-        See description for assert_storage method.
+        See the description for assert_storage method.
 
         Args:
             content_format (str): Content format stored in mock.
             mock_object (obj): Mock object where content was stored.
 
         Returns:
-            dict: Dictinary from the mocked object.
+            dict: Comparable dictinary from the test case mock.
         """
 
         dictionary = {}
@@ -697,17 +738,17 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return dictionary
 
     @staticmethod
-    def _read_mock(content_format, mock_object):
-        """Return collection from mock.
+    def _get_result_collection(content_format, mock_object):
+        """Return comparable collection from test case result.
 
-        See description for assert_storage method.
+        See the description for assert_storage method.
 
         Args:
             content_format (str): Content format stored in mock.
             mock_object (obj): Mock object where content was stored.
 
         Returns:
-            Collection(): Collection of resources read from the file.
+            Collection(): Comparable collection from test case result.
         """
 
         collection = Collection()
@@ -728,17 +769,17 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return collection
 
     @staticmethod
-    def _read_refs(content_format, content):
-        """Return collection from content.
+    def _get_expect_collection(content_format, content):
+        """Return comparable collection from expected content.
 
-        See description for assert_storage method.
+        See the description for assert_storage method.
 
         Args:
             content_format (str): Content format stored in mock.
             content (dict): Reference content.
 
         Returns:
-            Collection(): Collection of resources read from content.
+            Collection(): Comparable collection from expected content.
         """
 
         references = Collection()
@@ -823,6 +864,8 @@ class Content(object):  # pylint: disable=too-many-public-methods
         print("=" * 120)
         if type(result) is not type(expect):
             print("Cannot compare different types.")
+            print(result)
+            print(expect)
 
             return
 

@@ -396,12 +396,12 @@ class TestApiCreateReference(object):
             }]
         }
         content = {
-            'data': [],
+            'data': (),
             'brief': 'Python regular expression',
             'description': '',
-            'groups': ['python', 'regexp'],
-            'tags': ['howto', 'online', 'python', 'regexp'],
-            'links': ['https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/', 'https://pythex.org/'],
+            'groups': ('python', 'regexp'),
+            'tags': ('howto', 'online', 'python', 'regexp'),
+            'links': ('https://www.cheatography.com/davechild/cheat-sheets/regular-expressions/', 'https://pythex.org/'),
             'category': 'reference',
             'name': '',
             'filename': '',
@@ -460,12 +460,12 @@ class TestApiCreateReference(object):
             }]
         }
         content = {
-            'data': [],
+            'data': (),
             'brief': 'short brief',
             'description': 'longer description',
-            'groups': ['python'],
-            'tags': ['spaces', 'tabs'],
-            'links': ['link1', 'link2'],
+            'groups': ('python', ),
+            'tags': ('spaces', 'tabs'),
+            'links': ('link1', 'link2'),
             'category': 'reference',
             'name': 'short name',
             'filename': 'shortfilename.yaml',

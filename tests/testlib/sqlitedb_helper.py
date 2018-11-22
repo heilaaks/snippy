@@ -130,11 +130,6 @@ class SqliteDbHelper(object):
         except sqlite3.Error:
             pass
 
-        # UUID is masked away in order to compare resulted and expected
-        # collections.
-        for digest in collection.keys():
-            collection[digest].uuid = cls.VALID_UUID
-
         return collection
 
     @staticmethod

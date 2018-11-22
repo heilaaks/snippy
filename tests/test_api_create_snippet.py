@@ -797,7 +797,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': tuple(request_body['data'][0]['attributes']['data']),
             'brief': request_body['data'][0]['attributes']['brief'],
             'description': request_body['data'][0]['attributes']['description'],
-            'groups': [request_body['data'][0]['attributes']['groups']],
+            'groups': tuple([request_body['data'][0]['attributes']['groups']]),
             'tags': tuple(request_body['data'][0]['attributes']['tags']),
             'links': tuple(request_body['data'][0]['attributes']['links']),
             'category': 'snippet',

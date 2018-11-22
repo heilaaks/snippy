@@ -411,7 +411,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_reference_020(self, snippy, mocker):
+    def test_cli_import_reference_020(self, snippy):
         """Import all references.
 
         Import all references from Markdown formatted file.

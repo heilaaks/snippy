@@ -648,16 +648,17 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         Import all solutions from Markdown formatted file.
         """
 
-        content = [
-            Solution.DEFAULTS[Solution.BEATS],
-            Solution.DEFAULTS[Solution.KAFKA]
-        ]
-        expect_storage = {'data': content}
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.KAFKA]
+            ]
+        }
         file_content = Content.get_file_content(Content.MKDN, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--solution', '-f', './all-solutions.md'])
             assert cause == Cause.ALL_OK
-            Content.assert_storage(expect_storage)
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-solutions.md', 'r')
 
     @classmethod

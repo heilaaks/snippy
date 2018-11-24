@@ -40,20 +40,20 @@ class TestApiDeleteSnippet(object):
         matches to one reference that is deleted.
         """
 
-        expect_headers = {}
-        expect_storage = {
+        content = {
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
+        expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
         assert not result.text
-        Content.assert_storage(expect_storage)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'caller')
     def test_api_delete_snippet_002(self, server):
@@ -62,11 +62,18 @@ class TestApiDeleteSnippet(object):
         Try to DELETE snippet with resource location that does not exist.
         """
 
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED],
+                Snippet.DEFAULTS[Snippet.NETCAT],
+            ]
+        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -75,20 +82,13 @@ class TestApiDeleteSnippet(object):
                 'title': 'cannot find content with message digest: beefbeef'
             }]
         }
-        expect_storage = {
-            'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED],
-                Snippet.DEFAULTS[Snippet.NETCAT],
-            ]
-        }
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/snippets/beefbeef',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_delete_snippet_003(self, server):
@@ -98,11 +98,17 @@ class TestApiDeleteSnippet(object):
         resource.
         """
 
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -111,19 +117,13 @@ class TestApiDeleteSnippet(object):
                 'title': 'cannot delete content without identified resource'
             }]
         }
-        expect_storage = {
-            'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
-            ]
-        }
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):

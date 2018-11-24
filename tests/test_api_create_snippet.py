@@ -913,6 +913,25 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         be trimmed. Tags and links must be sorted.
         """
 
+        content = {
+            'data': [{
+                'data': ('first row', 'second row'),
+                'brief': 'short brief',
+                'description': 'long description',
+                'groups': ('python',),
+                'tags': ('spaces', 'tabs'),
+                'links': ('link1', 'link2'),
+                'category': 'snippet',
+                'name': 'short name',
+                'filename': 'shortfilename.yaml',
+                'versions': 'short versions',
+                'source': 'short source link',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': Content.REGEXP_TIME,
+                'updated': Content.REGEXP_TIME,
+                'digest': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5'
+            }]
+        }
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -930,34 +949,16 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }]
         }
-        content = {
-            'data': ('first row', 'second row'),
-            'brief': 'short brief',
-            'description': 'long description',
-            'groups': ('python',),
-            'tags': ('spaces', 'tabs'),
-            'links': ('link1', 'link2'),
-            'category': 'snippet',
-            'name': 'short name',
-            'filename': 'shortfilename.yaml',
-            'versions': 'short versions',
-            'source': 'short source link',
-            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': Content.REGEXP_TIME,
-            'updated': Content.REGEXP_TIME,
-            'digest': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5'
-        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '654'}
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5',
-                'attributes': content
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
@@ -965,7 +966,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(expect_storage)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_021(self, server):
@@ -976,6 +977,25 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         middle of the snippet must not be interpolated.
         """
 
+        content = {
+            'data': [{
+                'data': ('docker rm $(docker\\nps \\n --all -q -f status=exited)',),
+                'brief': '',
+                'description': '',
+                'groups': ('default',),
+                'tags': (),
+                'links': (),
+                'category': 'snippet',
+                'name': '',
+                'filename': '',
+                'versions': '',
+                'source': '',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': '2017-10-14T19:56:31.000001+0000',
+                'updated': '2017-10-14T19:56:31.000001+0000',
+                'digest': 'c10b8614d264ed75ad3b671526efb9718895974291627b4fd21307051c6928c1'
+            }]
+        }
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -984,23 +1004,6 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }]
         }
-        content = {
-            'data': ('docker rm $(docker\\nps \\n --all -q -f status=exited)',),
-            'brief': '',
-            'description': '',
-            'groups': ('default',),
-            'tags': (),
-            'links': (),
-            'category': 'snippet',
-            'name': '',
-            'filename': '',
-            'versions': '',
-            'source': '',
-            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': '2017-10-14T19:56:31.000001+0000',
-            'updated': '2017-10-14T19:56:31.000001+0000',
-            'digest': 'c10b8614d264ed75ad3b671526efb9718895974291627b4fd21307051c6928c1'
-        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '568'
@@ -1008,11 +1011,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': 'c10b8614d264ed75ad3b671526efb9718895974291627b4fd21307051c6928c1',
-                'attributes': content
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
@@ -1020,7 +1022,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
         Content.assert_restapi(result.json, expect_body)
-        Content.assert_storage(expect_storage)
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):

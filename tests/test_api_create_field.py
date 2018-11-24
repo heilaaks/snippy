@@ -41,17 +41,22 @@ class TestApiCreateField(object):
         Try to call not supported POST operation for /v1/keywords.
         """
 
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': content['data'][0]
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -66,7 +71,7 @@ class TestApiCreateField(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -82,7 +87,7 @@ class TestApiCreateField(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -97,7 +102,7 @@ class TestApiCreateField(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -113,7 +118,7 @@ class TestApiCreateField(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -128,7 +133,7 @@ class TestApiCreateField(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -144,7 +149,7 @@ class TestApiCreateField(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -159,7 +164,7 @@ class TestApiCreateField(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -169,17 +174,22 @@ class TestApiCreateField(object):
         Try to call not supported POST operation for /v1/groups.
         """
 
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': content['data'][0]
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -194,7 +204,7 @@ class TestApiCreateField(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -204,17 +214,22 @@ class TestApiCreateField(object):
         Try to call not supported POST operation for /v1/tags.
         """
 
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': content['data'][0]
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -229,7 +244,7 @@ class TestApiCreateField(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @classmethod

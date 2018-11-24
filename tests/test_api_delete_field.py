@@ -51,7 +51,7 @@ class TestApiDeleteField(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '365'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -66,7 +66,7 @@ class TestApiDeleteField(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -86,7 +86,7 @@ class TestApiDeleteField(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '365'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -101,7 +101,7 @@ class TestApiDeleteField(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -121,7 +121,7 @@ class TestApiDeleteField(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '365'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -136,7 +136,7 @@ class TestApiDeleteField(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_405
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @classmethod

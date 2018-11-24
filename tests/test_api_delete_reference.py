@@ -40,20 +40,20 @@ class TestApiDeleteReference(object):
         matches to one reference that is deleted.
         """
 
-        expect_headers = {}
-        expect_storage = {
+        content = {
             'data': [
                 Reference.DEFAULTS[Reference.GITLOG],
                 Reference.DEFAULTS[Reference.REGEXP]
             ]
         }
+        expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/references/1f9d9496005736ef',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
         assert not result.text
-        Content.assert_storage(expect_storage)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references', 'import-pytest', 'caller')
     def test_api_delete_reference_002(self, server):
@@ -61,11 +61,19 @@ class TestApiDeleteReference(object):
 
         Try to DELETE reference with resource location that does not exist.
         """
+
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP],
+                Reference.DEFAULTS[Reference.PYTEST]
+            ]
+        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -74,20 +82,13 @@ class TestApiDeleteReference(object):
                 'title': 'cannot find content with message digest: beefbeef'
             }]
         }
-        expect_storage = {
-            'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP],
-                Reference.DEFAULTS[Reference.PYTEST]
-            ]
-        }
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/references/beefbeef',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references', 'caller')
     def test_api_delete_reference_003(self, server):
@@ -97,11 +98,17 @@ class TestApiDeleteReference(object):
         reource.
         """
 
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
+        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -110,19 +117,13 @@ class TestApiDeleteReference(object):
                 'title': 'cannot delete content without identified resource'
             }]
         }
-        expect_storage = {
-            'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
-            ]
-        }
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):

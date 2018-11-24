@@ -502,17 +502,17 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         Args:
             content_format (str): Content format.
-            contents (list): Content list.
+            contents (dict): Content dictionary.
 
         Returns:
             Mock or dict: Dictionary or mocked file open depending on content.
         """
 
         if content_format in (Content.JSON, Content.YAML):
-            return {'data': contents}
+            return {'data': contents['data']}
 
         mocked_file = Const.EMPTY
-        for content in contents:
+        for content in contents['data']:
             mocked_file = mocked_file + Snippet.dump(content, content_format)
             if content_format == Content.MKDN:
                 mocked_file = mocked_file + '\n---\n\n'

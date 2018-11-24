@@ -42,32 +42,35 @@ class TestApiCreateSolution(object):
         Call POST /v1/solutions to create new solution.
         """
 
-        content = Solution.DEFAULTS[Solution.BEATS]
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'solution',
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'attributes': content['data'][0]
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2455'}
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
-                'attributes': content
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-beats-utc', 'create-kafka-utc')
     def test_api_create_solution_002(self, server):
@@ -76,35 +79,35 @@ class TestApiCreateSolution(object):
         Call POST /v1/solutions in list context to create new solutions.
         """
 
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.KAFKA]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'solution',
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'attributes': content['data'][0]
             }, {
                 'type': 'solution',
-                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'attributes': content['data'][1]
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '7155'
         }
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'attributes': content['data'][0]
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'attributes': content['data'][1]
             }]
-        }
-        expect_storage = {
-            'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.KAFKA]
-            ]
         }
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions',
@@ -112,8 +115,8 @@ class TestApiCreateSolution(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-beats', 'update-nginx-utc')
     def test_api_create_solution_003(self, server):
@@ -129,17 +132,26 @@ class TestApiCreateSolution(object):
         of this.
         """
 
-        content = Content.deepcopy(Solution.DEFAULTS[Solution.NGINX])
+
+        content = {
+            'data': [
+                Content.deepcopy(Solution.DEFAULTS[Solution.NGINX])
+            ]
+        }
+        content['data'][0]['filename'] = ''
+        content['data'][0]['created'] = Content.BEATS_TIME
+        content['data'][0]['updated'] = Content.NGINX_TIME
+        content['data'][0]['digest'] = '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970'
         request_body = {
             'data': {
                 'type': 'solution',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
-                    'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'description': Solution.DEFAULTS[Solution.NGINX]['description'],
-                    'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
+                    'data': Const.DELIMITER_DATA.join(content['data'][0]['data']),
+                    'brief': content['data'][0]['brief'],
+                    'description': content['data'][0]['description'],
+                    'groups': content['data'][0]['groups'],
+                    'tags': Const.DELIMITER_TAGS.join(content['data'][0]['tags']),
+                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links'])
                 }
             }
         }
@@ -147,29 +159,24 @@ class TestApiCreateSolution(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '3080'
         }
-        expect_json = {
+        expect_body = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/solutions/59c5861b51701c2f'
             },
             'data': {
                 'type': 'solution',
-                'id': '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970',
-                'attributes': content
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }
         }
-        expect_json['data']['attributes']['filename'] = ''
-        expect_json['data']['attributes']['created'] = Content.BEATS_TIME
-        expect_json['data']['attributes']['updated'] = Content.NGINX_TIME
-        expect_json['data']['attributes']['digest'] = '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970'
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/db712a82662d6932',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-beats', 'update-beats-utc')
     def test_api_create_solution_004(self, server):
@@ -180,54 +187,43 @@ class TestApiCreateSolution(object):
         PATCH.
         """
 
+        content = {
+            'data': [
+                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS])
+            ]
+        }
+        content['data'][0]['data'] = Solution.DEFAULTS[Solution.NGINX]['data']
+        content['data'][0]['digest'] = '02533ef592b8d26c557e1e365b3cc1bd9f54ca5599a5cb5aaf44a54cb7d6a310'
         request_body = {
             'data': {
                 'type': 'solution',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
+                    'data': Const.NEWLINE.join(content['data'][0]['data']),
                 }
             }
-        }
-        content = {
-            'data': Solution.DEFAULTS[Solution.NGINX]['data'],
-            'brief': Solution.DEFAULTS[Solution.BEATS]['brief'],
-            'description': Solution.DEFAULTS[Solution.BEATS]['description'],
-            'groups': Solution.DEFAULTS[Solution.BEATS]['groups'],
-            'tags': Solution.DEFAULTS[Solution.BEATS]['tags'],
-            'links': Solution.DEFAULTS[Solution.BEATS]['links'],
-            'category': Solution.DEFAULTS[Solution.BEATS]['category'],
-            'name': Solution.DEFAULTS[Solution.BEATS]['name'],
-            'filename': Solution.DEFAULTS[Solution.BEATS]['filename'],
-            'versions': Solution.DEFAULTS[Solution.BEATS]['versions'],
-            'source': Solution.DEFAULTS[Solution.BEATS]['source'],
-            'uuid': Solution.DEFAULTS[Solution.BEATS]['uuid'],
-            'created': Content.BEATS_TIME,
-            'updated': Content.BEATS_TIME,
-            'digest': '02533ef592b8d26c557e1e365b3cc1bd9f54ca5599a5cb5aaf44a54cb7d6a310'
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '3150'
         }
-        expect_json = {
+        expect_body = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/solutions/02533ef592b8d26c'
             },
             'data': {
                 'type': 'solution',
-                'id': '02533ef592b8d26c557e1e365b3cc1bd9f54ca5599a5cb5aaf44a54cb7d6a310',
-                'attributes': content
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/db712a82662d6932',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_create_solution_005(self, server):
@@ -237,20 +233,20 @@ class TestApiCreateSolution(object):
         solution. In this case the resource exists and the content is deleted.
         """
 
-        expect_headers = {}
-        expect_storage = {
+        content = {
             'data': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]
             ]
         }
+        expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions/fffeaf31e98e68a',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
         assert not result.text
-        Content.assert_storage(expect_storage)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('caller')
     def test_api_create_solution_006(self, server):
@@ -261,17 +257,22 @@ class TestApiCreateSolution(object):
         X-HTTP-Method-Override header.
         """
 
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'solution',
-                'attributes': Solution.DEFAULTS[Solution.NGINX]
+                'attributes': content['data'][0]
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '398'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -286,7 +287,7 @@ class TestApiCreateSolution(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
@@ -305,7 +306,7 @@ class TestApiCreateSolution(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '804'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -320,7 +321,7 @@ class TestApiCreateSolution(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('create-beats-utc', 'caller')
@@ -343,7 +344,7 @@ class TestApiCreateSolution(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '737'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -368,7 +369,7 @@ class TestApiCreateSolution(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('create-regexp-utc')
@@ -384,6 +385,25 @@ class TestApiCreateSolution(object):
         Tags and links must be sorted after parsing.
         """
 
+        content = {
+            'data': [{
+                'data': ('     first row   ', '   second row  ', ''),
+                'brief': 'short brief',
+                'description': 'long description',
+                'groups': ('python',),
+                'tags': ('atabs', 'bspaces'),
+                'links': ('alink2', 'blink1'),
+                'category': 'solution',
+                'name': 'short name',
+                'filename': 'shortfilename.yaml',
+                'versions': 'short versions',
+                'source': 'short source link',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': Content.REGEXP_TIME,
+                'updated': Content.REGEXP_TIME,
+                'digest': '13c08502972d72e0e9b355313bc3b14eddac5c7a80b34ca2b7f401ad57048c61'
+            }]
+        }
         request_body = {
             'data': [{
                 'type': 'solution',
@@ -401,42 +421,24 @@ class TestApiCreateSolution(object):
                 }
             }]
         }
-        content = {
-            'data': ('     first row   ', '   second row  ', ''),
-            'brief': 'short brief',
-            'description': 'long description',
-            'groups': ('python',),
-            'tags': ('atabs', 'bspaces'),
-            'links': ('alink2', 'blink1'),
-            'category': 'solution',
-            'name': 'short name',
-            'filename': 'shortfilename.yaml',
-            'versions': 'short versions',
-            'source': 'short source link',
-            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': Content.REGEXP_TIME,
-            'updated': Content.REGEXP_TIME,
-            'digest': '13c08502972d72e0e9b355313bc3b14eddac5c7a80b34ca2b7f401ad57048c61'
-        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '677'}
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'solution',
-                'id': '13c08502972d72e0e9b355313bc3b14eddac5c7a80b34ca2b7f401ad57048c61',
-                'attributes': content
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):

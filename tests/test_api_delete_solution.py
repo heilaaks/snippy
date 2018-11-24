@@ -40,20 +40,20 @@ class TestApiDeleteSolution(object):
         matches to one reference that is deleted.
         """
 
-        expect_headers = {}
-        expect_storage = {
+        content = {
             'data': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX]
             ]
         }
+        expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions/fffeaf31e98e68a',
             headers={'accept': 'application/json'})
         assert result.headers == expect_headers
         assert result.status == falcon.HTTP_204
         assert not result.text
-        Content.assert_storage(expect_storage)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka', 'caller')
     def test_api_delete_solution_002(self, server):
@@ -62,11 +62,18 @@ class TestApiDeleteSolution(object):
         Try to DELETE solution with resource location that does not exist.
         """
 
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX],
+                Solution.DEFAULTS[Solution.KAFKA]
+            ]
+        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -75,20 +82,13 @@ class TestApiDeleteSolution(object):
                 'title': 'cannot find content with message digest: beefbeef'
             }]
         }
-        expect_storage = {
-            'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX],
-                Solution.DEFAULTS[Solution.KAFKA]
-            ]
-        }
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions/beefbeef',
             headers={'accept': 'application/json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_delete_solution_003(self, server):
@@ -98,11 +98,17 @@ class TestApiDeleteSolution(object):
         resource.
         """
 
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
+        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '363'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -111,19 +117,13 @@ class TestApiDeleteSolution(object):
                 'title': 'cannot delete content without identified resource'
             }]
         }
-        expect_storage = {
-            'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
-            ]
-        }
         result = testing.TestClient(server.server.api).simulate_delete(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json'})
         assert result.status == falcon.HTTP_404
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):

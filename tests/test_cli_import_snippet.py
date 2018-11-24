@@ -45,17 +45,18 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         must result tool internal default file name and format being used.
         """
 
-        content = [
-            Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.DEFAULTS[Snippet.NETCAT]
-        ]
-        expect_storage = {'data': content}
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.NETCAT]
+            ]
+        }
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import'])
             assert cause == Cause.ALL_OK
-            Content.assert_storage(expect_storage)
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('./snippets.yaml', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml')
@@ -66,17 +67,18 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         from command line option -f|--file.
         """
 
-        content = [
-            Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.DEFAULTS[Snippet.NETCAT]
-        ]
-        expect_storage = {'data': content}
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.NETCAT]
+            ]
+        }
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.yaml'])
             assert cause == Cause.ALL_OK
-            Content.assert_storage(expect_storage)
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.yaml', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'json')
@@ -87,16 +89,17 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         from command line option -f|--file.
         """
 
-        content = [
-            Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.DEFAULTS[Snippet.NETCAT]
-        ]
-        expect_storage = {'data': content}
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.NETCAT]
+            ]
+        }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            json.load.return_value = expect_storage
+            json.load.return_value = content
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.json'])
             assert cause == Cause.ALL_OK
-            Content.assert_storage(expect_storage)
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.json', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'import-content-utc')
@@ -108,17 +111,17 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         case.
         """
 
-        content = [
-            Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.DEFAULTS[Snippet.FORCED]
-        ]
-        expect_storage = {'data': content}
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
-            Content.output()
             assert cause == Cause.ALL_OK
-            Content.assert_storage(expect_storage)
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'import-content-utc')
@@ -130,16 +133,17 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         case.
         """
 
-        content = [
-            Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.DEFAULTS[Snippet.FORCED]
-        ]
-        expect_storage = {'data': content}
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.text'])
             assert cause == Cause.ALL_OK
-            Content.assert_storage(expect_storage)
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.text', 'r')
 
     def test_cli_import_snippet_006(self, snippy):
@@ -175,7 +179,10 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         Try to import snippet from text file that is empty.
         """
 
-        file_content = Content.get_file_content(Content.TEXT, [])
+        content = {
+            'data': []
+        }
+        file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
             assert cause == 'NOK: could not identify text source content category: unknown'
@@ -191,14 +198,17 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         not updated in this case because the same content is imported again.
         """
 
-        content = [Snippet.DEFAULTS[Snippet.REMOVE]]
-        expect_storage = {'data': content}
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
             assert cause == Cause.ALL_OK
-            Content.assert_storage(expect_storage)
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'update-remove-utc')
@@ -210,17 +220,19 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         tags were updated.
         """
 
-        snippet = Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
-        snippet['tags'] = ('new', 'set', 'tags')
-        snippet['digest'] = '4525613eaecd52970316d7d6495f091fad1fd027834d7d82a523cbccc4aa3582'
-        content = [snippet]
-        expect_storage = {'data': content}
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+            ]
+        }
+        content['data'][0]['tags'] = ('new', 'set', 'tags')
+        content['data'][0]['digest'] = '4525613eaecd52970316d7d6495f091fad1fd027834d7d82a523cbccc4aa3582'
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '-d', '54e41e9b52a02b63', '-f', 'one-snippet.yaml'])
             assert cause == Cause.ALL_OK
-            Content.assert_storage(expect_storage)
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'json', 'import-remove', 'update-remove-utc')
@@ -424,16 +436,17 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         Import all snippets from Markdown formatted file.
         """
 
-        content = [
-            Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.DEFAULTS[Snippet.NETCAT]
-        ]
-        expect_storage = {'data': content}
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.NETCAT]
+            ]
+        }
         file_content = Content.get_file_content(Content.MKDN, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.md'])
             assert cause == Cause.ALL_OK
-            Content.assert_storage(expect_storage)
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-snippets.md', 'r')
 
     @classmethod

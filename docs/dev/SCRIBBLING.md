@@ -1824,6 +1824,36 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     4. Test case layouts and data structures
 
+       All test cases can be divided into three main categories. All the test withing
+       one category must follow the same layout. The test case layout differences are
+       minimized between main categories in order to improve maintainability and test
+       readability.
+
+           1. Creating, updating and importing content => assert tool storage
+
+           2. Exporting content                        => assert mocked file
+
+           3. Using REST API queries                   => assert REST API response
+
+       The rules below align test case data presentation in every test case and make
+       test cases more readable and maintainable.
+
+       Rules:
+
+           1. Content is always stored into 'content' variable in database format in
+              every test case main category.
+
+           2. The 'content' variable has all or one of the 'data', 'meta' or 'error'
+              keys. The 'data' key contain the content in database format.
+
+           3. The 'content' variable is always first and it is used to defined the
+              input for the test case as well as to test the expected results.
+           
+           4. Test case variables and layout must follow the layout in existing tests
+              and in the examples below.
+
+       Explanations:
+
        The file format that tool uses to store JSON or YAML content into a file uses
        'data' and 'meta' keys in dictionary. The 'data' key contains list of contents.
        The 'meta' key is optional and it is not always used.
@@ -1831,7 +1861,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        It is considered better to align test cases in same manner that the data passed
        to test case helpers in Collection always use the 'data' and optinal 'meta' keys.
        This allows for example adding new kind of data on top of the existing keys.
-       
+
        Test cases must pass a dictionary with 'data' and optional 'meta' keys when
        comparing expected content stored in created file, database or JSON REST API
        response. The 'data' key must contain a list of dictionaries where each
@@ -1841,36 +1871,28 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        This is, for example the data and tags fields must use tuples and the tags must
        be sorted correctly in each test case.
 
-       These rules align the test case data presentation in every test case and make
-       the test cases more readable and maintainable.
-
-       Test cases can be divided into following scenarios that create at least slightly
-       different content tests.
-
-           1. Creating, updating and importing data => assert storage (collection, dictionary)
-
-           2. Exporting data => assert file (yaml, json, text, mkdn) => (text, dictionary)
-
-           3. REST API => assert JSON API response (dictionary)
-
         # Example 1: Assert content creation, updating and importing.
-        
+
         @pytest.mark.usefixtures('isfile_true', 'yaml')
         def test_cli_import_snippet_999(self, snippy):
             """Import content from mocked YAML file.
-        
+
             The YAML file contains created and updated timestamps and there
             is no need to mock these. The 'yaml' fixture returns a variable
             to a mock that can be used define input for the test case as well
             as reading the test case result.
-        
+
             The Python YAML module uses file handles. This requires that the
             file handle where the YAML data is going to be written must be
             mocked with the used Python YAML API.
-        
+
             Same applies also to JSON content.
             """
-        
+
+            # Content data is always defined in database format. This means
+            # for example that tuple is used for data, groups, tags and links
+            # and that the groups, tags and links dedending on content are
+            # sorted.
             content = {
                 'data': [
                     Snippet.DEFAULTS[Snippet.REMOVE],
@@ -1884,17 +1906,21 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 assert cause == Cause.ALL_OK
                 Content.assert_storage(content)
                 mock_file.assert_called_once_with('./snippets.yaml', 'r')
-        
+
         @pytest.mark.usefixtures('isfile_true', 'import-content-utc')
         def test_cli_import_snippet_999(self, snippy):
             """Import content from mocked text file.
-        
+
             The text file does not contain timestamp fields. Because of this,
             the timestamp must be mocked and it must match the given content.
-        
+
             Same applies also to Markdown content.
             """
-        
+
+            # Content data is always defined in database format. This means
+            # for example that tuple is used for data, groups, tags and links
+            # and that the groups, tags and links dedending on content are
+            # sorted.
             content = {
                 'data': [
                     Snippet.DEFAULTS[Snippet.REMOVE],
@@ -1908,14 +1934,18 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 assert cause == Cause.ALL_OK
                 Content.assert_storage(content)
                 mock_file.assert_called_once_with('./all-snippets.txt', 'r')
-        
-        
+
+
         # Example 2: Assert exporting content.
-        
+
         @pytest.mark.usefixtures('default-snippets', 'export-time')
         def test_cli_export_snippet_999(self, snippy):
             """Export content to Markdown format."""
-        
+
+            # Content data is always defined in database format. This means
+            # for example that tuple is used for data, groups, tags and links
+            # and that the groups, tags and links dedending on content are
+            # sorted.
             content = {
                 'meta': Content.get_cli_meta(),
                 'data': [
@@ -1927,13 +1957,17 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
                 assert cause == Cause.ALL_OK
                 Content.assert_mkdn(mock_file, './snippets.mkdn', content)
-        
-        
+
+
         # Example 3: Assert REST API response.
-        
+
         @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
         def test_api_create_snippet_999(self, server):
-        
+
+            # Content data is always defined in database format. This means
+            # for example that tuple is used for data, groups, tags and links
+            # and that the groups, tags and links dedending on content are
+            # sorted.
             content = {
                 'data': [
                     Snippet.DEFAULTS[Snippet.REMOVE],
@@ -1972,10 +2006,18 @@ git update-index --no-assume-unchanged FILE_NAME # change back
             assert result.headers == expect_headers
             Content.assert_restapi(result.json, expect_body)
             Content.assert_storage(content)
-            
+
         @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
         def test_api_create_snippet_013(self, server):
-        
+
+            # Content data is always defined in database format. This means
+            # for example that tuple is used for data, groups, tags and links
+            # and that the groups, tags and links dedending on content are
+            # sorted.
+            #
+            # Content must be copied if it is changed locally. If a copy is
+            # not made, it will change the global default content which will
+            # affect to all test cases.
             content = {
                 'data': [
                     Content.deepcopy(Snippet.DEFAULTS[Snippet.FORCED])
@@ -2718,7 +2760,7 @@ ORDER BY rating DESC, name ASC LIMIT <count> OFFSET <skip>
 > This is a very long testing description that is supposed to extend to several lines in
 order to test how this goes in Markdown.
 
-> 
+>
 
 - Compress folder excluding the tar.
 
@@ -2742,14 +2784,14 @@ order to test how this goes in Markdown.
 
 ## Meta
 
-> category : snippet  
-created  : 2018-05-07T11:13:17.000001+0000  
-digest   : b890ba7be5c03b2008aa2160d34d14f651f22eb6f319df2ac06837c01bcf68e1  
-filename :   
-name     :   
-source   :   
-tags     : howto,linux,tar,untar  
-updated  : 2018-11-11T10:51:33.675848+0000  
-uuid     : f21c8ed8-8830-11e8-a114-2c4d54508088  
+> category : snippet
+created  : 2018-05-07T11:13:17.000001+0000
+digest   : b890ba7be5c03b2008aa2160d34d14f651f22eb6f319df2ac06837c01bcf68e1
+filename :
+name     :
+source   :
+tags     : howto,linux,tar,untar
+updated  : 2018-11-11T10:51:33.675848+0000
+uuid     : f21c8ed8-8830-11e8-a114-2c4d54508088
 versions :
 =====

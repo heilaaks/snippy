@@ -42,11 +42,11 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        expect_json = {'meta': Content.get_api_meta()}
+        expect_body = {'meta': Content.get_api_meta()}
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1/')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
 
     def test_api_hello_api_002(self, server):
         """Test hello API in /snippy/api/hello.
@@ -58,11 +58,11 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        expect_json = {'meta': Content.get_api_meta()}
+        expect_body = {'meta': Content.get_api_meta()}
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1/hello')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('mock-server')
     def test_api_hello_api_003(self):
@@ -76,13 +76,13 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        expect_json = {'meta': Content.get_api_meta()}
+        expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server', '--base-path-app', '/snippy/api/'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         server.release()
         Content.delete()
 
@@ -100,13 +100,13 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        expect_json = {'meta': Content.get_api_meta()}
+        expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server', '--base-path-app', '/snippy/api'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         server.release()
         Content.delete()
 
@@ -124,13 +124,13 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        expect_json = {'meta': Content.get_api_meta()}
+        expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server', '--base-path-app', 'snippy/api/'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         server.release()
         Content.delete()
 
@@ -148,13 +148,13 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        expect_json = {'meta': Content.get_api_meta()}
+        expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server', '--base-path-app', 'snippy/api'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         server.release()
         Content.delete()
 
@@ -171,13 +171,13 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        expect_json = {'meta': Content.get_api_meta()}
+        expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server', '--base-path-app', '/snippy//api'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         server.release()
         Content.delete()
 
@@ -193,14 +193,14 @@ class TestApiHello(object):
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '197'
         }
-        expect_json = {'meta': Content.get_api_meta()}
+        expect_body = {'meta': Content.get_api_meta()}
         server = Snippy(['snippy', '--server', '--ip', 'localhost', '--port', '8081', '-vv'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1/')
         assert 'configured option server ip: localhost :and port: 8081' in caplog.text
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         server.release()
         Content.delete()
 

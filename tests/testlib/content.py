@@ -22,7 +22,9 @@
 import copy
 import datetime
 import re
+import traceback
 
+import json
 import mock
 import pprintpp
 
@@ -179,20 +181,20 @@ class Content(object):  # pylint: disable=too-many-public-methods
             raise AssertionError
 
     @classmethod
-    def assert_json(cls, json, json_file, filename, content):
+    def assert_json(cls, json_mock, json_file, filename, content):
         """Compare JSON against expected content.
 
         See the description for assert_storage method.
 
         Args:
-            json (obj): Mocked JSON dump method.
+            json_mock (obj): Mocked JSON dump method.
             json_file (obj): Mocked file where the JSON content was saved.
             filename (str): Expected filename.
             content (dict): Excepted content compared against generated JSON.
         """
 
-        result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_JSON, json)
-        result_dictionary = cls._get_result_dictionary(Const.CONTENT_FORMAT_JSON, json)
+        result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_JSON, json_mock)
+        result_dictionary = cls._get_result_dictionary(Const.CONTENT_FORMAT_JSON, json_mock)
         expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_JSON, content)
         expect_dictionary = cls._get_expect_dictionary(content)
         try:
@@ -205,25 +207,25 @@ class Content(object):  # pylint: disable=too-many-public-methods
             raise AssertionError
 
     @classmethod
-    def assert_mkdn(cls, mkdn, filename, content):
+    def assert_mkdn(cls, mkdn_mock, filename, content):
         """Compare Markdown against expected content.
 
         See the description for assert_storage method.
 
         Args:
-            mkdn (obj): Mocked file where the Markdown content was saved.
+            mkdn_mock (obj): Mocked file where the Markdown content was saved.
             filename (str): Expected filename.
             content (dict): Excepted content compared against Markdown file.
         """
 
-        result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_MKDN, mkdn)
-        result_markdown = cls._read_text(Const.CONTENT_FORMAT_MKDN, mkdn)
+        result_collection = cls._get_result_collection(Const.CONTENT_FORMAT_MKDN, mkdn_mock)
+        result_markdown = cls._read_text(Const.CONTENT_FORMAT_MKDN, mkdn_mock)
         expect_collection = cls._get_expect_collection(Const.CONTENT_FORMAT_MKDN, content)
         expect_markdown = result_collection.dump_mkdn(Config.templates)
         try:
             assert result_collection == expect_collection
             assert result_markdown == expect_markdown
-            mkdn.assert_called_once_with(filename, 'w')
+            mkdn_mock.assert_called_once_with(filename, 'w')
         except AssertionError:
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_markdown, expect_markdown)
@@ -598,6 +600,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
         The original expected data must not be changed because it is shared
         between all tests.
 
+        Only the responses with the 'data' key have to be modified. This key
+        contains default content stored in the database format which needs to
+        be modified to match the response from the JSON REST API.
+
         Args:
             expect (dict): Excepted JSON in REST API response.
 
@@ -614,6 +620,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
             content['links'] = list(content['links'])
             content['uuid'] = Database.VALID_UUID
 
+        if 'data' not in expect:
+            return expect
+
         expect = copy.deepcopy(expect)
         try:
             if isinstance(expect['data'], list):
@@ -622,7 +631,11 @@ class Content(object):  # pylint: disable=too-many-public-methods
             else:
                 _convert(expect['data']['attributes'])
         except KeyError:
-            pass
+            raise Exception(
+                "test case failure:\n\n{}\nwith dictionary:\n{}".format(
+                    traceback.format_exc(), json.dumps(expect, sort_keys=True, indent=4)
+                )
+            )
 
         return expect
 
@@ -688,10 +701,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
             dict: Comparable dictionary from database.
         """
 
-        dict = {}
-        dict['data'] = collection.dump_dict()
+        dictionary = {}
+        dictionary['data'] = collection.dump_dict()
 
-        return dict
+        return dictionary
 
     @classmethod
     def _get_expect_dictionary(cls, content):
@@ -820,15 +833,15 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return text
 
     @staticmethod
-    def _sorter(json):
+    def _sorter(json_data):
         """Sort nested JSON to allow comparison."""
 
-        if isinstance(json, dict):
-            return sorted((k, Content._sorter(v)) for k, v in json.items())
-        if isinstance(json, (list, tuple)):
-            return sorted(Content._sorter(x) for x in json)
+        if isinstance(json_data, dict):
+            return sorted((k, Content._sorter(v)) for k, v in json_data.items())
+        if isinstance(json_data, (list, tuple)):
+            return sorted(Content._sorter(x) for x in json_data)
 
-        return json
+        return json_data
 
     @staticmethod
     def _is_valid_uuid(content):

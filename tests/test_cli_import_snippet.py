@@ -92,7 +92,6 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Snippet.DEFAULTS[Snippet.NETCAT]
         ]
         expect_storage = {'data': content}
-        file_content = Content.get_file_content(Content.JSON, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             json.load.return_value = expect_storage
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.json'])
@@ -184,7 +183,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'update-remove-utc')
-    def test_cli_import_snippet_009(self, snippy, mocker):
+    def test_cli_import_snippet_009(self, snippy):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -203,7 +202,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             mock_file.assert_called_once_with('one-snippet.yaml', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'import-remove', 'update-remove-utc')
-    def test_cli_import_snippet_010(self, snippy, mocker):
+    def test_cli_import_snippet_010(self, snippy):
         """Import defined snippet.
 
         Import defined snippet based on message digest. File name is defined
@@ -419,7 +418,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
             Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
-    def test_cli_import_snippet_020(self, snippy, mocker):
+    def test_cli_import_snippet_020(self, snippy):
         """Import all snippets.
 
         Import all snippets from Markdown formatted file.

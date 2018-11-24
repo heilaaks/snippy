@@ -40,49 +40,97 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
     def test_api_create_snippet_001(self, server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. The snippet is sent in
-        list context in POST request.
+        Call POST /v1/snippets to create new snippet. The created snippet is
+        sent in the POST request 'data' attribute as a list of snippet objects.
         """
 
-        content = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': content
+                'attributes': content['data'][0]
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '711'
         }
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': content
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')
     def test_api_create_snippet_002(self, server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. In this case the there
-        are only part of the content attributes defined.
+        Call POST /v1/snippets to create new snippet. The created snippet is
+        sent in the POST request 'data' attribute as a plain object. The
+        response that contains the created snippet must be received as a list
+        of snippet objects.
+        """
+
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
+        request_body = {
+            'data': {
+                'type': 'snippet',
+                'attributes': content['data'][0]
+            }
+        }
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '711'
+        }
+        expect_body = {
+            'data': [{
+                'type': 'snippet',
+                'id': Snippet.REMOVE_DIGEST,
+                'attributes': content['data'][0]
+            }]
+        }
+        result = testing.TestClient(server.server.api).simulate_post(
+            path='/snippy/api/app/v1/snippets',
+            headers={'accept': 'application/vnd.api+json'},
+            body=json.dumps(request_body))
+        assert result.status == falcon.HTTP_201
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
+
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_api_create_snippet_003(self, server):
+        """Create one snippet with POST.
+
+        Call POST /v1/snippets to create new snippet. In this case there are
+        only part of the snippet content attributes defined.
 
         The tags must be sorted and trimmed after parsing.
         """
 
-        content = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -99,42 +147,45 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '711'
         }
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': content
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-exited-utc')
-    def test_api_create_snippet_003(self, server):
+    def test_api_create_snippet_004(self, server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. In this case the content
-        data is defined in string context where each line is separated with a
-        newline.
+        Call POST /v1/snippets to create new snippet. In this case the snippet
+        content data, tags and links attributes are defined in string context
+        where each line is separated with a newline.
         """
 
-        content = Snippet.DEFAULTS[Snippet.EXITED]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.EXITED]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.EXITED]['data']),
-                    'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
-                    'groups': Snippet.DEFAULTS[Snippet.EXITED]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])
+                    'data': Const.DELIMITER_DATA.join(content['data'][0]['data']),
+                    'brief': content['data'][0]['brief'],
+                    'groups': content['data'][0]['groups'],
+                    'tags': Const.DELIMITER_TAGS.join(content['data'][0]['tags']),
+                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links'])
                 }
             }]
         }
@@ -142,32 +193,38 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '916'
         }
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': content
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-exited-utc')
-    def test_api_create_snippet_004(self, server):
+    def test_api_create_snippet_005(self, server):
         """Create one snippet with POST.
 
-        Call POST /v1/snippets to create new snippet. In this case the content
-        data is defined in list context where each line is an item in a list.
+        Call POST /v1/snippets to create new snippet. In this case the snippet
+        content data attribute is defined as list where each line is a separate
+        element in a list.
+
+        Additional newlines must be removed from the snippet data attribute.
         """
 
-        content = Snippet.DEFAULTS[Snippet.EXITED]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.EXITED]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -176,10 +233,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                         'docker rm $(docker ps --all -q -f status=exited)\n\n\n\n',
                         'docker images -q --filter dangling=true | xargs docker rmi'
                     ],
-                    'brief': Snippet.DEFAULTS[Snippet.EXITED]['brief'],
-                    'groups': Snippet.DEFAULTS[Snippet.EXITED]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.EXITED]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.EXITED]['links'])
+                    'brief': content['data'][0]['brief'],
+                    'groups': content['data'][0]['groups'],
+                    'tags': Const.DELIMITER_TAGS.join(content['data'][0]['tags']),
+                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links'])
                 }
             }]
         }
@@ -187,30 +244,48 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '916'
         }
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': content
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_005(self, server):
+    def test_api_create_snippet_006(self, server):
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet with only data.
         """
 
+        content = {
+            'data': [{
+                'data': ('docker rm $(docker ps --all -q -f status=exited)',),
+                'brief': '',
+                'description': '',
+                'groups': ('default',),
+                'tags': (),
+                'links': (),
+                'category': 'snippet',
+                'name': '',
+                'filename': '',
+                'versions': '',
+                'source': '',
+                'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': '2017-10-14T19:56:31.000001+0000',
+                'updated': '2017-10-14T19:56:31.000001+0000',
+                'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
+            }]
+        }
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -219,80 +294,62 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }]
         }
-        content = {
-            'data': ('docker rm $(docker ps --all -q -f status=exited)',),
-            'brief': '',
-            'description': '',
-            'groups': ('default',),
-            'tags': (),
-            'links': (),
-            'category': 'snippet',
-            'name': '',
-            'filename': '',
-            'versions': '',
-            'source': '',
-            'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': '2017-10-14T19:56:31.000001+0000',
-            'updated': '2017-10-14T19:56:31.000001+0000',
-            'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
-        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '562'
         }
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
-                'attributes': content
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
-    def test_api_create_snippet_006(self, server):
+    def test_api_create_snippet_007(self, server):
         """Create list of snippets from API.
 
         Call POST /v1/snippets in list context to create new snippets.
         """
 
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': content['data'][0]
             }, {
                 'type': 'snippet',
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'attributes': content['data'][1]
             }]
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1481'
         }
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': content['data'][0]
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'attributes': content['data'][1]
             }]
-        }
-        expect_storage = {
-            'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
-            ]
         }
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
@@ -300,11 +357,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_007(self, server):
+    def test_api_create_snippet_008(self, server):
         """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create new snippet with malformed
@@ -314,7 +371,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         request_body = Snippet.DEFAULTS[Snippet.REMOVE]
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '889'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '891'}
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -329,11 +386,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers_p3 or result.headers == expect_headers_p2
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_008(self, server):
+    def test_api_create_snippet_009(self, server):
         """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create new snippet with malformed
@@ -359,7 +416,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                     'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'}}]}
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '582'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '584'}
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -374,11 +431,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers_p2 or result.headers == expect_headers_p3
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_009(self, server):
+    def test_api_create_snippet_010(self, server):
         """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create new snippet with client
@@ -396,7 +453,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '382'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '403',
@@ -411,11 +468,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_403
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_010(self, server):
+    def test_api_create_snippet_011(self, server):
         """Try to create snippet with malformed JSON request.
 
         Try to call POST /v1/snippets to create two snippets. First one is
@@ -435,7 +492,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '754'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '758'}
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -450,18 +507,18 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers_p3 or result.headers == expect_headers_p2
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_011(self, server):
+    def test_api_create_snippet_012(self, server):
         """Try to create snippet with malformed JSON request.
 
-        Try to call POST /v1/snippets to create two snippets. First one is
-        correctly defind but the second one contains error in JSON structure.
-        The error is the client generated ID which is not supported. This must
-        not create any resources and the whole request must be considered
-        erronous request.
+        Try to call POST /v1/snippets to create two snippets. First snippet is
+        correctly defind but the second one contains an error in the JSON data
+        structure. The error is the client generated ID which is not supported.
+        This request must not create any resources and the whole request must
+        be considered request.
         """
 
         request_body = {
@@ -476,8 +533,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }]
         }
-        expect_headers = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '382'}
-        expect_json = {
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '382'
+        }
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '403',
@@ -492,62 +552,66 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_403
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
-    def test_api_create_snippet_012(self, server):
+    def test_api_create_snippet_013(self, server):
         """Update snippet with POST that maps to PUT.
 
         Call POST /v1/snippets with X-HTTP-Method-Override header to update
         snippet. In this case the resource exists and the content is updated.
         """
 
-        content = Snippet.DEFAULTS[Snippet.REMOVE]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
         request_body = {
             'data': {
                 'type': 'snippet',
-                'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
-                }
+                'attributes': content['data'][0]
             }
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '802'
         }
-        expect_json = {
+        expect_body = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
             },
             'data': {
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': content
+                'attributes': content['data'][0]
             }
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PUT'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
-    def test_api_create_snippet_013(self, server):
+    def test_api_create_snippet_014(self, server):
         """Update snippet with POST that maps to PATCH.
 
         Call POST /v1/snippets with X-HTTP-Method-Override header to update
         snippet. In this case the resource exists and the content is updated.
         """
 
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.FORCED])
+            ]
+        }
+        content['data'][0]['data'] = Snippet.DEFAULTS[Snippet.REMOVE]['data']
+        content['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -556,49 +620,31 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }
         }
-        content = {
-            'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
-            'brief': Snippet.DEFAULTS[Snippet.FORCED]['brief'],
-            'description': Snippet.DEFAULTS[Snippet.FORCED]['description'],
-            'groups': Snippet.DEFAULTS[Snippet.FORCED]['groups'],
-            'tags': Snippet.DEFAULTS[Snippet.FORCED]['tags'],
-            'links': Snippet.DEFAULTS[Snippet.FORCED]['links'],
-            'category': 'snippet',
-            'name': Snippet.DEFAULTS[Snippet.FORCED]['name'],
-            'filename': Snippet.DEFAULTS[Snippet.FORCED]['filename'],
-            'versions': Snippet.DEFAULTS[Snippet.FORCED]['versions'],
-            'source': Snippet.DEFAULTS[Snippet.FORCED]['source'],
-            'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': Content.FORCED_TIME,
-            'updated': Content.FORCED_TIME,
-            'digest': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
-        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '894'
         }
-        expect_json = {
+        expect_body = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
             },
             'data': {
                 'type': 'snippet',
-                'id': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2',
-                'attributes': content
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_storage(expect_storage)
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_storage(content)
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('import-forced', 'update-exited-utc')
-    def test_api_create_snippet_014(self, server):
+    def test_api_create_snippet_015(self, server):
         """Update snippet with POST that maps to PATCH.
 
         Call POST /v1/snippets with X-HTTP-Method-Override header to update
@@ -606,6 +652,25 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         modified by user must be modified.
         """
 
+        content = {
+            'data': [{
+                'data': ('data row1', 'data row2'),
+                'brief': 'brief description',
+                'description': 'long description',
+                'groups': ('solution',),
+                'tags': ('tag1', 'tag2'),
+                'links': ('link1', 'link2'),
+                'category': 'snippet',
+                'name': 'runme',
+                'filename': 'filename.txt',
+                'versions': 'versions 1.1',
+                'source': 'http://testing/snippets.html',
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': Content.FORCED_TIME,
+                'updated': Content.EXITED_TIME,
+                'digest': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4'
+            }]
+        }
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -627,72 +692,54 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }
         }
-        content = {
-            'data': tuple(request_body['data']['attributes']['data'].split(Const.DELIMITER_DATA)),
-            'brief': request_body['data']['attributes']['brief'],
-            'description': request_body['data']['attributes']['description'],
-            'groups': tuple(request_body['data']['attributes']['groups'].split(Const.DELIMITER_GROUPS)),
-            'tags': tuple(request_body['data']['attributes']['tags'].split(Const.DELIMITER_TAGS)),
-            'links': tuple(request_body['data']['attributes']['links'].split(Const.DELIMITER_LINKS)),
-            'category': 'snippet',
-            'name': request_body['data']['attributes']['name'],
-            'filename': request_body['data']['attributes']['filename'],
-            'versions': request_body['data']['attributes']['versions'],
-            'source': request_body['data']['attributes']['source'],
-            'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': Content.FORCED_TIME,
-            'updated': Content.EXITED_TIME,
-            'digest': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4'
-        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '748'
         }
-        expect_json = {
+        expect_body = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/ea89da812a610780'
             },
             'data': {
                 'type': 'snippet',
                 'id': 'ea89da812a61078069c34bd7c45bcaca55b84e14c11b2565402bb37075d243c4',
-                'attributes': content
+                'attributes': content['data'][0]
             }
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat')
-    def test_api_create_snippet_015(self, server):
+    def test_api_create_snippet_016(self, server):
         """Update snippet with POST that maps to DELETE.
 
         Call POST /v1/snippets with X-HTTP-Method-Override header to delete
         snippet. In this case the resource exists and the content is deleted.
         """
 
-        expect_headers = {}
-        expect_storage = {
+        content = {
             'data': [
                 Snippet.DEFAULTS[Snippet.REMOVE],
                 Snippet.DEFAULTS[Snippet.FORCED]
             ]
         }
+        expect_headers = {}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets/f3fd167c64b6f97e',
             headers={'accept': 'application/json', 'X-HTTP-Method-Override': 'DELETE'})
         assert result.status == falcon.HTTP_204
         assert result.headers == expect_headers
         assert not result.text
-        Content.assert_storage(expect_storage)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('caller')
-    def test_api_create_snippet_016(self, server):
+    def test_api_create_snippet_017(self, server):
         """Try to create snippet with resource id.
 
         Try to call POST /v1/snippets/53908d68425c61dc to create new snippet
@@ -710,7 +757,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '398'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -725,11 +772,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('create-exited-utc', 'caller')
-    def test_api_create_snippet_017(self, server):
+    def test_api_create_snippet_018(self, server):
         """Create one snippet with POST.
 
         Try to call POST /v1/snippets to create new snippet with empty content
@@ -748,7 +795,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '558'
         }
-        expect_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -768,11 +815,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_400
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_018(self, server):
+    def test_api_create_snippet_019(self, server):
         """Create and search snippet with unicode characters.
 
         Call POST /v1/snippets to create new snippet. In this case the content
@@ -780,6 +827,25 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         be also returned correctly when searching with unicode characters.
         """
 
+        content = {
+            'data': [{
+                'data': (u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'),
+                'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
+                'description': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
+                'groups': (u'Düsseldorf',),
+                'tags': (u'έδωσαν', u'γλώσσα', u'ελληνική'),
+                'links': (u'http://www.чухонца.edu/~fdc/utf8/',),
+                'category': 'snippet',
+                'name': '',
+                'filename': '',
+                'versions': '',
+                'source': '',
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': '2017-10-14T19:56:31.000001+0000',
+                'updated': '2017-10-14T19:56:31.000001+0000',
+                'digest': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf'
+            }]
+        }
         request_body = {
             'data': [{
                 'type': 'snippet',
@@ -793,49 +859,31 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 }
             }]
         }
-        content = {
-            'data': tuple(request_body['data'][0]['attributes']['data']),
-            'brief': request_body['data'][0]['attributes']['brief'],
-            'description': request_body['data'][0]['attributes']['description'],
-            'groups': tuple([request_body['data'][0]['attributes']['groups']]),
-            'tags': tuple(request_body['data'][0]['attributes']['tags']),
-            'links': tuple(request_body['data'][0]['attributes']['links']),
-            'category': 'snippet',
-            'name': '',
-            'filename': '',
-            'versions': '',
-            'source': '',
-            'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': '2017-10-14T19:56:31.000001+0000',
-            'updated': '2017-10-14T19:56:31.000001+0000',
-            'digest': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf'
-        }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '933'
         }
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'snippet',
-                'id': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf',
-                'attributes': content
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }]
         }
-        expect_storage = {'data': [content]}
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json', 'content-type': 'application/vnd.api+json; charset=UTF-8'},
             body=json.dumps(request_body, ensure_ascii=False))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
-        Content.assert_storage(expect_storage)
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '993'
         }
-        expect_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -844,8 +892,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': 'c267233096b6977ea4dd9ef41faa1559d3886ad550d8932ddb4513eae5b84fbf',
-                'attributes': content
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -854,10 +902,10 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             query_string='sall=Düsseldorf&limit=20&sort=brief')
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('create-regexp-utc')
-    def test_api_create_snippet_019(self, server):
+    def test_api_create_snippet_020(self, server):
         """Create one snippet from API.
 
         Call POST /v1/snippets to create new content. In this case every
@@ -902,7 +950,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '654'}
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'snippet',
                 'id': 'a861de558c95d7d371a5f3664a062444fd905e225c9e7ec69ae54a5b3b4197f5',
@@ -916,11 +964,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(expect_storage)
 
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_api_create_snippet_020(self, server):
+    def test_api_create_snippet_021(self, server):
         """Create one snippet with POST.
 
         Call POST /v1/snippets to create new snippet with data that have line
@@ -957,7 +1005,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '568'
         }
-        expect_json = {
+        expect_body = {
             'data': [{
                 'type': 'snippet',
                 'id': 'c10b8614d264ed75ad3b671526efb9718895974291627b4fd21307051c6928c1',
@@ -971,7 +1019,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        Content.assert_restapi(result.json, expect_json)
+        Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(expect_storage)
 
     @classmethod

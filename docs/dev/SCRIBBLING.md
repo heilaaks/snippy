@@ -1597,25 +1597,23 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
     CLASS HIERARCHY
 
-    1. Any class can import Constants()
+    1. Any class can import Constants().
 
-    2. Any class can import Logger()
+    2. Any class can import Logger().
 
-    3. Any class can import Cause()
+    3. Any class can import Cause().
 
-    4. Any class can import Collection()
+    4. Any class can import Collection().
 
-    5. Only Collection can import Resource()
+    5. Only Collection can import Resource().
 
-    6. With exception of config package, any class can import Migrate()
+    6. With exception of config package, any class can import Migrate().
 
-    7. Only the Config() can import and imported classes must not import outside config sub-package.
-        A) Cli()
-        B) Editor()
+    7. Only the Config() configuration sources Cli() and Editor().
 
-    8. Only the Storage() can import Sqlitedb()
+    8. Only the Storage() can import Sqlitedb().
 
-    9. Only the Collection() can import Parser() and related modules
+    9. Only Collection() and configuration sources Cli() and Editor() can import Parser().
 
     CHARACTER ENCODING
 
@@ -1873,13 +1871,13 @@ git update-index --no-assume-unchanged FILE_NAME # change back
             Same applies also to JSON content.
             """
         
-            expect_content = {
+            content = {
                 'data': [
                     Snippet.DEFAULTS[Snippet.REMOVE],
                     Snippet.DEFAULTS[Snippet.NETCAT]
                 ]
             }
-            file_content = Content.get_file_content(Content.YAML, expect_content)
+            file_content = Content.get_file_content(Content.YAML, content)
             with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
                 yaml.safe_load.return_value = file_content
                 cause = snippy.run(['snippy', 'import'])
@@ -1897,7 +1895,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
             Same applies also to Markdown content.
             """
         
-            expect_content = {
+            content = {
                 'data': [
                     Snippet.DEFAULTS[Snippet.REMOVE],
                     Snippet.DEFAULTS[Snippet.NETCAT]
@@ -1908,7 +1906,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
                 Content.output()
                 assert cause == Cause.ALL_OK
-                Content.assert_storage(expect_content)
+                Content.assert_storage(content)
                 mock_file.assert_called_once_with('./all-snippets.txt', 'r')
         
         
@@ -1918,7 +1916,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
         def test_cli_export_snippet_999(self, snippy):
             """Export content to Markdown format."""
         
-            expect_content = {
+            content = {
                 'meta': Content.get_cli_meta(),
                 'data': [
                     Snippet.DEFAULTS[Snippet.REMOVE],
@@ -1928,7 +1926,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
             with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
                 cause = snippy.run(['snippy', 'export', '-f', './snippets.mkdn'])
                 assert cause == Cause.ALL_OK
-                Content.assert_mkdn(mock_file, './snippets.mkdn', expect_content)
+                Content.assert_mkdn(mock_file, './snippets.mkdn', content)
         
         
         # Example 3: Assert REST API response.
@@ -1936,7 +1934,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
         @pytest.mark.usefixtures('create-remove-utc', 'create-forced-utc')
         def test_api_create_snippet_999(self, server):
         
-            expect_content = {
+            content = {
                 'data': [
                     Snippet.DEFAULTS[Snippet.REMOVE],
                     Snippet.DEFAULTS[Snippet.FORCED]
@@ -1945,25 +1943,25 @@ git update-index --no-assume-unchanged FILE_NAME # change back
             request_body = {
                 'data': [{
                     'type': 'snippet',
-                    'attributes': expect_content['data'][0]
+                    'attributes': content['data'][0]
                 }, {
                     'type': 'snippet',
-                    'attributes': expect_content['data'][1]
+                    'attributes': content['data'][1]
                 }]
             }
             expect_headers = {
                 'content-type': 'application/vnd.api+json; charset=UTF-8',
                 'content-length': '1481'
             }
-            expect_json = {
+            expect_body = {
                 'data': [{
                     'type': 'snippet',
                     'id': Snippet.REMOVE_DIGEST,
-                    'attributes': expect_content['data'][0]
+                    'attributes': content['data'][0]
                 }, {
                     'type': 'snippet',
                     'id': Snippet.FORCED_DIGEST,
-                    'attributes': expect_content['data'][0]
+                    'attributes': content['data'][0]
                 }]
             }
             result = testing.TestClient(server.server.api).simulate_post(
@@ -1972,19 +1970,19 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 body=json.dumps(request_body))
             assert result.status == falcon.HTTP_201
             assert result.headers == expect_headers
-            Content.assert_restapi(result.json, expect_json)
-            Content.assert_storage(expect_content)
+            Content.assert_restapi(result.json, expect_body)
+            Content.assert_storage(content)
             
-            @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
-            def test_api_create_snippet_013(self, server):
+        @pytest.mark.usefixtures('import-forced', 'update-forced-utc')
+        def test_api_create_snippet_013(self, server):
         
-            expect_content = {
+            content = {
                 'data': [
-                    Snippet.DEFAULTS[Snippet.FORCED]
+                    Content.deepcopy(Snippet.DEFAULTS[Snippet.FORCED])
                 ]
             }
-            expect_content['data'][0]['data'] = Snippet.DEFAULTS[Snippet.REMOVE]['data']
-            expect_content['data'][0]['digest'] = a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
+            content['data'][0]['data'] = Snippet.DEFAULTS[Snippet.REMOVE]['data']
+            content['data'][0]['digest'] = a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
             request_body = {
                 'data': {
                     'type': 'snippet',
@@ -1997,25 +1995,24 @@ git update-index --no-assume-unchanged FILE_NAME # change back
                 'content-type': 'application/vnd.api+json; charset=UTF-8',
                 'content-length': '894'
             }
-            expect_json = {
+            expect_body = {
                 'links': {
                     'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
                 },
                 'data': {
                     'type': 'snippet',
-                    'id': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2',
-                    'attributes': content
+                    'id': content['data'][0]['digest'],
+                    'attributes': content['data'][0]
                 }
             }
-            expect_storage = {'data': [content]}
             result = testing.TestClient(server.server.api).simulate_post(
                 path='/snippy/api/app/v1/snippets/53908d68425c61dc',
                 headers={'accept': 'application/vnd.api+json', 'X-HTTP-Method-Override': 'PATCH'},
                 body=json.dumps(request_body))
             assert result.status == falcon.HTTP_200
             assert result.headers == expect_headers
-            Content.assert_storage(expect_storage)
-            Content.assert_restapi(result.json, expect_json)
+            Content.assert_storage(content)
+            Content.assert_restapi(result.json, expect_body)
 
     DOCUMENTATION
 

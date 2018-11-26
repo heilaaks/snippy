@@ -165,13 +165,15 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
             if len(collection) == 1:
                 resource = next(collection.resources())
                 digest = resource.digest
-                self._logger.debug('importing: %s %s', resource.category,
+                updates = Migrate.load(Config.get_operation_file())
+                self._logger.debug('updating: %s ' % resource.category,
                                    ':with: uuid: %.16s' % content_uuid if content_uuid else
                                    ':with: digest: %.16s' % resource.digest)
-                collection = Migrate.load(Config.get_operation_file())
-                updates = next(collection.resources())
-                resource.migrate(updates)
-                self._storage.update(digest, resource)
+                if len(updates) == 1:
+                    resource.migrate(next(updates.resources()))
+                    self._storage.update(digest, resource)
+                else:
+                    Cause.push(Cause.HTTP_BAD_REQUEST, 'updates for content: %.16s :could not be used' % digest)
             else:
                 Config.validate_search_context(collection, 'import')
         else:

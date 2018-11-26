@@ -66,8 +66,8 @@ class ReferenceHelper(object):
         'versions': '',
         'source': '',
         'uuid': '32cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created': '2018-05-21T13:11:13.678729+0000',
-        'updated': '2018-05-21T13:11:13.678729+0000',
+        'created': '2018-06-22T13:11:13.678729+0000',
+        'updated': '2018-06-22T13:11:13.678729+0000',
         'digest': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832'
     }, {
         'data': (),

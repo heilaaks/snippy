@@ -67,7 +67,7 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 #   1) Creating metadata with export timestamp.
 
 # Snippets
-IMPORT_CONTENT = '2017-10-14T19:56:31.000001+0000'
+IMPORT_SNIPPETS = '2017-10-14T19:56:31.000001+0000'
 REMOVE_CREATED = '2017-10-14T19:56:31.000001+0000'
 FORCED_CREATED = '2017-10-14T19:56:31.000001+0000'
 EXITED_CREATED = '2017-10-20T07:08:45.000001+0000'
@@ -108,8 +108,9 @@ UPDATE_NGINX = (NGINX_CREATED,)*2
 UPDATE_KAFKA = (KAFKA_CREATED,)*2
 
 # References
+IMPORT_REFERENCES = '2018-06-22T13:11:13.678729+0000'
 GITLOG_CREATED = '2018-06-22T13:11:13.678729+0000'
-REGEXP_CREATED = '2018-05-21T13:11:13.678729+0000'
+REGEXP_CREATED = '2018-06-22T13:11:13.678729+0000'
 PYTEST_CREATED = '2016-04-21T12:10:11.678729+0000'
 CREATE_GITLOG = (GITLOG_CREATED,)*1
 CREATE_REGEXP = (REGEXP_CREATED,)*1
@@ -315,11 +316,17 @@ def import_default_snippets(mocker, snippy):
     contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
 
-@pytest.fixture(scope='function', name='import-content-utc')
-def import_content_time_mock(mocker):
+@pytest.fixture(scope='function', name='import-snippets-utc')
+def import_snippets_time_mock(mocker):
     """Mock timestamps to create content."""
 
-    mocker.patch.object(Config, 'utcnow', side_effect=(IMPORT_CONTENT,))
+    mocker.patch.object(Config, 'utcnow', side_effect=(IMPORT_SNIPPETS,))
+
+@pytest.fixture(scope='function', name='import-references-utc')
+def import_references_time_mock(mocker):
+    """Mock timestamps to create content."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=(IMPORT_REFERENCES,))
 
 @pytest.fixture(scope='function', name='import-exited')
 def import_exited_snippet(mocker, snippy):
@@ -610,6 +617,12 @@ def create_pytest_time_mock(mocker):
     """Mock timestamps to create 'pytest' reference."""
 
     _add_utc_time(mocker, CREATE_PYTEST)
+
+@pytest.fixture(scope='function', name='update-pytest-utc')
+def update_pytest_time_mock(mocker):
+    """Mock timestamps to update to 'pytest' reference."""
+
+    _add_utc_time(mocker, UPDATE_PYTEST)
 
 @pytest.fixture(scope='function', name='import-pytest')
 def import_gitlog_solution(mocker, snippy):

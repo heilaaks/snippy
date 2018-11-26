@@ -62,7 +62,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
     # References
     GITLOG_TIME = '2018-06-22T13:11:13.678729+0000'
-    REGEXP_TIME = '2018-05-21T13:11:13.678729+0000'
+    REGEXP_TIME = '2018-06-22T13:11:13.678729+0000'
     PYTEST_TIME = '2016-04-21T12:10:11.678729+0000'
 
     JSON = Const.CONTENT_FORMAT_JSON

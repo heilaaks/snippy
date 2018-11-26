@@ -1914,7 +1914,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
             The text file does not contain timestamp fields. Because of this,
             the timestamp must be mocked and it must match the given content.
 
-            Same applies also to Markdown content.
+            The same applies also to Markdown content.
             """
 
             # Content data is always defined in database format. This means
@@ -1930,10 +1930,37 @@ git update-index --no-assume-unchanged FILE_NAME # change back
             file_content = Content.get_file_content(Content.TEXT, content)
             with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
                 cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
-                Content.output()
                 assert cause == Cause.ALL_OK
                 Content.assert_storage(content)
                 mock_file.assert_called_once_with('./all-snippets.txt', 'r')
+
+        @pytest.mark.usefixtures('isfile_true', 'yaml')
+        def test_cli_import_snippet_001(self, snippy):
+            """Import content from mocked YAML file
+    
+            YAML file contain all the fields stored into the database with the
+            exception of database specific key and internal metadata fields.
+
+            Test like this would work just by defining the YAML safe_load value
+            directly as in content variable. The get_file_content is used to
+            protect code changes affecting to multiple test cases.
+
+            The same applies also to JSON file imports.
+            """
+    
+            content = {
+                'data': [
+                    Snippet.DEFAULTS[Snippet.REMOVE],
+                    Snippet.DEFAULTS[Snippet.NETCAT]
+                ]
+            }
+            file_content = Content.get_file_content(Content.YAML, content)
+            with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+                yaml.safe_load.return_value = file_content
+                cause = snippy.run(['snippy', 'import'])
+                assert cause == Cause.ALL_OK
+                Content.assert_storage(content)
+                mock_file.assert_called_once_with('./snippets.yaml', 'r')
 
 
         # Example 2: Assert exporting content.

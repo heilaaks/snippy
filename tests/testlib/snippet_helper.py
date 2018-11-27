@@ -35,6 +35,9 @@ class SnippetHelper(object):
     UMOUNT = 4
     INTERP = 5
 
+    DEFAULT_TIME = '2017-10-14T19:56:31.000001+0000'
+    DEFAULT_SOLUTIONS = (REMOVE, FORCED)
+
     # Default content must be always set so that it reflects content stored
     # into database. For example the tags must be sorted in correct order.
     # This forces defining erroneous content in each test case. This improves
@@ -52,8 +55,8 @@ class SnippetHelper(object):
         'versions': '',
         'source': '',
         'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created': '2017-10-14T19:56:31.000001+0000',
-        'updated': '2017-10-14T19:56:31.000001+0000',
+        'created': DEFAULT_TIME,
+        'updated': DEFAULT_TIME,
         'digest': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'
     }, {
         'data': ('docker rm --force redis', ),
@@ -70,8 +73,8 @@ class SnippetHelper(object):
         'versions': '',
         'source': '',
         'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created': '2017-10-14T19:56:31.000001+0000',
-        'updated': '2017-10-14T19:56:31.000001+0000',
+        'created': DEFAULT_TIME,
+        'updated': DEFAULT_TIME,
         'digest': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5'
     }, {
         'data': ('docker rm $(docker ps --all -q -f status=exited)',
@@ -144,6 +147,22 @@ class SnippetHelper(object):
         'updated': '2018-01-11T07:59:46.000001+0000',
         'digest': '9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3'
     })
+
+    REMOVE_CREATED = DEFAULTS[REMOVE]['created']
+    REMOVE_UPDATED = DEFAULTS[REMOVE]['updated']
+    FORCED_CREATED = DEFAULTS[FORCED]['created']
+    FORCED_UPDATED = DEFAULTS[FORCED]['updated']
+    EXITED_CREATED = DEFAULTS[EXITED]['created']
+    EXITED_UPDATED = DEFAULTS[EXITED]['updated']
+    NETCAT_CREATED = DEFAULTS[NETCAT]['created']
+    NETCAT_UPDATED = DEFAULTS[NETCAT]['updated']
+    UMOUNT_CREATED = DEFAULTS[UMOUNT]['created']
+    UMOUNT_UPDATED = DEFAULTS[UMOUNT]['updated']
+    INTERP_CREATED = DEFAULTS[INTERP]['created']
+    INTERP_UPDATED = DEFAULTS[INTERP]['updated']
+
+    if not DEFAULT_TIME == REMOVE_CREATED == REMOVE_UPDATED == FORCED_CREATED == FORCED_UPDATED:
+        raise Exception('default content timestamps must be same - see \'Test case layouts and data structures\'')
 
     REMOVE_DIGEST = DEFAULTS[REMOVE]['digest']
     FORCED_DIGEST = DEFAULTS[FORCED]['digest']

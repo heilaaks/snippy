@@ -32,6 +32,9 @@ class SolutionHelper(object):
     NGINX = 1
     KAFKA = 2
 
+    DEFAULT_TIME = '2017-10-20T11:11:19.000001+0000'
+    DEFAULT_SOLUTIONS = (BEATS, NGINX)
+
     # Default content must be always set so that it reflects content stored
     # into database. For example the tags must be sorted in correct order.
     # This forces defining erroneous content in each test case. This improves
@@ -83,15 +86,15 @@ class SolutionHelper(object):
         'groups': ('beats',),
         'tags': ('Elastic', 'beats', 'debug', 'filebeat', 'howto'),
         'links': ('https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',),
-        'category' :'solution',
+        'category': 'solution',
         'name': '',
-        'filename' :'howto-debug-elastic-beats.txt',
+        'filename': 'howto-debug-elastic-beats.txt',
         'versions': '',
         'source': '',
         'uuid': '21cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created' :'2017-10-20T11:11:19.000001+0000',
-        'updated' :'2017-10-20T11:11:19.000001+0000',
-        'digest':'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151'
+        'created': DEFAULT_TIME,
+        'updated': DEFAULT_TIME,
+        'digest': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151'
     }, {
         'data':('################################################################################',
                 '## BRIEF  : Debugging nginx',
@@ -165,8 +168,8 @@ class SolutionHelper(object):
         'versions': '',
         'source': '',
         'uuid': '22cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created': '2017-10-20T06:16:27.000001+0000',
-        'updated': '2017-10-20T06:16:27.000001+0000',
+        'created': DEFAULT_TIME,
+        'updated': DEFAULT_TIME,
         'digest': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea'
     }, {
         'data':('################################################################################',
@@ -275,6 +278,16 @@ class SolutionHelper(object):
         'updated': '2017-10-20T06:16:27.000001+0000',
         'digest': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee'
     })
+
+    BEATS_CREATED = DEFAULTS[BEATS]['created']  # Default solution.
+    BEATS_UPDATED = DEFAULTS[BEATS]['updated']  # Default solution.
+    NGINX_CREATED = DEFAULTS[NGINX]['created']  # Default solution.
+    NGINX_UPDATED = DEFAULTS[NGINX]['updated']  # Default solution.
+    KAFKA_CREATED = DEFAULTS[KAFKA]['created']
+    KAFKA_UPDATED = DEFAULTS[KAFKA]['updated']
+
+    if not DEFAULT_TIME == BEATS_CREATED == BEATS_UPDATED == NGINX_CREATED == NGINX_UPDATED:
+        raise Exception('default content timestamps must be same - see \'Test case layouts and data structures\'')
 
     BEATS_DIGEST = DEFAULTS[BEATS]['digest']
     NGINX_DIGEST = DEFAULTS[NGINX]['digest']

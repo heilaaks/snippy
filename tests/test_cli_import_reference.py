@@ -30,7 +30,6 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.reference_helper import ReferenceHelper as Reference
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
@@ -126,7 +125,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.json', 'r')
 
-    @pytest.mark.usefixtures('isfile_true', 'import-references-utc')
+    @pytest.mark.usefixtures('isfile_true', 'default-references-utc')
     def test_cli_import_reference_005(self, snippy):
         """Import all references.
 
@@ -148,7 +147,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.txt', 'r')
 
-    @pytest.mark.usefixtures('isfile_true', 'import-references-utc')
+    @pytest.mark.usefixtures('isfile_true', 'default-references-utc')
     def test_cli_import_reference_006(self, snippy):
         """Import all references.
 
@@ -170,7 +169,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./all-references.txt', 'r')
 
-    @pytest.mark.usefixtures('isfile_true', 'import-references-utc')
+    @pytest.mark.usefixtures('isfile_true', 'default-references-utc')
     def test_cli_import_reference_007(self, snippy):
         """Import all references.
 
@@ -320,41 +319,55 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_not_called()
 
-    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'update-regexp-utc', 'isfile_true')
-    def test_cli_import_reference_014(self, snippy, mocker):
+    @pytest.mark.usefixtures('yaml', 'import-gitlog', 'update-pytest-utc', 'isfile_true')
+    def test_cli_import_reference_014(self, snippy):
         """Import reference based on uuid.
 
         Import defined reference based on uuid.
         """
 
-        content = Content.updated_gitlog()
+        content = {
+            'data': [
+                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+            ]
+        }
+        content['data'][0]['links'] = ('https://updated-link.html',)
+        content['data'][0]['digest'] = 'fafd46eca7ca239bcbff8f1ba3e8cf806cadfbc9e267cdf6ccd3e23e356f9f8d'
+        content['data'][0]['updated'] = Content.PYTEST_TIME
+        file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            yaml.safe_load.return_value = Content.imported_dict(content)
+            yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--reference', '-u', '12c', '-f', 'one-reference.yaml'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_references()) == 1
+            Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
-            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('import-pytest', 'update-regexp-utc')
-    def test_cli_import_reference_015(self, snippy, mocker):
+    def test_cli_import_reference_015(self, snippy):
         """Import reference based on message uuid.
 
         Try to import defined reference with uuid that cannot be found.
         """
 
-        content = Content.updated_gitlog()
-        mocked_open = Content.mocked_open(content)
-        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.PYTEST]
+            ]
+        }
+        updates = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
+        }
+        file_content = Content.get_file_content(Content.TEXT, updates)
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-u', '1234567', '-f', 'one-reference.text'])
             assert cause == 'NOK: cannot find content with content uuid: 1234567'
-            assert len(Database.get_references()) == 1
-            assert not Database.get_snippets()
+            Content.assert_storage(content)
             mock_file.assert_not_called()
-            Content.verified(mocker, snippy, {Reference.PYTEST_DIGEST: Reference.DEFAULTS[Reference.PYTEST]})
 
     @pytest.mark.usefixtures('yaml')
-    def test_cli_import_reference_016(self, snippy, mocker):
+    def test_cli_import_reference_016(self, snippy):
         """Import references defaults.
 
         Import reference defaults. All references should be imported from
@@ -362,20 +375,22 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
-            Reference.PYTEST_DIGEST: Reference.DEFAULTS[Reference.PYTEST]
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.PYTEST]
+            ]
         }
+        file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            yaml.safe_load.return_value = Content.imported_dict(content)
+            yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_references()) == 2
+            Content.assert_storage(content)
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             mock_file.assert_called_once_with(defaults_references, 'r')
-            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('yaml', 'default-references', 'import-gitlog-utc', 'import-regexp-utc')
-    def test_cli_import_reference_017(self, snippy, mocker):
+    def test_cli_import_reference_017(self, snippy):
         """Import references defaults.
 
         Try to import reference defaults again. The second import should fail
@@ -386,18 +401,20 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
+        file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            yaml.safe_load.return_value = Content.imported_dict(content)
+            yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
             assert cause in ('NOK: content data already exist with digest: 5c2071094dbfaa33',
                              'NOK: content data already exist with digest: cb9225a81eab8ced')
-            assert len(Database.get_references()) == 2
+            Content.assert_storage(content)
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             mock_file.assert_called_once_with(defaults_references, 'r')
-            Content.verified(mocker, snippy, content)
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_018(self, snippy):
@@ -408,42 +425,46 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         be the same for all content types.
         """
 
-        template = Const.NEWLINE.join(Reference.TEMPLATE)
-        mocked_open = mock.mock_open(read_data=template)
-        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
+        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Reference.TEMPLATE))
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '--template'])
             assert cause == 'NOK: content was not stored because mandatory content field links is empty'
-            assert not Database.get_collection()
+            Content.assert_storage(None)
             mock_file.assert_called_once_with('./reference-template.txt', 'r')
 
     @pytest.mark.usefixtures('isfile_true', 'yaml', 'update-gitlog-utc')
-    def test_cli_import_reference_019(self, snippy, mocker):
+    def test_cli_import_reference_019(self, snippy):
         """Try to import reference which uuid collides.
 
         The uuid must be unique and this causes a database integrity error.
         """
 
         content = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
         }
-        mocked_open = Content.mocked_open(content)
-        with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
-            yaml.safe_load.return_value = Content.imported_dict(content)
+        file_content = Content.get_file_content(Content.YAML, content)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == Cause.ALL_OK
-            assert len(Database.get_references()) == 1
+            Content.assert_storage(content)
+            mock_file.assert_called_once_with('./references.yaml', 'r')
 
         content_uuid = {
-            Reference.REGEXP_DIGEST: Content.deepcopy(Reference.DEFAULTS[Reference.REGEXP]),
+            'data': [
+                Content.deepcopy(Reference.DEFAULTS[Reference.REGEXP]),
+            ]
         }
-        content_uuid[Reference.REGEXP_DIGEST]['uuid'] = Reference.DEFAULTS[Reference.GITLOG]['uuid']
-        mocked_open = Content.mocked_open(content_uuid)
-        with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
-            yaml.safe_load.return_value = Content.imported_dict(content_uuid)
+        content_uuid['data'][0]['uuid'] = content['data'][0]['uuid']
+        file_content = Content.get_file_content(Content.YAML, content_uuid)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--reference'])
             assert cause == 'NOK: content uuid already exist with digest: 5c2071094dbfaa33'
-            assert len(Database.get_references()) == 1
-            Content.verified(mocker, snippy, content)
+            Content.assert_storage(content)
+            mock_file.assert_called_once_with('./references.yaml', 'r')
 
     @pytest.mark.usefixtures('isfile_true')
     def test_cli_import_reference_020(self, snippy):
@@ -451,7 +472,6 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         Import all references from Markdown formatted file.
         """
-
 
         content = {
             'data': [

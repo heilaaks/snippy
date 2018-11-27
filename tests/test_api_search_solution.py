@@ -196,11 +196,17 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         order.
         """
 
-        result_headers = {
-            'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '7214'
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.NGINX],
+                Solution.DEFAULTS[Solution.BEATS]
+            ]
         }
-        result_json = {
+        expect_headers = {
+            'content-type': 'application/vnd.api+json; charset=UTF-8',
+            'content-length': '5513'
+        }
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -209,21 +215,21 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'id': Solution.NGINX_DIGEST,
+                'attributes': content['data'][0]
             }, {
                 'type': 'solution',
-                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
-                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'id': Solution.BEATS_DIGEST,
+                'attributes': content['data'][1]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker,beats%2Cnmap&limit=2&sort=-created,-brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
+        assert result.headers == expect_headers
         assert result.status == falcon.HTTP_200
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_search_solution_006(self, server):

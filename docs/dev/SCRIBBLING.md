@@ -1852,6 +1852,16 @@ git update-index --no-assume-unchanged FILE_NAME # change back
            4. Test case variables and layout must follow the layout in existing tests
               and in the examples below.
 
+           5. Default content that is created and updated timestamps must be same
+              within one content category. The reason is that when default content
+              is imported or created, only one timestamp is created for the whole
+              collection of imported or created content.
+
+              This matters only with tool proprietary text format. The reason is that
+              other formats have the timestamps in metadata that will override the
+              allocated (or mocked) time. In order to have constant rules, the rule
+              is enforced with all content categories.
+
        Explanations:
 
        The file format that tool uses to store JSON or YAML content into a file uses

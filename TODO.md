@@ -12,6 +12,7 @@
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Fix storage collection comparison assert. The new way masks away the test case dict because the collection e.g. sorts and trims tags, etc. The case should be exactly, check dict.
+   - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
 
 ## THINKING
    - [ ] Add code content.

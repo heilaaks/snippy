@@ -35,6 +35,8 @@ class Helper(object):  # pylint: disable=too-few-public-methods
     """
 
     EXPORT_TIME = '2018-02-02T02:02:02.000001+0000'
+    IMPORT_TIME = '2018-03-02T02:02:02.000001+0000'
+    EXPORT_TEMPLATE = '2017-10-14T19:56:31.000001+0000'
 
     RE_MATCH_ANSI_ESCAPE_SEQUENCES = re.compile(r'''
         \x1b[^m]*m    # Match all ANSI escape sequences.

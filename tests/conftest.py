@@ -31,6 +31,7 @@ from snippy.config.config import Config
 from snippy.constants import Constants as Const
 from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
+from tests.testlib.helper import Helper
 from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
@@ -66,14 +67,18 @@ from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 #
 #   1) Creating metadata with export timestamp.
 
+# Content
+EXPORT_TIME = Helper.EXPORT_TIME
+IMPORT_TIME = Helper.IMPORT_TIME
+
 # Snippets
-IMPORT_SNIPPETS = '2017-10-14T19:56:31.000001+0000'
-REMOVE_CREATED = '2017-10-14T19:56:31.000001+0000'
-FORCED_CREATED = '2017-10-14T19:56:31.000001+0000'
-EXITED_CREATED = '2017-10-20T07:08:45.000001+0000'
-NETCAT_CREATED = '2017-10-20T07:08:45.000001+0000'
-UMOUNT_CREATED = '2018-05-07T11:11:55.000001+0000'
-INTERP_CREATED = '2018-01-11T07:59:46.000001+0000'
+IMPORT_SNIPPETS = Snippet.DEFAULT_TIME
+REMOVE_CREATED = Snippet.REMOVE_CREATED
+FORCED_CREATED = Snippet.FORCED_CREATED
+EXITED_CREATED = Snippet.EXITED_CREATED
+NETCAT_CREATED = Snippet.NETCAT_CREATED
+UMOUNT_CREATED = Snippet.UMOUNT_CREATED
+INTERP_CREATED = Snippet.INTERP_CREATED
 CREATE_REMOVE = (REMOVE_CREATED,)*1
 CREATE_FORCED = (FORCED_CREATED,)*1
 CREATE_EXITED = (EXITED_CREATED,)*1
@@ -93,9 +98,10 @@ UPDATE_NETCAT = (NETCAT_CREATED,)*2
 EDITED_REMOVE = (REMOVE_CREATED,)*1
 
 # Solutions
-BEATS_CREATED = '2017-10-20T11:11:19.000001+0000'
-NGINX_CREATED = '2017-10-20T06:16:27.000001+0000'
-KAFKA_CREATED = '2017-10-20T06:16:27.000001+0000'
+IMPORT_SOLUTIONS = Solution.DEFAULT_TIME
+BEATS_CREATED = Solution.BEATS_CREATED
+NGINX_CREATED = Solution.NGINX_CREATED
+KAFKA_CREATED = Solution.KAFKA_CREATED
 CREATE_BEATS = (BEATS_CREATED,)*1
 CREATE_NGINX = (NGINX_CREATED,)*1
 CREATE_KAFKA = (KAFKA_CREATED,)*1
@@ -108,10 +114,10 @@ UPDATE_NGINX = (NGINX_CREATED,)*2
 UPDATE_KAFKA = (KAFKA_CREATED,)*2
 
 # References
-IMPORT_REFERENCES = '2018-06-22T13:11:13.678729+0000'
-GITLOG_CREATED = '2018-06-22T13:11:13.678729+0000'
-REGEXP_CREATED = '2018-06-22T13:11:13.678729+0000'
-PYTEST_CREATED = '2016-04-21T12:10:11.678729+0000'
+IMPORT_REFERENCES = Reference.DEFAULT_TIME
+GITLOG_CREATED = Reference.GITLOG_CREATED
+REGEXP_CREATED = Reference.REGEXP_CREATED
+PYTEST_CREATED = Reference.PYTEST_CREATED
 CREATE_GITLOG = (GITLOG_CREATED,)*1
 CREATE_REGEXP = (REGEXP_CREATED,)*1
 CREATE_PYTEST = (PYTEST_CREATED,)*1
@@ -124,10 +130,7 @@ UPDATE_REGEXP = (REGEXP_CREATED,)*2
 UPDATE_PYTEST = (PYTEST_CREATED,)*2
 
 # Templates
-EXPORT_TEMPLATE = '2017-10-14T19:56:31.000001+0000'
-
-# Export
-EXPORT_TIME = '2018-02-02T02:02:02.000001+0000'
+EXPORT_TEMPLATE = Helper.EXPORT_TEMPLATE
 
 IMPORT_DEFAULT_SNIPPETS = ((REMOVE_CREATED,) + (FORCED_CREATED,))
 IMPORT_DEFAULT_SOLUTIONS = ((BEATS_CREATED,) + (NGINX_CREATED,))
@@ -307,6 +310,14 @@ def caller_mock(mocker):
 
     mocker.patch.object(Cause, '_caller', return_value='snippy.testing.testing:123')
 
+## Content
+
+@pytest.fixture(scope='function', name='import-content-utc')
+def import_content_time_mock(mocker):
+    """Mock timestamps to create generic content."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=(IMPORT_TIME,))
+
 ## Snippets
 
 @pytest.fixture(scope='function', name='default-snippets')
@@ -316,17 +327,11 @@ def import_default_snippets(mocker, snippy):
     contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
 
-@pytest.fixture(scope='function', name='import-snippets-utc')
+@pytest.fixture(scope='function', name='default-snippets-utc')
 def import_snippets_time_mock(mocker):
-    """Mock timestamps to create content."""
+    """Mock timestamps to import default snippets."""
 
     mocker.patch.object(Config, 'utcnow', side_effect=(IMPORT_SNIPPETS,))
-
-@pytest.fixture(scope='function', name='import-references-utc')
-def import_references_time_mock(mocker):
-    """Mock timestamps to create content."""
-
-    mocker.patch.object(Config, 'utcnow', side_effect=(IMPORT_REFERENCES,))
 
 @pytest.fixture(scope='function', name='import-exited')
 def import_exited_snippet(mocker, snippy):
@@ -459,6 +464,12 @@ def import_default_solutions(mocker, snippy):
     contents = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SOLUTIONS)
 
+@pytest.fixture(scope='function', name='default-solutions-utc')
+def import_default_solutions_time(mocker):
+    """Mock timestamps to import default solutions."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=(IMPORT_SOLUTIONS,))
+
 @pytest.fixture(scope='function', name='import-beats')
 def import_beats_solution(mocker, snippy):
     """Import 'beats' solution for testing purposes."""
@@ -549,12 +560,19 @@ def update_kafka_time_mock(mocker):
     _add_utc_time(mocker, UPDATE_KAFKA)
 
 ## References
+
 @pytest.fixture(scope='function', name='default-references')
 def import_default_references(mocker, snippy):
     """Import default references for testing purposes."""
 
     contents = [Reference.DEFAULTS[Reference.GITLOG], Reference.DEFAULTS[Reference.REGEXP]]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_REFERENCES)
+
+@pytest.fixture(scope='function', name='default-references-utc')
+def import_default_references_time(mocker):
+    """Mock timestamps to create and import default references."""
+
+    mocker.patch.object(Config, 'utcnow', side_effect=(IMPORT_REFERENCES,))
 
 @pytest.fixture(scope='function', name='create-gitlog-utc')
 def create_gitlog_time_mock(mocker):

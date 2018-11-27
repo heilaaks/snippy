@@ -36,6 +36,7 @@ from snippy.meta import __docs__
 from snippy.meta import __homepage__
 from snippy.meta import __openapi__
 from snippy.meta import __version__
+from tests.testlib.helper import Helper
 from tests.testlib.reference_helper import ReferenceHelper as Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
@@ -45,25 +46,26 @@ class Content(object):  # pylint: disable=too-many-public-methods
     """Helper methods for content testing."""
 
     # Contents
-    EXPORT_TIME = '2018-02-02T02:02:02.000001+0000'
-    IMPORT_TIME = '2018-03-02T02:02:02.000001+0000'
+    EXPORT_TIME = Helper.EXPORT_TIME
+    IMPORT_TIME = Helper.IMPORT_TIME
 
     # Snippets
-    REMOVE_TIME = '2017-10-14T19:56:31.000001+0000'
-    FORCED_TIME = '2017-10-14T19:56:31.000001+0000'
-    EXITED_TIME = '2017-10-20T07:08:45.000001+0000'
-    NETCAT_TIME = '2017-10-20T07:08:45.000001+0000'
-    UMOUNT_TIME = '2018-05-07T11:11:55.000001+0000'
-    INTERP_TIME = '2018-01-11T07:59:46.000001+0000'
+    REMOVE_TIME = Snippet.REMOVE_CREATED  # Default snippet utc times must be same.
+    FORCED_TIME = Snippet.FORCED_CREATED  # Default snippet utc must be same.
+    EXITED_TIME = Snippet.EXITED_CREATED
+    NETCAT_TIME = Snippet.NETCAT_CREATED
+    UMOUNT_TIME = Snippet.UMOUNT_CREATED
+    INTERP_TIME = Snippet.INTERP_CREATED
 
     # Solutions
-    BEATS_TIME = '2017-10-20T11:11:19.000001+0000'
-    NGINX_TIME = '2017-10-20T06:16:27.000001+0000'
+    BEATS_TIME = Solution.BEATS_CREATED  # Default solution utc must be same.
+    NGINX_TIME = Solution.NGINX_CREATED  # Default solution utc must be same.
+    KAFKA_TIME = Solution.KAFKA_CREATED
 
     # References
-    GITLOG_TIME = '2018-06-22T13:11:13.678729+0000'
-    REGEXP_TIME = '2018-06-22T13:11:13.678729+0000'
-    PYTEST_TIME = '2016-04-21T12:10:11.678729+0000'
+    GITLOG_TIME = Reference.GITLOG_CREATED  # Default reference utc must be same.
+    REGEXP_TIME = Reference.REGEXP_CREATED  # Default reference utc must be same.
+    PYTEST_TIME = Reference.PYTEST_CREATED
 
     JSON = Const.CONTENT_FORMAT_JSON
     MKDN = Const.CONTENT_FORMAT_MKDN
@@ -523,17 +525,20 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return mock.mock_open(read_data=mocked_file)
 
     @staticmethod
-    def updated_nginx():
-        """Return updated nginx solution."""
+    def get_dict_content(content):
+        """Return content in dictionary format.
 
-        # Generate updated nginx solution.
-        content_read = {
-            'af2c51570a909031': copy.deepcopy(Solution.DEFAULTS[Solution.NGINX])
-        }
-        content_read['af2c51570a909031']['data'] = tuple([w.replace('# Instructions how to debug nginx.', '# Changed instruction set.') for w in content_read['af2c51570a909031']['data']])  # pylint: disable=line-too-long
-        content_read['af2c51570a909031']['description'] = 'Changed instruction set.'
+        Args:
+            content (str): Content in string format.
 
-        return content_read
+        Returns:
+            dict: Content in dictionary format.
+        """
+
+        collection = Collection()
+        collection.load(Const.CONTENT_FORMAT_TEXT, Content.IMPORT_TIME, content)
+
+        return collection.dump_dict()[0]
 
     @staticmethod
     def updated_kafka1():
@@ -573,18 +578,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         }
         content_read['21c1d813c414aec8']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   :  kubernetes-docker-log-driver-kafka.txt ') for w in content_read['21c1d813c414aec8']['data']])  # pylint: disable=line-too-long
         content_read['21c1d813c414aec8']['filename'] = Const.EMPTY
-
-        return content_read
-
-    @staticmethod
-    def updated_gitlog():
-        """Return updated gitlog reference."""
-
-        # Generate updated nginx solution.
-        content_read = {
-            Reference.GITLOG_DIGEST: copy.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
-        }
-        content_read[Reference.GITLOG_DIGEST]['data'] = tuple([w.replace('# Instructions how to debug nginx', '# Changed instruction set') for w in content_read[Reference.GITLOG_DIGEST]['data']])  # pylint: disable=line-too-long
 
         return content_read
 
@@ -632,7 +625,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
                 _convert(expect['data']['attributes'])
         except KeyError:
             raise Exception(
-                "test case failure:\n\n{}\nwith dictionary:\n{}".format(
+                'test case failure:\n\n{}\nwith dictionary:\n{}'.format(
                     traceback.format_exc(), json.dumps(expect, sort_keys=True, indent=4)
                 )
             )

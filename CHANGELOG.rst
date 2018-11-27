@@ -30,8 +30,9 @@ Bugfixes
 ~~~~~~~~
 
 * Fix solution creation from empty template.
-* Fix resource object validation in POST.
+* Fix importing content from invalid source file.
 * Fix search from all categories with --all option.
+* Fix resource object validation in POST.
 * Fix REST API HTTP OPTIONS responses.
 * All commits in `0.9.0`_.
 

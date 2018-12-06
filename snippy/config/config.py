@@ -94,7 +94,7 @@ class Config(object):
         # test cases to print unnecessary help dialog when test creates the
         # Snippy() object. This allows the first creation to be silent but
         # allows further configuration from tests with snippy.run().
-        cls.quiet = True if cls.source.quiet else False
+        cls.quiet = bool(cls.source.quiet)
         cls._update_logger()
         cls._logger.debug('config source: %s', cls.source)
 
@@ -141,22 +141,22 @@ class Config(object):
         cls.server = cls.source.server
 
         # Parsed from defined configuration.
-        cls.is_operation_create = True if cls.operation == 'create' else False
-        cls.is_operation_search = True if cls.operation == 'search' else False
-        cls.is_operation_update = True if cls.operation == 'update' else False
-        cls.is_operation_delete = True if cls.operation == 'delete' else False
-        cls.is_operation_export = True if cls.operation == 'export' else False
-        cls.is_operation_import = True if cls.operation == 'import' else False
-        cls.is_category_snippet = True if cls.content_category == Const.SNIPPET else False
-        cls.is_category_solution = True if cls.content_category == Const.SOLUTION else False
-        cls.is_category_reference = True if cls.content_category == Const.REFERENCE else False
-        cls.is_category_all = True if cls.content_category == Const.ALL_CATEGORIES else False
+        cls.is_operation_create = bool(cls.operation == 'create')
+        cls.is_operation_search = bool(cls.operation == 'search')
+        cls.is_operation_update = bool(cls.operation == 'update')
+        cls.is_operation_delete = bool(cls.operation == 'delete')
+        cls.is_operation_export = bool(cls.operation == 'export')
+        cls.is_operation_import = bool(cls.operation == 'import')
+        cls.is_category_snippet = bool(cls.content_category == Const.SNIPPET)
+        cls.is_category_solution = bool(cls.content_category == Const.SOLUTION)
+        cls.is_category_reference = bool(cls.content_category == Const.REFERENCE)
+        cls.is_category_all = bool(cls.content_category == Const.ALL_CATEGORIES)
         cls.operation_filename = cls._operation_filename((cls.content_category,))
         cls.operation_file_format = cls._operation_file_format(cls.operation_filename)
-        cls.is_operation_file_json = True if cls.operation_file_format == Const.CONTENT_FORMAT_JSON else False
-        cls.is_operation_file_mkdn = True if cls.operation_file_format == Const.CONTENT_FORMAT_MKDN else False
-        cls.is_operation_file_text = True if cls.operation_file_format == Const.CONTENT_FORMAT_TEXT else False
-        cls.is_operation_file_yaml = True if cls.operation_file_format == Const.CONTENT_FORMAT_YAML else False
+        cls.is_operation_file_json = bool(cls.operation_file_format == Const.CONTENT_FORMAT_JSON)
+        cls.is_operation_file_mkdn = bool(cls.operation_file_format == Const.CONTENT_FORMAT_MKDN)
+        cls.is_operation_file_text = bool(cls.operation_file_format == Const.CONTENT_FORMAT_TEXT)
+        cls.is_operation_file_yaml = bool(cls.operation_file_format == Const.CONTENT_FORMAT_YAML)
 
         cls.debug()
 
@@ -229,12 +229,12 @@ class Config(object):
         except (IndexError, ValueError):
             pass
 
-        cls.debug_logs = True if '--debug' in args else False
-        cls.log_json = True if '--log-json' in args else False
+        cls.debug_logs = bool('--debug' in args)
+        cls.log_json = bool('--log-json' in args)
         cls.log_msg_max = log_msg_max
-        cls.profiler = True if '--profile' in args else False
-        cls.quiet = True if '-q' in args else False
-        cls.very_verbose = True if '-vv' in args else False
+        cls.profiler = bool('--profile' in args)
+        cls.quiet = bool('-q' in args)
+        cls.very_verbose = bool('-vv' in args)
 
         # Profile code.
         Profiler.enable(cls.profiler)
@@ -366,10 +366,10 @@ class Config(object):
                 filename = cls._operation_filename(categories)
             cls.operation_filename = filename
             cls.operation_file_format = cls._operation_file_format(filename)
-            cls.is_operation_file_json = True if cls.operation_file_format == Const.CONTENT_FORMAT_JSON else False
-            cls.is_operation_file_mkdn = True if cls.operation_file_format == Const.CONTENT_FORMAT_MKDN else False
-            cls.is_operation_file_text = True if cls.operation_file_format == Const.CONTENT_FORMAT_TEXT else False
-            cls.is_operation_file_yaml = True if cls.operation_file_format == Const.CONTENT_FORMAT_YAML else False
+            cls.is_operation_file_json = bool(cls.operation_file_format == Const.CONTENT_FORMAT_JSON)
+            cls.is_operation_file_mkdn = bool(cls.operation_file_format == Const.CONTENT_FORMAT_MKDN)
+            cls.is_operation_file_text = bool(cls.operation_file_format == Const.CONTENT_FORMAT_TEXT)
+            cls.is_operation_file_yaml = bool(cls.operation_file_format == Const.CONTENT_FORMAT_YAML)
 
         return filename
 
@@ -377,11 +377,10 @@ class Config(object):
     def is_supported_file_format(cls):
         """Test if file format is supported."""
 
-        return True if cls.is_operation_file_json or \
-                       cls.is_operation_file_mkdn or \
-                       cls.is_operation_file_text or \
-                       cls.is_operation_file_yaml    \
-                       else False
+        return bool(cls.is_operation_file_json or
+                    cls.is_operation_file_mkdn or
+                    cls.is_operation_file_text or
+                    cls.is_operation_file_yaml)
 
     @classmethod
     def default_content_file(cls, category):
@@ -523,19 +522,19 @@ class Config(object):
         by the user.
         """
 
-        return True if cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws else False
+        return bool(cls.search_all_kws or cls.search_tag_kws or cls.search_grp_kws)
 
     @classmethod
     def _is_content_digest(cls):
         """Test if content digest was defined from command line."""
 
-        return False if cls.operation_digest is None else True
+        return bool(cls.operation_digest is not None)
 
     @classmethod
     def _is_content_uuid(cls):
         """Test if content uuid was defined from command line."""
 
-        return False if cls.operation_uuid is None else True
+        return bool(cls.operation_uuid is not None)
 
     @classmethod
     def is_search_criteria(cls):

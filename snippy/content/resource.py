@@ -430,7 +430,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def is_template(self):
         """Test if resource data is empty template."""
 
-        return True if self.digest in Resource.TEMPLATES else False
+        return bool(self.digest in Resource.TEMPLATES)
 
     def has_data(self):
         """Test if resource has data.
@@ -453,17 +453,17 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def is_snippet(self):
         """Test if resource is snippet."""
 
-        return True if self.category == Const.SNIPPET else False
+        return bool(self.category == Const.SNIPPET)
 
     def is_solution(self):
         """Test if resource is solution."""
 
-        return True if self.category == Const.SOLUTION else False
+        return bool(self.category == Const.SOLUTION)
 
     def is_reference(self):
         """Test if resource is reference."""
 
-        return True if self.category == Const.REFERENCE else False
+        return bool(self.category == Const.REFERENCE)
 
     def dump_qargs(self):
         """Convert resource for sqlite qargs.

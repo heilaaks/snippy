@@ -640,8 +640,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_200
         assert result.headers == expect_headers
-        Content.assert_storage(content)
         Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-forced', 'update-exited-utc')
     def test_api_create_snippet_015(self, server):

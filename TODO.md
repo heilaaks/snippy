@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Fix testing error titles. Some contain the hash which now prevent all checks for title. Some titles should be checked. (this is fixed by new testing helpers being taken into use)
    - [ ] Change the test with dump_text (or vise versa) to Content.compare_text like with compare_mkdn().
    - [ ] Refactor tests with Content.verified, Content.ordered, Content.compare_dump|Content.****_dump. Cases: import (check after import with YAML) and export (compare in target format.
    - [ ] Refactor tests 1. Content.compare_mkdn, Content.compare_text, Content.compare_yaml, Content.compare_json  # compare exported data
@@ -85,7 +86,6 @@
    - [ ] Fix insert_content and digest check is probably unnecessary. Remove it after content refactor.
    - [ ] Fix server crash (use e.g. sys.exit(0)) loses e.g. debug config like -vv
    - [ ] Fix all post responses to have link to created resource. Why this is not always included? Only in updates but not in create?
-   - [ ] Fix testing error titles. Some contain the hash which now prevent all checks for title. Some titles should be checked.
    - [ ] Fix failing tests print the help. Something was broken. This applies only (rare?) some cases? This comes from UT sqlite cases at least.
    - [ ] Fix help tests since it is not reading new _cli_ tests. What I was thinking?
    - [ ] Fix make test if pytest cover leaves hanging files like .coverage.localhost.localdomain.4727.176219. Add --cover-erase in commmand? // https://bitbucket.org/ned/coveragepy/issues/476/coverageexception-cant-add-arcs-to

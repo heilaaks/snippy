@@ -19,7 +19,6 @@
 
 """test_api_update_snippet: Test PUT /snippets API."""
 
-import copy
 import json
 
 from falcon import testing
@@ -29,7 +28,6 @@ import pytest
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 pytest.importorskip('gunicorn')
 
@@ -37,124 +35,148 @@ pytest.importorskip('gunicorn')
 class TestApiUpdateSnippet(object):
     """Test PUT /snippets/{digest} API."""
 
-    @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
-    def test_api_update_snippet_001(self, server, mocker):
+    @pytest.mark.usefixtures('import-forced', 'update-exited-utc')
+    def test_api_update_snippet_001(self, server):
         """Update one snippet with PUT request.
 
-        Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
+        Call PUT /v1/snippets/<digest> to update existing snippet with
         specified digest. See 'updating content attributes' for the attribute
         list that can be changed by user.
         """
 
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.EXITED])
+            ]
+        }
+        content['data'][0]['created'] = Content.FORCED_TIME
+        content['data'][0]['updated'] = Content.EXITED_TIME
+        content['data'][0]['digest'] = '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73'
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'description': Snippet.DEFAULTS[Snippet.REMOVE]['description'],
-                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+                    'data': content['data'][0]['data'],
+                    'brief': content['data'][0]['brief'],
+                    'description': content['data'][0]['description'],
+                    'groups': content['data'][0]['groups'],
+                    'tags': content['data'][0]['tags'],
+                    'links': content['data'][0]['links']
                 }
             }
         }
-        content_read = Snippet.DEFAULTS[Snippet.REMOVE]
-        content = {Snippet.REMOVE_DIGEST: content_read}
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '802'
+            'content-length': '1007'
         }
-        result_json = {
+        expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/49d6916b6711f13d'
             },
             'data': {
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                'attributes': content_read
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
-    def test_api_update_snippet_002(self, server, mocker):
+    def test_api_update_snippet_002(self, server):
         """Update one snippet with PUT request.
 
-        Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
+        Call PUT /v1/snippets/<digest> to update existing snippet with
         specified digest. Only partial set of attributes that can be modified
         is sent in request.
         """
 
+        content = {
+            'data': [{
+                'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
+                'brief': '',
+                'description': '',
+                'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
+                'tags': (),
+                'links': Snippet.DEFAULTS[Snippet.REMOVE]['links'],
+                'category': 'snippet',
+                'name': '',
+                'filename': '',
+                'versions': '',
+                'source': '',
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': Content.FORCED_TIME,
+                'updated': Content.REMOVE_TIME,
+                'digest': 'e56c2183edcc3a67cab99e6064439495a8af8a1d0b78bc538acd6079c841f27f'
+            }]
+        }
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
-                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+                    'data': content['data'][0]['data'],
+                    'groups': content['data'][0]['groups'],
+                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links'],)
                 }
             }
         }
-        content_read = {
-            'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
-            'brief': '',
-            'description': '',
-            'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
-            'tags': [],
-            'links': Snippet.DEFAULTS[Snippet.REMOVE]['links'],
-            'category': 'snippet',
-            'name': '',
-            'filename': '',
-            'versions': '',
-            'source': '',
-            'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': Content.FORCED_TIME,
-            'updated': Content.REMOVE_TIME,
-            'digest': 'e56c2183edcc3a67cab99e6064439495a8af8a1d0b78bc538acd6079c841f27f'
-        }
-        content = {'e56c2183edcc3a67': content_read}
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '708'
         }
-        result_json = {
+        expect_body = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/e56c2183edcc3a67'
             },
             'data': {
                 'type': 'snippet',
-                'id': 'e56c2183edcc3a67cab99e6064439495a8af8a1d0b78bc538acd6079c841f27f',
-                'attributes': content_read
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
-    def test_api_update_snippet_003(self, server, mocker):
+    def test_api_update_snippet_003(self, server):
         """Update one snippet with PUT request.
 
-        Call PUT /v1/snippets/53908d68425c61dc to update existing snippet with
+        Call PUT /v1/snippets/<digest> to update existing snippet with
         specified digest. The PUT request contains only the mandatory data
         attribute. All other attributes must be set to their default values.
         """
 
+        content = {
+            'data': [{
+                'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
+                'brief': '',
+                'description': '',
+                'groups': ('default',),
+                'tags': (),
+                'links': (),
+                'category': 'snippet',
+                'name': '',
+                'filename': '',
+                'versions': '',
+                'source': '',
+                'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
+                'created': Content.FORCED_TIME,
+                'updated': Content.REMOVE_TIME,
+                'digest': '26128ea95707a3a2623bb2613a17f50e29a5ab5232b8ba7ca7f1c96cb1ea5c58'
+            }]
+        }
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -163,56 +185,42 @@ class TestApiUpdateSnippet(object):
                 }
             }
         }
-        content_read = {
-            'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
-            'brief': '',
-            'description': '',
-            'groups': ['default'],
-            'tags': [],
-            'links': [],
-            'category': 'snippet',
-            'name': '',
-            'filename': '',
-            'versions': '',
-            'source': '',
-            'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': Content.FORCED_TIME,
-            'updated': Content.REMOVE_TIME,
-            'digest': '26128ea95707a3a2623bb2613a17f50e29a5ab5232b8ba7ca7f1c96cb1ea5c58'
-        }
-        content = {'26128ea95707a3a26': content_read}
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '651'
         }
-        result_json = {
+        expect_body = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/26128ea95707a3a2'
             },
             'data': {
                 'type': 'snippet',
-                'id': '26128ea95707a3a2623bb2613a17f50e29a5ab5232b8ba7ca7f1c96cb1ea5c58',
-                'attributes': content_read
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-forced', 'caller')
     def test_api_update_snippet_004(self, server):
         """Try to update snippet with malformed request.
 
-        Try to call PUT /v1/snippets/101010101010101 to update snippet with
-        digest that cannot be found.
+        Try to call PUT /v1/snippets/<digest> to update snippet with digest
+        that cannot be found.
         """
 
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -225,11 +233,11 @@ class TestApiUpdateSnippet(object):
                 }
             }
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '370'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -242,19 +250,24 @@ class TestApiUpdateSnippet(object):
             path='/snippy/api/app/v1/snippets/101010101010101',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
-        assert len(Database.get_snippets()) == 1
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-forced', 'caller')
     def test_api_update_snippet_005(self, server):
         """Try to update snippet with malformed request.
 
-        Try to call PUT /v1/snippets/53908d68425c61dc to update new snippet
-        with malformed JSON request.
+        Try to call PUT /v1/snippets/<digest> to update new snippet with
+        malformed JSON request.
         """
 
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
+        }
         request_body = {
             'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
             'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
@@ -262,84 +275,99 @@ class TestApiUpdateSnippet(object):
             'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
             'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
         }
-        result_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '877'}
-        result_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '879'}
-        result_json = {
+        expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '877'}
+        expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '879'}
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'not compared because of hash structure in random order inside the string'
+                'title': 'json media validation failed'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers_p3 or result.headers == result_headers_p2
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
-        assert len(Database.get_snippets()) == 1
+        assert result.headers == expect_headers_p3 or result.headers == expect_headers_p2
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-forced', 'update-netcat-utc')
-    def test_api_update_snippet_006(self, server, mocker):
+    def test_api_update_snippet_006(self, server):
         """Updated snippet and verify created and updated timestamps.
 
-        Call PUT /v1/snippets/53908d68425c61dc to update existing snippet
-        with specified digest. This test verifies that the created timestamp
-        does not change and the updated timestamp changes when the content is
+        Call PUT /v1/snippets/<digest> to update existing snippet with
+        specified digest. This test verifies that the created timestamp does
+        not change and the updated timestamp changes when the content is
         updated.
         """
 
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.NETCAT])
+            ]
+        }
+        content['data'][0]['created'] = Content.FORCED_TIME
+        content['data'][0]['updated'] = Content.NETCAT_TIME
+        content['data'][0]['digest'] = 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+                    'data': Const.NEWLINE.join(content['data'][0]['data']),
+                    'brief': content['data'][0]['brief'],
+                    'groups': content['data'][0]['groups'],
+                    'tags': Const.DELIMITER_TAGS.join(content['data'][0]['tags']),
+                    'links': Const.DELIMITER_LINKS.join(content['data'][0]['links'])
                 }
             }
         }
-        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '802'
+            'content-length': '770'
         }
-        result_json = {
+        expect_body = {
             'links': {
-                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
+                'self': 'http://falconframework.org/snippy/api/app/v1/snippets/f3fd167c64b6f97e'
             },
             'data': {
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
-                'attributes': copy.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }
         }
-        result_json['data']['attributes']['updated'] = Content.NETCAT_TIME
+        expect_body['data']['attributes']['updated'] = Content.NETCAT_TIME
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content_read)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-forced', 'update-remove-utc')
-    def test_api_update_snippet_007(self, server, mocker):
+    def test_api_update_snippet_007(self, server):
         """Update one snippet with PATCH request.
 
-        Call PATCH /v1/snippets/53908d68425c61dc to update existing snippet
-        with specified digest. The PATCH request contains only mandatory data
+        Call PATCH /v1/snippets/<digest> to update existing snippet with
+        specified digest. The PATCH request contains only mandatory the data
         attribute. All other attributes must be returned with their previous
         stored values.
         """
 
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.FORCED])
+            ]
+        }
+        content['data'][0]['data'] = Snippet.DEFAULTS[Snippet.REMOVE]['data']
+        content['data'][0]['created'] = Content.FORCED_TIME
+        content['data'][0]['updated'] = Content.REMOVE_TIME
+        content['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -348,51 +376,31 @@ class TestApiUpdateSnippet(object):
                 }
             }
         }
-        content_read = {
-            'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
-            'brief': Snippet.DEFAULTS[Snippet.FORCED]['brief'],
-            'description': Snippet.DEFAULTS[Snippet.FORCED]['description'],
-            'groups': Snippet.DEFAULTS[Snippet.FORCED]['groups'],
-            'tags': Snippet.DEFAULTS[Snippet.FORCED]['tags'],
-            'links': Snippet.DEFAULTS[Snippet.FORCED]['links'],
-            'category': 'snippet',
-            'name': Snippet.DEFAULTS[Snippet.FORCED]['name'],
-            'filename': Snippet.DEFAULTS[Snippet.FORCED]['filename'],
-            'versions': Snippet.DEFAULTS[Snippet.FORCED]['versions'],
-            'uuid': Snippet.DEFAULTS[Snippet.FORCED]['uuid'],
-            'source': Snippet.DEFAULTS[Snippet.FORCED]['source'],
-            'created': Content.FORCED_TIME,
-            'updated': Content.REMOVE_TIME,
-            'digest': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
-        }
-        content = {'a9e137c08aee0985': content_read}
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '894'
         }
-        result_json = {
+        expect_body = {
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/a9e137c08aee0985'
             },
             'data': {
                 'type': 'snippet',
-                'id': 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2',
-                'attributes': content_read
+                'id': content['data'][0]['digest'],
+                'attributes': content['data'][0]
             }
         }
         result = testing.TestClient(server.server.api).simulate_patch(
             path='/snippy/api/app/v1/snippets/53908d68425c61dc',
             headers={'accept': 'application/vnd.api+json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, server, content)
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

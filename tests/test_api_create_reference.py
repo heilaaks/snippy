@@ -158,7 +158,6 @@ class TestApiCreateReference(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        assert Content.ordered(result.json) == Content.ordered(expect_body)
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
@@ -415,7 +414,6 @@ class TestApiCreateReference(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        assert Content.ordered(result.json) == Content.ordered(expect_body)
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 
@@ -480,7 +478,6 @@ class TestApiCreateReference(object):
             body=json.dumps(request_body))
         assert result.status == falcon.HTTP_201
         assert result.headers == expect_headers
-        assert Content.ordered(result.json) == Content.ordered(expect_body)
         Content.assert_restapi(result.json, expect_body)
         Content.assert_storage(content)
 

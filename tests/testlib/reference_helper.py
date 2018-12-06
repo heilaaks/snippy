@@ -110,7 +110,8 @@ class ReferenceHelper(object):
     def get_dictionary(template):
         """Transform template to dictinary."""
 
-        collection = ReferenceHelper._get_content(template)
+        collection = Collection()
+        collection.load(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), template)
         resource = next(collection.resources())
 
         return resource.dump_dict(Config.remove_fields)
@@ -136,12 +137,3 @@ class ReferenceHelper(object):
             dump = resource.dump_mkdn(Config.templates)
 
         return dump
-
-    @staticmethod
-    def _get_content(text):
-        """Transform text template to content."""
-
-        collection = Collection()
-        collection.load(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), text)
-
-        return collection

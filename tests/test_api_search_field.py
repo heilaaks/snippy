@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_field: Test GET /snippy/api/app/v1/{field} API."""
+"""test_api_search_field: Test GET /{field} API."""
 
 from falcon import testing
 import falcon
@@ -26,14 +26,13 @@ import pytest
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 from tests.testlib.reference_helper import ReferenceHelper as Reference
 
 pytest.importorskip('gunicorn')
 
 
 class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
-    """Test GET /snippy/api/{field} API."""
+    """Test GET /{field} API."""
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_keyword_001(self, server):
@@ -43,11 +42,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         docs or python keyword.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2144'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 3,
                 'limit': 20,
@@ -56,15 +55,15 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }, {
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'id': Snippet.FORCED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
 
@@ -72,9 +71,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/docs,python',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references', 'default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_keyword_002(self, server):
@@ -84,11 +83,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         keyword.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '673'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -97,7 +96,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }]
 
@@ -106,9 +105,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/doc',
             headers={'accept': 'application/vnd.api+json'},
             query_string='limit=20&sort=brief&scat=reference')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_001(self, server):
@@ -118,11 +117,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         In this case the query matches to three out of four contents.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '6241'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 3,
                 'limit': 20,
@@ -131,24 +130,24 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'id': Snippet.FORCED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
                 'type': 'solution',
-                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
+                'id': Solution.KAFKA_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/groups/docker',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_002(self, server):
@@ -158,11 +157,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         python groups with search all keywords and content limit applied.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '5373'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -171,11 +170,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }, {
                 'type': 'solution',
-                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
+                'id': Solution.KAFKA_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
@@ -183,9 +182,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/groups/docker,python',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=test&limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_003(self, server):
@@ -197,11 +196,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         search hit from references should not be returned.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '4770'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -210,7 +209,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
+                'id': Solution.KAFKA_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
@@ -218,9 +217,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/groups/docker,python',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=test&limit=20&sort=brief&scat=snippet,solution')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_groups_004(self, server):
@@ -235,11 +234,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         in this case?
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '546'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -257,9 +256,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/groups/docker,python',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=test&limit=20&sort=brief&scat=snippets,solutions')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_groups_005(self, server):
@@ -268,11 +267,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Try to call GET /v1/groups/missing with a group that is not found.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -284,9 +283,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/groups/missing',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_groups_006(self, server):
@@ -296,15 +295,15 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         found.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json',
             'content-length': '0'
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/missing/docker',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_groups_007(self, server):
@@ -319,11 +318,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         identity is possible in case of a parameter.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1541'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -332,11 +331,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'id': Snippet.FORCED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
@@ -344,9 +343,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/groups/docker',
             headers={'accept': 'application/vnd.api+json'},
             query_string='scat=snippet&uuid=1')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_groups_008(self, server):
@@ -357,11 +356,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         category is not correct and error must be returned.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '558'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -379,9 +378,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/groups/docker',
             headers={'accept': 'application/vnd.api+json'},
             query_string='scat=snippet,solutions,reference&uuid=1')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_tags_001(self, server):
@@ -390,11 +389,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/tags/moby to get all content with a moby tag.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '6241'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 3,
                 'limit': 20,
@@ -403,24 +402,24 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'id': Snippet.FORCED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
                 'type': 'solution',
-                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
+                'id': Solution.KAFKA_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/tags/moby',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_tags_002(self, server):
@@ -430,11 +429,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         python tag.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '673'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -443,16 +442,16 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/tags/volume,python',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_tags_003(self, server):
@@ -461,11 +460,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Try to call GET /v1/tags/missing with a tag that is not found.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -477,9 +476,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/tags/missing',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_digest_001(self, server):
@@ -488,11 +487,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/digest/<digest> to get specific content based on digest.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '762'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -501,7 +500,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': {
                 'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.PYTEST]
             },
             'links': {
@@ -511,9 +510,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/digest/1f9d949600573',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_digest_002(self, server):
@@ -522,25 +521,25 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Try to call GET /v1/digest/<digest> with a digest that is not found.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '381'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content uuid: 01010101 was not unique and matched to: 1 resources'
+                'title': 'content digest: 01010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/digest/01010101',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_uuid_001(self, server):
@@ -552,11 +551,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         with selected identity.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '780'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -565,7 +564,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             },
             'data': {
                 'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.PYTEST]
             },
             'links': {
@@ -575,9 +574,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_uuid_002(self, server):
@@ -586,11 +585,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Try to call GET /v1/uuid/<uuid> that matches multiple contents.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '372'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -602,9 +601,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/uuid/1',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_uuid_003(self, server):
@@ -613,11 +612,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Try to call GET /v1/uuid/<uuid> with a uuid that is not found.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '379'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -629,9 +628,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/uuid/01010101',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_uuid_004(self, server):
@@ -640,14 +639,14 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/uuid/<uuid>/brief to get specific content field.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '272'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': {field: Reference.DEFAULTS[Reference.PYTEST][field] for field in ['brief']}
             },
             'links': {
@@ -657,9 +656,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest')
     def test_api_search_uuid_005(self, server):
@@ -668,14 +667,14 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/uuid/<uuid>/brief,tags to get specific content fields.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '315'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': {field: Reference.DEFAULTS[Reference.PYTEST][field] for field in ['brief', 'tags']}
             },
             'links': {
@@ -685,9 +684,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief,tags',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_uuid_006(self, server):
@@ -697,11 +696,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         with unknown uuid.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '407'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -713,9 +712,9 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/uuid/12345678-b6ef-4067-b5ac-3ceac07dde9f/brief',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-kafka', 'import-pytest', 'caller')
     def test_api_search_uuid_007(self, server):
@@ -728,11 +727,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         describes the error in more detail.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '372'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -744,13 +743,12 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/uuid/1/brief',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

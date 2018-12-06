@@ -178,7 +178,9 @@ class Content(object):  # pylint: disable=too-many-public-methods
         try:
             assert result_dict == expect_dict
         except AssertionError:
+            print('result:')
             pprintpp.pprint(result_dict)
+            print('expect:')
             pprintpp.pprint(expect_dict)
             raise AssertionError
 
@@ -304,51 +306,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
                 mock_file.assert_called_once_with('content.txt', 'w')
                 file_handle = mock_file.return_value.__enter__.return_value
                 file_handle.write.assert_has_calls([mock.call(Snippet.get_template(content[digest]) + Const.NEWLINE)])
-
-    @staticmethod
-    def ordered(contents):
-        """Sort JSON in order to compare random order JSON structures.
-
-        Because the 'contents' parameter may be modified in here, the data
-        structure is always deep copied in order to avoid modifying the
-        original which may be the content helper default JSON data.
-
-        Args:
-            contents (dict): Server response or content helper default JSON data.
-        """
-
-        contents = copy.deepcopy(contents)
-
-        # API errors have special case that containes random order hash
-        # structure inside a string. This string is masked.
-        #
-        # TODO: It should be possible to sort and compare this also.
-        if 'errors' in contents:
-            for error in contents['errors']:
-                error['title'] = 'not compared because of hash structure in random order inside the string'
-
-        # Validate predefined set of UUIDs.
-        if 'data' in contents:
-            if isinstance(contents['data'], list):
-                for data in contents['data']:
-                    if Content._is_valid_uuid(data['attributes']):
-                        data['attributes']['uuid'] = Database.VALID_UUID
-            else:
-                if Content._is_valid_uuid(contents['data']['attributes']):
-                    contents['data']['attributes']['uuid'] = Database.VALID_UUID
-
-        # Sort the content structure in order to be able to compare it.
-        json_list = []
-        if isinstance(contents, list):
-            json_list = (contents)
-        else:
-            json_list.append(contents)
-
-        contents = []
-        for content in json_list:
-            contents.append(Content._sorter(content))
-
-        return tuple(contents)
 
     @staticmethod
     def json_dump(json_dump, mock_file, filename, content):
@@ -478,12 +435,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return meta
 
     @staticmethod
-    def imported_dict(content_read):
-        """Return imported dictionary from content."""
-
-        return {'data': list(content_read.values())}
-
-    @staticmethod
     def mocked_open(content_read):
         """Return mocked open from content."""
 
@@ -607,11 +558,16 @@ class Content(object):  # pylint: disable=too-many-public-methods
         def _convert(content):
             """Convert content attributes to list."""
 
-            content['data'] = list(content['data'])
-            content['groups'] = list(content['groups'])
-            content['tags'] = list(content['tags'])
-            content['links'] = list(content['links'])
-            content['uuid'] = Database.VALID_UUID
+            if 'data' in content:
+                content['data'] = list(content['data'])
+            if 'groups' in content:
+                content['groups'] = list(content['groups'])
+            if 'tags' in content:
+                content['tags'] = list(content['tags'])
+            if 'links' in content:
+                content['links'] = list(content['links'])
+            if 'uuid' in content:
+                content['uuid'] = Database.VALID_UUID
 
         if 'data' not in expect:
             return expect
@@ -653,9 +609,11 @@ class Content(object):  # pylint: disable=too-many-public-methods
         try:
             if isinstance(result['data'], list):
                 for data in result['data']:
-                    data['attributes']['uuid'] = Database.VALID_UUID
+                    if 'uuid' in data['attributes']:
+                        data['attributes']['uuid'] = Database.VALID_UUID
             else:
-                result['data']['attributes']['uuid'] = Database.VALID_UUID
+                if 'uuid' in result['data']['attributes']:
+                    result['data']['attributes']['uuid'] = Database.VALID_UUID
         except KeyError:
             pass
 
@@ -824,17 +782,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
             text = re.sub(r'uuid     : \S+', 'uuid     : ' + Database.VALID_UUID, text)
 
         return text
-
-    @staticmethod
-    def _sorter(json_data):
-        """Sort nested JSON to allow comparison."""
-
-        if isinstance(json_data, dict):
-            return sorted((k, Content._sorter(v)) for k, v in json_data.items())
-        if isinstance(json_data, (list, tuple)):
-            return sorted(Content._sorter(x) for x in json_data)
-
-        return json_data
 
     @staticmethod
     def _is_valid_uuid(content):

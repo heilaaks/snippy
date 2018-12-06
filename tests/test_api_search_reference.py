@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_reference: Test GET /snippy/api/references API."""
+"""test_api_search_reference: Test GET /references API."""
 
 from falcon import testing
 import falcon
@@ -25,13 +25,12 @@ import pytest
 
 from tests.testlib.content import Content
 from tests.testlib.reference_helper import ReferenceHelper as Reference
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 pytest.importorskip('gunicorn')
 
 
 class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
-    """Test GET /snippy/api/references API."""
+    """Test GET /references API."""
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_001(self, server):
@@ -43,11 +42,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         defined in the search query is not exceeded.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1330'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -56,11 +55,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
                 'type': 'reference',
-                'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
+                'id': Reference.REGEXP_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.REGEXP]
             }]
         }
@@ -68,9 +67,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=commit%2Cregular&limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references', 'import-pytest')
     def test_api_search_reference_002(self, server):
@@ -85,11 +84,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         keywords must still match.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1268'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -98,11 +97,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
                 'type': 'reference',
-                'id': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e',
+                'id': Reference.PYTEST_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.PYTEST]
             }]
         }
@@ -110,9 +109,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
             query_string='sall=PYTHON%2Cgit&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_003(self, server):
@@ -125,11 +124,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         attributes are limited to brief and category.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '245'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -138,7 +137,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
+                'id': Reference.REGEXP_DIGEST,
                 'attributes': {field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']}
             }]
         }
@@ -146,9 +145,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
             query_string='sall=howto&limit=1&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_004(self, server):
@@ -160,11 +159,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         handle multiple attributes.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '245'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -173,7 +172,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
+                'id': Reference.REGEXP_DIGEST,
                 'attributes': {field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']}
             }]
         }
@@ -181,9 +180,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
             query_string='sall=howto&limit=1&sort=-brief&fields=brief%2Ccategory')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_005(self, server):
@@ -194,11 +193,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         times.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '245'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -207,7 +206,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
+                'id': Reference.REGEXP_DIGEST,
                 'attributes': {field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']}
             }]
         }
@@ -215,9 +214,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
             query_string='sall=howto&limit=1&sort=-brief&fields=brief&fields=category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references', 'caller')
     def test_api_search_reference_006(self, server):
@@ -227,11 +226,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         any results.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -244,9 +243,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references', 'caller')
     def test_api_search_reference_007(self, server):
@@ -256,11 +255,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result any matches.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -273,9 +272,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_008(self, server):
@@ -285,11 +284,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         based on digest. In this case the reference is found.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '759'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -298,7 +297,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             },
             'links': {
@@ -308,9 +307,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c20',
             headers={'accept': 'application/json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references', 'caller')
     def test_api_search_reference_009(self, server):
@@ -320,11 +319,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         found.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '388'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -336,9 +335,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/101010101010101',
             headers={'accept': 'application/json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_010(self, server):
@@ -348,11 +347,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         all content should be returned.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1330'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -361,11 +360,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
                 'type': 'reference',
-                'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
+                'id': Reference.REGEXP_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.REGEXP]
             }]
         }
@@ -373,9 +372,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_011(self, server):
@@ -387,11 +386,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         causes the last reference to be returned.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '733'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -400,7 +399,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
+                'id': Reference.REGEXP_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.REGEXP]
             }]
         }
@@ -408,9 +407,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.parametrize('server', [['--server', '-q']], indirect=True)
     @pytest.mark.usefixtures('default-references')
@@ -425,11 +424,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
               Why so much? Is there a problem in the result JSON?
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2348'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -438,11 +437,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.GITLOG]
             }, {
                 'type': 'reference',
-                'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
+                'id': Reference.REGEXP_DIGEST,
                 'attributes': Reference.DEFAULTS[Reference.REGEXP]
             }]
         }
@@ -450,9 +449,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=python%2CGIT&limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references', 'import-pytest')
     def test_api_search_reference_paginate_001(self, server):
@@ -466,11 +465,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         was provided.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '71'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 0,
                 'limit': 0,
@@ -483,9 +482,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/json'},
             query_string='sall=.&offset=4&limit=0&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_001(self, server):
@@ -495,14 +494,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         case the digest is shorter than the default 16 octet digest.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '233'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'data': []
                 }
@@ -514,9 +513,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c20/data',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_002(self, server):
@@ -525,14 +524,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/brief for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '263'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'brief': Reference.DEFAULTS[Reference.GITLOG]['brief']
                 }
@@ -544,9 +543,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/brief',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_003(self, server):
@@ -555,14 +554,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/groups for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '242'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'groups': Reference.DEFAULTS[Reference.GITLOG]['groups']
                 }
@@ -574,9 +573,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/groups',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_004(self, server):
@@ -585,14 +584,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/tags for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '257'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'tags': Reference.DEFAULTS[Reference.GITLOG]['tags']
                 }
@@ -604,9 +603,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/tags',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_005(self, server):
@@ -615,14 +614,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/links for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '277'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'links': Reference.DEFAULTS[Reference.GITLOG]['links']
                 }
@@ -634,9 +633,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/links',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_006(self, server):
@@ -645,14 +644,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/category for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '250'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'category': Reference.DEFAULTS[Reference.GITLOG]['category']
                 }
@@ -664,9 +663,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/category',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_007(self, server):
@@ -675,14 +674,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/name for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '233'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'name': Reference.DEFAULTS[Reference.GITLOG]['name']
                 }
@@ -694,9 +693,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/name',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_008(self, server):
@@ -705,14 +704,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/filename for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '241'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'filename': Reference.DEFAULTS[Reference.GITLOG]['filename']
                 }
@@ -724,9 +723,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/filename',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_009(self, server):
@@ -735,14 +734,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/versions for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '241'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'versions': Reference.DEFAULTS[Reference.GITLOG]['versions']
                 }
@@ -754,9 +753,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/versions',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_010(self, server):
@@ -765,14 +764,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/source for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '237'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'source': Reference.DEFAULTS[Reference.GITLOG]['source']
                 }
@@ -784,9 +783,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/source',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references')
     def test_api_search_reference_field_011(self, server):
@@ -795,14 +794,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/references/<digest>/uuid for existing reference.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '269'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'reference',
-                'id': '5c2071094dbfaa33787064a6669e1fdfe49a86d07e58f12fffa0780eecdb227f',
+                'id': Reference.GITLOG_DIGEST,
                 'attributes': {
                     'uuid': '12cd5827-b6ef-4067-b5ac-3ceac07dde9f'
                 }
@@ -814,9 +813,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/uuid',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references', 'caller')
     def test_api_search_reference_field_012(self, server):
@@ -826,11 +825,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         In this case the field name does not exist.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '355'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -842,9 +841,9 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/5c2071094dbfaa33/notexist',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-references', 'caller')
     def test_api_search_reference_field_013(self, server):
@@ -854,11 +853,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
         snippet with invalid field.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '529'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -869,19 +868,18 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'status': '404',
                 'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content digest 0101010101 was not unique and matched to: 3 resources'
+                'title': 'content digest: 0101010101 was not unique and matched to: 0 resources'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/references/0101010101/notexist',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

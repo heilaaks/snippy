@@ -25,7 +25,6 @@ import pytest
 
 from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 pytest.importorskip('gunicorn')
 
@@ -43,11 +42,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         defined in the search query is not exceeded.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '5514'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -56,11 +55,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
+                'id': Solution.NGINX_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -68,9 +67,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=nginx%2CElastic&limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_search_solution_002(self, server):
@@ -85,11 +84,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         keywords must still match.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '5513'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -98,11 +97,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
+                'id': Solution.NGINX_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -110,9 +109,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug%2Ctesting&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_003(self, server):
@@ -125,11 +124,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         attributes are limited to brief and category.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '233'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -138,7 +137,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
+                'id': Solution.NGINX_DIGEST,
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
@@ -146,9 +145,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_004(self, server):
@@ -160,11 +159,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         handle multiple attributes.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '233'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -173,7 +172,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
+                'id': Solution.NGINX_DIGEST,
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
@@ -181,9 +180,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief%2Ccategory')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_search_solution_005(self, server):
@@ -242,11 +241,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         two fields.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '7768'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -255,21 +254,21 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee',
-                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'id': Solution.NGINX_DIGEST,
+                'attributes': Solution.DEFAULTS[Solution.NGINX]
             }, {
                 'type': 'solution',
-                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
-                'attributes': Solution.DEFAULTS[Solution.NGINX]
+                'id': Solution.KAFKA_DIGEST,
+                'attributes': Solution.DEFAULTS[Solution.KAFKA]
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_search_solution_007(self, server):
@@ -279,11 +278,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         name that is not existing. The sort must fall to default sorting.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '380'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -296,9 +295,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_008(self, server):
@@ -309,11 +308,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         times.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '233'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -322,7 +321,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
+                'id': Solution.NGINX_DIGEST,
                 'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
             }]
         }
@@ -330,9 +329,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=debug&limit=1&sort=-brief&fields=brief&fields=category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_search_solution_009(self, server):
@@ -342,11 +341,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         any results.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -359,9 +358,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_search_solution_010(self, server):
@@ -371,11 +370,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result any matches.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -388,9 +387,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_search_solution_011(self, server):
@@ -400,11 +399,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result any matches.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -417,9 +416,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_012(self, server):
@@ -429,11 +428,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         based on digest. In this case the solution is found.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2607'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -442,7 +441,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': {
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             },
             'links': {
@@ -452,9 +451,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions/db712a82662d6932',
             headers={'accept': 'application/json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_search_solution_013(self, server):
@@ -464,11 +463,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         found.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '388'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -480,9 +479,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions/101010101010101',
             headers={'accept': 'application/json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_014(self, server):
@@ -492,11 +491,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         case all content should be returned.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '5514'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -505,11 +504,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
+                'id': Solution.NGINX_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -517,9 +516,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_015(self, server):
@@ -531,11 +530,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         to be returned.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '3068'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -544,7 +543,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
+                'id': Solution.NGINX_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -552,9 +551,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.parametrize('server', [['--server', '-q']], indirect=True)
     @pytest.mark.usefixtures('default-solutions')
@@ -566,11 +565,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         The response JSON is sent as pretty printed.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '8628'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -579,11 +578,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.BEATS]
             }, {
                 'type': 'solution',
-                'id': '5dee85bedb7f4d3a970aa2e0568930c68bac293edc8a2a4538d04bd70bea01ea',
+                'id': Solution.NGINX_DIGEST,
                 'attributes': Solution.DEFAULTS[Solution.NGINX]
             }]
         }
@@ -591,9 +590,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},
             query_string='sall=nginx%2CElastic&limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'import-kafka')
     def test_api_search_solution_paginate_001(self, server):
@@ -607,11 +606,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         meta as it was provided.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '71'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 0,
                 'limit': 0,
@@ -624,9 +623,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/solutions',
             headers={'accept': 'application/json'},
             query_string='sall=.&offset=4&limit=0&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_field_001(self, server):
@@ -635,14 +634,14 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/solutions/<digest>/data for existing solution.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1969'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': {
                     'data': Solution.DEFAULTS[Solution.BEATS]['data']
                 }
@@ -654,9 +653,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions/db712a82662d6932/data',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_field_002(self, server):
@@ -665,14 +664,14 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/solutions/<digest>/brief for existing solution.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '256'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': {
                     'brief': Solution.DEFAULTS[Solution.BEATS]['brief']
                 }
@@ -684,9 +683,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions/db712a82662d6932/brief',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_field_003(self, server):
@@ -695,14 +694,14 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/solutions/<digest>/groups for existing solution.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '242'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': {
                     'groups': Solution.DEFAULTS[Solution.BEATS]['groups']
                 }
@@ -714,9 +713,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions/db712a82662d6932/groups',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_field_004(self, server):
@@ -725,14 +724,14 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/solutions/<digest>/tags for existing solution.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '279'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': {
                     'tags': Solution.DEFAULTS[Solution.BEATS]['tags']
                 }
@@ -744,9 +743,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions/db712a82662d6932/tags',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions')
     def test_api_search_solution_field_005(self, server):
@@ -755,14 +754,14 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/solutions/<digest>/lnks for existing solution.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '319'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'solution',
-                'id': 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151',
+                'id': Solution.BEATS_DIGEST,
                 'attributes': {
                     'links': Solution.DEFAULTS[Solution.BEATS]['links']
                 }
@@ -774,9 +773,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions/db712a82662d6932/links',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_search_solution_field_006(self, server):
@@ -786,11 +785,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         In this case the field name does not exist.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '355'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -802,9 +801,9 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions/db712a82662d6932/notexist',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-solutions', 'caller')
     def test_api_search_solution_field_007(self, server):
@@ -814,11 +813,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         snippet with invalid field.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '529'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -835,13 +834,12 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/solutions/0101010101/notexist',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

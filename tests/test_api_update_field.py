@@ -27,7 +27,6 @@ import pytest
 
 from tests.testlib.content import Content
 from tests.testlib.reference_helper import ReferenceHelper as Reference
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 pytest.importorskip('gunicorn')
 
@@ -42,17 +41,22 @@ class TestApiCreateField(object):
         Try to call not supported PUT operation for /v1/keywords.
         """
 
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': content['data'][0]
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '362'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -65,9 +69,10 @@ class TestApiCreateField(object):
             path='/snippy/api/app/v1/docs,python',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_405
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
     def test_api_update_field_002(self, server):
@@ -76,17 +81,22 @@ class TestApiCreateField(object):
         Try to call not supported PUT operation for /v1/groups.
         """
 
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': content['data'][0]
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '362'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
@@ -99,9 +109,10 @@ class TestApiCreateField(object):
             path='/snippy/api/app/v1/groups/docs',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_405
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('caller')
     def test_api_update_field_003(self, server):
@@ -110,36 +121,41 @@ class TestApiCreateField(object):
         Try to call not supported PUT operation for /v1/tags.
         """
 
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
+        }
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': content['data'][0]
             }]
         }
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '362'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '405',
                 'statusString': '405 Method Not Allowed',
                 'module': 'snippy.testing.testing:123',
-                'title': 'fields api does not support method: PUE'
+                'title': 'fields api does not support method: PUT'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_put(
             path='/snippy/api/app/v1/tags/python,docs',
             headers={'accept': 'application/json'},
             body=json.dumps(request_body))
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_405
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
+        Content.assert_storage(None)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

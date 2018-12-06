@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""test_api_search_snippet: Test GET /snippy/api/snippets API."""
+"""test_api_search_snippet: Test GET /snippets API."""
 
 from falcon import testing
 import falcon
@@ -25,13 +25,12 @@ import pytest
 
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 pytest.importorskip('gunicorn')
 
 
 class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
-    """Test GET /snippy/api/snippets API."""
+    """Test GET /snippets API."""
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_001(self, server):
@@ -43,11 +42,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         query is not exceeded.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1541'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -56,11 +55,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'id': Snippet.FORCED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
@@ -68,9 +67,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_002(self, server):
@@ -82,11 +81,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         be applied before limit is applied.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1676'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -95,11 +94,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
@@ -107,9 +106,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_003(self, server):
@@ -122,11 +121,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         are limited only to brief and category.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '246'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -143,9 +142,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_004(self, server):
@@ -157,11 +156,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         multiple fields.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '246'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -179,9 +178,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief%2Ccategory')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_005(self, server):
@@ -192,11 +191,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         results only two of them sorted by the utc field in descending order.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1644'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -205,11 +204,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
+                'id': Snippet.NETCAT_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }, {
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
@@ -217,9 +216,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created,-brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_006(self, server):
@@ -231,11 +230,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         fields.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1644'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -244,11 +243,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
+                'id': Snippet.NETCAT_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }, {
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
@@ -256,9 +255,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=-created%2C-brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_007(self, server):
@@ -269,10 +268,10 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         sorting.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '380'}
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -285,9 +284,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=notexisting')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_008(self, server):
@@ -297,11 +296,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         fields are defined by setting the 'fields' parameter multiple times.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '246'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -318,9 +317,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker&limit=1&sort=-brief&fields=brief&fields=category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_009(self, server):
@@ -330,11 +329,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         any matches.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -347,9 +346,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=notfound&limit=10&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_010(self, server):
@@ -359,11 +358,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result any matches.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -376,9 +375,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='stag=notfound&limit=10&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_011(self, server):
@@ -388,11 +387,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         any matches.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -405,9 +404,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sgrp=notfound&limit=10&sort=-brief&fields=brief,category')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_012(self, server):
@@ -419,11 +418,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         the default 16 digit digest.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '862'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 20,
@@ -432,7 +431,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': {
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             },
             'links': {
@@ -442,9 +441,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/54e41e9b52a02b6',
             headers={'accept': 'application/json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_013(self, server):
@@ -454,11 +453,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         found. In this case the JSON 'null' is converted to Python None.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '388'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -470,9 +469,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/101010101010101',
             headers={'accept': 'application/json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_014(self, server):
@@ -482,11 +481,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         case all content should be returned.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1541'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -495,7 +494,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
@@ -507,9 +506,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_015(self, server):
@@ -521,11 +520,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         to be returned.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '839'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -542,9 +541,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='limit=1&sort=-brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.parametrize('server', [['--server', '-q']], indirect=True)
     @pytest.mark.usefixtures('default-snippets')
@@ -559,11 +558,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
               Why so much? Is there a problem in the result JSON?
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2695'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -572,7 +571,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
@@ -584,9 +583,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/vnd.api+json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_001(self, server):
@@ -599,11 +598,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         must not be set.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '3467'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 4,
                 'limit': 10,
@@ -612,11 +611,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }, {
                 'type': 'snippet',
@@ -624,7 +623,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
                 'type': 'snippet',
-                'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
+                'id': Snippet.NETCAT_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }],
             'links': {
@@ -637,9 +636,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=0&limit=10&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_002(self, server):
@@ -651,11 +650,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         page, the prev link must not be set.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2136'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -664,11 +663,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }],
             'links': {
@@ -682,9 +681,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=0&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_003(self, server):
@@ -695,11 +694,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         the last page. Because of this, there next link must not be set.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1968'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -712,7 +711,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }, {
                 'type': 'snippet',
-                'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
+                'id': Snippet.NETCAT_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }],
             'links': {
@@ -726,9 +725,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=2&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_004(self, server):
@@ -741,11 +740,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         be set.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1547'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 1,
@@ -754,7 +753,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }],
             'links': {
@@ -769,9 +768,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=1&limit=1&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_005(self, server):
@@ -785,11 +784,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         be set.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2317'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -798,11 +797,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'id': Snippet.FORCED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }],
             'links': {
@@ -817,9 +816,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=1&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_006(self, server):
@@ -832,11 +831,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         the same as total amount of hits.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1198'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 1,
                 'limit': 2,
@@ -845,7 +844,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d',
+                'id': Snippet.NETCAT_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
             }],
             'links': {
@@ -859,9 +858,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=3&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'import-umount')
     def test_api_search_snippet_paginate_007(self, server):
@@ -872,11 +871,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         and the requested page is not the last or the second last page.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '2172'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -885,11 +884,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }],
             'links': {
@@ -903,9 +902,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cumount%2Cnmap&offset=0&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_008(self, server):
@@ -915,11 +914,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         as the amount of snippets stored into the database.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -932,9 +931,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=4&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_009(self, server):
@@ -944,11 +943,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         than the maximum amount of hits.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '335'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -961,9 +960,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=10&limit=10&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited')
     def test_api_search_snippet_paginate_010(self, server):
@@ -974,11 +973,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         is empty.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '71'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 0,
                 'limit': 0,
@@ -991,9 +990,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=0&limit=0&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_011(self, server):
@@ -1002,26 +1001,26 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Try to call GET /v1/snippets with negative offset.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '359'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
-                'title': 'search result limit is not a positive integer: -4'
+                'title': 'search offset is not a positive integer: -4'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=-4&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_012(self, server):
@@ -1030,11 +1029,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Try to call GET /v1/snippets with negative offset and limit.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '515'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -1052,9 +1051,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=-4&limit=-2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'import-netcat', 'import-exited', 'caller')
     def test_api_search_snippet_paginate_013(self, server):
@@ -1063,11 +1062,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Try to call GET /v1/snippets when offset and limit are not numbers.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '528'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -1085,9 +1084,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&offset=ABCDEFG&limit=0xdeadbeef&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_field_001(self, server):
@@ -1096,14 +1095,14 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/snippets/<digest>/data for existing snippet.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '277'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
                     'data': Snippet.DEFAULTS[Snippet.REMOVE]['data']
                 }
@@ -1115,9 +1114,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/54e41e9b52a02b63/data',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_field_002(self, server):
@@ -1128,14 +1127,14 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         16 octet digest in the link.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '272'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
                     'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief']
                 }
@@ -1147,9 +1146,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/54e41e9b52/brief',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_field_003(self, server):
@@ -1158,14 +1157,14 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/snippets/<digest>/groups for existing snippet.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '241'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
                     'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups']
                 }
@@ -1177,9 +1176,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/54e41e9b52/groups',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_field_004(self, server):
@@ -1188,14 +1187,14 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/snippets/<digest>/tags for existing snippet.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '282'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
                     'tags': Snippet.DEFAULTS[Snippet.REMOVE]['tags']
                 }
@@ -1207,9 +1206,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/54e41e9b52/tags',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_api_search_snippet_field_005(self, server):
@@ -1218,14 +1217,14 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         Call GET /v1/snippets/<digest>/links for existing snippet.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '289'
         }
-        result_json = {
+        expect_body = {
             'data': {
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
                     'links': Snippet.DEFAULTS[Snippet.REMOVE]['links']
                 }
@@ -1237,9 +1236,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/54e41e9b52/links',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
@@ -1250,11 +1249,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         In this case the field name does not exist.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '355'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '400',
@@ -1266,9 +1265,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/54e41e9b52/notexist',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_400
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets', 'caller')
     def test_api_search_snippet_field_007(self, server):
@@ -1278,11 +1277,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         snippet with valid field.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '383'
         }
-        result_json = {
+        expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
                 'status': '404',
@@ -1294,9 +1293,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         result = testing.TestClient(server.server.api).simulate_get(
             path='/snippy/api/app/v1/snippets/0101010101/brief',
             headers={'accept': 'application/vnd.api+json'})
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_404
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('default-snippets')
     def test_pytest_fixtures(self, server):
@@ -1308,11 +1307,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         query is not exceeded.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1541'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 20,
@@ -1321,11 +1320,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
+                'id': Snippet.FORCED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.FORCED]
             }]
         }
@@ -1333,9 +1332,9 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cswarm&limit=20&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @pytest.mark.usefixtures('import-remove', 'import-forced', 'import-exited', 'import-netcat')
     def test_pytest_fixtures2(self, server):
@@ -1347,11 +1346,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
         be applied before limit is applied.
         """
 
-        result_headers = {
+        expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
             'content-length': '1676'
         }
-        result_json = {
+        expect_body = {
             'meta': {
                 'count': 2,
                 'limit': 2,
@@ -1360,11 +1359,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319',
+                'id': Snippet.REMOVE_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
             }, {
                 'type': 'snippet',
-                'id': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73',
+                'id': Snippet.EXITED_DIGEST,
                 'attributes': Snippet.DEFAULTS[Snippet.EXITED]
             }]
         }
@@ -1372,13 +1371,12 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             path='/snippy/api/app/v1/snippets',
             headers={'accept': 'application/json'},
             query_string='sall=docker%2Cnmap&limit=2&sort=brief')
-        assert result.headers == result_headers
-        assert Content.ordered(result.json) == Content.ordered(result_json)
         assert result.status == falcon.HTTP_200
+        assert result.headers == expect_headers
+        Content.assert_restapi(result.json, expect_body)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

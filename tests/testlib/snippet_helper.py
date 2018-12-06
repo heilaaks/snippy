@@ -186,7 +186,8 @@ class SnippetHelper(object):
     def get_dictionary(template):
         """Transform template to dictinary."""
 
-        collection = SnippetHelper._get_content(template)
+        collection = Collection()
+        collection.load(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), template)
         resource = next(collection.resources())
 
         return resource.dump_dict(Config.remove_fields)
@@ -221,12 +222,3 @@ class SnippetHelper(object):
         resource.load_dict(dictionary)
 
         return resource.dump_text(Config.templates)
-
-    @staticmethod
-    def _get_content(text):
-        """Transform text template to content."""
-
-        collection = Collection()
-        collection.load(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), text)
-
-        return collection

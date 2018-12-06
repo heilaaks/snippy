@@ -42,12 +42,6 @@ class Helper(object):  # pylint: disable=too-few-public-methods
         \x1b[^m]*m    # Match all ANSI escape sequences.
         ''', re.VERBOSE)
 
-    RE_CATCH_MKDN_UUID_METADATA = re.compile(r'''
-        uuid\s+[:]\s+    # Match metadata tag for uuid.
-        (?P<uuid>\S+)    # Catch uuid.
-        \s+
-        ''', re.VERBOSE)
-
     @staticmethod
     def read_template(filename):
         """Get default content template in text format.

@@ -67,8 +67,6 @@ class GunicornServer(gunicorn.app.base.BaseApplication):  # pylint: disable=abst
         with previous request OID which would be incorrect.
         """
 
-        pass
-
     @staticmethod
     def on_exit(_):
         """Called by Gunicorn server on exit.

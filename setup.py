@@ -51,7 +51,7 @@ extras_tests = (
     'pprintpp==0.4.0',
     'pyflakes==1.6.0',
     'pylint==1.9.3 ; python_version=="2.7.*"',
-    'pylint==2.1.1 ; python_version>"2.7"',
+    'pylint==2.2.2 ; python_version>"2.7"',
     'pytest==4.0.1',
     'pytest-cov==2.6.0',
     'pytest-mock==1.10.0',

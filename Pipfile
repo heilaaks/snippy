@@ -4,11 +4,11 @@ verify_ssl = true
 name = "pypi"
 
 [dev-packages]
-"flake8" = "==3.5.0"
+flake8 = "==3.5.0"
 mock = "==2.0.0"
 "openapi2jsonschema" = "==0.8.0"
 pprintpp = "==0.4.0"
-pylint = "==2.1.1"
+pylint = "==2.2.2"
 pytest-cov = "==2.6.0"
 pytest-mock = "==1.10.0"
 sphinx-autobuild = "==0.7.1"

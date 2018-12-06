@@ -246,7 +246,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f' './defined-solution.yaml'])
+            cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f', './defined-solution.yaml'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             Content.yaml_dump(yaml, mock_file, './defined-solution.yaml', content)
@@ -266,7 +266,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f' './defined-solution.yaml'])
+            cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f', './defined-solution.yaml'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             Content.yaml_dump(yaml, mock_file, './defined-solution.yaml', content)
@@ -288,7 +288,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f' './defined-solution.json'])
+            cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f', './defined-solution.json'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             Content.json_dump(json, mock_file, './defined-solution.json', content)
@@ -308,7 +308,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f' './defined-solution.json'])
+            cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f', './defined-solution.json'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             Content.json_dump(json, mock_file, './defined-solution.json', content)
@@ -330,7 +330,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f' './defined-solution.txt'])
+            cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f', './defined-solution.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_solutions()) == 2
             Content.text_dump(mock_file, './defined-solution.txt', content)
@@ -351,7 +351,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f' './defined-solution.txt'])
+            cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f', './defined-solution.txt'])
             assert cause == Cause.ALL_OK
             Content.text_dump(mock_file, './defined-solution.txt', content)
 
@@ -372,7 +372,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f' './defined-solution.text'])
+            cause = snippy.run(['snippy', 'export', '--solution', '-d', 'db712a82662d6932', '-f', './defined-solution.text'])
             assert cause == Cause.ALL_OK
             Content.text_dump(mock_file, './defined-solution.text', content)
 
@@ -391,7 +391,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f' './defined-solution.text'])
+            cause = snippy.run(['snippy', 'export', '-d', 'db712a82662d6932', '-f', './defined-solution.text'])
             assert cause == Cause.ALL_OK
             Content.text_dump(mock_file, './defined-solution.text', content)
 
@@ -479,7 +479,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         """
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--solution', '-d', '123456789abcdef0', '-f' './defined-solution.text'])
+            cause = snippy.run(['snippy', 'export', '--solution', '-d', '123456789abcdef0', '-f', './defined-solution.text'])
             assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value
@@ -564,7 +564,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'beats', '-f' './defined-solution.txt'])
+            cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'beats', '-f', './defined-solution.txt'])
             assert cause == Cause.ALL_OK
             Content.text_dump(mock_file, './defined-solution.txt', content)
 
@@ -585,7 +585,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
-            cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'howto', '-f' './defined-solutions.txt'])
+            cause = snippy.run(['snippy', 'export', '--solution', '--sall', 'howto', '-f', './defined-solutions.txt'])
             assert cause == Cause.ALL_OK
             Content.text_dump(mock_file, './defined-solutions.txt', content)
 

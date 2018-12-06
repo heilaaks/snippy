@@ -1,19 +1,11 @@
 ## WORKING
-   - [ ] Fix testing error titles. Some contain the hash which now prevent all checks for title. Some titles should be checked. (this is fixed by new testing helpers being taken into use)
-   - [ ] Change the test with dump_text (or vise versa) to Content.compare_text like with compare_mkdn().
-   - [ ] Refactor tests with Content.verified, Content.ordered, Content.compare_dump|Content.****_dump. Cases: import (check after import with YAML) and export (compare in target format.
-   - [ ] Refactor tests 1. Content.compare_mkdn, Content.compare_text, Content.compare_yaml, Content.compare_json  # compare exported data
-   - [ ] Refactor tests 2. Content.compare_data (replaces Content.verified) # Compare created, updated or imported data in database against YAML formatted reference.
-   - [ ] Refactor tests 3. REST API result needs Content.ordered. No changes to this?
-   - [ ] Refactor tests 4. Change file mocks to new mocked_file which allows defining the return format for the mock.
-   - [ ] Refactor tests so that the Content is used instead of sqlite_helper. Only use Content or Helper (?). The content is a wrapper for content related operations.
-   - [ ] Refactor tests and move common items to Helper class in testlib. Do not copy from code because it creates dependency to tested code which cause problems in test case imports.
+   - [ ] Refactor tests to use new Content helpers and refactor old methods away. Use only Content for asserts and not for example Database helper directly.
    - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
-   - [ ] Fix storage collection comparison assert. The new way masks away the test case dict because the collection e.g. sorts and trims tags, etc. The case should be exactly, check dict.
    - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
+   - [ ] Fix better logs if --logs-json (invalid option name) is used with -vv. Now there is not proper log what went wrong with -vv/--debug?
 
 ## THINKING
    - [ ] Add code content.

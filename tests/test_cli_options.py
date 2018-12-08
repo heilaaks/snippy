@@ -29,8 +29,8 @@ from snippy.meta import __homepage__
 from snippy.meta import __version__
 from snippy.snip import Snippy
 from snippy.snip import main
+from tests.testlib.content import Content
 from tests.testlib.helper import Helper
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliOptions(object):
@@ -159,7 +159,7 @@ class TestCliOptions(object):
         assert out == Const.NEWLINE.join(TestCliOptions.HELP)
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     def test_help_option_002(self, capsys, caplog):
         """Test printing help from console.
@@ -173,7 +173,7 @@ class TestCliOptions(object):
         assert out == Const.NEWLINE.join(TestCliOptions.HELP)
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     def test_help_option_003(self, capsys, caplog):
         """Test printing help from console.
@@ -187,7 +187,7 @@ class TestCliOptions(object):
         assert out == Const.NEWLINE.join(TestCliOptions.HELP)
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     def test_help_option_004(self, capsys, caplog):
         """Test printing help from console.
@@ -202,7 +202,7 @@ class TestCliOptions(object):
         assert out == Const.EMPTY
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     def test_help_option_005(self, capsys, caplog):
         """Test printing examples from console.
@@ -216,7 +216,7 @@ class TestCliOptions(object):
         assert out == Const.NEWLINE.join(TestCliOptions.EXAMPLES)
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
     def test_help_option_006(self, capsys, caplog):
@@ -247,7 +247,7 @@ class TestCliOptions(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     @pytest.mark.usefixtures('devel_file_list', 'devel_file_data')
     def test_help_option_007(self, capsys, caplog):
@@ -278,7 +278,7 @@ class TestCliOptions(object):
         assert out == Const.NEWLINE.join(output)
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     @pytest.mark.usefixtures('devel_no_tests')
     def test_help_option_008(self, capsys, caplog):
@@ -296,7 +296,7 @@ class TestCliOptions(object):
         assert not err
         assert not caplog.records[:]
         snippy.release()
-        Database.delete_storage()
+        Content.delete()
 
     @pytest.mark.parametrize('snippy', [['-vv']], indirect=True)
     def test_very_verbose_option_001(self, snippy, caplog, capsys):
@@ -426,7 +426,7 @@ class TestCliOptions(object):
         assert out == __version__ + Const.NEWLINE
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     def test_version_option_002(self, capsys, caplog):
         """Test printing tool version.
@@ -441,7 +441,7 @@ class TestCliOptions(object):
         assert out == __version__ + Const.NEWLINE
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     def test_snippy_main(self, capsys, caplog):
         """Test running program main with profile option.
@@ -456,7 +456,7 @@ class TestCliOptions(object):
         assert 'Ordered by: cumulative time' in out
         assert not err
         assert not caplog.records[:]
-        Database.delete_storage()
+        Content.delete()
 
     @pytest.mark.usefixtures('uuid', 'snippy', 'default-snippets')
     def test_debug_print_001(self, capsys):
@@ -511,7 +511,7 @@ class TestCliOptions(object):
             '# collection meta',
             '   ! total : 2'
         )
-        print(Database.get_snippets())  # Part of the test.
+        print(Content.output())  # Part of the test.
         out, err = capsys.readouterr()
         out = Helper.remove_ansi(out)
         assert Const.NEWLINE.join(output) in out
@@ -521,5 +521,4 @@ class TestCliOptions(object):
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

@@ -25,14 +25,13 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliCreateSolution(object):
     """Test workflows for creating solutions."""
 
     @pytest.mark.usefixtures('snippy', 'edit-beats')
-    def test_cli_create_solution_001(self, snippy, mocker):
+    def test_cli_create_solution_001(self, snippy):
         """Create solution from CLI.
 
         Create new solution by defining all content parameters from command
@@ -40,32 +39,36 @@ class TestCliCreateSolution(object):
         create the content.
         """
 
-        content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
-        data = Const.NEWLINE.join(Solution.DEFAULTS[Solution.BEATS]['data'])
-        brief = Solution.DEFAULTS[Solution.BEATS]['brief']
-        groups = Const.DELIMITER_GROUPS.join(Solution.DEFAULTS[Solution.BEATS]['groups'])
-        tags = Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.BEATS]['tags'])
-        links = Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.BEATS]['links'])
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS]
+            ]
+        }
+        data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
+        brief = content['data'][0]['brief']
+        groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])
+        tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags'])
+        links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
         cause = snippy.run(['snippy', 'create', '--solution', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions', 'edit-beats')
-    def test_cli_create_solution_002(self, snippy, mocker):
+    def test_cli_create_solution_002(self, snippy):
         """Try to create solution from CLI.
 
         Try to create same solution again with exactly the same content data.
         """
 
-        content_read = {
-            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
         cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: content data already exist with digest: db712a82662d6932'
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('edit-solution-template')
     def test_cli_create_solution_003(self, snippy):
@@ -76,7 +79,7 @@ class TestCliCreateSolution(object):
 
         cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: content was not stored because it was matching to an empty template'
-        assert not Database.get_solutions()
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_solution_004(self, snippy):
@@ -88,9 +91,9 @@ class TestCliCreateSolution(object):
 
         cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
-        assert not Database.get_solutions()
+        Content.assert_storage(None)
 
-    @pytest.mark.usefixtures('edit-unknown-template')
+    @pytest.mark.usefixtures('edit-unknown-solution-template')
     def test_cli_create_solution_005(self, snippy):
         """Try to create solution from CLI.
 
@@ -101,24 +104,26 @@ class TestCliCreateSolution(object):
 
         cause = snippy.run(['snippy', 'create', '--solution'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
-        assert not Database.get_solutions()
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('snippy', 'edit-beats')
-    def test_cli_create_solution_006(self, snippy, mocker):
+    def test_cli_create_solution_006(self, snippy):
         """Create solution from editor.
 
         Create new solution by defining all values from editor.
         """
 
-        content_read = {Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]}
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS]
+            ]
+        }
         cause = snippy.run(['snippy', 'create', '--solution', '--editor'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

@@ -699,7 +699,7 @@ def edit_empty_template(mocker):
 
     mocker.patch.object(Editor, '_call_editor', return_value=Const.EMPTY)
 
-@pytest.fixture(scope='function', name='edit-unknown-template')
+@pytest.fixture(scope='function', name='edit-unknown-solution-template')
 def edit_unidentified_template(mocker):
     """Edited unidentified template."""
 

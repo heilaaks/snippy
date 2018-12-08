@@ -163,6 +163,16 @@ class Content(object):  # pylint: disable=too-many-public-methods
             raise AssertionError
 
     @classmethod
+    def assert_storage_size(cls, size):
+        """Compare content count stored in database."""
+
+        try:
+            assert size == len(Database.get_collection())
+        except AssertionError:
+            print('database contains {} contents when expected size was {}'.format(len(Database.get_collection()), size))
+            raise AssertionError
+
+    @classmethod
     def assert_restapi(cls, result, expect):
         """Compare content received from REST API.
 

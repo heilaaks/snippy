@@ -25,29 +25,33 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.reference_helper import ReferenceHelper as Reference
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliCreateReferece(object):
     """Test workflows for creating references."""
 
-    def test_cli_create_reference_001(self, snippy, mocker):
+    @pytest.mark.usefixtures('create-gitlog-utc')
+    def test_cli_create_reference_001(self, snippy):
         """Create reference from CLI.
 
         Create new reference by defining all content parameters from command
-        line. Content data is not used at all in case of references.
+        line. Content data is must not be used at all in case of reference
+        content.
         """
 
-        content_read = {Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG]}
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
+        }
         data = 'must not be used'
-        brief = Reference.DEFAULTS[Reference.GITLOG]['brief']
-        groups = Reference.DEFAULTS[Reference.GITLOG]['groups']
-        tags = Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.GITLOG]['tags'])
-        links = Const.DELIMITER_LINKS.join(Reference.DEFAULTS[Reference.GITLOG]['links'])
+        brief = content['data'][0]['brief']
+        groups = content['data'][0]['groups']
+        tags = content['data'][0]['tags']
+        links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
         cause = snippy.run(['snippy', 'create', '--references', '--links', links, '-b', brief, '-g', groups, '-t', tags, '-c', data])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_references()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     def test_cli_create_reference_002(self, snippy):
         """Try to create reference from CLI.
@@ -55,13 +59,18 @@ class TestCliCreateReferece(object):
         Try to create new reference without defining mandatory content link.
         """
 
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
+        }
         data = 'must not be used'
-        brief = Reference.DEFAULTS[Reference.GITLOG]['brief']
+        brief = content['data'][0]['brief']
         groups = Reference.DEFAULTS[Reference.GITLOG]['groups']
-        tags = Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.GITLOG]['tags'])
+        tags = content['data'][0]['tags']
         cause = snippy.run(['snippy', 'create', '--references', '--brief', brief, '--groups', groups, '--tags', tags, '-c', data])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
-        assert not Database.get_references()
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('edit-reference-template')
     def test_cli_create_reference_003(self, snippy):
@@ -72,7 +81,7 @@ class TestCliCreateReferece(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
-        assert not Database.get_references()
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_reference_004(self, snippy):
@@ -84,11 +93,10 @@ class TestCliCreateReferece(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
-        assert not Database.get_references()
+        Content.assert_storage(None)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

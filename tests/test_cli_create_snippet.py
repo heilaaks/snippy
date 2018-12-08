@@ -25,48 +25,55 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliCreateSnippet(object):
     """Test workflows for creating snippets."""
 
-    def test_cli_create_snippet_001(self, snippy, mocker):
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_snippet_001(self, snippy):
         """Create snippet from CLI.
 
         Create new snippet by defining all content parameters from command
         line.
         """
 
-        content_read = {Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE]}
-        data = Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
-        brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
-        groups = Const.DELIMITER_GROUPS.join(Snippet.DEFAULTS[Snippet.REMOVE]['groups'])
-        tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
-        links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
+        data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
+        brief = content['data'][0]['brief']
+        groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])
+        tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags'])
+        links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
-    def test_cli_create_snippet_002(self, snippy, mocker):
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_snippet_002(self, snippy):
         """Create snippet from CLI.
 
         Create new snippet with all content parameters but only one tag.
         """
 
-        snippet_remove = Snippet.DEFAULTS[Snippet.REMOVE].copy()
-        snippet_remove['tags'] = [Snippet.DEFAULTS[Snippet.REMOVE]['tags'][0]]
-        content_read = {'f94cf88b1546a8fd': snippet_remove}
-        data = Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
-        brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
-        groups = Const.DELIMITER_GROUPS.join(Snippet.DEFAULTS[Snippet.REMOVE]['groups'])
-        tags = Snippet.DEFAULTS[Snippet.REMOVE]['tags'][0]
-        links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+            ]
+        }
+        content['data'][0]['tags'] = (content['data'][0]['tags'][0],)
+        content['data'][0]['digest'] = 'f94cf88b1546a8fd5cb442d39f5d598cee6db666a0577de3c6e046782b339a59'
+        data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
+        brief = content['data'][0]['brief']
+        groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])
+        tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags'])
+        links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     def test_cli_create_snippet_003(self, snippy):
         """Try to create snippet from CLI.
@@ -74,13 +81,18 @@ class TestCliCreateSnippet(object):
         Try to create new snippet without defining mandatory content data.
         """
 
-        brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
-        groups = Const.DELIMITER_GROUPS.join(Snippet.DEFAULTS[Snippet.REMOVE]['groups'])
-        tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
-        links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE]
+            ]
+        }
+        brief = content['data'][0]['brief']
+        groups = content['data'][0]['groups']
+        tags = content['data'][0]['tags']
+        links = content['data'][0]['links']
         cause = snippy.run(['snippy', 'create', '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
-        assert not Database.get_snippets()
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('edit-snippet-template')
     def test_cli_create_snippet_004(self, snippy):
@@ -91,7 +103,7 @@ class TestCliCreateSnippet(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: content was not stored because mandatory content field data is empty'
-        assert not Database.get_snippets()
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('edit-empty')
     def test_cli_create_snippet_005(self, snippy):
@@ -103,32 +115,33 @@ class TestCliCreateSnippet(object):
 
         cause = snippy.run(['snippy', 'create', '--editor'])
         assert cause == 'NOK: could not identify edited content category - please keep tags in place'
-        assert not Database.get_snippets()
+        Content.assert_storage(None)
 
     @pytest.mark.usefixtures('default-snippets', 'edit-remove')
-    def test_cli_create_snippet_006(self, snippy, mocker):
+    def test_cli_create_snippet_006(self, snippy):
         """Try to create snippet from CLI.
 
         Try to create snippet again with exactly same content than already
         stored.
         """
 
-        content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        data = Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
-        brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
-        groups = Const.DELIMITER_GROUPS.join(Snippet.DEFAULTS[Snippet.REMOVE]['groups'])
-        tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
-        links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+        data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
+        brief = content['data'][0]['brief']
+        groups = content['data'][0]['groups']
+        tags = content['data'][0]['tags']
+        links = content['data'][0]['links']
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == 'NOK: content data already exist with digest: 54e41e9b52a02b63'
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')
-    def test_cli_create_snippet_007(self, snippy, mocker, capsys):
+    def test_cli_create_snippet_007(self, snippy, capsys):
         """Create snippet with unicode characters from CLI.
 
         Every field that can be given from command line contains unicode
@@ -136,30 +149,32 @@ class TestCliCreateSnippet(object):
         keyword that contains unicode characters.
         """
 
-        data = Const.DELIMITER_DATA.join(['Sîne klâwen durh die wolken sint geslagen', 'er stîget ûf mit grôzer kraft'])
-        brief = 'Tagelied of Wolfram von Eschenbach Sîne klâwen'
-        groups = 'Düsseldorf'
-        tags = Const.DELIMITER_TAGS.join(['γλώσσα', 'έδωσαν', 'ελληνική'])
-        links = Const.DELIMITER_LINKS.join(['http://www.чухонца.edu/~fdc/utf8/'])
-        content_read = {
-            'data': [u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'],
-            'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
-            'groups': [u'Düsseldorf'],
-            'tags': [u'γλώσσα', u'έδωσαν', u'ελληνική'],
-            'links': [u'http://www.чухонца.edu/~fdc/utf8/'],
-            'category': 'snippet',
-            'name': '',
-            'filename': '',
-            'versions': '',
-            'created': Content.REMOVE_TIME,
-            'updated': Content.REMOVE_TIME,
-            'digest': 'a74d83df95d5729aceffc472433fea4d5e3fd2d87b510112fac264c741f20438'
+        content = {
+            'data': [{
+                'data': (u'Sîne klâwen durh die wolken sint geslagen', u'er stîget ûf mit grôzer kraft'),
+                'brief': u'Tagelied of Wolfram von Eschenbach Sîne klâwen',
+                'description': '',
+                'groups': (u'Düsseldorf',),
+                'tags': (u'έδωσαν', u'γλώσσα', u'ελληνική'),
+                'links': (u'http://www.чухонца.edu/~fdc/utf8/',),
+                'category': 'snippet',
+                'name': '',
+                'filename': '',
+                'versions': '',
+                'source': '',
+                'created': Content.REMOVE_TIME,
+                'updated': Content.REMOVE_TIME,
+                'digest': 'a74d83df95d5729aceffc472433fea4d5e3fd2d87b510112fac264c741f20438'
+            }]
         }
-        content = {'a74d83df95d572': content_read}
+        data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
+        brief = content['data'][0]['brief']
+        groups = Const.DELIMITER_GROUPS.join(content['data'][0]['groups'])
+        tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags'])
+        links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content)
+        Content.assert_storage(content)
 
         output = (
             u'1. Tagelied of Wolfram von Eschenbach Sîne klâwen @Düsseldorf [a74d83df95d5729a]',
@@ -173,33 +188,37 @@ class TestCliCreateSnippet(object):
             u'OK',
             u''
         )
-        out, err = capsys.readouterr()  # Resets the previous output in the capture buffer.
+        out, err = capsys.readouterr()
         cause = snippy.run(['snippy', 'search', '--sall', 'klâwen', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
         assert out == Const.NEWLINE.join(output)
         assert not err
 
-    def test_cli_create_snippet_008(self, snippy, mocker, capsys):
+    @pytest.mark.usefixtures('create-remove-utc')
+    def test_cli_create_snippet_008(self, snippy, capsys):
         """Create snippet from CLI.
 
         Create new snippet with three groups. The groups must be sorted when
         they are printed.
         """
 
-        snippet_remove = Snippet.DEFAULTS[Snippet.REMOVE].copy()
-        snippet_remove['groups'] = ['docker', 'moby', 'dockerfile']
-        content_read = {'03dc5d1629b25627': snippet_remove}
-        content_read['03dc5d1629b25627']['groups'] = sorted(content_read['03dc5d1629b25627']['groups'])
-        data = Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
-        brief = Snippet.DEFAULTS[Snippet.REMOVE]['brief']
-        groups = Const.DELIMITER_GROUPS.join(snippet_remove['groups'])
-        tags = Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags'])
-        links = Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+            ]
+        }
+        content['data'][0]['groups'] = ('docker', 'dockerfile', 'moby')
+        content['data'][0]['digest'] = '03dc5d1629b256271a6f2bf16abdc8f5d6f4f94f6deef9e79288792e41e32fe7'
+        data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
+        brief = content['data'][0]['brief']
+        groups = content['data'][0]['groups']
+        tags = Const.DELIMITER_TAGS.join(content['data'][0]['tags'])
+        links = Const.DELIMITER_LINKS.join(content['data'][0]['links'])
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
         output = (
             '1. Remove all docker containers with volumes @docker,dockerfile,moby [03dc5d1629b25627]',
@@ -212,7 +231,7 @@ class TestCliCreateSnippet(object):
             'OK',
             ''
         )
-        out, err = capsys.readouterr()  # Resets the previous output in the capture buffer.
+        out, err = capsys.readouterr()
         cause = snippy.run(['snippy', 'search', '--sall', 'dockerfile', '--no-ansi'])
         out, err = capsys.readouterr()
         assert cause == Cause.ALL_OK
@@ -223,5 +242,4 @@ class TestCliCreateSnippet(object):
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

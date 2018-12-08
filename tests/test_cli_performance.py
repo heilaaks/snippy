@@ -27,9 +27,9 @@ import mock
 import pytest
 
 from snippy.cause import Cause
+from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliPerformance(object):
@@ -45,8 +45,8 @@ class TestCliPerformance(object):
         the time consumed is measured. This is more for manual analysis
         than automation as of now.
 
-        Reference PC:   1 loop :  0.0253 /   55 loop :  1.2164 / 100 loop : 1.9392
-        Reference PC: 880 loop : 17.3052 / 1000 loop : 19.4387
+        Reference PC:   1 loop :  0.0252 /   55 loop :  1.0865 / 100 loop : 1.9484
+        Reference PC: 880 loop : 17.6897 / 1000 loop : 19.6802
 
         The reference is with sqlite database in memory as with all tests.
         There is naturally jitter in results and the values are as of now
@@ -63,8 +63,7 @@ class TestCliPerformance(object):
         start = time.time()
         for _ in range(55):
             self.create_defaults(snippy_perf)
-            assert len(Database.get_snippets()) == 2
-            assert len(Database.get_solutions()) == 2
+            Content.assert_storage_size(4)
 
             # Search all content.
             cause = snippy_perf.run(['snippy', 'search', '--all', '--sall', '.'])
@@ -79,7 +78,7 @@ class TestCliPerformance(object):
             assert cause == Cause.ALL_OK
             cause = snippy_perf.run(['snippy', 'delete', '-d', '5dee85bedb7f4d3a'])
             assert cause == Cause.ALL_OK
-            assert not Database.get_collection()
+            Content.assert_storage_size(0)
 
         runtime = time.time() - start
         out, err = capsys.readouterr()
@@ -121,5 +120,4 @@ class TestCliPerformance(object):
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

@@ -6,6 +6,7 @@
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
    - [ ] Fix better logs if --logs-json (invalid option name) is used with -vv. Now there is not proper log what went wrong with -vv/--debug?
+   - [ ] Fix help text to use import --all instead of content specific commands.
 
 ## THINKING
    - [ ] Add code content.

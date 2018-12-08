@@ -31,24 +31,25 @@ class TestCliUpdateReference(object):
     """Test workflows for updating references."""
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_001(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_001(self, snippy, edited_gitlog):
         """Update reference with digest.
 
         Update reference based on short message digest. Only content links
         are updated.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            '1fc34e79a4d2bac5': Reference.get_dictionary(template),
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
+        content['data'][0]['links'] = ('https://docs.docker.com', )
+        content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
+        edited_gitlog.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_002(self, snippy, edited_gitlog, mocker):
@@ -274,6 +275,24 @@ class TestCliUpdateReference(object):
         assert cause == Cause.ALL_OK
         assert len(Database.get_references()) == 1
         Content.verified(mocker, snippy, content_read)
+
+    @pytest.mark.usefixtures('default-references')
+    def test_cli_update_reference_013(self, snippy, edited_gitlog):
+        """Update reference with digest.
+
+        Try to update reference with empty string read from editor.
+        """
+
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
+        }
+        edited_gitlog.return_value = ''
+        cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
+        assert cause == 'NOK: could not identify edited content category - please keep tags in place'
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):

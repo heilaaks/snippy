@@ -112,6 +112,24 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return copy.deepcopy(content)
 
     @classmethod
+    def dump_text(cls, content):
+        """Return text from given content.
+
+        This can be used for example to convert test case content to text
+        string to be used as a response from mocked editor.
+
+        Args:
+            content (dict): Single content that is converted to collection.
+
+        Returns:
+            str: Text string created from the given content.
+        """
+
+        content = {'data': [content]}
+
+        return cls._get_expect_collection(Const.CONTENT_FORMAT_DICT, content).dump_text(Config.templates)
+
+    @classmethod
     def assert_storage(cls, content):
         """Compare content stored in database.
 

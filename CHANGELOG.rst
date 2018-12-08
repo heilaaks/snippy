@@ -30,7 +30,8 @@ Bugfixes
 ~~~~~~~~
 
 * Fix solution creation from empty template.
-* Fix importing content from invalid source file.
+* Fix content update when parsing user input fails.
+* Fix content import from invalid source file.
 * Fix search from all categories with --all option.
 * Fix resource object validation in POST.
 * Fix REST API HTTP OPTIONS responses.

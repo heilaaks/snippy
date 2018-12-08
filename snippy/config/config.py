@@ -204,12 +204,22 @@ class Config(object):
         The configuration source is updated with given in the Resource()
         object.
 
+        If the resource updates from one of the configuration sources fail,
+        same content is returned.
+
         Args:
             resource (Resource()): Content updates on top of configured content.
+
+        Returns:
+            Resource(): Updated resource from one of the configuration sources.
         """
 
         collection = cls.get_collection(updates)
-        resource = next(collection.resources())
+        if len(collection) == 1:
+            resource = next(collection.resources())
+        else:
+            cls._logger.debug('updating resource from configuration source failed: %d', len(collection))
+            resource = None
 
         return resource
 

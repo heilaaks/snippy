@@ -89,13 +89,16 @@ class ContentTypeBase(object):  # pylint: disable=too-many-instance-attributes
         if len(collection) == 1:
             stored = next(collection.resources())
             digest = stored.digest
-            self._logger.debug('updating stored: %s :with digest: %.16s', self._category, digest)
             updates = Config.get_resource(stored)
-            if Config.merge:
-                stored.merge(updates)
+            if updates:
+                self._logger.debug('updating stored: %s :with digest: %.16s', self._category, digest)
+                if Config.merge:
+                    stored.merge(updates)
+                else:
+                    stored.migrate(updates)
+                self.collection = self._storage.update(digest, stored)
             else:
-                stored.migrate(updates)
-            self.collection = self._storage.update(digest, stored)
+                self._logger.debug('content: %s :with digest: %.16s :was not updated', self._category, digest)
         else:
             Config.validate_search_context(collection, 'update')
 

@@ -78,7 +78,7 @@ class TestCliPerformance(object):
             assert cause == Cause.ALL_OK
             cause = snippy_perf.run(['snippy', 'delete', '-d', '5dee85bedb7f4d3a'])
             assert cause == Cause.ALL_OK
-            Content.assert_storage_size(0)
+            Content.assert_storage(None)
 
         runtime = time.time() - start
         out, err = capsys.readouterr()

@@ -747,9 +747,11 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         solution category name is not correctly spelled.
         """
 
+        p2_cause = 'NOK: search categories: [\'solutions,reference\'] : are not a subset of: (\'snippet\', \'solution\', \'reference\')'
+        p3_cause = 'NOK: search categories: [u\'solutions,reference\'] : are not a subset of: (\'snippet\', \'solution\', \'reference\')'
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--scat', 'solutions,reference'])
-            assert cause == 'NOK: search categories: [\'solutions,reference\'] : are not a subset of: (\'snippet\', \'solution\', \'reference\')'
+            assert cause in (p2_cause, p3_cause)
             assert len(Database.get_collection()) == 4
             mock_file.assert_not_called()
             file_handle = mock_file.return_value.__enter__.return_value

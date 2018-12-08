@@ -26,6 +26,7 @@ import argparse
 
 from snippy.constants import Constants as Const
 from snippy.config.source.base import ConfigSourceBase
+from snippy.content.parser import Parser
 from snippy.meta import __homepage__
 from snippy.meta import __version__
 
@@ -170,29 +171,29 @@ class Cli(ConfigSourceBase):
         # editing options
         options = parser.add_argument_group(title='edit options', description=Const.NEWLINE.join(Cli.ARGS_EDITOR))
         options.add_argument('-e', '--editor', action='store_true', default=False, help=argparse.SUPPRESS)
-        options.add_argument('-c', '--content', type=str, dest='data', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        options.add_argument('-b', '--brief', type=str, default=Const.EMPTY, help=argparse.SUPPRESS)
-        options.add_argument('-g', '--groups', nargs='*', type=str, default=Const.DEFAULT_GROUPS, help=argparse.SUPPRESS)
-        options.add_argument('-t', '--tags', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
-        options.add_argument('-l', '--links', nargs='*', type=str, default=[], help=argparse.SUPPRESS)
-        options.add_argument('-d', '--digest', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        options.add_argument('-u', '--uuid', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        options.add_argument('-c', '--content', type=Parser.to_unicode, dest='data', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        options.add_argument('-b', '--brief', type=Parser.to_unicode, default=Const.EMPTY, help=argparse.SUPPRESS)
+        options.add_argument('-g', '--groups', nargs='*', type=Parser.to_unicode, default=Const.DEFAULT_GROUPS, help=argparse.SUPPRESS)
+        options.add_argument('-t', '--tags', nargs='*', type=Parser.to_unicode, default=[], help=argparse.SUPPRESS)
+        options.add_argument('-l', '--links', nargs='*', type=Parser.to_unicode, default=[], help=argparse.SUPPRESS)
+        options.add_argument('-d', '--digest', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        options.add_argument('-u', '--uuid', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         options.add_argument('--merge', action='store_true', default=False, help=argparse.SUPPRESS)
 
         # search options
         search = parser.add_argument_group(title='search options', description=Const.NEWLINE.join(Cli.ARGS_SEARCH))
         search_meg = search.add_mutually_exclusive_group()
-        search_meg.add_argument('--sall', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        search_meg.add_argument('--stag', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        search.add_argument('--scat', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        search.add_argument('--sgrp', nargs='*', type=str, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
-        search.add_argument('--filter', type=str, dest='search_filter', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        search_meg.add_argument('--sall', nargs='*', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        search_meg.add_argument('--stag', nargs='*', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        search.add_argument('--scat', nargs='*', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        search.add_argument('--sgrp', nargs='*', type=Parser.to_unicode, default=argparse.SUPPRESS, help=argparse.SUPPRESS)
+        search.add_argument('--filter', type=Parser.to_unicode, dest='search_filter', default=argparse.SUPPRESS, help=argparse.SUPPRESS)
         search.add_argument('--limit', type=int, default=Cli.LIMIT_DEFAULT_CLI, help=argparse.SUPPRESS)
 
         # migration options
         migrat = parser.add_argument_group(title='migration options', description=Const.NEWLINE.join(Cli.ARGS_MIGRATE))
         migrat_meg = migrat.add_mutually_exclusive_group()
-        migrat_meg.add_argument('-f', '--file', type=str, dest='filename', default='', help=argparse.SUPPRESS)
+        migrat_meg.add_argument('-f', '--file', type=Parser.to_unicode, dest='filename', default='', help=argparse.SUPPRESS)
         migrat_meg.add_argument('--defaults', action='store_true', default=False, help=argparse.SUPPRESS)
         migrat_meg.add_argument('--template', action='store_true', default=False, help=argparse.SUPPRESS)
 
@@ -210,16 +211,16 @@ class Cli(ConfigSourceBase):
         # server options
         server = parser.add_argument_group(title='server options')
         server.add_argument('--server', action='store_true', default=False, help=argparse.SUPPRESS)
-        server.add_argument('--base-path-app', type=str, dest='base_path_app', default=Cli.BASE_PATH_APP, help=argparse.SUPPRESS)
-        server.add_argument('--ip', type=str, dest='server_ip', default=Cli.SERVER_IP, help=argparse.SUPPRESS)
-        server.add_argument('--port', type=str, dest='server_port', default=Cli.SERVER_PORT, help=argparse.SUPPRESS)
+        server.add_argument('--base-path-app', type=Parser.to_unicode, dest='base_path_app', default=Cli.BASE_PATH_APP, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
+        server.add_argument('--ip', type=Parser.to_unicode, dest='server_ip', default=Cli.SERVER_IP, help=argparse.SUPPRESS)
+        server.add_argument('--port', type=Parser.to_unicode, dest='server_port', default=Cli.SERVER_PORT, help=argparse.SUPPRESS)
         server.add_argument('--compact-json', dest='compact_json', action='store_true', default=False, help=argparse.SUPPRESS)
-        server.add_argument('--ssl-cert', type=str, dest='ssl_cert', default=None, help=argparse.SUPPRESS)
-        server.add_argument('--ssl-key', type=str, dest='ssl_key', default=None, help=argparse.SUPPRESS)
-        server.add_argument('--ssl-ca-cert', type=str, dest='ssl_ca_cert', default=None, help=argparse.SUPPRESS)
+        server.add_argument('--ssl-cert', type=Parser.to_unicode, dest='ssl_cert', default=None, help=argparse.SUPPRESS)
+        server.add_argument('--ssl-key', type=Parser.to_unicode, dest='ssl_key', default=None, help=argparse.SUPPRESS)
+        server.add_argument('--ssl-ca-cert', type=Parser.to_unicode, dest='ssl_ca_cert', default=None, help=argparse.SUPPRESS)
 
         # storage options
-        server.add_argument('--storage-path', type=str, dest='storage_path', default=Const.EMPTY, help=argparse.SUPPRESS)
+        server.add_argument('--storage-path', type=Parser.to_unicode, dest='storage_path', default=Const.EMPTY, help=argparse.SUPPRESS)
 
         # The argparse module will exit with support options help or version
         # and when argument parsing fails. The --no-ansi flag is needed before

@@ -177,7 +177,7 @@ class TestCliDeleteSolution(object):
             ]
         }
         Content.assert_storage_size(2)
-        data = Solution.get_template(Solution.DEFAULTS[Solution.NGINX])
+        data = Content.dump_text(Solution.DEFAULTS[Solution.NGINX])
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', data])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -214,7 +214,7 @@ class TestCliDeleteSolution(object):
                 Solution.DEFAULTS[Solution.NGINX]
             ]
         }
-        data = Solution.get_template(Solution.DEFAULTS[Solution.KAFKA])
+        data = Content.dump_text(Solution.DEFAULTS[Solution.KAFKA])
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', data])
         assert cause == 'NOK: cannot find content with content data: ##############################...'
         Content.assert_storage(content)

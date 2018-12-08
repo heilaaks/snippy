@@ -19,13 +19,11 @@
 
 """reference_helper: Helper methods for reference testing."""
 
-from snippy.config.config import Config
 from snippy.constants import Constants as Const
-from snippy.content.collection import Collection
 from tests.testlib.helper import Helper
 
 
-class ReferenceHelper(object):
+class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
     """Helper methods for reference testing."""
 
     GITLOG = 0
@@ -105,35 +103,3 @@ class ReferenceHelper(object):
     PYTEST_DIGEST = DEFAULTS[PYTEST]['digest']
 
     TEMPLATE = Helper.read_template('reference.txt').split(Const.NEWLINE)
-
-    @staticmethod
-    def get_dictionary(template):
-        """Transform template to dictinary."""
-
-        collection = Collection()
-        collection.load(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), template)
-        resource = next(collection.resources())
-
-        return resource.dump_dict(Config.remove_fields)
-
-    @staticmethod
-    def dump(content, content_format):
-        """Dump content in requested format.
-
-        Args:
-            content (dict): Content in dictionary.
-            content_format (str): Content format.
-
-        Returns:
-            str: Content in requested format.
-        """
-
-        dump = Const.EMPTY
-        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+0000')
-        resource.load_dict(content)
-        if content_format == Const.CONTENT_FORMAT_TEXT:
-            dump = resource.dump_text(Config.templates)
-        elif content_format == Const.CONTENT_FORMAT_MKDN:
-            dump = resource.dump_mkdn(Config.templates)
-
-        return dump

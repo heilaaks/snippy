@@ -118,16 +118,43 @@ class Content(object):  # pylint: disable=too-many-public-methods
         This can be used for example to convert test case content to text
         string to be used as a response from mocked editor.
 
+        In order to be able to insert multiple Markdown contents to database,
+        the UUID must be unique. Because of this, the conversion must not use
+        the methods that masks the content fields to common values. This is
+        applicaple only to Markdown content which has the full metadata.
+
+        The text string is returned from resource. The collection adds one
+        extra newline in the string.
+
         Args:
-            content (dict): Single content that is converted to collection.
+            content (dict): Single content that is converted to text.
 
         Returns:
-            str: Text string created from the given content.
+            str: Text string created from given content.
         """
 
-        content = {'data': [content]}
+        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+0000')
+        resource.load_dict(content)
 
-        return cls._get_expect_collection(Const.CONTENT_FORMAT_DICT, content).dump_text(Config.templates)
+        return resource.dump_text(Config.templates)
+
+    @classmethod
+    def dump_mkdn(cls, content):
+        """Return Markdown from given content.
+
+        See dump_text.
+
+        Args:
+            content (dict): Single content that is converted to Markdown.
+
+        Returns:
+            str: Text string in Markdown format created from given content.
+        """
+
+        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+0000')
+        resource.load_dict(content)
+
+        return resource.dump_mkdn(Config.templates)
 
     @classmethod
     def assert_storage(cls, content):
@@ -380,7 +407,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         references = Const.EMPTY
         content = copy.deepcopy(content)
         for data in content['data']:
-            references = references + Reference.dump(data, Content.TEXT)
+            references = references + Snippet.dump(data, Content.TEXT)
             references = references + '\n'
         references = [references]
 
@@ -494,8 +521,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         mocked_file = Const.EMPTY
         for content in contents['data']:
-            mocked_file = mocked_file + Snippet.dump(content, content_format)
-            if content_format == Content.MKDN:
+            if content_format == Content.TEXT:
+                mocked_file = mocked_file + Content.dump_text(content)
+            elif content_format == Content.MKDN:
+                mocked_file = mocked_file + Content.dump_mkdn(content)
                 mocked_file = mocked_file + '\n---\n\n'
 
         if content_format == Content.MKDN:

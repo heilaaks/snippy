@@ -24,7 +24,6 @@ import pytest
 from snippy.cause import Cause
 from tests.testlib.content import Content
 from tests.testlib.reference_helper import ReferenceHelper as Reference
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliUpdateReference(object):
@@ -52,27 +51,28 @@ class TestCliUpdateReference(object):
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_002(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_002(self, snippy, edited_gitlog):
         """Update reference with digest.
 
         Update reference based on very short message digest. This must match
         to a single reference that must be updated.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            '1fc34e79a4d2bac5': Reference.get_dictionary(template),
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
+        content['data'][0]['links'] = ('https://docs.docker.com', )
+        content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
+        edited_gitlog.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--reference', '--digest', '5c2071'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_003(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_003(self, snippy, edited_gitlog):
         """Update reference with digest.
 
         Update reference based on message digest and accidentally define
@@ -80,20 +80,21 @@ class TestCliUpdateReference(object):
         reference is updated properly regardless of incorrect category.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            '1fc34e79a4d2bac5': Reference.get_dictionary(template),
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
+        content['data'][0]['links'] = ('https://docs.docker.com', )
+        content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
+        edited_gitlog.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--solution', '-d', '5c2071094dbfaa33'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_004(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_004(self, snippy, edited_gitlog):
         """Update reference with digest.
 
         Update reference based on message digest and accidentally implicitly
@@ -102,40 +103,39 @@ class TestCliUpdateReference(object):
         properly regardless of incorrect category.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            '1fc34e79a4d2bac5': Reference.get_dictionary(template),
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
+        content['data'][0]['links'] = ('https://docs.docker.com', )
+        content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
+        edited_gitlog.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', '5c2071094dbfaa33'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_005(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_005(self, snippy):
         """Update reference with digest.
 
         Try to update reference with message digest that cannot be found. No
         changes must be made to stored content.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_006(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_006(self, snippy):
         """Update reference with digest.
 
         Try to update reference with empty message digest. Nothing should be
@@ -143,98 +143,94 @@ class TestCliUpdateReference(object):
         one reference. Only one content can be updated at the time.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest for: update :operation'
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_007(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_007(self, snippy, edited_gitlog):
         """Update reference with uuid.
 
         Update reference based on short uuid. Only content links are updated.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            '1fc34e79a4d2bac5': Reference.get_dictionary(template),
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
+        content['data'][0]['links'] = ('https://docs.docker.com', )
+        content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
+        edited_gitlog.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--reference', '-u', '12cd5827-b6ef-4067-b5ac'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_008(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_008(self, snippy):
         """Update reference with uuid.
 
         Try to update reference based on uuid that cannot be found.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '-u', '9999994'])
         assert cause == 'NOK: cannot find content with content uuid: 9999994'
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.skip(reason='not supported yet')
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_009(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_009(self, snippy, edited_gitlog):
         """Update reference with data.
 
         Update reference based on content links.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            '1fc34e79a4d2bac5': Reference.get_dictionary(template),
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
+        content['data'][0]['links'] = ('https://docs.docker.com', )
+        content['data'][0]['digest'] = '1fc34e79a4d2bac51a039b7265da464ad787da41574c3d6651dc6a128d4c7c10'
+        edited_gitlog.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--reference', '-l', 'https://chris.beams.io/posts/git-commit/'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.skip(reason='not supported yet')
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_010(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_010(self, snippy):
         """Update reference with data.
 
         Try to update reference based on content links that is not found.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', 'https://docs.docker.com')
-        content_read = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
         cause = snippy.run(['snippy', 'update', '--reference', '--links', 'links-not-exist'])
         assert cause == 'NOK: cannot find content with content data: reference not existing'
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
-    def test_cli_update_reference_011(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_011(self, snippy, edited_gitlog):
         """Update reference with data.
 
         Try to update reference with empty content links. Nothing must be
@@ -242,20 +238,21 @@ class TestCliUpdateReference(object):
         content.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        template = template.replace('https://chris.beams.io/posts/git-commit/', '')
-        content_read = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG],
-            Reference.REGEXP_DIGEST: Reference.DEFAULTS[Reference.REGEXP]
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.DEFAULTS[Reference.REGEXP]
+            ]
         }
-        edited_gitlog.return_value = template
+        updates = Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+        updates['links'] = ()
+        edited_gitlog.return_value = Content.dump_text(updates)
         cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'
-        assert len(Database.get_references()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-regexp', 'update-gitlog-utc')
-    def test_cli_update_reference_012(self, snippy, edited_gitlog, mocker):
+    def test_cli_update_reference_012(self, snippy, edited_gitlog):
         """Update existing reference from editor.
 
         Update existing reference by defining all values from editor. In this
@@ -265,16 +262,16 @@ class TestCliUpdateReference(object):
         shows the regexp reference and not an empty reference template.
         """
 
-        template = Reference.dump(Reference.DEFAULTS[Reference.GITLOG], Content.TEXT)
-        content_read = {
-            Reference.GITLOG_DIGEST: Reference.DEFAULTS[Reference.GITLOG]
+        content = {
+            'data': [
+                Reference.DEFAULTS[Reference.GITLOG]
+            ]
         }
-        edited_gitlog.return_value = template
+        edited_gitlog.return_value = Content.dump_text(Reference.DEFAULTS[Reference.GITLOG])
         cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--reference', '--editor'])
-        edited_gitlog.assert_called_with(Reference.dump(Reference.DEFAULTS[Reference.REGEXP], Content.TEXT))
+        edited_gitlog.assert_called_with(Content.dump_text(Reference.DEFAULTS[Reference.REGEXP]))
         assert cause == Cause.ALL_OK
-        assert len(Database.get_references()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-references')
     def test_cli_update_reference_013(self, snippy, edited_gitlog):
@@ -298,5 +295,4 @@ class TestCliUpdateReference(object):
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

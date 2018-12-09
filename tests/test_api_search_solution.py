@@ -24,7 +24,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 
 pytest.importorskip('gunicorn')
 
@@ -56,11 +56,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'attributes': Solution.BEATS
             }, {
                 'type': 'solution',
                 'id': Solution.NGINX_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.NGINX]
+                'attributes': Solution.NGINX
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -98,11 +98,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'attributes': Solution.BEATS
             }, {
                 'type': 'solution',
                 'id': Solution.NGINX_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.NGINX]
+                'attributes': Solution.NGINX
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -138,7 +138,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.NGINX_DIGEST,
-                'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
+                'attributes': {field: Solution.NGINX[field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -173,7 +173,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.NGINX_DIGEST,
-                'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
+                'attributes': {field: Solution.NGINX[field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -197,8 +197,8 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.NGINX],
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.NGINX,
+                Solution.BEATS
             ]
         }
         expect_headers = {
@@ -255,11 +255,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.NGINX_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.NGINX]
+                'attributes': Solution.NGINX
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'attributes': Solution.KAFKA
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -322,7 +322,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.NGINX_DIGEST,
-                'attributes': {field: Solution.DEFAULTS[Solution.NGINX][field] for field in ['brief', 'category']}
+                'attributes': {field: Solution.NGINX[field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -442,7 +442,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'attributes': Solution.BEATS
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/solutions/db712a82662d6932'
@@ -505,11 +505,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'attributes': Solution.BEATS
             }, {
                 'type': 'solution',
                 'id': Solution.NGINX_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.NGINX]
+                'attributes': Solution.NGINX
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -544,7 +544,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.NGINX_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.NGINX]
+                'attributes': Solution.NGINX
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -579,11 +579,11 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.BEATS]
+                'attributes': Solution.BEATS
             }, {
                 'type': 'solution',
                 'id': Solution.NGINX_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.NGINX]
+                'attributes': Solution.NGINX
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -643,7 +643,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
                 'attributes': {
-                    'data': Solution.DEFAULTS[Solution.BEATS]['data']
+                    'data': Solution.BEATS['data']
                 }
             },
             'links': {
@@ -673,7 +673,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
                 'attributes': {
-                    'brief': Solution.DEFAULTS[Solution.BEATS]['brief']
+                    'brief': Solution.BEATS['brief']
                 }
             },
             'links': {
@@ -703,7 +703,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
                 'attributes': {
-                    'groups': Solution.DEFAULTS[Solution.BEATS]['groups']
+                    'groups': Solution.BEATS['groups']
                 }
             },
             'links': {
@@ -733,7 +733,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
                 'attributes': {
-                    'tags': Solution.DEFAULTS[Solution.BEATS]['tags']
+                    'tags': Solution.BEATS['tags']
                 }
             },
             'links': {
@@ -763,7 +763,7 @@ class TestApiSearchSolution(object):  # pylint: disable=too-many-public-methods
                 'type': 'solution',
                 'id': Solution.BEATS_DIGEST,
                 'attributes': {
-                    'links': Solution.DEFAULTS[Solution.BEATS]['links']
+                    'links': Solution.BEATS['links']
                 }
             },
             'links': {

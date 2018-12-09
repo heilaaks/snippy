@@ -24,7 +24,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 
 pytest.importorskip('gunicorn')
 
@@ -42,8 +42,8 @@ class TestApiDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         expect_headers = {}
@@ -64,9 +64,9 @@ class TestApiDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX],
-                Solution.DEFAULTS[Solution.KAFKA]
+                Solution.BEATS,
+                Solution.NGINX,
+                Solution.KAFKA
             ]
         }
         expect_headers = {
@@ -100,8 +100,8 @@ class TestApiDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         expect_headers = {

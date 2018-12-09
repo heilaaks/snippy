@@ -25,7 +25,6 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.helper import Helper
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
@@ -1184,5 +1183,4 @@ class TestCliSearchSnippet(object):  # pylint: disable=too-many-public-methods
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

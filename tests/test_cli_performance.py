@@ -29,7 +29,7 @@ import pytest
 from snippy.cause import Cause
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 
 
 class TestCliPerformance(object):
@@ -106,12 +106,12 @@ class TestCliPerformance(object):
             cause = snippy.run(['snippy', 'import', '-f', 'forced.txt'])
             assert cause == Cause.ALL_OK
 
-        mocked_open = mock.mock_open(read_data=Snippet.get_template(Solution.DEFAULTS[Solution.BEATS]))
+        mocked_open = mock.mock_open(read_data=Snippet.get_template(Solution.BEATS))
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'beats.txt'])
             assert cause == Cause.ALL_OK
 
-        mocked_open = mock.mock_open(read_data=Snippet.get_template(Solution.DEFAULTS[Solution.NGINX]))
+        mocked_open = mock.mock_open(read_data=Snippet.get_template(Solution.NGINX))
         with mock.patch('snippy.content.migrate.open', mocked_open, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'nginx.txt'])
             assert cause == Cause.ALL_OK

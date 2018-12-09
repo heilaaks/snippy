@@ -25,7 +25,7 @@ import pytest
 
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
@@ -139,7 +139,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'attributes': Solution.KAFKA
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -175,7 +175,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'attributes': Solution.KAFKA
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -210,7 +210,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'solution',
                 'id': Solution.KAFKA_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'attributes': Solution.KAFKA
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -411,7 +411,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_DIGEST,
-                'attributes': Solution.DEFAULTS[Solution.KAFKA]
+                'attributes': Solution.KAFKA
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(

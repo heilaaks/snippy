@@ -17,26 +17,27 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""solution_helper: Helper methods for solution testing."""
+"""solution_helper: Default solutions for testing."""
 
 from tests.testlib.helper import Helper
 
 
-class SolutionHelper(object):  # pylint: disable=too-few-public-methods
-    """Helper methods for solution testing."""
+class Solution(object):  # pylint: disable=too-few-public-methods
+    """Default solutions for testing."""
 
-    BEATS = 0
-    NGINX = 1
-    KAFKA = 2
+    _BEATS = 0
+    _NGINX = 1
+    _KAFKA = 2
 
+    # Default time is same for the default content. See 'Test case layouts and
+    # data structures' for more information.
     DEFAULT_TIME = '2017-10-20T11:11:19.000001+0000'
-    DEFAULT_SOLUTIONS = (BEATS, NGINX)
 
     # Default content must be always set so that it reflects content stored
     # into database. For example the tags must be sorted in correct order.
     # This forces defining erroneous content in each test case. This improves
     # the readability and maintainability of failure testing.
-    DEFAULTS = ({
+    _DEFAULTS = ({
         'data':('################################################################################',
                 '## BRIEF  : Debugging Elastic Beats',
                 '##',
@@ -276,23 +277,28 @@ class SolutionHelper(object):  # pylint: disable=too-few-public-methods
         'digest': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee'
     })
 
-    BEATS_CREATED = DEFAULTS[BEATS]['created']  # Default solution.
-    BEATS_UPDATED = DEFAULTS[BEATS]['updated']  # Default solution.
-    NGINX_CREATED = DEFAULTS[NGINX]['created']  # Default solution.
-    NGINX_UPDATED = DEFAULTS[NGINX]['updated']  # Default solution.
-    KAFKA_CREATED = DEFAULTS[KAFKA]['created']
-    KAFKA_UPDATED = DEFAULTS[KAFKA]['updated']
+    BEATS_CREATED = _DEFAULTS[_BEATS]['created']
+    BEATS_UPDATED = _DEFAULTS[_BEATS]['updated']
+    NGINX_CREATED = _DEFAULTS[_NGINX]['created']
+    NGINX_UPDATED = _DEFAULTS[_NGINX]['updated']
+    KAFKA_CREATED = _DEFAULTS[_KAFKA]['created']
+    KAFKA_UPDATED = _DEFAULTS[_KAFKA]['updated']
 
     if not DEFAULT_TIME == BEATS_CREATED == BEATS_UPDATED == NGINX_CREATED == NGINX_UPDATED:
         raise Exception('default content timestamps must be same - see \'Test case layouts and data structures\'')
 
-    BEATS_DIGEST = DEFAULTS[BEATS]['digest']
-    NGINX_DIGEST = DEFAULTS[NGINX]['digest']
-    KAFKA_DIGEST = DEFAULTS[KAFKA]['digest']
+    BEATS_DIGEST = _DEFAULTS[_BEATS]['digest']
+    NGINX_DIGEST = _DEFAULTS[_NGINX]['digest']
+    KAFKA_DIGEST = _DEFAULTS[_KAFKA]['digest']
+
+    BEATS = _DEFAULTS[_BEATS]
+    NGINX = _DEFAULTS[_NGINX]
+    KAFKA = _DEFAULTS[_KAFKA]
+    DEFAULT_SOLUTIONS = (BEATS, NGINX)
 
     TEMPLATE = Helper.read_template('solution.txt').split('\n')
 
-    OUTPUT = [(
+    _OUTPUTS = [(
         '',
         '   # Elastic,beats,debug,filebeat,howto',
         '   > https://www.elastic.co/guide/en/beats/filebeat/master/enable-filebeat-debugging.html',
@@ -338,3 +344,5 @@ class SolutionHelper(object):  # pylint: disable=too-few-public-methods
         '   : ## whiteboard',
         '   : ################################################################################'
     )]
+
+    BEATS_OUTPUT = _OUTPUTS[_BEATS]

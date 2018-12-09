@@ -31,7 +31,7 @@ from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.reference import Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
@@ -414,7 +414,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content2 = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         content3 = {

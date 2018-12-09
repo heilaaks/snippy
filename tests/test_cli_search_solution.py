@@ -23,8 +23,8 @@ import pytest
 
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
-from tests.testlib.solution_helper import SolutionHelper as Solution
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
+from tests.testlib.content import Content
+from tests.testlib.solution import Solution
 
 
 class TestCliSearchSolution(object):
@@ -40,7 +40,7 @@ class TestCliSearchSolution(object):
 
         output = (
             '1. Debugging Elastic Beats @beats [db712a82662d6932]',
-            Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
+            Const.NEWLINE.join(Solution.BEATS_OUTPUT),
             '   :',
             '',
             'OK',
@@ -75,7 +75,7 @@ class TestCliSearchSolution(object):
 
         output = (
             '1. Debugging Elastic Beats @beats [db712a82662d6932]',
-            Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
+            Const.NEWLINE.join(Solution.BEATS_OUTPUT),
             '   :',
             '',
             'OK',
@@ -96,7 +96,7 @@ class TestCliSearchSolution(object):
 
         output = (
             '1. Debugging Elastic Beats @beats [db712a82662d6932]',
-            Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
+            Const.NEWLINE.join(Solution.BEATS_OUTPUT),
             '   :',
             '',
             'OK',
@@ -119,7 +119,7 @@ class TestCliSearchSolution(object):
 
         output = (
             '1. Debugging Elastic Beats @beats [db712a82662d6932]',
-            Const.NEWLINE.join(Solution.OUTPUT[Solution.BEATS]),
+            Const.NEWLINE.join(Solution.BEATS_OUTPUT),
             '   :',
             '',
             'OK',
@@ -135,5 +135,4 @@ class TestCliSearchSolution(object):
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

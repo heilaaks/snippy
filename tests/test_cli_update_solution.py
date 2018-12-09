@@ -23,7 +23,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.content import Content
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 
 
 class TestCliUpdateSolution(object):
@@ -40,8 +40,8 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
-                Solution.DEFAULTS[Solution.NGINX]
+                Content.deepcopy(Solution.BEATS),
+                Solution.NGINX
             ]
         }
         content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
@@ -62,8 +62,8 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
-                Solution.DEFAULTS[Solution.NGINX]
+                Content.deepcopy(Solution.BEATS),
+                Solution.NGINX
             ]
         }
         content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
@@ -84,8 +84,8 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
-                Solution.DEFAULTS[Solution.NGINX]
+                Content.deepcopy(Solution.BEATS),
+                Solution.NGINX
             ]
         }
         content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
@@ -107,8 +107,8 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
-                Solution.DEFAULTS[Solution.NGINX]
+                Content.deepcopy(Solution.BEATS),
+                Solution.NGINX
             ]
         }
         content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
@@ -131,8 +131,8 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
-                Solution.DEFAULTS[Solution.NGINX]
+                Content.deepcopy(Solution.BEATS),
+                Solution.NGINX
             ]
         }
         content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
@@ -153,8 +153,8 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'update', '--solution', '-d', '123456789abcdef0'])
@@ -172,8 +172,8 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'update', '--solution', '-d', ''])
@@ -189,15 +189,15 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
-                Solution.DEFAULTS[Solution.NGINX]
+                Content.deepcopy(Solution.BEATS),
+                Solution.NGINX
             ]
         }
         content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
         content['data'][0]['description'] = ''
         content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
         edited_beats.return_value = Content.dump_text(content['data'][0])
-        data = Content.dump_text(Solution.DEFAULTS[Solution.BEATS])
+        data = Content.dump_text(Solution.BEATS)
         cause = snippy.run(['snippy', 'update', '--solution', '-c', data])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -211,8 +211,8 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'update', '--solution', '--content', 'solution not existing'])
@@ -229,8 +229,8 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'update', '--solution', '-c', ''])
@@ -250,12 +250,12 @@ class TestCliUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         edited_beats.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', '5dee85bedb7f4d3a', '--solution', '--editor'])
-        edited_beats.assert_called_with(Content.dump_text(Solution.DEFAULTS[Solution.NGINX]))
+        edited_beats.assert_called_with(Content.dump_text(Solution.NGINX))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 

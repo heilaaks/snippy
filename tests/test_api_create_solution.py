@@ -27,7 +27,7 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 
 pytest.importorskip('gunicorn')
 
@@ -44,7 +44,7 @@ class TestApiCreateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         request_body = {
@@ -81,8 +81,8 @@ class TestApiCreateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.KAFKA]
+                Solution.BEATS,
+                Solution.KAFKA
             ]
         }
         request_body = {
@@ -135,7 +135,7 @@ class TestApiCreateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.NGINX])
+                Content.deepcopy(Solution.NGINX)
             ]
         }
         content['data'][0]['filename'] = ''
@@ -189,10 +189,10 @@ class TestApiCreateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS])
+                Content.deepcopy(Solution.BEATS)
             ]
         }
-        content['data'][0]['data'] = Solution.DEFAULTS[Solution.NGINX]['data']
+        content['data'][0]['data'] = Solution.NGINX['data']
         content['data'][0]['digest'] = '02533ef592b8d26c557e1e365b3cc1bd9f54ca5599a5cb5aaf44a54cb7d6a310'
         request_body = {
             'data': {
@@ -235,8 +235,8 @@ class TestApiCreateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         expect_headers = {}
@@ -259,7 +259,7 @@ class TestApiCreateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.NGINX
             ]
         }
         request_body = {

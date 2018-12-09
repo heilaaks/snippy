@@ -38,7 +38,7 @@ from snippy.meta import __version__
 from tests.testlib.helper import Helper
 from tests.testlib.reference import Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 class Content(object):  # pylint: disable=too-many-public-methods
@@ -538,7 +538,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         # Generate updated kafka solution. No FILE defined.
         content_read = {
-            '3cbade9454ac80d2': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
+            '3cbade9454ac80d2': copy.deepcopy(Solution.KAFKA)
         }
         content_read['3cbade9454ac80d2']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   : ') for w in content_read['3cbade9454ac80d2']['data']])  # pylint: disable=line-too-long
         content_read['3cbade9454ac80d2']['filename'] = Const.EMPTY
@@ -552,7 +552,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         # Generate updated kafka solution. No space after FILE.
         content_read = {
-            'fb657e3b49deb5b8': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
+            'fb657e3b49deb5b8': copy.deepcopy(Solution.KAFKA)
         }
         content_read['fb657e3b49deb5b8']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   :') for w in content_read['fb657e3b49deb5b8']['data']])  # pylint: disable=line-too-long
         content_read['fb657e3b49deb5b8']['filename'] = Const.EMPTY
@@ -566,7 +566,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         # Generate updated kafka solution. Spaces around filename.
         content_read = {
-            '21c1d813c414aec8': copy.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
+            '21c1d813c414aec8': copy.deepcopy(Solution.KAFKA)
         }
         content_read['21c1d813c414aec8']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   :  kubernetes-docker-log-driver-kafka.txt ') for w in content_read['21c1d813c414aec8']['data']])  # pylint: disable=line-too-long
         content_read['21c1d813c414aec8']['filename'] = Const.EMPTY

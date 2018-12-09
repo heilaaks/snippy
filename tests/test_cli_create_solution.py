@@ -24,7 +24,7 @@ import pytest
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 
 
 class TestCliCreateSolution(object):
@@ -41,7 +41,7 @@ class TestCliCreateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
@@ -62,8 +62,8 @@ class TestCliCreateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'create', '--solution'])
@@ -115,7 +115,7 @@ class TestCliCreateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         cause = snippy.run(['snippy', 'create', '--solution', '--editor'])

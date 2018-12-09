@@ -27,7 +27,7 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 
 pytest.importorskip('gunicorn')
 
@@ -46,7 +46,7 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.KAFKA])
+                Content.deepcopy(Solution.KAFKA)
             ]
         }
         content['data'][0]['filename'] = ''
@@ -100,7 +100,7 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [{
-                'data': Solution.DEFAULTS[Solution.NGINX]['data'],
+                'data': Solution.NGINX['data'],
                 'brief': '',
                 'description': '',
                 'groups': ('default',),
@@ -159,18 +159,18 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
-                    'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
+                    'data': Const.NEWLINE.join(Solution.NGINX['data']),
+                    'brief': Solution.NGINX['brief'],
+                    'groups': Solution.NGINX['groups'],
+                    'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
+                    'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
                 }
             }
         }
@@ -204,15 +204,15 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         request_body = {
-            'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
-            'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-            'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
-            'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-            'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
+            'data': Const.NEWLINE.join(Solution.NGINX['data']),
+            'brief': Solution.NGINX['brief'],
+            'groups': Solution.NGINX['groups'],
+            'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
+            'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
         }
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5360'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '5173'}
@@ -245,7 +245,7 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         request_body = {
@@ -253,11 +253,11 @@ class TestApiUpdateSolution(object):
                 'type': 'solution',
                 'id': '59c5861b51701c2f52abad1a7965e4503875b2668a4df12f6c3386ef9d535970',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
-                    'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
+                    'data': Const.NEWLINE.join(Solution.NGINX['data']),
+                    'brief': Solution.NGINX['brief'],
+                    'groups': Solution.NGINX['groups'],
+                    'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
+                    'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
                 }
             }
         }
@@ -293,7 +293,7 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         request_body = {
@@ -301,11 +301,11 @@ class TestApiUpdateSolution(object):
                 'type': 'snippet',
                 'id': '',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.NGINX]['data']),
-                    'brief': Solution.DEFAULTS[Solution.NGINX]['brief'],
-                    'groups': Solution.DEFAULTS[Solution.NGINX]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Solution.DEFAULTS[Solution.NGINX]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Solution.DEFAULTS[Solution.NGINX]['links'])
+                    'data': Const.NEWLINE.join(Solution.NGINX['data']),
+                    'brief': Solution.NGINX['brief'],
+                    'groups': Solution.NGINX['groups'],
+                    'tags': Const.DELIMITER_TAGS.join(Solution.NGINX['tags']),
+                    'links': Const.DELIMITER_LINKS.join(Solution.NGINX['links'])
                 }
             }
         }
@@ -343,10 +343,10 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [
-                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS])
+                Content.deepcopy(Solution.BEATS)
             ]
         }
-        content['data'][0]['data'] = Solution.DEFAULTS[Solution.KAFKA]['data']
+        content['data'][0]['data'] = Solution.KAFKA['data']
         content['data'][0]['created'] = Content.BEATS_TIME
         content['data'][0]['updated'] = Content.KAFKA_TIME
         content['data'][0]['digest'] = 'c7b25c6ee326b025c471caa32be285f8c4fc4138593d7cb31a7da63acc36043b'
@@ -354,7 +354,7 @@ class TestApiUpdateSolution(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Solution.DEFAULTS[Solution.KAFKA]['data']),
+                    'data': Const.NEWLINE.join(Solution.KAFKA['data']),
                 }
             }
         }
@@ -392,7 +392,7 @@ class TestApiUpdateSolution(object):
 
         content = {
             'data': [{
-                'data': Solution.DEFAULTS[Solution.NGINX]['data'],
+                'data': Solution.NGINX['data'],
                 'brief': '',
                 'description': '',
                 'groups': ('default',),

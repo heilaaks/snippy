@@ -34,7 +34,7 @@ from snippy.snip import Snippy
 from tests.testlib.helper import Helper
 from tests.testlib.reference import Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 # Calls to Config.utcnow()
@@ -461,7 +461,7 @@ def import_interp_snippet(mocker, snippy):
 def import_default_solutions(mocker, snippy):
     """Import default soutions for testing purposes."""
 
-    contents = [Solution.DEFAULTS[Solution.BEATS], Solution.DEFAULTS[Solution.NGINX]]
+    contents = [Solution.BEATS, Solution.NGINX]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SOLUTIONS)
 
 @pytest.fixture(scope='function', name='default-solutions-utc')
@@ -474,21 +474,21 @@ def import_default_solutions_time(mocker):
 def import_beats_solution(mocker, snippy):
     """Import 'beats' solution for testing purposes."""
 
-    contents = [Solution.DEFAULTS[Solution.BEATS]]
+    contents = [Solution.BEATS]
     _import_content(snippy, mocker, contents, IMPORT_BEATS)
 
 @pytest.fixture(scope='function', name='import-nginx')
 def import_nginx_solution(mocker, snippy):
     """Import 'nginx' solution for testing purposes."""
 
-    contents = [Solution.DEFAULTS[Solution.NGINX]]
+    contents = [Solution.NGINX]
     _import_content(snippy, mocker, contents, IMPORT_NGINX)
 
 @pytest.fixture(scope='function', name='import-kafka')
 def import_kafka_solution(mocker, snippy):
     """Import 'kafka' solution for testing purposes."""
 
-    contents = [Solution.DEFAULTS[Solution.KAFKA]]
+    contents = [Solution.KAFKA]
     _import_content(snippy, mocker, contents, IMPORT_KAFKA)
 
 @pytest.fixture(scope='function', name='create-beats-utc')
@@ -513,7 +513,7 @@ def import_beats_time_mock(mocker):
 def edit_beats_solution(mocker):
     """Edited 'beats' solution."""
 
-    template = Snippet.get_template(Solution.DEFAULTS[Solution.BEATS])
+    template = Snippet.get_template(Solution.BEATS)
     mocker.patch.object(Editor, '_call_editor', return_value=template)
     _add_utc_time(mocker, EDITED_BEATS)
 

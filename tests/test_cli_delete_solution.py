@@ -23,7 +23,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.content import Content
-from tests.testlib.solution_helper import SolutionHelper as Solution
+from tests.testlib.solution import Solution
 
 
 class TestCliDeleteSolution(object):
@@ -38,7 +38,7 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         Content.assert_storage_size(2)
@@ -55,7 +55,7 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         Content.assert_storage_size(2)
@@ -73,7 +73,7 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '5dee8'])
@@ -89,7 +89,7 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         Content.assert_storage_size(2)
@@ -120,8 +120,8 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '123456789abcdef0'])
@@ -138,8 +138,8 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', ''])
@@ -156,8 +156,8 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '-d', '123456'])
@@ -173,11 +173,11 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS]
+                Solution.BEATS
             ]
         }
         Content.assert_storage_size(2)
-        data = Content.dump_text(Solution.DEFAULTS[Solution.NGINX])
+        data = Content.dump_text(Solution.NGINX)
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', data])
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
@@ -192,8 +192,8 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', 'not-exists'])
@@ -210,11 +210,11 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
-        data = Content.dump_text(Solution.DEFAULTS[Solution.KAFKA])
+        data = Content.dump_text(Solution.KAFKA)
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', data])
         assert cause == 'NOK: cannot find content with content data: ##############################...'
         Content.assert_storage(content)
@@ -229,8 +229,8 @@ class TestCliDeleteSolution(object):
 
         content = {
             'data': [
-                Solution.DEFAULTS[Solution.BEATS],
-                Solution.DEFAULTS[Solution.NGINX]
+                Solution.BEATS,
+                Solution.NGINX
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--solution', '--content', ''])

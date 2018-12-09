@@ -12,6 +12,7 @@
    - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
+   - [ ] Refactor and check the sqlitedb_helper somehow. At least the name can be synchronized with the snippet,solution and reference helpers.
 
 ## THINKING
    - [ ] Add code content.

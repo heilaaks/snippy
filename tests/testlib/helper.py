@@ -26,7 +26,7 @@ import re
 import pkg_resources
 
 
-class Helper(object):  # pylint: disable=too-few-public-methods
+class Helper(object):
     """Generic helpers testing.
 
     This class intentionally copies some of the implementation from the

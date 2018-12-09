@@ -26,7 +26,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
 
@@ -43,7 +43,7 @@ class TestApiCreateField(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         request_body = {
@@ -83,7 +83,7 @@ class TestApiCreateField(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         request_body = {
@@ -123,7 +123,7 @@ class TestApiCreateField(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         request_body = {

@@ -29,7 +29,7 @@ import yaml
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 
 class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
@@ -45,8 +45,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -68,8 +68,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -91,8 +91,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -113,8 +113,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         file_content = Content.get_file_content(Content.JSON, content)
@@ -136,8 +136,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         file_content = Content.get_file_content(Content.TEXT, content)
@@ -158,8 +158,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         file_content = Content.get_file_content(Content.TEXT, content)
@@ -180,8 +180,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         file_content = Content.get_file_content(Content.TEXT, content)
@@ -231,7 +231,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
         content['data'][0]['links'] = ('https://updated-link.html',)
@@ -256,7 +256,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
         content['data'][0]['links'] = ('https://updated-link.html',)
@@ -281,7 +281,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
         content['data'][0]['links'] = ('https://updated-link.html',)
@@ -304,12 +304,12 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.PYTEST]
+                Reference.PYTEST
             ]
         }
         updates = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         file_content = Content.get_file_content(Content.TEXT, updates)
@@ -328,7 +328,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
         content['data'][0]['links'] = ('https://updated-link.html',)
@@ -351,12 +351,12 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.PYTEST]
+                Reference.PYTEST
             ]
         }
         updates = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         file_content = Content.get_file_content(Content.TEXT, updates)
@@ -376,8 +376,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.PYTEST]
+                Reference.GITLOG,
+                Reference.PYTEST
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -402,8 +402,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -441,7 +441,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -454,7 +454,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content_uuid = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.REGEXP]),
+                Content.deepcopy(Reference.REGEXP)
             ]
         }
         content_uuid['data'][0]['uuid'] = content['data'][0]['uuid']
@@ -475,8 +475,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         file_content = Content.get_file_content(Content.MKDN, content)
@@ -495,7 +495,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         file_content = Content.get_file_content(Content.YAML, {'data': []})

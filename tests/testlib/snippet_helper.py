@@ -36,7 +36,7 @@ class SnippetHelper(object):
     INTERP = 5
 
     DEFAULT_TIME = '2017-10-14T19:56:31.000001+0000'
-    DEFAULT_SOLUTIONS = (REMOVE, FORCED)
+    DEFAULT_SNIPPETS = (REMOVE, FORCED)
 
     # Default content must be always set so that it reflects content stored
     # into database. For example the tags must be sorted in correct order.

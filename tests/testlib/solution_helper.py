@@ -19,13 +19,10 @@
 
 """solution_helper: Helper methods for solution testing."""
 
-from snippy.config.config import Config
-from snippy.constants import Constants as Const
-from snippy.content.collection import Collection
 from tests.testlib.helper import Helper
 
 
-class SolutionHelper(object):
+class SolutionHelper(object):  # pylint: disable=too-few-public-methods
     """Helper methods for solution testing."""
 
     BEATS = 0
@@ -293,7 +290,7 @@ class SolutionHelper(object):
     NGINX_DIGEST = DEFAULTS[NGINX]['digest']
     KAFKA_DIGEST = DEFAULTS[KAFKA]['digest']
 
-    TEMPLATE = Helper.read_template('solution.txt').split(Const.NEWLINE)
+    TEMPLATE = Helper.read_template('solution.txt').split('\n')
 
     OUTPUT = [(
         '',
@@ -341,22 +338,3 @@ class SolutionHelper(object):
         '   : ## whiteboard',
         '   : ################################################################################'
     )]
-
-    @staticmethod
-    def get_dictionary(template):
-        """Transform template to dictinary."""
-
-        collection = Collection()
-        collection.load(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), template)
-        resource = next(collection.resources())
-
-        return resource.dump_dict(Config.remove_fields)
-
-    @staticmethod
-    def get_template(dictionary):
-        """Transform dictionary to text template."""
-
-        resource = Collection.get_resource(Const.SOLUTION, '2018-10-20T06:16:27.000001+0000')
-        resource.load_dict(dictionary)
-
-        return resource.dump_text(Config.templates)

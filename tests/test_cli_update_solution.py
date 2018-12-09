@@ -22,77 +22,82 @@
 import pytest
 
 from snippy.cause import Cause
-from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.solution_helper import SolutionHelper as Solution
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliUpdateSolution(object):
     """Test workflows for updating solutions."""
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_001(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_001(self, snippy, edited_beats):
         """Update solution with digest.
 
         Update solution based on short message digest. Only content data
-        is updated.
+        is updated. Because the description tag was changed, the description
+        itself is not read and it results an empty string.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
+        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['description'] = ''
+        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        edited_beats.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--solution', '-d', 'db712a82662d6932'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_002(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_002(self, snippy, edited_beats):
         """Update solution with digest.
 
         Update solution based on very short message digest. This must match
         to a single solution that must be updated.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
+        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['description'] = ''
+        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        edited_beats.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--solution', '--digest', 'db712'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_003(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_003(self, snippy, edited_beats):
         """Update solution with digest.
 
         Update solution based on long message digest. Only the content data
         is updated.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
+        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['description'] = ''
+        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        edited_beats.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--solution', '-d', 'db712a82662d693206004c2174a0bb1900e1e1307f21f79a0efb88a01add4151']) # pylint: disable=line-too-long
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_004(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_004(self, snippy, edited_beats):
         """Update solution with digest.
 
         Update solution based on message digest and accidentally define
@@ -100,20 +105,22 @@ class TestCliUpdateSolution(object):
         solution is updated properly regardless of incorrect category.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
+        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['description'] = ''
+        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        edited_beats.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--snippet', '-d', 'db712a82662d6932'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_005(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_005(self, snippy, edited_beats):
         """Update solution with digest.
 
         Update solution based on message digest and accidentally implicitly
@@ -122,40 +129,40 @@ class TestCliUpdateSolution(object):
         properly regardless of incorrect category.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
+        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['description'] = ''
+        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        edited_beats.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', 'db712a82662d6932'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_006(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_006(self, snippy):
         """Update solution with digest.
 
         Try to update solution with message digest that cannot be found. No
         changes must be made to stored content.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_007(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_007(self, snippy):
         """Update solution with digest.
 
         Try to update solution with empty message digest. Nothing should be
@@ -163,79 +170,75 @@ class TestCliUpdateSolution(object):
         one solution. Only one content can be updated at the time.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest for: update :operation'
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_008(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_008(self, snippy, edited_beats):
         """Update solution with data.
 
         Update solution based on content data.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            '8d2ae8a08f54ced1': Solution.get_dictionary(template),
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Content.deepcopy(Solution.DEFAULTS[Solution.BEATS]),
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
-        data = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
+        content['data'][0]['data'] = tuple([line.replace('## description', '## updated desc') for line in content['data'][0]['data']])
+        content['data'][0]['description'] = ''
+        content['data'][0]['digest'] = '19baa35ea3751e7fb66a810fb20b766601dc7c61512a36a8378be7c6b0063acc'
+        edited_beats.return_value = Content.dump_text(content['data'][0])
+        data = Content.dump_text(Solution.DEFAULTS[Solution.BEATS])
         cause = snippy.run(['snippy', 'update', '--solution', '-c', data])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_009(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_009(self, snippy):
         """Update solution with data.
 
         Try to update solution based on content data that is not found.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '--content', 'solution not existing'])
         assert cause == 'NOK: cannot find content with content data: solution not existing'
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-solutions')
-    def test_cli_update_solution_010(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_010(self, snippy):
         """Update solution with data.
 
         Try to update solution with empty content data. Nothing must be
         updated in this case because there is more than one content stored.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        template = template.replace('## description', '## updated content description')
-        content_read = {
-            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS],
-            Solution.NGINX_DIGEST: Solution.DEFAULTS[Solution.NGINX]
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS],
+                Solution.DEFAULTS[Solution.NGINX]
+            ]
         }
-        edited_beats.return_value = template
         cause = snippy.run(['snippy', 'update', '--solution', '-c', ''])
         assert cause == 'NOK: cannot use empty content data for: update :operation'
-        assert len(Database.get_solutions()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('import-nginx', 'update-beats-utc')
-    def test_cli_update_solution_011(self, snippy, edited_beats, mocker):
+    def test_cli_update_solution_011(self, snippy, edited_beats):
         """Update existing solution from editor.
 
         Update existing solution by defining all values from editor. In this
@@ -245,20 +248,19 @@ class TestCliUpdateSolution(object):
         shows the ngingx solution and not an empty solution template.
         """
 
-        template = Solution.get_template(Solution.DEFAULTS[Solution.BEATS])
-        content_read = {
-            Solution.BEATS_DIGEST: Solution.DEFAULTS[Solution.BEATS]
+        content = {
+            'data': [
+                Solution.DEFAULTS[Solution.BEATS]
+            ]
         }
-        edited_beats.return_value = template
+        edited_beats.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', '5dee85bedb7f4d3a', '--solution', '--editor'])
-        edited_beats.assert_called_with(Const.DELIMITER_DATA.join(map(str, Solution.DEFAULTS[Solution.NGINX]['data'])))
+        edited_beats.assert_called_with(Content.dump_text(Solution.DEFAULTS[Solution.NGINX]))
         assert cause == Cause.ALL_OK
-        assert len(Database.get_solutions()) == 1
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

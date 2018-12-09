@@ -28,7 +28,7 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
 
@@ -47,7 +47,7 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         request_body = {
@@ -87,7 +87,7 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         request_body = {
@@ -124,8 +124,8 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.PYTEST]
+                Reference.GITLOG,
+                Reference.PYTEST
             ]
         }
         request_body = {
@@ -173,7 +173,7 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.REGEXP])
+                Content.deepcopy(Reference.REGEXP)
             ]
         }
         request_body = {
@@ -218,12 +218,12 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
-        content['data'][0]['brief'] = Reference.DEFAULTS[Reference.REGEXP]['brief']
-        content['data'][0]['description'] = Reference.DEFAULTS[Reference.REGEXP]['description']
-        content['data'][0]['links'] = Reference.DEFAULTS[Reference.REGEXP]['links']
+        content['data'][0]['brief'] = Reference.REGEXP['brief']
+        content['data'][0]['description'] = Reference.REGEXP['description']
+        content['data'][0]['links'] = Reference.REGEXP['links']
         content['data'][0]['updated'] = Content.REGEXP_TIME
         content['data'][0]['digest'] = 'ee4a072a5a7a661a8c5d8e8f2aac88267c47fbf0b26db19b97d0b72bae3d74f0'
         request_body = {
@@ -268,8 +268,8 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         expect_headers = {}
@@ -335,7 +335,7 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         request_body = {
@@ -387,7 +387,7 @@ class TestApiCreateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.REGEXP])
+                Content.deepcopy(Reference.REGEXP)
             ]
         }
         content['data'][0]['groups'] = ('python', 'regexp')

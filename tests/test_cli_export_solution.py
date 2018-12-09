@@ -29,7 +29,7 @@ import yaml
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
@@ -666,7 +666,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX],
                 Snippet.DEFAULTS[Snippet.REMOVE],
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -688,7 +688,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX],
                 Snippet.DEFAULTS[Snippet.REMOVE],
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -709,7 +709,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             'data': [
                 Solution.DEFAULTS[Solution.BEATS],
                 Solution.DEFAULTS[Solution.NGINX],
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -730,7 +730,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:

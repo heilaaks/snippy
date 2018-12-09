@@ -29,7 +29,7 @@ import yaml
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 
@@ -668,7 +668,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
+                Reference.GITLOG,
                 Solution.DEFAULTS[Solution.NGINX],
                 Snippet.DEFAULTS[Snippet.REMOVE]
             ]

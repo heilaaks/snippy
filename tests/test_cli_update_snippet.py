@@ -24,94 +24,97 @@ import pytest
 from snippy.cause import Cause
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestCliUpdateSnippet(object):
     """Test workflows for updating snippets."""
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_001(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_001(self, snippy, edited_remove):
         """Update snippet based on digest.
 
         Update snippet based on short message digest. Only content data
         is updated.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            'af8c89629dc1a531': Snippet.get_dictionary(template),
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
+        content['data'][0]['data'] = ('docker images', )
+        content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
+        edited_remove.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b63'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_002(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_002(self, snippy, edited_remove):
         """Update snippet based on digest.
 
         Update snippet based on very short message digest. This must match to
         a single snippet that must be updated.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            'af8c89629dc1a531': Snippet.get_dictionary(template),
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
+        content['data'][0]['data'] = ('docker images', )
+        content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
+        edited_remove.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', '54e41'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_003(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_003(self, snippy, edited_remove):
         """Update snippet based on digest.
 
         Update snippet based on long message digest. Only the content data is
         updated.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            'af8c89629dc1a531': Snippet.get_dictionary(template),
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
+        content['data'][0]['data'] = ('docker images', )
+        content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
+        edited_remove.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', '54e41e9b52a02b631b5c65a6a053fcbabc77ccd42b02c64fdfbc76efdb18e319'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_004(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_004(self, snippy, edited_remove):
         """Update snippet based on digest.
 
         Update snippet based on message digest and explicitly define the
         content category.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            'af8c89629dc1a531': Snippet.get_dictionary(template),
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
+        content['data'][0]['data'] = ('docker images', )
+        content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
+        edited_remove.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--snippets', '-d', '54e41e9b52a02b63'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_005(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_005(self, snippy, edited_remove):
         """Update snippet based on digest.
 
         Update snippet based on message digest and accidentally define
@@ -119,40 +122,39 @@ class TestCliUpdateSnippet(object):
         regardless of incorrect category.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            'af8c89629dc1a531': Snippet.get_dictionary(template),
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
+        content['data'][0]['data'] = ('docker images', )
+        content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
+        edited_remove.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '--solution', '-d', '54e41e9b52a02b63'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_006(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_006(self, snippy):
         """Update snippet based on digest.
 
         Try to update snippet with message digest that cannot be found. No
         changes must be made to stored content.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '123456789abcdef0'])
         assert cause == 'NOK: cannot find content with message digest: 123456789abcdef0'
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_007(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_007(self, snippy):
         """Update snippet based on digest.
 
         Try to update snippet with empty message digest. Nothing should be
@@ -160,100 +162,94 @@ class TestCliUpdateSnippet(object):
         one snippet. Only one content can be updated at the time.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', ''])
         assert cause == 'NOK: cannot use empty message digest for: update :operation'
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_008(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_008(self, snippy):
         """Update snippet based on digest.
 
         Try to update snippet with one digit digest that matches two snippets.
-        Note! Don't not change the test snippets because this case is produced
+
+        NOTE! Don't not change the test snippets because this case is produced
         with real digests that just happen to have same digit starting both of
         the cases.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-d', '5'])
         assert cause == 'NOK: content digest: 5 :matched more than once: 2 :preventing: update :operation'
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_009(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_009(self, snippy, edited_remove):
         """Update snippet based on content data.
 
         Update snippet based on content data.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            'af8c89629dc1a531': Snippet.get_dictionary(template),
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
+        content['data'][0]['data'] = ('docker images', )
+        content['data'][0]['digest'] = 'af8c89629dc1a5313fd15c95fa9c1199b2b99874426e0b2532a952f40dcf980d'
+        edited_remove.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-c', 'docker rm --volumes $(docker ps --all --quiet)'])
         assert cause == Cause.ALL_OK
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_010(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_010(self, snippy):
         """Update snippet based on content data.
 
         Try to update snippet based on content data that is not found.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-c', 'snippet not existing'])
         assert cause == 'NOK: cannot find content with content data: snippet not existing'
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_011(self, snippy, edited_remove, mocker):
+    def test_cli_update_snippet_011(self, snippy):
         """Update snippet based on content data.
 
         Try to update snippet with empty content data. Nothing must be updated
         in this case because there is more than one content stored.
         """
 
-        template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
-        template = template.replace('docker rm --volumes $(docker ps --all --quiet)', 'docker images')
-        content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
-        edited_remove.return_value = template
         cause = snippy.run(['snippy', 'update', '-c', ''])
         assert cause == 'NOK: cannot use empty content data for: update :operation'
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
 
     @pytest.mark.usefixtures('default-snippets')
-    def test_cli_update_snippet_012(self, snippy, mocker):
+    def test_cli_update_snippet_012(self, snippy):
         """Update snippet based on content data.
 
         Try to update snippet with content data that matches to two different
@@ -261,17 +257,18 @@ class TestCliUpdateSnippet(object):
         updated only if it is uniquely identified.
         """
 
-        content_read = {
-            Snippet.REMOVE_DIGEST: Snippet.DEFAULTS[Snippet.REMOVE],
-            Snippet.FORCED_DIGEST: Snippet.DEFAULTS[Snippet.FORCED]
+        content = {
+            'data': [
+                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.DEFAULTS[Snippet.FORCED]
+            ]
         }
         cause = snippy.run(['snippy', 'update', '-c', 'docker'])
         assert cause == 'NOK: content data: docker :matched more than once: 2 :preventing: update :operation'
-        assert len(Database.get_snippets()) == 2
-        Content.verified(mocker, snippy, content_read)
+        Content.assert_storage(content)
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""
 
-        Database.delete_all_contents()
-        Database.delete_storage()
+        Content.delete()

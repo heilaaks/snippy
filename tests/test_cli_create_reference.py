@@ -24,7 +24,7 @@ import pytest
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 
 class TestCliCreateReferece(object):
@@ -41,7 +41,7 @@ class TestCliCreateReferece(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         data = 'must not be used'
@@ -61,12 +61,12 @@ class TestCliCreateReferece(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         data = 'must not be used'
         brief = content['data'][0]['brief']
-        groups = Reference.DEFAULTS[Reference.GITLOG]['groups']
+        groups = Reference.GITLOG['groups']
         tags = content['data'][0]['tags']
         cause = snippy.run(['snippy', 'create', '--references', '--brief', brief, '--groups', groups, '--tags', tags, '-c', data])
         assert cause == 'NOK: content was not stored because mandatory content field links is empty'

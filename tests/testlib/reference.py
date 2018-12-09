@@ -17,27 +17,27 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""reference_helper: Helper methods for reference testing."""
+"""reference: Default references for testing."""
 
-from snippy.constants import Constants as Const
 from tests.testlib.helper import Helper
 
 
-class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
-    """Helper methods for reference testing."""
+class Reference(object):  # pylint: disable=too-few-public-methods
+    """Default references for testing."""
 
-    GITLOG = 0
-    REGEXP = 1
-    PYTEST = 2
+    _GITLOG = 0
+    _REGEXP = 1
+    _PYTEST = 2
 
+    # Default time is same for the default content. See 'Test case layouts and
+    # data structures' for more information.
     DEFAULT_TIME = '2018-06-22T13:11:13.678729+0000'
-    DEFAULT_SOLUTIONS = (GITLOG, REGEXP)
 
     # Default content must be always set so that it reflects content stored
     # into database. For example the tags must be sorted in correct order.
     # This forces defining erroneous content in each test case. This improves
     # the readability and maintainability of failure testing.
-    DEFAULTS = ({
+    _DEFAULTS = ({
         'data': (),
         'brief': 'How to write commit messages',
         'description': '',
@@ -88,18 +88,23 @@ class ReferenceHelper(object):  # pylint: disable=too-few-public-methods
         'digest': '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e'
     })
 
-    GITLOG_CREATED = DEFAULTS[GITLOG]['created']
-    GITLOG_UPDATED = DEFAULTS[GITLOG]['updated']
-    REGEXP_CREATED = DEFAULTS[REGEXP]['created']
-    REGEXP_UPDATED = DEFAULTS[REGEXP]['updated']
-    PYTEST_CREATED = DEFAULTS[PYTEST]['created']
-    PYTEST_UPDATED = DEFAULTS[PYTEST]['updated']
+    GITLOG_CREATED = _DEFAULTS[_GITLOG]['created']
+    GITLOG_UPDATED = _DEFAULTS[_GITLOG]['updated']
+    REGEXP_CREATED = _DEFAULTS[_REGEXP]['created']
+    REGEXP_UPDATED = _DEFAULTS[_REGEXP]['updated']
+    PYTEST_CREATED = _DEFAULTS[_PYTEST]['created']
+    PYTEST_UPDATED = _DEFAULTS[_PYTEST]['updated']
 
     if not DEFAULT_TIME == GITLOG_CREATED == GITLOG_UPDATED == REGEXP_CREATED == REGEXP_UPDATED:
         raise Exception('default content timestamps must be same - see \'Test case layouts and data structures\'')
 
-    GITLOG_DIGEST = DEFAULTS[GITLOG]['digest']
-    REGEXP_DIGEST = DEFAULTS[REGEXP]['digest']
-    PYTEST_DIGEST = DEFAULTS[PYTEST]['digest']
+    GITLOG_DIGEST = _DEFAULTS[_GITLOG]['digest']
+    REGEXP_DIGEST = _DEFAULTS[_REGEXP]['digest']
+    PYTEST_DIGEST = _DEFAULTS[_PYTEST]['digest']
 
-    TEMPLATE = Helper.read_template('reference.txt').split(Const.NEWLINE)
+    GITLOG = _DEFAULTS[_GITLOG]
+    REGEXP = _DEFAULTS[_REGEXP]
+    PYTEST = _DEFAULTS[_PYTEST]
+    DEFAULT_REFERENCES = (GITLOG, REGEXP)
+
+    TEMPLATE = Helper.read_template('reference.txt').split('\n')

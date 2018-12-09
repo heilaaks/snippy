@@ -26,7 +26,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
 
@@ -44,7 +44,7 @@ class TestApiDeleteField(object):
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': Reference.GITLOG
             }]
         }
         expect_headers = {
@@ -79,7 +79,7 @@ class TestApiDeleteField(object):
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': Reference.GITLOG
             }]
         }
         expect_headers = {
@@ -114,7 +114,7 @@ class TestApiDeleteField(object):
         request_body = {
             'data': [{
                 'type': 'reference',
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': Reference.GITLOG
             }]
         }
         expect_headers = {

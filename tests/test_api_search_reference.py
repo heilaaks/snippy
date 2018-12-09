@@ -24,7 +24,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
 
@@ -56,11 +56,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': Reference.GITLOG
             }, {
                 'type': 'reference',
                 'id': Reference.REGEXP_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.REGEXP]
+                'attributes': Reference.REGEXP
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -98,11 +98,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': Reference.GITLOG
             }, {
                 'type': 'reference',
                 'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.PYTEST]
+                'attributes': Reference.PYTEST
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -138,7 +138,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.REGEXP_DIGEST,
-                'attributes': {field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']}
+                'attributes': {field: Reference.REGEXP[field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -173,7 +173,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.REGEXP_DIGEST,
-                'attributes': {field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']}
+                'attributes': {field: Reference.REGEXP[field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -207,7 +207,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.REGEXP_DIGEST,
-                'attributes': {field: Reference.DEFAULTS[Reference.REGEXP][field] for field in ['brief', 'category']}
+                'attributes': {field: Reference.REGEXP[field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -298,7 +298,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': Reference.GITLOG
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/references/5c2071094dbfaa33'
@@ -361,11 +361,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': Reference.GITLOG
             }, {
                 'type': 'reference',
                 'id': Reference.REGEXP_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.REGEXP]
+                'attributes': Reference.REGEXP
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -400,7 +400,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.REGEXP_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.REGEXP]
+                'attributes': Reference.REGEXP
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -438,11 +438,11 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.GITLOG]
+                'attributes': Reference.GITLOG
             }, {
                 'type': 'reference',
                 'id': Reference.REGEXP_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.REGEXP]
+                'attributes': Reference.REGEXP
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -533,7 +533,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
                 'attributes': {
-                    'brief': Reference.DEFAULTS[Reference.GITLOG]['brief']
+                    'brief': Reference.GITLOG['brief']
                 }
             },
             'links': {
@@ -563,7 +563,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
                 'attributes': {
-                    'groups': Reference.DEFAULTS[Reference.GITLOG]['groups']
+                    'groups': Reference.GITLOG['groups']
                 }
             },
             'links': {
@@ -593,7 +593,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
                 'attributes': {
-                    'tags': Reference.DEFAULTS[Reference.GITLOG]['tags']
+                    'tags': Reference.GITLOG['tags']
                 }
             },
             'links': {
@@ -623,7 +623,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
                 'attributes': {
-                    'links': Reference.DEFAULTS[Reference.GITLOG]['links']
+                    'links': Reference.GITLOG['links']
                 }
             },
             'links': {
@@ -653,7 +653,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
                 'attributes': {
-                    'category': Reference.DEFAULTS[Reference.GITLOG]['category']
+                    'category': Reference.GITLOG['category']
                 }
             },
             'links': {
@@ -683,7 +683,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
                 'attributes': {
-                    'name': Reference.DEFAULTS[Reference.GITLOG]['name']
+                    'name': Reference.GITLOG['name']
                 }
             },
             'links': {
@@ -713,7 +713,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
                 'attributes': {
-                    'filename': Reference.DEFAULTS[Reference.GITLOG]['filename']
+                    'filename': Reference.GITLOG['filename']
                 }
             },
             'links': {
@@ -743,7 +743,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
                 'attributes': {
-                    'versions': Reference.DEFAULTS[Reference.GITLOG]['versions']
+                    'versions': Reference.GITLOG['versions']
                 }
             },
             'links': {
@@ -773,7 +773,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
                 'type': 'reference',
                 'id': Reference.GITLOG_DIGEST,
                 'attributes': {
-                    'source': Reference.DEFAULTS[Reference.GITLOG]['source']
+                    'source': Reference.GITLOG['source']
                 }
             },
             'links': {

@@ -23,7 +23,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 
 class TestCliDeleteReference(object):
@@ -38,7 +38,7 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         Content.assert_storage_size(2)
@@ -69,8 +69,8 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-d', '123456789abcdef0'])
@@ -86,7 +86,7 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         Content.assert_storage_size(2)
@@ -103,8 +103,8 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-u', ''])
@@ -120,8 +120,8 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-u', '1234567'])
@@ -139,8 +139,8 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-u', '1'])
@@ -156,7 +156,7 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.REGEXP
             ]
         }
         Content.assert_storage_size(2)
@@ -174,8 +174,8 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--content', 'not found content'])
@@ -192,7 +192,7 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.REGEXP
             ]
         }
         Content.assert_storage_size(2)
@@ -210,8 +210,8 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--content', ''])
@@ -228,7 +228,7 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.REGEXP
             ]
         }
         Content.assert_storage_size(2)
@@ -247,8 +247,8 @@ class TestCliDeleteReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--sall', 'chris'])

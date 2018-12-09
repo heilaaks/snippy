@@ -27,7 +27,7 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
 
@@ -46,7 +46,7 @@ class TestApiUpdateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.PYTEST])
+                Content.deepcopy(Reference.PYTEST)
             ]
         }
         content['data'][0]['created'] = Content.GITLOG_TIME
@@ -104,7 +104,7 @@ class TestApiUpdateReference(object):
                 'description': '',
                 'groups': ('default',),
                 'tags': (),
-                'links': Reference.DEFAULTS[Reference.PYTEST]['links'],
+                'links': Reference.PYTEST['links'],
                 'category': 'reference',
                 'name': '',
                 'filename': '',
@@ -157,14 +157,14 @@ class TestApiUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'links': Reference.DEFAULTS[Reference.REGEXP]['links'],
+                    'links': Reference.REGEXP['links'],
                 }
             }
         }
@@ -200,15 +200,15 @@ class TestApiUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         request_body = {
-            'data': Const.NEWLINE.join(Reference.DEFAULTS[Reference.REGEXP]['data']),
-            'brief': Reference.DEFAULTS[Reference.REGEXP]['brief'],
-            'groups': Reference.DEFAULTS[Reference.REGEXP]['groups'],
-            'tags': Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.REGEXP]['tags']),
-            'links': Const.DELIMITER_LINKS.join(Reference.DEFAULTS[Reference.REGEXP]['links'])
+            'data': Const.NEWLINE.join(Reference.REGEXP['data']),
+            'brief': Reference.REGEXP['brief'],
+            'groups': Reference.REGEXP['groups'],
+            'tags': Const.DELIMITER_TAGS.join(Reference.REGEXP['tags']),
+            'links': Const.DELIMITER_LINKS.join(Reference.REGEXP['links'])
         }
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '785'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '787'}
@@ -241,7 +241,7 @@ class TestApiUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
         request_body = {
@@ -249,11 +249,11 @@ class TestApiUpdateReference(object):
                 'type': 'reference',
                 'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Reference.DEFAULTS[Reference.REGEXP]['data']),
-                    'brief': Reference.DEFAULTS[Reference.REGEXP]['brief'],
-                    'groups': Reference.DEFAULTS[Reference.REGEXP]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Reference.DEFAULTS[Reference.REGEXP]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Reference.DEFAULTS[Reference.REGEXP]['links'])
+                    'data': Const.NEWLINE.join(Reference.REGEXP['data']),
+                    'brief': Reference.REGEXP['brief'],
+                    'groups': Reference.REGEXP['groups'],
+                    'tags': Const.DELIMITER_TAGS.join(Reference.REGEXP['tags']),
+                    'links': Const.DELIMITER_LINKS.join(Reference.REGEXP['links'])
                 }
             }
         }
@@ -295,10 +295,10 @@ class TestApiUpdateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+                Content.deepcopy(Reference.GITLOG)
             ]
         }
-        content['data'][0]['links'] = Reference.DEFAULTS[Reference.REGEXP]['links']
+        content['data'][0]['links'] = Reference.REGEXP['links']
         content['data'][0]['created'] = Content.GITLOG_TIME
         content['data'][0]['updated'] = Content.REGEXP_TIME
         content['data'][0]['digest'] = '915d0aa75703093ccb347755bfb597a16c0774b9b70626948dd378bd01310dec'
@@ -306,7 +306,7 @@ class TestApiUpdateReference(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'links': Const.NEWLINE.join(Reference.DEFAULTS[Reference.REGEXP]['links']),
+                    'links': Const.NEWLINE.join(Reference.REGEXP['links']),
                 }
             }
         }
@@ -348,7 +348,7 @@ class TestApiUpdateReference(object):
                 'description': '',
                 'groups': ('default',),
                 'tags': (),
-                'links': Reference.DEFAULTS[Reference.REGEXP]['links'],
+                'links': Reference.REGEXP['links'],
                 'category': 'reference',
                 'name': '',
                 'filename': '',

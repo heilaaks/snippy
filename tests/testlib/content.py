@@ -28,7 +28,6 @@ import json
 import mock
 import pprintpp
 
-from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
@@ -37,7 +36,7 @@ from snippy.meta import __homepage__
 from snippy.meta import __openapi__
 from snippy.meta import __version__
 from tests.testlib.helper import Helper
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
@@ -346,21 +345,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_dictionary, expect_dictionary)
             raise AssertionError
-
-    @staticmethod
-    def verified(mocker, snippy, content):
-        """Compare given content against content stored in database."""
-
-        mocker.patch.object(Config, 'utcnow', side_effect=(Content.EXPORT_TIME,)*len(content))
-        assert len(Database.get_collection()) == len(content)
-        with mock.patch('snippy.content.migrate.open', mock.mock_open()) as mock_file:
-            for digest in content:
-                mock_file.reset_mock()
-                cause = snippy.run(['snippy', 'export', '-d', digest, '-f', 'content.txt'])
-                assert cause == Cause.ALL_OK
-                mock_file.assert_called_once_with('content.txt', 'w')
-                file_handle = mock_file.return_value.__enter__.return_value
-                file_handle.write.assert_has_calls([mock.call(Snippet.get_template(content[digest]) + Const.NEWLINE)])
 
     @staticmethod
     def json_dump(json_dump, mock_file, filename, content):

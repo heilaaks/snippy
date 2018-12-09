@@ -26,7 +26,7 @@ import pytest
 from tests.testlib.content import Content
 from tests.testlib.snippet_helper import SnippetHelper as Snippet
 from tests.testlib.solution_helper import SolutionHelper as Solution
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 pytest.importorskip('gunicorn')
 
@@ -56,7 +56,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.PYTEST]
+                'attributes': Reference.PYTEST
             }, {
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
@@ -97,7 +97,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.PYTEST]
+                'attributes': Reference.PYTEST
             }]
 
         }
@@ -171,7 +171,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.PYTEST]
+                'attributes': Reference.PYTEST
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_DIGEST,
@@ -443,7 +443,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'reference',
                 'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.PYTEST]
+                'attributes': Reference.PYTEST
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -501,7 +501,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'reference',
                 'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.PYTEST]
+                'attributes': Reference.PYTEST
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/digest/1f9d9496005736ef'
@@ -565,7 +565,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'reference',
                 'id': Reference.PYTEST_DIGEST,
-                'attributes': Reference.DEFAULTS[Reference.PYTEST]
+                'attributes': Reference.PYTEST
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f'
@@ -647,7 +647,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'reference',
                 'id': Reference.PYTEST_DIGEST,
-                'attributes': {field: Reference.DEFAULTS[Reference.PYTEST][field] for field in ['brief']}
+                'attributes': {field: Reference.PYTEST[field] for field in ['brief']}
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief'
@@ -675,7 +675,7 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'reference',
                 'id': Reference.PYTEST_DIGEST,
-                'attributes': {field: Reference.DEFAULTS[Reference.PYTEST][field] for field in ['brief', 'tags']}
+                'attributes': {field: Reference.PYTEST[field] for field in ['brief', 'tags']}
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/uuid/27cd5827-b6ef-4067-b5ac-3ceac07dde9f/brief,tags'

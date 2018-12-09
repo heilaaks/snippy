@@ -23,7 +23,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.content import Content
-from tests.testlib.reference_helper import ReferenceHelper as Reference
+from tests.testlib.reference import Reference
 
 
 class TestCliUpdateReference(object):
@@ -39,8 +39,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
-                Reference.DEFAULTS[Reference.REGEXP]
+                Content.deepcopy(Reference.GITLOG),
+                Reference.REGEXP
             ]
         }
         content['data'][0]['links'] = ('https://docs.docker.com', )
@@ -60,8 +60,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
-                Reference.DEFAULTS[Reference.REGEXP]
+                Content.deepcopy(Reference.GITLOG),
+                Reference.REGEXP
             ]
         }
         content['data'][0]['links'] = ('https://docs.docker.com', )
@@ -82,8 +82,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
-                Reference.DEFAULTS[Reference.REGEXP]
+                Content.deepcopy(Reference.GITLOG),
+                Reference.REGEXP
             ]
         }
         content['data'][0]['links'] = ('https://docs.docker.com', )
@@ -105,8 +105,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
-                Reference.DEFAULTS[Reference.REGEXP]
+                Content.deepcopy(Reference.GITLOG),
+                Reference.REGEXP
             ]
         }
         content['data'][0]['links'] = ('https://docs.docker.com', )
@@ -126,8 +126,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'update', '--reference', '-d', '123456789abcdef0'])
@@ -145,8 +145,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'update', '--reference', '-d', ''])
@@ -162,8 +162,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
-                Reference.DEFAULTS[Reference.REGEXP]
+                Content.deepcopy(Reference.GITLOG),
+                Reference.REGEXP
             ]
         }
         content['data'][0]['links'] = ('https://docs.docker.com', )
@@ -182,8 +182,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'update', '--reference', '-u', '9999994'])
@@ -200,8 +200,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG]),
-                Reference.DEFAULTS[Reference.REGEXP]
+                Content.deepcopy(Reference.GITLOG),
+                Reference.REGEXP
             ]
         }
         content['data'][0]['links'] = ('https://docs.docker.com', )
@@ -221,8 +221,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         cause = snippy.run(['snippy', 'update', '--reference', '--links', 'links-not-exist'])
@@ -240,11 +240,11 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
-        updates = Content.deepcopy(Reference.DEFAULTS[Reference.GITLOG])
+        updates = Content.deepcopy(Reference.GITLOG)
         updates['links'] = ()
         edited_gitlog.return_value = Content.dump_text(updates)
         cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
@@ -264,12 +264,12 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG]
+                Reference.GITLOG
             ]
         }
-        edited_gitlog.return_value = Content.dump_text(Reference.DEFAULTS[Reference.GITLOG])
+        edited_gitlog.return_value = Content.dump_text(content['data'][0])
         cause = snippy.run(['snippy', 'update', '-d', 'cb9225a81eab8ced', '--reference', '--editor'])
-        edited_gitlog.assert_called_with(Content.dump_text(Reference.DEFAULTS[Reference.REGEXP]))
+        edited_gitlog.assert_called_with(Content.dump_text(Reference.REGEXP))
         assert cause == Cause.ALL_OK
         Content.assert_storage(content)
 
@@ -282,8 +282,8 @@ class TestCliUpdateReference(object):
 
         content = {
             'data': [
-                Reference.DEFAULTS[Reference.GITLOG],
-                Reference.DEFAULTS[Reference.REGEXP]
+                Reference.GITLOG,
+                Reference.REGEXP
             ]
         }
         edited_gitlog.return_value = ''

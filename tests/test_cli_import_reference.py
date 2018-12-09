@@ -199,8 +199,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         content templates without any modifications cannot be imported.
         """
 
-        mocked_open = mock.mock_open(read_data=Const.NEWLINE.join(Reference.TEMPLATE))
-        with mock.patch('snippy.content.migrate.open', mocked_open, create=True) as mock_file:
+        file_content = mock.mock_open(read_data=Const.NEWLINE.join(Reference.TEMPLATE))
+        with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '--reference', '-f', './reference-template.txt'])
             assert cause == 'NOK: content was not stored because mandatory content field links is empty'
             Content.assert_storage(None)

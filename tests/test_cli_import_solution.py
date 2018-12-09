@@ -633,7 +633,7 @@ class TestCliImportSolution(object):  # pylint: disable=too-many-public-methods
         template = template.replace('## description', '## description changed')
         content = {
             'data': [
-                Content.get_dict_content(template)
+                Content.dump_dict(template)
             ]
         }
         file_content = Content.get_file_content(Content.TEXT, content)

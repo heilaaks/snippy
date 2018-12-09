@@ -826,8 +826,8 @@ def devel_file_data(mocker):
         '            snippy = None',
         '            Database.delete_storage()'
     )
-    mocked_open = mocker.mock_open(read_data=Const.NEWLINE.join(testcase))
-    mocker.patch('snippy.devel.reference.open', mocked_open, create=True)
+    file_content = mocker.mock_open(read_data=Const.NEWLINE.join(testcase))
+    mocker.patch('snippy.devel.reference.open', file_content, create=True)
 
 @pytest.fixture(scope='function', name='devel_no_tests')
 def devel_no_tests(mocker):
@@ -843,8 +843,8 @@ def devel_no_tests(mocker):
     # class of ModuleNotFoundError and it works with older Python versions.
     mocker.patch('snippy.devel.reference.pkg_resources.resource_isdir', side_effect=[ImportError("No module named 'tests'"), mocker.DEFAULT])
     mocker.patch('snippy.devel.reference.pkg_resources.resource_listdir', return_value=tests)
-    mocked_open = mocker.mock_open(read_data=Const.EMPTY)
-    mocker.patch('snippy.devel.reference.open', mocked_open, create=True)
+    file_content = mocker.mock_open(read_data=Const.EMPTY)
+    mocker.patch('snippy.devel.reference.open', file_content, create=True)
 
 ## Helpers
 
@@ -868,8 +868,8 @@ def _import_content(snippy, mocker, contents, timestamps):
     start = len(Database.get_collection()) + 1
     with mock.patch('snippy.content.migrate.os.path.isfile', return_value=True):
         for idx, content in enumerate(contents, start=start):
-            mocked_open = mocker.mock_open(read_data=Snippet.get_template(content))
-            mocker.patch('snippy.content.migrate.open', mocked_open, create=True)
+            file_content = mocker.mock_open(read_data=Snippet.get_template(content))
+            mocker.patch('snippy.content.migrate.open', file_content, create=True)
             cause = snippy.run(['snippy', 'import', '-f', 'content.txt'])
             assert cause == Cause.ALL_OK
             assert len(Database.get_collection()) == idx

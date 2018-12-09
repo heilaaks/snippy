@@ -155,6 +155,23 @@ class Content(object):  # pylint: disable=too-many-public-methods
 
         return resource.dump_mkdn(Config.templates)
 
+
+    @staticmethod
+    def dump_dict(content):
+        """Return content in dictionary format.
+
+        Args:
+            content (str): Content in text string format.
+
+        Returns:
+            dict: Content in dictionary format.
+        """
+
+        collection = Collection()
+        collection.load_text(Content.IMPORT_TIME, content)
+
+        return collection.dump_dict()[0]
+
     @classmethod
     def assert_storage(cls, content):
         """Compare content stored in database.
@@ -321,7 +338,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             raise AssertionError
 
     @classmethod
-    def assert_yaml(cls, yaml, yaml_file, filename, content):
+    def assert_yaml(cls, yaml, yaml_file, filenames, content):
         """Compare YAML against expected content.
 
         See description for assert_storage method.
@@ -329,7 +346,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
         Args:
             yaml (obj): Mocked YAML dump method.
             yaml_file (obj): Mocked file where the YAML content was saved.
-            filename (str): Expected filename.
+            filenames (str|list): Expected filename or list of filenames.
             content (dict): Excepted content compared against generated YAML.
         """
 
@@ -340,112 +357,14 @@ class Content(object):  # pylint: disable=too-many-public-methods
         try:
             assert result_collection == expect_collection
             assert result_dictionary == expect_dictionary
-            yaml_file.assert_called_once_with(filename, 'w')
+            if isinstance(filenames, (list, tuple)):
+                for filename in filenames:
+                    yaml_file.assert_any_call(filename, 'w')
+            else:
+                yaml_file.assert_called_once_with(filenames, 'w')
         except AssertionError:
             Content._print_assert(result_collection, expect_collection)
             Content._print_assert(result_dictionary, expect_dictionary)
-            raise AssertionError
-
-    @staticmethod
-    def json_dump(json_dump, mock_file, filename, content):
-        """Compare given content against yaml dump.
-
-        Both test data and reference data must be validated for UUIDs. The
-        list of UUIDs is predefined but it must be unique so each content may
-        have any of the valid UUIDs.
-
-        Because the 'content' parameter may be modified in here, the data
-        structure is always deep copied in order to avoid modifying the
-        original which may be the content helper default JSON data.
-
-        Args:
-            json_dump (obj): Mocked yaml object.
-            mock_file (obj): Mocked file object.
-            filename (str): Expected filename used to for mocked file.
-            content (str): Content expected to be dumped into JSON file.
-        """
-
-        content = copy.deepcopy(content)
-
-        dictionary = json_dump.dump.mock_calls[0][1][0]
-        for data in content['data']:
-            if Content._is_valid_uuid(data):
-                data['uuid'] = Database.VALID_UUID
-
-        for data in dictionary['data']:
-            if Content._is_valid_uuid(data):
-                data['uuid'] = Database.VALID_UUID
-        mock_file.assert_called_once_with(filename, 'w')
-        json_dump.dump.assert_called_with(content, mock.ANY)
-
-    @staticmethod
-    def text_dump(mock_file, filename, content):
-        """Compare given content against yaml dump.
-
-        Args:
-            mock_file (obj): Mocked file where the text content was saved.
-            filename (str): Expected filename.
-            content (dict): Excepted content.
-        """
-
-        references = Const.EMPTY
-        content = copy.deepcopy(content)
-        for data in content['data']:
-            references = references + Snippet.dump(data, Content.TEXT)
-            references = references + '\n'
-        references = [references]
-
-        mock_calls = []
-        handle = mock_file.return_value.__enter__.return_value
-        for call in handle.write.mock_calls:
-            mock_calls.append(call[1][0])
-        try:
-            mock_file.assert_called_once_with(filename, 'w')
-            assert mock_calls == references
-        except AssertionError:
-            Content._print_compare(mock_file, mock_calls, references, filename)
-            raise AssertionError
-
-    @staticmethod
-    def yaml_dump(yaml_dump, mock_file, filename, content, call=0):
-        """Compare given content against yaml dump.
-
-        Both test data and reference data must be validated for UUIDs. The
-        list of UUIDs is predefined but it must be unique so each content may
-        have any of the valid UUIDs.
-
-        Because the 'content' parameter may be modified in here, the data
-        structure is always deep copied in order to avoid modifying the
-        original which may be the content helper default JSON data.
-
-        Args:
-            yaml_dump (obj): Mocked yaml object.
-            mock_file (obj): Mocked file object.
-            filename (str): Expected filename used to for mocked file.
-            content (str): Content expected to be dumped into YAML file.
-            call (int): The call order number for yaml dump.
-        """
-
-        content = copy.deepcopy(content)
-        for data in content['data']:
-            if Content._is_valid_uuid(data):
-                data['uuid'] = Database.VALID_UUID
-
-        dictionary = yaml_dump.safe_dump.mock_calls[call][1][0]
-        for data in dictionary['data']:
-            if Content._is_valid_uuid(data):
-                data['uuid'] = Database.VALID_UUID
-
-        try:
-            mock_file.assert_any_call(filename, 'w')
-            yaml_dump.safe_dump.assert_any_call(content, mock.ANY, default_flow_style=mock.ANY)
-        except AssertionError:
-            print("===REFERENCES===")
-            pprintpp.pprint(content)
-            print("===MOCK_CALLS===")
-            pprintpp.pprint(yaml_dump.safe_dump.mock_calls[0][1][0])
-            print("================")
-
             raise AssertionError
 
     @staticmethod
@@ -472,16 +391,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         }
 
         return meta
-
-    @staticmethod
-    def mocked_open(content_read):
-        """Return mocked open from content."""
-
-        mocked_open = Const.EMPTY
-        for item in content_read.values():
-            mocked_open = mocked_open + Snippet.get_template(item) + Const.NEWLINE
-
-        return mock.mock_open(read_data=mocked_open)
 
     @staticmethod
     def get_file_content(content_format, contents):
@@ -515,63 +424,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
             mocked_file = mocked_file[:-6]  # Remove last separator for Markdown content.
 
         return mock.mock_open(read_data=mocked_file)
-
-    @staticmethod
-    def get_dict_content(content):
-        """Return content in dictionary format.
-
-        Args:
-            content (str): Content in string format.
-
-        Returns:
-            dict: Content in dictionary format.
-        """
-
-        collection = Collection()
-        collection.load(Const.CONTENT_FORMAT_TEXT, Content.IMPORT_TIME, content)
-
-        return collection.dump_dict()[0]
-
-    @staticmethod
-    def updated_kafka1():
-        """Return updated kafka solution."""
-
-        # Generate updated kafka solution. No FILE defined.
-        content_read = {
-            '3cbade9454ac80d2': copy.deepcopy(Solution.KAFKA)
-        }
-        content_read['3cbade9454ac80d2']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   : ') for w in content_read['3cbade9454ac80d2']['data']])  # pylint: disable=line-too-long
-        content_read['3cbade9454ac80d2']['filename'] = Const.EMPTY
-        content_read['3cbade9454ac80d2']['digest'] = '3cbade9454ac80d20eb1b8300dc7537a3851c078791b6e69af48e289c9d62e09'
-
-        return content_read
-
-    @staticmethod
-    def updated_kafka2():
-        """Return updated kafka solution."""
-
-        # Generate updated kafka solution. No space after FILE.
-        content_read = {
-            'fb657e3b49deb5b8': copy.deepcopy(Solution.KAFKA)
-        }
-        content_read['fb657e3b49deb5b8']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   :') for w in content_read['fb657e3b49deb5b8']['data']])  # pylint: disable=line-too-long
-        content_read['fb657e3b49deb5b8']['filename'] = Const.EMPTY
-        content_read['fb657e3b49deb5b8']['digest'] = 'fb657e3b49deb5b8e55bb2aa3e81aef4fe54a161a26be728791fb6d4a423f560'
-
-        return content_read
-
-    @staticmethod
-    def updated_kafka3():
-        """Return updated kafka solution."""
-
-        # Generate updated kafka solution. Spaces around filename.
-        content_read = {
-            '21c1d813c414aec8': copy.deepcopy(Solution.KAFKA)
-        }
-        content_read['21c1d813c414aec8']['data'] = tuple([w.replace('## FILE   : kubernetes-docker-log-driver-kafka.txt', '## FILE   :  kubernetes-docker-log-driver-kafka.txt ') for w in content_read['21c1d813c414aec8']['data']])  # pylint: disable=line-too-long
-        content_read['21c1d813c414aec8']['filename'] = Const.EMPTY
-
-        return content_read
 
     @staticmethod
     def _get_expect_restapi(expect):
@@ -735,7 +587,11 @@ class Content(object):  # pylint: disable=too-many-public-methods
         if content_format == Const.CONTENT_FORMAT_JSON:
             dictionary = mock_object.dump.mock_calls[0][1][0]
         elif content_format == Const.CONTENT_FORMAT_YAML:
-            dictionary = mock_object.safe_dump.mock_calls[0][1][0]
+            for call in mock_object.safe_dump.mock_calls:
+                if 'data' not in dictionary:
+                    dictionary = call[1][0]
+                else:
+                    dictionary['data'].append(call[1][0]['data'][0])
 
         for data in dictionary['data']:
             data['uuid'] = Database.VALID_UUID
@@ -825,28 +681,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
         return text
 
     @staticmethod
-    def _is_valid_uuid(content):
-        """Test if content UUID is valid.
-
-        UUID can be any of the UUID's allocated for testing. Because the test
-        case can contain contentn in any order, the test UUID's can be used in
-        random order. Therefore the content UUID must be checked from list of
-        valid UUID's.
-
-        It may be that the UUDI field is not returned by a server for example
-        when user limits the returned fields. Because of this, missing field is
-        considered valid.
-        """
-
-        if 'uuid' not in content:
-            return True
-
-        if content['uuid'] in Database.TEST_UUIDS_STR:
-            return True
-
-        return False
-
-    @staticmethod
     def _print_assert(result, expect):
         """Print differences between results and expected values.
 
@@ -910,54 +744,6 @@ class Content(object):  # pylint: disable=too-many-public-methods
             print(result)
             print(expect)
         print("=" * 120)
-
-    @staticmethod
-    def _print_compare(mock_file, mock_calls, references, filename):  # pylint: disable=too-many-locals
-        """Print comparison data.
-
-        Compare mock and references so that the first difference is searched
-        and then add few extra lines after first failure. The failure and all
-        following lines are colored differently from standard line color.
-
-        The comparing output is printed side by side from mock and references.
-        """
-
-        # Color code lengths must be equal to align output correctly. Also when
-        # the failure colors are added, the normal coloring is removed in order
-        # to maintain correct text alignment.
-        fail = '\033[1m'
-        succ = '\x1b[2m'
-        endc = '\x1b[0m'
-        references = references[0].splitlines()
-        if mock_calls:
-            mock_calls = mock_calls[0].splitlines()
-        else:
-            mock_calls = [Const.EMPTY] * len(references)
-        references = [succ + line + endc for line in references]
-        mock_calls = [succ + line + endc for line in mock_calls]
-        idx = 0
-        failure = False
-        for idx, line in enumerate(references):
-            if line != mock_calls[idx]:
-                failure = True
-                break
-        if failure:
-            references = references[0:idx+5]
-            mock_calls = mock_calls[0:idx+5]
-            for i in range(idx, len(references)):
-                references[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', references[i]) + endc
-                mock_calls[i] = fail + Const.RE_MATCH_ANSI_ESCAPE_SEQUENCES.sub('', mock_calls[i]) + endc
-        max_len = len(max(references+mock_calls, key=len))
-        compare = Const.NEWLINE.join("| {:<{len}} | {:{len}}".format(x, y, len=max_len) for x, y in zip(references, mock_calls))
-
-        print('+' + "=" *(max_len*2))
-        reference_file = filename + ' - w'
-        mock_call_file = mock_file.mock_calls[0][1][0] + ' - ' + mock_file.mock_calls[0][1][1]
-        max_len_header = max_len-len(succ)-len(endc)- len('references: ')
-        print("| references: {:<{len}} | mock calls: {:{len}}".format(reference_file, mock_call_file, len=max_len_header))
-        print('+' + "=" *(max_len*2))
-        print(compare)
-        print('+' + "=" *(max_len*2))
 
 
 class Field(object):  # pylint: disable=too-few-public-methods

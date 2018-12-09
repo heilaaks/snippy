@@ -23,7 +23,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 
 class TestCliDeleteSnippet(object):
@@ -38,7 +38,7 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         Content.assert_storage_size(2)
@@ -56,7 +56,7 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         Content.assert_storage_size(2)
@@ -73,7 +73,7 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         Content.assert_storage_size(2)
@@ -104,8 +104,8 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-d', '123456789abcdef0'])
@@ -122,8 +122,8 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-d', ''])
@@ -140,8 +140,8 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'delete', '-d', '123456'])
@@ -157,7 +157,7 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         Content.assert_storage_size(2)
@@ -175,8 +175,8 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--content', 'not found content'])
@@ -193,8 +193,8 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--content', 'docker rm --volumes $(docker ps --all)'])
@@ -211,8 +211,8 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--content', ''])
@@ -229,7 +229,7 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         Content.assert_storage_size(2)
@@ -248,8 +248,8 @@ class TestCliDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'delete', '--sall', 'docker'])

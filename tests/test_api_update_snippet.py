@@ -27,7 +27,7 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 pytest.importorskip('gunicorn')
 
@@ -46,12 +46,12 @@ class TestApiUpdateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.EXITED])
+                Content.deepcopy(Snippet.EXITED)
             ]
         }
         content['data'][0]['created'] = Content.FORCED_TIME
         content['data'][0]['updated'] = Content.EXITED_TIME
-        content['data'][0]['digest'] = '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73'
+        content['data'][0]['digest'] = Snippet.EXITED_DIGEST
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -99,12 +99,12 @@ class TestApiUpdateSnippet(object):
 
         content = {
             'data': [{
-                'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
+                'data': Snippet.REMOVE['data'],
                 'brief': '',
                 'description': '',
-                'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
+                'groups': Snippet.REMOVE['groups'],
                 'tags': (),
-                'links': Snippet.DEFAULTS[Snippet.REMOVE]['links'],
+                'links': Snippet.REMOVE['links'],
                 'category': 'snippet',
                 'name': '',
                 'filename': '',
@@ -160,7 +160,7 @@ class TestApiUpdateSnippet(object):
 
         content = {
             'data': [{
-                'data': Snippet.DEFAULTS[Snippet.REMOVE]['data'],
+                'data': Snippet.REMOVE['data'],
                 'brief': '',
                 'description': '',
                 'groups': ('default',),
@@ -181,7 +181,7 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
+                    'data': Const.NEWLINE.join(Snippet.REMOVE['data']),
                 }
             }
         }
@@ -218,18 +218,18 @@ class TestApiUpdateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
-                    'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-                    'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+                    'data': Const.NEWLINE.join(Snippet.REMOVE['data']),
+                    'brief': Snippet.REMOVE['brief'],
+                    'groups': Snippet.REMOVE['groups'],
+                    'tags': Const.DELIMITER_TAGS.join(Snippet.REMOVE['tags']),
+                    'links': Const.DELIMITER_LINKS.join(Snippet.REMOVE['links'])
                 }
             }
         }
@@ -265,15 +265,15 @@ class TestApiUpdateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         request_body = {
-            'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-            'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-            'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
-            'tags': Const.DELIMITER_TAGS.join(Snippet.DEFAULTS[Snippet.REMOVE]['tags']),
-            'links': Const.DELIMITER_LINKS.join(Snippet.DEFAULTS[Snippet.REMOVE]['links'])
+            'data': Const.NEWLINE.join(Snippet.REMOVE['data']),
+            'brief': Snippet.REMOVE['brief'],
+            'groups': Snippet.REMOVE['groups'],
+            'tags': Const.DELIMITER_TAGS.join(Snippet.REMOVE['tags']),
+            'links': Const.DELIMITER_LINKS.join(Snippet.REMOVE['links'])
         }
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '877'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '879'}
@@ -307,12 +307,12 @@ class TestApiUpdateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.NETCAT])
+                Content.deepcopy(Snippet.NETCAT)
             ]
         }
         content['data'][0]['created'] = Content.FORCED_TIME
         content['data'][0]['updated'] = Content.NETCAT_TIME
-        content['data'][0]['digest'] = 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'
+        content['data'][0]['digest'] = Snippet.NETCAT_DIGEST
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -361,10 +361,10 @@ class TestApiUpdateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.FORCED])
+                Content.deepcopy(Snippet.FORCED)
             ]
         }
-        content['data'][0]['data'] = Snippet.DEFAULTS[Snippet.REMOVE]['data']
+        content['data'][0]['data'] = Snippet.REMOVE['data']
         content['data'][0]['created'] = Content.FORCED_TIME
         content['data'][0]['updated'] = Content.REMOVE_TIME
         content['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
@@ -372,7 +372,7 @@ class TestApiUpdateSnippet(object):
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
+                    'data': Const.NEWLINE.join(Snippet.REMOVE['data'])
                 }
             }
         }

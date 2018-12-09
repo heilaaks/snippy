@@ -24,7 +24,7 @@ import pytest
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 
 class TestCliCreateSnippet(object):
@@ -40,7 +40,7 @@ class TestCliCreateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
@@ -61,7 +61,7 @@ class TestCliCreateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
         content['data'][0]['tags'] = (content['data'][0]['tags'][0],)
@@ -83,7 +83,7 @@ class TestCliCreateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         brief = content['data'][0]['brief']
@@ -127,8 +127,8 @@ class TestCliCreateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         data = Const.DELIMITER_DATA.join(content['data'][0]['data'])
@@ -206,7 +206,7 @@ class TestCliCreateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
         content['data'][0]['groups'] = ('docker', 'dockerfile', 'moby')

@@ -28,7 +28,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
 
 
@@ -96,22 +96,22 @@ class TestCliPerformance(object):
     def create_defaults(snippy):
         """Add default snippets for testing purposes."""
 
-        file_content = mock.mock_open(read_data=Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE]))
+        file_content = Content.get_file_content(Content.TEXT, {'data': [Snippet.REMOVE]})
         with mock.patch('snippy.content.migrate.open', file_content, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'remove.txt'])
             assert cause == Cause.ALL_OK
 
-        file_content = mock.mock_open(read_data=Snippet.get_template(Snippet.DEFAULTS[Snippet.FORCED]))
+        file_content = Content.get_file_content(Content.TEXT, {'data': [Snippet.FORCED]})
         with mock.patch('snippy.content.migrate.open', file_content, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'forced.txt'])
             assert cause == Cause.ALL_OK
 
-        file_content = mock.mock_open(read_data=Snippet.get_template(Solution.BEATS))
+        file_content = Content.get_file_content(Content.TEXT, {'data': [Solution.BEATS]})
         with mock.patch('snippy.content.migrate.open', file_content, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'beats.txt'])
             assert cause == Cause.ALL_OK
 
-        file_content = mock.mock_open(read_data=Snippet.get_template(Solution.NGINX))
+        file_content = Content.get_file_content(Content.TEXT, {'data': [Solution.NGINX]})
         with mock.patch('snippy.content.migrate.open', file_content, create=True):
             cause = snippy.run(['snippy', 'import', '-f', 'nginx.txt'])
             assert cause == Cause.ALL_OK

@@ -29,7 +29,7 @@ import yaml
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 
 class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
@@ -45,8 +45,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.NETCAT]
+                Snippet.REMOVE,
+                Snippet.NETCAT
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -67,8 +67,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.NETCAT]
+                Snippet.REMOVE,
+                Snippet.NETCAT
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -89,8 +89,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.NETCAT]
+                Snippet.REMOVE,
+                Snippet.NETCAT
             ]
         }
         file_content = Content.get_file_content(Content.JSON, content)
@@ -112,8 +112,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         file_content = Content.get_file_content(Content.TEXT, content)
@@ -134,8 +134,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         file_content = Content.get_file_content(Content.TEXT, content)
@@ -199,7 +199,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -221,7 +221,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
         content['data'][0]['tags'] = ('new', 'set', 'tags')
@@ -245,7 +245,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
         content['data'][0]['brief'] = 'Updated brief description'
@@ -269,7 +269,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
         content['data'][0]['links'] = ('https://new.link',)
@@ -292,7 +292,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE])
+                Content.deepcopy(Snippet.REMOVE)
             ]
         }
         content['data'][0]['links'] = ('https://new.link', )
@@ -314,7 +314,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         file_content = Content.get_file_content(Content.TEXT, content)
@@ -339,8 +339,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -365,8 +365,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -407,9 +407,9 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED],
-                Snippet.DEFAULTS[Snippet.NETCAT]
+                Snippet.REMOVE,
+                Snippet.FORCED,
+                Snippet.NETCAT
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -432,8 +432,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         file_content = Content.get_file_content(Content.YAML, content)
@@ -454,8 +454,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.NETCAT]
+                Snippet.REMOVE,
+                Snippet.NETCAT
             ]
         }
         file_content = Content.get_file_content(Content.MKDN, content)

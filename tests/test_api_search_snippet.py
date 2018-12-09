@@ -24,7 +24,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 pytest.importorskip('gunicorn')
 
@@ -56,11 +56,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'attributes': Snippet.FORCED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -95,11 +95,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': Snippet.EXITED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -134,8 +134,8 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
+                'id': Snippet.FORCED_DIGEST,
+                'attributes': {field: Snippet.FORCED[field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -169,8 +169,8 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
+                'id': Snippet.FORCED_DIGEST,
+                'attributes': {field: Snippet.FORCED[field] for field in ['brief', 'category']}
             }]
         }
 
@@ -205,11 +205,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.NETCAT_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
+                'attributes': Snippet.NETCAT
             }, {
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': Snippet.EXITED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -244,11 +244,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.NETCAT_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
+                'attributes': Snippet.NETCAT
             }, {
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': Snippet.EXITED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -309,8 +309,8 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': {field: Snippet.DEFAULTS[Snippet.FORCED][field] for field in ['brief', 'category']}
+                'id': Snippet.FORCED_DIGEST,
+                'attributes': {field: Snippet.FORCED[field] for field in ['brief', 'category']}
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -432,7 +432,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': {
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             },
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets/54e41e9b52a02b63'
@@ -495,11 +495,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'id': Snippet.FORCED_DIGEST,
+                'attributes': Snippet.FORCED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -533,8 +533,8 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'id': Snippet.FORCED_DIGEST,
+                'attributes': Snippet.FORCED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -572,11 +572,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'id': Snippet.FORCED_DIGEST,
+                'attributes': Snippet.FORCED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -612,19 +612,19 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': Snippet.EXITED
             }, {
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'id': Snippet.FORCED_DIGEST,
+                'attributes': Snippet.FORCED
             }, {
                 'type': 'snippet',
                 'id': Snippet.NETCAT_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
+                'attributes': Snippet.NETCAT
             }],
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=10&offset=0&sall=docker%2Cnmap&sort=brief',
@@ -664,11 +664,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': Snippet.EXITED
             }],
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cnmap&sort=brief',
@@ -707,12 +707,12 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             },
             'data': [{
                 'type': 'snippet',
-                'id': '53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5',
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'id': Snippet.FORCED_DIGEST,
+                'attributes': Snippet.FORCED
             }, {
                 'type': 'snippet',
                 'id': Snippet.NETCAT_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
+                'attributes': Snippet.NETCAT
             }],
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=2&sall=docker%2Cnmap&sort=brief',
@@ -754,7 +754,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': Snippet.EXITED
             }],
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=1&offset=1&sall=docker%2Cnmap&sort=brief',
@@ -798,11 +798,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': Snippet.EXITED
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'attributes': Snippet.FORCED
             }],
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=1&sall=docker%2Cnmap&sort=brief',
@@ -845,7 +845,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.NETCAT_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.NETCAT]
+                'attributes': Snippet.NETCAT
             }],
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=3&sall=docker%2Cnmap&sort=brief',
@@ -885,11 +885,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': Snippet.EXITED
             }],
             'links': {
                 'self': 'http://falconframework.org/snippy/api/app/v1/snippets?limit=2&offset=0&sall=docker%2Cumount%2Cnmap&sort=brief',
@@ -1104,7 +1104,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
-                    'data': Snippet.DEFAULTS[Snippet.REMOVE]['data']
+                    'data': Snippet.REMOVE['data']
                 }
             },
             'links': {
@@ -1136,7 +1136,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
-                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief']
+                    'brief': Snippet.REMOVE['brief']
                 }
             },
             'links': {
@@ -1166,7 +1166,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
-                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups']
+                    'groups': Snippet.REMOVE['groups']
                 }
             },
             'links': {
@@ -1196,7 +1196,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
-                    'tags': Snippet.DEFAULTS[Snippet.REMOVE]['tags']
+                    'tags': Snippet.REMOVE['tags']
                 }
             },
             'links': {
@@ -1226,7 +1226,7 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
                 'attributes': {
-                    'links': Snippet.DEFAULTS[Snippet.REMOVE]['links']
+                    'links': Snippet.REMOVE['links']
                 }
             },
             'links': {
@@ -1321,11 +1321,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'attributes': Snippet.FORCED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -1360,11 +1360,11 @@ class TestApiSearchSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.EXITED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.EXITED]
+                'attributes': Snippet.EXITED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(

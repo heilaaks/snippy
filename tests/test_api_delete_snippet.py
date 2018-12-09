@@ -24,7 +24,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 pytest.importorskip('gunicorn')
 
@@ -42,8 +42,8 @@ class TestApiDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         expect_headers = {}
@@ -64,9 +64,9 @@ class TestApiDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED],
-                Snippet.DEFAULTS[Snippet.NETCAT],
+                Snippet.REMOVE,
+                Snippet.FORCED,
+                Snippet.NETCAT,
             ]
         }
         expect_headers = {
@@ -100,8 +100,8 @@ class TestApiDeleteSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         expect_headers = {

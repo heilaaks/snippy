@@ -29,7 +29,7 @@ import yaml
 from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 
 class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
@@ -46,8 +46,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -66,8 +66,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -85,8 +85,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -105,8 +105,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -142,7 +142,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -161,7 +161,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -180,7 +180,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -200,7 +200,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -233,7 +233,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -252,7 +252,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -271,7 +271,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -290,7 +290,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -309,7 +309,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -329,8 +329,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -362,7 +362,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -381,7 +381,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -400,7 +400,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -419,7 +419,7 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -468,8 +468,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -504,8 +504,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -523,8 +523,8 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:

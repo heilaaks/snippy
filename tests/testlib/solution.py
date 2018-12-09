@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""solution_helper: Default solutions for testing."""
+"""solution: Default solutions for testing."""
 
 from tests.testlib.helper import Helper
 

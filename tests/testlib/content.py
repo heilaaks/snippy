@@ -37,7 +37,7 @@ from snippy.meta import __openapi__
 from snippy.meta import __version__
 from tests.testlib.helper import Helper
 from tests.testlib.reference import Reference
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
@@ -171,6 +171,22 @@ class Content(object):  # pylint: disable=too-many-public-methods
         collection.load_text(Content.IMPORT_TIME, content)
 
         return collection.dump_dict()[0]
+
+    @staticmethod
+    def get_collection(content):
+        """Return collection from content.
+
+        Args:
+            content (dict): Content in a dictionary format.
+
+        Returns:
+            CollectionI(): Content stored in collection.
+        """
+
+        collection = Collection()
+        collection.load(Const.CONTENT_FORMAT_DICT, Content.IMPORT_TIME, {'data': [content]})
+
+        return collection
 
     @classmethod
     def assert_storage(cls, content):

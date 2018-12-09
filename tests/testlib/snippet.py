@@ -17,32 +17,30 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""snippet_helper: Helper methods for snippet testing."""
+"""snippet: Default snippets for testing."""
 
-from snippy.config.config import Config
-from snippy.constants import Constants as Const
-from snippy.content.collection import Collection
 from tests.testlib.helper import Helper
 
 
-class SnippetHelper(object):
-    """Helper methods for snippet testing."""
+class Snippet(object):  # pylint: disable=too-few-public-methods
+    """Default snippets for testing."""
 
-    REMOVE = 0
-    FORCED = 1
-    EXITED = 2
-    NETCAT = 3
-    UMOUNT = 4
-    INTERP = 5
+    _REMOVE = 0
+    _FORCED = 1
+    _EXITED = 2
+    _NETCAT = 3
+    _UMOUNT = 4
+    _INTERP = 5
 
+    # Default time is same for the default content. See 'Test case layouts and
+    # data structures' for more information.
     DEFAULT_TIME = '2017-10-14T19:56:31.000001+0000'
-    DEFAULT_SNIPPETS = (REMOVE, FORCED)
 
     # Default content must be always set so that it reflects content stored
     # into database. For example the tags must be sorted in correct order.
     # This forces defining erroneous content in each test case. This improves
     # the readability and maintainability of failure testing.
-    DEFAULTS = ({
+    _DEFAULTS = ({
         'data': ('docker rm --volumes $(docker ps --all --quiet)',),
         'brief': 'Remove all docker containers with volumes',
         'description': '',
@@ -148,77 +146,35 @@ class SnippetHelper(object):
         'digest': '9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3'
     })
 
-    REMOVE_CREATED = DEFAULTS[REMOVE]['created']
-    REMOVE_UPDATED = DEFAULTS[REMOVE]['updated']
-    FORCED_CREATED = DEFAULTS[FORCED]['created']
-    FORCED_UPDATED = DEFAULTS[FORCED]['updated']
-    EXITED_CREATED = DEFAULTS[EXITED]['created']
-    EXITED_UPDATED = DEFAULTS[EXITED]['updated']
-    NETCAT_CREATED = DEFAULTS[NETCAT]['created']
-    NETCAT_UPDATED = DEFAULTS[NETCAT]['updated']
-    UMOUNT_CREATED = DEFAULTS[UMOUNT]['created']
-    UMOUNT_UPDATED = DEFAULTS[UMOUNT]['updated']
-    INTERP_CREATED = DEFAULTS[INTERP]['created']
-    INTERP_UPDATED = DEFAULTS[INTERP]['updated']
+    REMOVE_CREATED = _DEFAULTS[_REMOVE]['created']
+    REMOVE_UPDATED = _DEFAULTS[_REMOVE]['updated']
+    FORCED_CREATED = _DEFAULTS[_FORCED]['created']
+    FORCED_UPDATED = _DEFAULTS[_FORCED]['updated']
+    EXITED_CREATED = _DEFAULTS[_EXITED]['created']
+    EXITED_UPDATED = _DEFAULTS[_EXITED]['updated']
+    NETCAT_CREATED = _DEFAULTS[_NETCAT]['created']
+    NETCAT_UPDATED = _DEFAULTS[_NETCAT]['updated']
+    UMOUNT_CREATED = _DEFAULTS[_UMOUNT]['created']
+    UMOUNT_UPDATED = _DEFAULTS[_UMOUNT]['updated']
+    INTERP_CREATED = _DEFAULTS[_INTERP]['created']
+    INTERP_UPDATED = _DEFAULTS[_INTERP]['updated']
 
     if not DEFAULT_TIME == REMOVE_CREATED == REMOVE_UPDATED == FORCED_CREATED == FORCED_UPDATED:
         raise Exception('default content timestamps must be same - see \'Test case layouts and data structures\'')
 
-    REMOVE_DIGEST = DEFAULTS[REMOVE]['digest']
-    FORCED_DIGEST = DEFAULTS[FORCED]['digest']
-    EXITED_DIGEST = DEFAULTS[EXITED]['digest']
-    NETCAT_DIGEST = DEFAULTS[NETCAT]['digest']
-    UMOUNT_DIGEST = DEFAULTS[UMOUNT]['digest']
-    INTERP_DIGEST = DEFAULTS[INTERP]['digest']
+    REMOVE_DIGEST = _DEFAULTS[_REMOVE]['digest']
+    FORCED_DIGEST = _DEFAULTS[_FORCED]['digest']
+    EXITED_DIGEST = _DEFAULTS[_EXITED]['digest']
+    NETCAT_DIGEST = _DEFAULTS[_NETCAT]['digest']
+    UMOUNT_DIGEST = _DEFAULTS[_UMOUNT]['digest']
+    INTERP_DIGEST = _DEFAULTS[_INTERP]['digest']
 
-    TEMPLATE = Helper.read_template('snippet.txt').split(Const.NEWLINE)
+    REMOVE = _DEFAULTS[_REMOVE]
+    FORCED = _DEFAULTS[_FORCED]
+    EXITED = _DEFAULTS[_EXITED]
+    NETCAT = _DEFAULTS[_NETCAT]
+    UMOUNT = _DEFAULTS[_UMOUNT]
+    INTERP = _DEFAULTS[_INTERP]
+    DEFAULT_SNIPPETS = (REMOVE, FORCED)
 
-    @staticmethod
-    def get_collection(snippet=None):
-        """Transform text template to content."""
-
-        collection = Collection()
-        collection.load(Const.CONTENT_FORMAT_DICT, Config.utcnow(), {'data': [SnippetHelper.DEFAULTS[snippet]]})
-
-        return collection
-
-    @staticmethod
-    def get_dictionary(template):
-        """Transform template to dictinary."""
-
-        collection = Collection()
-        collection.load(Const.CONTENT_FORMAT_TEXT, Config.utcnow(), template)
-        resource = next(collection.resources())
-
-        return resource.dump_dict(Config.remove_fields)
-
-    @staticmethod
-    def dump(content, content_format):
-        """Dump one content into requested format.
-
-        Args:
-            content (dict): Content in dictionary.
-            content_format (str): Content format.
-
-        Returns:
-            str: Content in requested format.
-        """
-
-        dump = Const.EMPTY
-        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+0000')
-        resource.load_dict(content)
-        if content_format == Const.CONTENT_FORMAT_TEXT:
-            dump = resource.dump_text(Config.templates)
-        elif content_format == Const.CONTENT_FORMAT_MKDN:
-            dump = resource.dump_mkdn(Config.templates)
-
-        return dump
-
-    @staticmethod
-    def get_template(dictionary):
-        """Transform dictionary to text template."""
-
-        resource = Collection.get_resource(dictionary['category'], '2018-10-20T06:16:27.000001+0000')
-        resource.load_dict(dictionary)
-
-        return resource.dump_text(Config.templates)
+    TEMPLATE = Helper.read_template('snippet.txt').split('\n')

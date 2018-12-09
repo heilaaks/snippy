@@ -23,7 +23,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 
 class TestCliUpdateSnippet(object):
@@ -39,8 +39,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Content.deepcopy(Snippet.REMOVE),
+                Snippet.FORCED
             ]
         }
         content['data'][0]['data'] = ('docker images', )
@@ -60,8 +60,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Content.deepcopy(Snippet.REMOVE),
+                Snippet.FORCED
             ]
         }
         content['data'][0]['data'] = ('docker images', )
@@ -81,8 +81,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Content.deepcopy(Snippet.REMOVE),
+                Snippet.FORCED
             ]
         }
         content['data'][0]['data'] = ('docker images', )
@@ -102,8 +102,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Content.deepcopy(Snippet.REMOVE),
+                Snippet.FORCED
             ]
         }
         content['data'][0]['data'] = ('docker images', )
@@ -124,8 +124,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Content.deepcopy(Snippet.REMOVE),
+                Snippet.FORCED
             ]
         }
         content['data'][0]['data'] = ('docker images', )
@@ -145,8 +145,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'update', '-d', '123456789abcdef0'])
@@ -164,8 +164,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'update', '-d', ''])
@@ -185,8 +185,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'update', '-d', '5'])
@@ -202,8 +202,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.REMOVE]),
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Content.deepcopy(Snippet.REMOVE),
+                Snippet.FORCED
             ]
         }
         content['data'][0]['data'] = ('docker images', )
@@ -222,8 +222,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'update', '-c', 'snippet not existing'])
@@ -240,8 +240,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'update', '-c', ''])
@@ -259,8 +259,8 @@ class TestCliUpdateSnippet(object):
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         cause = snippy.run(['snippy', 'update', '-c', 'docker'])

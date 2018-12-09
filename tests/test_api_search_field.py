@@ -24,7 +24,7 @@ import falcon
 import pytest
 
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
 from tests.testlib.reference import Reference
 
@@ -60,11 +60,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             }, {
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'attributes': Snippet.FORCED
             }]
 
         }
@@ -131,11 +131,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'attributes': Snippet.FORCED
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_DIGEST,
@@ -332,11 +332,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'attributes': Snippet.FORCED
             }]
         }
         result = testing.TestClient(server.server.api).simulate_get(
@@ -403,11 +403,11 @@ class TestApiSearchField(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': Snippet.FORCED_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.FORCED]
+                'attributes': Snippet.FORCED
             }, {
                 'type': 'solution',
                 'id': Solution.KAFKA_DIGEST,

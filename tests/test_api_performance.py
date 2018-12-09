@@ -31,7 +31,7 @@ import pytest
 
 from snippy.cause import Cause
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 try:
     import http.client as httplib
@@ -81,10 +81,10 @@ class TestApiPerformance(object):
         time.sleep(1)  # Wait untill server is up.
         snippets = {
             'data': [
-                {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
-                {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]},
-                {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]},
-                {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]}
+                {'type': 'snippet', 'attributes': Snippet.REMOVE},
+                {'type': 'snippet', 'attributes': Snippet.FORCED},
+                {'type': 'snippet', 'attributes': Snippet.EXITED},
+                {'type': 'snippet', 'attributes': Snippet.NETCAT}
             ]
         }
         conn = httplib.HTTPConnection('localhost', port=8080)
@@ -175,10 +175,10 @@ class TestApiPerformance(object):
         time.sleep(1)  # Wait untill server up.
         snippets = {
             'data': [
-                {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.REMOVE]},
-                {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.FORCED]},
-                {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.EXITED]},
-                {'type': 'snippet', 'attributes': Snippet.DEFAULTS[Snippet.NETCAT]}
+                {'type': 'snippet', 'attributes': Snippet.REMOVE},
+                {'type': 'snippet', 'attributes': Snippet.FORCED},
+                {'type': 'snippet', 'attributes': Snippet.EXITED},
+                {'type': 'snippet', 'attributes': Snippet.NETCAT}
             ]
         }
         conn = httplib.HTTPConnection('localhost', port=8080)

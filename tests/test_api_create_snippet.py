@@ -28,7 +28,7 @@ import pytest
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 
 pytest.importorskip('gunicorn')
 
@@ -46,7 +46,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         request_body = {
@@ -87,7 +87,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         request_body = {
@@ -128,16 +128,16 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         request_body = {
             'data': [{
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data']),
-                    'brief': Snippet.DEFAULTS[Snippet.REMOVE]['brief'],
-                    'groups': Snippet.DEFAULTS[Snippet.REMOVE]['groups'],
+                    'data': Const.NEWLINE.join(Snippet.REMOVE['data']),
+                    'brief': Snippet.REMOVE['brief'],
+                    'groups': Snippet.REMOVE['groups'],
                     'tags': [' moby ', 'cleanup  ', '  container', 'docker', 'docker-ce'],
                     'links': ['https://docs.docker.com/engine/reference/commandline/rm/']
                 }
@@ -174,7 +174,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.EXITED]
+                Snippet.EXITED
             ]
         }
         request_body = {
@@ -222,7 +222,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.EXITED]
+                Snippet.EXITED
             ]
         }
         request_body = {
@@ -323,8 +323,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         request_body = {
@@ -368,7 +368,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         JSON request. In this case the top level json object is incorrect.
         """
 
-        request_body = Snippet.DEFAULTS[Snippet.REMOVE]
+        request_body = Snippet.REMOVE
         expect_headers_p3 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '889'}
         expect_headers_p2 = {'content-type': 'application/vnd.api+json; charset=UTF-8', 'content-length': '891'}
         expect_body = {
@@ -446,7 +446,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
             'data': [{
                 'type': 'snippet',
                 'id': Snippet.REMOVE_DIGEST,
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }]
         }
         expect_headers = {
@@ -484,7 +484,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'attributes': {'brief': ''}
@@ -524,7 +524,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }, {
                 'type': 'snippet',
                 'id': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd',
@@ -565,7 +565,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         request_body = {
@@ -607,16 +607,16 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Content.deepcopy(Snippet.DEFAULTS[Snippet.FORCED])
+                Content.deepcopy(Snippet.FORCED)
             ]
         }
-        content['data'][0]['data'] = Snippet.DEFAULTS[Snippet.REMOVE]['data']
+        content['data'][0]['data'] = Snippet.REMOVE['data']
         content['data'][0]['digest'] = 'a9e137c08aee09852797a974ef91b871c48915fecf25b2e89c5bdba4885b2bd2'
         request_body = {
             'data': {
                 'type': 'snippet',
                 'attributes': {
-                    'data': Const.NEWLINE.join(Snippet.DEFAULTS[Snippet.REMOVE]['data'])
+                    'data': Const.NEWLINE.join(Snippet.REMOVE['data'])
                 }
             }
         }
@@ -725,8 +725,8 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
-                Snippet.DEFAULTS[Snippet.FORCED]
+                Snippet.REMOVE,
+                Snippet.FORCED
             ]
         }
         expect_headers = {}
@@ -750,7 +750,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         request_body = {
             'data': [{
                 'type': 'snippet',
-                'attributes': Snippet.DEFAULTS[Snippet.REMOVE]
+                'attributes': Snippet.REMOVE
             }]
         }
         expect_headers = {

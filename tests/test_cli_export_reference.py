@@ -30,7 +30,7 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.reference import Reference
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
 
 
@@ -392,7 +392,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
         content = {
             'meta': Content.get_cli_meta(),
             'data': [
-                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.REMOVE,
                 Solution.BEATS,
                 Reference.GITLOG
             ]
@@ -439,7 +439,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             'meta': Content.get_cli_meta(),
             'data': [
                 Reference.GITLOG,
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
@@ -481,7 +481,7 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
             'meta': Content.get_cli_meta(),
             'data': [
                 Reference.GITLOG,
-                Snippet.DEFAULTS[Snippet.REMOVE]
+                Snippet.REMOVE
             ]
         }
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:

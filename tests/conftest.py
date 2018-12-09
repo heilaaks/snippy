@@ -29,11 +29,12 @@ import yaml
 from snippy.cause import Cause
 from snippy.config.config import Config
 from snippy.constants import Constants as Const
+from snippy.content.collection import Collection
 from snippy.config.source.editor import Editor
 from snippy.snip import Snippy
 from tests.testlib.helper import Helper
 from tests.testlib.reference import Reference
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
@@ -324,7 +325,7 @@ def import_content_time_mock(mocker):
 def import_default_snippets(mocker, snippy):
     """Import default snippets for testing purposes."""
 
-    contents = [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.FORCED]]
+    contents = [Snippet.REMOVE, Snippet.FORCED]
     _import_content(snippy, mocker, contents, IMPORT_DEFAULT_SNIPPETS)
 
 @pytest.fixture(scope='function', name='default-snippets-utc')
@@ -337,14 +338,14 @@ def import_snippets_time_mock(mocker):
 def import_exited_snippet(mocker, snippy):
     """Import 'exited' snippet for testing purposes."""
 
-    contents = [Snippet.DEFAULTS[Snippet.EXITED]]
+    contents = [Snippet.EXITED]
     _import_content(snippy, mocker, contents, IMPORT_EXITED)
 
 @pytest.fixture(scope='function', name='import-remove')
 def import_remove_snippet(mocker, snippy):
     """Import 'remove' snippet for testing purposes."""
 
-    contents = [Snippet.DEFAULTS[Snippet.REMOVE]]
+    contents = [Snippet.REMOVE]
     _import_content(snippy, mocker, contents, IMPORT_REMOVE)
 
 @pytest.fixture(scope='function', name='create-remove-utc')
@@ -369,7 +370,7 @@ def import_remove_time_mock(mocker):
 def edit_remove_snippet(mocker):
     """Edited 'remove' snippet."""
 
-    template = Snippet.get_template(Snippet.DEFAULTS[Snippet.REMOVE])
+    template = _get_template(Snippet.REMOVE)
     mocker.patch.object(Editor, '_call_editor', return_value=template)
     mocker.patch.object(Config, 'utcnow', side_effect=EDITED_REMOVE)
 
@@ -383,7 +384,7 @@ def edited_remove(mocker):
 def import_forced_snippet(mocker, snippy):
     """Import 'forced' snippet for testing purposes."""
 
-    contents = [Snippet.DEFAULTS[Snippet.FORCED]]
+    contents = [Snippet.FORCED]
     _import_content(snippy, mocker, contents, IMPORT_FORCED)
 
 @pytest.fixture(scope='function', name='create-forced-utc')
@@ -420,7 +421,7 @@ def update_exited_time_mock(mocker):
 def import_netcat_snippet(mocker, snippy):
     """Import 'netcat' snippet for testing purposes."""
 
-    contents = [Snippet.DEFAULTS[Snippet.NETCAT]]
+    contents = [Snippet.NETCAT]
     _import_content(snippy, mocker, contents, IMPORT_NETCAT)
 
 @pytest.fixture(scope='function', name='netcat-utc')
@@ -445,14 +446,14 @@ def import_netcat_time_mock(mocker):
 def import_umount_snippet(mocker, snippy):
     """Import 'umount' snippet for testing purposes."""
 
-    contents = [Snippet.DEFAULTS[Snippet.UMOUNT]]
+    contents = [Snippet.UMOUNT]
     _import_content(snippy, mocker, contents, IMPORT_UMOUNT)
 
 @pytest.fixture(scope='function', name='import-interp')
 def import_interp_snippet(mocker, snippy):
     """Import 'interp' snippet for testing purposes."""
 
-    contents = [Snippet.DEFAULTS[Snippet.INTERP]]
+    contents = [Snippet.INTERP]
     _import_content(snippy, mocker, contents, IMPORT_INTERP)
 
 ## Solutions
@@ -513,7 +514,7 @@ def import_beats_time_mock(mocker):
 def edit_beats_solution(mocker):
     """Edited 'beats' solution."""
 
-    template = Snippet.get_template(Solution.BEATS)
+    template = _get_template(Solution.BEATS)
     mocker.patch.object(Editor, '_call_editor', return_value=template)
     _add_utc_time(mocker, EDITED_BEATS)
 
@@ -807,7 +808,7 @@ def devel_file_data(mocker):
         '',
         '        mock_isfile.return_value = True',
         '        mock_storage_file.return_value = Database.get_storage()',
-        '        import_dict = {\'content\': [Snippet.DEFAULTS[Snippet.REMOVE], Snippet.DEFAULTS[Snippet.NETCAT]]}',
+        '        import_dict = {\'content\': [Snippet.REMOVE, Snippet.NETCAT]}',
         '        mock_yaml_load.return_value = import_dict',
         '        mock_json_load.return_value = import_dict',
         '        compare_content = {\'54e41e9b52a02b63\': import_dict[\'data\'][0],',
@@ -848,6 +849,14 @@ def devel_no_tests(mocker):
 
 ## Helpers
 
+def _get_template(dictionary):
+    """Transform dictionary to text template."""
+
+    resource = Collection.get_resource(dictionary['category'], '2018-10-20T06:16:27.000001+0000')
+    resource.load_dict(dictionary)
+
+    return resource.dump_text(Config.templates)
+
 def _create_snippy(mocker, options):
     """Create snippy with mocks."""
 
@@ -868,7 +877,7 @@ def _import_content(snippy, mocker, contents, timestamps):
     start = len(Database.get_collection()) + 1
     with mock.patch('snippy.content.migrate.os.path.isfile', return_value=True):
         for idx, content in enumerate(contents, start=start):
-            file_content = mocker.mock_open(read_data=Snippet.get_template(content))
+            file_content = mocker.mock_open(read_data=_get_template(content))
             mocker.patch('snippy.content.migrate.open', file_content, create=True)
             cause = snippy.run(['snippy', 'import', '-f', 'content.txt'])
             assert cause == Cause.ALL_OK
@@ -888,7 +897,7 @@ def _editor(mocker, timestamp):
     """Mock editor."""
 
     editor = mocker.patch.object(Editor, '_call_editor')
-    _add_utc_time(mocker, timestamp*3)
+    _add_utc_time(mocker, timestamp*2)
 
     return editor
 

@@ -20,7 +20,8 @@
 """test_ut_sqlitedb: Test Sqlitedb() class."""
 
 from snippy.constants import Constants as Const
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.content import Content
+from tests.testlib.snippet import Snippet
 from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
@@ -33,7 +34,7 @@ class TestUtSqlitedb(object):
         Insert one Snippet resource into the database.
         """
 
-        collection = Snippet.get_collection(snippet=Snippet.REMOVE)
+        collection = Content.get_collection(Snippet.REMOVE)
         sqlitedb.insert(collection)
         cause.assert_called_once_with('201 Created', 'content created')
         assert collection == Database.get_snippets()
@@ -46,10 +47,10 @@ class TestUtSqlitedb(object):
         multiple items in tag and link lists.
         """
 
-        collection = Snippet.get_collection(snippet=Snippet.REMOVE)
-        collection.migrate(Snippet.get_collection(snippet=Snippet.FORCED))
-        collection.migrate(Snippet.get_collection(snippet=Snippet.EXITED))
-        collection.migrate(Snippet.get_collection(snippet=Snippet.NETCAT))
+        collection = Content.get_collection(Snippet.REMOVE)
+        collection.migrate(Content.get_collection(Snippet.FORCED))
+        collection.migrate(Content.get_collection(Snippet.EXITED))
+        collection.migrate(Content.get_collection(Snippet.NETCAT))
         sqlitedb.insert(collection)
         cause.assert_called_once_with('201 Created', 'content created')
         assert collection == Database.get_snippets()
@@ -62,13 +63,13 @@ class TestUtSqlitedb(object):
         keyword matches to links column.
         """
 
-        collection = Snippet.get_collection(snippet=Snippet.FORCED)
-        collection.migrate(Snippet.get_collection(snippet=Snippet.EXITED))
-        collection.migrate(Snippet.get_collection(snippet=Snippet.NETCAT))
+        collection = Content.get_collection(Snippet.FORCED)
+        collection.migrate(Content.get_collection(Snippet.EXITED))
+        collection.migrate(Content.get_collection(Snippet.NETCAT))
         sqlitedb.insert(collection)
         collection = sqlitedb.select(scat=(Const.SNIPPET,), sall=('foo', 'bar', 'digitalocean'))
         cause.assert_called_once_with('201 Created', 'content created')
-        assert collection == Snippet.get_collection(snippet=Snippet.FORCED)
+        assert collection == Content.get_collection(Snippet.FORCED)
 
     def test_sqlitedb_delete_002(self, sqlitedb, cause, mocker):
         """Test SqliteDb basic delete.
@@ -76,15 +77,15 @@ class TestUtSqlitedb(object):
         Delete one row from database with short digest.
         """
 
-        collection = Snippet.get_collection(snippet=Snippet.REMOVE)
-        collection.migrate(Snippet.get_collection(snippet=Snippet.FORCED))
+        collection = Content.get_collection(Snippet.REMOVE)
+        collection.migrate(Content.get_collection(Snippet.FORCED))
         sqlitedb.insert(collection)
         sqlitedb.delete('53908d68425c61dc')
         results = []
         results.append(mocker.call('201 Created', 'content created'))
         results.append(mocker.call('204 No Content', 'content deleted successfully'))
         cause.assert_has_calls(results)
-        assert Database.get_snippets() == Snippet.get_collection(snippet=Snippet.REMOVE)
+        assert Database.get_snippets() == Content.get_collection(Snippet.REMOVE)
         assert len(Database.get_snippets()) == 1
 
     def test_sqlitedb_delete_001(self, sqlitedb, cause, mocker):
@@ -93,13 +94,13 @@ class TestUtSqlitedb(object):
         Delete one row from database with long digest.
         """
 
-        collection = Snippet.get_collection(snippet=Snippet.REMOVE)
-        collection.migrate(Snippet.get_collection(snippet=Snippet.FORCED))
+        collection = Content.get_collection(Snippet.REMOVE)
+        collection.migrate(Content.get_collection(Snippet.FORCED))
         sqlitedb.insert(collection)
         sqlitedb.delete('53908d68425c61dc310c9ce49d530bd858c5be197990491ca20dbe888e6deac5')
         results = []
         results.append(mocker.call('201 Created', 'content created'))
         results.append(mocker.call('204 No Content', 'content deleted successfully'))
         cause.assert_has_calls(results)
-        assert Database.get_snippets() == Snippet.get_collection(snippet=Snippet.REMOVE)
+        assert Database.get_snippets() == Content.get_collection(Snippet.REMOVE)
         assert len(Database.get_snippets()) == 1

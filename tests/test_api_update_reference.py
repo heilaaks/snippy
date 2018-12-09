@@ -51,7 +51,7 @@ class TestApiUpdateReference(object):
         }
         content['data'][0]['created'] = Content.GITLOG_TIME
         content['data'][0]['updated'] = Content.PYTEST_TIME
-        content['data'][0]['digest'] = '1f9d9496005736efe321d44a28c05ca9ed0e53f7170743df361ddcd7b884455e'
+        content['data'][0]['digest'] = Reference.PYTEST_DIGEST
         request_body = {
             'data': {
                 'type': 'snippet',
@@ -247,7 +247,7 @@ class TestApiUpdateReference(object):
         request_body = {
             'data': {
                 'type': 'reference',
-                'id': 'cb9225a81eab8ced090649f795001509b85161246b46de7d12ab207698373832',
+                'id': Reference.REGEXP_DIGEST,
                 'attributes': {
                     'data': Const.NEWLINE.join(Reference.REGEXP['data']),
                     'brief': Reference.REGEXP['brief'],

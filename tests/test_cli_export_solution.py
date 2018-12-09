@@ -30,7 +30,7 @@ from snippy.cause import Cause
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
 from tests.testlib.reference import Reference
-from tests.testlib.snippet_helper import SnippetHelper as Snippet
+from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
 
 
@@ -658,7 +658,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             'data': [
                 Solution.BEATS,
                 Solution.NGINX,
-                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.REMOVE,
                 Reference.GITLOG
             ]
         }
@@ -679,7 +679,7 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
             'data': [
                 Solution.BEATS,
                 Solution.NGINX,
-                Snippet.DEFAULTS[Snippet.REMOVE],
+                Snippet.REMOVE,
                 Reference.GITLOG
             ]
         }

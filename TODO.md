@@ -1,18 +1,23 @@
 ## WORKING
-   - [ ] Fix dump_text and handing of "raw format". The user should be able to use \n "as is" without interpolation. decode immediately in parser? P3: .encode().decode("unicode-escape")) P2:https://stackoverflow.com/a/26867674 (this works)
+   - [ ] Add support for CockroachDB and PostgreSQL and make database modules more generic.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
-   - [ ] Add https://github.com/cockroachdb/cockroach and refactor Sqlite to more generic. The connect is sqlite but rest SQL is generic?
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.
    - [ ] Fix (?) updating JSON or YAML solution (only solution?) with mkdn or text data where data brief changes. This is not now updated in case of YAML/JSON solution because the dict is just read. The problem is to how to identify text or Markdown from YAML/JSON (dict)?
    - [ ] Fix better logs if --logs-json (invalid option name) is used with -vv. Now there is not proper log what went wrong with -vv/--debug?
    - [ ] Fix help text to use import --all instead of content specific commands.
+   - [ ] Add changelog to README.
+   - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
+   - [ ] Fix '--filter 0' maps to None instead of 0?
+   - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
+   - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
+   - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.
+   - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
 
 ## THINKING
    - [ ] Add code content.
    - [ ] Add Debug() for all classes. Add debug() for snippy that calls all the debugs that Snippy imports.
    - [ ] Add UT tests for class Debug() methods.
    - [ ] Add --help server to list server specific commands and log parameters. Maybe add --help debug/troubleshoot? Debug better because it is shorter?
-   - [ ] Add changelog to README.
    - [ ] Add tool configs to pyproject.toml.
 
 ## OPTIMIZATIONS
@@ -47,26 +52,17 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
-   - [ ] Fix and test adding two same tags, links and categories. At least from text source two tags are duplicated. Verify others.
    - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok?
-   - [ ] Fix (remove) the LANG in Alpine based dockerfile? Is this useless as MUSL does not support locales? https://github.com/gliderlabs/docker-alpine/issues/144
    - [ ] Fix Gunicorn info logs to debug somehow?
-   - [ ] Fix content import from other than text template and API to trimp content same way? for example yaml? The stored content should load as is likely...
-   - [ ] Fix '--filter 0' maps to None instead of 0?
-   - [ ] Fix does the Parser really return UTF-8 encoded strings always? For example (links/keywords) is not coverted and other use decode(utf-8) which is opposite?
    - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?
    - [ ] Fix duplicated paths in swagger specs. This seems to work with OAS3.0 (at least it does not complain) But how to specific this in swagger nicely without duplicated code? // https://en.wikipedia.org/wiki/Percent-encoding and https://stackoverflow.com/questions/44150758/swagger-2-0-multiple-path-objects-with-different-paths-but-same-request-and-res
    - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties
    - [ ] Fix it seems that python can do like Config.parameternewparameter which adds new parameter in case of typo. Can this be prevented?
    - [ ] Fix test cases hiding that cls.source was _not_ set in init when the Config.init called storage method that used cls.source. How this can be not noticed?
-   - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.
    - [ ] Fix docs where it was stated that uuid1 contains hostname. It actually contains mac address. This is different per container by default. Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings
-   - [ ] Fix test case content.verified methot that does not check other content that what gets dumped to text file. This misses checks for example update timestamps and uuid because those are not in text text file in e.g. test_cli_import_reference_011. Should have been dump to yaml instead of text.
    - [ ] Fix print resource it does not print data in debug part because it is empty tuple.
-   - [ ] Fix get_resource and next if the collection is empty. This generates StopIteration exception.
    - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
    - [ ] Fix failure to process request like SSL error does not refresh OID. Is there a hook for this?
-   - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
    - [ ] Fix few failing tests like api perf test in Docker Trusty. Reason unknown. See 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH''.
    - [ ] Fix 'WSGIWarning: Unknown REQUEST_METHOD: 'PATCH'' It seems Python 2.7 does not support PATCH somewhere? This is coming in docker snippy/python34-trusty when running tests.
    - [ ] Fix schema check in case of error that returns different lenght result depending on Python version? Maybe ok. Maybe not fix. Just to remind.

@@ -231,6 +231,182 @@ Random notes and scribling during development.
    ```
 
    ```
+   # Postgres with Docker
+   $ pip install psycopg2-binary
+   $ docker exec -it $(docker ps | egrep -m 1 'postgres' | awk '{print $1}') /bin/bash
+   $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
+   $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -v postgres_data:/var/lib/postgresql/data -p 5432:5432 -d postgres
+   
+   # Operate postgres
+   psql -d postgres -U postgres
+   \l
+   \dt
+   drop table contents;
+   \d+ contents
+   
+   # Changes
+   1. Test sqlite.
+   
+        - blob to char?
+        - REGEXP to ~*?
+   
+   1. Change database.sql
+      A) Capitalize SQL syntax.
+      B) test if sqlite blob can be changed to char(64)
+      C) Remove default from timestamps to force them?
+      D) Rename table to align snippy namespace
+      E) Connect
+         import psycopg2
+         connection = psycopg2.connect(host="localhost", user="postgres", password="postgres")
+      F) queries ? --> %s
+      G) use datetime. Do conversion in sqlite(database) module.
+
+   
+   1. sql syntax
+      create table if not exists contents (
+          data        text not null unique,
+          brief       text default '',
+          description text default '',
+          groups      text default '',
+          tags        text default '',
+          links       text default '',
+          category    text default 'snippet',
+          name        text default '',
+          filename    text default '',
+          versions    text default '',
+          source      text default '',
+          uuid        text not null unique,
+          -- created     datetime default current_timestamp,
+          -- updated     datetime default current_timestamp,
+          created     timestamp,
+          updated     timestamp,
+          --digest      blob(64),
+          digest      char(64), --> allows searching with digest and regexp.
+          metadata    text default '',
+          id          serial primary key
+      );
+   2. ? => %s
+   3. ROLLBACK is own function in postgres
+   4. query = 'SELECT regexp_matches(data, %s) FROM contents '
+      qargs = ['.']
+      
+      --> SELECT * FROM contents WHERE (data ~* %s OR brief ~* %s OR description ~* %s OR groups ~* %s OR tags ~* %s OR links ~* %s) AND (category=%s) ORDER BY brief ASC LIMIT 99 OFFSET 0
+      -->  #columns = ['data', 'brief', 'description', 'groups', 'tags', 'links', 'digest'] --> bytea not able to regexp
+      > https://dba.stackexchange.com/questions/166509/select-rows-from-my-table-where-a-character-column-matches-a-pattern
+      
+      -> sqlite regexp is case insensitve but the the postgre is case sensitive. how to change postgre? --> use ~*
+      -> does sqlite support ~* syntax?
+
+        - sqlitehelper store()
+        
+            content.get('created', ''), --Z must use timestamp
+            content.get('updated', ''),
+            -->
+            content.get('created', '2018-02-02T02:02:02.000001+0000'),
+            content.get('updated', '2018-02-02T02:02:02.000001+0000'),
+      
+   5. Table name to snippy_*?
+   6. timetsamp formats?
+        postgr: 2018-05-07 11:11:55.000001
+        sqlite: 2017-10-16T19:42:19.000001+0000
+        
+        -> convert to datetime?
+
+        self.created = row[Resource.CREATED].strftime('%Y-%m-%dT%H:%M:%S.%f+0000')
+        self.updated = row[Resource.UPDATED].strftime('%Y-%m-%dT%H:%M:%S.%f+0000')
+
+    7. Create delete table content for postgres after each test.
+    8. assert storage changes to read from postgre
+        change _connect in db helper
+
+    --> test_api_create_snippet_015 (update) was failing due to updates
+    
+                        --> fix typo: snippet. All fields are tried to be updated but only __the that__ can be
+    
+                     test_api_create_reference_008 (sqlite expcetion)
+                     
+    --> api performance does not work since it does not use external DB
+    
+        - This works by manyally starting the server
+        - peformance with manually started server with 1000 loop was  73.5 seconds.
+    
+    --> test_debug_option_001
+            internal database key random (table not dropped so this increments all the time?)
+
+    --> test_cli_update_reference_001 updates from cli are in different order in dict list which causes problems.
+        - update #assert result_dictionary == expect_dictionary in assert storage.
+
+        --> snippy mock to use Database.delete_all_contents() to clean the database instead of Database.delete_storage().
+
+    9. performance is with cli_performance 4 times slower with postgres. from ~1s to ~4s.
+    
+    10. Parallel execution does not work.
+    
+    11. import all results python runner search --all --sall . --> 37. Was this correct?
+
+   # Embedded postgres function that was not used after all because the Python support is not in by default.
+   create language plpythonu;
+   CREATE FUNCTION REGEXP (a integer, b integer)
+   RETURNS integer
+   AS $$
+   return re.search(expr, item, re.IGNORECASE) is not None
+   $$ LANGUAGE plpythonu;
+
+   ```
+      
+   ```
+   # cockroachDB
+   docker run -d --name=roach2 --hostname=roach2 -p 26257:26257 -p 8080:8080 cockroachdb/cockroach:v2.1.2 start --insecure
+   docker run -d --name=roach1 --hostname=roach1 -p 26257:26257 -p 8080:8080 -v "${PWD}/cockroach-data/roach1:/cockroach/cockroach-data" cockroachdb/cockroach:v2.1.2 start --insecure
+   > http://localhost:8080
+   $ docker exec -it $(docker ps | egrep -m 1 'roach' | awk '{print $1}') /bin/bash
+   $ ./cockroach sql --insecure
+   $ ./cockroach sql --insecure -e "SHOW USERS;
+   
+   > https://www.cockroachlabs.com/docs/stable/build-a-python-app-with-cockroachdb.html
+   ./cockroach sql --insecure
+   CREATE USER IF NOT EXISTS maxroach;
+   CREATE DATABASE snippy;
+   GRANT ALL ON DATABASE snippy TO maxroach;
+   
+   show tables;
+   
+   # Python changes
+   1. connection = psycopg2.connect(database='snippy', user='root', sslmode='disable', port=26257, host='localhost')
+   2. return utc.strftime('%Y-%m-%dT%H:%M:%S.%f+00:00') with TIMESTAMPZ
+      --> same to resource load_dict and dict.pm (is resource load_dict used anymore?)
+      --> this works with timestamp but there must be 00:00
+
+   3. python  runner search --all  --sall . results 38. check this
+             
+   4. sql defs
+      create table if not exists contents (
+          data        text not null unique,
+          brief       text default '',
+          description text default '',
+          groups      text default '',
+          tags        text default '',
+          links       text default '',
+          category    text default 'snippet',
+          name        text default '',
+          filename    text default '',
+          versions    text default '',
+          source      text default '',
+          uuid        text not null unique,
+          -- created     datetime default current_timestamp,
+          -- updated     datetime default current_timestamp,
+          created     TIMESTAMPTZ,
+          updated     TIMESTAMPTZ,
+          --digest      blob(64),
+          digest      char(64),
+          metadata    text default '',
+          id          SERIAL primary key
+      );
+      
+   ```
+
+
+   ```
    $ make docker
    $
    $ sudo docker run heilaaks/snippy search --sall .

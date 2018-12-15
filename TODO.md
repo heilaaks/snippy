@@ -1,4 +1,20 @@
 ## WORKING
+   - [ ] Refactor the sqlite_helper at least the name.
+   - [ ] Fix TZ to +00:00 from +0000 because Cockroach does not support +0000.
+   - [ ] Test if sqlite supports REGEXP to ~*? If yes, remove REGEXP and use this.
+   - [ ] Test if sqlite supports blob to char(64)?
+   - [ ] Test if sqlite supports queries ? --> %s?
+   - [ ] Test if sqlite has rollback() instead of ROLLBACK? How to do this since this is now part of SQL with sqlite but function with postgres? How with cockroachDB?
+   - [ ] Capitalize SQL syntax.
+   - [ ] Remove default from timestamps to force them.
+   - [ ] Use datetime for created and updated. Do the conversion in sqlite(database) module and do not check this in Resource since it would reveal DB type.
+   - [ ] Add option to select db from {sqlite,postgres,cockroach} and default to sqlite.
+   - [ ] Insecure by defautl (experimental release) as of now.
+   - [ ] Test unner search --all --sall . with sqlite.
+   - [ ] Fix assert storage to support dict list in different orders. Check first why postgres does this. The order is now different in sqlite and postgres. Why this is in update?
+   - [ ] Note that that database ID changes with postgres and e.g. test cases that print check it will need something.
+   - [ ] Database needs own certs so the server cert names should be changed? Yes because the database certs can be user specific? Yes...? at least for cockroach https://www.cockroachlabs.com/docs/stable/build-a-python-app-with-cockroachdb.html
+   - [ ] Test API performance by disabling server start from api_performance against all db's.
    - [ ] Add support for CockroachDB and PostgreSQL and make database modules more generic.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.
    - [ ] Add delete for wheel build directory for automation. If the folder exist this is a problem (at least used to be) see how to fail python release/building/something.

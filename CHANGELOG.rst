@@ -18,13 +18,13 @@ New features
 ~~~~~~~~~~~~
 
 * Add REST API routes for: keywords, groups, tags, uuid and digest `[5]`_.
-* Add uuid1 field for CLI and REST API operations.
-* Add description field in text content templates.
-* Add --limit option for CLI operations.
-* Add search category (scat) option for CLI operations.
-* Add export and import operations for Markdown formatted content.
+* Add support for Markdown formatted content.
 * Add export and import all default content with one command.
 * Add comment auto-alignment for snippets when printed to terminal.
+* Add description field in text content templates.
+* Add uuid1 field for CLI and REST API operations.
+* Add limit option for CLI operations.
+* Add search category (scat) option for CLI operations.
 
 Bugfixes
 ~~~~~~~~

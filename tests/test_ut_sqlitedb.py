@@ -21,8 +21,8 @@
 
 from snippy.constants import Constants as Const
 from tests.testlib.content import Content
+from tests.testlib.database import Database
 from tests.testlib.snippet import Snippet
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 
 class TestUtSqlitedb(object):

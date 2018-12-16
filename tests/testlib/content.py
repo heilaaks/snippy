@@ -35,11 +35,11 @@ from snippy.meta import __docs__
 from snippy.meta import __homepage__
 from snippy.meta import __openapi__
 from snippy.meta import __version__
+from tests.testlib.database import Database
 from tests.testlib.helper import Helper
 from tests.testlib.reference import Reference
 from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
 
 class Content(object):  # pylint: disable=too-many-public-methods
     """Helper methods for content testing."""

@@ -36,7 +36,7 @@ from tests.testlib.helper import Helper
 from tests.testlib.reference import Reference
 from tests.testlib.snippet import Snippet
 from tests.testlib.solution import Solution
-from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database
+from tests.testlib.database import Database
 
 # Calls to Config.utcnow()
 # =======================
@@ -299,7 +299,7 @@ def sqlite_mock(request, mocker):
 # Cause
 @pytest.fixture(scope='function', name='cause')
 def cause_mock(mocker):
-    """Mock sqlite for unit testing."""
+    """Mock cause for unit testing."""
 
     cause = mocker.patch.object(Cause, 'push')
 
@@ -792,8 +792,8 @@ def devel_file_data(mocker):
         'from snippy.config.config import Config',
         'from snippy.constants import Constants as Const',
         'from snippy.cause import Cause',
-        'from tests.testlib.snippet_helper import SnippetHelper as Snippet',
-        'from tests.testlib.sqlitedb_helper import SqliteDbHelper as Database',
+        'from tests.testlib.snippet import Snippet',
+        'from tests.testlib.database import Database',
         '',
         '',
         'class TestWfImportSnippet(object):',

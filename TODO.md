@@ -1,5 +1,4 @@
 ## WORKING
-   - [ ] Refactor the sqlite_helper at least the name.
    - [ ] Fix TZ to +00:00 from +0000 because Cockroach does not support +0000.
    - [ ] Test if sqlite supports REGEXP to ~*? If yes, remove REGEXP and use this.
    - [ ] Test if sqlite supports blob to char(64)?

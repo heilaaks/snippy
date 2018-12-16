@@ -466,7 +466,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         return bool(self.category == Const.REFERENCE)
 
     def dump_qargs(self):
-        """Convert resource for sqlite qargs.
+        """Convert resource for storage.
 
         Links are not sorted because it is assumed that link order matter
         for the end user. For example with reference content, it is possible

@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""sqlitedb_helper: Helper methods for Sqlite database testing."""
+"""database: Helper methods for testing with generic database."""
 
 from __future__ import print_function
 
@@ -32,8 +32,8 @@ from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
 
 
-class SqliteDbHelper(object):
-    """Helper methods for Sqlite database testing."""
+class Database(object):
+    """Helper methods for testing with generic database."""
 
     VALID_UUID = '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
     TEST_UUIDS = (
@@ -106,7 +106,7 @@ class SqliteDbHelper(object):
 
         rows = ()
         collection = Collection()
-        connection = SqliteDbHelper._connect()
+        connection = Database._connect()
         with closing(connection.cursor()) as cursor:
             cursor.execute('SELECT * FROM contents')
             rows = cursor.fetchall()
@@ -121,7 +121,7 @@ class SqliteDbHelper(object):
         rows = ()
         collection = Collection()
         try:
-            connection = SqliteDbHelper._connect()
+            connection = Database._connect()
             with closing(connection.cursor()) as cursor:
                 cursor.execute('SELECT * FROM contents')
                 rows = cursor.fetchall()
@@ -136,19 +136,19 @@ class SqliteDbHelper(object):
     def get_snippets():
         """Return snippets from database as collection."""
 
-        return SqliteDbHelper._select(Const.SNIPPET)
+        return Database._select(Const.SNIPPET)
 
     @staticmethod
     def get_solutions():
         """Return solutions from database as collection."""
 
-        return SqliteDbHelper._select(Const.SOLUTION)
+        return Database._select(Const.SOLUTION)
 
     @staticmethod
     def get_references():
         """Return references from database as collection."""
 
-        return SqliteDbHelper._select(Const.REFERENCE)
+        return Database._select(Const.REFERENCE)
 
     @staticmethod
     def get_schema():
@@ -201,7 +201,7 @@ class SqliteDbHelper(object):
             content.get('metadata', '')
         )
         try:
-            connection = SqliteDbHelper._connect()
+            connection = Database._connect()
             with closing(connection.cursor()) as cursor:
                 cursor.execute(query, qargs)
                 connection.commit()
@@ -214,7 +214,7 @@ class SqliteDbHelper(object):
 
         # In successful case the database table does not exist anymore
         try:
-            connection = SqliteDbHelper._connect()
+            connection = Database._connect()
             with closing(connection.cursor()) as cursor:
                 cursor.execute('DELETE FROM contents')
                 connection.commit()
@@ -228,7 +228,7 @@ class SqliteDbHelper(object):
 
         # The file based database is used in testing only in case of Python2.
         if Const.PYTHON2:
-            filename = SqliteDbHelper.get_storage()
+            filename = Database.get_storage()
             if os.path.isfile(filename):
                 try:
                     os.remove(filename)
@@ -240,9 +240,9 @@ class SqliteDbHelper(object):
         """Connect to database."""
 
         if not Const.PYTHON2:
-            connection = sqlite3.connect(SqliteDbHelper.get_storage(), check_same_thread=False, uri=True)
+            connection = sqlite3.connect(Database.get_storage(), check_same_thread=False, uri=True)
         else:
-            connection = sqlite3.connect(SqliteDbHelper.get_storage(), check_same_thread=False)
+            connection = sqlite3.connect(Database.get_storage(), check_same_thread=False)
 
         return connection
 
@@ -255,7 +255,7 @@ class SqliteDbHelper(object):
         try:
             query = ('SELECT * FROM contents WHERE category=?')
             qargs = [category]
-            connection = SqliteDbHelper._connect()
+            connection = Database._connect()
             with closing(connection.cursor()) as cursor:
                 cursor.execute(query, qargs)
                 rows = cursor.fetchall()

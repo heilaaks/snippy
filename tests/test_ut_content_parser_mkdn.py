@@ -27,7 +27,7 @@ from snippy.content.parsers.mkdn import ContentParserMkdn as Parser
 class TestUtContentParserMkdn(object):
     """Test ContentParserMkdn() class."""
 
-    TIMESTAMP = '2018-09-09T14:44:00.000001+0000'
+    TIMESTAMP = '2018-09-09T14:44:00.000001+00:00'
 
     def test_parser_snippet_001(self):
         """Test parsing snippet.
@@ -56,13 +56,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -97,8 +97,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
         assert resource.digest == digest
 
     def test_parser_snippet_002(self):
@@ -132,13 +132,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : 0a8b31f0ab442991e56dcaef1fc65aa6bff479c567e04dd7990948f201187c69  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -158,13 +158,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : 0bcf78d5c36a96a556fa3293f9b68c3dca577ea9c7fa5de76b354ccf27885df2  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     :   ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f31c752e-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             ''
@@ -200,8 +200,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
         assert resource.digest == digest
 
         data = (
@@ -232,8 +232,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
         assert resource.digest == digest
 
     def test_parser_snippet_003(self):
@@ -261,13 +261,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : snippet  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : 852ca349dc05fb75bccfac743318230b7fc5360e8d3d4e61674e71aba2e469ff  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -295,8 +295,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
         assert resource.digest == digest
 
     def test_parser_snippet_004(self):
@@ -335,13 +335,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : snippet  ',
-            'created  : 2018-05-07T11:13:17.000001+0000  ',
+            'created  : 2018-05-07T11:13:17.000001+00:00  ',
             'digest   : 1115c9c843d1ffae45997d68c96d02af83fef49db677a9a7298ba135436e4ca8  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : howto,linux,tar,untar  ',
-            'updated  : 2018-05-07T11:13:17.000001+0000  ',
+            'updated  : 2018-05-07T11:13:17.000001+00:00  ',
             'uuid     : f21c8ed8-8830-11e8-a114-2c4d54508088  ',
             'versions : ',
             ''
@@ -373,8 +373,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2018-05-07T11:13:17.000001+0000'
-        assert resource.updated == '2018-05-07T11:13:17.000001+0000'
+        assert resource.created == '2018-05-07T11:13:17.000001+00:00'
+        assert resource.updated == '2018-05-07T11:13:17.000001+00:00'
         assert resource.digest == digest
 
     def test_parser_solution_001(self):
@@ -409,13 +409,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -457,8 +457,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
     def test_parser_solution_002(self):
         """Test parsing solution.
@@ -500,13 +500,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -558,8 +558,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
     def test_parser_solution_003(self):
         """Test parsing solution.
@@ -606,13 +606,13 @@ class TestUtContentParserMkdn(object):
             '# Meta',
             '',
             '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -664,8 +664,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
     def test_parser_solution_004(self):
         """Test parsing solution.
@@ -699,13 +699,13 @@ class TestUtContentParserMkdn(object):
             '# Meta',
             '',
             '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -742,8 +742,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
     def test_parser_solution_005(self):
         """Test parsing solution.
@@ -780,13 +780,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -828,8 +828,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2017-10-12T11:52:11.000001+00:00'
 
     def test_parser_solution_006(self):
         """Test parsing solution.
@@ -877,13 +877,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : solution  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : e167e4e2e06eba6bf041d1b9d56c41f39d199ced9a2174f2e4b92c658a23c56c  ',
             'filename :  docker-example.txt ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, docker, docker-ce, moby  ',
-            'updated  : 2017-10-12T11:52:11.000001+0000  ',
+            'updated  : 2017-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -936,7 +936,7 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
 
     def test_parser_reference_001(self):
         """Test parsing reference.
@@ -957,13 +957,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : reference  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : ec6ff1c1e8c52bc2ca8de76c71cd2eebd4f5ca07e6bdd9bba42ad2154d40503b  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, python, docker-ce, moby  ',
-            'updated  : 2018-10-12T11:52:11.000001+0000  ',
+            'updated  : 2018-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -994,8 +994,8 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2018-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
         assert resource.digest == digest
 
     def test_parser_reference_002(self):
@@ -1015,13 +1015,13 @@ class TestUtContentParserMkdn(object):
             '## Meta',
             '',
             '> category : reference  ',
-            'created  : 2017-10-12T11:52:11.000001+0000  ',
+            'created  : 2017-10-12T11:52:11.000001+00:00  ',
             'digest   : 1c7501ac802d98aeb161c973ec51c1b96d56774cdc8936c17df0fa9315d3e1c7  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
             'tags     : cleanup, container, python, docker-ce, moby  ',
-            'updated  : 2018-10-12T11:52:11.000001+0000  ',
+            'updated  : 2018-10-12T11:52:11.000001+00:00  ',
             'uuid     : f21c6318-8830-11e8-a114-2c4d54508088  ',
             'versions :',
             '',
@@ -1045,6 +1045,6 @@ class TestUtContentParserMkdn(object):
         assert resource.versions == Const.EMPTY
         assert resource.source == Const.EMPTY
         assert resource.uuid == uuid
-        assert resource.created == '2017-10-12T11:52:11.000001+0000'
-        assert resource.updated == '2018-10-12T11:52:11.000001+0000'
+        assert resource.created == '2017-10-12T11:52:11.000001+00:00'
+        assert resource.updated == '2018-10-12T11:52:11.000001+00:00'
         assert resource.digest == digest

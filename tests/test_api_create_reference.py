@@ -58,7 +58,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '606'}
+            'content-length': '608'}
         expect_body = {
             'data': [{
                 'type': 'reference',
@@ -98,7 +98,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '606'}
+            'content-length': '608'}
         expect_body = {
             'data': [{
                 'type': 'reference',
@@ -139,7 +139,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1209'
+            'content-length': '1213'
         }
         expect_body = {
             'data': [{
@@ -184,7 +184,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '767'
+            'content-length': '769'
         }
         expect_body = {
             'links': {
@@ -237,7 +237,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '751'
+            'content-length': '753'
         }
         expect_body = {
             'links': {
@@ -400,7 +400,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '684'}
+            'content-length': '686'}
         expect_body = {
             'data': [{
                 'type': 'reference',
@@ -464,7 +464,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '635'}
+            'content-length': '637'}
         expect_body = {
             'data': [{
                 'type': 'reference',

@@ -34,7 +34,7 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
 
     # Default time is same for the default content. See 'Test case layouts and
     # data structures' for more information.
-    DEFAULT_TIME = '2017-10-14T19:56:31.000001+0000'
+    DEFAULT_TIME = '2017-10-14T19:56:31.000001+00:00'
 
     # Default content must be always set so that it reflects content stored
     # into database. For example the tags must be sorted in correct order.
@@ -90,8 +90,8 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
         'versions': '',
         'source': '',
         'uuid': '13cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created': '2017-10-20T07:08:45.000001+0000',
-        'updated': '2017-10-20T07:08:45.000001+0000',
+        'created': '2017-10-20T07:08:45.000001+00:00',
+        'updated': '2017-10-20T07:08:45.000001+00:00',
         'digest': '49d6916b6711f13d67960905c4698236d8a66b38922b04753b99d42a310bcf73'
     }, {
         'data': ('nc -v 10.183.19.189 443',
@@ -107,8 +107,8 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
         'versions': '',
         'source': '',
         'uuid': '14cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created': '2017-10-20T07:08:45.000001+0000',
-        'updated': '2017-10-20T07:08:45.000001+0000',
+        'created': '2017-10-20T07:08:45.000001+00:00',
+        'updated': '2017-10-20T07:08:45.000001+00:00',
         'digest': 'f3fd167c64b6f97e5dab4a3aebef678ef7361ba8c4a5acbc1d3faff968d4402d'
     }, {
         'data': ('lsof | grep \'/tmp/overlayfs/overlay\'',
@@ -125,8 +125,8 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
         'versions': '',
         'source': '',
         'uuid': '15cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created': '2018-05-07T11:11:55.000001+0000',
-        'updated': '2018-05-07T11:11:55.000001+0000',
+        'created': '2018-05-07T11:11:55.000001+00:00',
+        'updated': '2018-05-07T11:11:55.000001+00:00',
         'digest': '490c913cf941a0bedc14e3d390894958b3db4220dc2b1b856454403c888df17f'
     }, {
         'data': ('find . -type d -name \'.git\' | while read dir ; do sh -c "cd $dir/../ && echo -e \\"\\nGIT STATUS IN ${dir//\\.git/}\\" && git status -s" ; done',),  # pylint: disable=line-too-long
@@ -141,8 +141,8 @@ class Snippet(object):  # pylint: disable=too-few-public-methods
         'versions': '',
         'source': '',
         'uuid': '16cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created': '2018-01-11T07:59:46.000001+0000',
-        'updated': '2018-01-11T07:59:46.000001+0000',
+        'created': '2018-01-11T07:59:46.000001+00:00',
+        'updated': '2018-01-11T07:59:46.000001+00:00',
         'digest': '9e1949c2810df2a50137f0a4056b7992529b37632d9db0da7040d17bf16f5bd3'
     })
 

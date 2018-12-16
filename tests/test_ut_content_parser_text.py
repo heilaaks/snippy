@@ -27,7 +27,7 @@ from snippy.content.collection import Collection
 class TestUtContentParserText(object):
     """Test ContentParserText() class."""
 
-    TIMESTAMP = '2018-09-09T14:44:00.000001+0000'
+    TIMESTAMP = '2018-09-09T14:44:00.000001+00:00'
 
     def test_parser_snippet_001(self):
         """Test parsing snippet.

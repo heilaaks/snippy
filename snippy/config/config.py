@@ -562,7 +562,7 @@ class Config(object):
 
         utc = datetime.datetime.utcnow()
 
-        return utc.strftime('%Y-%m-%dT%H:%M:%S.%f+0000')
+        return utc.strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
 
     @classmethod
     def debug(cls):

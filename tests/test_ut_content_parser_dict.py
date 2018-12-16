@@ -27,7 +27,7 @@ from snippy.content.parsers.dict import ContentParserDict as Parser
 class TestUtContentParserDict(object):
     """Test ContentParserDict() class."""
 
-    TIMESTAMP = '2018-09-09T14:44:00.000001+0000'
+    TIMESTAMP = '2018-09-09T14:44:00.000001+00:00'
 
     def test_parser_snippet_001(self):
         """Test parsing snippet.
@@ -54,8 +54,8 @@ class TestUtContentParserDict(object):
             'versions': '',
             'source': '',
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': '2015-10-14T19:56:31.000001+0000',
-            'updated': '2016-10-14T19:56:31.000001+0000',
+            'created': '2015-10-14T19:56:31.000001+00:00',
+            'updated': '2016-10-14T19:56:31.000001+00:00',
             'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
         }]}
         collection = Collection()
@@ -73,8 +73,8 @@ class TestUtContentParserDict(object):
         assert resource.versions == ''
         assert resource.source == ''
         assert resource.uuid == '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
-        assert resource.created == '2015-10-14T19:56:31.000001+0000'
-        assert resource.updated == '2016-10-14T19:56:31.000001+0000'
+        assert resource.created == '2015-10-14T19:56:31.000001+00:00'
+        assert resource.updated == '2016-10-14T19:56:31.000001+00:00'
         assert resource.digest == '76257166ef4499ffbbf4036accd161184e9b91f326b0b6f3d5e7a1333b516713'
 
     def test_parser_snippet_002(self):
@@ -96,8 +96,8 @@ class TestUtContentParserDict(object):
             'versions': '',
             'source': '',
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': '2015-10-14T19:56:31.000001+0000',
-            'updated': '2016-10-14T19:56:31.000001+0000',
+            'created': '2015-10-14T19:56:31.000001+00:00',
+            'updated': '2016-10-14T19:56:31.000001+00:00',
             'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
         }]}
         collection = Collection()
@@ -123,8 +123,8 @@ class TestUtContentParserDict(object):
             'versions': '',
             'source': '',
             'uuid': '11cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-            'created': '2015-10-14T19:56:31.000001+0000',
-            'updated': '2016-10-14T19:56:31.000001+0000',
+            'created': '2015-10-14T19:56:31.000001+00:00',
+            'updated': '2016-10-14T19:56:31.000001+00:00',
             'digest': '3d855210284302d58cf383ea25d8abdea2f7c61c4e2198da01e2c0896b0268dd'
         }]}
         collection = Collection()

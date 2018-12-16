@@ -39,6 +39,7 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     else:
         TEXT_TYPE = str
         BINARY_TYPE = bytes
+    PYTHON37 = bool(sys.version_info >= (3, 7))
 
     # Content categories.
     SNIPPET = 'snippet'

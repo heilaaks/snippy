@@ -132,7 +132,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             str: Text string created from given content.
         """
 
-        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+0000')
+        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+00:00')
         resource.load_dict(content)
 
         return resource.dump_text(Config.templates)
@@ -150,7 +150,7 @@ class Content(object):  # pylint: disable=too-many-public-methods
             str: Text string in Markdown format created from given content.
         """
 
-        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+0000')
+        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+00:00')
         resource.load_dict(content)
 
         return resource.dump_mkdn(Config.templates)
@@ -769,15 +769,30 @@ class Field(object):  # pylint: disable=too-few-public-methods
     def is_iso8601(timestamp):
         """Test if timestamp is in ISO8601 format."""
 
-        # Python 2 does not support timezone parsing. The %z directive is
-        # available only from Python 3.2 onwards.
-        if not Const.PYTHON2:
+        # Python 2 does not support timezone parsing.
+        #
+        # The %z directive is # available only from Python 3.2 onwards.
+        #
+        # From Python 3.7 onwards, the datetime strptime is able to parse
+        # timezone in format that includes colon delimiter in UTC offset [3].
+        #
+        # [1] https://bugs.python.org/issue31800
+        # [2] https://stackoverflow.com/a/49784038
+        # [3] https://stackoverflow.com/a/48539157
+        # [4] https://github.com/python/cpython/commit/32318930da70ff03320ec50813b843e7db6fbc2e
+        if Const.PYTHON37:
             try:
                 datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f%z')
             except ValueError:
                 return False
+        elif not Const.PYTHON2:
+            try:
+                timestamp = timestamp.replace('+00:00', '+0000')
+                datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f%z')
+            except ValueError:
+                return False
         else:
-            timestamp = timestamp[:-5]  # Remove last '+0000'.
+            timestamp = timestamp[:-6]  # Remove last '+00:00'.
             try:
                 datetime.datetime.strptime(timestamp, '%Y-%m-%dT%H:%M:%S.%f')
             except ValueError:

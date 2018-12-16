@@ -67,7 +67,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1007'
+            'content-length': '1009'
         }
         expect_body = {
             'links': {
@@ -128,7 +128,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '708'
+            'content-length': '710'
         }
         expect_body = {
             'links': {
@@ -187,7 +187,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '651'
+            'content-length': '653'
         }
         expect_body = {
             'links': {
@@ -327,7 +327,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '770'
+            'content-length': '772'
         }
         expect_body = {
             'links': {
@@ -378,7 +378,7 @@ class TestApiUpdateSnippet(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '894'
+            'content-length': '896'
         }
         expect_body = {
             'links': {

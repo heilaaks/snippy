@@ -31,7 +31,7 @@ class Solution(object):  # pylint: disable=too-few-public-methods
 
     # Default time is same for the default content. See 'Test case layouts and
     # data structures' for more information.
-    DEFAULT_TIME = '2017-10-20T11:11:19.000001+0000'
+    DEFAULT_TIME = '2017-10-20T11:11:19.000001+00:00'
 
     # Default content must be always set so that it reflects content stored
     # into database. For example the tags must be sorted in correct order.
@@ -272,8 +272,8 @@ class Solution(object):  # pylint: disable=too-few-public-methods
         'versions': '',
         'source': '',
         'uuid': '23cd5827-b6ef-4067-b5ac-3ceac07dde9f',
-        'created': '2017-10-20T06:16:27.000001+0000',
-        'updated': '2017-10-20T06:16:27.000001+0000',
+        'created': '2017-10-20T06:16:27.000001+00:00',
+        'updated': '2017-10-20T06:16:27.000001+00:00',
         'digest': 'fffeaf31e98e68a3dd063a1db0e334c0bc7e7c2f774262c5df0f95210c5ff1ee'
     })
 

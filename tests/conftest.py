@@ -852,7 +852,7 @@ def devel_no_tests(mocker):
 def _get_template(dictionary):
     """Transform dictionary to text template."""
 
-    resource = Collection.get_resource(dictionary['category'], '2018-10-20T06:16:27.000001+0000')
+    resource = Collection.get_resource(dictionary['category'], '2018-10-20T06:16:27.000001+00:00')
     resource.load_dict(dictionary)
 
     return resource.dump_text(Config.templates)

@@ -346,7 +346,7 @@ class CustomFormatter(logging.Formatter):
         # be read by reading three significat digits after point.
         if Logger.CONFIG['log_json']:
             timstamp = time.strftime('%Y-%m-%dT%H:%M:%S', time.gmtime(record.created))
-            time_string = '%s.%d+0000' % (timstamp, int(Const.TEXT_TYPE(record.msecs).replace('.', '')[:6]))
+            time_string = '%s.%d+00:00' % (timstamp, int(Const.TEXT_TYPE(record.msecs).replace('.', '')[:6]))
         else:
             timstamp = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(record.created))
             time_string = '%s.%03d' % (timstamp, record.msecs)

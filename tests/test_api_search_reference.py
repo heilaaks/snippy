@@ -44,7 +44,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1330'
+            'content-length': '1334'
         }
         expect_body = {
             'meta': {
@@ -86,7 +86,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1268'
+            'content-length': '1272'
         }
         expect_body = {
             'meta': {
@@ -286,7 +286,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '759'
+            'content-length': '761'
         }
         expect_body = {
             'meta': {
@@ -349,7 +349,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '1330'
+            'content-length': '1334'
         }
         expect_body = {
             'meta': {
@@ -388,7 +388,7 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '733'
+            'content-length': '735'
         }
         expect_body = {
             'meta': {
@@ -422,11 +422,14 @@ class TestApiSearchReference(object):  # pylint: disable=too-many-public-methods
 
         TODO: The groups refactoring changed the lenght from 2196 to 2278.
               Why so much? Is there a problem in the result JSON?
+
+              This was checked (but what was it?) and this is a left over
+              comment?
         """
 
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '2348'
+            'content-length': '2352'
         }
         expect_body = {
             'meta': {

@@ -13,11 +13,12 @@ Breaking changes
 * Change content field group to groups `[2]`_.
 * Change filter option behaviour `[3]`_.
 * Change default export file format from text to YAML `[4]`_.
+* Change UTC offset format from +0000 to +00:00 `[5]`_.
 
 New features
 ~~~~~~~~~~~~
 
-* Add REST API routes for: keywords, groups, tags, uuid and digest `[5]`_.
+* Add REST API routes for: keywords, groups, tags, uuid and digest `[6]`_.
 * Add support for Markdown formatted content.
 * Add export and import all default content with one command.
 * Add comment auto-alignment for snippets when printed to terminal.
@@ -83,4 +84,5 @@ Security
 .. _`[2]`: https://github.com/heilaaks/snippy/commit/08394b6acaf8d1e0c7971e5fe4de95c04c54790b
 .. _`[3]`: https://github.com/heilaaks/snippy/commit/4be86cff53ea4d9cdb358ed487420a67d9f5bcbe
 .. _`[4]`: https://github.com/heilaaks/snippy/commit/61f3e55156166427ec45312974ff1ed15a342d37
-.. _`[5]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0
+.. _`[5]`: https://github.com/heilaaks/snippy/commit/1b00a4d9179bf67ada56f7ee624e851e884c7f6a
+.. _`[6]`: https://app.swaggerhub.com/apis/heilaaks/snippy/1.0

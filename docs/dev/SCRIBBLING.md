@@ -547,6 +547,7 @@ sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 80
 snippy search --sall prune
 sudo docker run -d --net="host" --name snippy heilaaks/snippy --server --port 8080 --ip 127.0.0.1 --log-json -vv
 curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/" | python -m json.tool
+curl -s -X GET "http://127.0.0.1:8080//snippy/api/app/v1/uuid/1/brief"
 curl -v -X OPTIONS "http://127.0.0.1:8080/snippy/api/app/v1/snippets"
 curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?limit=0" -H "accept: application/vnd.api+json"
 curl -s -X GET "http://127.0.0.1:8080/snippy/api/app/v1/snippets?sall=security&limit=1" -H "accept: application/vnd.api+json"

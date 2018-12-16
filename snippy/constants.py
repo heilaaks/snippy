@@ -70,6 +70,11 @@ class Constants(object):  # pylint: disable=too-few-public-methods
     CONTENT_FORMAT_YAML = 'yaml'
     CONTENT_FORMAT_NONE = 'none'
 
+    # Databases
+    DB_SQLITE = 'sqlite'
+    DB_POSTGRESQL = 'postgresql'
+    DB_COCKROACHDB = 'cockroachdb'
+
     # Regexp patterns.
     RE_MATCH_ANSI_ESCAPE_SEQUENCES = re.compile(r'''
         \x1b[^m]*m    # Match all ANSI escape sequences.

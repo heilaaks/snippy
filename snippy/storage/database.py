@@ -17,7 +17,7 @@
 #  You should have received a copy of the GNU Affero General Public License
 #  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-"""sqlitedb: Database management."""
+"""database: Database management."""
 
 import re
 import os.path
@@ -32,19 +32,29 @@ from snippy.config.config import Config
 from snippy.content.collection import Collection
 
 
-class SqliteDb(object):
-    """Sqlite database management."""
+class Database(object):
+    """Generic SQL database manager."""
 
     QUERY_TYPE_REGEX = 'regex'
     QUERY_TYPE_TOTAL = 'total'
 
     def __init__(self):
         self._logger = Logger.get_logger(__name__)
+        self._db = Const.DB_SQLITE
         self._connection = None
         self._columns = ()
+        self._re = 'REGEXP'
+        self._ph = '?'
 
     def init(self):
         """Initialize database."""
+
+        if self._db == Const.DB_SQLITE:
+            self._re = 'REGEXP'
+            self._ph = '?'
+        else:
+            self._re = '~*'
+            self._ph = '%s'
 
         if not self._connection:
             self._connection = self._create_db()
@@ -112,7 +122,7 @@ class SqliteDb(object):
 
         query = ('INSERT OR ROLLBACK INTO contents (data, brief, description, groups, tags, links, category, name, ' +
                  'filename, versions, source, uuid, created, updated, digest, metadata) ' +
-                 'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+                 'VALUES({0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0})'.format(self._ph))
         qargs = resource.dump_qargs()
         try:
             self._put_db(query, qargs)
@@ -149,9 +159,9 @@ class SqliteDb(object):
         """
 
         collection = Collection()
-        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_REGEX)
+        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, data, Database.QUERY_TYPE_REGEX)
         if query:
-            rows = self._get_db(query, qargs)
+            rows = self._select(query, qargs)
             self._logger.debug('selected: %d :rows: %s', len(rows), rows)
             if search_filter:
                 rows = [row for row in rows if any(search_filter.search(str(column)) for column in row)]
@@ -178,7 +188,7 @@ class SqliteDb(object):
 
             query = ('SELECT * FROM contents WHERE (')
             for _ in scat:
-                query = query + 'category=? OR '
+                query = query + 'category={0} OR '.format(self._ph)
             query = query[:-4]  # Remove last ' OR ' added by the loop.
             query = query + ')'
             qargs = list(scat)
@@ -240,9 +250,9 @@ class SqliteDb(object):
         """
 
         count = 0
-        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, data, SqliteDb.QUERY_TYPE_TOTAL)
+        query, qargs = self._get_query(scat, sall, stag, sgrp, uuid, digest, data, Database.QUERY_TYPE_TOTAL)
         if query:
-            rows = self._get_db(query, qargs)
+            rows = self._select(query, qargs)
             try:
                 count = rows[0][0]
             except IndexError:
@@ -270,9 +280,9 @@ class SqliteDb(object):
 
             return stored
 
-        query = ('UPDATE contents SET data=?, brief=?, description=?, groups=?, tags=?, links=?, category=?, name=?, '
-                 'filename=?, versions=?, source=?, uuid=?, created=?, updated=?, digest=?, metadata=? '
-                 'WHERE digest LIKE ?')
+        query = ('UPDATE contents SET data={0}, brief={0}, description={0}, groups={0}, tags={0}, links={0}, '.format(self._ph) +
+                 'category={0}, name={0}, filename={0}, versions={0}, source={0}, uuid={0}, created={0}, '.format(self._ph) +
+                 'updated={0}, digest={0}, metadata={0} WHERE digest LIKE {0}'.format(self._ph))
         qargs = resource.dump_qargs() + (digest,)
         self._put_db(query, qargs)
 
@@ -288,7 +298,7 @@ class SqliteDb(object):
         """
 
         if self._connection:
-            query = ('DELETE FROM contents WHERE digest LIKE ?')
+            query = ('DELETE FROM contents WHERE digest LIKE {0}'.format(self._ph))
             self._logger.debug('delete content with digest: %s', digest)
             try:
                 with closing(self._connection.cursor()) as cursor:
@@ -306,7 +316,7 @@ class SqliteDb(object):
             Cause.push(Cause.HTTP_500, 'internal error prevented deleting content in database')
 
     def debug(self):
-        """Debug Sqlitedb."""
+        """Debug databse."""
 
         with closing(self._connection.cursor()) as cursor:
             cursor.execute('SELECT * FROM contents')
@@ -327,7 +337,7 @@ class SqliteDb(object):
 
         collection = Collection()
         if self._connection:
-            query = ('SELECT * FROM contents WHERE data=?')
+            query = ('SELECT * FROM contents WHERE data={0}'.format(self._ph))
             qargs = [Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, data))]
             self._logger.debug('running select data query: %s :with qargs: %s', query, qargs)
             try:
@@ -356,7 +366,7 @@ class SqliteDb(object):
 
         collection = Collection()
         if self._connection:
-            query = ('SELECT * FROM contents WHERE uuid=?')
+            query = ('SELECT * FROM contents WHERE uuid={0}'.format(self._ph))
             qargs = [uuid]
             self._logger.debug('running select uuid query: %s :with qargs: %s', query, qargs)
             try:
@@ -390,7 +400,7 @@ class SqliteDb(object):
                 connection = sqlite3.connect(location, check_same_thread=False, uri=True)
             else:
                 connection = sqlite3.connect(location, check_same_thread=False)
-            connection.create_function('REGEXP', 2, SqliteDb._regexp)
+            connection.create_function('REGEXP', 2, lambda regex, value: bool(re.search(regex, value, re.IGNORECASE)))
             with closing(connection.cursor()) as cursor:
                 cursor.execute(schema)
             with closing(connection.cursor()) as cursor:
@@ -401,12 +411,6 @@ class SqliteDb(object):
             Cause.push(Cause.HTTP_500, 'creating database failed with exception {}'.format(exception))
 
         return connection
-
-    @staticmethod
-    def _regexp(expr, item):
-        """Regular expression for the sqlite database."""
-
-        return re.search(expr, item, re.IGNORECASE) is not None
 
     def _test_content(self, resource, update=False):
         """Test content validity.
@@ -461,7 +465,7 @@ class SqliteDb(object):
 
         return digest
 
-    def _get_db(self, query, qargs):
+    def _select(self, query, qargs):
         """Run generic query to get data."""
 
         rows = ()
@@ -500,7 +504,7 @@ class SqliteDb(object):
         self._logger.debug('query scat: %s :sall: %s :stag: %s :sgrp: %s :suuid: %s :sdigest: %s :and sdata: %.20s',
                            scat, sall, stag, sgrp, suuid, sdigest, sdata)
 
-        if query_type == SqliteDb.QUERY_TYPE_TOTAL:
+        if query_type == Database.QUERY_TYPE_TOTAL:
             query_pointer = self._query_count
         else:
             query_pointer = self._query_regex
@@ -515,22 +519,22 @@ class SqliteDb(object):
             columns = ['groups']
             query, qargs = query_pointer(sgrp, columns, (), scat)
         elif sdigest is not None:
-            if query_type == SqliteDb.QUERY_TYPE_TOTAL:
-                query = ('SELECT count(*) FROM contents WHERE digest LIKE ?')
+            if query_type == Database.QUERY_TYPE_TOTAL:
+                query = ('SELECT count(*) FROM contents WHERE digest LIKE {0}'.format(self._ph))
             else:
-                query = ('SELECT * FROM contents WHERE digest LIKE ?')
+                query = ('SELECT * FROM contents WHERE digest LIKE {0}'.format(self._ph))
             qargs = [sdigest+'%']
         elif suuid is not None:
-            if query_type == SqliteDb.QUERY_TYPE_TOTAL:
-                query = ('SELECT count(*) FROM contents WHERE uuid LIKE ?')
+            if query_type == Database.QUERY_TYPE_TOTAL:
+                query = ('SELECT count(*) FROM contents WHERE uuid LIKE {0}'.format(self._ph))
             else:
-                query = ('SELECT * FROM contents WHERE uuid LIKE ?')
+                query = ('SELECT * FROM contents WHERE uuid LIKE {0}'.format(self._ph))
             qargs = [suuid+'%']
         elif sdata:
-            if query_type == SqliteDb.QUERY_TYPE_TOTAL:
-                query = ('SELECT count(*) FROM contents WHERE data LIKE ?')
+            if query_type == Database.QUERY_TYPE_TOTAL:
+                query = ('SELECT count(*) FROM contents WHERE data LIKE {0}'.format(self._ph))
             else:
-                query = ('SELECT * FROM contents WHERE data LIKE ?')
+                query = ('SELECT * FROM contents WHERE data LIKE {0}'.format(self._ph))
             qargs = ['%'+Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, sdata))+'%']
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'please define keyword, uuid, digest or content data as search criteria')
@@ -565,8 +569,7 @@ class SqliteDb(object):
 
         return query, qargs
 
-    @staticmethod
-    def _add_regex_filters(query, keywords, columns, groups, categories):
+    def _add_regex_filters(self, query, keywords, columns, groups, categories):
         """Return regex query."""
 
         qargs = []
@@ -578,21 +581,21 @@ class SqliteDb(object):
         #   3. '(tags REGEXP ?) AND (category=? or category=?) '
         regex = '('
         for column in columns:
-            regex = regex + column + ' REGEXP ? OR '
+            regex = regex + column + ' {0} {1} OR '.format(self._re, self._ph)
         regex = regex[:-4]  # Remove last ' OR ' added by the loop.
         regex = regex + ') '
 
         if groups:
             regex = regex + 'AND ('
             for _ in groups:
-                regex = regex + 'groups=? OR '
+                regex = regex + 'groups={0} OR '.format(self._ph)
             regex = regex[:-4]  # Remove last ' OR ' added by the loop.
             regex = regex + ') '
 
         if categories:
             regex = regex + 'AND ('
             for _ in categories:
-                regex = regex + 'category=? OR '
+                regex = regex + 'category={0} OR '.format(self._ph)
             regex = regex[:-4]  # Remove last ' OR ' added by the loop.
             regex = regex + ') '
 

@@ -234,7 +234,7 @@ def server_db(mocker, request):
 
     # Mock server so that real Snippy server is not started.
     with mocker.patch('snippy.server.server.SnippyServer'):
-        with mock.patch('snippy.storage.sqlitedb.sqlite3.connect', create=True) as mock_db_connect:
+        with mock.patch('snippy.storage.database.sqlite3.connect', create=True) as mock_db_connect:
             snippy = _create_snippy(mocker, params)
             snippy.run()
 
@@ -272,18 +272,18 @@ def logger_wrapper(request):
 
     return logger
 
-# Sqlitedb
+# Database
 @pytest.fixture(scope='function', name='sqlitedb')
 def sqlite_mock(request, mocker):
     """Mock sqlite for unit testing."""
 
-    from snippy.storage.sqlitedb import SqliteDb
+    from snippy.storage.database import Database as Sqlite
 
     Config.init(['snippy', '-q'])  # Prevent unnecessary CLI help output with quiet option.
     mocker.patch.object(Config, 'storage_file', Database.get_storage(), create=True)
     mocker.patch.object(Config, 'storage_schema', Database.get_schema(), create=True)
 
-    sqlite = SqliteDb()
+    sqlite = Sqlite()
     sqlite.init()
 
     def fin():

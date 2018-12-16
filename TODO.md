@@ -1,8 +1,6 @@
 ## WORKING
-   - [ ] Fix TZ to +00:00 from +0000 because Cockroach does not support +0000.
-   - [ ] Test if sqlite supports REGEXP to ~*? If yes, remove REGEXP and use this.
+   - [ ] Rename test helpers as TSnippet or TDatabase (lint?) in order to avoid collisions with real modules?
    - [ ] Test if sqlite supports blob to char(64)?
-   - [ ] Test if sqlite supports queries ? --> %s?
    - [ ] Test if sqlite has rollback() instead of ROLLBACK? How to do this since this is now part of SQL with sqlite but function with postgres? How with cockroachDB?
    - [ ] Capitalize SQL syntax.
    - [ ] Remove default from timestamps to force them.

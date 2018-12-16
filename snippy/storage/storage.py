@@ -21,7 +21,7 @@
 
 from snippy.config.config import Config
 from snippy.logger import Logger
-from snippy.storage.sqlitedb import SqliteDb as Database
+from snippy.storage.database import Database
 
 
 class Storage(object):

@@ -132,10 +132,12 @@ class Content(object):  # pylint: disable=too-many-public-methods
             str: Text string created from given content.
         """
 
-        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+00:00')
-        resource.load_dict(content)
+        collection = Collection()
+        collection.load_dict('2018-10-20T06:16:27.000001+00:00', {'data': [content]})
 
-        return resource.dump_text(Config.templates)
+        # Collection adds one extra newline which must be removed. The rstrip()
+        # cannot be used because it would remove all the trailing newlines.
+        return collection.dump_text(Config.templates)[:-1]
 
     @classmethod
     def dump_mkdn(cls, content):
@@ -150,11 +152,10 @@ class Content(object):  # pylint: disable=too-many-public-methods
             str: Text string in Markdown format created from given content.
         """
 
-        resource = Collection.get_resource(content['category'], '2018-10-20T06:16:27.000001+00:00')
-        resource.load_dict(content)
+        collection = Collection()
+        collection.load_dict('2018-10-20T06:16:27.000001+00:00', {'data': [content]})
 
-        return resource.dump_mkdn(Config.templates)
-
+        return collection.dump_mkdn(Config.templates)
 
     @staticmethod
     def dump_dict(content):

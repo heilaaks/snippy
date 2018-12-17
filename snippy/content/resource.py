@@ -495,30 +495,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         return qargs
 
-    def load_dict(self, dictionary):
-        """Convert dictionary to resource."""
-
-        self.data = tuple(dictionary.get('data', self.data))
-        self.brief = dictionary.get('brief', self.brief)
-        self.description = dictionary.get('description', self.description)
-        self.groups = tuple(sorted(dictionary.get('groups', self.groups)))
-        self.tags = tuple(sorted(dictionary.get('tags', self.tags)))
-        self.links = tuple(dictionary.get('links', self.links))
-        self.category = dictionary.get('category', self.category)
-        self.name = dictionary.get('name', self.name)
-        self.filename = dictionary.get('filename', self.filename)
-        self.versions = dictionary.get('versions', self.versions)
-        self.source = dictionary.get('source', self.source)
-        self.uuid = dictionary.get('uuid', self.uuid)
-        self.created = dictionary.get('created', self.created)
-        self.updated = dictionary.get('updated', self.updated)
-        self.digest = dictionary.get('digest', self.digest)
-
-        if self.is_reference():
-            self.data = tuple(dictionary.get('links', self.links))
-
-        self.digest = self.compute_digest()
-
     def dump_dict(self, remove_fields):
         """Convert resource to dictionary."""
 

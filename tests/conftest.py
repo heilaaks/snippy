@@ -852,10 +852,10 @@ def devel_no_tests(mocker):
 def _get_template(dictionary):
     """Transform dictionary to text template."""
 
-    resource = Collection.get_resource(dictionary['category'], '2018-10-20T06:16:27.000001+00:00')
-    resource.load_dict(dictionary)
+    collection = Collection()
+    collection.load_dict('2018-10-20T06:16:27.000001+00:00', {'data': [dictionary]})
 
-    return resource.dump_text(Config.templates)
+    return collection.dump_text(Config.templates)
 
 def _create_snippy(mocker, options):
     """Create snippy with mocks."""

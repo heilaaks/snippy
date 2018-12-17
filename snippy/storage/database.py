@@ -43,18 +43,18 @@ class Database(object):
         self._db = Const.DB_SQLITE
         self._connection = None
         self._columns = ()
-        self._re = 'REGEXP'
-        self._ph = '?'
+        self._regexp = 'REGEXP'
+        self._placeholder = '?'
 
     def init(self):
         """Initialize database."""
 
         if self._db == Const.DB_SQLITE:
-            self._re = 'REGEXP'
-            self._ph = '?'
+            self._regexp = 'REGEXP'
+            self._placeholder = '?'
         else:
-            self._re = '~*'
-            self._ph = '%s'
+            self._regexp = '~*'
+            self._placeholder = '%s'
 
         if not self._connection:
             self._connection = self._create_db()
@@ -120,9 +120,32 @@ class Database(object):
 
             return error
 
-        query = ('INSERT OR ROLLBACK INTO contents (data, brief, description, groups, tags, links, category, name, ' +
-                 'filename, versions, source, uuid, created, updated, digest, metadata) ' +
-                 'VALUES({0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0},{0})'.format(self._ph))
+        query = '''
+            INSERT OR ROLLBACK
+            INTO      contents
+                      (
+                                data
+                              , brief
+                              , description
+                              , groups
+                              , tags
+                              , links
+                              , category
+                              , name
+                              , filename
+                              , versions
+                              , source
+                              , uuid
+                              , created
+                              , updated
+                              , digest
+                              , metadata
+                      )
+                      VALUES
+                      (
+                              {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}
+                      )
+            '''.format(self._placeholder)
         qargs = resource.dump_qargs()
         try:
             self._put_db(query, qargs)
@@ -188,7 +211,7 @@ class Database(object):
 
             query = ('SELECT * FROM contents WHERE (')
             for _ in scat:
-                query = query + 'category={0} OR '.format(self._ph)
+                query = query + 'category={0} OR '.format(self._placeholder)
             query = query[:-4]  # Remove last ' OR ' added by the loop.
             query = query + ')'
             qargs = list(scat)
@@ -280,9 +303,28 @@ class Database(object):
 
             return stored
 
-        query = ('UPDATE contents SET data={0}, brief={0}, description={0}, groups={0}, tags={0}, links={0}, '.format(self._ph) +
-                 'category={0}, name={0}, filename={0}, versions={0}, source={0}, uuid={0}, created={0}, '.format(self._ph) +
-                 'updated={0}, digest={0}, metadata={0} WHERE digest LIKE {0}'.format(self._ph))
+        query = '''
+            UPDATE
+                      contents
+            SET       data        = {0}
+                    , brief       = {0}
+                    , description = {0}
+                    , groups      = {0}
+                    , tags        = {0}
+                    , links       = {0}
+                    , category    = {0}
+                    , name        = {0}
+                    , filename    = {0}
+                    , versions    = {0}
+                    , source      = {0}
+                    , uuid        = {0}
+                    , created     = {0}
+                    , updated     = {0}
+                    , digest      = {0}
+                    , metadata    = {0}
+            WHERE
+                      digest LIKE   {0}
+            '''.format(self._placeholder)
         qargs = resource.dump_qargs() + (digest,)
         self._put_db(query, qargs)
 
@@ -298,7 +340,7 @@ class Database(object):
         """
 
         if self._connection:
-            query = ('DELETE FROM contents WHERE digest LIKE {0}'.format(self._ph))
+            query = ('DELETE FROM contents WHERE digest LIKE {0}'.format(self._placeholder))
             self._logger.debug('delete content with digest: %s', digest)
             try:
                 with closing(self._connection.cursor()) as cursor:
@@ -337,7 +379,7 @@ class Database(object):
 
         collection = Collection()
         if self._connection:
-            query = ('SELECT * FROM contents WHERE data={0}'.format(self._ph))
+            query = ('SELECT * FROM contents WHERE data={0}'.format(self._placeholder))
             qargs = [Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, data))]
             self._logger.debug('running select data query: %s :with qargs: %s', query, qargs)
             try:
@@ -366,7 +408,7 @@ class Database(object):
 
         collection = Collection()
         if self._connection:
-            query = ('SELECT * FROM contents WHERE uuid={0}'.format(self._ph))
+            query = ('SELECT * FROM contents WHERE uuid={0}'.format(self._placeholder))
             qargs = [uuid]
             self._logger.debug('running select uuid query: %s :with qargs: %s', query, qargs)
             try:
@@ -520,21 +562,21 @@ class Database(object):
             query, qargs = query_pointer(sgrp, columns, (), scat)
         elif sdigest is not None:
             if query_type == Database.QUERY_TYPE_TOTAL:
-                query = ('SELECT count(*) FROM contents WHERE digest LIKE {0}'.format(self._ph))
+                query = ('SELECT count(*) FROM contents WHERE digest LIKE {0}'.format(self._placeholder))
             else:
-                query = ('SELECT * FROM contents WHERE digest LIKE {0}'.format(self._ph))
+                query = ('SELECT * FROM contents WHERE digest LIKE {0}'.format(self._placeholder))
             qargs = [sdigest+'%']
         elif suuid is not None:
             if query_type == Database.QUERY_TYPE_TOTAL:
-                query = ('SELECT count(*) FROM contents WHERE uuid LIKE {0}'.format(self._ph))
+                query = ('SELECT count(*) FROM contents WHERE uuid LIKE {0}'.format(self._placeholder))
             else:
-                query = ('SELECT * FROM contents WHERE uuid LIKE {0}'.format(self._ph))
+                query = ('SELECT * FROM contents WHERE uuid LIKE {0}'.format(self._placeholder))
             qargs = [suuid+'%']
         elif sdata:
             if query_type == Database.QUERY_TYPE_TOTAL:
-                query = ('SELECT count(*) FROM contents WHERE data LIKE {0}'.format(self._ph))
+                query = ('SELECT count(*) FROM contents WHERE data LIKE {0}'.format(self._placeholder))
             else:
-                query = ('SELECT * FROM contents WHERE data LIKE {0}'.format(self._ph))
+                query = ('SELECT * FROM contents WHERE data LIKE {0}'.format(self._placeholder))
             qargs = ['%'+Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, sdata))+'%']
         else:
             Cause.push(Cause.HTTP_BAD_REQUEST, 'please define keyword, uuid, digest or content data as search criteria')
@@ -581,21 +623,21 @@ class Database(object):
         #   3. '(tags REGEXP ?) AND (category=? or category=?) '
         regex = '('
         for column in columns:
-            regex = regex + column + ' {0} {1} OR '.format(self._re, self._ph)
+            regex = regex + column + ' {0} {1} OR '.format(self._regexp, self._placeholder)
         regex = regex[:-4]  # Remove last ' OR ' added by the loop.
         regex = regex + ') '
 
         if groups:
             regex = regex + 'AND ('
             for _ in groups:
-                regex = regex + 'groups={0} OR '.format(self._ph)
+                regex = regex + 'groups={0} OR '.format(self._placeholder)
             regex = regex[:-4]  # Remove last ' OR ' added by the loop.
             regex = regex + ') '
 
         if categories:
             regex = regex + 'AND ('
             for _ in categories:
-                regex = regex + 'category={0} OR '.format(self._ph)
+                regex = regex + 'category={0} OR '.format(self._placeholder)
             regex = regex[:-4]  # Remove last ' OR ' added by the loop.
             regex = regex + ') '
 

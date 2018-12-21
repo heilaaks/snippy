@@ -410,8 +410,8 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--reference', '--defaults'])
-            assert cause in ('NOK: content data already exist with digest: 5c2071094dbfaa33',
-                             'NOK: content data already exist with digest: cb9225a81eab8ced')
+            assert cause in ('NOK: content: data :already exist with digest: 5c2071094dbfaa33',
+                             'NOK: content: data :already exist with digest: cb9225a81eab8ced')
             Content.assert_storage(content)
             defaults_references = pkg_resources.resource_filename('snippy', 'data/defaults/references.yaml')
             mock_file.assert_called_once_with(defaults_references, 'r')
@@ -462,7 +462,7 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--reference'])
-            assert cause == 'NOK: content uuid already exist with digest: 5c2071094dbfaa33'
+            assert cause == 'NOK: content: uuid :already exist with digest: 5c2071094dbfaa33'
             Content.assert_storage(content)
             mock_file.assert_called_once_with('./references.yaml', 'r')
 

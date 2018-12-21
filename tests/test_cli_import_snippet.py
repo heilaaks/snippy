@@ -184,7 +184,7 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         file_content = Content.get_file_content(Content.TEXT, content)
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './all-snippets.txt'])
-            assert cause == 'NOK: could not identify text source content category: unknown'
+            assert cause == 'NOK: could not identify content category - please keep template tags in place'
             Content.assert_storage(None)
             mock_file.assert_called_once_with('./all-snippets.txt', 'r')
 
@@ -373,8 +373,8 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content
             cause = snippy.run(['snippy', 'import', '--defaults'])
-            assert cause in ('NOK: content data already exist with digest: 53908d68425c61dc',
-                             'NOK: content data already exist with digest: 54e41e9b52a02b63')
+            assert cause in ('NOK: content: data :already exist with digest: 53908d68425c61dc',
+                             'NOK: content: data :already exist with digest: 54e41e9b52a02b63')
             Content.assert_storage(content)
             defaults_snippets = pkg_resources.resource_filename('snippy', 'data/defaults/snippets.yaml')
             mock_file.assert_called_once_with(defaults_snippets, 'r')
@@ -407,11 +407,13 @@ class TestCliImportSnippet(object):  # pylint: disable=too-many-public-methods
 
         content = {
             'data': [
-                Snippet.REMOVE,
-                Snippet.FORCED,
+                Content.deepcopy(Snippet.REMOVE),
+                Content.deepcopy(Snippet.FORCED),
                 Snippet.NETCAT
             ]
         }
+        content['data'][0]['uuid'] = '24cd5827-b6ef-4067-b5ac-3ceac07dde9f'
+        content['data'][1]['uuid'] = '25cd5827-b6ef-4067-b5ac-3ceac07dde9f'
         file_content = Content.get_file_content(Content.YAML, content)
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             yaml.safe_load.return_value = file_content

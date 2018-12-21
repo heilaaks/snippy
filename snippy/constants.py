@@ -85,3 +85,8 @@ class Constants(object):  # pylint: disable=too-few-public-methods
         (:?\s{1,}[#]{1}\s{1,}|$)  # Match optional separator between command and comment or end of line.
         (?P<comment>[\s\S]+|$)    # Catch optional comment. Force empty string instead of None in optional group.
         ''', re.VERBOSE)
+
+    RE_CATCH_VIOLATING_COLUMN = re.compile(r'''
+        contents[.]{1}  # Match leading table name.
+        (?P<column>.*)  # Catch column name.
+        ''', re.VERBOSE)

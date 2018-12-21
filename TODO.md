@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Rename test helpers as TSnippet or TDatabase (lint?) in order to avoid collisions with real modules?
    - [ ] Test if sqlite supports blob to char(64)?
    - [ ] Test if sqlite has rollback() instead of ROLLBACK? How to do this since this is now part of SQL with sqlite but function with postgres? How with cockroachDB?
@@ -26,6 +27,7 @@
    - [ ] Fix clarify how insert multiple - one failure behaves. Should have been fail all because of simplicity. Write test and fix.
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
    - [ ] Refactor and check the sqlitedb_helper somehow. At least the name can be synchronized with the snippet,solution and reference helpers.
+   - [ ] Remove the column marks from cause code (the structured log data rule). The cause could strip these out from middle of the string. Keep at the end?
 
 ## THINKING
    - [ ] Add code content.

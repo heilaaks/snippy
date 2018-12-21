@@ -114,7 +114,7 @@ class TestCliCreateSnippet(object):
         """
 
         cause = snippy.run(['snippy', 'create', '--editor'])
-        assert cause == 'NOK: could not identify edited content category - please keep tags in place'
+        assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('default-snippets', 'edit-remove')
@@ -137,7 +137,7 @@ class TestCliCreateSnippet(object):
         tags = content['data'][0]['tags']
         links = content['data'][0]['links']
         cause = snippy.run(['snippy', 'create', '--content', data, '--brief', brief, '--groups', groups, '--tags', tags, '--links', links])  # pylint: disable=line-too-long
-        assert cause == 'NOK: content data already exist with digest: 54e41e9b52a02b63'
+        assert cause == 'NOK: content: data :already exist with digest: 54e41e9b52a02b63'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('create-remove-utc')

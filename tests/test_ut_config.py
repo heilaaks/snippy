@@ -40,19 +40,6 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
 
         mock_utcnow.return_value = '2018-02-17 13:23:43'
 
-        resource = {
-            'data': (),
-            'brief': '',
-            'group': 'default',
-            'tags': (),
-            'links': (),
-            'category': 'snippet',
-            'name': '',
-            'filename': '',
-            'versions': '',
-            'created': '2018-02-17 13:23:43',
-            'updated': '2018-02-17 13:23:43',
-            'digest': 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'}
         Config.init(None)
         Config.load(Cli(['snippy', 'create']))
         assert isinstance(Config.content_category, str)
@@ -77,8 +64,8 @@ class TestUtConfig(object):  # pylint: disable=too-many-public-methods
         assert Config.remove_fields == ()
         assert Config.sort_fields == OrderedDict([('brief', 'ASC')])
         assert isinstance(Config.get_operation_file(), str)
-        assert Config.get_resource(None).dump_dict([]), resource
-        assert next(Config.get_collection().resources()).dump_dict([]), resource
+        assert not Config.get_resource(None)
+        assert not Config.get_collection()
         assert Config.is_operation_create
         assert not Config.is_operation_search
         assert not Config.is_operation_update

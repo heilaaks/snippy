@@ -233,8 +233,8 @@ class TestUtContentParserText(object):
 
         text = '\n'.join((
             '# Add mandatory snippet below.',
-            '# unknown 2.',
-            'Remove docker image with force',
+            '# Remove docker image with.',
+            'docker rm $(docker ps --all -q -f status=exited)',
             '# Add optional brief description below.',
             '# unknown 4.',
             '  cleanup,  container,docker,docker-ce,image,moby  ',
@@ -245,12 +245,15 @@ class TestUtContentParserText(object):
             '# Add mandatory snippet below',
             '# unknown 2.'
         ))
+        data = (
+            '# Remove docker image with.',
+            'docker rm $(docker ps --all -q -f status=exited)')
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         assert len(collection) == 1
         resource = next(collection.resources())
         assert resource.category == Const.SNIPPET
-        assert resource.data == ('',)
+        assert resource.data == data
         assert resource.brief == ''
         assert resource.description == ''
         assert resource.groups == ()

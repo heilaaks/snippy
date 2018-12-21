@@ -120,7 +120,26 @@ class Cause(object):
 
     @classmethod
     def is_ok(cls):
-        """Test if errors were detected."""
+        """Test if errors were detected.
+
+        The status is considered ok in following cases:
+
+          1. There are no errors at all.
+          2. There are only accepted error codes.
+          3. Content has been created without internal errors.
+
+        The last case is a special case. The problem is that currently the case
+        where multiple contents are imported when some of them fail due to data
+        already existing is considered successful. That is, user should get OK
+        when importing a list of data when some of them are already imported.
+        For this reason, the Created is searched without internal error.
+
+        The UUID collision is considered internal error because that field is
+        set by the application.
+
+        Returns:
+            bool: Define if the cause list can be considered ok.
+        """
 
         is_ok = False
         if not cls._list['errors']:
@@ -128,6 +147,8 @@ class Cause(object):
         elif len(cls._list['errors']) == 1 and cls._list['errors'][0]['status_string'] in Cause.OK_STATUS_LIST:
             is_ok = True
         elif all(error['status_string'] in Cause.OK_STATUS_LIST for error in cls._list['errors']):
+            is_ok = True
+        elif not cls._is_internal_error() and any(error['status_string'] == cls.HTTP_CREATED for error in cls._list['errors']):
             is_ok = True
 
         return is_ok
@@ -189,6 +210,15 @@ class Cause(object):
                   '  string : %s\n'
                   '  module : %s\n'
                   '  title  : %s\n' % (cause['status'], cause['status_string'], cause['module'], cause['title']))
+
+    @classmethod
+    def _is_internal_error(cls):
+        """Test if internal error was detected."""
+
+        if any(error['status_string'] == cls.HTTP_INTERNAL_SERVER_ERROR for error in cls._list['errors']):
+            return True
+
+        return False
 
     @staticmethod
     def _caller():

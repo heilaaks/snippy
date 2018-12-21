@@ -299,7 +299,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '559'
+            'content-length': '687'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -313,6 +313,11 @@ class TestApiCreateReference(object):
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
                 'title': 'content was not stored because it was matching to an empty template'
+            }, {
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'no content to be stored'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(
@@ -346,7 +351,7 @@ class TestApiCreateReference(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '706'}
+            'content-length': '578'}
         expect_body = {
             'meta': Content.get_api_meta(),
             'errors': [{
@@ -355,15 +360,10 @@ class TestApiCreateReference(object):
                 'module': 'snippy.testing.testing:123',
                 'title': 'internal error when searching content possibly violating database unique constraints'
             }, {
-                'status': '409',
-                'statusString': '409 Conflict',
+                'status': '500',
+                'statusString': '500 Internal Server Error',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content already exist with digest: not found'
-            }, {
-                'status': '409',
-                'statusString': '409 Conflict',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content already exist with digest: not found'
+                'title': 'content: uuid :already exist with digest: not found'
             }]
         }
         server = server_db[0]

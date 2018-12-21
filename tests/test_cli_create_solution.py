@@ -67,7 +67,7 @@ class TestCliCreateSolution(object):
             ]
         }
         cause = snippy.run(['snippy', 'create', '--solution'])
-        assert cause == 'NOK: content data already exist with digest: db712a82662d6932'
+        assert cause == 'NOK: content: data :already exist with digest: db712a82662d6932'
         Content.assert_storage(content)
 
     @pytest.mark.usefixtures('edit-solution-template')
@@ -90,7 +90,7 @@ class TestCliCreateSolution(object):
         """
 
         cause = snippy.run(['snippy', 'create', '--solution'])
-        assert cause == 'NOK: could not identify edited content category - please keep tags in place'
+        assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('edit-unknown-solution-template')
@@ -103,7 +103,7 @@ class TestCliCreateSolution(object):
         """
 
         cause = snippy.run(['snippy', 'create', '--solution'])
-        assert cause == 'NOK: could not identify edited content category - please keep tags in place'
+        assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
     @pytest.mark.usefixtures('snippy', 'edit-beats')

@@ -793,7 +793,7 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '558'
+            'content-length': '686'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -807,6 +807,11 @@ class TestApiCreateSnippet(object):  # pylint: disable=too-many-public-methods
                 'statusString': '400 Bad Request',
                 'module': 'snippy.testing.testing:123',
                 'title': 'content was not stored because it was matching to an empty template'
+            }, {
+                'status': '404',
+                'statusString': '404 Not Found',
+                'module': 'snippy.testing.testing:123',
+                'title': 'no content to be stored'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(

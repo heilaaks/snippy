@@ -89,6 +89,11 @@ class Collection(object):  # pylint: disable=too-many-public-methods
 
         return self._data['data'][digest]['data']
 
+    def __delitem__(self, digest):
+        """Return item from object based on message digest."""
+
+        return self._data['data'][digest]['data']
+
     def keys(self):
         """Return list of digests in collection."""
 
@@ -133,18 +138,24 @@ class Collection(object):  # pylint: disable=too-many-public-methods
            source (content): Resource or Collection that is migrated.
         """
 
+        migrated = False
         if isinstance(source, Collection):
             for resource in source.resources():
                 self.migrate(resource)
         elif isinstance(source, Resource):
             if source.category in Const.CATEGORIES:
-                if source.digest not in self.keys():
-                    self._data['meta']['total'] = self._data['meta']['total'] + 1
-                source.seal()
-                self._data['data'][source.digest] = {}
-                self._data['data'][source.digest]['data'] = source
+                if source.seal():
+                    if source.digest not in self.keys():
+                        self._data['meta']['total'] = self._data['meta']['total'] + 1
+                    self._data['data'][source.digest] = {}
+                    self._data['data'][source.digest]['data'] = source
+                    migrated = True
+                else:
+                    self._logger.debug('resource: {} :not migrated to collection'.format(source.digest))
             else:
                 self._logger.debug('migrate to collection failed due to unknown category: {}'.format(Logger.remove_ansi(str(source))))
+
+        return migrated
 
     def merge(self, source):
         """Merge a resource to collection.
@@ -158,7 +169,7 @@ class Collection(object):  # pylint: disable=too-many-public-methods
         no need for it.
 
         Args:
-           source (Resource): Resource to be merged to collection.
+            source (Resource): Resource to be merged to collection.
 
         Returns:
             str: The new message digest after merging the resource.
@@ -171,10 +182,15 @@ class Collection(object):  # pylint: disable=too-many-public-methods
             return digest
 
         if source.digest in self.keys():
-            digest = self[source.digest].merge(source)
+            if self[source.digest].merge(source):
+                digest = self[source.digest].digest
+            else:
+                del self[source.digest]
         else:
-            self.migrate(source)
-            digest = source.digest
+            if self.migrate(source):
+                digest = source.digest
+            else:
+                del self[source.digest]
 
         return digest
 

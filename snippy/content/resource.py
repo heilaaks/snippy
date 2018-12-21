@@ -339,15 +339,21 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         The tool has been built to expect always the data part and it was
         considered that it is more maintanable to to it like this instead
         of adding extra logic around the code.
+
+        Returns:
+            bool: If the resource sealing was successful.
         """
 
         if self.category == Const.REFERENCE:
             self.data = self.links
         else:
             self.links = tuple(sorted(self.links))
-
         self.digest = self.compute_digest()
-        self.has_data()
+
+        is_empty = self.is_empty()
+        is_template = self.is_template()
+
+        return not bool(is_empty or is_template)
 
     def migrate(self, source):
         """Migrate source into Resource.
@@ -367,7 +373,8 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.filename = source.filename
         self.versions = source.versions
         self.source = source.source
-        self.seal()
+
+        return self.seal()
 
     def merge(self, source):
         """Merge two resources.
@@ -402,9 +409,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         if source.source:
             self.source = source.source
 
-        self.seal()
-
-        return self.digest
+        return self.seal()
 
     def convert(self, row):
         """Convert database row into resource."""
@@ -430,10 +435,13 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def is_template(self):
         """Test if resource data is empty template."""
 
+        if bool(self.digest in Resource.TEMPLATES):
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
+
         return bool(self.digest in Resource.TEMPLATES)
 
-    def has_data(self):
-        """Test if resource has data.
+    def is_empty(self):
+        """Test if resource does not have mandatory data.
 
         In case of snippet and solution, the content data must be present.
         In case of references, the link must be present.
@@ -442,13 +450,13 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         if self.category in (Const.SNIPPET, Const.SOLUTION) and not any(self.data):
             Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data is empty')
 
-            return False
+            return True
         if self.category == Const.REFERENCE and not any(self.links):
             Cause.push(Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field links is empty')
 
-            return False
+            return True
 
-        return True
+        return False
 
     def is_snippet(self):
         """Test if resource is snippet."""

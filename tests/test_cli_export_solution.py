@@ -454,7 +454,6 @@ class TestCliExportSolution(object):  # pylint: disable=too-many-public-methods
         with mock.patch('snippy.content.migrate.open', file_content, create=True) as mock_file:
             cause = snippy.run(['snippy', 'import', '-f', './kafka.text'])
             assert cause == Cause.ALL_OK
-            Content.output()
 
         content['data'][0]['filename'] = 'kubernetes-docker-log-driver-kafka.txt'
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:

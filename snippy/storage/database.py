@@ -80,26 +80,21 @@ class Database(object):
             Collection: Collection of inserted content.
         """
 
+        stored = Collection()
+        if not collection:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'no content to be stored')
+
+            return stored
+
         inserted = 0
-        error = (Cause.HTTP_OK, Const.EMPTY)
         for resource in collection.resources():
-            if resource.digest != resource.compute_digest():
-                self._logger.debug('invalid digest found and updated while storing content data: "%s"', resource.data)
-                resource.update_digest()
-            error = self._insert(resource)
-            if error[0] == Cause.HTTP_OK:
+            if self._insert(resource):
                 inserted = inserted + 1
 
         self._logger.debug('inserted: %d :out of: %d :content', inserted, len(collection))
-        if not collection:
-            error = (Cause.HTTP_NOT_FOUND, 'no content found to be stored')
-        elif inserted == len(collection):
+        if inserted:
             Cause.push(Cause.HTTP_CREATED, 'content created')
 
-        if not inserted and error[0] != Cause.HTTP_OK:
-            Cause.push(*error)
-
-        stored = Collection()
         for resource in collection.resources():
             stored.migrate(self.select(resource.category, digest=resource.digest))
 
@@ -115,11 +110,7 @@ class Database(object):
             List: Local error that contains cause and message.
         """
 
-        error = self._test_content(resource)
-        if error[0] != Cause.HTTP_OK:
-
-            return error
-
+        stored = False
         query = '''
             INSERT OR ROLLBACK
             INTO      contents
@@ -149,8 +140,18 @@ class Database(object):
         qargs = resource.dump_qargs()
         try:
             self._put_db(query, qargs)
-        except sqlite3.IntegrityError:
-            error = (Cause.HTTP_CONFLICT, 'content already exist with digest: {:.16}'.format(self._get_digest(resource)))
+            stored = True
+        except sqlite3.IntegrityError as err:
+            match = Const.RE_CATCH_VIOLATING_COLUMN.search(str(err))
+            if match:
+                if match.group('column') == 'uuid':
+                    cause = Cause.HTTP_500
+                else:
+                    cause = Cause.HTTP_CONFLICT
+                error = (cause, 'content: {} :already exist with digest: {:.16}'.format(match.group('column'), self._get_digest(resource)))
+            else:
+                self._logger.info('database integrity error parse failure: {}'.format(err))
+                error = (Cause.HTTP_CONFLICT, 'content already exist with digest: {:.16}'.format(self._get_digest(resource)))
             Cause.push(*error)
             self._logger.info('database integrity error from database: {}'.format(traceback.format_exc()))
             self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
@@ -158,7 +159,7 @@ class Database(object):
             self._logger.info('database integrity error from query arguments: {}'.format(qargs))
             self._logger.info('database integrity error stack trace: {}'.format(traceback.format_stack(limit=20)))
 
-        return error
+        return stored
 
     def select(self, scat=(), sall=(), stag=(), sgrp=(), search_filter=None, uuid=None, digest=None, data=None):
         """Select content based on search criteria.
@@ -297,9 +298,8 @@ class Database(object):
         """
 
         stored = Collection()
-        error = self._test_content(resource, update=True)
-        if error[0] != Cause.HTTP_OK:
-            Cause.push(*error)
+        if not resource:
+            Cause.push(Cause.HTTP_NOT_FOUND, 'no content to be updated')
 
             return stored
 
@@ -453,41 +453,6 @@ class Database(object):
             Cause.push(Cause.HTTP_500, 'creating database failed with exception {}'.format(exception))
 
         return connection
-
-    def _test_content(self, resource, update=False):
-        """Test content validity.
-
-        In case of update, the same content data and uuid are existing. These
-        two checks are relevant only in case of insert.
-        """
-
-        error = (Cause.HTTP_OK, Const.EMPTY)
-        if resource.is_template():
-            error = (Cause.HTTP_BAD_REQUEST, 'content was not stored because it was matching to an empty template')
-            self._logger.debug(error[1])
-
-            return error
-
-        if not resource.has_data():
-            error = (Cause.HTTP_BAD_REQUEST, 'content was not stored because mandatory content field data was missing')
-            self._logger.debug(error[1])
-
-            return error
-
-        if not update:
-            if self._select_data(resource.data):
-                error = (Cause.HTTP_CONFLICT, 'content data already exist with digest: {:.16}'.format(self._get_digest(resource)))
-                self._logger.debug(error[1])
-
-                return error
-
-            if self._select_uuid(resource.uuid):
-                error = (Cause.HTTP_CONFLICT, 'content uuid already exist with digest: {:.16}'.format(self._get_digest(resource)))
-                self._logger.debug(error[1])
-
-                return error
-
-        return error
 
     def _get_digest(self, resource):
         """Return digest of given content from database."""

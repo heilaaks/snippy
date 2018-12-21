@@ -1001,8 +1001,8 @@ class TestUtContentParserMkdn(object):
     def test_parser_reference_002(self):
         """Test parsing reference.
 
-        Test case verifies that optional fields brief, groups, description and
-        links can be ommitted and the content is still parsed correctly.
+        Test case verifies that optional fields brief, groups and description
+        can be ommitted and the content is still parsed correctly.
         """
 
         text = Const.NEWLINE.join((
@@ -1010,13 +1010,13 @@ class TestUtContentParserMkdn(object):
             '',
             '> ',
             '',
-            '> ',
+            "> \\[1\\] https://docs.docker.com/engine/reference/commandline/images/  ",
             '',
             '## Meta',
             '',
             '> category : reference  ',
             'created  : 2017-10-12T11:52:11.000001+00:00  ',
-            'digest   : 1c7501ac802d98aeb161c973ec51c1b96d56774cdc8936c17df0fa9315d3e1c7  ',
+            'digest   : 0bd50d9035d987a2407b0dfe68aea761fadf1306556bd5fafea3f59bef51c826  ',
             'filename :   ',
             'name     :   ',
             'source   :   ',
@@ -1027,19 +1027,20 @@ class TestUtContentParserMkdn(object):
             '',
         ))
         groups = ('default',)
+        links = ('https://docs.docker.com/engine/reference/commandline/images/',)
         tags = ('cleanup', 'container', 'docker-ce', 'moby', 'python')
         uuid = 'f21c6318-8830-11e8-a114-2c4d54508088'
-        digest = '1c7501ac802d98aeb161c973ec51c1b96d56774cdc8936c17df0fa9315d3e1c7'
+        digest = '0bd50d9035d987a2407b0dfe68aea761fadf1306556bd5fafea3f59bef51c826'
         collection = Collection()
         Parser(self.TIMESTAMP, text, collection).read_collection()
         resource = next(collection.resources())
         assert resource.category == Const.REFERENCE
-        assert resource.data == ()
+        assert resource.data == links
         assert resource.brief == Const.EMPTY
         assert resource.groups == groups
         assert resource.description == Const.EMPTY
         assert resource.tags == tags
-        assert resource.links == ()
+        assert resource.links == links
         assert resource.filename == Const.EMPTY
         assert resource.name == Const.EMPTY
         assert resource.versions == Const.EMPTY

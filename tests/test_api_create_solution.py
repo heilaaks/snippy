@@ -342,7 +342,7 @@ class TestApiCreateSolution(object):
         }
         expect_headers = {
             'content-type': 'application/vnd.api+json; charset=UTF-8',
-            'content-length': '737'
+            'content-length': '512'
         }
         expect_body = {
             'meta': Content.get_api_meta(),
@@ -352,15 +352,10 @@ class TestApiCreateSolution(object):
                 'module': 'snippy.testing.testing:123',
                 'title': 'content was not stored because mandatory content field data is empty'
             }, {
-                'status': '400',
-                'statusString': '400 Bad Request',
+                'status': '404',
+                'statusString': '404 Not Found',
                 'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because mandatory content field data is empty'
-            }, {
-                'status': '400',
-                'statusString': '400 Bad Request',
-                'module': 'snippy.testing.testing:123',
-                'title': 'content was not stored because mandatory content field data was missing'
+                'title': 'no content to be stored'
             }]
         }
         result = testing.TestClient(server.server.api).simulate_post(

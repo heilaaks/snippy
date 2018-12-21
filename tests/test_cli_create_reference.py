@@ -92,7 +92,7 @@ class TestCliCreateReferece(object):
         """
 
         cause = snippy.run(['snippy', 'create', '--editor'])
-        assert cause == 'NOK: could not identify edited content category - please keep tags in place'
+        assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(None)
 
     @classmethod

@@ -288,7 +288,7 @@ class TestCliUpdateReference(object):
         }
         edited_gitlog.return_value = ''
         cause = snippy.run(['snippy', 'update', '--reference', '-d', '5c2071094dbfaa33'])
-        assert cause == 'NOK: could not identify edited content category - please keep tags in place'
+        assert cause == 'NOK: could not identify content category - please keep template tags in place'
         Content.assert_storage(content)
 
     @classmethod

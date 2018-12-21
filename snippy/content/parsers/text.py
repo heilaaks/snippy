@@ -67,7 +67,7 @@ class ContentParserText(ContentParserBase):
     REGEXP['data'][Const.SNIPPET] = re.compile(r'''
         (?:%s|%s)               # Match snippet or reference data header.
         (?P<data>[\s\S]*?)      # Catch multiline data untill next match.
-        (?:\n{2}|^[#])          # Match newlines or next header indicated by hash at the beginning of line.
+        (?:\n{2}|[#]\sAdd\s)    # Match newlines or next header indicated by hash and 'Add' tag from template.
         ''' % (re.escape(DATA[Const.SNIPPET]), re.escape(DATA[Const.REFERENCE])), re.MULTILINE | re.VERBOSE)
     REGEXP['data'][Const.REFERENCE] = REGEXP['data'][Const.SNIPPET]
     REGEXP['data'][Const.SOLUTION] = re.compile(r'''
@@ -204,7 +204,7 @@ class ContentParserText(ContentParserBase):
             offset = 1
             tag = '# Add mandatory links below one link per line'
         else:
-            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'could not identify text source content category: {}'.format(category))
+            Cause.push(Cause.HTTP_BAD_REQUEST, 'could not identify content category - please keep template tags in place')
 
             return contents
 

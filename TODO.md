@@ -28,6 +28,8 @@
    - [ ] Fix Parser which assumes always UTF-8. If CLI terminal has something else, this fails.
    - [ ] Refactor and check the sqlitedb_helper somehow. At least the name can be synchronized with the snippet,solution and reference helpers.
    - [ ] Remove the column marks from cause code (the structured log data rule). The cause could strip these out from middle of the string. Keep at the end?
+   - [ ] Parse new format that supports snippets with leading comment to internal format? Or remove the support?
+   - [ ] Is there a better way to support the special case of checking internal cause 500 and Content created cause for importing some of the content (digest integrity error)
 
 ## THINKING
    - [ ] Add code content.

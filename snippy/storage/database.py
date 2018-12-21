@@ -497,7 +497,7 @@ class Database(object):
                     cursor.execute(query, qargs)
                     self._connection.commit()
             except sqlite3.IntegrityError:
-                raise sqlite3.IntegrityError
+                raise
             except sqlite3.Error as exception:
                 Cause.push(Cause.HTTP_500, 'writing into database failed with exception {}'.format(exception))
         else:

@@ -1,4 +1,7 @@
 ## WORKING
+   - [ ] Change the VIOLATED const to SQLITE and POSTGRE
+   - [ ] Set the id as serial for sqlite also and alter the serial.
+   - [ ] Fix the database test helper.
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Rename test helpers as TSnippet or TDatabase (lint?) in order to avoid collisions with real modules?
    - [ ] Use datetime for created and updated. Do the conversion in sqlite(database) module and do not check this in Resource since it would reveal DB type.

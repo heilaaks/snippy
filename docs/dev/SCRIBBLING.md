@@ -1885,6 +1885,14 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        safety and security reasons. This tries to prevent extremely long log messages
        which may cause problems for the server.
 
+    SQL
+    
+    1. SQL formatting
+    
+       SQL syntax is formatted with [1]. There are undocumented changes to
+       the format to please authors eye.
+       
+       [1] https://www.sqlinform.com/online-sql-formatter/
 
     SECURITY
 

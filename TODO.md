@@ -1,13 +1,10 @@
 ## WORKING
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Rename test helpers as TSnippet or TDatabase (lint?) in order to avoid collisions with real modules?
-   - [ ] Test if sqlite supports blob to char(64)?
-   - [ ] Capitalize SQL syntax.
-   - [ ] Remove default from timestamps to force them.
    - [ ] Use datetime for created and updated. Do the conversion in sqlite(database) module and do not check this in Resource since it would reveal DB type.
    - [ ] Add option to select db from {sqlite,postgres,cockroach} and default to sqlite.
    - [ ] Insecure by defautl (experimental release) as of now.
-   - [ ] Test unner search --all --sall . with sqlite.
+   - [ ] Test runner search --all --sall . with sqlite.
    - [ ] Fix assert storage to support dict list in different orders. Check first why postgres does this. The order is now different in sqlite and postgres. Why this is in update?
    - [ ] Note that that database ID changes with postgres and e.g. test cases that print check it will need something.
    - [ ] Database needs own certs so the server cert names should be changed? Yes because the database certs can be user specific? Yes...? at least for cockroach https://www.cockroachlabs.com/docs/stable/build-a-python-app-with-cockroachdb.html

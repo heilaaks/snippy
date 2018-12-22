@@ -124,15 +124,17 @@ class Database(object):
                     cursor.executemany(query, qargs)
                     self._connection.commit()
             except sqlite3.IntegrityError:
+                self._connection.rollback()
                 raise
             except sqlite3.Error:
+                self._connection.rollback()
                 self._logger.info('database error in insert with query: {}'.format(query))
                 self._logger.info('database error in insert with query arguments: {}'.format(qargs))
                 raise
 
         stored = False
         query = '''
-            INSERT OR ROLLBACK
+            INSERT
             INTO      contents
                       (
                                 data

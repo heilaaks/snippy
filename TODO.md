@@ -2,7 +2,6 @@
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Rename test helpers as TSnippet or TDatabase (lint?) in order to avoid collisions with real modules?
    - [ ] Test if sqlite supports blob to char(64)?
-   - [ ] Test if sqlite has rollback() instead of ROLLBACK? How to do this since this is now part of SQL with sqlite but function with postgres? How with cockroachDB?
    - [ ] Capitalize SQL syntax.
    - [ ] Remove default from timestamps to force them.
    - [ ] Use datetime for created and updated. Do the conversion in sqlite(database) module and do not check this in Resource since it would reveal DB type.

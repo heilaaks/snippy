@@ -334,8 +334,10 @@ class TestApiCreateReference(object):
         """Try to create reference.
 
         Try to POST new reference when database throws an integrity error from
-        UUID column unique constraint violation. In this case there is no
-        content and the digest in error message is not filled.
+        UUID column's unique constraint violation. In this case there is no
+        stored content and the digest in generated error message cannot filled
+        based on database content. Database tries to insert the content twice
+        and both of them result the same unique constraint violation.
         """
 
         content = {
@@ -368,7 +370,10 @@ class TestApiCreateReference(object):
         }
         server = server_db[0]
         db_connect = server_db[1]
-        db_connect.return_value.commit.side_effect = [sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid')]
+        db_connect.return_value.commit.side_effect = [
+            sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid'),
+            sqlite3.IntegrityError('UNIQUE constraint failed: contents.uuid')
+        ]
         result = testing.TestClient(server.server.api).simulate_post(
             path='/snippy/api/app/v1/references',
             headers={'accept': 'application/vnd.api+json; charset=UTF-8'},

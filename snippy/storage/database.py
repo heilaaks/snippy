@@ -38,6 +38,11 @@ class Database(object):
     QUERY_TYPE_REGEX = 'regex'
     QUERY_TYPE_TOTAL = 'total'
 
+    RE_CATCH_VIOLATING_COLUMN = re.compile(r'''
+        contents[.]{1}  # Match leading table name.
+        (?P<column>.*)  # Catch column name.
+        ''', re.VERBOSE)
+
     def __init__(self):
         self._logger = Logger.get_logger(__name__)
         self._db = Const.DB_SQLITE
@@ -73,8 +78,12 @@ class Database(object):
     def insert(self, collection):
         """Insert collection into database.
 
+        If any of the resources in the given collection is successfully
+        inseted, the operation results Created status. The failing resources
+        each produce own failure cause.
+
         Args:
-            collection (Collection): Content container to be stored into database.
+            collection (Collection): Content container to be stored.
 
         Returns:
             Collection: Collection of inserted content.
@@ -86,29 +95,40 @@ class Database(object):
 
             return stored
 
-        inserted = 0
-        for resource in collection.resources():
-            if self._insert(resource):
-                inserted = inserted + 1
-
-        self._logger.debug('inserted: %d :out of: %d :content', inserted, len(collection))
-        if inserted:
+        if self._insert(collection):
             Cause.push(Cause.HTTP_CREATED, 'content created')
-
-        for resource in collection.resources():
-            stored.migrate(self.select(resource.category, digest=resource.digest))
+            for resource in collection:
+                stored.migrate(self.select(resource.category, digest=resource.digest))
+        self._logger.debug('inserted: %d :out of: %d :content', len(stored), len(collection))
 
         return stored
 
-    def _insert(self, resource):
-        """Insert one resource into database.
+    def _insert(self, collection):
+        """Insert collection into database.
+
+        Insert all resources in collection in one batch. If any of queries
+        in the batch fail, each resource is tried to be insert on by one.
 
         Args:
-            resource (Resource): Stored content in ``Resource()`` container.
+            collection (Collection): Content container to be stored.
 
         Returns:
-            List: Local error that contains cause and message.
+            bool: True if any of resources in collection is inserted.
         """
+
+        def execute(query, qargs):
+            "Execute database query."""
+
+            try:
+                with closing(self._connection.cursor()) as cursor:
+                    cursor.executemany(query, qargs)
+                    self._connection.commit()
+            except sqlite3.IntegrityError:
+                raise
+            except sqlite3.Error:
+                self._logger.info('database error in insert with query: {}'.format(query))
+                self._logger.info('database error in insert with query arguments: {}'.format(qargs))
+                raise
 
         stored = False
         query = '''
@@ -137,27 +157,23 @@ class Database(object):
                               {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}
                       )
             '''.format(self._placeholder)
-        qargs = resource.dump_qargs()
+        qargs = []
+        for resource in collection:
+            qargs.append(resource.dump_qargs())
         try:
-            self._put_db(query, qargs)
+            execute(query, qargs)
             stored = True
         except sqlite3.IntegrityError as err:
-            match = Const.RE_CATCH_VIOLATING_COLUMN.search(str(err))
-            if match:
-                if match.group('column') == 'uuid':
-                    cause = Cause.HTTP_500
-                else:
-                    cause = Cause.HTTP_CONFLICT
-                error = (cause, 'content: {} :already exist with digest: {:.16}'.format(match.group('column'), self._get_digest(resource)))
-            else:
-                self._logger.info('database integrity error parse failure: {}'.format(err))
-                error = (Cause.HTTP_CONFLICT, 'content already exist with digest: {:.16}'.format(self._get_digest(resource)))
-            Cause.push(*error)
-            self._logger.info('database integrity error from database: {}'.format(traceback.format_exc()))
-            self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
-            self._logger.info('database integrity error from query: {}'.format(query))
-            self._logger.info('database integrity error from query arguments: {}'.format(qargs))
-            self._logger.info('database integrity error stack trace: {}'.format(traceback.format_stack(limit=20)))
+            self._logger.info('database integrity error with query: {}'.format(query))
+            self._logger.info('database integrity error with query arguments: {}'.format(qargs))
+            for resource in collection:
+                try:
+                    execute(query, [resource.dump_qargs()])
+                    stored = True
+                except sqlite3.IntegrityError as err:
+                    self._set_integrity_error(err, resource)
+        except sqlite3.Error as err:
+            self._set_error(err, collection)
 
         return stored
 
@@ -613,3 +629,38 @@ class Database(object):
         query = query[:-3]  # Remove last 'OR ' added by the loop.
 
         return query, qargs
+
+    def _set_integrity_error(self, error, resource):
+        """Set integrity error.
+
+        Args:
+            error (str): Exception string from integrity error.
+            resource (Resource): Resource which SQL operation caused exception.
+        """
+
+        digest = self._get_digest(resource)
+        match = self.RE_CATCH_VIOLATING_COLUMN.search(str(error))
+        if match:
+            if match.group('column') == 'uuid':
+                cause = Cause.HTTP_500
+            else:
+                cause = Cause.HTTP_CONFLICT
+            Cause.push(cause, 'content: {} :already exist with digest: {:.16}'.format(match.group('column'), digest))
+        else:
+            self._logger.info('database integrity error parse failure: {}'.format(error))
+            Cause.push(Cause.HTTP_CONFLICT, 'content already exist with digest: {:.16}'.format(digest))
+        self._logger.info('database integrity error from database: {}'.format(traceback.format_exc()))
+        self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
+        self._logger.info('database integrity error stack trace: {}'.format(traceback.format_stack(limit=20)))
+
+    def _set_error(self, error, collection):
+        """Set generic database error.
+
+        Args:
+            error (str): Exception string from integrity error.
+        """
+
+        self._logger.info('database error: {}'.format(traceback.format_exc()))
+        self._logger.info('database error from collection with size: {}'.format(len(collection)))
+        self._logger.info('database error stack trace: {}'.format(traceback.format_stack(limit=20)))
+        Cause.push(Cause.HTTP_500, 'database operation failed with exception {}'.format(error))

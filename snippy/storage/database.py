@@ -165,17 +165,17 @@ class Database(object):
         try:
             execute(query, qargs)
             stored = True
-        except sqlite3.IntegrityError as err:
+        except sqlite3.IntegrityError:
             self._logger.info('database integrity error with query: {}'.format(query))
             self._logger.info('database integrity error with query arguments: {}'.format(qargs))
             for resource in collection:
                 try:
                     execute(query, [resource.dump_qargs()])
                     stored = True
-                except sqlite3.IntegrityError as err:
-                    self._set_integrity_error(err, resource)
-        except sqlite3.Error as err:
-            self._set_error(err, collection)
+                except sqlite3.IntegrityError as error:
+                    self._set_integrity_error(error, resource)
+        except sqlite3.Error as error:
+            self._set_error(error)
 
         return stored
 
@@ -323,29 +323,37 @@ class Database(object):
 
         query = '''
             UPDATE
-                      contents
-            SET       data        = {0}
-                    , brief       = {0}
-                    , description = {0}
-                    , groups      = {0}
-                    , tags        = {0}
-                    , links       = {0}
-                    , category    = {0}
-                    , name        = {0}
-                    , filename    = {0}
-                    , versions    = {0}
-                    , source      = {0}
-                    , uuid        = {0}
-                    , created     = {0}
-                    , updated     = {0}
-                    , digest      = {0}
-                    , metadata    = {0}
+                          contents
+            SET           data        = {0}
+                        , brief       = {0}
+                        , description = {0}
+                        , groups      = {0}
+                        , tags        = {0}
+                        , links       = {0}
+                        , category    = {0}
+                        , name        = {0}
+                        , filename    = {0}
+                        , versions    = {0}
+                        , source      = {0}
+                        , uuid        = {0}
+                        , created     = {0}
+                        , updated     = {0}
+                        , digest      = {0}
+                        , metadata    = {0}
             WHERE
-                      digest LIKE   {0}
+                        digest LIKE     {0}
             '''.format(self._placeholder)
         qargs = resource.dump_qargs() + (digest,)
-        self._put_db(query, qargs)
-
+        try:
+            with closing(self._connection.cursor()) as cursor:
+                cursor.execute(query, qargs)
+                self._connection.commit()
+        except sqlite3.IntegrityError as error:
+            self._logger.info('database integrity error with query: {}'.format(query))
+            self._logger.info('database integrity error with query arguments: {}'.format(qargs))
+            self._set_integrity_error(error, resource)
+        except sqlite3.Error as error:
+            self._set_error(error)
         stored.migrate(self.select(resource.category, digest=resource.digest))
 
         return stored
@@ -506,21 +514,6 @@ class Database(object):
 
         return rows
 
-    def _put_db(self, query, qargs):
-        """Run generic query for insert or update."""
-
-        if self._connection:
-            try:
-                with closing(self._connection.cursor()) as cursor:
-                    cursor.execute(query, qargs)
-                    self._connection.commit()
-            except sqlite3.IntegrityError:
-                raise
-            except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'writing into database failed with exception {}'.format(exception))
-        else:
-            Cause.push(Cause.HTTP_500, 'internal error prevented writing into database')
-
     def _get_query(self, scat, sall, stag, sgrp, suuid, sdigest, sdata, query_type):  # noqa pylint: disable=too-many-arguments,too-many-locals,too-many-branches
         """Get query based on defined type."""
 
@@ -655,7 +648,7 @@ class Database(object):
         self._logger.info('database integrity error from resource: {}'.format(Logger.remove_ansi(str(resource))))
         self._logger.info('database integrity error stack trace: {}'.format(traceback.format_stack(limit=20)))
 
-    def _set_error(self, error, collection):
+    def _set_error(self, error):
         """Set generic database error.
 
         Args:
@@ -663,6 +656,5 @@ class Database(object):
         """
 
         self._logger.info('database error: {}'.format(traceback.format_exc()))
-        self._logger.info('database error from collection with size: {}'.format(len(collection)))
         self._logger.info('database error stack trace: {}'.format(traceback.format_stack(limit=20)))
         Cause.push(Cause.HTTP_500, 'database operation failed with exception {}'.format(error))

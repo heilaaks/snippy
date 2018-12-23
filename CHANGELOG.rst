@@ -23,7 +23,7 @@ New features
 * Add export and import all default content with one command.
 * Add comment auto-alignment for snippets when printed to terminal.
 * Add description field in text content templates.
-* Add uuid1 field for CLI and REST API operations.
+* Add uuid4 field for CLI and REST API operations.
 * Add limit option for CLI operations.
 * Add search category (scat) option for CLI operations.
 

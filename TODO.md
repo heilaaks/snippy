@@ -1,6 +1,7 @@
 ## WORKING
    - [ ] Export changes the timestamp format to '2018-06-22 13:10:33.295299' this is regression.
    - [ ] Remove uuid from defaults and generate them again with UUID4.
+   - [ ] Add namespace for for internal UUID since the containers may have same MAC addresses Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] _read_collection can remove digest since it must be always in seal.
    - [ ] Change the VIOLATED const to SQLITE and POSTGRE
    - [ ] Set the id as serial for sqlite also and alter the serial.
@@ -79,7 +80,6 @@
    - [ ] Fix (by using OAS3.0?) swagger yaml since it uses 3.0. Componentst and etc should be under defintions // https://stackoverflow.com/questions/47293855/swagger-schema-error-should-not-have-additional-properties
    - [ ] Fix it seems that python can do like Config.parameternewparameter which adds new parameter in case of typo. Can this be prevented?
    - [ ] Fix test cases hiding that cls.source was _not_ set in init when the Config.init called storage method that used cls.source. How this can be not noticed?
-   - [ ] Fix docs where it was stated that uuid1 contains hostname. It actually contains mac address. This is different per container by default. Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] Fix print resource it does not print data in debug part because it is empty tuple.
    - [ ] Fix tox which seems to test on latest python 3.6 and not e.g. 3.4. Tox -e py34 // http://notes.webutvikling.org/darn-installation-of-python-3-4/
    - [ ] Fix failure to process request like SSL error does not refresh OID. Is there a hook for this?

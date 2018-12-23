@@ -137,7 +137,8 @@ class Database(object):
             INSERT
             INTO      contents
                       (
-                                data
+                                id
+                              , data
                               , brief
                               , description
                               , groups
@@ -152,7 +153,6 @@ class Database(object):
                               , created
                               , updated
                               , digest
-                              , metadata
                       )
                       VALUES
                       (
@@ -324,7 +324,8 @@ class Database(object):
         query = '''
             UPDATE
                           contents
-            SET           data        = {0}
+            SET           id          = {0}
+                        , data        = {0}
                         , brief       = {0}
                         , description = {0}
                         , groups      = {0}
@@ -339,7 +340,6 @@ class Database(object):
                         , created     = {0}
                         , updated     = {0}
                         , digest      = {0}
-                        , metadata    = {0}
             WHERE
                         digest LIKE     {0}
             '''.format(self._placeholder)

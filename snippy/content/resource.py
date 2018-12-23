@@ -35,23 +35,22 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     """Persiste one resource."""
 
     # Database column numbers.
-    DATA = 0
-    BRIEF = 1
-    DESCRIPTION = 2
-    GROUPS = 3
-    TAGS = 4
-    LINKS = 5
-    CATEGORY = 6
-    NAME = 7
-    FILENAME = 8
-    VERSIONS = 9
-    SOURCE = 10
-    UUID = 11
-    CREATED = 12
-    UPDATED = 13
-    DIGEST = 14
-    METADATA = 15
-    KEY = 16
+    _ID = 0
+    DATA = 1
+    BRIEF = 2
+    DESCRIPTION = 3
+    GROUPS = 4
+    TAGS = 5
+    LINKS = 6
+    CATEGORY = 7
+    NAME = 8
+    FILENAME = 9
+    VERSIONS = 10
+    SOURCE = 11
+    UUID = 12
+    CREATED = 13
+    UPDATED = 14
+    DIGEST = 15
 
     SNIPPET_TEMPLATE = 'b4bedc2603e3b9ea95bcf53cb7b8aa6efa31eabb788eed60fccf3d8029a6a6cc'
     SOLUTION_TEMPLATE = '79e4ae470cd135798d718a668c52dbca1e614187da8bb22eca63047681f8d146'
@@ -60,6 +59,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
     def __init__(self, category='', timestamp=''):
         self._logger = Logger.get_logger(__name__)
+        self._id = self._get_internal_uuid()
         self._data = ()
         self._brief = ''
         self._description = ''
@@ -74,8 +74,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._uuid = self._get_external_uuid()
         self._created = timestamp
         self._updated = timestamp
-        self._metadata = ''
-        self._key = None
         self._digest = self.compute_digest()
 
     def __str__(self):
@@ -87,7 +85,9 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """Compare resources if they are equal."""
 
         if type(resource) is type(self):
-            # Resource key is defined by database and it is not compared.
+            # The comparison checks only publicly visible resource fields.
+            # Internal field ID is not compared since it is always unique
+            # ID used for database primary key.
             return self.data == resource.data and \
                    self.brief == resource.brief and \
                    self.description == resource.description and \
@@ -102,7 +102,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                    self.uuid == resource.uuid and \
                    self.created == resource.created and \
                    self.updated == resource.updated and \
-                   self.metadata == resource.metadata and \
                    self.digest == resource.digest
 
         return False
@@ -292,30 +291,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
 
         self._digest = value
 
-    @property
-    def metadata(self):
-        """Get resource metadata."""
-
-        return self._metadata
-
-    @metadata.setter
-    def metadata(self, value):
-        """Resource metadata."""
-
-        self._metadata = value
-
-    @property
-    def key(self):
-        """Get resource key."""
-
-        return self._key
-
-    @key.setter
-    def key(self, value):
-        """Resource key."""
-
-        self._key = value
-
     def compute_digest(self):
         """Compute digest from the content."""
 
@@ -428,6 +403,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
     def convert(self, row):
         """Convert database row into resource."""
 
+        self._id = row[Resource._ID]
         self.data = tuple(row[Resource.DATA].split(Const.DELIMITER_DATA))
         self.brief = row[Resource.BRIEF]
         self.description = row[Resource.DESCRIPTION]
@@ -443,8 +419,6 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self.created = row[Resource.CREATED]
         self.updated = row[Resource.UPDATED]
         self.digest = row[Resource.DIGEST]
-        self.metadata = row[Resource.METADATA]
-        self.key = row[Resource.KEY]
 
     def is_template(self):
         """Test if resource data is empty template."""
@@ -497,6 +471,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """
 
         qargs = (
+            self._id,
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, self.data)),
             self.brief,
             self.description,
@@ -511,8 +486,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.uuid,
             self.created,
             self.updated,
-            self.digest,
-            self.metadata,
+            self.digest
         )
 
         return qargs
@@ -706,8 +680,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             text = text + meta.format(indent=indent, key='description', align=' ' * 1, value=self.description)
             text = text + digest.format(indent=indent, key='digest', align=' ' * 6, value=self.digest, test=self.digest == self.compute_digest())  # noqa pylint: disable=line-too-long
             text = text + meta.format(indent=indent, key='filename', align=' ' * 4, value=self.filename)
-            text = text + meta.format(indent=indent, key='key', align=' ' * 9, value=self.key)
-            text = text + meta.format(indent=indent, key='metadata', align=' ' * 4, value=self.metadata)
+            text = text + meta.format(indent=indent, key='id', align=' ' * 10, value=self._id)
             text = text + meta.format(indent=indent, key='name', align=' ' * 8, value=self.name)
             text = text + meta.format(indent=indent, key='source', align=' ' * 6, value=self.source)
             text = text + meta.format(indent=indent, key='updated', align=' ' * 5, value=self.updated)
@@ -773,3 +746,17 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         """
 
         return str(uuid.uuid4())
+
+    @staticmethod
+    def _get_internal_uuid():
+        """Get internally used UUID.
+
+        This UUID is intended not to be visible outside of the server. The
+        UUID contains physical MAC address that may reveal location of
+        running server.
+
+        Returns:
+            str: UUID1 string.
+        """
+
+        return str(uuid.uuid1())

@@ -904,4 +904,5 @@ def _editor(mocker, timestamp):
 def _mock_uuids(mocker):
     """Mock UUIDS."""
 
+    mocker.patch.object(uuid, 'uuid1', side_effect=Database.TEST_UUIDS)
     mocker.patch.object(uuid, 'uuid4', side_effect=Database.TEST_UUIDS)

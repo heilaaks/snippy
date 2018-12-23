@@ -1,7 +1,7 @@
 ## WORKING
    - [ ] runner export --scat reference -f reference.yaml and python runner export --reference -f reference.yam print OK with none content.
-   - [ ] Add namespace for for internal UUID since the containers may have same MAC addresses Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] _read_collection can remove digest since it must be always in seal.
+   - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.
    - [ ] Change the VIOLATED const to SQLITE and POSTGRE
    - [ ] Set the id as serial for sqlite also and alter the serial.
    - [ ] Fix the database test helper.
@@ -44,6 +44,7 @@
    - [ ] Fix (optimize) migrate and dump. The dump_dict is not needed in case of text and mkdn because those methods do not need the dict format but produce string directly.
    - [ ] Fix (optimize) digest calculation for import. Print the digest string from digest compute and see that it computes digest 4 times for same content.
    - [ ] Fix (optimize) POST API with multiple contents. Now each content in collection is *.run with own resources. The create supports collection so this should work.
+   - [ ] Fix (optimize) the order of SQL columns. Fixed length columns first. This should ? allow database to optimize the length of data. Is this the case?
 
 ## FEATURES
    - [ ] Add support to search phrases like has 'active end'. This should return one result with default set but it returns two since each word is searched separately.
@@ -72,6 +73,7 @@
    - [ ] Remove server name and version from HTTP responses. This would require overriding Gunicorn https://stackoverflow.com/a/21294524.
 
 ## FIX
+   - [ ] Fix the internal primary key UUID. It has MAC address which is same for multiple containers? //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] Fix long description in Markdown format does not support keeping paragraph. The description supports only one paragraph that is wrapped for Markdown. Fix or ok?
    - [ ] Fix Gunicorn info logs to debug somehow?
    - [ ] Fix Fields class. It may not have to be inherited like now. The operation ID refresh and logs are problematic now because the Fields logs would refresh OID to be different than with the base class logs. How?

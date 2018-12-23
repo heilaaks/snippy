@@ -2,7 +2,8 @@
 -- Database schema for Snippy application.
 CREATE TABLE IF NOT EXISTS contents
           (
-                    data        text NOT NULL UNIQUE
+                    id          UUID PRIMARY KEY NOT NULL UNIQUE
+                  , data        text NOT NULL UNIQUE
                   , brief       text DEFAULT ''
                   , description text DEFAULT ''
                   , groups      text DEFAULT ''
@@ -17,7 +18,5 @@ CREATE TABLE IF NOT EXISTS contents
                   , created     TIMESTAMP
                   , updated     TIMESTAMP
                   , digest      CHAR(64)
-                  , metadata    text DEFAULT ''
-                  , id          INTEGER PRIMARY KEY
           )
 ;

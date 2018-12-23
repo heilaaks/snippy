@@ -179,10 +179,11 @@ class Database(object):
             content (dict): Content in a dictionary.
         """
 
-        query = ('INSERT OR ROLLBACK INTO contents (data, brief, description, groups, tags, links, category, name, ' +
-                 'filename, versions, source, uuid, created, updated, digest, metadata) ' +
+        query = ('INSERT OR ROLLBACK INTO contents (id, data, brief, description, groups, tags, links, category, name, ' +
+                 'filename, versions, source, uuid, created, updated, digest) ' +
                  'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
         qargs = (
+            content.get('id', ''),
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, content.get('data', ()))),
             content.get('brief', ''),
             content.get('description', ''),
@@ -197,8 +198,7 @@ class Database(object):
             content.get('uuid', ''),
             content.get('created', ''),
             content.get('updated', ''),
-            content.get('digest', ''),
-            content.get('metadata', '')
+            content.get('digest', '')
         )
         try:
             connection = Database._connect()

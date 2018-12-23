@@ -1,6 +1,6 @@
 ## WORKING
    - [ ] runner export --scat reference -f reference.yaml and python runner export --reference -f reference.yam print OK with none content.
-   - [ ] _read_collection can remove digest since it must be always in seal.
+   - [ ] _read_collection can remove digest since it must be always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
    - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.
    - [ ] Change the VIOLATED const to SQLITE and POSTGRE
    - [ ] Set the id as serial for sqlite also and alter the serial.

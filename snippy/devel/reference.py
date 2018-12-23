@@ -56,8 +56,8 @@ class Reference(object):
         # is only in Python 3.6 but the ImportError works with older Python versions.
         try:
             pkg_resources.resource_isdir('tests', '')
-        except ImportError as exception:
-            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'test cases are not packaged with release {}'.format(exception))
+        except ImportError as error:
+            Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'test cases are not packaged with release {}'.format(error))
 
             return
 

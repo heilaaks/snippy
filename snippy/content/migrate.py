@@ -72,8 +72,8 @@ class Migrate(object):
                     yaml.safe_dump(dictionary, outfile, default_flow_style=False)
                 else:
                     cls._logger.debug('unknown export file format')
-            except (IOError, TypeError, ValueError, yaml.YAMLError) as exception:
-                cls._logger.exception('fatal failure to generate formatted export file "%s"', exception)
+            except (IOError, TypeError, ValueError, yaml.YAMLError) as error:
+                cls._logger.exception('fatal failure to generate formatted export file "%s"', error)
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting content to file')
 
     @classmethod
@@ -87,8 +87,8 @@ class Migrate(object):
         with open(filename, 'w') as outfile:
             try:
                 outfile.write(template)
-            except IOError as exception:
-                cls._logger.exception('fatal failure in creating %s template file "%s"', category, exception)
+            except IOError as error:
+                cls._logger.exception('fatal failure in creating %s template file "%s"', category, error)
                 Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while exporting template {}'.format(filename))
 
     @classmethod
@@ -118,8 +118,8 @@ class Migrate(object):
                         collection.load_dict(timestamp, dictionary)
                     else:
                         cls._logger.debug('unknown import file format')
-                except (TypeError, ValueError, yaml.YAMLError) as exception:
-                    cls._logger.exception('fatal exception while loading file "%s"', exception)
+                except (TypeError, ValueError, yaml.YAMLError) as error:
+                    cls._logger.exception('fatal exception while loading file "%s"', error)
                     Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'fatal failure while importing content from file')
 
         else:

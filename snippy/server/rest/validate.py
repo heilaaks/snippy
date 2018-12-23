@@ -206,11 +206,11 @@ class JsonSchema(object):  # pylint: disable=too-few-public-methods
         try:
             validate(media, schema)
             validated = True
-        except ValidationError as exception:
-            minimized = ' '.join(str(exception).split())
+        except ValidationError as error:
+            minimized = ' '.join(str(error).split())
             Cause.push(Cause.HTTP_BAD_REQUEST, 'json media validation failed: {}'.format(minimized))
-        except SchemaError as exception:
-            minimized = ' '.join(str(exception).split())
+        except SchemaError as error:
+            minimized = ' '.join(str(error).split())
             Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'json schema failure: {}'.format(minimized))
 
         return validated

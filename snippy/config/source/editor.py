@@ -70,8 +70,8 @@ class Editor(object):  # pylint: disable=too-few-public-methods
                 outfile.seek(0)
                 message = outfile.read()
                 message = message.decode('UTF-8')
-            except OSError as exception:
-                Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'required editor %s not installed %s' % (editor, exception))
+            except OSError as error:
+                Cause.push(Cause.HTTP_INTERNAL_SERVER_ERROR, 'required editor %s not installed %s' % (editor, error))
 
         return message
 

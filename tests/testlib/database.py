@@ -260,8 +260,8 @@ class Database(object):
                 cursor.execute(query, qargs)
                 rows = cursor.fetchall()
             connection.close()
-        except sqlite3.Error as exception:
-            print(exception)
+        except sqlite3.Error as error:
+            print(error)
 
         collection.convert(rows)
 

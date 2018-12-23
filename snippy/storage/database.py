@@ -25,6 +25,13 @@ import sqlite3
 import traceback
 from contextlib import closing
 
+try:
+    import psycopg2
+except ImportError:
+    class psycopg2(object): pass  # noqa pylint: disable=W,C,R
+    setattr(psycopg2, 'IntegrityError', sqlite3.IntegrityError)
+    setattr(psycopg2, 'Error', sqlite3.Error)
+
 from snippy.constants import Constants as Const
 from snippy.logger import Logger
 from snippy.cause import Cause
@@ -72,8 +79,8 @@ class Database(object):
                 self._connection.close()
                 self._connection = None
                 self._logger.debug('closed sqlite3 database')
-            except sqlite3.Error as exception:
-                self._logger.exception('closing sqlite3 database failed with exception "%s"', exception)
+            except (sqlite3.Error, psycopg2.Error) as error:
+                self._logger.exception('closing sqlite3 database failed with exception "%s"', error)
 
     def insert(self, collection):
         """Insert collection into database.
@@ -123,10 +130,10 @@ class Database(object):
                 with closing(self._connection.cursor()) as cursor:
                     cursor.executemany(query, qargs)
                     self._connection.commit()
-            except sqlite3.IntegrityError:
+            except (sqlite3.IntegrityError, psycopg2.IntegrityError):
                 self._connection.rollback()
                 raise
-            except sqlite3.Error:
+            except (sqlite3.Error, psycopg2.Error):
                 self._connection.rollback()
                 self._logger.info('database error in insert with query: {}'.format(query))
                 self._logger.info('database error in insert with query arguments: {}'.format(qargs))
@@ -165,16 +172,16 @@ class Database(object):
         try:
             execute(query, qargs)
             stored = True
-        except sqlite3.IntegrityError:
+        except (sqlite3.IntegrityError, psycopg2.IntegrityError):
             self._logger.info('database integrity error with query: {}'.format(query))
             self._logger.info('database integrity error with query arguments: {}'.format(qargs))
             for resource in collection:
                 try:
                     execute(query, [resource.dump_qargs()])
                     stored = True
-                except sqlite3.IntegrityError as error:
+                except (sqlite3.IntegrityError, psycopg2.IntegrityError) as error:
                     self._set_integrity_error(error, resource)
-        except sqlite3.Error as error:
+        except (sqlite3.Error, psycopg2.Error) as error:
             self._set_error(error)
 
         return stored
@@ -239,8 +246,8 @@ class Database(object):
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
                     collection.convert(rows)
-            except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(exception))
+            except (sqlite3.Error, psycopg2.Error) as error:
+                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(error))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
 
@@ -268,8 +275,8 @@ class Database(object):
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute('SELECT DISTINCT {} FROM contents'.format(column))
                     uniques = [tup[0] for tup in cursor.fetchall()]
-            except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(exception))
+            except (sqlite3.Error, psycopg2.Error) as error:
+                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(error))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
 
@@ -348,11 +355,11 @@ class Database(object):
             with closing(self._connection.cursor()) as cursor:
                 cursor.execute(query, qargs)
                 self._connection.commit()
-        except sqlite3.IntegrityError as error:
+        except (sqlite3.IntegrityError, psycopg2.IntegrityError) as error:
             self._logger.info('database integrity error with query: {}'.format(query))
             self._logger.info('database integrity error with query arguments: {}'.format(qargs))
             self._set_integrity_error(error, resource)
-        except sqlite3.Error as error:
+        except (sqlite3.Error, psycopg2.Error) as error:
             self._set_error(error)
         stored.migrate(self.select(resource.category, digest=resource.digest))
 
@@ -378,8 +385,8 @@ class Database(object):
                         Cause.push(Cause.HTTP_NOT_FOUND, 'cannot find content to be deleted with digest {:.16}'.format(digest))
                     else:
                         self._logger.debug('unexpected row count: %d :while deleting with digest: %s', cursor.rowcount, digest)
-            except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'deleting from database failed with exception {}'.format(exception))
+            except (sqlite3.Error, psycopg2.Error) as error:
+                Cause.push(Cause.HTTP_500, 'deleting from database failed with exception {}'.format(error))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented deleting content in database')
 
@@ -413,8 +420,8 @@ class Database(object):
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
                     collection.convert(rows)
-            except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'selecting content from database with data failed with exception {}'.format(exception))
+            except (sqlite3.Error, psycopg2.Error) as error:
+                Cause.push(Cause.HTTP_500, 'selecting content from database with data failed with exception {}'.format(error))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
 
@@ -442,8 +449,8 @@ class Database(object):
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
                     collection.convert(rows)
-            except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'selecting content from database with uuid failed with exception {}'.format(exception))
+            except (sqlite3.Error, psycopg2.Error) as error:
+                Cause.push(Cause.HTTP_500, 'selecting content from database with uuid failed with exception {}'.format(error))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented searching from database')
 
@@ -461,8 +468,8 @@ class Database(object):
             with open(storage_schema, 'rt') as schema_file:
                 try:
                     schema = schema_file.read()
-                except IOError as exception:
-                    Cause.push(Cause.HTTP_500, 'reading database schema failed with exception {}'.format(exception))
+                except IOError as error:
+                    Cause.push(Cause.HTTP_500, 'reading database schema failed with exception {}'.format(error))
         try:
             if not Const.PYTHON2:
                 connection = sqlite3.connect(location, check_same_thread=False, uri=True)
@@ -475,8 +482,8 @@ class Database(object):
                 cursor.execute("pragma table_info('contents')")
                 self._columns = [column[1] for column in cursor.fetchall()]
             self._logger.debug('sqlite3 database persisted in: %s', location)
-        except sqlite3.Error as exception:
-            Cause.push(Cause.HTTP_500, 'creating database failed with exception {}'.format(exception))
+        except (sqlite3.Error, psycopg2.Error) as error:
+            Cause.push(Cause.HTTP_500, 'creating database failed with exception {}'.format(error))
 
         return connection
 
@@ -507,8 +514,8 @@ class Database(object):
                 with closing(self._connection.cursor()) as cursor:
                     cursor.execute(query, qargs)
                     rows = cursor.fetchall()
-            except sqlite3.Error as exception:
-                Cause.push(Cause.HTTP_500, 'reading from database failed with exception {}'.format(exception))
+            except (sqlite3.Error, psycopg2.Error) as error:
+                Cause.push(Cause.HTTP_500, 'reading from database failed with exception {}'.format(error))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented reading from database')
 

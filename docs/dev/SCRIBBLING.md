@@ -270,7 +270,8 @@ Random notes and scribling during development.
 
    2. Database sql
 
-        , id          SERIAL PRIMARY KEY
+        #, id          SERIAL PRIMARY KEY
+        Fixed
 
    3. Database sql helper _connect
 
@@ -279,8 +280,10 @@ Random notes and scribling during development.
 
    4. Resource.convert()
 
-        self.created = row[Resource.CREATED].strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
-        self.updated = row[Resource.UPDATED].strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
+        #self.created = row[Resource.CREATED].strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
+        #self.updated = row[Resource.UPDATED].strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
+        
+        Is not needed after the check that converts Datetime object to string in seal()?
 
    5. conftest.py and def server(mocker, request):
 
@@ -295,6 +298,11 @@ Random notes and scribling during development.
         request.addfinalizer(fin)
 
    6. Database
+
+        try:
+            import psycopg2
+        except ImportError:
+            psycopg2 = object
 
         exceptions: sqlite3.IntegrityError --> except (sqlite3.IntegrityError, psycopg2.IntegrityError):
 

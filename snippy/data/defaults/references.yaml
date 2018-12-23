@@ -1,7 +1,7 @@
 data:
 - brief: How to write commit messages
   category: reference
-  created: 2018-06-22T13:10:33.295299+00:00
+  created: '2018-06-22T13:10:33.295299+00:00'
   data: []
   description: ''
   digest: 6d221115da7b95409c59164632893a57419666135c08151ddbf0be976f3b20a3
@@ -19,10 +19,10 @@ data:
   - howto
   - message
   - scm
-  updated: 2018-06-27T10:10:16.553052+00:00
-  uuid: f8561bca-8830-11e8-9b18-2c4d54508088
+  updated: '2018-06-27T10:10:16.553052+00:00'
+  uuid: 33da9768-1257-4419-b6df-881e19f07bbc
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2018-12-16T10:33:37.229963+00:00'
+  updated: '2018-12-23T12:50:55.390287+00:00'
   version: 0.9.d

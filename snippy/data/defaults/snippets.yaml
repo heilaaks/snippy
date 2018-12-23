@@ -1,7 +1,7 @@
 data:
 - brief: Remove all docker containers with volumes
   category: snippet
-  created: 2018-09-08T12:44:23.491495+00:00
+  created: '2018-09-08T12:44:23.491495+00:00'
   data:
   - docker rm --volumes $(docker ps --all --quiet)
   description: ''
@@ -19,12 +19,12 @@ data:
   - docker
   - docker-ce
   - moby
-  updated: 2018-09-08T12:44:23.491495+00:00
-  uuid: e9c53316-b364-11e8-83bb-2c4d54508088
+  updated: '2018-09-08T12:44:23.491495+00:00'
+  uuid: 49ea04bf-90e7-498b-b1e6-9f39c64d32b9
   versions: ''
 - brief: Remove docker image with force
   category: snippet
-  created: 2018-09-08T12:44:23.504865+00:00
+  created: '2018-09-08T12:44:23.504865+00:00'
   data:
   - docker rm --force redis
   description: ''
@@ -43,12 +43,12 @@ data:
   - docker
   - docker-ce
   - moby
-  updated: 2018-09-08T12:44:23.504865+00:00
-  uuid: e9c73846-b364-11e8-83bb-2c4d54508088
+  updated: '2018-09-08T12:44:23.504865+00:00'
+  uuid: 99dd9724-582d-4d34-8154-27f4b1a6e7d7
   versions: ''
 - brief: Remove all exited containers and dangling images
   category: snippet
-  created: 2018-09-08T12:44:23.512780+00:00
+  created: '2018-09-08T12:44:23.512780+00:00'
   data:
   - docker rm $(docker ps --all -q -f status=exited)
   - docker images -q --filter dangling=true | xargs docker rmi
@@ -70,12 +70,12 @@ data:
   - docker-ce
   - image
   - moby
-  updated: 2018-09-08T12:44:23.512780+00:00
-  uuid: e9c86d42-b364-11e8-83bb-2c4d54508088
+  updated: '2018-09-08T12:44:23.512780+00:00'
+  uuid: daa8bd77-540d-4af1-b064-c90c00070df0
   versions: ''
 - brief: Test if specific port is open
   category: snippet
-  created: 2018-09-08T12:44:23.520766+00:00
+  created: '2018-09-08T12:44:23.520766+00:00'
   data:
   - nc -v 10.183.19.189 443
   - nmap 10.183.19.189
@@ -93,12 +93,12 @@ data:
   - netcat
   - networking
   - port
-  updated: 2018-09-08T12:44:23.520766+00:00
-  uuid: e9c9a536-b364-11e8-83bb-2c4d54508088
+  updated: '2018-09-08T12:44:23.520766+00:00'
+  uuid: 2a9354d7-b111-4163-a6e5-492c6fada5f2
   versions: ''
 - brief: Find pattern from files
   category: snippet
-  created: 2017-10-16T12:09:34.000001+00:00
+  created: '2017-10-16T12:09:34.000001+00:00'
   data:
   - 'grep -rn ./ -e ''pattern''  #  recursive, line numbers, case sensitive'
   - 'grep -rni ./ -e ''pattern''  #  recursive, line numbers, case insensitive'
@@ -116,12 +116,12 @@ data:
   tags:
   - linux
   - search
-  updated: 2018-11-06T12:43:25.774128+00:00
-  uuid: f21c662e-8830-11e8-a114-2c4d54508088
+  updated: '2018-11-06T12:43:25.774128+00:00'
+  uuid: f511fc21-dad2-4275-878d-039191a15505
   versions: ''
 - brief: Stop and delete all running containers and images
   category: snippet
-  created: 2017-10-16T12:06:07.000001+00:00
+  created: '2017-10-16T12:06:07.000001+00:00'
   data:
   - docker stop $(docker ps -aq)
   - docker rm $(docker ps -a -q)
@@ -145,12 +145,12 @@ data:
   - docker-ce
   - moby
   - stop
-  updated: 2017-10-16T12:06:07.000001+00:00
-  uuid: f21c69a8-8830-11e8-a114-2c4d54508088
+  updated: '2017-10-16T12:06:07.000001+00:00'
+  uuid: d2a6a4ef-8524-42c2-85ea-c76282e4bfd6
   versions: ''
 - brief: Build docker containers
   category: snippet
-  created: 2017-10-16T19:42:19.000001+00:00
+  created: '2017-10-16T19:42:19.000001+00:00'
   data:
   - docker build -t heilaaks/snippy .
   - docker build --no-cache -t heilaaks/snippy .
@@ -171,12 +171,12 @@ data:
   - docker
   - docker-ce
   - moby
-  updated: 2017-10-16T19:42:19.000001+00:00
-  uuid: f21c6b56-8830-11e8-a114-2c4d54508088
+  updated: '2017-10-16T19:42:19.000001+00:00'
+  uuid: c0aaffc8-390c-4672-b3a1-c6b7143f47e8
   versions: ''
 - brief: Run containers and connect to them
   category: snippet
-  created: 2017-10-16T12:43:15.000001+00:00
+  created: '2017-10-16T12:43:15.000001+00:00'
   data:
   - docker run -td heilaaks/snippy tail -f /dev/null
   - docker exec -it 9782f882ab34 /bin/bash
@@ -199,12 +199,12 @@ data:
   - lingering
   - moby
   - run
-  updated: 2017-10-16T12:43:15.000001+00:00
-  uuid: f21c6ce6-8830-11e8-a114-2c4d54508088
+  updated: '2017-10-16T12:43:15.000001+00:00'
+  uuid: 6af494d3-ddeb-479f-b43a-a4050f6a140b
   versions: ''
 - brief: Compile with screen window manager
   category: snippet
-  created: 2017-10-16T19:10:55.000001+00:00
+  created: '2017-10-16T19:10:55.000001+00:00'
   data:
   - screen -h 10000
   - screen -X sessionname snippy.compile
@@ -226,12 +226,12 @@ data:
   - linux
   - screen
   - terminal
-  updated: 2017-10-16T19:10:55.000001+00:00
-  uuid: f21c6e8a-8830-11e8-a114-2c4d54508088
+  updated: '2017-10-16T19:10:55.000001+00:00'
+  uuid: a01b5b4f-4bf8-4f88-bfab-d32bd9e5650d
   versions: ''
 - brief: Install docker compose
   category: snippet
-  created: 2017-10-19T10:25:26.000001+00:00
+  created: '2017-10-19T10:25:26.000001+00:00'
   data:
   - curl -L "https://github.com/docker/compose/releases/download/1.21.1/docker-compose-$(uname
     -s)-$(uname -m)" -o /usr/local/bin/docker-compose
@@ -254,12 +254,12 @@ data:
   - docker-ce
   - install
   - moby
-  updated: 2018-06-27T09:44:10.870314+00:00
-  uuid: f21c7024-8830-11e8-a114-2c4d54508088
+  updated: '2018-06-27T09:44:10.870314+00:00'
+  uuid: 0c7d3aec-0453-42c7-b2de-11dc2d8b896a
   versions: ''
 - brief: Install docker-ce on RHEL
   category: snippet
-  created: 2017-12-04T11:30:21.000001+00:00
+  created: '2017-12-04T11:30:21.000001+00:00'
   data:
   - yum remove docker-engine
   - yum install -y yum-utils device-mapper-persistent-data lvm2
@@ -290,12 +290,12 @@ data:
   - moby
   - rhel
   - rpm
-  updated: 2017-12-04T11:30:21.000001+00:00
-  uuid: f21c71be-8830-11e8-a114-2c4d54508088
+  updated: '2017-12-04T11:30:21.000001+00:00'
+  uuid: 7d2a5850-8994-4fc0-92a3-a4c6f4f5f189
   versions: ''
 - brief: Initialize, deploy and remove docker swarm
   category: snippet
-  created: 2017-10-19T10:55:01.000001+00:00
+  created: '2017-10-19T10:55:01.000001+00:00'
   data:
   - docker swarm init
   - docker stack deploy --compose-file docker-compose.yml devstack
@@ -325,12 +325,12 @@ data:
   - docker-ce
   - moby
   - swarm
-  updated: 2017-10-19T10:55:01.000001+00:00
-  uuid: f21c7380-8830-11e8-a114-2c4d54508088
+  updated: '2017-10-19T10:55:01.000001+00:00'
+  uuid: 1621cb30-9b1e-4df0-a8b9-3e75bf837429
   versions: ''
 - brief: Solve docker networking 'has active endpoints' problem
   category: snippet
-  created: 2017-10-19T11:02:06.000001+00:00
+  created: '2017-10-19T11:02:06.000001+00:00'
   data:
   - docker network ls
   - docker network inspect y0fdm2xoyuca
@@ -354,12 +354,12 @@ data:
   - remove
   - solution
   - swarm
-  updated: 2017-10-19T11:02:06.000001+00:00
-  uuid: f21c752e-8830-11e8-a114-2c4d54508088
+  updated: '2017-10-19T11:02:06.000001+00:00'
+  uuid: e13c5e94-0167-42ed-b944-985c7013fe2f
   versions: ''
 - brief: Print Elasticsearch basic information
   category: snippet
-  created: 2017-12-12T18:17:26.000001+00:00
+  created: '2017-12-12T18:17:26.000001+00:00'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/health?v"
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
@@ -383,12 +383,12 @@ data:
   - elasticsearch
   - rest
   - security
-  updated: 2017-12-12T18:17:26.000001+00:00
-  uuid: f21c76dc-8830-11e8-a114-2c4d54508088
+  updated: '2017-12-12T18:17:26.000001+00:00'
+  uuid: fb8f60c4-2eae-4cb1-843a-4347a4eeeaa0
   versions: ''
 - brief: Print logs from Kubernetes pods
   category: snippet
-  created: 2017-10-19T11:17:37.000001+00:00
+  created: '2017-10-19T11:17:37.000001+00:00'
   data:
   - kubectl get pods
   - kubectl logs nginx-3107262526-k01hd
@@ -408,12 +408,12 @@ data:
   - kubernetes
   - logginig
   - moby
-  updated: 2017-10-19T11:17:37.000001+00:00
-  uuid: f21c7876-8830-11e8-a114-2c4d54508088
+  updated: '2017-10-19T11:17:37.000001+00:00'
+  uuid: 04407398-52bb-40d9-8000-e833b167e2c8
   versions: ''
 - brief: List, dump and delete Elasticsearch indices
   category: snippet
-  created: 2017-12-11T17:34:40.000001+00:00
+  created: '2017-12-11T17:34:40.000001+00:00'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/indices?v"
   - curl -XGET -u elastic:changeme "${HOSTNAME}:9200/.kibana/_search?pretty=true&q=*:*"
@@ -440,12 +440,12 @@ data:
   - list
   - rest
   - security
-  updated: 2017-12-11T17:34:40.000001+00:00
-  uuid: f21c79fc-8830-11e8-a114-2c4d54508088
+  updated: '2017-12-11T17:34:40.000001+00:00'
+  uuid: 57f688e5-42a1-43a9-8365-6864e988eb6c
   versions: ''
 - brief: Debug TLS/SSL connection
   category: snippet
-  created: 2017-10-20T05:42:26.000001+00:00
+  created: '2017-10-20T05:42:26.000001+00:00'
   data:
   - openssl s_client -debug -connect 10.183.19.189:443
   - openssl s_client -debug -connect kafka:9093 -tls1
@@ -465,12 +465,12 @@ data:
   - security
   - ssl
   - tls
-  updated: 2017-10-20T05:42:26.000001+00:00
-  uuid: f21c7baa-8830-11e8-a114-2c4d54508088
+  updated: '2017-10-20T05:42:26.000001+00:00'
+  uuid: f7bea89c-cf8e-47f9-8c41-828fe4325990
   versions: ''
 - brief: Manage Elasticsearch templates
   category: snippet
-  created: 2017-12-11T17:34:23.000001+00:00
+  created: '2017-12-11T17:34:23.000001+00:00'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_template/*" | python
     -m json.tool
@@ -505,12 +505,12 @@ data:
   - security
   - template
   - update
-  updated: 2017-12-11T17:34:23.000001+00:00
-  uuid: f21c7eac-8830-11e8-a114-2c4d54508088
+  updated: '2017-12-11T17:34:23.000001+00:00'
+  uuid: 8f19637b-5227-4cca-bce8-741c5bae3b83
   versions: ''
 - brief: Perform recursive git pull on subdirectories
   category: snippet
-  created: 2017-11-07T07:58:46.000001+00:00
+  created: '2017-11-07T07:58:46.000001+00:00'
   data:
   - find . -type d -name .git -exec sh -c "cd \"{}\"/../ && pwd && git pull" \;
   description: ''
@@ -526,12 +526,12 @@ data:
   tags:
   - git
   - pull
-  updated: 2017-11-07T07:58:46.000001+00:00
-  uuid: f21c8064-8830-11e8-a114-2c4d54508088
+  updated: '2017-11-07T07:58:46.000001+00:00'
+  uuid: 413308cc-b0c8-4efd-bedb-700055e736bc
   versions: ''
 - brief: List git commit log headers
   category: snippet
-  created: 2017-11-12T09:54:23.000001+00:00
+  created: '2017-11-12T09:54:23.000001+00:00'
   data:
   - git log --pretty=oneline --abbrev-commit
   description: ''
@@ -548,12 +548,12 @@ data:
   tags:
   - git
   - log
-  updated: 2017-11-12T09:54:23.000001+00:00
-  uuid: f21c81ea-8830-11e8-a114-2c4d54508088
+  updated: '2017-11-12T09:54:23.000001+00:00'
+  uuid: da0160de-2a8a-44a9-a73f-313bf8ea795f
   versions: ''
 - brief: Install docker-ce on Fedora
   category: snippet
-  created: 2017-12-07T10:27:57.000001+00:00
+  created: '2017-12-07T10:27:57.000001+00:00'
   data:
   - dnf remove docker docker-client docker-client-latest docker-common docker-latest
     docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux
@@ -586,12 +586,12 @@ data:
   - install
   - moby
   - rpm
-  updated: 2018-06-27T09:48:02.107035+00:00
-  uuid: f21c8370-8830-11e8-a114-2c4d54508088
+  updated: '2018-06-27T09:48:02.107035+00:00'
+  uuid: 4de7ec60-2a98-471a-bb7a-8220eb7c7062
   versions: ''
 - brief: Set single node Elasticsearch cluster to green state
   category: snippet
-  created: 2017-12-05T06:48:05.000001+00:00
+  created: '2017-12-05T06:48:05.000001+00:00'
   data:
   - curl -XPUT -u elastic:changeme "http://${HOSTNAME}:9200/*/_settings" -d '{"number_of_replicas":0}'
   description: ''
@@ -613,12 +613,12 @@ data:
   - rest
   - settings
   - shards
-  updated: 2017-12-05T06:48:05.000001+00:00
-  uuid: f21c8528-8830-11e8-a114-2c4d54508088
+  updated: '2017-12-05T06:48:05.000001+00:00'
+  uuid: f6ca094e-66d1-4533-8dbe-2b98dc393cc8
   versions: ''
 - brief: Manage Elasticsearch x-pack watches
   category: snippet
-  created: 2017-12-05T06:48:50.000001+00:00
+  created: '2017-12-05T06:48:50.000001+00:00'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack" | python -m json.tool
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_xpack/watcher" | python
@@ -650,12 +650,12 @@ data:
   - rest
   - watcher
   - x-pack
-  updated: 2017-12-05T06:48:50.000001+00:00
-  uuid: f21c86b8-8830-11e8-a114-2c4d54508088
+  updated: '2017-12-05T06:48:50.000001+00:00'
+  uuid: 90484eca-e254-401f-8af9-e3ee97416ba8
   versions: ''
 - brief: Manage Elasticsearch plugins
   category: snippet
-  created: 2017-12-05T06:49:47.000001+00:00
+  created: '2017-12-05T06:49:47.000001+00:00'
   data:
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_cat/plugins"
   - curl -XGET -u elastic:changeme "http://${HOSTNAME}:9200/_nodes/plugins?filter_path=**.plugins.name&pretty"
@@ -675,12 +675,12 @@ data:
   - plugin
   - rest
   - x-pack
-  updated: 2017-12-05T06:49:47.000001+00:00
-  uuid: f21c888e-8830-11e8-a114-2c4d54508088
+  updated: '2017-12-05T06:49:47.000001+00:00'
+  uuid: 71f0cd41-fa76-49c2-8c85-136f5ab411e1
   versions: ''
 - brief: Perform recursive git status on subdirectories
   category: snippet
-  created: 2018-01-11T07:59:46.000001+00:00
+  created: '2018-01-11T07:59:46.000001+00:00'
   data:
   - find . -type d -name '.git' | while read dir ; do sh -c "cd $dir/../ && echo -e
     \"\nGIT STATUS IN ${dir//\.git/}\" && git status -s" ; done
@@ -696,12 +696,12 @@ data:
   tags:
   - git
   - status
-  updated: 2018-01-11T07:59:46.000001+00:00
-  uuid: f21c8a46-8830-11e8-a114-2c4d54508088
+  updated: '2018-01-11T07:59:46.000001+00:00'
+  uuid: 11affea1-29e4-4be7-b727-466737eb9025
   versions: ''
 - brief: Kill zombie processes
   category: snippet
-  created: 2018-02-28T10:47:08.000001+00:00
+  created: '2018-02-28T10:47:08.000001+00:00'
   data:
   - kill - 9 $(ps -A -ostat,ppid | awk '/[zZ]/ && !a[$2]++ {print $2}')
   - ps aux | grep -w Z
@@ -718,12 +718,12 @@ data:
   - kill
   - linux
   - zombie
-  updated: 2018-02-28T10:47:08.000001+00:00
-  uuid: f21c8bcc-8830-11e8-a114-2c4d54508088
+  updated: '2018-02-28T10:47:08.000001+00:00'
+  uuid: f42898bb-f989-46c4-a5f6-26d2282ff4f9
   versions: ''
 - brief: Umount a busy device
   category: snippet
-  created: 2018-05-07T11:11:55.000001+00:00
+  created: '2018-05-07T11:11:55.000001+00:00'
   data:
   - lsof | grep '/tmp/overlayfs/overlay'
   - kill <pid>
@@ -741,12 +741,12 @@ data:
   - device
   - linux
   - umount
-  updated: 2018-05-07T11:11:55.000001+00:00
-  uuid: f21c8d52-8830-11e8-a114-2c4d54508088
+  updated: '2018-05-07T11:11:55.000001+00:00'
+  uuid: d3f5311b-597f-4a66-aa46-8ec99b7eb3b2
   versions: ''
 - brief: Manipulate compressed tar files
   category: snippet
-  created: 2018-05-07T11:13:17.000001+00:00
+  created: '2018-05-07T11:13:17.000001+00:00'
   data:
   - 'tar cvfz mytar.tar.gz --exclude="mytar.tar.gz" ./  #  Compress folder excluding
     the tar.'
@@ -768,10 +768,10 @@ data:
   - linux
   - tar
   - untar
-  updated: 2018-11-06T12:43:55.884902+00:00
-  uuid: f21c8ed8-8830-11e8-a114-2c4d54508088
+  updated: '2018-11-06T12:43:55.884902+00:00'
+  uuid: e45024fb-264f-4cb8-bef5-f73b12818909
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2018-12-16T10:33:37.151841+00:00'
+  updated: '2018-12-23T12:50:55.312626+00:00'
   version: 0.9.d

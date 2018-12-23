@@ -1,7 +1,7 @@
 data:
 - brief: Testing docker log drivers
   category: solution
-  created: 2017-10-30T08:24:28.000001+00:00
+  created: '2017-10-30T08:24:28.000001+00:00'
   data:
   - '################################################################################'
   - '## BRIEF  : Testing docker log drivers'
@@ -113,12 +113,12 @@ data:
   - logs2kafka
   - moby
   - plugin
-  updated: 2018-11-04T15:57:06.814127+00:00
-  uuid: f4f3e188-8830-11e8-86cf-2c4d54508088
+  updated: '2018-11-04T15:57:06.814127+00:00'
+  uuid: 44999371-ea42-48ec-978e-980921619d4b
   versions: ''
 - brief: Debugging nginx
   category: solution
-  created: 2018-01-11T11:00:32.000001+00:00
+  created: '2018-01-11T11:00:32.000001+00:00'
   data:
   - '################################################################################'
   - '## BRIEF  : Debugging nginx '
@@ -345,12 +345,12 @@ data:
   - howto
   - logging
   - nginx
-  updated: 2018-11-04T15:56:58.543013+00:00
-  uuid: f4f3e5c0-8830-11e8-86cf-2c4d54508088
+  updated: '2018-11-04T15:56:58.543013+00:00'
+  uuid: 5211dd43-4a40-4f4a-94cc-c96ad3c68578
   versions: ''
 - brief: Debugging Elastic Beats
   category: solution
-  created: 2017-10-30T08:21:40.000001+00:00
+  created: '2017-10-30T08:21:40.000001+00:00'
   data:
   - '################################################################################'
   - '## BRIEF  : Debugging Elastic Beats'
@@ -479,12 +479,12 @@ data:
   - debug
   - filebeat
   - howto
-  updated: 2018-11-04T15:56:17.291581+00:00
-  uuid: f4f3e9c6-8830-11e8-86cf-2c4d54508088
+  updated: '2018-11-04T15:56:17.291581+00:00'
+  uuid: 9015d79e-65d8-4cbd-97bc-0fa49e7a278c
   versions: ''
 - brief: Debugging Docker
   category: solution
-  created: 2018-01-11T10:59:24.000001+00:00
+  created: '2018-01-11T10:59:24.000001+00:00'
   data:
   - '################################################################################'
   - '## BRIEF  : Debugging Docker '
@@ -652,12 +652,12 @@ data:
   - docker
   - howto
   - swarm
-  updated: 2018-11-04T15:55:31.339834+00:00
-  uuid: f4f3ec96-8830-11e8-86cf-2c4d54508088
+  updated: '2018-11-04T15:55:31.339834+00:00'
+  uuid: 73be0a8f-af42-40c4-9102-ed26f76439c7
   versions: ''
 - brief: Debugging Kubernetes
   category: solution
-  created: 2018-02-15T13:49:38.000001+00:00
+  created: '2018-02-15T13:49:38.000001+00:00'
   data:
   - '################################################################################'
   - '## BRIEF  : Debugging Kubernetes '
@@ -834,12 +834,12 @@ data:
   - howto
   - kubernetes
   - moby
-  updated: 2018-11-04T15:56:42.619640+00:00
-  uuid: f4f3eff2-8830-11e8-86cf-2c4d54508088
+  updated: '2018-11-04T15:56:42.619640+00:00'
+  uuid: 5d44f0ca-4d92-4736-b913-41ac38503b1d
   versions: ''
 - brief: Debugging Kafka
   category: solution
-  created: 2018-01-10T07:29:35.000001+00:00
+  created: '2018-01-10T07:29:35.000001+00:00'
   data:
   - '################################################################################'
   - '## BRIEF  : Debugging Kafka '
@@ -904,12 +904,12 @@ data:
   - howto
   - kafka
   - zookeeper
-  updated: 2018-11-04T15:56:34.314743+00:00
-  uuid: f4f3f330-8830-11e8-86cf-2c4d54508088
+  updated: '2018-11-04T15:56:34.314743+00:00'
+  uuid: 4ad6e229-404a-40d0-8f7f-b4344e256217
   versions: ''
 - brief: Debugging Elasticsearch
   category: solution
-  created: 2017-10-20T11:11:19.000001+00:00
+  created: '2017-10-20T11:11:19.000001+00:00'
   data:
   - '################################################################################'
   - '## BRIEF  : Debugging Elasticsearch'
@@ -1027,12 +1027,12 @@ data:
   - elastic
   - elasticsearch
   - howto
-  updated: 2018-11-04T15:56:26.315179+00:00
-  uuid: f4f3f54c-8830-11e8-86cf-2c4d54508088
+  updated: '2018-11-04T15:56:26.315179+00:00'
+  uuid: 6c61fbe0-d2ba-4ed4-90b9-86f8147d1b23
   versions: ''
 - brief: Debugging LXC containers
   category: solution
-  created: 2017-01-29T12:31:00.000001+00:00
+  created: '2017-01-29T12:31:00.000001+00:00'
   data:
   - '################################################################################'
   - '## BRIEF  : Debugging LXC containers'
@@ -1142,10 +1142,10 @@ data:
   - debug
   - howto
   - lxc
-  updated: 2018-11-04T15:56:50.883257+00:00
-  uuid: f4f3f7fe-8830-11e8-86cf-2c4d54508088
+  updated: '2018-11-04T15:56:50.883257+00:00'
+  uuid: eb70559c-6019-44cc-99a9-ad600006ca4e
   versions: ''
 meta:
   homepage: https://github.com/heilaaks/snippy
-  updated: '2018-12-16T10:33:37.184471+00:00'
+  updated: '2018-12-23T12:50:55.344870+00:00'
   version: 0.9.d

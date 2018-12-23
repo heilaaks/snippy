@@ -1,6 +1,5 @@
 ## WORKING
    - [ ] runner export --scat reference -f reference.yaml and python runner export --reference -f reference.yam print OK with none content.
-   - [ ] Remove uuid from defaults and generate them again with UUID4.
    - [ ] Add namespace for for internal UUID since the containers may have same MAC addresses Two same MACs between containers might not work . //https://docs.docker.com/engine/reference/run/#network-settings
    - [ ] _read_collection can remove digest since it must be always in seal.
    - [ ] Change the VIOLATED const to SQLITE and POSTGRE
@@ -183,6 +182,7 @@
    - [ ] Python module jsonschema has open fault that prevent splitting schema to multiple files. // https://github.com/Julian/jsonschema/issues/313
 
 ## DONE
+   - [x] Changed external UUID1 to UUID4.
    - [x] Fix reading timestamps from YAML file without quotation marks.
    - [x] Add Markdown format.
    - [x] Fixed export --all --defaults.

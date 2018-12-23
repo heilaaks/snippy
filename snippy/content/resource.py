@@ -348,6 +348,10 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.data = self.links
         else:
             self.links = tuple(sorted(self.links))
+
+        if not self.uuid:
+            self.uuid = str(uuid.uuid1())
+
         self.digest = self.compute_digest()
 
         is_empty = self.is_empty()

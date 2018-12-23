@@ -506,6 +506,30 @@ class TestCliImportReference(object):  # pylint: disable=too-many-public-methods
             Content.assert_storage(content)
             mock_file.assert_called_once_with('one-reference.yaml', 'r')
 
+    @pytest.mark.usefixtures('isfile_true', 'yaml')
+    def test_cli_import_reference_022(self, snippy):
+        """Try to import references wihtout UUID.
+
+        Try to import two references without UUID. When the UUID is missing, it
+        must be automatically allocated
+        """
+
+        content = {
+            'data': [
+                Content.deepcopy(Reference.GITLOG),
+                Content.deepcopy(Reference.REGEXP)
+            ]
+        }
+        content['data'][0]['uuid'] = ''
+        content['data'][1]['uuid'] = ''
+        file_content = Content.get_file_content(Content.YAML, content)
+        with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
+            yaml.safe_load.return_value = file_content
+            cause = snippy.run(['snippy', 'import', '--reference'])
+            assert cause == Cause.ALL_OK
+            Content.assert_storage(content)
+            mock_file.assert_called_once_with('./references.yaml', 'r')
+
     @classmethod
     def teardown_class(cls):
         """Teardown class."""

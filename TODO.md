@@ -1,4 +1,7 @@
 ## WORKING
+   - [ ] Export changes the timestamp format to '2018-06-22 13:10:33.295299' this is regression.
+   - [ ] Remove uuid from defaults and generate them again with UUID4.
+   - [ ] _read_collection can remove digest since it must be always in seal.
    - [ ] Change the VIOLATED const to SQLITE and POSTGRE
    - [ ] Set the id as serial for sqlite also and alter the serial.
    - [ ] Fix the database test helper.

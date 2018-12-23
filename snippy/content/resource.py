@@ -70,7 +70,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
         self._filename = ''
         self._versions = ''
         self._source = ''
-        self._uuid = str(uuid.uuid1())
+        self._uuid = self._get_external_uuid()
         self._created = timestamp
         self._updated = timestamp
         self._metadata = ''
@@ -350,7 +350,7 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.links = tuple(sorted(self.links))
 
         if not self.uuid:
-            self.uuid = str(uuid.uuid1())
+            self.uuid = self._get_external_uuid()
 
         self.digest = self.compute_digest()
 
@@ -745,3 +745,21 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
                 aligned = aligned + (snippet['command'],)
 
         return aligned
+
+    @staticmethod
+    def _get_external_uuid():
+        """Get externally used UUID.
+
+        This UUID is intended to be visible outside the REST API server. The
+        UUID must not contain hardware addresses like MAC address used in
+        UUID1. The reason is that this would reveal hardware MAC address and
+        possibly the physical location of the server.
+
+        UUID4 is used in order to allocate pseudo-random UUID that does not
+        contain physical identities like MAC.
+
+        Returns:
+            str: UUID4 string.
+        """
+
+        return str(uuid.uuid4())

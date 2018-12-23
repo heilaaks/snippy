@@ -236,7 +236,7 @@ Random notes and scribling during development.
    $ docker exec -it $(docker ps | egrep -m 1 'postgres' | awk '{print $1}') /bin/bash
    $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
    $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -v postgres_data:/var/lib/postgresql/data -p 5432:5432 -d postgres
-   
+
    # Operate postgres
    psql -d postgres -U postgres
    \l
@@ -244,16 +244,16 @@ Random notes and scribling during development.
    drop table contents;
    \d+ contents
    SHOW client_encoding;
-   
+
    # Changes round 2:
-   
+
    A) change the VIOLATED const to SQLITE and POSTGRE
    B) Set the id as serial for sqlite also and alter the serial.
    C) Fix the database test helper.
-   
-   
+
+
    1. create database
-   
+
         import psycopg2
 
         ...
@@ -267,41 +267,41 @@ Random notes and scribling during development.
         with closing(connection.cursor()) as cursor:
             cursor.execute(schema)
         self._logger.debug('sqlite3 database persisted in: %s', location)
-   
+
    2. Database sql
-   
+
         , id          SERIAL PRIMARY KEY
 
    3. Database sql helper _connect
-        
-        import psycopg2                                                                              
+
+        import psycopg2
         connection = psycopg2.connect(host="localhost", user="postgres", password="postgres")
-   
+
    4. Resource.convert()
-   
+
         self.created = row[Resource.CREATED].strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
         self.updated = row[Resource.UPDATED].strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
 
    5. conftest.py and def server(mocker, request):
-   
+
         remove data after each test.
 
         def fin():
             """Clear the resources at the end."""
-    
+
             snippy.release()
             Database.delete_all_contents()
             Database.delete_storage()
         request.addfinalizer(fin)
 
    6. Database
-   
+
         exceptions: sqlite3.IntegrityError --> except (sqlite3.IntegrityError, psycopg2.IntegrityError):
-        
+
         > rename RE_CATCH_VIOLATING_COLUMN to RE_CATCH_SQLITE_VIOLATING_COLUMN
-        
+
         Postgre example:
-        
+
         duplicate key value violates unique constraint "contents_data_key"
         DETAIL:  Key (data)=(docker rm --volumes $(docker ps --all --quiet)) already exists.
 
@@ -319,74 +319,74 @@ Random notes and scribling during development.
         match = self.RE_CATCH_POSTGRE_VIOLATING_COLUMN.search(str(error))
 
    7. Failing tests will leave hanging data in separate database.
-    
+
       If any test fail, remove data from postgre/cockroach
 
    8. Skip tests
-    
+
       @pytest.mark.skip(reason="postgre testing")
-    
+
        - test_api_create_reference_008
-   
+
    9. Database helper has store that has ROLLBACK
-   
+
         Change 1:
         query = ('INSERT OR ROLLBACK INTO contents (data, brief, description, groups, tags, links, category, name, ' +
         -->
         query = ('INSERT INTO contents (data, brief, description, groups, tags, links, category, name, ' +
         .rollback()
-        
+
         Change 2:
         Same helper has still ? that should be %s
         'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
-        
+
         Change 3: format the above code as in real database.
-        
+
         Change 4:
         format the timestamp that cannot be empty
-        
+
         from tests.testlib.helper import Helper
         content.get('created', Helper.IMPORT_TIME),
         content.get('updated', Helper.IMPORT_TIME),
-        
+
         Change 5:
             the _select has query = ('SELECT * FROM contents WHERE category=?') --> %s
 
     10. testing with pytest tests/test_cli_import_* that fails one test: test_cli_import_snippet_016
-    
+
         The result is in different order in list of hash. Why?
-        
+
         Ignore the 016 helps: @pytest.mark.skip(reason="postgre testing")
-        
+
         ignore test_cli_import_solution_008 (same problem)
-        
+
         the amount of tests is random: comment line: #assert result_dictionary == expect_dictionary
-        
+
     11. The database is is incremental now
-    
+
         test_debug_option_001
         test_debug_print_001
-        
+
         Alter the incremented value: https://stackoverflow.com/a/5272164
-        
+
         ALTER SEQUENCE <tablename>_<id>_seq RESTART WITH 1
         ALTER SEQUENCE contents_id_seq RESTART WITH 1
-   
+
     12. parallelism does not work
-    
+
         Option 1: Own table for every test?
-        
+
     13. python 2.7
-    
+
         pytest tests/test_api_create_snippet.py -k test_api_create_snippet_019
         test_cli_create_snippet_007
-        
+
         "In Python 3 instead the strings are automatically decoded in the connection encoding,
          as the str object can represent Unicode characters. In Python 2 you must register a
          typecaster in order to receive unicode objects"
-         
+
         "It is also possible to register typecasters on the connection or globally
-        
+
         THIS: https://stackoverflow.com/a/14887474:  psycopg2 returns byte strings by default in Python 2:
               -->
         The above confirms that the below is correct- Other way is to decode the binary string like:
@@ -395,21 +395,21 @@ Random notes and scribling during development.
 
                 self.data = tuple(row[Resource.DATA].decode('utf-8').split(Const.DELIMITER_DATA))
 
-        
+
         Fixed by;
         # This seems to be the best. REgistering this per connection was not working.
         import psycopg2
         #import psycopg2.extensions
         #psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
         #psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
-        
+
         ...
         connection = psycopg2.connect(host="localhost", user="postgres", password="postgres")
         connection.set_client_encoding('UTF8')
         psycopg2.extensions.register_type(psycopg2.extensions.UNICODE)
         psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY)
 
-        
+
         #psycopg2.extensions.register_type(psycopg2.extensions.UNICODE, connection)
         #psycopg2.extensions.register_type(psycopg2.extensions.UNICODEARRAY, connection)
         #psycopg2.extensions.register_type(psycopg2.extensions.UNICODE, connection)
@@ -449,13 +449,13 @@ Random notes and scribling during development.
             ),
         ]
 
-   
+
    # Changes
    1. Test sqlite.
-   
+
         - blob to char?
         - REGEXP to ~*?
-   
+
    1. Change database.sql
       A) Capitalize SQL syntax.
       B) test if sqlite blob can be changed to char(64)
@@ -467,7 +467,7 @@ Random notes and scribling during development.
       F) queries ? --> %s
       G) use datetime. Do conversion in sqlite(database) module.
 
-   
+
    1. sql syntax
       create table if not exists contents (
           data        text not null unique,
@@ -495,27 +495,27 @@ Random notes and scribling during development.
    3. ROLLBACK is own function in postgres
    4. query = 'SELECT regexp_matches(data, %s) FROM contents '
       qargs = ['.']
-      
+
       --> SELECT * FROM contents WHERE (data ~* %s OR brief ~* %s OR description ~* %s OR groups ~* %s OR tags ~* %s OR links ~* %s) AND (category=%s) ORDER BY brief ASC LIMIT 99 OFFSET 0
       -->  #columns = ['data', 'brief', 'description', 'groups', 'tags', 'links', 'digest'] --> bytea not able to regexp
       > https://dba.stackexchange.com/questions/166509/select-rows-from-my-table-where-a-character-column-matches-a-pattern
-      
+
       -> sqlite regexp is case insensitve but the the postgre is case sensitive. how to change postgre? --> use ~*
       -> does sqlite support ~* syntax?
 
         - sqlitehelper store()
-        
+
             content.get('created', ''), --Z must use timestamp
             content.get('updated', ''),
             -->
             content.get('created', '2018-02-02T02:02:02.000001+0000'),
             content.get('updated', '2018-02-02T02:02:02.000001+0000'),
-      
+
    5. Table name to snippy_*?
    6. timetsamp formats?
         postgr: 2018-05-07 11:11:55.000001
         sqlite: 2017-10-16T19:42:19.000001+0000
-        
+
         -> convert to datetime?
 
         self.created = row[Resource.CREATED].strftime('%Y-%m-%dT%H:%M:%S.%f+0000')
@@ -526,16 +526,16 @@ Random notes and scribling during development.
         change _connect in db helper
 
     --> test_api_create_snippet_015 (update) was failing due to updates
-    
+
                         --> fix typo: snippet. All fields are tried to be updated but only __the that__ can be
-    
+
                      test_api_create_reference_008 (sqlite expcetion)
-                     
+
     --> api performance does not work since it does not use external DB
-    
+
         - This works by manyally starting the server
         - peformance with manually started server with 1000 loop was  73.5 seconds.
-    
+
     --> test_debug_option_001
             internal database key random (table not dropped so this increments all the time?)
 
@@ -545,9 +545,9 @@ Random notes and scribling during development.
         --> snippy mock to use Database.delete_all_contents() to clean the database instead of Database.delete_storage().
 
     9. performance is with cli_performance 4 times slower with postgres. from ~1s to ~4s.
-    
+
     10. Parallel execution does not work.
-    
+
     11. import all results python runner search --all --sall . --> 37. Was this correct?
 
    # Embedded postgres function that was not used after all because the Python support is not in by default.
@@ -559,7 +559,7 @@ Random notes and scribling during development.
    $$ LANGUAGE plpythonu;
 
    ```
-      
+
    ```
    # cockroachDB
    docker run -d --name=roach2 --hostname=roach2 -p 26257:26257 -p 8080:8080 cockroachdb/cockroach:v2.1.2 start --insecure
@@ -568,15 +568,15 @@ Random notes and scribling during development.
    $ docker exec -it $(docker ps | egrep -m 1 'roach' | awk '{print $1}') /bin/bash
    $ ./cockroach sql --insecure
    $ ./cockroach sql --insecure -e "SHOW USERS;
-   
+
    > https://www.cockroachlabs.com/docs/stable/build-a-python-app-with-cockroachdb.html
    ./cockroach sql --insecure
    CREATE USER IF NOT EXISTS maxroach;
    CREATE DATABASE snippy;
    GRANT ALL ON DATABASE snippy TO maxroach;
-   
+
    show tables;
-   
+
    # Python changes
    1. connection = psycopg2.connect(database='snippy', user='root', sslmode='disable', port=26257, host='localhost')
    2. return utc.strftime('%Y-%m-%dT%H:%M:%S.%f+00:00') with TIMESTAMPZ
@@ -584,7 +584,7 @@ Random notes and scribling during development.
       --> this works with timestamp but there must be 00:00
 
    3. python  runner search --all  --sall . results 38. check this
-             
+
    4. sql defs
       create table if not exists contents (
           data        text not null unique,
@@ -608,7 +608,7 @@ Random notes and scribling during development.
           metadata    text default '',
           id          SERIAL primary key
       );
-      
+
    ```
 
 
@@ -1681,11 +1681,15 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
        D) UUID
 
-          The UUID is intended to be used in cases where multiple databases are
-          merged to one. The UUID is allocated always for the content and it
-          never changes. Used UUID format is uuid1 which contains the hostname
-          and timestamp where it was generated. This allows separting different
-          processes running for example in different containers or hosts.
+          The UUID field is intended to be externally visible UUID field that
+          is exposed outside the REST API server. The UUID is allocated always
+          for the content and it never changes. In order to allocate one static
+          unique identifier for each content, UUID4 is used.
+
+          There is always a change of UUID4 collision if multiple servers are
+          run but it is considered so small that it does not matter [1].
+
+          [1] https://en.wikipedia.org/wiki/Universally_unique_identifier#Version_4_(random)
 
        E) Digest
 
@@ -2092,12 +2096,12 @@ git update-index --no-assume-unchanged FILE_NAME # change back
        which may cause problems for the server.
 
     SQL
-    
+
     1. SQL formatting
-    
+
        SQL syntax is formatted with [1]. There are undocumented changes to
        the format to please authors eye.
-       
+
        [1] https://www.sqlinform.com/online-sql-formatter/
 
     SECURITY
@@ -2239,7 +2243,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
            3. The 'content' variable is always first and it is used to defined the
               input for the test case as well as to test the expected results.
-           
+
            4. Test case variables and layout must follow the layout in existing tests
               and in the examples below.
 
@@ -2338,7 +2342,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
         @pytest.mark.usefixtures('isfile_true', 'yaml')
         def test_cli_import_snippet_001(self, snippy):
             """Import content from mocked YAML file
-    
+
             YAML file contain all the fields stored into the database with the
             exception of database specific key and internal metadata fields.
 
@@ -2348,7 +2352,7 @@ git update-index --no-assume-unchanged FILE_NAME # change back
 
             The same applies also to JSON file imports.
             """
-    
+
             content = {
                 'data': [
                     Snippet.DEFAULTS[Snippet.REMOVE],

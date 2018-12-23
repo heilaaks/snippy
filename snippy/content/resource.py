@@ -19,6 +19,7 @@
 
 """resource: Single resource."""
 
+import datetime
 import hashlib
 import re
 import textwrap
@@ -348,6 +349,15 @@ class Resource(object):  # pylint: disable=too-many-public-methods,too-many-inst
             self.data = self.links
         else:
             self.links = tuple(sorted(self.links))
+
+        # There may be case where for example Yaml loading automatically
+        # converts timestamps to datetime objects if the timestamps are
+        # not surrounded by quotes. Internally the timestamps are stored
+        # as strings.
+        if isinstance(self.created, datetime.datetime):
+            self.created = self.created.strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
+        if isinstance(self.updated, datetime.datetime):
+            self.updated = self.updated.strftime('%Y-%m-%dT%H:%M:%S.%f+00:00')
 
         if not self.uuid:
             self.uuid = self._get_external_uuid()

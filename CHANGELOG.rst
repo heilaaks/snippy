@@ -36,6 +36,7 @@ Bugfixes
 * Fix search from all categories with --all option.
 * Fix resource object validation in POST.
 * Fix REST API HTTP OPTIONS responses.
+* Fix reading timestamps without quotes from YAML.
 * All commits in `0.9.0`_.
 
 Security

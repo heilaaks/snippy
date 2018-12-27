@@ -1,4 +1,5 @@
 ## WORKING
+   - [ ] Cannot do WHERE LIKE UUDI with PostgreSQL. This , uuid        UUID NOT NULL UNIQUE should be 'uuid text' for current code to work.
    - [ ] runner export --scat reference -f reference.yaml and python runner export --reference -f reference.yam print OK with none content.
    - [ ] _read_collection can remove digest since it must be always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
    - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.

@@ -45,7 +45,7 @@ class Database(object):
     QUERY_TYPE_REGEX = 'regex'
     QUERY_TYPE_TOTAL = 'total'
 
-    RE_CATCH_VIOLATING_COLUMN = re.compile(r'''
+    RE_CATCH_UNIQUE_SQLITE_COLUMN = re.compile(r'''
         contents[.]{1}  # Match leading table name.
         (?P<column>.*)  # Catch column name.
         ''', re.VERBOSE)
@@ -78,9 +78,9 @@ class Database(object):
             try:
                 self._connection.close()
                 self._connection = None
-                self._logger.debug('closed sqlite3 database')
+                self._logger.debug('closed database connection')
             except (sqlite3.Error, psycopg2.Error) as error:
-                self._logger.exception('closing sqlite3 database failed with exception "%s"', error)
+                self._logger.info('closing database connection failed with exception: {}'.format(error))
 
     def insert(self, collection):
         """Insert collection into database.
@@ -141,8 +141,7 @@ class Database(object):
 
         stored = False
         query = '''
-            INSERT
-            INTO      contents
+            INSERT INTO contents
                       (
                                 id
                               , data
@@ -247,7 +246,7 @@ class Database(object):
                     rows = cursor.fetchall()
                     collection.convert(rows)
             except (sqlite3.Error, psycopg2.Error) as error:
-                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception {}'.format(error))
+                Cause.push(Cause.HTTP_500, 'selecting all from database failed with exception: {}'.format(error))
         else:
             Cause.push(Cause.HTTP_500, 'internal error prevented selecting all content from database')
 
@@ -641,7 +640,7 @@ class Database(object):
         """
 
         digest = self._get_digest(resource)
-        match = self.RE_CATCH_VIOLATING_COLUMN.search(str(error))
+        match = self.RE_CATCH_UNIQUE_SQLITE_COLUMN.search(str(error))
         if match:
             if match.group('column') == 'uuid':
                 cause = Cause.HTTP_500

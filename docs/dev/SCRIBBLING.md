@@ -233,9 +233,9 @@ Random notes and scribling during development.
    ```
    # Postgres with Docker
    $ pip install psycopg2-binary
-   $ docker exec -it $(docker ps | egrep -m 1 'postgres' | awk '{print $1}') /bin/bash
    $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres
    $ docker run --name postgres -e POSTGRES_PASSWORD=postgres -v postgres_data:/var/lib/postgresql/data -p 5432:5432 -d postgres
+   $ docker exec -it $(docker ps | egrep -m 1 'postgres' | awk '{print $1}') /bin/bash
 
    # Operate postgres
    psql -d postgres -U postgres

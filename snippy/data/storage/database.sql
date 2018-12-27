@@ -14,9 +14,9 @@ CREATE TABLE IF NOT EXISTS contents
                   , filename    text DEFAULT ''
                   , versions    text DEFAULT ''
                   , source      text DEFAULT ''
-                  , uuid        text NOT NULL UNIQUE
-                  , created     TIMESTAMP
-                  , updated     TIMESTAMP
+                  , uuid        UUID NOT NULL UNIQUE
+                  , created     TIMESTAMP WITH TIME ZONE
+                  , updated     TIMESTAMP WITH TIME ZONE
                   , digest      CHAR(64)
           )
 ;

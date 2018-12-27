@@ -482,14 +482,14 @@ class TestCliExportSnippet(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_snippet_025(self, snippy):
         """Export snippet defaults.
 
-        Try to export snippet defaults when there are no stored snippets. No
-        files should be created and OK should printed for end user. The reason
-        is that processing list of zero items is considered as an OK case.
+        Try to export snippet defaults when there are no stored snippets.
+        Files should not be created and proper NOK cause should be printed
+        for end user.
         """
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--defaults'])
-            assert cause == Cause.ALL_OK
+            assert cause == 'NOK: no content found to be exported'
             mock_file.assert_not_called()
 
     @pytest.mark.usefixtures('yaml', 'default-snippets', 'export-time')

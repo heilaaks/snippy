@@ -50,7 +50,7 @@ class Migrate(object):
             return
 
         if not collection:
-            cls._logger.debug('no content to be exported')
+            Cause.push(Cause.HTTP_NOT_FOUND, 'no content found to be exported')
 
             return
 

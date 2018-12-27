@@ -369,14 +369,14 @@ class TestCliExportReference(object):  # pylint: disable=too-many-public-methods
     def test_cli_export_reference_019(self, snippy):
         """Export reference defaults.
 
-        Try to export reference defaults when there are no stored references. No
-        files should be created and OK should printed for end user. The reason
-        is that processing list of zero items is considered as an OK case.
+        Try to export reference defaults when there are no stored references.
+        Files should not be created and proper NOK cause should be printed for
+        end user.
         """
 
         with mock.patch('snippy.content.migrate.open', mock.mock_open(), create=True) as mock_file:
             cause = snippy.run(['snippy', 'export', '--defaults', '--references'])
-            assert cause == Cause.ALL_OK
+            assert cause == 'NOK: no content found to be exported'
             mock_file.assert_not_called()
 
     @pytest.mark.usefixtures('yaml', 'import-gitlog', 'import-remove', 'import-beats', 'export-time-all-categories')

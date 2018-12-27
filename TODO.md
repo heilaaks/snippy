@@ -34,6 +34,7 @@
    - [ ] Parse new format that supports snippets with leading comment to internal format? Or remove the support?
    - [ ] Is there a better way to support the special case of checking internal cause 500 and Content created cause for importing some of the content (digest integrity error)
    - [ ] Database.init can be moved to database __init__ because it is always called immediately after object init. This is likely historical left over or something that some test requires (mock?)?
+   - [ ] It seems that that sqlite3 (and perhaps psycopg2) automatically rollbacks or commits with context manager (with block). So the explicit commit and rollback may (?) be unnecessary? It may better to leave those since working with different databases? Document in code?
 
 ## THINKING
    - [ ] Add code content.

@@ -61,12 +61,16 @@ class Database(object):
     def init(self):
         """Initialize database."""
 
-        if self._db == Const.DB_SQLITE:
+        if Config.storage_type == Const.DB_SQLITE:
+            self._db = Config.storage_type
             self._regexp = 'REGEXP'
             self._placeholder = '?'
-        else:
+        elif Config.storage_type in (Const.DB_POSTGRESQL, Const.DB_COCKROACHDB):
+            self._db = Config.storage_type
             self._regexp = '~*'
             self._placeholder = '%s'
+        else:
+            self._logger.debug('unknown database type - using default sqlite', Config.storage_type)
 
         if not self._connection:
             self._connection = self._create_db()

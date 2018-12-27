@@ -66,12 +66,12 @@ class TestUtCli(object):
         assert not cli.server
         assert cli.server_ip == '127.0.0.1'
         assert cli.server_port == '8080'
+        assert cli.server_ssl_ca_cert is None
+        assert cli.server_ssl_cert is None
+        assert cli.server_ssl_key is None
         assert cli.sgrp == ()
         assert cli.sort_fields == OrderedDict([('brief', 'ASC')])
         assert cli.source == ''
-        assert cli.ssl_ca_cert is None
-        assert cli.ssl_cert is None
-        assert cli.ssl_key is None
         assert cli.stag == ()
         assert cli.storage_path == ''
         assert cli.tags == ()

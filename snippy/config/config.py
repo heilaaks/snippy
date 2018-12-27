@@ -53,9 +53,16 @@ class Config(object):
         cls.source = Cli(args)
 
         # Static storage and template configurations.
+        cls.storage_type = cls.source.storage_type
         cls.storage_schema = cls._storage_schema()
         cls.storage_path = cls.source.storage_path
         cls.storage_file = cls._storage_file()
+        cls.storage_host = cls.source.storage_host
+        cls.storage_login = cls.source.storage_login
+        cls.storage_password = cls.source.storage_password
+        cls.storage_ssl_cert = cls.source.storage_ssl_cert
+        cls.storage_ssl_key = cls.source.storage_ssl_key
+        cls.storage_ssl_ca_cert = cls.source.storage_ssl_ca_cert
         cls.templates = {
             'text': {
                 'snippet': cls._content_template('snippet.txt'),
@@ -75,9 +82,9 @@ class Config(object):
         cls.server = cls.source.server
         cls.server_ip = cls.source.server_ip
         cls.server_port = cls.source.server_port
-        cls.ssl_cert = cls._ssl_file(cls.source.ssl_cert)
-        cls.ssl_key = cls._ssl_file(cls.source.ssl_key)
-        cls.ssl_ca_cert = cls._ssl_file(cls.source.ssl_ca_cert)
+        cls.server_ssl_cert = cls._ssl_file(cls.source.server_ssl_cert)
+        cls.server_ssl_key = cls._ssl_file(cls.source.server_ssl_key)
+        cls.server_ssl_ca_cert = cls._ssl_file(cls.source.server_ssl_ca_cert)
 
         # Dynamic configuration.
         cls.load(cls.source)
@@ -568,8 +575,14 @@ class Config(object):
     def debug(cls):
         """Debug Config."""
 
-        cls._logger.debug('configured storage file: %s', cls.storage_file)
+        cls._logger.debug('configured storage type: %s', cls.storage_type)
         cls._logger.debug('configured storage schema: %s', cls.storage_schema)
+        cls._logger.debug('configured storage file: %s', cls.storage_file)
+        cls._logger.debug('configured storage host: %s', cls.storage_host)
+        cls._logger.debug('configured storage login name: %s', cls.storage_login)
+        cls._logger.debug('configured storage ssl certificate file: %s', cls.storage_ssl_cert)
+        cls._logger.debug('configured storage ssl key file: %s', cls.storage_ssl_key)
+        cls._logger.debug('configured storage ssl ca certificate file: %s', cls.storage_ssl_ca_cert)
         cls._logger.debug('configured content operation: %s', cls.operation)
         cls._logger.debug('configured content category: %s', cls.content_category)
         cls._logger.debug('configured content data: %s', cls.content_data)
@@ -602,6 +615,6 @@ class Config(object):
         cls._logger.debug('configured option server app base path: %s', cls.base_path_app)
         cls._logger.debug('configured option server ip: %s :and port: %s', cls.server_ip, cls.server_port)
         cls._logger.debug('configured option server compact json: %s', cls.compact_json)
-        cls._logger.debug('configured option server ssl certificate file: %s', cls.ssl_cert)
-        cls._logger.debug('configured option server ssl key file: %s', cls.ssl_key)
-        cls._logger.debug('configured option server ssl ca certificate file: %s', cls.ssl_ca_cert)
+        cls._logger.debug('configured option server ssl certificate file: %s', cls.server_ssl_cert)
+        cls._logger.debug('configured option server ssl key file: %s', cls.server_ssl_key)
+        cls._logger.debug('configured option server ssl ca certificate file: %s', cls.server_ssl_ca_cert)

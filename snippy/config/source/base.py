@@ -86,7 +86,7 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
 
         return repr_
 
-    def set_conf(self, parameters):
+    def set_conf(self, parameters):  # pylint: disable=too-many-statements
         """Set API configuration parameters."""
 
         if parameters is None:
@@ -131,14 +131,21 @@ class ConfigSourceBase(object):  # pylint: disable=too-many-instance-attributes
         self.server = parameters.get('server', False)
         self.server_ip = parameters.get('server_ip', self.SERVER_IP)
         self.server_port = parameters.get('server_port', self.SERVER_PORT)
+        self.server_ssl_ca_cert = parameters.get('server_ssl_ca_cert', None)
+        self.server_ssl_cert = parameters.get('server_ssl_cert', None)
+        self.server_ssl_key = parameters.get('server_ssl_key', None)
         self.sgrp = parameters.get('sgrp', None)
         self.sort_fields = parameters.get('sort', ('brief'))
         self.source = parameters.get('source', Const.EMPTY)
-        self.ssl_ca_cert = parameters.get('ssl_ca_cert', None)
-        self.ssl_cert = parameters.get('ssl_cert', None)
-        self.ssl_key = parameters.get('ssl_key', None)
         self.stag = parameters.get('stag', None)
         self.storage_path = parameters.get('storage_path', Const.EMPTY)
+        self.storage_type = parameters.get('storage_type', Const.DB_SQLITE)
+        self.storage_host = parameters.get('storage_host', None)
+        self.storage_login = parameters.get('storage_login', None)
+        self.storage_password = parameters.get('storage_password', None)
+        self.storage_ssl_cert = parameters.get('storage_ssl_cert', None)
+        self.storage_ssl_key = parameters.get('storage_ssl_key', None)
+        self.storage_ssl_ca_cert = parameters.get('storage_ssl_ca_cert', None)
         self.tags = parameters.get('tags', ())
         self.template = parameters.get('template', False)
         self.uuid = parameters.get('uuid', None)

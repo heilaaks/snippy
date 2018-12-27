@@ -1,5 +1,6 @@
 ## WORKING
-   - [ ] Cannot do WHERE LIKE UUDI with PostgreSQL. This , uuid        UUID NOT NULL UNIQUE should be 'uuid text' for current code to work.
+   - [ ] Remove --server flag and use --server-host in format of 'localhost:8080'. This is easier and cleaner to write than --server-ip 234234 --server-port 9090. Same form storage. This also allows formats like 'host1.8080,host2.8080,etc'. This also forces user to define the IP (leaves responsibility to set it correctly and not use unsecure defaults like star)
+   - [ ] Cannot do WHERE LIKE UUID with PostgreSQL. This , uuid        UUID NOT NULL UNIQUE should be 'uuid text' for current code to work.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
    - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.
    - [ ] Change the VIOLATED const to SQLITE and POSTGRE
@@ -32,6 +33,7 @@
    - [ ] Remove the column marks from cause code (the structured log data rule). The cause could strip these out from middle of the string. Keep at the end?
    - [ ] Parse new format that supports snippets with leading comment to internal format? Or remove the support?
    - [ ] Is there a better way to support the special case of checking internal cause 500 and Content created cause for importing some of the content (digest integrity error)
+   - [ ] Database.init can be moved to database __init__ because it is always called immediately after object init. This is likely historical left over or something that some test requires (mock?)?
 
 ## THINKING
    - [ ] Add code content.

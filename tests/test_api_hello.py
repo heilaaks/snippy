@@ -194,7 +194,7 @@ class TestApiHello(object):
             'content-length': '197'
         }
         expect_body = {'meta': Content.get_api_meta()}
-        server = Snippy(['snippy', '--server', '--ip', 'localhost', '--port', '8081', '-vv'])
+        server = Snippy(['snippy', '--server', '--server-ip', 'localhost', '--server-port', '8081', '-vv'])
         server.run()
         result = testing.TestClient(server.server.api).simulate_get('/snippy/api/app/v1/')
         assert 'configured option server ip: localhost :and port: 8081' in caplog.text

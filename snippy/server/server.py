@@ -69,10 +69,10 @@ class Server(object):  # pylint: disable=too-few-public-methods
 
         options = {
             'bind': '%s:%s' % (Config.server_ip, Config.server_port),
-            'ca_certs': Config.ssl_ca_cert,
-            'certfile': Config.ssl_cert,
+            'ca_certs': Config.server_ssl_ca_cert,
+            'certfile': Config.server_ssl_cert,
             'ciphers': 'ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA',
-            'keyfile': Config.ssl_key,
+            'keyfile': Config.server_ssl_key,
             'logger_class': CustomGunicornLogger,
             'on_exit': SnippyServer.on_exit,
             'post_worker_init': SnippyServer.post_worker_init,

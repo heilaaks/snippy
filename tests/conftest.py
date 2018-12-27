@@ -137,6 +137,23 @@ IMPORT_DEFAULT_SNIPPETS = ((REMOVE_CREATED,) + (FORCED_CREATED,))
 IMPORT_DEFAULT_SOLUTIONS = ((BEATS_CREATED,) + (NGINX_CREATED,))
 IMPORT_DEFAULT_REFERENCES = ((GITLOG_CREATED,) + (REGEXP_CREATED,))
 
+def pytest_addoption(parser):
+    """Add command line options for Pytest."""
+
+    parser.addoption(
+        '--snippy-db',
+        action='store',
+        default=Database.DB_SQLITE,
+        help='test agains database: {' + Database.DB_SQLITE + ' (default), ' + Database.DB_POSTGRESQL + ', ' + Database.DB_COCKROACHDB + '}'
+    )
+
+@pytest.fixture(scope="session", autouse=True)
+def init_all_tests(request):
+    """Initialize all tests."""
+
+    database = request.config.getoption("--snippy-db")
+    Database.set_database(database)
+
 # Snippy
 @pytest.fixture(scope='function', name='snippy')
 def mocked_snippy(mocker, request):
@@ -213,6 +230,7 @@ def server(mocker, request):
         """Clear the resources at the end."""
 
         snippy.release()
+        Database.delete_all_contents()
         Database.delete_storage()
     request.addfinalizer(fin)
 

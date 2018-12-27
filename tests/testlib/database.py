@@ -23,17 +23,33 @@ from __future__ import print_function
 
 import os.path
 import sqlite3
+import traceback
 import uuid
 from contextlib import closing
 
 import pkg_resources
+try:
+    import psycopg2
+except ImportError:
+    class psycopg2(object): pass  # noqa pylint: disable=W,C,R
+    setattr(psycopg2, 'IntegrityError', sqlite3.IntegrityError)
+    setattr(psycopg2, 'Error', sqlite3.Error)
 
 from snippy.constants import Constants as Const
 from snippy.content.collection import Collection
+from tests.testlib.helper import Helper
 
 
 class Database(object):
     """Helper methods for testing with generic database."""
+
+    # Database options.
+    DB_SQLITE = 'sqlite'
+    DB_POSTGRESQL = 'postgresql'
+    DB_COCKROACHDB = 'cockroachdb'
+    _DATABASE = DB_SQLITE
+    _DATABASES = (DB_SQLITE, DB_POSTGRESQL, DB_COCKROACHDB)
+    _PLACEHOLDER = '?'
 
     VALID_UUID = '11cd5827-b6ef-4067-b5ac-3ceac07dde9f'
     TEST_UUIDS = (
@@ -100,23 +116,26 @@ class Database(object):
     )
     TEST_UUIDS_STR = [str(uuid_) for uuid_ in TEST_UUIDS]
 
-    @staticmethod
-    def print_contents():
-        """Print database content."""
-
-        rows = ()
-        collection = Collection()
-        connection = Database._connect()
-        with closing(connection.cursor()) as cursor:
-            cursor.execute('SELECT * FROM contents')
-            rows = cursor.fetchall()
-        connection.close()
-        collection.convert(rows)
-        print(collection)
-
     @classmethod
-    def get_collection(cls):
-        """Return database rows as collection."""
+    def set_database(cls, database):
+        """Set used database."""
+
+        if database not in cls._DATABASES:
+            database = cls.DB_SQLITE
+        cls._DATABASE = database
+
+        if cls._DATABASE == cls.DB_SQLITE:
+            cls._PLACEHOLDER = '?'
+        else:
+            cls._PLACEHOLDER = '%s'
+
+    @staticmethod
+    def get_collection():
+        """Return database rows as collection.
+
+        This method may be called before the database is created. Because of
+        this, the exception is silently discarded here.
+        """
 
         rows = ()
         collection = Collection()
@@ -127,10 +146,16 @@ class Database(object):
                 rows = cursor.fetchall()
             connection.close()
             collection.convert(rows)
-        except sqlite3.Error:
+        except (sqlite3.Error, psycopg2.Error):
             pass
 
         return collection
+
+    @classmethod
+    def print_contents(cls):
+        """Print database content."""
+
+        print(cls.get_collection())
 
     @staticmethod
     def get_snippets():
@@ -171,17 +196,39 @@ class Database(object):
 
         return storage
 
-    @staticmethod
-    def store(content):
+    @classmethod
+    def store(cls, content):
         """Store content into database.
 
         Args:
             content (dict): Content in a dictionary.
         """
 
-        query = ('INSERT OR ROLLBACK INTO contents (id, data, brief, description, groups, tags, links, category, name, ' +
-                 'filename, versions, source, uuid, created, updated, digest) ' +
-                 'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)')
+        query = '''
+            INSERT INTO contents
+                      (
+                                id
+                              , data
+                              , brief
+                              , description
+                              , groups
+                              , tags
+                              , links
+                              , category
+                              , name
+                              , filename
+                              , versions
+                              , source
+                              , uuid
+                              , created
+                              , updated
+                              , digest
+                      )
+                      VALUES
+                      (
+                              {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}, {0}
+                      )
+        '''.format(cls._PLACEHOLDER)
         qargs = (
             content.get('id', ''),
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, content.get('data', ()))),
@@ -196,8 +243,8 @@ class Database(object):
             content.get('versions', ''),
             content.get('source', ''),
             content.get('uuid', ''),
-            content.get('created', ''),
-            content.get('updated', ''),
+            content.get('created', Helper.IMPORT_TIME),
+            content.get('updated', Helper.IMPORT_TIME),
             content.get('digest', '')
         )
         try:
@@ -205,8 +252,8 @@ class Database(object):
             with closing(connection.cursor()) as cursor:
                 cursor.execute(query, qargs)
                 connection.commit()
-        except sqlite3.OperationalError:
-            pass
+        except (sqlite3.Error, psycopg2.Error):
+            print(traceback.format_exc())
 
     @staticmethod
     def delete_all_contents():
@@ -219,8 +266,8 @@ class Database(object):
                 cursor.execute('DELETE FROM contents')
                 connection.commit()
             connection.close()
-        except sqlite3.OperationalError:
-            pass
+        except (sqlite3.Error, psycopg2.Error):
+            print(traceback.format_exc())
 
     @staticmethod
     def delete_storage():
@@ -235,33 +282,36 @@ class Database(object):
                 except OSError:
                     pass
 
-    @staticmethod
-    def _connect():
+    @classmethod
+    def _connect(cls):
         """Connect to database."""
 
-        if not Const.PYTHON2:
-            connection = sqlite3.connect(Database.get_storage(), check_same_thread=False, uri=True)
-        else:
-            connection = sqlite3.connect(Database.get_storage(), check_same_thread=False)
+        if cls._DATABASE == cls.DB_SQLITE:
+            if not Const.PYTHON2:
+                connection = sqlite3.connect(Database.get_storage(), check_same_thread=False, uri=True)
+            else:
+                connection = sqlite3.connect(Database.get_storage(), check_same_thread=False)
+        elif cls._DATABASE == cls.DB_POSTGRESQL:
+            connection = psycopg2.connect(host="localhost", user="postgres", password="postgres")
 
         return connection
 
-    @staticmethod
-    def _select(category):
+    @classmethod
+    def _select(cls, category):
         """Return content based on category."""
 
         rows = ()
         collection = Collection()
         try:
-            query = ('SELECT * FROM contents WHERE category=?')
+            query = ('SELECT * FROM contents WHERE category={0}'.format(cls._PLACEHOLDER))
             qargs = [category]
             connection = Database._connect()
             with closing(connection.cursor()) as cursor:
                 cursor.execute(query, qargs)
                 rows = cursor.fetchall()
             connection.close()
-        except sqlite3.Error as error:
-            print(error)
+        except (sqlite3.Error, psycopg2.Error):
+            print(traceback.format_exc())
 
         collection.convert(rows)
 

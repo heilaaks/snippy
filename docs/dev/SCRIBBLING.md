@@ -245,6 +245,9 @@ Random notes and scribling during development.
    \d+ contents
    SHOW client_encoding;
 
+   python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
+   pytest tests/test_api_create_reference.py -k test_api_create_reference_001 --snippy-db postgresql
+
    # Changes round 2:
 
    A) change the VIOLATED const to SQLITE and POSTGRE

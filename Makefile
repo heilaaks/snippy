@@ -29,6 +29,9 @@ else
 	make test
 endif
 
+test-postgresql:
+	pytest tests/test_api_create_reference.py -k test_api_create_reference_001 --snippy-db postgresql
+
 coverage:
 	pytest --cov=snippy --cov-branch --cov-report html tests/
 	pytest --cov=snippy tests/
@@ -90,4 +93,4 @@ clean:
 clean-db:
 	> snippy/data/storage/snippy.db
 
-.PHONY: install upgrade uninstall server dev test test-fast coverage outdated docs lint pyflakes docker security-scan clean clean-db
+.PHONY: install upgrade uninstall server dev test test-fast test-postgresql coverage outdated docs lint pyflakes docker security-scan clean clean-db

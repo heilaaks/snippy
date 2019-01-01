@@ -1,4 +1,7 @@
 ## WORKING
+   - [ ] Make one exception instead of two to get easier test case raise tests?
+   - [ ] Parse postgre integrity error.
+   - [ ] Sort the assert storage that now returns content in different order. Add ORDER somewhere?
    - [ ] Remove --server flag and use --server-host in format of 'localhost:8080'. This is easier and cleaner to write than --server-ip 234234 --server-port 9090. Same form storage. This also allows formats like 'host1.8080,host2.8080,etc'. This also forces user to define the IP (leaves responsibility to set it correctly and not use unsecure defaults like star)
    - [ ] Add support to read storage and server options from env variables.
    - [ ] Cannot do WHERE LIKE UUID with PostgreSQL. This , uuid        UUID NOT NULL UNIQUE should be 'uuid text' for current code to work.

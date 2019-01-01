@@ -73,7 +73,10 @@ class Database(object):
             self._logger.debug('unknown database type - using default sqlite', Config.storage_type)
 
         if not self._connection:
-            self._connection = self._create_db()
+            self._connection = self._connect()
+
+        if not self._connection:
+            Config.failure = True
 
     def disconnect(self):
         """Close database connection."""
@@ -461,9 +464,10 @@ class Database(object):
 
         return collection
 
-    def _create_db(self):
+    def _connect(self):
         """Create the database."""
 
+        connection = None
         schema = Const.EMPTY
         location = Config.storage_file
         storage_schema = Config.storage_schema
@@ -474,19 +478,45 @@ class Database(object):
                 except IOError as error:
                     Cause.push(Cause.HTTP_500, 'reading database schema failed with exception {}'.format(error))
         try:
-            if not Const.PYTHON2:
-                connection = sqlite3.connect(location, check_same_thread=False, uri=True)
+            if self._db == Const.DB_SQLITE:
+                if not Const.PYTHON2:
+                    connection = sqlite3.connect(location, check_same_thread=False, uri=True)
+                else:
+                    connection = sqlite3.connect(location, check_same_thread=False)
+                connection.create_function('REGEXP', 2, lambda regex, value: bool(re.search(regex, value, re.IGNORECASE)))
+                with closing(connection.cursor()) as cursor:
+                    cursor.execute("pragma table_info('contents')")
+                    self._columns = [column[1] for column in cursor.fetchall()]
+                self._logger.debug('sqlite3 database persisted in: %s', location)
+            elif self._db == Const.DB_POSTGRESQL:
+                # This allows adding connection parameters like connect_timeout
+                # after the database name. For example database parameter string
+                # with values like 'database?connect_timeout=10', the parameters
+                # are directly passed to connection string on purpose.
+                #
+                # The host can contain also multiple hosts separated with syntax
+                # required for each database [1].
+                #
+                # [1] https://www.postgresql.org/docs/current/libpq-connect.html#LIBPQ-CONNSTRING
+                connection = psycopg2.connect(
+                    'postgresql://' +
+                    Config.storage_user +
+                    ':' +
+                    Config.storage_password +
+                    '@' +
+                    Config.storage_host +
+                    '/' +
+                    Config.storage_database
+                )
+            elif self._db == Const.DB_COCKROACHDB:
+                Cause.push(Cause.HTTP_500, 'unsupported database: {}'.format(self._db))
             else:
-                connection = sqlite3.connect(location, check_same_thread=False)
-            connection.create_function('REGEXP', 2, lambda regex, value: bool(re.search(regex, value, re.IGNORECASE)))
+                Cause.push(Cause.HTTP_500, 'connecting to unknown database failed: {}'.format(self._db))
+
             with closing(connection.cursor()) as cursor:
                 cursor.execute(schema)
-            with closing(connection.cursor()) as cursor:
-                cursor.execute("pragma table_info('contents')")
-                self._columns = [column[1] for column in cursor.fetchall()]
-            self._logger.debug('sqlite3 database persisted in: %s', location)
         except (sqlite3.Error, psycopg2.Error) as error:
-            Cause.push(Cause.HTTP_500, 'creating database failed with exception {}'.format(error))
+            self._set_error(error)
 
         return connection
 
@@ -667,4 +697,4 @@ class Database(object):
 
         self._logger.info('database error: {}'.format(traceback.format_exc()))
         self._logger.info('database error stack trace: {}'.format(traceback.format_stack(limit=20)))
-        Cause.push(Cause.HTTP_500, 'database operation failed with exception {}'.format(error))
+        Cause.push(Cause.HTTP_500, 'database operation failed with exception: {}'.format(error).lower())

@@ -58,8 +58,9 @@ class Config(object):
         cls.storage_path = cls.source.storage_path
         cls.storage_file = cls._storage_file()
         cls.storage_host = cls.source.storage_host
-        cls.storage_login = cls.source.storage_login
+        cls.storage_user = cls.source.storage_user
         cls.storage_password = cls.source.storage_password
+        cls.storage_database = cls.source.storage_database
         cls.storage_ssl_cert = cls.source.storage_ssl_cert
         cls.storage_ssl_key = cls.source.storage_ssl_key
         cls.storage_ssl_ca_cert = cls.source.storage_ssl_ca_cert
@@ -579,7 +580,8 @@ class Config(object):
         cls._logger.debug('configured storage schema: %s', cls.storage_schema)
         cls._logger.debug('configured storage file: %s', cls.storage_file)
         cls._logger.debug('configured storage host: %s', cls.storage_host)
-        cls._logger.debug('configured storage login name: %s', cls.storage_login)
+        cls._logger.debug('configured storage login user name: %s', cls.storage_user)
+        cls._logger.debug('configured storage database: %s', cls.storage_database)
         cls._logger.debug('configured storage ssl certificate file: %s', cls.storage_ssl_cert)
         cls._logger.debug('configured storage ssl key file: %s', cls.storage_ssl_key)
         cls._logger.debug('configured storage ssl ca certificate file: %s', cls.storage_ssl_ca_cert)

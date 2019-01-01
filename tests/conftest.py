@@ -148,8 +148,8 @@ def pytest_addoption(parser):
     )
 
 @pytest.fixture(scope="session", autouse=True)
-def init_all_tests(request):
-    """Initialize all tests."""
+def set_database(request):
+    """Get used database."""
 
     database = request.config.getoption("--snippy-db")
     Database.set_database(database)
@@ -176,7 +176,8 @@ def mocked_snippy(mocker, request):
     # Mock predicatable UUIDs.
     _mock_uuids(mocker)
 
-    snippy = _create_snippy(mocker, params)
+    database = request.config.getoption("--snippy-db")
+    snippy = _create_snippy(mocker, params, database)
     def fin():
         """Clear the resources at the end."""
 
@@ -196,7 +197,8 @@ def mocked_snippy_perf(mocker, request):
     feasible.
     """
 
-    snippy = _create_snippy(mocker, ())
+    database = request.config.getoption("--snippy-db")
+    snippy = _create_snippy(mocker, (), database)
     def fin():
         """Clear the resources at the end."""
 
@@ -223,7 +225,8 @@ def server(mocker, request):
 
     # Mock server so that real Snippy server is not started.
     mocker.patch('snippy.server.server.SnippyServer')
-    snippy = _create_snippy(mocker, params)
+    database = request.config.getoption("--snippy-db")
+    snippy = _create_snippy(mocker, params, database)
     snippy.run()
 
     def fin():
@@ -253,7 +256,8 @@ def server_db(mocker, request):
     # Mock server so that real Snippy server is not started.
     with mocker.patch('snippy.server.server.SnippyServer'):
         with mock.patch('snippy.storage.database.sqlite3.connect', create=True) as mock_db_connect:
-            snippy = _create_snippy(mocker, params)
+            database = request.config.getoption("--snippy-db")
+            snippy = _create_snippy(mocker, params, database)
             snippy.run()
 
     def fin():
@@ -875,16 +879,29 @@ def _get_template(dictionary):
 
     return collection.dump_text(Config.templates)
 
-def _create_snippy(mocker, options):
+def _create_snippy(mocker, params, database):
     """Create snippy with mocks."""
 
-    # Mock only objects from Snippy package. If system calls are mocked
-    # here, it will mock all the third party packages that are imported
-    # when the Snippy object is created. System calls like os.path.isfile
-    # must be mocked after the Snippy object is in a such state that it
-    # can accept test case input.
-    mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
-    snippy = Snippy(options)
+    # Mock only objects from the Snippy package. If system calls like os.open
+    # are mocked from here, it will mock all the third party packages that are
+    # imported when the Snippy object is created. System calls must be mocked
+    # after the Snippy object is in a such state that it can accept test case
+    # input.
+    if database == Database.DB_SQLITE:
+        mocker.patch.object(Config, '_storage_file', return_value=Database.get_storage())
+    elif database == Database.DB_POSTGRESQL:
+        params.append('--storage-type')
+        params.append('postgresql')
+        params.append('--storage-host')
+        params.append('localhost:5432')
+        params.append('--storage-database')
+        params.append('postgres')
+        params.append('--storage-user')
+        params.append('postgres')
+        params.append('--storage-password')
+        params.append('postgres')
+
+    snippy = Snippy(params)
 
     return snippy
 

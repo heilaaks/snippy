@@ -223,8 +223,9 @@ class Cli(ConfigSourceBase):
         server.add_argument('--storage-path', type=Parser.to_unicode, dest='storage_path', default=Const.EMPTY, help=argparse.SUPPRESS)
         server.add_argument('--storage-type', type=Parser.to_unicode, dest='storage_type', choices=Const.STORAGES, default=Const.DB_SQLITE, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long
         server.add_argument('--storage-host', type=Parser.to_unicode, dest='storage_host', help=argparse.SUPPRESS)
-        server.add_argument('--storage-login', type=Parser.to_unicode, dest='storage_login', help=argparse.SUPPRESS)
+        server.add_argument('--storage-user', type=Parser.to_unicode, dest='storage_user', help=argparse.SUPPRESS)
         server.add_argument('--storage-password', type=Parser.to_unicode, dest='storage_password', help=argparse.SUPPRESS)
+        server.add_argument('--storage-database', type=Parser.to_unicode, dest='storage_database', help=argparse.SUPPRESS)
         server.add_argument('--storage-ssl-cert', type=Parser.to_unicode, dest='storage_ssl_cert', default=None, help=argparse.SUPPRESS)
         server.add_argument('--storage-ssl-key', type=Parser.to_unicode, dest='storage_ssl_key', default=None, help=argparse.SUPPRESS)
         server.add_argument('--storage-ssl-ca-cert', type=Parser.to_unicode, dest='storage_ssl_ca_cert', default=None, help=argparse.SUPPRESS)  # noqa pylint: disable=line-too-long

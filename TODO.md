@@ -1,5 +1,6 @@
 ## WORKING
    - [ ] Remove --server flag and use --server-host in format of 'localhost:8080'. This is easier and cleaner to write than --server-ip 234234 --server-port 9090. Same form storage. This also allows formats like 'host1.8080,host2.8080,etc'. This also forces user to define the IP (leaves responsibility to set it correctly and not use unsecure defaults like star)
+   - [ ] Add support to read storage and server options from env variables.
    - [ ] Cannot do WHERE LIKE UUID with PostgreSQL. This , uuid        UUID NOT NULL UNIQUE should be 'uuid text' for current code to work.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
    - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.

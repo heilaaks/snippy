@@ -30,7 +30,7 @@ else
 endif
 
 test-postgresql:
-	pytest tests/test_api_create_reference.py -k test_api_create_reference_001 --snippy-db postgresql
+	python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
 
 coverage:
 	pytest --cov=snippy --cov-branch --cov-report html tests/

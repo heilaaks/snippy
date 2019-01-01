@@ -27,6 +27,7 @@ import traceback
 import uuid
 from contextlib import closing
 
+import pytest
 import pkg_resources
 try:
     import psycopg2
@@ -128,6 +129,8 @@ class Database(object):
             cls._PLACEHOLDER = '?'
         else:
             cls._PLACEHOLDER = '%s'
+
+        cls._assert_database_connection()
 
     @staticmethod
     def get_collection():
@@ -260,6 +263,7 @@ class Database(object):
         """Delete all content from database."""
 
         # In successful case the database table does not exist anymore
+        # and exception is allowed.
         try:
             connection = Database._connect()
             with closing(connection.cursor()) as cursor:
@@ -267,7 +271,7 @@ class Database(object):
                 connection.commit()
             connection.close()
         except (sqlite3.Error, psycopg2.Error):
-            print(traceback.format_exc())
+            pass
 
     @staticmethod
     def delete_storage():
@@ -295,6 +299,15 @@ class Database(object):
             connection = psycopg2.connect(host="localhost", user="postgres", password="postgres")
 
         return connection
+
+    @classmethod
+    def _assert_database_connection(cls):
+        """Test that database can be connencted."""
+
+        try:
+            cls._connect()
+        except (sqlite3.Error, psycopg2.Error):
+            pytest.exit('cannot connect to used database: {}'.format(cls._DATABASE))
 
     @classmethod
     def _select(cls, category):

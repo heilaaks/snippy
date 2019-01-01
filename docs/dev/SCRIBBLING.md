@@ -248,6 +248,8 @@ Random notes and scribling during development.
    python -m pytest -x ./tests/test_*.py --cov snippy --snippy-db postgresql
    pytest tests/test_api_create_reference.py -k test_api_create_reference_001 --snippy-db postgresql
 
+   python runner --server -vv --storage-type postgresql --storage-host localhost:5432 --storage-database postgres --storage-user postgres --storage-password postgres
+
    # Changes round 2:
 
    A) change the VIOLATED const to SQLITE and POSTGRE

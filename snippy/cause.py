@@ -79,6 +79,12 @@ class Cause(object):
     def push(cls, status, message):
         """Append cause to list.
 
+        Message will always contain only the string till the first newline.
+        The reason is that the message may be coming from an exception which
+        message may contain multiple lines. In this case it is always assumed
+        that the first line contains the actual exception message. The whole
+        message is always printed into log.
+
         Args:
             status (str): One of the predefined HTTP status codes.
             message (str): Description of the cause.
@@ -99,7 +105,7 @@ class Cause(object):
             'status': int(status.split()[0]),
             'status_string': status,
             'module': caller,
-            'title': message
+            'title': message.splitlines()[0]
         })
 
     @classmethod

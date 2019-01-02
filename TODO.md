@@ -1,25 +1,17 @@
 ## WORKING
-   - [ ] Make one exception instead of two to get easier test case raise tests?
-   - [ ] Parse postgre integrity error.
-   - [ ] Sort the assert storage that now returns content in different order. Add ORDER somewhere?
+   - [ ] Sort the assert storage that now returns content in different order. Add ORDER somewhere? The problem is that default content has same date. This needs also sort by brief to get predictable output - see how sqlite does this.
    - [ ] Remove secret items (user name, paswd, ssl paths, server paths) from Config. Do not allow prints and make print(Config) like with CLI? But is it ok to keep with debug settings after all? Should do the print(Config) at least.
    - [ ] Remove --server flag and use --server-host in format of 'localhost:8080'. This is easier and cleaner to write than --server-ip 234234 --server-port 9090. Same form storage. This also allows formats like 'host1.8080,host2.8080,etc'. This also forces user to define the IP (leaves responsibility to set it correctly and not use unsecure defaults like star)
    - [ ] Add support to read storage and server options from env variables.
-   - [ ] Cannot do WHERE LIKE UUID with PostgreSQL. This , uuid        UUID NOT NULL UNIQUE should be 'uuid text' for current code to work.
    - [ ] _read_collection can remove compute_digest since it is always in seal. Can the compute_digest be internal? It would help to get rid of external usage.
    - [ ] Sort SQL attributes so that the digest is last. Eventually the digest will contain all the fields.
-   - [ ] Change the VIOLATED const to SQLITE and POSTGRE
-   - [ ] Set the id as serial for sqlite also and alter the serial.
-   - [ ] Fix the database test helper.
    - [ ] Config get_resource could return empty Resource instead of None in failure. This is now related to new migrate refactoring that prevents migrating template resources.
    - [ ] Rename test helpers as TSnippet or TDatabase (lint?) in order to avoid collisions with real modules?
    - [ ] Use datetime for created and updated. Do the conversion in sqlite(database) module and do not check this in Resource since it would reveal DB type.
    - [ ] Add option to select db from {sqlite,postgres,cockroach} and default to sqlite.
-   - [ ] Insecure by defautl (experimental release) as of now.
-   - [ ] Test runner search --all --sall . with sqlite.
+   - [ ] Test postgreSQL SSL connection manually.
    - [ ] Fix assert storage to support dict list in different orders. Check first why postgres does this. The order is now different in sqlite and postgres. Why this is in update?
    - [ ] Note that that database ID changes with postgres and e.g. test cases that print check it will need something.
-   - [ ] Database needs own certs so the server cert names should be changed? Yes because the database certs can be user specific? Yes...? at least for cockroach https://www.cockroachlabs.com/docs/stable/build-a-python-app-with-cockroachdb.html
    - [ ] Test API performance by disabling server start from api_performance against all db's.
    - [ ] Add support for CockroachDB and PostgreSQL and make database modules more generic.
    - [ ] Add possibility to import from other external sources that contain cheat sheet data or snippets in structured format.

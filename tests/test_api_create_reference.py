@@ -337,7 +337,7 @@ class TestApiCreateReference(object):
         UUID column's unique constraint violation. In this case there is no
         stored content and the digest in generated error message cannot filled
         based on database content. Database tries to insert the content twice
-        and both of them result the same unique constraint violation.
+        and both of the inserts result same unique constraint violation.
         """
 
         content = {

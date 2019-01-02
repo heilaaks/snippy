@@ -255,8 +255,13 @@ def server_db(mocker, request):
 
     # Mock server so that real Snippy server is not started.
     with mocker.patch('snippy.server.server.SnippyServer'):
-        with mock.patch('snippy.storage.database.sqlite3.connect', create=True) as mock_db_connect:
-            database = request.config.getoption("--snippy-db")
+        database = request.config.getoption("--snippy-db")
+        if database == Database.DB_SQLITE:
+            patched = 'snippy.storage.database.sqlite3.connect'
+        else:
+            patched = 'snippy.storage.database.psycopg2.connect'
+
+        with mock.patch(patched, create=True) as mock_db_connect:
             snippy = _create_snippy(mocker, params, database)
             snippy.run()
 

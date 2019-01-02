@@ -28,7 +28,9 @@ from contextlib import closing
 try:
     import psycopg2
 except ImportError:
-    class psycopg2(object): pass  # noqa pylint: disable=W,C,R
+    class psycopg2(object):  # noqa pylint: disable=C,R
+        """Dummy psycopg2 class to use exceptions."""
+
     setattr(psycopg2, 'IntegrityError', sqlite3.IntegrityError)
     setattr(psycopg2, 'Error', sqlite3.Error)
 

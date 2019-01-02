@@ -235,7 +235,7 @@ class Database(object):
                       )
         '''.format(cls._PLACEHOLDER)
         qargs = (
-            content.get('id', ''),
+            content.get('id', Database.VALID_UUID),
             Const.DELIMITER_DATA.join(map(Const.TEXT_TYPE, content.get('data', ()))),
             content.get('brief', ''),
             content.get('description', ''),
@@ -247,7 +247,7 @@ class Database(object):
             content.get('filename', ''),
             content.get('versions', ''),
             content.get('source', ''),
-            content.get('uuid', ''),
+            content.get('uuid', Database.VALID_UUID),
             content.get('created', Helper.IMPORT_TIME),
             content.get('updated', Helper.IMPORT_TIME),
             content.get('digest', '')
